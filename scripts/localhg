@@ -1,0 +1,35 @@
+#!/System/Library/Frameworks/Python.framework/Versions/2.5/Resources/Python.app/Contents/MacOS/Python
+#
+# mercurial - scalable distributed SCM
+#
+# Copyright 2005-2007 Matt Mackall <mpm@selenic.com>
+#
+# This software may be used and distributed according to the terms
+# of the GNU General Public License, incorporated herein by reference.
+
+# enable importing on demand to reduce startup time
+
+import sys
+import os.path
+
+packageDir   = os.path.dirname( os.path.dirname(sys.argv[0]) )
+mercurialDir = os.path.join( packageDir, "PlugIns", "LocalMercurial")
+
+sys.path = [mercurialDir] + sys.path
+
+try:
+    from mercurial import demandimport; demandimport.enable()
+except ImportError:
+    import sys
+    sys.stderr.write("abort: couldn't find mercurial libraries in [%s]\n" %
+                     ' '.join(sys.path))
+    sys.stderr.write("(check your install and PYTHONPATH)\n")
+    sys.exit(-1)
+
+import mercurial.util
+import mercurial.dispatch
+
+for fp in (sys.stdin, sys.stdout, sys.stderr):
+    mercurial.util.set_binary(fp)
+
+mercurial.dispatch.run()

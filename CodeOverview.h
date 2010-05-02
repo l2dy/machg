@@ -1,0 +1,323 @@
+
+//
+// Coding overview and naming conventions for MacHG
+//
+// Jason F Harris, (c) 2010.
+//
+// Some of these conventions will be totally non-controversial, but others will be controversial. In any case these conventions
+// have worked well for me and if you are committing code to MacHG, please try and follow them. But in any case thank you for your
+// contribution to the project!
+//
+
+
+// ------------------------------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------------------------------------
+// GENERAL CODING CONVENTIONS   -------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------------------------------------
+
+// Constants
+// ------------------------------------------------------------------------------------------------------------------------------
+// General Constants: constants being with lower k, eg kRepositoryDataDidChange
+// Preference constants are prefixed with the BTS prefix, eg BTSShowModifiedFilesInBrowser
+
+
+// Private Members
+// ------------------------------------------------------------------------------------------------------------------------------
+// private class variables have a trailing underscore, eg
+//    NSString*	rootPath_;					// The root of the repository
+
+
+// Pointers
+// ------------------------------------------------------------------------------------------------------------------------------
+// pointer * is associated with the type. (The other convention although more common in Cocoa appears to me much less intuitive),
+// eg use
+//		NSString* foo;
+// in place of
+//		NSString *foo;
+// foo is a pointer to string, rather than a de-referenced foo being a string. Almost all the time in the code you are dealing with
+// foo instead of dealing with *foo, so the atomic foo is really the thing we are interested in working with thus the question is
+// "What is foo?". While the answer is "NSString*".
+
+
+// Full Names
+// ------------------------------------------------------------------------------------------------------------------------------
+// Use full names for all methods and public functions. Eg use repositoryInitialization rather than repoInit
+
+
+// Local Variable Names
+// ------------------------------------------------------------------------------------------------------------------------------
+// Full name exceptions can be made for local variables, when it is clear what is occurring. eg revInt instead of revisionInteger
+// when it is clear and local to a small section of code. In some cases we append Int or Num on a local variable to distinguish
+// them. Eg in some parts of the code we have:
+//		NSString* theParentsOfEntry = [entry parents];
+//		NSInteger revInt = stringAsInt([entry revision]);
+//		NSNumber* revNum = stringAsNumber([entry revision]);
+// so since we are dealing with local variables and its clear what they mean this is acceptable. The Int and the Num are appended
+// since we need to distinguish between the two versions of the same thing.
+
+
+// Brace conventions
+// ------------------------------------------------------------------------------------------------------------------------------
+// Use Allman style for braces. (http://en.wikipedia.org/wiki/Indent_style) eg
+//	while (x == y)
+//	{
+//		something();
+//		somethingelse();
+//	}
+//	finalthing();
+//
+//
+// Avoid braces on single lines. eg use code like the following
+//	if (x == y)
+//		doSomething();
+//	else
+//	{
+//		doSomethingElse();
+//		finish();
+//	}
+
+
+// Spacing and Tab conventions
+// ------------------------------------------------------------------------------------------------------------------------------
+// Use tabs to indent and tend to line up similar bits of code with tabs followed by spaces so things visually line up in blocks.
+// Set your editor to tabs being 4 spaces.
+
+
+// Blocks of Code
+// ------------------------------------------------------------------------------------------------------------------------------
+// Visually if several lines are the same then to capture this visual similarity you can have the long lines line up. Eg:
+//	...
+//	if (DefaultAnnotationOptionChangesetFromDefaults())		[options addObject:@"--changeset"];
+//	if (DefaultAnnotationOptionDateFromDefaults())			[options addObject:@"--date"];
+//	if (DefaultAnnotationOptionFollowFromDefaults())		[options addObject:@"--follow"];
+//	if (DefaultAnnotationOptionLineNumberFromDefaults())	[options addObject:@"--line-number"];
+//	...
+//
+// In this each of the statements following the if doesn't have to be on its own line.
+
+
+// Prefer Early Return / Limit Nesting
+// ------------------------------------------------------------------------------------------------------------------------------
+// Where possible do an early return from a block of code instead of nesting statements. Here is a small fragment of code showing
+// the general idea in two different versions. eg
+//
+//	bool doRefresh(SomeType e)
+//	{
+//		bool ans = false;
+//		if (e->isGood())
+//		{
+//			postIsGood();
+//			if (e->isLargeEnough)
+//			{
+//				postIsLarge();
+//				if (t->needsRefresh())
+//				{
+//					postNeedsRefesh();
+//					ans = true;
+//				}
+//				else
+//				{
+//					ans = false;
+//				}
+//			}
+//			else
+//			{
+//				ans = false;
+//			}
+//		}
+//		else
+//		{
+//			ans = false;
+//		}
+//	}
+//
+// The above is truly hideous and hard to read. Now make that a 600 line function and well the real fun begins... Instead use
+// something like:
+//
+//	bool doRefresh(SomeType e)
+//	{
+//		if (!e->isGood())
+//			return false;
+//		postIsGood();
+//		
+//		if (!e->isLargeEnough)
+//			return false;
+//		postIsLarge();
+//
+//		if (!t->needsRefresh())
+//			return false;
+//		
+//		postNeedsRefesh();
+//		return true;
+//	}
+
+
+
+
+
+// ------------------------------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------------------------------------
+// COCOA CODING   ---------------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------------------------------------
+
+
+// Garbage Collection
+// ------------------------------------------------------------------------------------------------------------------------------
+// Garbage Collection is turned on in the project.
+
+
+// Threads
+// ------------------------------------------------------------------------------------------------------------------------------
+// Grand Central Dispatch is used for a lot of the threading behavior. The main task is to get the processing done off of the main
+// thread. After the processing, the resulting UI parts are often needed to be updated on the main thread though. Cocoa has async
+// and sync dispatch.
+//
+// I also use "spliced" dispatches. These check the queue we are on and if it is the requested queue that we are trying to
+// dispatch to then we just go ahead and execute the block straight away, if not we do a sync dispatch to that queue.
+
+
+// synchronizedXYZMethod
+// ------------------------------------------------------------------------------------------------------------------------------
+// These methods, such as synchronizedObjectForKey, are exactly the same as the normal method objectForKey except they are wrapped
+// in a @synchronized(self) {...} fragment. If all the accessors and setters of a class use the synchronized versions then
+// everything is thread safe, but at the cost of some performance to do the locking / unlocking.
+
+
+// Executing NSTasks
+// ------------------------------------------------------------------------------------------------------------------------------
+// I use a wrapper class for this in TaskExecutions. This initializes pipes for stdin, stdout, stderr, it then does the actual
+// NSTask then reads the complete result, and records the termination status, etc.
+
+
+// Document
+// ------------------------------------------------------------------------------------------------------------------------------
+// The document is visually the Sidebar and a pane of content.
+
+// Panes
+// ------------------------------------------------------------------------------------------------------------------------------
+// The main panes plug into the main document window. There are currently four panes. (I have more planned for the future)
+// 1. BrowserPane
+// 2. HistoryPane
+// 3. DifferencesPane
+// 4. BackingPane.
+
+
+// Model classes.
+// ------------------------------------------------------------------------------------------------------------------------------
+// Here are the main Model classes:
+// 1. LogEntry
+//		This is the information in a single revision of a repository. It stores things like the revision number, the revision changeset
+//		hash, the date of the revision, the author of the revision, the description of the revision, etc. It is loaded progressively.
+//		Ie it starts out as just a revision number and then it can be filled out to include basic information, and then later filled
+//		out further to include all of the detailed information on a revision.
+// 2. RepositoryData:
+//		This is the collection of all of the Log Entries, and the information about all the labels, tags, parents, tec. It is a
+//		progressive collection in that it starts out mostly empty but as we scroll through the history we start to fill up this
+//		collection with more and more LogEntries as the entries come into view. As information is built up the collection accumulates
+//		information on the parents and children of each revision. The labels (tags, branches, bookmarks) are loaded separately, but are
+//		still part of the RepositoryData.
+// 3. FSNodeInfo:
+//		This is a node in the file browser of all the files in the current working version of the repository. It contains information
+//		on the status of the file or the status of the child items in this folder. These nodes back the NSBrowser which displays the
+//		hierarchy of files.
+// 4. SidebarNode:
+//		These nodes contain information on the repositories, the file path or URL path to each repository, a local name to use in the
+//		side bar for them, etc.
+// 5. LabelData:
+//		This contains information on a tag, branch, or bookmark.
+// 6. PatchData:
+//		This contains information on a patch, the path to the patch, the author, the date of the patch, the parent, the actual lines of
+//		the patch, etc..
+
+
+// Reused tables and structures
+// ------------------------------------------------------------------------------------------------------------------------------
+// There are some tables which are reused in many places throughout the sheets.
+// 1. LogTableView
+//		This is a table of the log entries (revisions / changesets) in the history of the repository. Its a direct subclass of
+//		NSTableView, and has a few of its own cell classes for cells in the table.
+// 2. LablesTableView
+//		This is a table of the labels (local tags, global tags, bookmarks, branches, open heads) which make up all labels of the
+//		different revisions/changesets in the repository. LabelsTableView is a direct subclass of NSTableView, and has a few of its own
+//		cell classes for cells in the table.
+// 3. PatchesTableView
+//		This is a table of the patches 
+//		different revisions/changesets in the repository. LabelsTableView is a direct subclass of NSTableView, and has a few of its own
+//		cell classes for cells in the table.
+
+
+
+// ResetXYZ / RefreshXYZ / ReloadXYZ
+// ------------------------------------------------------------------------------------------------------------------------------
+// ResetXYZ will in general clear all caches to do with XYZ and basically wipe everything with XYZ back to a pristine state. Eg
+//   ResetLogTableView.
+// RefreshXYZ will usually update the backing information in eg a table, etc. Eg there are the same number of rows but the data in
+//   the rows might have changed.
+
+
+// Menu items and Contextual Menu items
+// ------------------------------------------------------------------------------------------------------------------------------
+// The name of an action to do XYZ is generally prefixed with a form <origin-of-menu>Menu, so a main menu item for XYZ would be
+// mainMenuXYZ. If the action was a contextual menu for say the history pane it would be historyMenuXYZ. Similarly it could be
+// browserMenuXYZ, or differencesMenuXYZ.
+
+
+// Sheets
+// ------------------------------------------------------------------------------------------------------------------------------
+// Generally there should be a one-to-one correspondence between classes to control sheets and the sheet nib's. Eg there is not
+// one class to manage both 'pull' and 'incoming' even though they are quite similar. the name should be XYZSheetController.[hm],
+// where XYZ is push, pull, update, incoming, revert, etc.
+//
+// (Note however, eg the collapse sheet is a two step process, the first sheet within the nib is to first select the revisions to
+// collapse and the second sheet is to edit the combined commit message, but these are still all to do with the same thing. There
+// is just the one collapse command.)
+// 
+// Generally options to a command are handled through the utility class OptionController. eg option like eg '--rev 23' has an
+// option controller instance.
+//
+// Advanced options are usually grouped in a DisclosureBoxController which will show hide all of the advanced options at once.
+//
+// The sheets are descended from the base class BaseSheetWindowController. These could inherit from NSObject instead except I use
+// the responder chain to detect flagsModified, and it handy to have a responder chain to override and here is a convenient place
+// to override it. Maybe this is wrong and there is a better way to do this...
+
+
+// Selected / Clicked / Chosen
+// ------------------------------------------------------------------------------------------------------------------------------
+// For many tables there is a selected row. We can get this via the [self selectedRow], however if an action was generated with a
+// right click on a row in the table then this can be different than the selected row, ie the clickedRow. Consequently we have the
+// concept of the chosenRow which is the row where the user clicked *if* there was a click, or if there was no click then it is
+// the selected row. So selectedRow, clickedRow, and chosenRow. This grouping works for browser columns, sidebar nodes, etc. Eg
+// selectedNode, clickedNode, and chosenNode.
+
+
+// SCEvents
+// ------------------------------------------------------------------------------------------------------------------------------
+// These are used to detect underlying file changes. Unfortunately we have to turn these off when doing underlying mercurial
+// commands since mercurial creates temp files while executing many of its commands. I wish Mercurial would do this in a temporary
+// directory (Maybe I just need to specify some advanced option I am not familiar with?). Because right now Mercurial while
+// executing commands generates temp files in its main directory, which triggers a refresh which creates another temporary file,
+// which can trigger another refresh, etc. (Why don't they use some tmp directory? I am sure its easy enough to get hold of...)
+// So to be on the safe side while executing mercurial commands the tracking of file events is unfortunately turned off.
+
+
+// General Category Extensions
+// ------------------------------------------------------------------------------------------------------------------------------
+// The general category extensions are collected in Common.h. Most of these should be applicable to basically any Cocoa program.
+
+
+// Notifications
+// ------------------------------------------------------------------------------------------------------------------------------
+// I have added a category extension so observing, and posting notifications is a bit simpler.
+// eg
+//		[myDocument postNotificationWithName:kRepositoryRootChanged];
+// and too observe this:
+//		[self observe:kRepositoryRootChanged		from:[self myDocument]  byCalling:@selector(repositoryRootDidChange)];
+
+
+// String Matching
+// ------------------------------------------------------------------------------------------------------------------------------
+// Handled by RegexKitLite. Why on earth doesn't apple have something like this?!?
+

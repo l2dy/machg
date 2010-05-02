@@ -1,0 +1,15 @@
+#!/bin/bash
+
+theCommand="cd $1"
+
+# create our applescript which will launch a
+# new Terminal window if there is not one running
+# and otherwise run the command we want in the
+# current running Terminal window
+aplscr="
+tell application \"Terminal\" to activate
+tell application \"Terminal\" to do script \"$theCommand\"
+"
+
+# execute the applescript
+osascript -e "$aplscr" &>/dev/null &

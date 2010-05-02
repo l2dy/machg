@@ -1,0 +1,145 @@
+//
+//  OptionController.m
+//  MacHg
+//
+//  Created by Jason Harris on 1/20/10.
+//  Copyright 2010 Jason F Harris. All rights reserved.
+//
+
+#import "OptionController.h"
+#import "MacHgDocument.h"
+
+@implementation OptionController
+
+@synthesize specialHandling;
+@synthesize originalTarget;
+@synthesize originalAction;
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Initialization
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (void) setName:(NSString*)name
+{
+	optionName = name;
+}
+
+-(void) awakeFromNib
+{
+	[self setOriginalTarget:[optionSwitchButton target]];
+	[self setOriginalAction:[optionSwitchButton action]];
+	[optionSwitchButton setAction:@selector(setOptionValueStateFromButton:)];
+	[optionSwitchButton setTarget:self];
+	[optionSwitchButton setContinuous:YES];
+	[optionValueField   setContinuous:YES];
+	specialHandling = NO;
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Accessors and Setters
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (BOOL)      optionIsSet								{ return ([optionSwitchButton state] == NSOnState); }
+- (NSString*) optionValue								{ return [self optionIsSet] ? [optionValueField stringValue] : nil; }
+- (void)	  setOptionValue:(NSString*)value			{ [optionValueField setStringValue:value?value:@""]; [self setOverallState:value?YES:NO]; }
+
+- (IBAction)  setOptionValueStateFromButton:(id)sender
+{
+	[self setOverallState:([optionSwitchButton state] == NSOnState)];
+	[optionSwitchButton sendAction:originalAction to:originalTarget];
+}
+
+- (void) setOverallState:(BOOL)state
+{
+	if (state == YES)
+	{
+		[optionSwitchButton setState:NSOnState];
+		NSRect fullFrame = [optionValueField frame];
+		NSRect squishedFrame = fullFrame;
+		squishedFrame.size.width = 0;
+		[optionValueField   setHidden:NO];
+		[optionValueField setFrame:squishedFrame];
+		[[optionValueField animator] setFrame:fullFrame];
+	}
+	else
+	{
+		[optionSwitchButton setState:NSOffState];
+		[optionValueField   setHidden:YES];
+	}
+}
+
+- (void) addOptionToArgs:(NSMutableArray*)args
+{
+	if (specialHandling || ![self optionIsSet])
+		return;
+	[args addObject:[NSString stringWithFormat:@"--%@", optionName]];
+	if (optionValueField)
+		[args addObject:[self optionValue]];
+}
+
++ (BOOL) containsOptionWhichIsSet:(NSArray*)options
+{
+	for (id obj in options)
+		if ([obj respondsToSelector:@selector(optionIsSet)])
+			if ([obj optionIsSet])
+				return YES;
+	return NO;
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Connections
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (void) setConnections:(NSMutableDictionary*)connections fromOptionWithKey:(NSString*)key;
+{
+	NSString* fullKey = [key stringByAppendingString:optionName];
+	if ([self optionIsSet])
+	{
+		id value;
+		if (optionValueField)
+			value = [self optionValue];
+		else
+			value = YESasNumber;
+		[connections setObject:value forKey:fullKey];
+	}
+	else
+		[connections removeObjectForKey:fullKey];
+}
+
+- (void) setOptionFromConnections:(NSMutableDictionary*)connections forKey:(NSString*)key
+{
+	NSString* fullKey = [key stringByAppendingString:optionName];
+	id val = [connections objectForKey:fullKey];
+	[self setOptionValue:val];
+}
+
++ (void) setOptions:(NSArray*)options  fromConnections:(NSMutableDictionary*)connections  forKey:(NSString*)key
+{
+	for (OptionController* opt in options)
+		[opt setOptionFromConnections:connections forKey:key];
+}
+
++ (void) setConnections:(NSMutableDictionary*)connections  fromOptions:(NSArray*)options  forKey:(NSString*)key
+{
+	for (OptionController* opt in options)
+		[opt setConnections:connections fromOptionWithKey:key];
+}
+
+
+
+@end

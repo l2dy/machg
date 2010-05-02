@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Merging Branches</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta name="hatver" content="v2 R6"/>
+<meta name="builddefid" content="4111"/>
+<meta name="topicid" content="27594"/>
+<meta name="Keywords" content="merge, merge branches, merge base, merged files, branches, Repository menu, History view, FileMerge, merge conflicts, resolve conflicts, edit files, Action menu, commit,"/>
+<!-- do not translate -->
+<meta name="Keywords" content="MacHg, Mercurial, .hg" />
+<!-- end do not translate -->
+<meta name="description" content="How to merge branches in a repository."/>
+<meta name="template" content="2031"/>
+<meta name="pagetype" content="Task"/>
+<meta name="project" content="MacHgHelp"/>
+<meta name="release" content=""/>
+<meta name="projectcomponent" content="SafariSnow"/>
+<link href="../sty/task.css" rel="stylesheet" type="text/css" media="all"/>
+<link href="../sty/print.css" rel="stylesheet" type="text/css" media="print"/>
+</head>
+
+<body id="apple-pd">
+<!--top navigation area-->
+
+<div id="navbox" class="gradient"> <a name="MergingBranches"></a>
+
+   <div id="navleftbox"> <a class="navlink_left" href="help:anchor='access' bookID=MacHg Help">Home</a> </div>
+
+   <div id="navrightbox"> <a class="navlink_right" href="help:anchor='xall' bookID=MacHg Help">Index</a> </div>
+</div>
+<!--page head-->
+
+<div id="headerbox">
+
+   <div id="iconbox"> <img id="iconimg" src="../gfx/hgicon.png" alt="MacHg icon" height="32" width="32"/> </div>
+
+   <div id="pagetitle">
+      <h1>Merging Branches</h1>
+   </div>
+</div>
+
+<p>When you have multiple branches of work in a repository, you can merge the branches to bring them back together. For more on branching concepts see <a href="http://stevelosh.com/blog/2009/08/a-guide-to-branching-in-mercurial/">this</a>.</p>
+
+<div class="task-box-spacing">
+
+   <div class="task-box-frame">
+      <h2>To merge two branches:</h2>
+      <ol>
+         <li>
+            <p>In the <a href="help:anchor=AboutRepositoryLists bookID=MacHg Help">sidebar</a> select the repository in which you want to perform the merge, and switch to the <a href="help:anchor=AboutTheHistoryView bookID=MacHg Help">History view</a>.</p>
+         </li>
+         <li>
+            <p>Select a version - <strong>the merge base</strong> - which you want to merge into.</p>
+         </li>
+         <li>
+            <p>Select the menu item Repository &gt; Merge...</p>
+         </li>
+         <li>
+            <p>In the dialog choose the revision which you want to be merged into the merge base.</p>
+         </li>
+         <li>
+            <p>If needed, choose any advanced options which are appropriate when merging (for example, the <strong>--force</strong> option to force a merge with outstanding changes).</p>
+         </li>
+         <li>
+            <p>Click the Merge button for Mercurial to start the merge.</p>
+         </li>
+         <li>
+            <p>In the process of Mercurial merging files, merge conflicts may arise. To resolve the conflicts between such files, Mercurial will open two such conflicting files in FileMerge. Working in FileMerge, you then need to choose which parts of the two files you want to make up the final merged file. (You can perform edits in the third combined pane below.) When you have finished merging these two files in FileMerge, you must <strong>save</strong> and <strong>quit</strong> FileMerge. You will have to repeat this process for any other pairs of conflicting files to be merged.</p>
+         </li>
+         <li>
+            <p>Finally, switch to  the main Browser View, review the merged files, and then choose Action &gt; &quot;Commit Merged Files...&quot; to finish the merge.</p>
+         </li>
+      </ol>
+   </div>
+</div>
+
+<div id="rule">
+   <hr />
+</div>
+
+<div id="linkinternalbox">
+   <h3>Related Topics</h3>
+
+   <p class="linkinternal"><a href="help:anchor=PushingChanges bookID=MacHg Help">Push changes in your Repository to other Repositories</a></p>
+
+   <p class="linkinternal"><a href="help:anchor=PullingChanges bookID=MacHg Help">Pull changes from other Repositories into your Repository</a></p>
+</div>
+
+<div id="linkexternalbox">
+   <h3>External Links</h3>
+
+   <p class="linkexternal"><a href="http://stevelosh.com/blog/2009/08/a-guide-to-branching-in-mercurial/">Branching in Mercurial</a></p>
+
+   <p class="linkexternal"><a href="http://hgbook.red-bean.com/read/a-tour-of-mercurial-merging-work.html">MDG: Merging work</a></p>
+</div>
+</body>
+</html>

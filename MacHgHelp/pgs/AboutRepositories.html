@@ -1,0 +1,92 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>About Repositories</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="hatver" content="v2 R6" />
+<meta name="builddefid" content="4105" />
+<meta name="topicid" content="26296" />
+<meta name="Keywords" content=".hg directory, hidden directory, commit, metadata, real directory, local respository, server repository, clone" />
+<!-- do not translate -->
+<meta name="Keywords" content="MacHg, Mercurial, .hg" />
+<!-- end do not translate -->
+<meta name="Description" content="repositories store all your files and historical versions of all your files." />
+<meta name="template" content="2029" />
+<meta name="pagetype" content="Task" />
+<meta name="project" content="SafariHelp" />
+<meta name="release" content="" />
+<meta name="projectcomponent" content="SafariSnow" />
+<link href="../sty/task.css" rel="stylesheet" type="text/css" media="all" />
+</head>
+
+<body id="apple-pd">
+<!--top navigation area-->
+
+<div id="navbox" class="gradient"> <a name="AboutRepositories"></a>
+
+   <div id="navleftbox"> <a class="navlink_left" href="help:anchor='access' bookID=MacHg Help">Home</a> </div>
+
+   <div id="navrightbox"> <a class="navlink_right" href="help:anchor='xall' bookID=MacHg Help">Index</a> </div>
+</div>
+<!--page head-->
+
+<div id="headerbox">
+
+   <div id="iconbox"> <img id="iconimg" src="../gfx/hgicon.png" alt="MacHg icon" height="32" width="32" /> </div>
+
+   <div id="pagetitle">
+      <h1>About Repositories</h1>
+   </div>
+</div>
+
+<p> For any revision control system a repository, in general, is just a normal directory tree, containing  normal files and folders, except that a historical record is kept of the state of this collection of files at times the user(s) of the repository would like to record. In the revision control system <em>Mercurial</em>, the different phases of the files are recorded in a hidden directory with the name “.<strong>hg”</strong> in the top directory of the repository.</p>
+
+<p>In Mercurial the archived versions of the files are stored in a compressed form. After making changes to the files, or adding or removing files or folders, the user can then “commit” these changes to the repository which tells Mercurial to record the changes in its history. Then at a later stage the user can compare the current files to  historical versions of these files, find out when some line of code changed, revert some file to a previous version if desired, and other similar operations.</p>
+
+<p>Thus a Mercurial repository is just a normal folder with standard contents, except that an historical record of the changes is stored in the meta-data (the &quot;.hg&quot; directory at the root level of the repository).</p>
+
+<p> Every Mercurial repository is complete, self-contained, and independent. It contains its own private copy of a project's files and history in the .hg directory at the root of the repository.</p>
+
+<p>The contents of the .hg directory and its subdirectories are private to Mercurial. Every other file and directory in the repository is yours to do with as you please. In Mercurial terminology, the .hg directory is the <em>real</em> repository, and all of the files and directories that coexist with it are said to live in the working directory. An easy way to remember the distinction is that the repository contains the history of your project, while the working directory contains a snapshot of your project at a particular &quot;commit&quot; point in history.</p>
+
+<h2><a name="AboutRepositories_LocalRepositories"></a>Local Repositories</h2>
+
+<p>A <strong>local repository</strong> is a repository that is resident on your local machine.</p>
+
+<h2><a name="AboutRepositories_ServerRepositories"></a>Server Repositories</h2>
+
+<p>A <strong>server repository</strong> is a repository that is resident on a server and not resident on your local machine. Since such a repository is on a server, MacHg will only record a <strong>reference</strong> to it. To work with such a remote repository, you must first clone it to a local clone on your machine and then work with this local repository.</p>
+
+<div id="rule">
+   <hr />
+</div>
+
+<div id="linkinternalbox">
+   <h3>Related Topics</h3>
+
+   <p class="linkinternal"><a href="help:anchor=AboutMacHgDocuments bookID=MacHg Help">About MacHg Documents</a></p>
+
+   <p class="linkinternal"><a href="help:anchor=CreatingANewLocalRepository bookID=MacHg Help">Create a new Repository</a></p>
+
+   <p class="linkinternal"><a href="help:anchor=AddingExistingLocalRepository bookID=MacHg Help">Manage an existing Repository</a></p>
+
+   <p class="linkinternal"><a href="help:anchor=CloningARepository bookID=MacHg Help">Clone a Repository</a></p>
+
+   <p class="linkinternal"><a href="help:anchor=AboutTheBrowserView bookID=MacHg Help">View the files in a Repository</a></p>
+
+   <p class="linkinternal"><a href="help:anchor=AboutTheHistoryView bookID=MacHg Help">View the history of a Repository</a></p>
+
+   <p class="linkinternal"><a href="help:anchor=PullingChanges bookID=MacHg Help">Pull changes from other Repositories into your Repository</a></p>
+
+   <p class="linkinternal"><a href="help:anchor=PushingChanges bookID=MacHg Help">Push changes in your Repository to other Repositories</a></p>
+</div>
+
+<div id="linkexternalbox">
+   <h3>External Links</h3>
+
+   <p class="linkexternal"><a href="http://hgbook.red-bean.com/read/a-tour-of-mercurial-the-basics.html#id345120">Definitive Guide : Working with a repository<span class="linkarrow"></span></a></p>
+
+   <p class="linkexternal"><a href="http://hgbook.red-bean.com/read/how-did-we-get-here.html">Definitive Guide : revision control primer</a></p>
+</div>
+</body>
+</html>

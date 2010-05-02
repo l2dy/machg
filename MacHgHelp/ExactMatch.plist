@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple Computer//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>autofill</key>
+	<string>em6454</string>
+	<key>bonjour</key>
+	<string>em6425</string>
+	<key>bookmarks</key>
+	<string>em6423</string>
+	<key>bookmarksbar</key>
+	<string>em3574</string>
+	<key>bookmarksmenu</key>
+	<string>em3575</string>
+	<key>cache</key>
+	<string>em6268</string>
+	<key>certificates</key>
+	<string>em6246</string>
+	<key>cookies</key>
+	<string>em6159</string>
+	<key>customizing</key>
+	<string>em6129</string>
+	<key>digitalcertificates</key>
+	<string>em6081</string>
+	<key>download</key>
+	<string>em6048</string>
+	<key>downloading</key>
+	<string>em6047</string>
+	<key>finding</key>
+	<string>em5937</string>
+	<key>google</key>
+	<string>em3568</string>
+	<key>lockicon</key>
+	<string>em5692</string>
+	<key>personalizing</key>
+	<string>em6129</string>
+	<key>plug-in</key>
+	<string>em5439</string>
+	<key>privacy</key>
+	<string>em5396</string>
+	<key>rendezvous</key>
+	<string>em6425</string>
+	<key>rss</key>
+	<string>em2768</string>
+	<key>rssfeeds</key>
+	<string>em2768</string>
+	<key>search</key>
+	<string>em5202</string>
+	<key>security</key>
+	<string>em5197</string>
+	<key>solvingproblems</key>
+	<string>em5113</string>
+	<key>tabbedbrowsing</key>
+	<string>em11250</string>
+	<key>tabs</key>
+	<string>em5032</string>
+	<key>troubleshooting</key>
+	<string>em4976</string>
+	<key>websearch</key>
+	<string>em3567</string>
+</dict>
+</plist>

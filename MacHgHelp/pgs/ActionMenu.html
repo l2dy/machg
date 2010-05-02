@@ -1,0 +1,335 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Operations in Action Menu</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta name="hatver" content="v2 R6"/>
+<meta name="builddefid" content="4151"/>
+<meta name="topicid" content="26821"/>
+<meta name="Keywords" content="commit files, add files, diff files, revert files, delete files, untrack files, AddRemove files, rename files,remerge files, resolved files, ignore files, unignore files, annotate files, rollback files, commit, add, diff, revert, delete, untrack, rename, remerge, resolve, ignore, unignore, annotate, rollback" />
+<!-- do not translate -->
+<meta name="Keywords" content="MacHg, Mercurial, .hg"/>
+<!-- end do not translate -->
+<meta name="description" content="Operations available in the Action menu."/>
+<meta name="template" content="2028"/>
+<meta name="pagetype" content="Task"/>
+<meta name="project" content="SafariHelp"/>
+<meta name="release" content=""/>
+<meta name="projectcomponent" content="SafariSnow"/>
+<link href="../sty/task.css" rel="stylesheet" type="text/css" media="all"/>
+<link href="../sty/print.css" rel="stylesheet" type="text/css" media="print"/>
+</head>
+
+<body id="apple-pd">
+<!--top navigation area-->
+
+<div id="navbox" class="gradient"> <a name="ActionMenu"></a>
+
+   <div id="navleftbox"> <a class="navlink_left" href="help:anchor='access' bookID=MacHg Help">Home</a> </div>
+
+   <div id="navrightbox"> <a class="navlink_right" href="help:anchor='xall' bookID=MacHg Help">Index</a> </div>
+</div>
+<!--page head-->
+
+<div id="headerbox">
+
+   <div id="iconbox"> <img id="iconimg" src="../gfx/hgicon.png" alt="MacHg icon" height="32" width="32"/> </div>
+
+   <div id="pagetitle">
+      <h1>Action Menu</h1>
+   </div>
+</div>
+
+<p>The Action menu is, in general, concerned with operations on the files in a chosen repository. (Operations on the repository as a whole are accessed via the <a href="help:anchor=RepositoryMenu bookID=MacHg Help">Repository menu</a>.)</p>
+
+<p>MacHg provides a front end for many of the standard commands present in Mercurial's standard command set. Below is a list of the menu items in the Action menu, together with their corresponding Mercurial versions. Also, with each Action menu item there is a description of its availability and its corresponding operation.</p>
+
+<p>&nbsp;</p>
+<h3>Fundamental commands acting on files:</h3>
+
+<div class="two-col-description">
+
+   <div class="two-col-description-header">
+      <!-- note: primary text+text type will never be bulleted -->
+      <div class="two-col-description-header-left"> Menu Item </div>
+      <div class=" two-col-description-header-right"> Operation </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Commit Selected Files...</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#commit">commit</a></p>
+         <p><strong>Available:</strong> when one or more files are selected in the Browser View, if at least one of these is marked as Modified, Added or Removed.</p>
+         <p><strong>Operation:</strong> Performing this operation opens a commit sheet with all the Modified, Added and Removed files contained within the selection. After entering a suitable documentation message, you can then commit the selected files to the repository in a new changeset.</p>
+         <p><strong>External Help:</strong> <a href="http://mercurial.selenic.com/wiki/Commit">commit wiki</a>, <a href="http://hgbook.red-bean.com/read/a-tour-of-mercurial-the-basics.html#id347526">MDG: Writing a commit message</a></p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Diff Selected Files</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#diff">diff</a></p>
+         <p><strong>Available:</strong> when one or more files marked Modified are selected in the Browser View.</p>
+         <p><strong>Operation:</strong> For a particular selected Modified file, performing this operation displays a graphical difference between the current state of this file and the file as of the current revision of the repository. The FileMerge tool is used to display these changes.</p>
+         <p><strong>External Help:</strong> <a href="http://mercurial.selenic.com/wiki/Diff">diff wiki</a>, <a href="http://hgbook.red-bean.com/read/a-tour-of-mercurial-the-basics.html#id346595">MDG: Making and reviewing changes</a></p>
+      </div>
+   </div>
+   
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>AddRemove Selected Files</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#addremove">addremove --similarity</a></p>
+         <p><strong>Available:</strong> when one or more files are selected in the Browser View, if at least one of these is marked Unknown or Missing.</p>
+         <p><strong>Operation:</strong> Marks all Unknown files in the selection as Added files, and marks all Missing files in the selection as Removed files. Moreover, the similarity option is used to try to detect when a file has simply had its name changed. You can set the similarity factor in the MacHg preferences under the Mercurial tab. By default, MacHg uses a factor of 95% similarity; but this can be changed in the preferences.</p>
+         <p><strong>External Help:</strong> <a href="http://stevelosh.com/blog/2009/05/what-i-hate-about-mercurial/#addremove-can-track-renames-but-wont-unless-you-ask-it-really-nicely">AddRemove can track renames</a>, <a href="http://hgbook.red-bean.com/read/mercurial-in-daily-use.html#id362374">MDG: Adding and removing files in one step</a></p>
+      </div>
+   </div>
+
+</div>
+
+<div class="clear-two-col-description"></div>
+<h3> Commands for reverting, adding, removing, and renaming files:</h3>
+
+<div class="two-col-description">
+
+   <div class="two-col-description-header">
+      <!-- note: primary text+text type will never be bulleted -->
+      <div class="two-col-description-header-left"> Menu Item </div>
+      <div class=" two-col-description-header-right"> Operation </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Revert Selected Files</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#revert">revert</a></p>
+         <p><strong>Available:</strong> when one or more files are selected in the Browser View, if at least one of these is marked Modified, Added or Removed.</p>
+         <p><strong>Operation:</strong> Performing this operation will restore all selected Modified, Added and Removed files to their state as of the current revision of the repository.</p>
+         <p><strong>External Help:</strong> <a href="http://mercurial.selenic.com/wiki/Revert">revert wiki</a>, <a href="http://hgbook.red-bean.com/read/mercurial-in-daily-use.html#id361971">MDG: Missing files</a></p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Revert Selected Files to Version...</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#revert">revert --rev</a></p>
+         <p><strong>Available:</strong> when at least one file is selected in the Browser View.</p>
+         <p><strong>Operation:</strong> A sheet of the history of the repository will be displayed, from which you select the revision to revert the files to. All of the contents of the selected files will be replaced with the contents of the files as of the version you are reverting to. However, the overall repository revision will remain the same. After reverting the selected files to the chosen revision, you subsequently need to commit these reverted files to incorporate the changes into the repository.</p>
+         <p><strong>External Help:</strong> <a href="http://mercurial.selenic.com/wiki/Revert">revert wiki</a>, <a href="http://hgbook.red-bean.com/read/mercurial-in-daily-use.html#id361971">MDG: Missing files</a></p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Delete Selected Files</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> -</p>
+         <p><strong>Available:</strong> when one or more files and/or folders are selected in the Browser View.</p>
+         <p><strong>Operation:</strong> Moves all of the selected files and folders to the trash. If a file was being tracked, then after deleting it, it will appear as missing in the browser.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Add Selected Files</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#add">add</a></p>
+         <p><strong>Available:</strong> when one or more files are selected in the Browser View, if at least one of these is marked Unknown.</p>
+         <p><strong>Operation:</strong> Performing this operation changes selected files marked Unknown to ones marked Added, hence files that you presumably want to add to the repository. (To actually add files marked Added to the repository so that the repository can track them, you subsequently need to commit them.)</p>
+         <p><strong>External Help:</strong> <a href="http://hgbook.red-bean.com/read/a-tour-of-mercurial-the-basics.html#id349357">MDG: Starting a new project and adding files</a></p>
+      </div>
+   </div>
+
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Untrack Selected Files</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#forget">forget</a></p>
+         <p><strong>Available:</strong> when one or more tracked files are selected in the Browser View. A <strong>tracked file</strong> is any file other than an Unknown file.</p>
+         <p><strong>Operation:</strong> Marks all the selected files as being Unknown files, hence no longer tracked by the repository. You subsequently need to commit these tracking removals to incorporate the changes into the repository.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Rename Selected File...</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#rename">rename</a></p>
+         <p><strong>Available:</strong> when you select one or more tracked files in the Browser View. A <strong>tracked file</strong> is anything other than a file marked Unknown.</p>
+         <p><strong>Operation:</strong> Opens a sheet where you can choose a new name for the file. Renaming allows Mercurial to track the history of the file across the rename, whereas simply removing the file and adding it again will loose this history tracking.</p>
+         <p><strong>External Help:</strong> <a href="http://hgbook.red-bean.com/read/mercurial-in-daily-use.html#id364064">MDG: Renaming files</a></p>
+      </div>
+   </div>
+</div>
+
+<div class="clear-two-col-description"></div>
+<h3> Commands involving the merging of files:</h3>
+
+<div class="two-col-description">
+
+   <div class="two-col-description-header">
+      <!-- note: primary text+text type will never be bulleted -->
+      <div class="two-col-description-header-left"> Menu Item </div>
+      <div class=" two-col-description-header-right"> Operation </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Remerge Unresolved Selected Files</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#resolve">resolve</a></p>
+         <p><strong>Available:</strong> after selecting one or more files which have changed due to a merge but are still unresolved.</p>
+         <p><strong>Operation:</strong> Cleanly retries unresolved file merges using file revisions preserved from the last update or merge.</p>
+         <p><strong>External Help:</strong> <a href="http://hgbook.red-bean.com/read/mercurial-in-daily-use.html#id366109">MDG: File resolution states</a></p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Mark Resolved Selected Files</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#diff">resolve --mark</a></p>
+         <p><strong>Available:</strong> after selecting one or more files which have changed due to a merge.</p>
+         <p><strong>Operation:</strong> Marks the selected merged files as resolved.</p>
+         <p><strong>External Help:</strong> <a href="http://hgbook.red-bean.com/read/mercurial-in-daily-use.html#id366109">MDG: File resolution states</a></p>
+      </div>
+   </div>
+</div>
+
+<div class="clear-two-col-description"></div>
+<h3> Commands involving all files:</h3>
+
+<div class="two-col-description">
+
+   <div class="two-col-description-header">
+      <!-- note: primary text+text type will never be bulleted -->
+      <div class="two-col-description-header-left"> Menu Item </div>
+      <div class=" two-col-description-header-right"> Operation </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Commit All Files...</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#commit">commit</a></p>
+         <p><strong>Available:</strong> when the repository contains at least one file marked Modified, Added or Removed.</p>
+         <p><strong>Operation:</strong> Performing this operation opens a commit sheet with all the Modified, Added and Removed files contained in the repository. After entering a suitable documentation/commit message, you can then commit all these files to the repository in a new changeset.</p>
+         <p><strong>External Help:</strong> <a href="http://mercurial.selenic.com/wiki/Commit">commit wiki</a>, <a href="http://hgbook.red-bean.com/read/a-tour-of-mercurial-the-basics.html#id347526">MDG: Writing a commit message</a></p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Diff All Files</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#diff">diff</a></p>
+         <p><strong>Available:</strong> when the repository contains at least one file marked Modified.</p>
+         <p><strong>Operation:</strong> Performing this operation displays, for each chosen Modified file in the repository, a graphical difference between the current state of the file and the file as of the current revision of the repository. The FileMerge tool is used to display these changes.</p>
+         <p><strong>External Help:</strong> <a href="http://mercurial.selenic.com/wiki/Diff">diff wiki</a>, <a href="http://hgbook.red-bean.com/read/a-tour-of-mercurial-the-basics.html#id346595">MDG: Making and reviewing changes</a></p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Revert All Files</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#revert">revert</a></p>
+         <p><strong>Available:</strong> when the repository contains at least one file marked Modified, Added or Removed.</p>
+         <p><strong>Operation:</strong> Performing this operation restores all Modified, Added and Removed files in the repository to their state as of the current revision of the repository.</p>
+         <p><strong>External Help:</strong> <a href="http://mercurial.selenic.com/wiki/Revert">revert wiki</a>, <a href="http://hgbook.red-bean.com/read/mercurial-in-daily-use.html#id361971">MDG: Missing files</a></p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Revert All Files to Version...</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#revert">revert --rev</a></p>
+         <p><strong>Available:</strong> always in the Browser View.</p>
+         <p><strong>Operation:</strong> A sheet of the history of the repository will be displayed, from which you select the revision to revert all files to. All of the contents of all of the files will be replaced with the contents of the files as of the version you are reverting to. However, the overall repository revision will remain the same. After reverting all files to the chosen revision, you subsequently need to commit these reverted files to incorporate the changes into the repository.</p>
+         <p><strong>External Help:</strong> <a href="http://mercurial.selenic.com/wiki/Revert">revert wiki</a>, <a href="http://hgbook.red-bean.com/read/mercurial-in-daily-use.html#id361971">MDG: Missing files</a></p>
+      </div>
+   </div>
+</div>
+
+<div class="clear-two-col-description"></div>
+<h3> Commands for miscellaneous file operations:</h3>
+
+<div class="two-col-description">
+
+   <div class="two-col-description-header">
+      <!-- note: primary text+text type will never be bulleted -->
+      <div class="two-col-description-header-left"> Menu Item </div>
+      <div class=" two-col-description-header-right"> Operation </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Ignore Selected Files</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial concept:</strong> <a href="http://www.selenic.com/mercurial/hgignore.5.html">.hgignore</a></p>
+         <p><strong>Available:</strong> when one or more files are selected in the Browser View, but none of these is marked Ignored.</p>
+         <p><strong>Operation:</strong> Performing this operation adds the selected files to the <strong>.hgignore</strong> file at the root of the repository. Mercurial consults this file to determine which files to ignore and which to track. </p>
+         <p><strong>External Help:</strong> <a href="http://hgbook.red-bean.com/read/file-names-and-pattern-matching.html#id382104">MDG: Permanently ignoring unwanted files and directories</a></p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>UnIgnore Selected Files</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial concept:</strong> <a href="http://www.selenic.com/mercurial/hgignore.5.html">.hgignore</a><a href="http://www.selenic.com/mercurial/hg.1.html#diff"></a></p>
+         <p><strong>Available:</strong> when one or more files are selected in the Browser View and they are all marked Ignored.</p>
+         <p><strong>Operation: </strong>Performing this operation removes the selected files from the <strong>.hgignore</strong> file at the root of the repository. Mercurial consults this file to determine which files to ignore and which to track.</p>
+         <p><strong>External Help:</strong> <a href="http://hgbook.red-bean.com/read/file-names-and-pattern-matching.html#id382104">MDG: Permanently ignoring unwanted files and directories</a></p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Annotate Selected Files</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#annotate">annotate</a></p>
+         <p><strong>Available: </strong> when one or more files are selected in the Browser View and none of them are marked Unknown.</p>
+         <p><strong>Operation:</strong> Lists a selected file, and on each line of the file, notes the most recent revision in which that line changed and when it changed and who made the change. </p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Rollback Last Commit</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#rollback">rollback</a></p>
+         <p><strong>Available:</strong> once a commit has been made. Rollback applies only to the last change.</p>
+         <p><strong>Operation:</strong> Performing this operation restores the repository to its state before the last commit. Rollback can only be used once, ie., you can't apply rollback twice to rollback two commits (this is a Mercurial limitation). To do more serious editing changes, see <a href="help:anchor=EditingRepositoryHistory bookID=MacHg Help">editing history</a></p>
+         <p><strong>External Help:</strong> <a href="http://hgbook.red-bean.com/read/finding-and-fixing-mistakes.html#sec:undo:rollback">MDG: Rolling back a transaction</a>, <a href="http://hgbook.red-bean.com/read/finding-and-fixing-mistakes.html#id391000">MDG: Rollback only once</a></p>
+      </div>
+   </div>
+</div>
+</body>
+</html>

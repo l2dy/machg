@@ -1,0 +1,116 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>About the Browser View</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="hatver" content="v2 R6" />
+<meta name="builddefid" content="4105" />
+<meta name="topicid" content="26296" />
+<meta name="Keywords" content="Browser View, Browser, Action menu, modified files, modify, commit, revert, delete, add, checkboxes, sidebar, status" />
+<!-- do not translate -->
+<meta name="Keywords" content="MacHg, Mercurial, .hg" />
+<!-- end do not translate -->
+<meta name="description" content="Describes the features available from the browser view." />
+<meta name="template" content="2029" />
+<meta name="pagetype" content="Task" />
+<meta name="project" content="SafariHelp" />
+<meta name="release" content="" />
+<meta name="projectcomponent" content="SafariSnow" />
+<link href="../sty/task.css" rel="stylesheet" type="text/css" media="all" />
+</head>
+
+<body id="apple-pd">
+<!--top navigation area-->
+
+<div id="navbox" class="gradient"> <a name="AboutTheBrowserView"></a>
+
+   <div id="navleftbox"> <a class="navlink_left" href="help:anchor='access' bookID=MacHg Help">Home</a> </div>
+
+   <div id="navrightbox"> <a class="navlink_right" href="help:anchor='xall' bookID=MacHg Help">Index</a> </div>
+</div>
+<!--page head-->
+
+<div id="headerbox">
+
+   <div id="iconbox"> <img id="iconimg" src="../gfx/hgicon.png" alt="MacHg icon" height="32" width="32" /> </div>
+
+   <div id="pagetitle">
+      <h1>About the Browser View</h1>
+   </div>
+</div>
+
+<p>You can switch the view of the Document Window to the <strong>Browser View</strong> through the <strong>View</strong> menu. A typical Browser view might be:</p>
+
+<p><img src="../gfx/BrowserView.png" alt="BrowserView" width="850" height="604" /></p>
+
+<p>In the Browser View you can see the current status of the files and folders in the repository. Which files and folders are shown in the browser depend on which viewing options you have chosen in the right sidebar. Depending upon the status of the files you have selected, you can choose to perform various actions available from the <a href="help:anchor=ActionMenu bookID=MacHg Help">Action menu</a>. These actions can include committing changes, reverting changes, deleting files, adding new files, inspecting the files changes, etc.</p>
+
+<p>The status of a file is always with respect to its parent revision. This could be the last commit; or if the update command has been used, it could be some other revision. With respect to the parent revision, we can talk about files and folders which are modified, removed, added, missing, unknown, etc.</p>
+
+<p>The various file viewing options (like Modified, Added, Removed, etc., which appear in the right sidebar) control the class of files that will be shown in the browser. Checking a particular option will cause any folders and files with the specified status to be correspondingly shown. For instance, in the screenshot, 'Modified' is checked, and we see that the file CircleView.m, which has been modified relative to the parent revision, is consequently shown. ‘Up to date’ is also checked, so we can see all the files which are tracked by Mercurial but have not been changed in any way since the parent revision.</p>
+<table border="0" cellpadding="2" class="definition">
+   <tr>
+      <td valign="top"><strong>Checkbox</strong></td>
+      <td><strong>Controls the showing or hiding of:</strong></td>
+   </tr>
+   <tr>
+      <td valign="top">Up to date</td>
+      <td>Controls the showing or hiding of files which are up to date. (In Mercurial terminology, 'Clean'.) </td>
+   </tr>
+   <tr>
+      <td valign="top">Modified</td>
+      <td>Controls the showing or hiding of files which are modified.</td>
+   </tr>
+   <tr>
+      <td valign="top">Added</td>
+      <td>Controls the showing or hiding of files which have been added.</td>
+   </tr>
+   <tr>
+      <td valign="top">Removed</td>
+      <td>Controls the showing or hiding of files which have been removed.</td>
+   </tr>
+   <tr>
+      <td valign="top">Missing</td>
+      <td>Controls the showing or hiding of files which are missing.</td>
+   </tr>
+   <tr>
+      <td valign="top">Unknown</td>
+      <td>Controls the showing or hiding of files which are not yet tracked.</td>
+   </tr>
+   <tr>
+      <td valign="top">Ignored</td>
+      <td>Controls the showing or hiding of files which are to be ignored.</td>
+   </tr>
+   <tr>
+      <td valign="top">Unresolved</td>
+      <td>Controls the showing or hiding of files which after a merge have merge conflicts.</td>
+   </tr>
+   <tr>
+      <td valign="top">Resolved</td>
+      <td>Controls the showing or hiding of files which have been merged since the last commit, and whose merge conflicts have been resolved.</td>
+   </tr>
+   <tr>
+      <td valign="top">Status Icons</td>
+      <td>Controls the showing or hiding of finder icons indicating the status of each of the files and folders that are displayed in the browser.</td>
+   </tr>
+</table>
+
+<div id="rule">
+   <hr />
+</div>
+
+<div id="linkinternalbox">
+   <h3>Related Topics</h3>
+
+   <p class="linkinternal"><a href="help:anchor=AboutMacHgDocuments bookID=MacHg Help">About MacHg Documents</a></p>
+
+   <p class="linkinternal"><a href="help:anchor=AboutTheBrowserView bookID=MacHg Help">View the files in a Repository</a></p>
+
+   <p class="linkinternal"><a href="help:anchor=AboutTheHistoryView bookID=MacHg Help">View the history of a Repository</a></p>
+
+   <p class="linkinternal"><a href="help:anchor=PullingChanges bookID=MacHg Help">Pull changes from other Repositories into your Repository</a></p>
+
+   <p class="linkinternal"><a href="help:anchor=PushingChanges bookID=MacHg Help">Push changes in your Repository to other Repositories</a></p>
+</div>
+</body>
+</html>

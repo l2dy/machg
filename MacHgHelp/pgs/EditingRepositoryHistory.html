@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Editing the History of a Repository</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta name="hatver" content="v2 R6"/>
+<meta name="builddefid" content="4111"/>
+<meta name="topicid" content="27594"/>
+<meta name="Keywords" content="edit history,history view, edit changesets, collapse changesets, strip changesets, rebase changesets,"/>
+<!-- do not translate -->
+<meta name="Keywords" content="MacHg, Mercurial, .hg" />
+<!-- end do not translate -->
+<meta name="description" content="How to make changes to existing changesets."/>
+<meta name="template" content="2031"/>
+<meta name="pagetype" content="Task"/>
+<meta name="project" content="MacHgHelp"/>
+<meta name="release" content=""/>
+<meta name="projectcomponent" content="SafariSnow"/>
+<link href="../sty/task.css" rel="stylesheet" type="text/css" media="all"/>
+<link href="../sty/print.css" rel="stylesheet" type="text/css" media="print"/>
+</head>
+
+<body id="apple-pd">
+<!--top navigation area-->
+
+<div id="navbox" class="gradient"> <a name="EditingRepositoryHistory"></a>
+
+   <div id="navleftbox"> <a class="navlink_left" href="help:anchor='access' bookID=MacHg Help">Home</a> </div>
+
+   <div id="navrightbox"> <a class="navlink_right" href="help:anchor='xall' bookID=MacHg Help">Index</a> </div>
+</div>
+<!--page head-->
+
+<div id="headerbox">
+
+   <div id="iconbox"> <img id="iconimg" src="../gfx/hgicon.png" alt="MacHg icon" height="32" width="32"/> </div>
+
+   <div id="pagetitle">
+      <h1>Editing the History of a Repository</h1>
+   </div>
+</div>
+
+<p>You can, if necessary, edit the history of a repository. In practice, many people want to be able to edit the history of a repository, and MacHg provides nice visual tools for doing such modifications. Editing the history means switching around the order of certain commits, collapsing a sequence of commits into a single commit, editing a commit message, moving commits from one branch to another, removing commits, etc.<a name="EditingHistoryWarning" id="EditingHistoryWarning"></a> </p>
+
+<div id="important-spacer">
+
+   <div class="important">
+      <p> <span class="important-prefix">Important:</span>In general, you should be an experienced user of Mercurial and MacHg before editing
+         a repository history. It is <em>strongly </em>recommended you clone your repository before performing any history altering operations. Some of the underlying Mercurial
+         commands to edit the history are in fact external commands not written by the core Mercurial team, and not officially part of the Mercurial distribution. Also, be aware
+         that if you have previously pushed a repository before altering its history, you must then somehow arrange to have the histories of all other instances of the repository correspondingly altered.</p>
+   </div>
+</div>
+
+<div class="task-box-spacing">
+
+   <div class="task-box-frame">
+      <h2>To edit the history of a repository:</h2>
+      <ol>
+         <li>
+            <p>If you have not already done so, choose MacHg &gt; Preferences..., go to the Mercurial tab in the preferences, and change the option History Editing from Disallowed to Allowed.</p>
+         </li>
+         <li>
+            <p>Choose the repository to alter in the <a href="help:anchor=AboutRepositoryLists bookID=MacHg Help">sidebar</a>.</p>
+         </li>
+         <li>
+            <p>If not already in the History view, switch to it (by selecting <em>History View</em> from the Document View menu).</p>
+         </li>
+         <li>
+            <p>From the Repository menu choose the appropriate history editing command: </p>
+            <ul id="taskauxlistbulletedplain">
+               <li>
+                  <p class="listparagraph"> <a href="help:anchor=RepositoryMenu_histedit bookID=MacHg Help">Edit Changesets...</a> to run the Mercurial  command 'histedit'. This will provide a semi-interactive way to edit a consecutive range of changesets.</p>
+               </li>
+               <li>
+                  <p class="listparagraph"> <a href="help:anchor=RepositoryMenu_collapse bookID=MacHg Help">Collapse Changesets...</a> to run the Mercurial command 'collapse'. This will take a consecutive range of changesets and collapse them into a single changeset.</p>
+               </li>
+               <li>
+                  <p class="listparagraph"> <a href="help:anchor=RepositoryMenu_strip bookID=MacHg Help">Strip Changesets...</a> to run the Mercurial command 'strip'. This will strip (delete) all child changesets from the selected revision downwards.</p>
+               </li>
+               <li>
+                  <p class="listparagraph"> <a href="help:anchor=RepositoryMenu_rebaase bookID=MacHg Help">Rebase Changesets...</a> to run the Mercurial command 'rebase'. This will move a revision and all its children from one branch to another.</p>
+               </li>
+            </ul>
+         </li>
+      </ol>
+   </div>
+</div>
+
+<p> Many of the history editing commands apply to a selected revision and all children derived from that revision, ie., the sub-tree of revisions rooted at the selected revision.</p>
+
+<div id="linkexternalbox">
+   <h3>External Links</h3>
+
+   <p class="linkexternal"><a href="http://mercurial.selenic.com/wiki/EditingHistory">Editing Repository History</a></p>
+</div>
+</body>
+</html>

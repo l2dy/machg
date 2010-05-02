@@ -1,0 +1,112 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Quick Start</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="hatver" content="v2 R6" />
+<meta name="builddefid" content="4105" />
+<meta name="topicid" content="26296" />
+<meta name="Keywords" content="rendesvous, rendezvous, bon jour, Bonjour, browsing" />
+<!-- do not translate -->
+<meta name="Keywords" content="MacHg, Mercurial, hg" />
+<!-- end do not translate -->
+<meta name="description" content="Quickly get started using MacHg." />
+<meta name="template" content="2029" />
+<meta name="pagetype" content="Task" />
+<meta name="project" content="SafariHelp" />
+<meta name="release" content="" />
+<meta name="projectcomponent" content="SafariSnow" />
+<link href="../sty/task.css" rel="stylesheet" type="text/css" media="all" />
+</head>
+
+<body id="apple-pd">
+<!--top navigation area-->
+
+<div id="navbox" class="gradient"> <a name="QuickStart"></a>
+
+   <div id="navleftbox"> <a class="navlink_left" href="help:anchor='access' bookID=MacHg Help">Home</a> </div>
+
+   <div id="navrightbox"> <a class="navlink_right" href="help:anchor='xall' bookID=MacHg Help">Index</a> </div>
+</div>
+<!--page head-->
+
+<div id="headerbox">
+
+   <div id="iconbox"> <img id="iconimg" src="../gfx/hgicon.png" alt="MacHg icon" height="32" width="32" /> </div>
+
+   <div id="pagetitle">
+      <h1>Quick Start</h1>
+   </div>
+</div>
+
+<h2>Mercurial</h2>
+
+<p>If you are not familiar with Mercurial or any other revision control system, then see one of the starting tutorials below or <a href="http://hgbook.red-bean.com/read/how-did-we-get-here.html">Definitive Guide : revision control primer</a></p>
+
+<h2>Create a new Repository</h2>
+
+<p>Open MacHg, then drag and drop a folder onto the left <a href="help:anchor=AboutRepositoryLists bookID=MacHg Help">sidebar</a>. If the folder contains an existing Mercurial repository, you have just started managing it with MacHg. If it is not an existing Mercurial repository, you will be given the option to transform the given folder into a Mercurial repository.</p>
+
+<h2>Add Files to the Repository</h2>
+
+<p>In the Browser View, select the entire contents of the folder you just added, ie all files and folders in the repository folder. With the files and folders selected, choose the menu Action &gt; &quot;Add Selected Files&quot;, to add the selected files to the new MacHg repository. These files are now marked for addition. Now choose the menu Action &gt; &quot;Commit Selected Files...&quot; to commit these changes. In the commit dialog enter an informative message like &quot;initializing my repository with the files that I want.&quot;</p>
+
+<h2>Perform operations on the Repository</h2>
+
+<p>Now in some external application (eg., xcode, bbedit, etc) make some edits to the files you have just added, and save your edits. Switch back to MacHg. You should see that the files are marked as modified in MacHg. Now select the modified files in MacHg again and choose the menu Action &gt; &quot;Diff Selected Files&quot;. After reviewing the differences, save these changes into the Mercurial repository using Action &gt; &quot;Commit Selected Files...&quot;</p>
+
+<h2>Add a Server</h2>
+
+<p>A <a href="help:anchor=AboutRepositories_ServerRepositories bookID=MacHg Help">server repository</a> is a repository that is resident on a server and not resident on your local machine. Since such a repository is on a server, MacHg can only record a <strong>reference</strong> to this remote repository. To work with a server repository you must first make a local clone of it on your machine, and then work with this local repository.</p>
+
+<p>To add an example server, choose Repository &gt; &quot;Add Server Repository...&quot;. In the ensuing dialog enter <strong>http://selenic.com/repo/hello</strong> in the Sever URL field, and enter an informative name in the short name field, eg. <em>hellorepo</em>. Click the button &quot;Bookmark Server&quot; to create the bookmark.</p>
+
+<p>Now with the new server bookmark selected in the sidebar, choose Repository &gt; &quot;Clone...&quot;. In the clone sheet that has popped up, enter a local path where you are going to clone this server to, together with a new shortname and hit &quot;Clone Repository&quot;. This will give you a local clone of the example repository, <em>hello</em>, which is resident on selenic.com (the creators of Mercurial). Then you can modify the files in this repository and commit them. (You can't push changes from your repository to selenic's <em>hello</em> repository because you are not allowed write access to this repository.)</p>
+
+<h2>Bonus Points! Create a BitBucket account</h2>
+
+<p>Go to <a href="http://bitbucket.org/">bitbucket</a> and create your own account. You can host a private repository (or public repository) there for free. After experimenting with the functionality, you can upgrade your account for other people on your team to access it, etc. (I have no relation to bitbucket; it's just a neat site if you are using Mercurial. Of course, if your company or team already has a Mercurial host somewhere, then use that...)</p>
+
+<div id="rule">
+   <hr />
+</div>
+
+<div id="linkinternalbox">
+   <h3>Related Topics</h3>
+
+   <p class="linkinternal"><a href="help:anchor=AboutMacHgDocuments bookID=MacHg Help">About MacHg Documents</a></p>
+
+   <p class="linkinternal"><a href="help:anchor=CreatingANewLocalRepository bookID=MacHg Help">Create a new Repository</a></p>
+
+   <p class="linkinternal"><a href="help:anchor=AddingExistingLocalRepository bookID=MacHg Help">Manage an existing Repository</a></p>
+
+   <p class="linkinternal"><a href="help:anchor=CloningARepository bookID=MacHg Help">Clone a Repository</a></p>
+
+   <p class="linkinternal"><a href="help:anchor=AboutTheBrowserView bookID=MacHg Help">View the files in a Repository</a></p>
+
+   <p class="linkinternal"><a href="help:anchor=AboutTheHistoryView bookID=MacHg Help">View the history of a Repository</a></p>
+
+   <p class="linkinternal"><a href="help:anchor=PullingChanges bookID=MacHg Help">Pull changes from other Repositories into your Repository</a></p>
+
+   <p class="linkinternal"><a href="help:anchor=PushingChanges bookID=MacHg Help">Push changes in your Repository to other Repositories</a></p>
+
+   <p class="linkinternal"><a href="help:anchor=MergingBranches bookID=MacHg Help">Merging your changes</a></p>
+</div>
+
+<div id="linkexternalbox">
+   <h3>External Mercurial Tutorials</h3>
+
+   <p class="linkexternal"><a href="http://mercurial.selenic.com/wiki/Tutorial">Official Mercurial Tutorial</a></p>
+
+   <p class="linkexternal"><a href="http://hginit.com/">Hg Init: a Mercurial tutorial</a></p>
+
+   <p class="linkexternal"><a href="http://mercurial.aragost.com/kick-start/">Mercurial Kick Start</a></p>
+
+   <p class="linkexternal"><a href="http://stevelosh.com/blog/2009/08/a-guide-to-branching-in-mercurial/">Branching in Mercurial</a></p>
+
+   <p class="linkexternal"><a href="http://hgbook.red-bean.com/read/a-tour-of-mercurial-merging-work.html">MDG: Merging work</a></p>
+
+   <p class="linkexternal"><a href="http://hgtip.com/">Mercurial tips</a></p>
+</div>
+</body>
+</html>

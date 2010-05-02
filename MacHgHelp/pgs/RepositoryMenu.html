@@ -1,0 +1,380 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>Operations in the Repository Menu</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta name="hatver" content="v2 R6"/>
+<meta name="builddefid" content="4151"/>
+<meta name="topicid" content="26821"/>
+<meta name="Keywords" content="repository menu, clone, pull, push,outgoing, update,merge, collapse changesets, collapse, edit changesets, edit,strip changesets, strip, rebase changesets,rebase, changesets, manifest, add tag, tag, add branch,branch, add local repository, local repository, add server repository, server repository, repository group, remove repository, configure, reveal, open terminal"/>
+<!-- do not translate -->
+<meta name="Keywords" content="MacHg, Mercurial, .hg"/>
+<!-- end do not translate -->
+<meta name="description" content="Operations available in the Repository menu."/>
+<meta name="template" content="2028"/>
+<meta name="pagetype" content="Task"/>
+<meta name="project" content="SafariHelp"/>
+<meta name="release" content=""/>
+<meta name="projectcomponent" content="SafariSnow"/>
+<link href="../sty/task.css" rel="stylesheet" type="text/css" media="all"/>
+<link href="../sty/print.css" rel="stylesheet" type="text/css" media="print"/>
+</head>
+
+<body id="apple-pd">
+<!--top navigation area-->
+
+<div id="navbox" class="gradient"> <a name="RepositoryMenu"></a>
+
+   <div id="navleftbox"> <a class="navlink_left" href="help:anchor='access' bookID=MacHg Help">Home</a> </div>
+
+   <div id="navrightbox"> <a class="navlink_right" href="help:anchor='xall' bookID=MacHg Help">Index</a> </div>
+</div>
+<!--page head-->
+
+<div id="headerbox">
+
+   <div id="iconbox"> <img id="iconimg" src="../gfx/hgicon.png" alt="MacHg icon" height="32" width="32"/> </div>
+
+   <div id="pagetitle">
+      <h1>Repository Menu</h1>
+   </div>
+</div>
+
+<p>The <strong>Repository menu</strong> is, in general, concerned with operations on a repository as a whole. (Operations on the files and folders in a repository are accessed via the <a href="help:anchor=ActionMenu bookID=MacHg Help">Action menu</a>.)</p>
+
+<p>MacHg provides a front end for many of the standard commands present in Mercurial's standard command set. Below is a list of the menu items in the Repository menu, together with their corresponding Mercurial versions. Also, with each Repository menu item there is a description of its availability and its corresponding operation.</p>
+
+<p>&nbsp;</p>
+<h3>Fundamental commands acting on repositories:</h3>
+
+<div class="two-col-description">
+
+   <div class="two-col-description-header">
+      <!-- note: primary text+text type will never be bulleted -->
+      <div class="two-col-description-header-left"> Menu Item </div>
+      <div class="two-col-description-header-right"> Operation </div>
+   </div>
+   <a name="clone" id="clone"></a>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Clone...</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#clone">clone</a></p>
+         <p><strong>Available:</strong> in all views when a local or server repository is selected in the <a href="help:anchor=AboutRepositoryLists bookID=MacHg Help">sidebar.</a> (Also available from the toolbar.)</p>
+         <p><strong>Operation:</strong> Performing this operation opens a clone sheet where you must specify a source repository to clone and a destination for the clone (duplicate) on your local file system. After filling out the fields on this sheet, the clone operation will make an exact duplicate of the selected repository and all its history at the location specified. In the advanced options section of the sheet you can specify further options which the Mercurial clone command can take. </p>
+         <p><strong>External Help:</strong> <a href="http://mercurial.selenic.com/wiki/Clone">clone wiki</a>, <a href="http://hgbook.red-bean.com/read/a-tour-of-mercurial-the-basics.html#id347526">MDG: Making a local copy of a repository</a></p>
+      </div>
+   </div>
+   <a name="pull" id="pull"></a>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Pull from...</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#pull">pull</a></p>
+         <p><strong>Available:</strong> in all views when a local or server repository is selected in the <a href="help:anchor=AboutRepositoryLists bookID=MacHg Help">sidebar</a>. (Also available from the toolbar.)</p>
+         <p><strong>Operation:</strong> Performing this operation opens a pull sheet. On the pull sheet the destination of the pull is the currently selected repository and you must select the source repository. The source repository is another compatible repository (or you can specify that you want to pull from incompatible repositories). Completing the pull operation will copy all the changesets that are in the source which are not in your local destination to your local destination repository. In the advanced options section of the sheet you can specify further options which the Mercurial pull command can take. </p>
+         <p><strong>External Help:</strong> <a href="http://mercurial.selenic.com/wiki/Pull">pull wiki</a>, <a href="http://hgbook.red-bean.com/read/a-tour-of-mercurial-the-basics.html#sec:tour:pull">MDG: Pulling changes from another repository</a></p>
+      </div>
+   </div>
+   <a name="push" id="push"></a>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Push to...</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#push">push</a></p>
+         <p><strong>Available:</strong> in all views when a local repository is selected in the <a href="help:anchor=AboutRepositoryLists bookID=MacHg Help">sidebar</a>. (Also available from the toolbar.) </p>
+         <p><strong>Operation:</strong> Performing this operation opens a push sheet. On the push sheet the source of the push is the currently selected repository and you must select the destination repository. The destination is another compatible repository (or you can specify that you want to push to incompatible repositories). Completing the push operation will send all the changesets you have in your source which are not in the destination to the destination. In the advanced options section of the sheet you can specify further options which the Mercurial push command can take. </p>
+         <p><strong>External Help: <a href="http://mercurial.selenic.com/wiki/Push">push wiki</a>,</strong> <a href="http://hgbook.red-bean.com/read/a-tour-of-mercurial-the-basics.html#id348825">MDG: Pushing changes to another repository</a></p>
+      </div>
+   </div>
+   <a name="incoming" id="incoming"></a>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Incoming...</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#incmong">incoming</a></p>
+         <p><strong>Available:</strong> in all views when a local or server repository is selected in the <a href="help:anchor=AboutRepositoryLists bookID=MacHg Help">sidebar</a>. (Also available from the toolbar.)</p>
+         <p><strong>Operation:</strong> Performing this operation opens an incoming sheet. On the incoming sheet the destination for the comparison is the currently selected repository and you must select the source repository. The source repository is another compatible repository (or you can specify that you want to view changes from incompatible repositories). Completing the incoming operation will print a summary of all the changesets in the source repository which are not in your local destination repository. In the advanced options section of the sheet you can specify further options which the Mercurial incoming command can take. </p>
+         <p><strong>External Help:</strong> <a href="http://hgbook.red-bean.com/read/a-tour-of-mercurial-the-basics.html#sec:tour:pull">MDG: Pulling changes from another repository</a></p>
+      </div>
+   </div>
+   <a name="outgoing" id="outgoing"></a>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Outgoing...</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#outgoing">outgoing</a></p>
+         <p><strong>Available:</strong> in all views when a local repository is selected in the <a href="help:anchor=AboutRepositoryLists bookID=MacHg Help">sidebar</a>. (Also available from the toolbar.)</p>
+         <p><strong>Operation:</strong> Performing this operation opens an outgoing sheet. On the outgoing sheet the source for the comparison is the currently selected repository and you must select the destination repository. The destination is another compatible repository (or you can specify that you want to push to incompatible repositories). Completing the outgoing operation will print a summary of all the changesets in the source repository which are not present in the destination repository. In the advanced options section of the sheet you can specify further options which the Mercurial outgoing command can take. </p>
+         <p><strong>External Help:</strong> <a href="http://hgbook.red-bean.com/read/a-tour-of-mercurial-the-basics.html#id348825">MDG: Pushing changes to another repository</a></p>
+      </div>
+   </div>
+</div>
+
+<div class="clear-two-col-description"></div>
+<h3>Commands for updating and merging a local repository:</h3>
+
+<div class="two-col-description">
+
+   <div class="two-col-description-header">
+      <!-- note: primary text+text type will never be bulleted -->
+      <div class="two-col-description-header-left"> Menu Item </div>
+      <div class=" two-col-description-header-right"> Operation </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Update Repository</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#update">update</a></p>
+         <p><strong>Available: </strong>in the Browser and History views when a local repository is selected in the <a href="help:anchor=AboutRepositoryLists bookID=MacHg Help">sidebar</a>.</p>
+         <p><strong>Operation:</strong> Updates the working revision of the repository to the head of the current branch. The Repository menu item &quot;Update Repository &quot; acts differently from the Action menu item  &quot;Revert All Files&quot;. The latter only changes the contents of all the repository files whereas the former will change the contents of the repository files <strong>and</strong> change the working revision of the repository to the head of the current branch.</p>
+         <p><strong>External Help:</strong> <a href="http://mercurial.selenic.com/wiki/Update">update wiki</a>, <a href="http://hgbook.red-bean.com/read/a-tour-of-mercurial-the-basics.html#id348343">MDG: Updating the working directory</a></p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Update Repository to Version...</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#update">update --rev</a></p>
+         <p><strong>Available: </strong>in all views when a local repository is selected in the <a href="help:anchor=AboutRepositoryLists bookID=MacHg Help">sidebar</a>.</p>
+         <p><strong>Operation:</strong> Performing this operation opens an update sheet. After choosing a version to update to, you can then update the working revision of the repository to the specified revision. The Repository menu item &quot;Update Repository to version...&quot; acts differently from the Action menu item  &quot;Revert All Files to Version...&quot;. The latter only changes the contents of all the repository files whereas the former will change the contents of the repository files <strong>and</strong> change the working revision of the repository to the specified revision.</p>
+         <p><strong>External Help:</strong> <a href="http://mercurial.selenic.com/wiki/Update">update wiki</a>, <a href="http://hgbook.red-bean.com/read/a-tour-of-mercurial-the-basics.html#id348343">MDG: Updating the working directory</a></p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Merge</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#merge">merge</a></p>
+         <p><strong>Available: </strong>in the Browser and History views when a local repository with more than one branch is selected in the <a href="help:anchor=AboutRepositoryLists bookID=MacHg Help">sidebar</a>.</p>
+         <p><strong>Operation:</strong> Performing this operation opens a merge sheet. After choosing a version to merge with, you can then merge the working revision of the repository with the specified revision.</p>
+         <p><strong>External Help:</strong> <a href="http://mercurial.selenic.com/wiki/Merge">merge wiki</a>, <a href="http://hgbook.red-bean.com/read/a-tour-of-mercurial-merging-work.html">MDG: Merging work</a></p>
+      </div>
+   </div>
+</div>
+
+<div class="clear-two-col-description"></div>
+<h3> Commands Editing local Repository History:</h3>
+
+<div class="two-col-description">
+
+   <div class="two-col-description-header">
+      <!-- note: primary text+text type will never be bulleted -->
+      <div class="two-col-description-header-left"> Menu Item </div>
+      <div class=" two-col-description-header-right"> Operation </div>
+   </div>
+   <a name="RepositoryMenu_collapse"></a>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Collapse Changesets...</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://mercurial.selenic.com/wiki/CollapseExtension">collapse extension</a></p>
+         <p><strong>Available:</strong> in the History view when a local repository is selected in the <a href="help:anchor=AboutRepositoryLists bookID=MacHg Help">sidebar</a>.</p>
+         <p><strong>Operation:</strong> Performing this operation opens a collapse sheet. On this sheet you must choose a consecutive range of revisions to collapse into a single revision. After completing this sheet, a further sheet will present a combined message for the range of commits which are getting collapsed into a single commit. After editing this new commit message as appropriate, the revisions will be collapsed.</p>
+         <p><strong>External Help:</strong> <a href="http://mercurial.selenic.com/wiki/EditingHistory">Editing Repository History</a></p>
+      </div>
+   </div>
+   <a name="RepositoryMenu_histedit"></a>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Edit Changesets...</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://mercurial.selenic.com/wiki/HisteditExtension">histedit extension</a></p>
+         <p><strong>Available:</strong> in the History view when a local repository is selected in the <a href="help:anchor=AboutRepositoryLists bookID=MacHg Help">sidebar</a>.</p>
+         <p><strong>Operation:</strong> Performing this operation opens a history editing sheet. On this sheet you must choose a starting revision. This chosen revision, together with all child revisions of this chosen revision, will be edited. After choosing the starting revision, a further sheet is presented where you can elect to move a revision, edit a revision, fold a revision into the previous revision, or drop a revision. See the <a href="http://mercurial.selenic.com/wiki/HisteditExtension">histedit extension</a> for further details.</p>
+         <p><strong>External Help:</strong> <a href="http://mercurial.selenic.com/wiki/EditingHistory">Editing Repository History</a></p>
+      </div>
+   </div>
+   <a name="RepositoryMenu_strip"></a>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Strip Changesets...</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://mercurial.selenic.com/wiki/Strip">strip extension</a></p>
+         <p><strong>Available:</strong> in the History view when a local repository is selected in the <a href="help:anchor=AboutRepositoryLists bookID=MacHg Help">sidebar</a>.</p>
+         <p><strong>Operation:</strong> Performing this operation opens a strip sheet. On this sheet you must choose a starting revision. On completing the strip operation, the chosen revision together with all child revisions of the chosen revision will be striped, and the repository will be updated to the first parent of the removed revision.</p>
+         <p><strong>External Help:</strong> <a href="http://mercurial.selenic.com/wiki/EditingHistory">Editing Repository History</a></p>
+      </div>
+   </div>
+   <a name="RepositoryMenu_rebase"></a>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Rebase Changesets...</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://mercurial.selenic.com/wiki/RebaseExtension">rebase extension</a></p>
+         <p><strong>Available:</strong> in the History view when a local repository is selected in the <a href="help:anchor=AboutRepositoryLists bookID=MacHg Help">sidebar</a>.</p>
+         <p><strong>Operation:</strong> Performing this operation opens a rebase sheet.  On this sheet you must choose a source revision and a destination revision on a different branch. On completing the rebase operation, the source revision together with all child revisions of the source revision will be moved from their current branch onto the branch of the destination and become children of the destination revision.</p>
+         <p><strong>External Help:</strong> <a href="http://mercurial.selenic.com/wiki/EditingHistory">Editing Repository History</a></p>
+      </div>
+   </div>
+</div>
+
+<div class="clear-two-col-description"></div>
+<h3> Commands involving all files in a repository:</h3>
+
+<div class="two-col-description">
+
+   <div class="two-col-description-header">
+      <!-- note: primary text+text type will never be bulleted -->
+      <div class="two-col-description-header-left"> Menu Item </div>
+      <div class=" two-col-description-header-right"> Operation </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Manifest</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#manifest">manifest</a></p>
+         <p><strong>Available: </strong>in the Browser and History views when a revision is selected<a href="help:anchor=AboutRepositoryLists bookID=MacHg Help"></a>.</p>
+         <p><strong>Operation:</strong> Prints a list of version controlled files of the currently selected revision in the log list.</p>
+         <p><strong>External Help:</strong> <a href="http://mercurial.selenic.com/wiki/Commit">commit wiki</a>, <a href="http://hgbook.red-bean.com/read/a-tour-of-mercurial-the-basics.html#id347526">MDG: Writing a commit message</a></p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Add Revision Label...</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#tag">tag</a>, <a href="http://www.selenic.com/mercurial/hg.1.html#branch">branch</a></p>
+         <p><strong>Available:</strong>in the Browser and History views when a revision is selected<a href="help:anchor=AboutRepositoryLists bookID=MacHg Help"></a>.</p>
+            <p><strong>Operation:</strong> Performing this operation opens a sheet where you can add a label, be it a local tag, global tag, bookmark, or branch. You need to choose the name of the label and the revision to be labeled.</p>
+         <p><strong>External Help:</strong> <a href="http://mercurial.selenic.com/wiki/Branch">branch wiki</a>, <a href="http://stevelosh.com/blog/2009/08/a-guide-to-branching-in-mercurial/">SJL: Branching in Mercurial</a></p>
+      </div>
+   </div>
+</div>
+
+<div class="clear-two-col-description"></div>
+<h3> Commands for adding, removing and configuring repositories:</h3>
+
+<div class="two-col-description">
+
+   <div class="two-col-description-header">
+      <!-- note: primary text+text type will never be bulleted -->
+      <div class="two-col-description-header-left"> Menu Item </div>
+      <div class=" two-col-description-header-right"> Operation </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Add Local Repository...</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial concept:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#init">init</a> / -</p>
+         <p><strong>Available:</strong> Always.</p>
+         <p><strong>Operation:</strong> Adds to the current document (a <strong>reference</strong> to) an existing local repository, or  <strong>creates</strong> a new local repository and adds (a reference to) this to the current document. Once you have added (the reference to) the repository to your MacHg document, you can manage this repository using the functionality of MacHg.</p>
+         <p><strong>Help: </strong><a href="help:anchor=AddingExistingLocalRepository bookID=MacHg Help">Adding an existing local repository</a>, <a href="CreatingANewLocalRepository copy.html">Creating a new local repository</a></p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Add Server Repository</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial concept:</strong> -</p>
+         <p><strong>Available:</strong> Always.</p>
+         <p><strong>Operation: </strong> Adds to the current document a <strong>reference</strong> to an external repository (i.e., a repository on a server external to your machine). Once you have such a reference to an external repository in your MacHg document, you can interact with that external repository using the functionality of MacHg. For instance, you can <a href="help:anchor=CloningARepository bookID=MacHg Help">clone</a> the external repository to a local repository, you can <a href="help:anchor=PushingChanges bookID=MacHg Help">push</a> or <a href="help:anchor=PullingChanges bookID=MacHg Help">pull</a> changes from your local clone of the repository to the external repository, etc.</p>
+         <p><strong>Help:</strong> <a href="help:anchor=AddingServerRepository bookID=MacHg Help">Adding a server repository</a></p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Add New Repository Group</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> -<a href="http://www.selenic.com/mercurial/hg.1.html#annotate"></a></p>
+         <p><strong>Available: </strong>Always.</p>
+         <p><strong>Operation:</strong> Adds a grouping folder to the left <a href="help:anchor=AboutRepositoryLists bookID=MacHg Help">sidebar</a>. You can drag and drop repository references into the grouping folders, and change the titles of these groups. The left <a href="help:anchor=AboutRepositoryLists bookID=MacHg Help">sidebar</a> acts like a standard Document sidebar in OS X.</p>
+         <p><strong>Help:</strong> <a href="help:anchor=AddingRepositoryGroup bookID=MacHg Help">Adding a Repository Group</a></p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Remove Repository Item</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> -<a href="http://www.selenic.com/mercurial/hg.1.html#rollback"></a></p>
+         <p><strong>Available: </strong>when a repository or a repository group is selected.</p>
+         <p><strong>Operation:</strong> Removes the reference to the selected repository or <a href="help:anchor=EditingRepositoryHistory bookID=MacHg Help"></a>repository group. If you  select a local repository in the <a href="help:anchor=AboutRepositoryLists bookID=MacHg Help">sidebar</a>, then in addition to removing the reference to this repository, performing this operation allows you to choose to delete the underlying repository on your local machine as well.</p>
+         <p><strong>External Help:</strong> <a href="help:anchor=RemovingRepositoryItem bookID=MacHg Help">Removing a Repository Item</a><a href="http://hgbook.red-bean.com/read/finding-and-fixing-mistakes.html#id391000"></a></p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Configure Selected Repository...</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> -<a href="http://www.selenic.com/mercurial/hg.1.html#rollback"></a></p>
+         <p><strong>Available: </strong>when a repository is selected.</p>
+         <p><strong>Operation:</strong> Opens up a sheet where you can change the path to the repository if the repository is local, or change its URL if the repository is a server reference. Also here you can change the shortname of the repository. </p>
+      </div>
+   </div>
+</div>
+
+<div class="clear-two-col-description"></div>
+<h3> Commands for externally interacting with repositories:</h3>
+
+<div class="two-col-description">
+
+   <div class="two-col-description-header">
+      <!-- note: primary text+text type will never be bulleted -->
+      <div class="two-col-description-header-left"> Menu Item </div>
+      <div class=" two-col-description-header-right"> Operation </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Reveal in Finder</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#manifest">-</a></p>
+         <p><strong>Available: </strong>in all views.</p>
+         <p><strong>Operation:</strong> Switches to the finder and reveal the selected files or repository. </p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Open Terminal Here</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> -</p>
+         <p><strong>Available:</strong> in multiple views.</p>
+         <p><strong>Operation:</strong> Switches to the terminal application and changes the working directory in the terminal to the directory of the selected files or the selected repository. </p>
+      </div>
+   </div>
+</div>
+
+<div class="clear-two-col-description"></div>
+</body>
+</html>
