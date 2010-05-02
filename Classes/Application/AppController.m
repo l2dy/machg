@@ -372,12 +372,12 @@
 }
 - (IBAction) openBugReportPage:(id)sender
 {
-	NSURL* bugReportPage = [NSURL URLWithString:@"http://bitbucket.org/jfh/MacHg/issues/"];
+	NSURL* bugReportPage = [NSURL URLWithString:@"http://bitbucket.org/jfh/machg/issues/"];
 	[[NSWorkspace sharedWorkspace] openURL:bugReportPage];
 }
 - (IBAction) openRelaseNotes:(id)sender
 {
-	NSURL* bugReportPage = [NSURL URLWithString:@"http://www.jasonfharris.com/MacHg/releasenotes.html"];
+	NSURL* bugReportPage = [NSURL URLWithString:@"http://www.jasonfharris.com/MacHg/downloads/RealeaseNotes/releaseNotes.html"];
 	[[NSWorkspace sharedWorkspace] openURL:bugReportPage];
 }
 
