@@ -368,7 +368,7 @@
 - (IBAction) openQuickStartPage:(id)sender
 {
 	NSString* locBookName = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleHelpBookName"];
-	[[NSHelpManager sharedHelpManager] openHelpAnchor:@"PageStartQuickStart" inBook:locBookName];
+	[[NSHelpManager sharedHelpManager] openHelpAnchor:@"QuickStart" inBook:locBookName];
 }
 - (IBAction) openBugReportPage:(id)sender
 {
@@ -377,7 +377,7 @@
 }
 - (IBAction) openRelaseNotes:(id)sender
 {
-	NSURL* bugReportPage = [NSURL URLWithString:@"http://www.jasonfharris.com/MacHg/downloads/RealeaseNotes/releaseNotes.html"];
+	NSURL* bugReportPage = [NSURL URLWithString:@"http://www.jasonfharris.com/machg/downloads/notes/releasenotes.html"];
 	[[NSWorkspace sharedWorkspace] openURL:bugReportPage];
 }
 

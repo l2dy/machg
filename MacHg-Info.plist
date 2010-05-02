@@ -58,6 +58,6 @@
 	<key>SUPublicDSAKeyFile</key>
 	<string>macHgPublicKey_dsa.pem</string>
 	<key>SUFeedURL</key>
-	<string>http://jasonfharris.com/MacHg/MacHgAppcast.xml</string>
+	<string>http://jasonfharris.com/machg/machg_appcast.xml</string>
 </dict>
 </plist>
