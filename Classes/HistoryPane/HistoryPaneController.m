@@ -172,6 +172,20 @@
 // MARK:  Labels Actions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+- (IBAction) labelsMenuMoveChosenLabel:(id) sender
+{
+	LabelData* label = [theLabelsTableView_ chosenLabel];
+	if (!label)
+	{
+		PlayBeep();
+		NSRunAlertPanel(@"No Label Selected", @"You need to select a label first to move it", @"Ok", nil, nil);
+		return;
+	}
+	[[myDocument theAddLabelSheetController] openAddLabelSheetForMoveLabel:label];
+}
+
+
+
 - (IBAction) labelsMenuRemoveChosenLabel:(id) sender
 {
 	LabelData* label = [theLabelsTableView_ chosenLabel];
@@ -296,6 +310,7 @@
 
 	// HistoryPane contextual items
 	if (theAction == @selector(labelsMenuAddLabelToCurrentRevision:))			return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryPane];
+	if (theAction == @selector(labelsMenuMoveChosenLabel:))						return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryPane] && [theLabelsTableView_ chosenLabel] && ![[theLabelsTableView_ chosenLabel] isOpenHead];
 	if (theAction == @selector(labelsMenuRemoveChosenLabel:))					return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryPane] && [theLabelsTableView_ chosenLabel] && ![[theLabelsTableView_ chosenLabel] isOpenHead];
 	// -------
 	if (theAction == @selector(labelsMenuUpdateRepositoryToChosenRevision:))	return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryPane] && [theLabelsTableView_ chosenLabel];

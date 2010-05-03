@@ -12,7 +12,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="344"/>
+			<integer value="945"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1874,6 +1874,14 @@
 						<reference key="NSOnImage" ref="591860921"/>
 						<reference key="NSMixedImage" ref="550118683"/>
 					</object>
+					<object class="NSMenuItem" id="908562197">
+						<reference key="NSMenu" ref="38680503"/>
+						<string key="NSTitle">Move Label...</string>
+						<string key="NSKeyEquiv"/>
+						<int key="NSMnemonicLoc">2147483647</int>
+						<reference key="NSOnImage" ref="591860921"/>
+						<reference key="NSMixedImage" ref="550118683"/>
+					</object>
 					<object class="NSMenuItem" id="130705725">
 						<reference key="NSMenu" ref="38680503"/>
 						<string key="NSTitle">Delete Label</string>
@@ -2417,6 +2425,14 @@
 						<reference key="destination" ref="610587452"/>
 					</object>
 					<int key="connectionID">980</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">labelsMenuMoveChosenLabel:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="908562197"/>
+					</object>
+					<int key="connectionID">983</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -3203,6 +3219,7 @@
 							<reference ref="654669701"/>
 							<reference ref="130705725"/>
 							<reference ref="459589586"/>
+							<reference ref="908562197"/>
 						</object>
 						<reference key="parent" ref="0"/>
 						<string key="objectName">Menu (LabelsContextualMenu)</string>
@@ -3340,6 +3357,11 @@
 						<reference key="object" ref="577052666"/>
 						<reference key="parent" ref="886653824"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">981</int>
+						<reference key="object" ref="908562197"/>
+						<reference key="parent" ref="38680503"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -3476,6 +3498,7 @@
 					<string>976.IBPluginDependency</string>
 					<string>977.IBPluginDependency</string>
 					<string>978.IBPluginDependency</string>
+					<string>981.IBPluginDependency</string>
 				</object>
 				<object class="NSMutableArray" key="dict.values">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -3593,13 +3616,14 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{252, 539}, {256, 73}}</string>
+					<string>{{252, 519}, {256, 93}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>ScrollToForLogTable</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3627,7 +3651,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">980</int>
+			<int key="maxID">983</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3646,6 +3670,7 @@
 							<string>historyMenuRevertAllToChosenRevision:</string>
 							<string>historyMenuUpdateRepositoryToChosenRevision:</string>
 							<string>historyMenuViewRevisionDifferences:</string>
+							<string>labelsMenuMoveChosenLabel:</string>
 							<string>labelsMenuRemoveChosenLabel:</string>
 							<string>labelsMenuUpdateRepositoryToChosenRevision:</string>
 							<string>mainMenuCollapseChangesets:</string>
@@ -3656,6 +3681,7 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -3695,7 +3721,7 @@
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/HistoryPane/HistoryPaneController.h</string>
+						<string key="minorKey">../MacHg/Classes/HistoryPane/HistoryPaneController.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -3722,9 +3748,9 @@
 							<string>NSView</string>
 						</object>
 					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="128148769">
+					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="204147408">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/HistoryPane/JHAccordionView.h</string>
+						<string key="minorKey">../MacHg/Classes/HistoryPane/JHAccordionView.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -3757,7 +3783,7 @@
 							<string>JHAccordionSubView</string>
 						</object>
 					</object>
-					<reference key="sourceIdentifier" ref="128148769"/>
+					<reference key="sourceIdentifier" ref="204147408"/>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">JHAccordionView</string>
@@ -3827,7 +3853,7 @@
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/LanelsPane/LabelsTableView.h</string>
+						<string key="minorKey">Classes/LabelsModel/LabelsTableView.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -3835,15 +3861,15 @@
 					<string key="superclassName">NSImageCell</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/LogEntryModel/LogGraphCell.h</string>
+						<string key="minorKey">../MacHg/Classes/LogEntryModel/LogGraphCell.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">LogTableTextFieldCell</string>
 					<string key="superclassName">NSTextFieldCell</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="71114144">
+					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="390752744">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/LogEntryModel/LogTableView.h</string>
+						<string key="minorKey">../MacHg/Classes/LogEntryModel/LogTableView.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -3883,7 +3909,7 @@
 							<string>id</string>
 						</object>
 					</object>
-					<reference key="sourceIdentifier" ref="71114144"/>
+					<reference key="sourceIdentifier" ref="390752744"/>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">MacHgDocument</string>
@@ -4112,7 +4138,7 @@
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/UtilityClasses/ScrollToForLogTable/ScrollToForLogTable.h</string>
+						<string key="minorKey">../MacHg/Classes/UtilityClasses/ScrollToForLogTable/ScrollToForLogTable.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -4149,7 +4175,6 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>defaultActionTarget_</string>
 							<string>informationTextView_</string>
 							<string>myDocument</string>
 							<string>repositoryPathControl_</string>
@@ -4157,7 +4182,6 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
 							<string>NSTextView</string>
 							<string>MacHgDocument</string>
 							<string>NSPathControl</string>
@@ -4645,6 +4669,20 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">QuartzCore.framework/Headers/CIImageProvider.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">Sparkle.framework/Headers/SUAppcast.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">Sparkle.framework/Headers/SUUpdater.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">

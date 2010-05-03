@@ -65,6 +65,7 @@
 - (IBAction) mainMenuHistoryEditChangesets:(id)sender;
 
 // LabelsTableView Contextual Menu
+- (IBAction) labelsMenuMoveChosenLabel:(id) sender;
 - (IBAction) labelsMenuRemoveChosenLabel:(id) sender;
 - (IBAction) labelsMenuUpdateRepositoryToChosenRevision:(id)sender;
 

@@ -57,4 +57,6 @@ typedef enum
 - (IBAction) didSelectSegment:(id)sender;
 - (IBAction) didChangeFieldContents:(id)sender;
 
+- (void)	 openAddLabelSheetForMoveLabel:(LabelData*)label;
+
 @end
