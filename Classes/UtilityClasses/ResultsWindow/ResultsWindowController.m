@@ -22,7 +22,9 @@
 	NSSize resultsSize = [results size];
 	NSSize newSize;
 	newSize.width  = MAX(resultsSize.width,  titleSize.width);
+	newSize.width  = MIN(1000, newSize.width);
 	newSize.height = MAX(resultsSize.height, titleSize.height);
+	newSize.height = MIN(720, newSize.height);
 	newSize.width  += 40;
 	newSize.height += 70;
 
