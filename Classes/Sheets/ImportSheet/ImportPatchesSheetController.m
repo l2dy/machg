@@ -148,11 +148,11 @@
 {
 	
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
-	NSMutableArray* argsImport = [NSMutableArray arrayWithObjects:@"import", nil];
 	BOOL canClose = NO;
 
 	while (true)
 	{
+		NSMutableArray* argsImport = [NSMutableArray arrayWithObjects:@"import", nil];
 		if ([[patchesTable patches] count] <= 0)
 		{
 			canClose = YES;
