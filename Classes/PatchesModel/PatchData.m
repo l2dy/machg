@@ -160,7 +160,7 @@
 		dateRegEx   = @"^# Date (.*)$";
 		parentRegEx = @"^# Parent (.*)$";
 		nodeRegEx   = @"^# Node ID (.*)$";
-		commitMessageRegEx = [NSString stringWithFormat:@"(?:#.*%@)*(.*)", linebreak];
+		commitMessageRegEx = [NSString stringWithFormat:@"(?:#.*?%@)*(.*)", linebreak];
 	}
 
 	NSArray* parts = [contents captureComponentsMatchedByRegex:headerRegEx options:RKLDotAll range:NSMaxiumRange error:NULL];
