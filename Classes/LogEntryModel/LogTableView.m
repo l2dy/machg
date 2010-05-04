@@ -241,10 +241,10 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	
 	while (YES)
 	{
-		if (aval >= rval)
-			return a;
-		if (bval <= rval)
-			return b;
+		if (aval >= rval && bval >= rval)
+			return aval < bval ? a : b;
+		if (aval <= rval && bval <= rval)
+			return aval > bval ? a : b;
 		if (abs(a-b) <= 1)
 			return (abs(aval - rval) <= abs(bval - rval)) ? a : b;
 
@@ -353,7 +353,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 {
 	NSIndexSet* rows = [self selectedRowIndexes];
 	dispatch_async(mainQueue(), ^{
-		[self scrollToRangeOfRevisions:MakeLowHighPair([rows firstIndex],[rows lastIndex])];
+		[self  scrollToRangeOfRowsLow:[rows firstIndex] high:[rows lastIndex]];
 	});
 }
 
@@ -385,7 +385,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	if (IsEmpty(indexSet))
 		return;
 	dispatch_async(mainQueue(), ^{
-		[self scrollToRangeOfRevisions:MakeLowHighPair([indexSet firstIndex],[indexSet lastIndex])];
+		[self  scrollToRangeOfRowsLow:[indexSet firstIndex] high:[indexSet lastIndex]];
 		[self selectRowIndexes:indexSet byExtendingSelection:NO];
 	});
 }
