@@ -19,7 +19,7 @@
 // Constants
 // ------------------------------------------------------------------------------------------------------------------------------
 // General Constants: constants being with lower k, eg kRepositoryDataDidChange
-// Preference constants are prefixed with the BTS prefix, eg BTSShowModifiedFilesInBrowser
+// Preference constants are prefixed with the MHG prefix, eg MHGShowModifiedFilesInBrowser
 
 
 // Private Members
@@ -213,7 +213,7 @@
 //		Ie it starts out as just a revision number and then it can be filled out to include basic information, and then later filled
 //		out further to include all of the detailed information on a revision.
 // 2. RepositoryData:
-//		This is the collection of all of the Log Entries, and the information about all the labels, tags, parents, tec. It is a
+//		This is the collection of all of the Log Entries, and the information about all the labels, tags, parents, etc. It is a
 //		progressive collection in that it starts out mostly empty but as we scroll through the history we start to fill up this
 //		collection with more and more LogEntries as the entries come into view. As information is built up the collection accumulates
 //		information on the parents and children of each revision. The labels (tags, branches, bookmarks) are loaded separately, but are
@@ -296,11 +296,34 @@
 // SCEvents
 // ------------------------------------------------------------------------------------------------------------------------------
 // These are used to detect underlying file changes. Unfortunately we have to turn these off when doing underlying mercurial
-// commands since mercurial creates temp files while executing many of its commands. I wish Mercurial would do this in a temporary
-// directory (Maybe I just need to specify some advanced option I am not familiar with?). Because right now Mercurial while
-// executing commands generates temp files in its main directory, which triggers a refresh which creates another temporary file,
-// which can trigger another refresh, etc. (Why don't they use some tmp directory? I am sure its easy enough to get hold of...)
-// So to be on the safe side while executing mercurial commands the tracking of file events is unfortunately turned off.
+// commands since mercurial creates temp files while executing many of its commands. Actually the version of Mercurial shipping
+// with MacHg is slightly modified to turn off this behavior which I might consider buggy in any case. The changes are in util.py.
+// You can simply diff the file from the original source files if you want but basically the diff is here.
+
+- Use the standard temp directory rather than the given directory since it stops racing on
+  OSX.
+
+diff --git a/LocalMercurial/mercurial/util.py b/LocalMercurial/mercurial/util.py
+--- a/LocalMercurial/mercurial/util.py
++++ b/LocalMercurial/mercurial/util.py
+@@ -641,7 +641,7 @@
+ 
+     try:
+         EXECFLAGS = stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH
+-        fh, fn = tempfile.mkstemp("", "", path)
++        fh, fn = tempfile.mkstemp(dir=None,prefix='hg-check-exec-')
+         try:
+             os.close(fh)
+             m = os.stat(fn).st_mode & 0777
+@@ -659,7 +659,7 @@
+     """check whether the given path is on a symlink-capable filesystem"""
+     # mktemp is not racy because symlink creation will fail if the
+     # file already exists
+-    name = tempfile.mktemp(dir=path)
++    name = tempfile.mktemp(dir=None)
+     try:
+         os.symlink(".", name)
+         os.unlink(name)
 
 
 // General Category Extensions
