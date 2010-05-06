@@ -1,7 +1,7 @@
 MacHg
 -------------------------------
 MacHg is a GUI client for Mercurial. It runs under OSX 10.6 (Snow leopard). It
-is free to use and donation ware. It was written by Jason F Harris. The inital
+is free to use and donation ware. It was written by Jason F Harris. The initial
 public release was version 0.9.0 released 3rd May 2010. It is licensed under the
 "New BSD License" (see the file License.txt)
 
