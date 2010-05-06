@@ -14,7 +14,7 @@
 {
 	IBOutlet NSTextField*	titleMessageTextField;
 	IBOutlet NSTextView*	resultsMessageTextView;
-	IBOutlet NSWindow*		resultsWIndow;
+	IBOutlet NSWindow*		resultsWindow;
 	IBOutlet NSButton*		okButtonForResultsWindow;
 	
 	NSString*				pendingMessage;
@@ -23,7 +23,7 @@
 
 - (IBAction) doneWithResults:(id)sender;
 
-- (ResultsWindowController*) initWithMessage:(NSString*)message andResults:(NSAttributedString*)results andWindowTitle:(NSString*)windowTitle;
+- (ResultsWindowController*)   initWithMessage:(NSString*)message andResults:(NSAttributedString*)results andWindowTitle:(NSString*)windowTitle;
 + (ResultsWindowController*) createWithMessage:(NSString*)message andResults:(NSAttributedString*)results andWindowTitle:(NSString*)windowTitle;
 
 @end

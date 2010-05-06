@@ -25,19 +25,19 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 	NSSize resultsSize = [results size];
 	NSSize newSize;
 	
-	NSRect visibleFrame = [[resultsWIndow screen] visibleFrame];
+	NSRect visibleFrame = [[resultsWindow screen] visibleFrame];
 	
 	newSize.width   = constrain(MAX(resultsSize.width,  titleSize.width)  + 40, 50, visibleFrame.size.width  - 20);
 	newSize.height  = constrain(MAX(resultsSize.height, titleSize.height) + 70, 50, visibleFrame.size.height - 20);
 
 	NSSize currentSize = [resultsMessageTextView frame].size;
-	NSRect f = [resultsWIndow frame];
+	NSRect f = [resultsWindow frame];
 	f.size.width  += (newSize.width  - currentSize.width);
 	f.size.height += (newSize.height - currentSize.height);
-	[resultsWIndow setFrame:f display:YES];
-	[resultsWIndow setTitle:windowTitle];
-	[resultsWIndow makeKeyAndOrderFront:self];
-	[resultsWIndow makeFirstResponder:okButtonForResultsWindow];
+	[resultsWindow setFrame:f display:YES];
+	[resultsWindow setTitle:windowTitle];
+	[resultsWindow makeKeyAndOrderFront:self];
+	[resultsWindow makeFirstResponder:okButtonForResultsWindow];
 
 	return self;
 }
@@ -50,7 +50,7 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 
 - (IBAction) doneWithResults:(id)sender
 {
-	[resultsWIndow close];
+	[resultsWindow close];
 }
 
 @end
