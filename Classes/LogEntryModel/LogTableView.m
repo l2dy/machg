@@ -337,6 +337,30 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	return MakeLowHighPair(MIN(firstRev, lastRev), MAX(firstRev, lastRev));
 }
 
+- (LowHighPair) parentToHighestSelectedRevisions
+{
+	NSIndexSet* rows = [self selectedRowIndexes];
+	if (!rows || IsEmpty(rows))
+		return MakeLowHighPair(NSNotFound, NSNotFound);
+	
+	NSString* firstRev    = [self revisionForTableRow:[rows firstIndex]];
+	NSString* lastRev     = [self revisionForTableRow:[rows lastIndex]];
+	NSInteger firstRevInt = stringAsInt(firstRev);
+	NSInteger lastRevInt  = stringAsInt(lastRev);
+	NSInteger lowRevInt   = MIN(firstRevInt, lastRevInt);
+	NSInteger highRevInt  = MAX(firstRevInt, lastRevInt);
+	NSString* lowRev      = (lowRevInt == firstRevInt) ? firstRev : lastRev;
+
+	LogEntry* lowRevEntry = [[self repositoryData] entryForRevisionString:lowRev];
+	NSArray* parents = [lowRevEntry parentsOfEntry];
+	NSInteger parentRevInt;
+	if ([parents count] == 0)
+		parentRevInt = MAX(0, lowRevInt - 1);	// Step back one to see the differences from the previous version to this version.
+	else
+		parentRevInt = numberAsInt([parents objectAtIndex:0]);
+	return MakeLowHighPair(parentRevInt, highRevInt);	
+}
+
 
 
 
