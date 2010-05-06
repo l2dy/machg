@@ -4,6 +4,11 @@
 //  Copyright (c) 2001-2007, Apple Inc. All rights reserved.
 //
 //  FSBrowserCell knows how to display file system info obtained from an FSNodeInfo object.
+//
+//  Extensively modified by Jason Harris.
+//  Copyright 2010 Jason F Harris. All rights reserved.
+//  This software is licensed under the "New BSD License". The full license text is given in the file License.txt
+//
 
 #import <Cocoa/Cocoa.h>
 #import "Common.h"

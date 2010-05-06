@@ -1,7 +1,11 @@
-/*
-	FSBrowserCell.m
-	Was based on some of apples code but has now been heavily modified.
-*/
+//
+//  FSBrowserCell.m
+//  Was based on some of apples code but has now been heavily modified.
+//
+//  Copyright 2010 Jason F Harris. All rights reserved.
+//  This software is licensed under the "New BSD License". The full license text is given in the file License.txt
+//
+
 
 #import "FSNodeInfo.h"
 #import "FSBrowserCell.h"

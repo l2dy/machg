@@ -6,8 +6,10 @@
 //  Copyright 2009 Matteo Bertozzi. All rights reserved.
 //  Extensive modifications made by Jason Harris 29/11/09.
 //  Copyright 2009 Jason Harris. All rights reserved.
-// Actually it needs to be modified some more. It uses method names which are the same as variable, eg drawBadge and it could just
-// do with a tidy up, but it works so leave it.
+//  This software is licensed under the "New BSD License". The full license text is given in the file License.txt
+//
+//  Actually it needs to be modified some more. It uses method names which are the same as variable, eg drawBadge and it could just
+//  do with a tidy up, but it works so leave it.
 //
 
 #import "SidebarCell.h"

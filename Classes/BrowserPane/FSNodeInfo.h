@@ -3,6 +3,10 @@
 //
 //  Copyright (c) 2001-2007, Apple Inc. All rights reserved.
 //
+//  Extensively modified by Jason Harris.
+//  Copyright 2010 Jason F Harris. All rights reserved.
+//  This software is licensed under the "New BSD License". The full license text is given in the file License.txt
+//
 //  FSNodeInfo encapsulates information about a file or directory.
 //  This implementation is not necessarily the best way to do something like this,
 //  it is simply a wrapper to make the rest of the browser code easy to follow.
