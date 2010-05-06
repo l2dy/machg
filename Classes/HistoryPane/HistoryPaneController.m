@@ -62,6 +62,9 @@
 	[theLabelsTableView_ setAutosaveTableColumns:YES];
 	[theLabelsTableView_ setAutosaveName:[NSString stringWithFormat:@"File:%@:HistoryLabelsTableViewColumnPositions", fileName]];
 	
+	[logTableView setTarget:self];
+	[logTableView setDoubleAction:@selector(handleLogTableViewDoubleClick:)];	
+	
 	[[myDocument mainWindow] makeFirstResponder:logTableView];
 }
 
@@ -163,6 +166,29 @@
 - (IBAction) mainMenuStripChangesets:(id)sender		{ [myDocument mainMenuStripChangesets:sender]; }
 - (IBAction) mainMenuRebaseChangesets:(id)sender		{ [myDocument mainMenuRebaseChangesets:sender]; }
 - (IBAction) mainMenuHistoryEditChangesets:(id)sender	{ [myDocument mainMenuHistoryEditChangesets:sender]; }
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  LogTableView Actions
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (IBAction) handleLogTableViewDoubleClick:(id)sender
+{
+	NSArray* rootPathAsArray = [myDocument absolutePathOfRepositoryRootAsArray];
+	LowHighPair pair = [logTableView lowestHighestSelectedRevisions];
+	LogEntry* lowRevEntry = [[logTableView repositoryData] entryForRevisionString:intAsString(pair.lowRevision)];
+	NSArray* parents = [lowRevEntry parentsOfEntry];
+	if ([parents count] == 0)
+		pair.lowRevision = MAX(0,pair.lowRevision - 1);	// Step back one to see the differences from the previous version to this version.
+	else
+		pair.lowRevision = numberAsInt([parents objectAtIndex:0]);
+	NSString* revisionNumbers = [NSString stringWithFormat:@"%d%:%d", pair.lowRevision, pair.highRevision];
+	[myDocument viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:revisionNumbers];
+}
 
 
 
