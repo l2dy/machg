@@ -145,7 +145,7 @@
 
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	NSString* repositoryName = [[[myDocument sidebar] selectedNode] shortName];
-	LowHighPair pair = [logTableView lowestHighestSelectedRevisions];
+	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
 	NSString* stripDescription = [NSString stringWithFormat:@"Stripping %d in “%@”", pair.lowRevision, repositoryName];
 	NSMutableArray* argsStrip = [NSMutableArray arrayWithObjects:@"strip", nil];
 	
@@ -208,7 +208,7 @@
 - (NSAttributedString*) formattedSheetMessage
 {
 	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
-	LowHighPair pair = [logTableView lowestHighestSelectedRevisions];
+	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"The selected revisions within ")];
 	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(intAsString(pair.lowRevision))];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" through to ")];

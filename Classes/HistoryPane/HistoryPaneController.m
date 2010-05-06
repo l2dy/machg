@@ -147,7 +147,7 @@
 
 - (IBAction) historyMenuViewRevisionDifferences:(id)sender
 {
-	LowHighPair pair = [logTableView lowestHighestSelectedRevisions];
+	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
 	LogEntry* lowRevEntry = [logTableView entryForTableRow:pair.lowRevision];
 	NSArray* parents = [lowRevEntry parentsOfEntry];
 	if ([parents count] == 0)
@@ -179,7 +179,7 @@
 - (IBAction) handleLogTableViewDoubleClick:(id)sender
 {
 	NSArray* rootPathAsArray = [myDocument absolutePathOfRepositoryRootAsArray];
-	LowHighPair pair = [logTableView lowestHighestSelectedRevisions];
+	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
 	LogEntry* lowRevEntry = [[logTableView repositoryData] entryForRevisionString:intAsString(pair.lowRevision)];
 	NSArray* parents = [lowRevEntry parentsOfEntry];
 	if ([parents count] == 0)

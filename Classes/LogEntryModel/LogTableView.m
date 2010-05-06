@@ -326,7 +326,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	return revisions;
 }
 
-- (LowHighPair) lowestHighestSelectedRevisions
+- (LowHighPair) lowestToHighestSelectedRevisions
 {
 	NSIndexSet* rows = [self selectedRowIndexes];
 	if (!rows || IsEmpty(rows))
@@ -481,7 +481,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	if ([self multipleRevisionsSelected])
 	{
 		NSIndexSet* rows = [self selectedRowIndexes];
-		LowHighPair lowHigh = [self lowestHighestSelectedRevisions];
+		LowHighPair lowHigh = [self lowestToHighestSelectedRevisions];
 		NSString* descriptiveString = [NSString stringWithFormat:@"Multiple Selection: %d revisions in range %d to %d", [rows count], lowHigh.lowRevision, lowHigh.highRevision];
 		[[detailedEntryTextView textStorage] setAttributedString:grayedAttributedString(descriptiveString)];
 

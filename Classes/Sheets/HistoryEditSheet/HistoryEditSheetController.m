@@ -214,7 +214,7 @@
 - (IBAction) openHistoryEditConfirmationSheet:(id)sender
 {
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
-	LowHighPair pair = [logTableView lowestHighestSelectedRevisions];
+	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
 	NSMutableArray* argsHistoryEdit = [NSMutableArray arrayWithObjects:@"histedit", nil];
 	
 	// If we are using MacHgs historyEdit command we need to specify that it is in the extensions folder of the included Mercurial
@@ -244,7 +244,7 @@
 	[theHistoryEditConfirmationSheet orderOut:sender];
 
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
-	LowHighPair pair = [logTableView lowestHighestSelectedRevisions];
+	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
 	NSString* repositoryName = [[[myDocument sidebar] selectedNode] shortName];
 	NSString* historyEditDescription = [NSString stringWithFormat:@"Editing descendants of %d in “%@”", pair.lowRevision, repositoryName];
 	NSMutableArray* argsHistoryEdit = [NSMutableArray arrayWithObjects:@"histedit", nil];
@@ -310,7 +310,7 @@
 - (NSAttributedString*) formattedSheetMessage
 {
 	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
-	LowHighPair pair = [logTableView lowestHighestSelectedRevisions];
+	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"The revisions from ")];
 	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(intAsString(pair.lowRevision))];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" through to ")];

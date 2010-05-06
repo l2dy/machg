@@ -72,7 +72,7 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 	if ([entries count] < 2)
 		return @"Unable to perform collapse because a single revision is selected. Select two or more consecutive revisions to collapse.";
 	
-	LowHighPair pair = [logTableView lowestHighestSelectedRevisions];
+	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
 	NSInteger low  = pair.lowRevision;
 	NSInteger high = pair.highRevision;
 	
@@ -200,7 +200,7 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	NSString* repositoryName = [[[myDocument sidebar] selectedNode] shortName];
-	LowHighPair pair = [logTableView lowestHighestSelectedRevisions];
+	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
 	NSString* collapseDescription = [NSString stringWithFormat:@"Collapsing %d-%d in “%@”", pair.lowRevision, pair.highRevision, repositoryName];
 	NSMutableArray* argsCollapse  = [NSMutableArray arrayWithObjects:@"collapse", nil];
 
@@ -257,7 +257,7 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 - (NSAttributedString*) formattedSheetMessage
 {
 	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
-	LowHighPair pair = [logTableView lowestHighestSelectedRevisions];
+	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"The revisions from ")];
 	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(intAsString(pair.lowRevision))];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" through to ")];

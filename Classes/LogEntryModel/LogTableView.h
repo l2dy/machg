@@ -91,7 +91,7 @@
 - (NSString*)	selectedRevision;
 - (NSArray*)	selectedRevisions;	// Array of NSString
 
-- (LowHighPair) lowestHighestSelectedRevisions;
+- (LowHighPair) lowestToHighestSelectedRevisions;
 
 
 

@@ -213,7 +213,7 @@
 
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	NSString* repositoryName = [[[myDocument sidebar] selectedNode] shortName];
-	LowHighPair pair = [sourceLogTableView lowestHighestSelectedRevisions];
+	LowHighPair pair = [sourceLogTableView lowestToHighestSelectedRevisions];
 	NSString* destinationRev = [destinationLogTableView selectedRevision];
 	NSString* rebaseDescription = [NSString stringWithFormat:@"rebasing %d-%d in “%@”", pair.lowRevision, pair.highRevision, repositoryName];
 	NSMutableArray* argsRebase = [NSMutableArray arrayWithObjects:@"rebase", nil];
@@ -303,7 +303,7 @@
 - (NSAttributedString*) formattedSheetMessage
 {
 	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
-	LowHighPair sourcePair = [sourceLogTableView lowestHighestSelectedRevisions];
+	LowHighPair sourcePair = [sourceLogTableView lowestToHighestSelectedRevisions];
 	NSString* destinationRev = [destinationLogTableView selectedRevision];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"The selected revisions within ")];
 	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(intAsString(sourcePair.lowRevision))];

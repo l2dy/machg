@@ -114,7 +114,7 @@
 	[theExportPatchesSheet orderOut:sender];
 	
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
-	LowHighPair pair = [logTableView lowestHighestSelectedRevisions];
+	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
 	NSString* exportDescription = [NSString stringWithFormat:@"exporting %d-%d", pair.lowRevision, pair.highRevision];
 	NSMutableArray* argsExport = [NSMutableArray arrayWithObjects:@"export", nil];
 	NSString* revisionNumbers = [NSString stringWithFormat:@"%d%:%d", pair.lowRevision, pair.highRevision];
@@ -147,7 +147,7 @@
 - (IBAction) sheetButtonViewDifferencesForExportPatchesSheet:(id)sender
 {
 	NSArray* rootPathAsArray = [myDocument absolutePathOfRepositoryRootAsArray];
-	LowHighPair pair = [logTableView lowestHighestSelectedRevisions];
+	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
 	LogEntry* lowRevEntry = [[logTableView repositoryData] entryForRevisionString:intAsString(pair.lowRevision)];
 	NSArray* parents = [lowRevEntry parentsOfEntry];
 	if ([parents count] == 0)
@@ -190,7 +190,7 @@
 - (NSAttributedString*) formattedSheetMessage
 {
 	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
-	LowHighPair pair = [logTableView lowestHighestSelectedRevisions];
+	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
 	if (pair.lowRevision == pair.highRevision)
 	{
 		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"A patch corresponding to revision ")];
