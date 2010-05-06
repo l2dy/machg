@@ -195,8 +195,8 @@
 - (void) compareLow:(NSString*)low toHigh:(NSString*)high
 {
 	LowHighPair pair = MakeLowHighPair(stringAsInt(low), stringAsInt(high));
-	[baseLogTableView scrollToRangeOfRevisions:pair];
-	[baseLogTableView scrollToRevision:intAsString(pair.lowRevision)];
+	[baseLogTableView    scrollToRangeOfRevisions:pair];
+	[baseLogTableView    scrollToRevision:intAsString(pair.lowRevision)];
 	[compareLogTableView scrollToRangeOfRevisions:pair];
 	[compareLogTableView scrollToRevision:intAsString(pair.highRevision)];
 }

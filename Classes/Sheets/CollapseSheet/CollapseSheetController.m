@@ -202,7 +202,7 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 	NSString* repositoryName = [[[myDocument sidebar] selectedNode] shortName];
 	LowHighPair pair = [logTableView lowestHighestSelectedRevisions];
 	NSString* collapseDescription = [NSString stringWithFormat:@"Collapsing %d-%d in “%@”", pair.lowRevision, pair.highRevision, repositoryName];
-	NSMutableArray* argsCollapse = [NSMutableArray arrayWithObjects:@"collapse", nil];
+	NSMutableArray* argsCollapse  = [NSMutableArray arrayWithObjects:@"collapse", nil];
 
 	// If we are using MacHgs collapse command we need to specify that it is in the extensions folder of the included Mercurial
 	if (UseWhichMercurialBinaryFromDefaults() == eUseMercurialBinaryIncludedInMacHg)
