@@ -800,6 +800,7 @@ void _DebugLog(const char* file, int lineNumber, const char* funcName, NSString*
 - (id)		  synchronizedObjectForKey:(id)aKey;
 - (NSArray*)  synchronizedAllKeys;
 - (NSInteger) synchronizedCount;
+- (id)		  synchronizedValueForNumberKey:(NSNumber*)key;
 - (id)		  valueForNumberKey:(NSNumber*)key;
 @end
 
@@ -808,6 +809,7 @@ void _DebugLog(const char* file, int lineNumber, const char* funcName, NSString*
 @interface NSMutableDictionary ( NSMutableDictionaryPlusAccessors )
 - (void)	synchronizedSetObject:(id)anObject forKey:(id)aKey;
 - (void)	synchronizedRemoveObjectForKey:(id)aKey;
+- (void)	synchronizedSetValue:(id)value forNumberKey:(NSNumber*)key;
 - (void)	setValue:(id)value forNumberKey:(NSNumber*)key;
 @end
 

@@ -529,11 +529,11 @@
 
 - (NSMutableArray*) setOfParentsForRev:(NSNumber*)rev
 {
-	NSMutableArray* setOfParents = [parentsCollection_ valueForNumberKey:rev];
+	NSMutableArray* setOfParents = [parentsCollection_ synchronizedValueForNumberKey:rev];
 	if (!setOfParents)
 	{
 		setOfParents = [[NSMutableArray alloc] init];
-		[parentsCollection_ setValue:setOfParents forNumberKey:rev];
+		[parentsCollection_ synchronizedSetValue:setOfParents forNumberKey:rev];
 	}
 	return setOfParents;
 }
@@ -541,11 +541,11 @@
 
 - (NSMutableArray*) setOfChildrenForRev:(NSNumber*)rev
 {
-	NSMutableArray* setOfChildren = [childrenCollection_ valueForNumberKey:rev];
+	NSMutableArray* setOfChildren = [childrenCollection_ synchronizedValueForNumberKey:rev];
 	if (!setOfChildren)
 	{
 		setOfChildren = [[NSMutableArray alloc] init];
-		[childrenCollection_ setValue:setOfChildren forNumberKey:rev];
+		[childrenCollection_ synchronizedSetValue:setOfChildren forNumberKey:rev];
 	}
 	return setOfChildren;
 }
@@ -633,8 +633,8 @@
 }
 
 
-- (NSArray*) parentsOfRev:(NSNumber*)rev  { return [parentsCollection_  valueForNumberKey:rev]; }
-- (NSArray*) childrenOfRev:(NSNumber*)rev { return [childrenCollection_ valueForNumberKey:rev]; }
+- (NSArray*) parentsOfRev:(NSNumber*)rev  { return [parentsCollection_  synchronizedValueForNumberKey:rev]; }
+- (NSArray*) childrenOfRev:(NSNumber*)rev { return [childrenCollection_ synchronizedValueForNumberKey:rev]; }
 
 
 - (void) descendantsOfRev_addDescendants:(NSArray*)children to:(NSMutableSet*)descendants

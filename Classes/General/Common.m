@@ -1007,18 +1007,20 @@ void _DebugLog(const char* file, int lineNumber, const char* funcName, NSString*
 
 // MARK: -
 @implementation NSDictionary ( NSDictionaryPlusAccessors )
-- (id) synchronizedObjectForKey:(id)aKey	{ @synchronized(self) { return [self objectForKey:aKey]; }; /*keep gcc happy*/ return nil; }
-- (NSArray*) synchronizedAllKeys			{ @synchronized(self) { return [self allKeys]; }; /*keep gcc happy*/ return nil; }
-- (NSInteger) synchronizedCount				{ @synchronized(self) { return [self count]; }; /*keep gcc happy*/ return 0;}
+- (id) synchronizedObjectForKey:(id)aKey			{ @synchronized(self) { return [self objectForKey:aKey]; }; /*keep gcc happy*/ return nil; }
+- (NSArray*) synchronizedAllKeys					{ @synchronized(self) { return [self allKeys]; }; /*keep gcc happy*/ return nil; }
+- (NSInteger) synchronizedCount						{ @synchronized(self) { return [self count]; }; /*keep gcc happy*/ return 0; }
+- (id) synchronizedValueForNumberKey:(NSNumber*)key	{ @synchronized(self) { return [self valueForKey:[key stringValue]]; }; /*keep gcc happy*/ return nil; }
 - (id) valueForNumberKey:(NSNumber*)key		{ return [self valueForKey:[key stringValue]]; }
 @end
 
 
 // MARK: -
 @implementation NSMutableDictionary ( NSMutableDictionaryPlusAccessors )
-- (void) synchronizedSetObject:(id)anObject forKey:(id)aKey	{ @synchronized(self) { [self setObject:anObject forKey:aKey]; }; }
-- (void) synchronizedRemoveObjectForKey:(id)aKey			{ @synchronized(self) { [self removeObjectForKey:aKey]; }; }
-- (void) setValue:(id)value forNumberKey:(NSNumber*)key		{ [self setValue:value forKey:[key stringValue]]; }
+- (void) synchronizedSetObject:(id)anObject forKey:(id)aKey			{ @synchronized(self) { [self setObject:anObject forKey:aKey]; }; }
+- (void) synchronizedRemoveObjectForKey:(id)aKey					{ @synchronized(self) { [self removeObjectForKey:aKey]; }; }
+- (void) synchronizedSetValue:(id)value forNumberKey:(NSNumber*)key	{ @synchronized(self) { [self setValue:value forKey:[key stringValue]]; }; }
+- (void) setValue:(id)value forNumberKey:(NSNumber*)key				{ [self setValue:value forKey:[key stringValue]]; }
 @end
 
 
