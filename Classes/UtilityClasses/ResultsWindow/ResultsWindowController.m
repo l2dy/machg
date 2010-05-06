@@ -11,6 +11,8 @@
 #import "Common.h"
 #import "TaskExecutions.h"
 
+static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val < min) return min; if (val > max) return max; return val; }
+
 @implementation ResultsWindowController
 
 - (ResultsWindowController*) initWithMessage:(NSString*)message andResults:(NSAttributedString*)results andWindowTitle:(NSString*)windowTitle
@@ -22,12 +24,11 @@
 	NSSize titleSize = [[titleMessageTextField attributedStringValue] size];
 	NSSize resultsSize = [results size];
 	NSSize newSize;
-	newSize.width  = MAX(resultsSize.width,  titleSize.width);
-	newSize.width  = MIN(1000, newSize.width);
-	newSize.height = MAX(resultsSize.height, titleSize.height);
-	newSize.height = MIN(720, newSize.height);
-	newSize.width  += 40;
-	newSize.height += 70;
+	
+	NSRect visibleFrame = [[resultsWIndow screen] visibleFrame];
+	
+	newSize.width   = constrain(MAX(resultsSize.width,  titleSize.width)  + 40, 50, visibleFrame.size.width  - 20);
+	newSize.height  = constrain(MAX(resultsSize.height, titleSize.height) + 70, 50, visibleFrame.size.height - 20);
 
 	NSSize currentSize = [resultsMessageTextView frame].size;
 	NSRect f = [resultsWIndow frame];
