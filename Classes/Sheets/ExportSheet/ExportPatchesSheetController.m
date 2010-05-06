@@ -148,7 +148,7 @@
 {
 	NSArray* rootPathAsArray = [myDocument absolutePathOfRepositoryRootAsArray];
 	LowHighPair pair = [logTableView lowestHighestSelectedRevisions];
-	LogEntry* lowRevEntry = [logTableView entryForTableRow:pair.lowRevision];
+	LogEntry* lowRevEntry = [[logTableView repositoryData] entryForRevisionString:intAsString(pair.lowRevision)];
 	NSArray* parents = [lowRevEntry parentsOfEntry];
 	if ([parents count] == 0)
 		pair.lowRevision = MAX(0,pair.lowRevision - 1);	// Step back one to see the differences from the previous version to this version.
