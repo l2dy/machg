@@ -26,14 +26,19 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 	NSSize newSize;
 	
 	NSRect visibleFrame = [[resultsWindow screen] visibleFrame];
-	
-	newSize.width   = constrain(MAX(resultsSize.width,  titleSize.width)  + 40, 50, visibleFrame.size.width  - 20);
-	newSize.height  = constrain(MAX(resultsSize.height, titleSize.height) + 70, 50, visibleFrame.size.height - 20);
-
 	NSSize currentSize = [resultsMessageTextView frame].size;
 	NSRect f = [resultsWindow frame];
-	f.size.width  += (newSize.width  - currentSize.width);
-	f.size.height += (newSize.height - currentSize.height);
+	
+	CGFloat padH   = f.size.width  - currentSize.width;
+	CGFloat padV   = f.size.height - currentSize.height;
+	newSize.width  = constrain(MAX(resultsSize.width,  titleSize.width)  + 40, 50, visibleFrame.size.width  - 20 - padH);
+	newSize.height = constrain(MAX(resultsSize.height, titleSize.height) + 70, 50, visibleFrame.size.height - 20 - padV);
+
+	f.size.width   = (newSize.width  + padH);
+	f.size.height  = (newSize.height + padV);
+	f.origin.x     = constrain(f.origin.x, 10, MAX(visibleFrame.size.width  - newSize.width  - 20, 10));
+	f.origin.y     = constrain(f.origin.y, 10, MAX(visibleFrame.size.height - newSize.height - 20, 10));
+	
 	[resultsWindow setFrame:f display:YES];
 	[resultsWindow setTitle:windowTitle];
 	[resultsWindow makeKeyAndOrderFront:self];
