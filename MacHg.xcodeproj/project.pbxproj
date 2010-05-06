@@ -1735,10 +1735,7 @@
 				GCC_PREFIX_HEADER = MacHg_Prefix.pch;
 				INFOPLIST_FILE = "MacHg-Info.plist";
 				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/LinkedLibraries/RBSplitView12/build/Release\"",
-				);
+				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_CFLAGS = "-DDEBUG";
 				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = MacHg;
