@@ -266,6 +266,7 @@ NSString* kTheRevisionFieldValue = @"theRevisionFieldValue";
 	
 	[NSApp endSheet:theAddLabelSheet];
 	[theAddLabelSheet orderOut:sender];
+	[myDocument postNotificationWithName:kUnderlyingRepositoryChanged];
 }
 
 
