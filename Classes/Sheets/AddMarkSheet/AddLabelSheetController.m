@@ -252,7 +252,7 @@ NSString* kTheRevisionFieldValue = @"theRevisionFieldValue";
 	NSMutableArray* argsLabel = [NSMutableArray arrayWithObjects:command, nil ];
 	if (addLabelTabNumber_ != eAddLabelTabBranch)
 		[argsLabel addObject: @"--rev" followedBy:theRevisionFieldValue_];
-	if ((addLabelTabNumber_ == eAddLabelTabBranch || addLabelTabNumber_ == eAddLabelTabLocalTag) && forceValue_ == YES)
+	if (forceValue_ == YES)
 		[argsLabel addObject: @"--force"];
 	if (addLabelTabNumber_ == eAddLabelTabLocalTag)
 		[argsLabel addObject: @"--local"];
