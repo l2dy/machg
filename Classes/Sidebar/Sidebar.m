@@ -460,36 +460,46 @@
 	if ([node isExistentLocalRepositoryRef])
 	{
 		RepositoryData* repositoryData = [myDocument repositoryData];
-		NSString* parentField = [repositoryData inMergeState] ? @"\nParents: " : @"\nParent: ";
-		[attrString appendAttributedString: [NSAttributedString string:parentField withAttributes:smallGraySystemFontAttributes]];
-		[attrString appendAttributedString: [NSAttributedString string:[repositoryData getHGParentsRevisions] withAttributes:smallSystemFontAttributes]];		
-
+		NSString* parentRevisions = [repositoryData getHGParentsRevisions];
 		LogEntry* parentEntry = [repositoryData entryForRevisionString: [repositoryData getHGParent1Revision]];
-		if (IsNotEmpty([parentEntry tags]))
+		NSArray*  tags        = [parentEntry tags];
+		NSArray*  bookmarks   = [parentEntry bookmarks];
+		NSString* branch      = [repositoryData getHGBranchName];
+		
+		if (IsNotEmpty(parentRevisions))
+		{
+			NSString* parentField = [repositoryData inMergeState] ? @"\nParents: " : @"\nParent: ";
+			[attrString appendAttributedString: [NSAttributedString string:parentField     withAttributes:smallGraySystemFontAttributes]];
+			[attrString appendAttributedString: [NSAttributedString string:parentRevisions withAttributes:smallSystemFontAttributes]];		
+		}		
+		if (IsNotEmpty(tags))
 		{
 			[attrString appendAttributedString: [NSAttributedString string:@"\nTags: " withAttributes:smallGraySystemFontAttributes]];
-			[attrString appendAttributedString: [NSAttributedString string:[[parentEntry tags] componentsJoinedByString:@", "] withAttributes:smallSystemFontAttributes]];		
+			[attrString appendAttributedString: [NSAttributedString string:[tags componentsJoinedByString:@", "] withAttributes:smallSystemFontAttributes]];		
 		}
-		if (IsNotEmpty([parentEntry bookmarks]))
+		if (IsNotEmpty(bookmarks))
 		{
-			NSString* bookmarksField = [[parentEntry bookmarks] count] > 1 ? @"\nBookmarks: " : @"\nBookmark: ";
+			NSString* bookmarksField = [bookmarks count] > 1 ? @"\nBookmarks: " : @"\nBookmark: ";
 			[attrString appendAttributedString: [NSAttributedString string:bookmarksField withAttributes:smallGraySystemFontAttributes]];
-			[attrString appendAttributedString: [NSAttributedString string:[[parentEntry bookmarks] componentsJoinedByString:@", "] withAttributes:smallSystemFontAttributes]];		
+			[attrString appendAttributedString: [NSAttributedString string:[bookmarks componentsJoinedByString:@", "] withAttributes:smallSystemFontAttributes]];		
 		}
-		if (IsNotEmpty([repositoryData getHGBranchName]))
+		if (IsNotEmpty(branch))
 		{
 			[attrString appendAttributedString: [NSAttributedString string:@"\nBranch: " withAttributes:smallGraySystemFontAttributes]];
-			[attrString appendAttributedString: [NSAttributedString string:[repositoryData getHGBranchName] withAttributes:smallSystemFontAttributes]];		
+			[attrString appendAttributedString: [NSAttributedString string:branch		 withAttributes:smallSystemFontAttributes]];		
 		}
 	}
 	
-	NSString* pathType;
-	if      ([node isServerRepositoryRef]) pathType = @"\nURL: ";
-	else if ([node isLocalRepositoryRef])  pathType = @"\nPath: ";
-	else							  pathType = @"\n";
-	
-	[attrString appendAttributedString: [NSAttributedString string:pathType withAttributes:smallGraySystemFontAttributes]];
-	[attrString appendAttributedString: [NSAttributedString string:[node path] withAttributes:smallSystemFontAttributes]];
+	if (IsNotEmpty([node path]))
+	{
+		NSString* pathType;
+		if      ([node isServerRepositoryRef]) pathType = @"\nURL: ";
+		else if ([node isLocalRepositoryRef])  pathType = @"\nPath: ";
+		else							       pathType = @"\n";
+		
+		[attrString appendAttributedString: [NSAttributedString string:pathType withAttributes:smallGraySystemFontAttributes]];
+		[attrString appendAttributedString: [NSAttributedString string:[node path] withAttributes:smallSystemFontAttributes]];
+	}
 	return attrString;
 }
 
