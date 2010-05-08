@@ -222,19 +222,27 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 
 
 	// Draw red dot in center
-	NSRect dotRect;
-	[[NSColor redColor] set];
-	if (hasIncompleteRevision && theRevisionInt == incompleteRevisionInt)
-		[[NSColor grayColor] set];
-
-	int radius = 2;
-		
+	int radius = 3.0;
+	NSRect dotRect;		
 	dotRect.origin.x = [self xCoordOfColumn:theColumn withinFrame:cellBounds] - radius;
 	dotRect.origin.y = NSMidY(cellBounds) - radius;
 	dotRect.size.width  = 2 * radius;
 	dotRect.size.height = 2 * radius;
 	
-	[[NSBezierPath bezierPathWithOvalInRect:dotRect] fill];
+	NSBezierPath* path = [NSBezierPath bezierPathWithOvalInRect:dotRect];
+
+	[[NSColor colorWithCalibratedRed:0.5 green:0.0 blue:0.0 alpha:1.0] set];
+	if (hasIncompleteRevision && theRevisionInt == incompleteRevisionInt)
+	{
+		[[NSColor whiteColor] set];
+		[path fill];
+		[[NSColor grayColor] set];
+		[path stroke];
+		return;
+	}
+	
+	[path fill];
+	//[path stroke];
 }
 
 - (NSSize) cellSize {
