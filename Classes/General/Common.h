@@ -65,6 +65,7 @@
 @class IncomingSheetController;
 @class LocalRepositoryRefSheetController;
 @class MergeSheetController;
+@class MoveLabelSheetController;
 @class OutgoingSheetController;
 @class ProcessListController;
 @class PullSheetController;

@@ -143,6 +143,8 @@
 		969754C310DE296A00F02ACF /* push_32h.png in Resources */ = {isa = PBXBuildFile; fileRef = 969754C210DE296A00F02ACF /* push_32h.png */; };
 		969BD94511953E43007AA6D9 /* AddLabelSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 969BD94411953E43007AA6D9 /* AddLabelSheetController.m */; };
 		969BD94811953E54007AA6D9 /* AddLabelSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 969BD94611953E54007AA6D9 /* AddLabelSheet.xib */; };
+		969BD95511953FAA007AA6D9 /* MoveLabelSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 969BD95411953FAA007AA6D9 /* MoveLabelSheetController.m */; };
+		969BD95811953FB1007AA6D9 /* MoveLabelSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 969BD95611953FB1007AA6D9 /* MoveLabelSheet.xib */; };
 		969C525B112EC73800FA7C33 /* HistoryEditSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 969C525A112EC73800FA7C33 /* HistoryEditSheetController.m */; };
 		969C525E112EC73E00FA7C33 /* HistoryEditSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 969C525C112EC73E00FA7C33 /* HistoryEditSheet.xib */; };
 		969C52F8112EE44700FA7C33 /* StripSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 969C52F7112EE44700FA7C33 /* StripSheetController.m */; };
@@ -397,6 +399,9 @@
 		969BD94311953E43007AA6D9 /* AddLabelSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddLabelSheetController.h; sourceTree = "<group>"; };
 		969BD94411953E43007AA6D9 /* AddLabelSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddLabelSheetController.m; sourceTree = "<group>"; };
 		969BD94711953E54007AA6D9 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/AddLabelSheet.xib; sourceTree = SOURCE_ROOT; };
+		969BD95311953FAA007AA6D9 /* MoveLabelSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoveLabelSheetController.h; sourceTree = "<group>"; };
+		969BD95411953FAA007AA6D9 /* MoveLabelSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoveLabelSheetController.m; sourceTree = "<group>"; };
+		969BD95711953FB1007AA6D9 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MoveLabelSheet.xib; sourceTree = SOURCE_ROOT; };
 		969C5259112EC73800FA7C33 /* HistoryEditSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HistoryEditSheetController.h; sourceTree = "<group>"; };
 		969C525A112EC73800FA7C33 /* HistoryEditSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HistoryEditSheetController.m; sourceTree = "<group>"; };
 		969C525D112EC73E00FA7C33 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/HistoryEditSheet.xib; sourceTree = SOURCE_ROOT; };
@@ -723,6 +728,7 @@
 				96DD29C7112AE56200A57BD3 /* CollapseSheet */,
 				969C5258112EC73800FA7C33 /* HistoryEditSheet */,
 				9631D0391107A7E20007FDF2 /* MergeSheet */,
+				969BD95211953FAA007AA6D9 /* MoveLabelSheet */,
 				9695C0A71108E1C5004CE684 /* PullSheet */,
 				9695C0AA1108E1C5004CE684 /* PushSheet */,
 				9630898B11820711006E45A8 /* ImportSheet */,
@@ -1182,6 +1188,16 @@
 			path = AddLabelSheet;
 			sourceTree = "<group>";
 		};
+		969BD95211953FAA007AA6D9 /* MoveLabelSheet */ = {
+			isa = PBXGroup;
+			children = (
+				969BD95311953FAA007AA6D9 /* MoveLabelSheetController.h */,
+				969BD95411953FAA007AA6D9 /* MoveLabelSheetController.m */,
+				969BD95611953FB1007AA6D9 /* MoveLabelSheet.xib */,
+			);
+			path = MoveLabelSheet;
+			sourceTree = "<group>";
+		};
 		969C5258112EC73800FA7C33 /* HistoryEditSheet */ = {
 			isa = PBXGroup;
 			children = (
@@ -1378,6 +1394,7 @@
 				9637C8C1118E9C030000C14B /* SmallDividerThumb.png in Resources */,
 				9637C8C3118E9C300000C14B /* ActionDropButtonSizeSmall.png in Resources */,
 				969BD94811953E54007AA6D9 /* AddLabelSheet.xib in Resources */,
+				969BD95811953FB1007AA6D9 /* MoveLabelSheet.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1457,6 +1474,7 @@
 				9637C8B3118E9BB40000C14B /* ScrollToForLogTable.m in Sources */,
 				9637C8C9118E9C5A0000C14B /* NSString+SymlinksAndAliases.m in Sources */,
 				969BD94511953E43007AA6D9 /* AddLabelSheetController.m in Sources */,
+				969BD95511953FAA007AA6D9 /* MoveLabelSheetController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1654,6 +1672,14 @@
 				969BD94711953E54007AA6D9 /* English */,
 			);
 			name = AddLabelSheet.xib;
+			sourceTree = "<group>";
+		};
+		969BD95611953FB1007AA6D9 /* MoveLabelSheet.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				969BD95711953FB1007AA6D9 /* English */,
+			);
+			name = MoveLabelSheet.xib;
 			sourceTree = "<group>";
 		};
 		969C525C112EC73E00FA7C33 /* HistoryEditSheet.xib */ = {

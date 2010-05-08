@@ -78,6 +78,7 @@
 	IncomingSheetController*			theIncomingSheetController_;
 	LocalRepositoryRefSheetController*	theLocalRepositoryRefSheetController_;
 	MergeSheetController*				theMergeSheetController_;
+	MoveLabelSheetController*			theMoveLabelSheetController_;
 	OutgoingSheetController*			theOutgoingSheetController_;
 	PullSheetController*				thePullSheetController_;
 	PushSheetController*				thePushSheetController_;
@@ -143,6 +144,7 @@
 - (IncomingSheetController*)		theIncomingSheetController;
 - (LocalRepositoryRefSheetController*)	theLocalRepositoryRefSheetController;
 - (MergeSheetController*)			theMergeSheetController;
+- (MoveLabelSheetController*)		theMoveLabelSheetController;
 - (OutgoingSheetController*)		theOutgoingSheetController;
 - (PullSheetController*)			thePullSheetController;
 - (PushSheetController*)			thePushSheetController;

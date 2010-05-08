@@ -37,6 +37,7 @@
 #import "IncomingSheetController.h"
 #import "LocalRepositoryRefSheetController.h"
 #import "MergeSheetController.h"
+#import "MoveLabelSheetController.h"
 #import "OutgoingSheetController.h"
 #import "PullSheetController.h"
 #import "PushSheetController.h"
@@ -425,6 +426,18 @@
 			theMergeSheetController_ = [[MergeSheetController alloc] initMergeSheetControllerWithDocument:self];
 	}
 	return theMergeSheetController_;
+}
+
+- (MoveLabelSheetController*) theMoveLabelSheetController
+{
+	if (theMoveLabelSheetController_)
+		return theMoveLabelSheetController_;
+	@synchronized(self)
+	{
+		if (!theMoveLabelSheetController_)
+			theMoveLabelSheetController_ = [[MoveLabelSheetController alloc] initMoveLabelSheetControllerWithDocument:self];
+	}
+	return theMoveLabelSheetController_;
 }
 
 - (OutgoingSheetController*) theOutgoingSheetController
