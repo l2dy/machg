@@ -139,7 +139,9 @@
 	NSMutableArray* argsExportRange = nil;
 	NSMutableArray* argsDiff = nil;
 	NSString* fileNameTemplate = [self patchNameOption];
-	fileNameTemplate = [fileNameTemplate stringByReplacingOccurrencesOfRegex:@"\\%N" withString:intAsString(numberOfPatches)];
+	fileNameTemplate  = [fileNameTemplate stringByReplacingOccurrencesOfRegex:@"\\%N" withString:intAsString(numberOfPatches)];
+	BOOL changingFileName = [fileNameTemplate matchesRegex:@"\\%[nrRhH]" options:RKLNoOptions];
+
 	if (exportPatchesForLowHigh)
 	{
 		argsExportRange = [NSMutableArray arrayWithObjects:@"export", nil];
@@ -178,7 +180,10 @@
 				patchFileName = [patchFileName stringByReplacingOccurrencesOfRegex:@"\\%r" withString:[logTableView incompleteRevision]];
 				if (![patchFileName isAbsolutePath])
 					patchFileName = [rootPath stringByAppendingPathComponent:patchFileName];
-				[result.outStr writeToFile:patchFileName atomically:YES encoding:NSUTF8StringEncoding error:nil];
+				if (changingFileName)
+					[result.outStr writeToFile:patchFileName atomically:YES encoding:NSUTF8StringEncoding error:nil];
+				else
+					[[NSFileManager defaultManager] appendString:[NSString stringWithFormat:@"\n\n%@",result.outStr] toFilePath:patchFileName];
 			}
 		}
 	}];	
