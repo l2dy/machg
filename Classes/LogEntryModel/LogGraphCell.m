@@ -232,18 +232,43 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 	
 	NSBezierPath* path = [NSBezierPath bezierPathWithOvalInRect:dotRect];
 
-	[[NSColor colorWithCalibratedRed:0.5 green:0.0 blue:0.0 alpha:1.0] set];
+	static NSColor* defaultRed;
+	if (!defaultRed)
+		defaultRed = [NSColor colorWithCalibratedRed:0.5 green:0.0 blue:0.0 alpha:1.0];
+	NSColor* fillColor   = defaultRed;
+	NSColor* strokeColor = nil;
+
 	if (hasIncompleteRevision && theRevisionInt == incompleteRevisionInt)
 	{
-		[[NSColor whiteColor] set];
-		[path fill];
-		[[NSColor grayColor] set];
-		[path stroke];
-		return;
+		fillColor   = [NSColor whiteColor];
+		strokeColor = [NSColor grayColor];
+	}
+	else if (IsNotEmpty([entry_ branch]))
+	{
+		fillColor   = LogEntryTableBranchHighlightColor();
+		strokeColor = defaultRed;
+	}
+	else if (IsNotEmpty([entry_ bookmarks]))
+	{
+		fillColor = LogEntryTableBookmarkHighlightColor();
+		strokeColor = defaultRed;
+	}
+	else if (IsNotEmpty([entry_ tags]))
+	{
+		fillColor = LogEntryTableTagHighlightColor();
+		strokeColor = defaultRed;
 	}
 	
-	[path fill];
-	//[path stroke];
+	if (fillColor)
+	{
+		[fillColor set];
+		[path fill];
+	}
+	if (strokeColor)
+	{
+		[strokeColor set];
+		[path stroke];
+	}
 }
 
 - (NSSize) cellSize {
