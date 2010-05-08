@@ -34,7 +34,7 @@
 - (RevertSheetController*) initRevertSheetControllerWithDocument:(MacHgDocument*)doc;
 
 
-// Action Methods - Log Inspector
+// Action Methods
 - (IBAction) openRevertSheetWithAllFiles:(id)sender;
 - (IBAction) openRevertSheetWithSelectedFiles:(id)sender;
 - (IBAction) sheetButtonOkForRevertSheet:(id)sender;

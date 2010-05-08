@@ -30,7 +30,7 @@
 - (StripSheetController*) initStripSheetControllerWithDocument:(MacHgDocument*)doc;
 
 
-// Action Methods - Log Inspector
+// Action Methods
 - (IBAction) openStripSheetWithSelectedRevisions:(id)sender;
 - (IBAction) sheetButtonOkForStripSheet:(id)sender;
 - (IBAction) sheetButtonCancelForStripSheet:(id)sender;

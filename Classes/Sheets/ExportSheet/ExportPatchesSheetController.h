@@ -44,7 +44,7 @@
 - (ExportPatchesSheetController*) initExportPatchesSheetControllerWithDocument:(MacHgDocument*)doc;
 
 
-// Action Methods - Log Inspector
+// Action Methods
 - (IBAction) openExportPatchesSheetWithSelectedRevisions:(id)sender;
 - (IBAction) sheetButtonOkForExportPatchesSheet:(id)sender;
 - (IBAction) sheetButtonCancelForExportPatchesSheet:(id)sender;

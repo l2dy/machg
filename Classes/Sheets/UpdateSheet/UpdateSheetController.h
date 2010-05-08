@@ -36,7 +36,7 @@
 - (UpdateSheetController*) initUpdateSheetControllerWithDocument:(MacHgDocument*)doc;
 
 
-// Action Methods - Log Inspector
+// Action Methods
 - (IBAction) validate:(id)sender;
 - (void)     openUpdateSheetWithRevision:(NSString*)revision;
 - (IBAction) openUpdateSheetWithCurrentRevision:(id)sender;

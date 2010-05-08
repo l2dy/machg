@@ -49,7 +49,7 @@
 - (RebaseSheetController*) initRebaseSheetControllerWithDocument:(MacHgDocument*)doc;
 
 
-// Action Methods - Log Inspector
+// Action Methods
 - (IBAction) openRebaseSheetWithSelectedRevisions:(id)sender;
 - (IBAction) sheetButtonOkForRebaseSheet:(id)sender;
 - (IBAction) sheetButtonCancelForRebaseSheet:(id)sender;

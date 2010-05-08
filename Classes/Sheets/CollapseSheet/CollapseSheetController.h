@@ -33,7 +33,7 @@
 - (CollapseSheetController*) initCollapseSheetControllerWithDocument:(MacHgDocument*)doc;
 
 
-// Action Methods - Log Inspector
+// Action Methods
 - (IBAction) openCollapseSheetWithSelectedRevisions:(id)sender;
 - (IBAction) sheetButtonOkForCollapseSheet:(id)sender;
 - (IBAction) sheetButtonCancelForCollapseSheet:(id)sender;
