@@ -124,6 +124,14 @@
 
 - (NSString*) shortVersionNumberString	{ return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]; }
 - (NSString*) shortVersionString		{ return [NSString stringWithFormat:@"Version:%@", [self shortVersionNumberString]]; }
+- (NSString*) mercurialVersionString
+{
+	NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"version", nil];
+	ExecutionResult result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
+	NSArray* versionParts = [result.outStr componentsSeparatedByString:@"\n"];
+	NSString* versionString = ([versionParts count] > 0) ? [versionParts objectAtIndex:0] : @"";
+	return versionString;
+}
 
 
 

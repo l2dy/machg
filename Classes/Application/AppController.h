@@ -56,9 +56,10 @@
 
 // About Box
 - (IBAction)  showAboutBox:(id)sender;
+- (void)	  webView:(WebView*)webView decidePolicyForNavigationAction:(NSDictionary*)actionInformation request:(NSURLRequest*)request frame:(WebFrame*)frame decisionListener:(id < WebPolicyDecisionListener >)listener;
 - (NSString*) shortVersionString;
 - (NSString*) shortVersionNumberString;
-- (void)	  webView:(WebView*)webView decidePolicyForNavigationAction:(NSDictionary*)actionInformation request:(NSURLRequest*)request frame:(WebFrame*)frame decisionListener:(id < WebPolicyDecisionListener >)listener;
+- (NSString*) mercurialVersionString;
 
 
 // Help Menus
