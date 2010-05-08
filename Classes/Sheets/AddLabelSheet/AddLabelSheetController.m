@@ -202,39 +202,6 @@ NSString* kTheRevisionFieldValue = @"theRevisionFieldValue";
 }
 
 
-// Open the add label sheet and fill in the label name with the given label name and set the force flag to true. The user then
-// needs to fill in the new revision number.
-- (void) openAddLabelSheetForMoveLabel:(LabelData*)label
-{
-	HistoryPaneController*	theHistoryPane = [myDocument theHistoryPaneController];
-	BOOL wasShowingHistoryPane = [myDocument showingHistoryPane];
-	[myDocument actionSwitchViewToHistoryPane:self];				// Open the log inspector
-	[[myDocument toolbarSearchField] setStringValue:@""];			// reset the search term
-	if (!wasShowingHistoryPane)
-		[[theHistoryPane logTableView] scrollToCurrentRevision:self];			// Scroll to the current revision
-	
-	
-	switch ([label labelType])
-	{
-		case eLocalTag:		[addLabelTabView selectTabViewItemAtIndex:0];	break;
-		case eGlobalTag:	[addLabelTabView selectTabViewItemAtIndex:1];	break;
-		case eBookmark:		[addLabelTabView selectTabViewItemAtIndex:2];	break;
-		case eActiveBranch:
-		case eInactiveBranch:
-		case eClosedBranch: [addLabelTabView selectTabViewItemAtIndex:3];	break;
-	}
-	
-	[self setTheNewNameFieldValue:[label name]];
-	[self setForceValue:YES];
-	[self setTheRevisionFieldValue:@""];
-	[commitMessageTextView setString:[NSString stringWithFormat:@"Move label %@", [label name]]];
-	[self updateButtonsAndMessages];
-	[NSApp beginSheet:theAddLabelSheet modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];	
-}
-
-
-
-
 - (void) sheetButtonOkForAddLabelSheet:(id)sender
 {
 	[theAddLabelSheet makeFirstResponder:theAddLabelSheet];	// Make the text fields of the sheet commit any changes they currently have
