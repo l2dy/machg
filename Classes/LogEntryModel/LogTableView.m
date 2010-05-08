@@ -460,7 +460,8 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 {
 	NSString* requestedColumn = [aTableColumn identifier];
 	NSString* theRevision = [self revisionForTableRow:rowIndex];
-	[aCell setTheRevision:theRevision];
+	LogEntry* entry = [repositoryData_ entryForRevisionString:theRevision];
+	[aCell setEntry:entry];
 	[aCell setLogTableView:DynamicCast(LogTableView,aTableView)];
 	[aCell setLogTableColumn:aTableColumn];
 	if ([requestedColumn isEqualToString:@"graph"])
@@ -785,7 +786,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 #pragma mark -
 @implementation LogTableTextFieldCell
 
-@synthesize theRevision    = theRevision_;
+@synthesize entry		   = entry_;
 @synthesize logTableView   = logTableView_;
 @synthesize logTableColumn = logTableColumn_;
 
@@ -793,7 +794,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 - (NSColor*) highlightColorWithFrame:(NSRect)cellFrame inView:(NSView*)controlView
 {
 	LogTableView* theLogTableView = (LogTableView*)controlView;
-	int rowIndex = [theLogTableView tableRowForRevision:[self theRevision]];
+	int rowIndex = [theLogTableView tableRowForRevision:[entry_ revision]];
 	NSColor* backColor =[theLogTableView specialBackingColorForRow:rowIndex];
 	return backColor ? backColor : [super highlightColorWithFrame:cellFrame inView:controlView];
 }
@@ -808,7 +809,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	if ([[[self logTableColumn] identifier] isEqualToString:@"shortComment"])
 	{
 		RepositoryData* repositoryData = [[self logTableView] repositoryData];
-		LogEntry* logEntry = [repositoryData entryForRevisionString:[self theRevision]];
+		LogEntry* logEntry = [repositoryData entryForRevisionString:[entry_ revision]];
 		NSString* fullMessageText = [logEntry fullCommentSynchronous];
 		NSDictionary* attributes = [message attributesOfWholeString];
 		message = [NSAttributedString string:fullMessageText withAttributes:attributes];
@@ -836,7 +837,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	if ([[[self logTableColumn] identifier] isEqualToString:@"shortComment"])
 	{
 		RepositoryData* repositoryData = [[self logTableView] repositoryData];
-		LogEntry* logEntry = [repositoryData entryForRevisionString:[self theRevision]];
+		LogEntry* logEntry = [repositoryData entryForRevisionString:[entry_ revision]];
 		NSString* fullMessageText = [logEntry fullCommentSynchronous];
 		NSDictionary* attributes = [message attributesOfWholeString];
 		message = [NSAttributedString string:fullMessageText withAttributes:attributes];

@@ -118,12 +118,12 @@
 
 @interface LogTableTextFieldCell : NSTextFieldCell
 {
-	NSString*		theRevision_;
+	LogEntry*		entry_;				// The entry backing this cell
 	LogTableView*	logTableView_;
 	NSTableColumn*	logTableColumn_;
 }
-@property (assign,readwrite) NSString* theRevision;
-@property (assign,readwrite) LogTableView* logTableView;
+@property (readwrite,assign) LogEntry*		entry;
+@property (assign,readwrite) LogTableView*	logTableView;
 @property (assign,readwrite) NSTableColumn*	logTableColumn;
 
 - (NSColor*) highlightColorWithFrame:(NSRect)cellFrame inView:(NSView*)controlView;

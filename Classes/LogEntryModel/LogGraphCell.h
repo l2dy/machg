@@ -13,13 +13,13 @@
 @interface LogGraphCell : NSImageCell
 {
 	// These variables reference the table view in which this cell is based, and they get set in tableView:willDisplayCell:...
-	NSString*		theRevision;		// This is the revision in the table view.
+	LogEntry*		entry_;				// The entry backing this cell
 	LogTableView*	logTableView;		// This is the table view containing this cell.
-	NSTableColumn*	logTableColumn_;		// This is the table column of the LogTableView containing this LogGraphCell.
+	NSTableColumn*	logTableColumn_;	// This is the table column of the LogTableView containing this LogGraphCell.
 	NSInteger		theColumn;			// The column number of the node in the graph.
 }
 
-@property (readwrite,assign) NSString*			theRevision;
+@property (readwrite,assign) LogEntry*			entry;
 @property (readwrite,assign) LogTableView*		logTableView;
 @property (readwrite,assign) NSTableColumn*		logTableColumn;
 @property (readwrite,assign) NSInteger			theColumn;

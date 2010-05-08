@@ -9,6 +9,7 @@
 
 #import "LogGraphCell.h"
 #import "LogGraph.h"
+#import "LogEntry.h"
 #import "LogTableView.h"
 #import <AppKit/NSCell.h>
 #import "RepositoryData.h"
@@ -17,7 +18,7 @@
 @implementation LogGraphCell
 
 
-@synthesize theRevision;
+@synthesize entry = entry_;
 @synthesize logTableView;
 @synthesize logTableColumn = logTableColumn_;
 @synthesize theColumn;
@@ -54,7 +55,7 @@
 - (CGFloat) yCoordOfRevision:(NSNumber*)rev withinFrame:(NSRect)bounds
 {
 	CGFloat rowHeight = bounds.size.height;
-	int thisRow   = [logTableView tableRowForRevision:theRevision];
+	int thisRow   = [logTableView tableRowForRevision:[entry_ revision]];
 	int targetRow = [logTableView tableRowForRevision:numberAsString(rev)];
 	return floor(NSMidY(bounds) + ([[self controlView] isFlipped] ? 1 : -1) * (targetRow - thisRow) * rowHeight);
 }
@@ -171,15 +172,15 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 	if (IsNotEmpty([logTableView theSearchFilter]))
 		return;
 
-	//DebugLog(@"drawingLines for %@", theRevision);
+	//DebugLog(@"drawingLines for %@", [entry revision]);
 	NSRect cellBounds = NSInsetRect(cellFrame, -1, -1);  	// This should be a method somewhere so we can always be sure the cell frame is just a single pixel.
 
 	[NSGraphicsContext saveGraphicsState];
 	NSRectClip(cellBounds);
 	[[NSColor greenColor] set];
-	int theRevisionInt = stringAsInt(theRevision);
+	int theRevisionInt = stringAsInt([entry_ revision]);
 	
-	NSArray* lines = [[theLogGraph lineSegments] objectForKey:theRevision];
+	NSArray* lines = [[theLogGraph lineSegments] objectForKey:[entry_ revision]];
 	BOOL hasIncompleteRevision = [[logTableView repositoryData] includeIncompleteRevision];
 	NSInteger incompleteRevisionInt = [[logTableView repositoryData] computeNumberOfRevisions];
 	for (LineSegment* line in lines)
