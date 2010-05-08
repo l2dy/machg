@@ -51,6 +51,7 @@
 {
 	[self openSplitViewPaneToDefaultHeight: self];
 	[theExportPatchesSheet makeFirstResponder:logTableView];
+	[logTableView setCanSelectIncompleteRevision:YES];
 	[self setPatchNameOption:@"%b-feature%n.patch"];
 }
 
@@ -115,19 +116,71 @@
 	
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
+	
+	BOOL exportPatchForIncompleteVersion = NO;
+	BOOL exportPatchesForLowHigh = YES;
 	NSString* exportDescription = [NSString stringWithFormat:@"exporting %d-%d", pair.lowRevision, pair.highRevision];
-	NSMutableArray* argsExport = [NSMutableArray arrayWithObjects:@"export", nil];
-	NSString* revisionNumbers = [NSString stringWithFormat:@"%d%:%d", pair.lowRevision, pair.highRevision];
-
-	if ([self textOption])			[argsExport addObject:@"--text"];
-	if ([self gitOption])			[argsExport addObject:@"--git"];
-	if ([self noDatesOption])		[argsExport addObject:@"--nodates"];
-	if ([self switchParentOption])	[argsExport addObject:@"--switch-parent"];
-	[argsExport addObject:@"--output" followedBy:[self patchNameOption]];
-	[argsExport addObject:revisionNumbers];
+	if (pair.highRevision == stringAsInt([logTableView incompleteRevision]))
+	{
+		exportPatchForIncompleteVersion = YES;
+		if (pair.lowRevision == pair.highRevision)
+		{
+			exportPatchesForLowHigh = NO;
+			exportDescription = @"exporting current changes";
+		}
+		else
+		{
+			pair.highRevision -= 1;
+			[NSString stringWithFormat:@"exporting %d to current changes", pair.lowRevision];
+		}
+	}
+	
+	NSInteger numberOfPatches = (exportPatchForIncompleteVersion ? 1 : 0) + (exportPatchesForLowHigh ? (pair.highRevision - pair.lowRevision + 1) : 0);
+	NSMutableArray* argsExportRange = nil;
+	NSMutableArray* argsDiff = nil;
+	NSString* fileNameTemplate = [self patchNameOption];
+	fileNameTemplate = [fileNameTemplate stringByReplacingOccurrencesOfRegex:@"\\%N" withString:intAsString(numberOfPatches)];
+	if (exportPatchesForLowHigh)
+	{
+		argsExportRange = [NSMutableArray arrayWithObjects:@"export", nil];
+		NSString* revisionNumbers = [NSString stringWithFormat:@"%d%:%d", pair.lowRevision, pair.highRevision];
+		
+		if ([self textOption])			[argsExportRange addObject:@"--text"];
+		if ([self gitOption])			[argsExportRange addObject:@"--git"];
+		if ([self noDatesOption])		[argsExportRange addObject:@"--nodates"];
+		if ([self switchParentOption])	[argsExportRange addObject:@"--switch-parent"];
+		[argsExportRange addObject:@"--output" followedBy:fileNameTemplate];
+		[argsExportRange addObject:revisionNumbers];
+	}
+	
+	if (exportPatchForIncompleteVersion)
+	{
+		argsDiff = [NSMutableArray arrayWithObjects:@"diff", nil];		
+		if ([self textOption])			[argsDiff addObject:@"--text"];
+		if ([self gitOption])			[argsDiff addObject:@"--git"];
+		if ([self noDatesOption])		[argsDiff addObject:@"--nodates"];
+	}
 	
 	[myDocument dispatchToMercurialQueuedWithDescription:exportDescription  process:^{
-		[myDocument  executeMercurialWithArgs:argsExport  fromRoot:rootPath  whileDelayingEvents:YES];
+		if (exportPatchesForLowHigh)
+			[myDocument  executeMercurialWithArgs:argsExportRange  fromRoot:rootPath  whileDelayingEvents:YES];
+		if (exportPatchForIncompleteVersion)
+		{
+			// For the incomplete version since writing this file can't be handled by export we have to use diff instead.
+			// Substitute the %_ control characters for their values and then write the diff to the file
+			ExecutionResult result = [myDocument  executeMercurialWithArgs:argsDiff  fromRoot:rootPath  whileDelayingEvents:YES];
+			if (result.outStr)
+			{
+				NSString* patchFileName = fileNameTemplate;
+				patchFileName = [patchFileName stringByReplacingOccurrencesOfRegex:@"\\%R" withString:[logTableView incompleteRevision]];
+				patchFileName = [patchFileName stringByReplacingOccurrencesOfRegex:@"\\%b" withString:[rootPath lastPathComponent]];
+				patchFileName = [patchFileName stringByReplacingOccurrencesOfRegex:@"\\%n" withString:intAsString(numberOfPatches)];
+				patchFileName = [patchFileName stringByReplacingOccurrencesOfRegex:@"\\%r" withString:[logTableView incompleteRevision]];
+				if (![patchFileName isAbsolutePath])
+					patchFileName = [rootPath stringByAppendingPathComponent:patchFileName];
+				[result.outStr writeToFile:patchFileName atomically:YES encoding:NSUTF8StringEncoding error:nil];
+			}
+		}
 	}];	
 }
 
