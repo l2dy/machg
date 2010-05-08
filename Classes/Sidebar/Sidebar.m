@@ -347,6 +347,29 @@
 }
 
 
+// If we are dragging a repository folder into the sidebar in the finder, check to see is the repository has a stored reference to
+// the server and if the server is not present in the document then add it to the sidebar as well.
+- (BOOL) addServerIfAvailableAndNotPresent:(NSString*)file  at:(SidebarNode*)targetParent index:(NSInteger)index
+{
+	// Look for a server in [paths].default
+	NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"paths.default", nil];
+	ExecutionResult result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:file];
+	BOOL isServer = [result.outStr matchesRegex:@"^ssh|http|https://"	options:RKLMultiline];
+	if (!isServer || IsNotEmpty(result.errStr))
+		return NO;
+	
+	// If the server is already present in the document don't add it again.
+	NSArray* allRepositories = [self allRepositories];
+	for (SidebarNode* repo in allRepositories)
+		if ([repo isServerRepositoryRef] && [[repo path] isEqualToString:result.outStr])
+			return NO;
+	
+	SidebarNode* serverNode = [SidebarNode nodeWithCaption:[file lastPathComponent]  forServerPath:result.outStr];
+	[targetParent insertChild:serverNode atIndex:index];
+	return YES;
+}
+
+
 - (BOOL) outlineView:(NSOutlineView*)outlineView  acceptDrop:(id<NSDraggingInfo>)info  item:(id)targetItem  childIndex:(NSInteger)index
 {
 	NSPasteboard* pboard = [info draggingPasteboard];	// get the pasteboard
@@ -408,6 +431,7 @@
 				SidebarNode* node = [SidebarNode nodeForLocalURL:file];
 				[targetParent insertChild:node atIndex:index];
 				[[AppController sharedAppController] computeRepositoryIdentityForPath:file];
+				[self addServerIfAvailableAndNotPresent:file at:targetParent index:index];
 				newSelectedNode = node;
 			}
 
