@@ -112,8 +112,6 @@
 		963DBE1310C7D54800189853 /* SidebarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 963DBE0D10C7D54800189853 /* SidebarCell.m */; };
 		963DBE1410C7D54800189853 /* SidebarNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 963DBE0F10C7D54800189853 /* SidebarNode.m */; };
 		9657059A113B1455009FE4C5 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96570599113B1455009FE4C5 /* WebKit.framework */; };
-		965920311172437A00BD019B /* AddLabelSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 965920301172437A00BD019B /* AddLabelSheetController.m */; };
-		965920381172446300BD019B /* AddLabelSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 965920361172446300BD019B /* AddLabelSheet.xib */; };
 		965FA57D116424A40074E4AA /* FinderIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 965FA57C116424A40074E4AA /* FinderIcon.png */; };
 		96680DA510CDD789001D178B /* FSBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 96680DA010CDD789001D178B /* FSBrowser.m */; };
 		96680DA610CDD789001D178B /* FSBrowserCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96680DA210CDD789001D178B /* FSBrowserCell.m */; };
@@ -143,6 +141,8 @@
 		9695CBD3110A101C004CE684 /* IncomingSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9695CBD2110A101C004CE684 /* IncomingSheetController.m */; };
 		969754B910DE28CD00F02ACF /* pull_32h.png in Resources */ = {isa = PBXBuildFile; fileRef = 969754B710DE28CD00F02ACF /* pull_32h.png */; };
 		969754C310DE296A00F02ACF /* push_32h.png in Resources */ = {isa = PBXBuildFile; fileRef = 969754C210DE296A00F02ACF /* push_32h.png */; };
+		969BD94511953E43007AA6D9 /* AddLabelSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 969BD94411953E43007AA6D9 /* AddLabelSheetController.m */; };
+		969BD94811953E54007AA6D9 /* AddLabelSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 969BD94611953E54007AA6D9 /* AddLabelSheet.xib */; };
 		969C525B112EC73800FA7C33 /* HistoryEditSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 969C525A112EC73800FA7C33 /* HistoryEditSheetController.m */; };
 		969C525E112EC73E00FA7C33 /* HistoryEditSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 969C525C112EC73E00FA7C33 /* HistoryEditSheet.xib */; };
 		969C52F8112EE44700FA7C33 /* StripSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 969C52F7112EE44700FA7C33 /* StripSheetController.m */; };
@@ -347,9 +347,6 @@
 		963DBE0F10C7D54800189853 /* SidebarNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SidebarNode.m; path = Classes/Sidebar/SidebarNode.m; sourceTree = SOURCE_ROOT; };
 		963DBE3810C7D6CA00189853 /* Sidebar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sidebar.h; sourceTree = "<group>"; };
 		96570599113B1455009FE4C5 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
-		9659202F1172437A00BD019B /* AddLabelSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddLabelSheetController.h; sourceTree = "<group>"; };
-		965920301172437A00BD019B /* AddLabelSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddLabelSheetController.m; sourceTree = "<group>"; };
-		965920371172446300BD019B /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/AddLabelSheet.xib; sourceTree = SOURCE_ROOT; };
 		965FA57C116424A40074E4AA /* FinderIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FinderIcon.png; sourceTree = "<group>"; };
 		96680D9F10CDD789001D178B /* FSBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FSBrowser.h; path = Classes/BrowserPane/FSBrowser.h; sourceTree = "<group>"; };
 		96680DA010CDD789001D178B /* FSBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FSBrowser.m; path = Classes/BrowserPane/FSBrowser.m; sourceTree = "<group>"; };
@@ -397,6 +394,9 @@
 		9695CBD2110A101C004CE684 /* IncomingSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IncomingSheetController.m; sourceTree = "<group>"; };
 		969754B710DE28CD00F02ACF /* pull_32h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pull_32h.png; path = SheetIcons/pull_32h.png; sourceTree = "<group>"; };
 		969754C210DE296A00F02ACF /* push_32h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = push_32h.png; path = SheetIcons/push_32h.png; sourceTree = "<group>"; };
+		969BD94311953E43007AA6D9 /* AddLabelSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddLabelSheetController.h; sourceTree = "<group>"; };
+		969BD94411953E43007AA6D9 /* AddLabelSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddLabelSheetController.m; sourceTree = "<group>"; };
+		969BD94711953E54007AA6D9 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/AddLabelSheet.xib; sourceTree = SOURCE_ROOT; };
 		969C5259112EC73800FA7C33 /* HistoryEditSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HistoryEditSheetController.h; sourceTree = "<group>"; };
 		969C525A112EC73800FA7C33 /* HistoryEditSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HistoryEditSheetController.m; sourceTree = "<group>"; };
 		969C525D112EC73E00FA7C33 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/HistoryEditSheet.xib; sourceTree = SOURCE_ROOT; };
@@ -717,7 +717,7 @@
 		9631D0321107A7E20007FDF2 /* Sheets */ = {
 			isa = PBXGroup;
 			children = (
-				9659202E1172436400BD019B /* AddLabelSheet */,
+				969BD94211953E43007AA6D9 /* AddLabelSheet */,
 				9631D0331107A7E20007FDF2 /* CloneSheet */,
 				9631D0361107A7E20007FDF2 /* CommitSheet */,
 				96DD29C7112AE56200A57BD3 /* CollapseSheet */,
@@ -991,17 +991,6 @@
 			path = Classes/Sidebar;
 			sourceTree = "<group>";
 		};
-		9659202E1172436400BD019B /* AddLabelSheet */ = {
-			isa = PBXGroup;
-			children = (
-				9659202F1172437A00BD019B /* AddLabelSheetController.h */,
-				965920301172437A00BD019B /* AddLabelSheetController.m */,
-				965920361172446300BD019B /* AddLabelSheet.xib */,
-			);
-			name = AddLabelSheet;
-			path = AddMarkSheet;
-			sourceTree = "<group>";
-		};
 		966810C210CE7425001D178B /* Backing Pane */ = {
 			isa = PBXGroup;
 			children = (
@@ -1181,6 +1170,16 @@
 				9695CB65110A0ACD004CE684 /* OutgoingSheet.xib */,
 			);
 			path = OutgoingSheet;
+			sourceTree = "<group>";
+		};
+		969BD94211953E43007AA6D9 /* AddLabelSheet */ = {
+			isa = PBXGroup;
+			children = (
+				969BD94311953E43007AA6D9 /* AddLabelSheetController.h */,
+				969BD94411953E43007AA6D9 /* AddLabelSheetController.m */,
+				969BD94611953E54007AA6D9 /* AddLabelSheet.xib */,
+			);
+			path = AddLabelSheet;
 			sourceTree = "<group>";
 		};
 		969C5258112EC73800FA7C33 /* HistoryEditSheet */ = {
@@ -1366,7 +1365,6 @@
 				96B1C98B1159C00500752DF2 /* MacHgHelp in Resources */,
 				965FA57D116424A40074E4AA /* FinderIcon.png in Resources */,
 				96138847116B437D0022F368 /* ActionDrop.png in Resources */,
-				965920381172446300BD019B /* AddLabelSheet.xib in Resources */,
 				9610639B117C6E4000FF7EB2 /* ActionDrop24.png in Resources */,
 				963089911182071B006E45A8 /* ImportPatchesSheet.xib in Resources */,
 				962ED0BC11878A120072211F /* macHgPublicKey_dsa.pem in Resources */,
@@ -1379,6 +1377,7 @@
 				9637C8C0118E9C030000C14B /* DividerThumb.png in Resources */,
 				9637C8C1118E9C030000C14B /* SmallDividerThumb.png in Resources */,
 				9637C8C3118E9C300000C14B /* ActionDropButtonSizeSmall.png in Resources */,
+				969BD94811953E54007AA6D9 /* AddLabelSheet.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1440,7 +1439,6 @@
 				9606EE18115670FD00968DE8 /* HelpButton.m in Sources */,
 				961D5A09115DBD9E0064A4DA /* CommandKeyTextField.m in Sources */,
 				969064EC11601E2400F30915 /* MonitorFSEvents.m in Sources */,
-				965920311172437A00BD019B /* AddLabelSheetController.m in Sources */,
 				96D2477D117BC1810030815B /* ThickSplitView.m in Sources */,
 				9630898E11820711006E45A8 /* ImportPatchesSheetController.m in Sources */,
 				962ED03B11875ABC0072211F /* LabelData.m in Sources */,
@@ -1458,6 +1456,7 @@
 				9637C8A5118E9AC00000C14B /* JHAccordionView.m in Sources */,
 				9637C8B3118E9BB40000C14B /* ScrollToForLogTable.m in Sources */,
 				9637C8C9118E9C5A0000C14B /* NSString+SymlinksAndAliases.m in Sources */,
+				969BD94511953E43007AA6D9 /* AddLabelSheetController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1592,14 +1591,6 @@
 			name = HistoryPane.xib;
 			sourceTree = "<group>";
 		};
-		965920361172446300BD019B /* AddLabelSheet.xib */ = {
-			isa = PBXVariantGroup;
-			children = (
-				965920371172446300BD019B /* English */,
-			);
-			name = AddLabelSheet.xib;
-			sourceTree = "<group>";
-		};
 		966810D510CE7546001D178B /* BackingPane.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
@@ -1655,6 +1646,14 @@
 				9695CB69110A0AD4004CE684 /* English */,
 			);
 			name = IncomingSheet.xib;
+			sourceTree = "<group>";
+		};
+		969BD94611953E54007AA6D9 /* AddLabelSheet.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				969BD94711953E54007AA6D9 /* English */,
+			);
+			name = AddLabelSheet.xib;
 			sourceTree = "<group>";
 		};
 		969C525C112EC73E00FA7C33 /* HistoryEditSheet.xib */ = {
