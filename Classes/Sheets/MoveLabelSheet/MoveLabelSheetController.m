@@ -56,16 +56,26 @@
 // MARK: Actions Log Inspector
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+- (IBAction) validate:(id)sender
+{
+	NSString* versionToRevertTo = [logTableView selectedRevision];
+	[sheetInformativeMessageTextField setAttributedStringValue: [self formattedSheetMessage]];
+	BOOL enabled = (versionToRevertTo && [versionToRevertTo isNotEqualToString:[labelToMove_ revision]]);
+	[okButton setEnabled:enabled];	
+}
+
+
 - (void) openMoveLabelSheetForMoveLabel:(LabelData*)label;
 {
 	labelToMove_ = label;
-	// Report the branch we are about to revert on in the dialog
-	NSString* newSheetMessage = [NSString stringWithFormat:@"The following files will be reverted to the versions as of the revision selected below (%@)", [label name]];
-	NSString* newLabelToMoveMessage = [NSString stringWithFormat:@"%@ to move:%@", [label labelTypeDescription], [label name]];
 
-	[sheetInformativeMessageTextField setStringValue: newSheetMessage];
+	// Report the label we are about to move
+	NSString* newLabelToMoveMessage = [NSString stringWithFormat:@"%@ to move:%@", [label labelTypeDescription], [label name]];
 	[labelToMoveTextField setStringValue:newLabelToMoveMessage];
 	
+	// Update the button and the sheet message
+	[self validate:self];
+
 	[logTableView resetTable:self];
 	[NSApp beginSheet:theMoveLabelSheet  modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
 	[logTableView scrollToRevision:[label revision]];
@@ -146,7 +156,7 @@
 
 - (void) logTableViewSelectionDidChange:(LogTableView*)theLogTable;
 {
-	[sheetInformativeMessageTextField setAttributedStringValue: [self formattedSheetMessage]];
+	[self validate:self];
 }
 
 
@@ -161,10 +171,20 @@
 - (NSAttributedString*) formattedSheetMessage
 {
 	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
-	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"The contents of the files within the selected file paths will be replaced with their contents as of version ")];
-	NSString* rev = [logTableView selectedRevision];
-	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(rev ? rev : @"-")];
-	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@". Any tracked files which have been modified will be moved aside. Any newly added or removed files will return to their former status.")];
+	NSString* versionToRevertTo = [logTableView selectedRevision];
+	
+	if (!versionToRevertTo || [versionToRevertTo isEqualToString:[labelToMove_ revision]])
+	{
+		NSString* newSheetMessageText = [NSString stringWithFormat:@"select a revision to move the %@ %@ to which is different than the current revision %@", [labelToMove_ labelTypeDescription], [labelToMove_ name], [labelToMove_ revision]];
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(newSheetMessageText)];
+		return newSheetMessage;
+	}
+
+	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString([NSString stringWithFormat:@"The %@ %@ will be moved from revision ",[labelToMove_ labelTypeDescription], [labelToMove_ name]])];
+	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString([labelToMove_ revision])];
+	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" to the selected revision ")];
+	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(versionToRevertTo)];
+	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@".")];
 	return newSheetMessage;
 }
 

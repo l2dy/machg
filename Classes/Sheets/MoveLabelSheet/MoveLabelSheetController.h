@@ -23,6 +23,7 @@
 	IBOutlet NSTextField*	labelToMoveTextField;
 	IBOutlet NSTextField*	sheetInformativeMessageTextField;
 	IBOutlet NSTextField*	moveLabelSheetTitle;
+	IBOutlet NSButton*		okButton;
 }
 
 

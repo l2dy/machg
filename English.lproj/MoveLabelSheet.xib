@@ -945,6 +945,14 @@
 					</object>
 					<int key="connectionID">168</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">okButton</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="131696825"/>
+					</object>
+					<int key="connectionID">169</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -1504,7 +1512,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">168</int>
+			<int key="maxID">169</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1536,7 +1544,7 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">LogTableTextFieldCell</string>
 					<string key="superclassName">NSTextFieldCell</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="322389169">
+					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="155099008">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/LogEntryModel/LogTableView.h</string>
 					</object>
@@ -1578,7 +1586,7 @@
 							<string>id</string>
 						</object>
 					</object>
-					<reference key="sourceIdentifier" ref="322389169"/>
+					<reference key="sourceIdentifier" ref="155099008"/>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">MoveLabelSheetController</string>
@@ -1604,6 +1612,7 @@
 							<string>labelToMoveTextField</string>
 							<string>logTableView</string>
 							<string>moveLabelSheetTitle</string>
+							<string>okButton</string>
 							<string>sheetInformativeMessageTextField</string>
 							<string>theMoveLabelSheet</string>
 						</object>
@@ -1613,6 +1622,7 @@
 							<string>NSTextField</string>
 							<string>LogTableView</string>
 							<string>NSTextField</string>
+							<string>NSButton</string>
 							<string>NSTextField</string>
 							<string>NSWindow</string>
 						</object>
