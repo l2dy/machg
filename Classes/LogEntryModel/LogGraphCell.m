@@ -178,7 +178,6 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 	[NSGraphicsContext saveGraphicsState];
 	NSRectClip(cellBounds);
 	[[NSColor greenColor] set];
-	int theRevisionInt = stringAsInt([entry_ revision]);
 	
 	NSArray* lines = [[theLogGraph lineSegments] objectForKey:[entry_ revision]];
 	BOOL hasIncompleteRevision = [[logTableView repositoryData] includeIncompleteRevision];
@@ -222,11 +221,17 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 	[NSGraphicsContext restoreGraphicsState];
 
 
-	// Draw red dot in center
+	// Draw dot in center of graph line
+	[self drawGraphDot:NSMakePoint([self xCoordOfColumn:theColumn withinFrame:cellBounds], NSMidY(cellBounds))];
+}
+
+
+- (void) drawGraphDot:(NSPoint) dotCenter;
+{
 	int radius = 3.0;
-	NSRect dotRect;		
-	dotRect.origin.x = [self xCoordOfColumn:theColumn withinFrame:cellBounds] - radius;
-	dotRect.origin.y = NSMidY(cellBounds) - radius;
+	NSRect dotRect;
+	dotRect.origin.x = dotCenter.x - radius;
+	dotRect.origin.y = dotCenter.y - radius;
 	dotRect.size.width  = 2 * radius;
 	dotRect.size.height = 2 * radius;
 	
@@ -238,7 +243,7 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 	NSColor* fillColor   = defaultRed;
 	NSColor* strokeColor = nil;
 
-	if (hasIncompleteRevision && theRevisionInt == incompleteRevisionInt)
+	if ([[logTableView repositoryData] incompleteRevisionEntry] == entry_)
 	{
 		fillColor   = [NSColor whiteColor];
 		strokeColor = [NSColor grayColor];

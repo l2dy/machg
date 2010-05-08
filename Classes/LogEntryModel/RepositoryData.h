@@ -98,6 +98,7 @@
 - (BOOL)		hasMultipleOpenHeads;		// Do we have more than one "open" head in the repository. If not then we have nothing
 											// to merge with.
 - (NSString*)	incompleteRevision;
+- (LogEntry*)	incompleteRevisionEntry;
 
 - (id)			initWithRootPath:(NSString*)rootPath andDocument:(MacHgDocument*)doc;
 - (BOOL)		entryIsLoadedForRevisionNumber:(NSNumber*)rev;

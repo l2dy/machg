@@ -24,7 +24,8 @@
 @property (readwrite,assign) NSTableColumn*		logTableColumn;
 @property (readwrite,assign) NSInteger			theColumn;
 
-- (void)		drawWithFrame:(NSRect)cellFrame inView:(NSView*)controlView;
-- (NSSize)		cellSize;
+- (void)	drawWithFrame:(NSRect)cellFrame inView:(NSView*)controlView;
+- (void)	drawGraphDot:(NSPoint) dotCenter;
+- (NSSize)	cellSize;
 
 @end

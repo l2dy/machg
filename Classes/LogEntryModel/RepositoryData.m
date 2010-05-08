@@ -517,7 +517,7 @@
 - (NSInteger) computeNumberOfRealRevisions	{ return [[self getHGTipRevision] intValue]; }
 - (NSInteger) computeNumberOfRevisions		{ return [[self getHGTipRevision] intValue] + (includeIncompleteRevision_ ? 1 : 0); }
 - (NSString*) incompleteRevision			{ return [incompleteRevisionEntry_ revision]; }
-
+- (LogEntry*) incompleteRevisionEntry		{ return incompleteRevisionEntry_; }
 
 
 
