@@ -11,6 +11,7 @@
 #import "MacHgDocument.h"
 #import "TaskExecutions.h"
 #import "LogEntry.h"
+#import "LabelData.h"
 #import "RepositoryData.h"
 #import "LogTableView.h"
 
@@ -55,62 +56,83 @@
 // MARK: Actions Log Inspector
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) openMoveLabelSheetWithPaths:(NSArray*)paths andRevision:(NSString*)revision
+- (void) openMoveLabelSheetForMoveLabel:(LabelData*)label;
 {
+	labelToMove_ = label;
 	// Report the branch we are about to revert on in the dialog
-	NSString* newSheetMessage = [NSString stringWithFormat:@"The following files will be reverted to the versions as of the revision selected below (%@)", [logTableView selectedRevision]];
+	NSString* newSheetMessage = [NSString stringWithFormat:@"The following files will be reverted to the versions as of the revision selected below (%@)", [label name]];
+	NSString* newLabelToMoveMessage = [NSString stringWithFormat:@"%@ to move:%@", [label labelTypeDescription], [label name]];
+
 	[sheetInformativeMessageTextField setStringValue: newSheetMessage];
-	absolutePathsOfFilesToRevert = paths;
+	[labelToMoveTextField setStringValue:newLabelToMoveMessage];
 	
 	[logTableView resetTable:self];
-	[labelToMoveTextField setStringValue:[paths componentsJoinedByString:@"\n"]];
 	[NSApp beginSheet:theMoveLabelSheet  modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
-	[logTableView scrollToRevision:revision];
+	[logTableView scrollToRevision:[label revision]];
 }
 
 
-- (IBAction) openMoveLabelSheetWithAllFiles:(id)sender
+- (void) sheetButtonOkForMoveLabelSheet:(id)sender
 {
-	NSString* newTitle = [NSString stringWithFormat:@"Reverting All Files in %@", [myDocument selectedRepositoryShortName]];
-	[moveLabelSheetTitle setStringValue:newTitle];
+	[theMoveLabelSheet makeFirstResponder:theMoveLabelSheet];	// Make the text fields of the sheet commit any changes they currently have
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
-	[self openMoveLabelSheetWithPaths:[NSArray arrayWithObject:rootPath] andRevision:[myDocument getHGParent1Revision]];
-}
-
-- (IBAction) openMoveLabelSheetWithSelectedFiles:(id)sender
-{
-	NSString* newTitle = [NSString stringWithFormat:@"Reverting Selected Files in %@", [myDocument selectedRepositoryShortName]];
-	[moveLabelSheetTitle setStringValue:newTitle];
-	NSArray* paths = [myDocument absolutePathsOfBrowserChosenFiles];
-	if ([paths count] <= 0)
-	{ PlayBeep(); DebugLog(@"No files are selected to revert"); return; }
-	
-	[self openMoveLabelSheetWithPaths:paths  andRevision:[myDocument getHGParent1Revision]];
-}
-
-
-- (IBAction) sheetButtonOkForMoveLabelSheet:(id)sender;
-{
 	NSString* versionToRevertTo = [logTableView selectedRevision];
-	BOOL didReversion = [myDocument primaryActionRevertFiles:absolutePathsOfFilesToRevert toVersion:versionToRevertTo];
-	if (!didReversion)
+
+	NSString* command = @"";
+	BOOL bailEarly = NO;
+	switch ([labelToMove_ labelType])
+	{
+		case eLocalTag:
+		case eGlobalTag:		command = @"tag";		break;
+		case eBookmark:			command = @"bookmark";	break;
+		case eActiveBranch:
+		case eInactiveBranch:
+		case eClosedBranch:
+		{
+			if ([versionToRevertTo isNotEqualToString:[[myDocument repositoryData] getHGParent]])
+			{
+				BOOL updatedToTagetRev = [myDocument primaryActionUpdateFilesToVersion:versionToRevertTo withCleanOption:NO];
+				if (!updatedToTagetRev)
+					bailEarly = YES;
+			}
+			command = @"branch";
+			break;
+		}
+
+		default:bailEarly = YES;
+	}
+	
+	if (bailEarly)
+	{
+		PlayBeep();
+		[NSApp endSheet:theMoveLabelSheet];
+		[theMoveLabelSheet orderOut:sender];
+		return;
+	}
+		
+	NSMutableArray* argsMoveLabel = [NSMutableArray arrayWithObjects:command, nil ];
+	if (![labelToMove_ isBranch])
+		[argsMoveLabel addObject: @"--rev" followedBy:versionToRevertTo];
+	if ([labelToMove_ labelType] == eLocalTag)
+		[argsMoveLabel addObject: @"--local"];
+	[argsMoveLabel addObject: @"--force"];
+	[argsMoveLabel addObject:[labelToMove_ name]];
+	ExecutionResult results = [myDocument executeMercurialWithArgs:argsMoveLabel fromRoot:rootPath whileDelayingEvents:YES];
+	
+	if ([results.errStr length] > 0)
 		return;
 	
 	[NSApp endSheet:theMoveLabelSheet];
 	[theMoveLabelSheet orderOut:sender];
+	[myDocument postNotificationWithName:kUnderlyingRepositoryChanged];
 }
+
+
 
 - (IBAction) sheetButtonCancelForMoveLabelSheet:(id)sender;
 {
 	[NSApp endSheet:theMoveLabelSheet];
 	[theMoveLabelSheet orderOut:sender];
-}
-
-
-- (IBAction) sheetButtonViewDifferencesForMoveLabelSheet:(id)sender
-{
-	NSString* versionToRevertTo = [logTableView selectedRevision];
-	[myDocument viewDifferencesInCurrentRevisionFor:absolutePathsOfFilesToRevert toRevision:versionToRevertTo];
 }
 
 

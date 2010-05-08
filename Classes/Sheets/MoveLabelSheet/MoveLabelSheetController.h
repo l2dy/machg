@@ -14,8 +14,7 @@
 @interface MoveLabelSheetController : BaseSheetWindowController < ControllerForLogTableView >
 {
 	MacHgDocument*			myDocument;
-	NSArray*				absolutePathsOfFilesToRevert;	// This array is stored here when the sheet is set up. Later when
-															// the user hits the revert button it is used to do the revert.
+	LabelData*				labelToMove_;
 	
 	// Main window
 	IBOutlet NSWindow*		theMoveLabelSheet;
@@ -34,12 +33,10 @@
 - (MoveLabelSheetController*) initMoveLabelSheetControllerWithDocument:(MacHgDocument*)doc;
 
 
-// Action Methods - Log Inspector
-- (IBAction) openMoveLabelSheetWithAllFiles:(id)sender;
-- (IBAction) openMoveLabelSheetWithSelectedFiles:(id)sender;
+// Action Methods
 - (IBAction) sheetButtonOkForMoveLabelSheet:(id)sender;
 - (IBAction) sheetButtonCancelForMoveLabelSheet:(id)sender;
-- (IBAction) sheetButtonViewDifferencesForMoveLabelSheet:(id)sender;
+- (void)	 openMoveLabelSheetForMoveLabel:(LabelData*)label;
 
 
 // Table delegate methods
@@ -47,6 +44,5 @@
 
 
 - (NSAttributedString*) formattedSheetMessage;
-- (void) openMoveLabelSheetWithPaths:(NSArray*)paths andRevision:(NSString*)revision;
 
 @end
