@@ -9,55 +9,44 @@
 
 #import <Cocoa/Cocoa.h>
 #import "Common.h"
+#import "LogTableView.h"
 
-typedef enum
+@interface MoveLabelSheetController : BaseSheetWindowController < ControllerForLogTableView >
 {
-	eMoveLabelTabLocalTag  = 0x0,
-	eMoveLabelTabGlobalTag = 0x1,
-	eMoveLabelTabBookmark  = 0x2,
-	eMoveLabelTabBranch	  = 0x3
-} MoveLabelTabEnum;
-
-@interface MoveLabelSheetController : BaseSheetWindowController <NSTabViewDelegate>
-{
+	MacHgDocument*			myDocument;
+	NSArray*				absolutePathsOfFilesToRevert;	// This array is stored here when the sheet is set up. Later when
+															// the user hits the revert button it is used to do the revert.
+	
+	// Main window
 	IBOutlet NSWindow*		theMoveLabelSheet;
+	IBOutlet LogTableView*	logTableView;
+	IBOutlet NSSplitView*	inspectorSplitView;
+	IBOutlet NSTextField*	labelToMoveTextField;
 	IBOutlet NSTextField*	sheetInformativeMessageTextField;
 	IBOutlet NSTextField*	moveLabelSheetTitle;
-	IBOutlet NSButton*		okButton;
-	IBOutlet NSTabView*		moveLabelTabView;
-
-	IBOutlet NSTextView*	commitMessageTextView;
-
-	MacHgDocument*		myDocument;
-	
-	NSString*			theNewNameFieldValue_;
-	NSString*			theRevisionFieldValue_;
-	NSAttributedString*	theMovementMessage_;
-	NSAttributedString*	theScopeMessage_;
-	NSAttributedString*	theCommitMessageValue_;
-	BOOL				forceValue_;
-	MoveLabelTabEnum		moveLabelTabNumber_;
-
 }
 
-@property (readwrite,assign) NSString*				theNewNameFieldValue;
-@property (readwrite,assign) NSString*				theRevisionFieldValue;
-@property (readwrite,assign) BOOL					forceValue;
-@property (readwrite,assign) MoveLabelTabEnum		moveLabelTabNumber;
-@property (readwrite,assign) NSAttributedString*	theMovementMessage;
-@property (readwrite,assign) NSAttributedString*	theScopeMessage;
-@property (readwrite,assign) NSAttributedString*	theCommitMessageValue;
+
+@property (readwrite,assign) MacHgDocument*  myDocument;
 
 
+// Initialization
 - (MoveLabelSheetController*) initMoveLabelSheetControllerWithDocument:(MacHgDocument*)doc;
 
 
-- (IBAction) openMoveLabelSheet:(id)sender;
+// Action Methods - Log Inspector
+- (IBAction) openMoveLabelSheetWithAllFiles:(id)sender;
+- (IBAction) openMoveLabelSheetWithSelectedFiles:(id)sender;
 - (IBAction) sheetButtonOkForMoveLabelSheet:(id)sender;
 - (IBAction) sheetButtonCancelForMoveLabelSheet:(id)sender;
-- (IBAction) didSelectSegment:(id)sender;
-- (IBAction) didChangeFieldContents:(id)sender;
+- (IBAction) sheetButtonViewDifferencesForMoveLabelSheet:(id)sender;
 
-- (void)	 openMoveLabelSheetForMoveLabel:(LabelData*)label;
+
+// Table delegate methods
+- (void)	logTableViewSelectionDidChange:(LogTableView*)theLogTable;
+
+
+- (NSAttributedString*) formattedSheetMessage;
+- (void) openMoveLabelSheetWithPaths:(NSArray*)paths andRevision:(NSString*)revision;
 
 @end

@@ -9,7 +9,6 @@
 
 #import "AddLabelSheetController.h"
 #import "MacHgDocument.h"
-#import "FSNodeInfo.h"
 #import "TaskExecutions.h"
 #import "HistoryPaneController.h"
 #import "LabelData.h"

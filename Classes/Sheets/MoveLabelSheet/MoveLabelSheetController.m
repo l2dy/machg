@@ -9,26 +9,13 @@
 
 #import "MoveLabelSheetController.h"
 #import "MacHgDocument.h"
-#import "FSNodeInfo.h"
 #import "TaskExecutions.h"
-#import "HistoryPaneController.h"
-#import "LabelData.h"
-
-
-@interface MoveLabelSheetController (Private)
-- (void) updateButtonsAndMessages;
-@end
-
-
+#import "LogEntry.h"
+#import "RepositoryData.h"
+#import "LogTableView.h"
 
 @implementation MoveLabelSheetController
-@synthesize theNewNameFieldValue	= theNewNameFieldValue_;
-@synthesize theRevisionFieldValue	= theRevisionFieldValue_;
-@synthesize theMovementMessage		= theMovementMessage_;
-@synthesize theScopeMessage			= theScopeMessage_;
-@synthesize theCommitMessageValue	= theCommitMessageValue_;
-@synthesize forceValue				= forceValue_;
-@synthesize moveLabelTabNumber		= moveLabelTabNumber_;
+@synthesize myDocument;
 
 
 
@@ -47,18 +34,16 @@
 }
 
 
+- (IBAction) openSplitViewPaneToDefaultHeight: (id)sender
+{
+	[inspectorSplitView setPosition:200 ofDividerAtIndex: 0];
+}
+
 
 - (void) awakeFromNib
 {
-//	[self  addObserver:self  forKeyPath:kTheNewNameFieldValue		options:NSKeyValueObservingOptionNew  context:NULL];
-//	[self  addObserver:self  forKeyPath:kTheRevisionFieldValue		options:NSKeyValueObservingOptionNew  context:NULL];
-	[moveLabelTabView setDelegate:self];
-}
-
-- (void) observeValueForKeyPath:(NSString*)keyPath  ofObject:(id)object  change:(NSDictionary*)change  context:(void*)context
-{
-//    if ([keyPath isEqualToString:kTheNewNameFieldValue] || [keyPath isEqualToString:kTheRevisionFieldValue])
-//		[self updateButtonsAndMessages];
+	[self openSplitViewPaneToDefaultHeight: self];
+	[theMoveLabelSheet makeFirstResponder:logTableView];
 }
 
 
@@ -67,212 +52,98 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK:  Update TabIndex and SegmentsIndexes
+// MARK: Actions Log Inspector
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) updateButtonsAndMessages
+- (void) openMoveLabelSheetWithPaths:(NSArray*)paths andRevision:(NSString*)revision
 {
-	BOOL local		= (moveLabelTabNumber_ == eMoveLabelTabLocalTag || moveLabelTabNumber_ == eMoveLabelTabBookmark);
-	BOOL stationary = (moveLabelTabNumber_ == eMoveLabelTabLocalTag || moveLabelTabNumber_ == eMoveLabelTabGlobalTag);
+	// Report the branch we are about to revert on in the dialog
+	NSString* newSheetMessage = [NSString stringWithFormat:@"The following files will be reverted to the versions as of the revision selected below (%@)", [logTableView selectedRevision]];
+	[sheetInformativeMessageTextField setStringValue: newSheetMessage];
+	absolutePathsOfFilesToRevert = paths;
 	
-	NSMutableAttributedString* newScopeMessage = [[NSMutableAttributedString alloc] init];
-	if (local)
-	{
-		[newScopeMessage appendAttributedString: emphasizedSheetMessageAttributedString(@"Local")];
-		[newScopeMessage appendAttributedString: normalSheetMessageAttributedString(@" - the label will be created in only the current repository. When you push this repository, the label name will not appear in the repositories pushed to.")];
-	}
-	else
-	{
-		[newScopeMessage appendAttributedString: emphasizedSheetMessageAttributedString(@"Global")];
-		[newScopeMessage appendAttributedString: normalSheetMessageAttributedString(@" - the label will be globally tracked with the repository. When you push this repository, the label name will appear in all of the repositories pushed to.")];
-	}
-	[self setTheScopeMessage:newScopeMessage];
-
-	
-	NSMutableAttributedString* newMovementMessage = [[NSMutableAttributedString alloc] init];
-	if (stationary)
-	{
-		[newMovementMessage appendAttributedString: emphasizedSheetMessageAttributedString(@"Stationary")];
-		[newMovementMessage appendAttributedString: normalSheetMessageAttributedString(@" - the label will always reference the same revision changeset.")];
-	}
-	else
-	{
-		[newMovementMessage appendAttributedString: emphasizedSheetMessageAttributedString(@"Advancing")];
-		[newMovementMessage appendAttributedString: normalSheetMessageAttributedString(@" - the label will advance as commits are made to the working branch of the repository.")];
-	}
-	[self setTheMovementMessage:newMovementMessage];
-	
-	
-	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
-	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"Revision ")];
-	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(IsNotEmpty(theRevisionFieldValue_) ? theRevisionFieldValue_ : @"...")];
-	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" will be labeled with the name '")];
-	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString( IsNotEmpty(theNewNameFieldValue_) ? theNewNameFieldValue_ : @"...")];
-	
-	
-	switch (moveLabelTabNumber_)
-	{
-		case eMoveLabelTabLocalTag:
-		{
-			[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"'. This tag will be added immediately without any \"commit\" to the repository.")];
-			break;
-		}
-		case eMoveLabelTabGlobalTag:
-		{
-			[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"'. This tag will be added by a \"commit\" to the repository.")];
-			break;
-		}
-		case eMoveLabelTabBookmark:
-		{
-			[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"'. This bookmark will be added immediately without any \"commit\" to the repository.")];
-			break;
-		}
-		case eMoveLabelTabBranch:
-		{
-			newSheetMessage = [[NSMutableAttributedString alloc] init];
-			[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"The current revision will be labeled with the name '")];
-			[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString( IsNotEmpty(theNewNameFieldValue_) ? theNewNameFieldValue_ : @"...")];
-			[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"'. This branch label will only appear after the next \"commit\" to the repository.")];
-			break;
-		}
-	}
-	[sheetInformativeMessageTextField setAttributedStringValue:newSheetMessage];
-	
-	switch (moveLabelTabNumber_)
-	{
-		case eMoveLabelTabLocalTag:	[okButton setEnabled:(IsNotEmpty(theNewNameFieldValue_) && IsNotEmpty(theRevisionFieldValue_))];	break;
-		case eMoveLabelTabGlobalTag:	[okButton setEnabled:(IsNotEmpty(theNewNameFieldValue_) && IsNotEmpty(theRevisionFieldValue_))];	break;
-		case eMoveLabelTabBookmark:	[okButton setEnabled:(IsNotEmpty(theNewNameFieldValue_) && IsNotEmpty(theRevisionFieldValue_))];	break;
-		case eMoveLabelTabBranch:	[okButton setEnabled:IsNotEmpty(theNewNameFieldValue_)];	break;
-		default:
-			return;
-	}
-	
+	[logTableView resetTable:self];
+	[labelToMoveTextField setStringValue:[paths componentsJoinedByString:@"\n"]];
+	[NSApp beginSheet:theMoveLabelSheet  modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[logTableView scrollToRevision:revision];
 }
 
 
-
-
-
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
-// MARK:  Pseudo Notifications
-// -----------------------------------------------------------------------------------------------------------------------------------------
-
-// Delegate Method
-- (void) tabView:(NSTabView*)tabView didSelectTabViewItem:(NSTabViewItem*)tabViewItem
+- (IBAction) openMoveLabelSheetWithAllFiles:(id)sender
 {
-	[self updateButtonsAndMessages];
-}
-
-- (IBAction) didSelectSegment:(id)sender
-{
-	[self updateButtonsAndMessages];
-}
-
-- (IBAction) didChangeFieldContents:(id)sender
-{
-	[self updateButtonsAndMessages];	
-}
-
-
-
-
-
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
-// MARK:  Tab handling
-// -----------------------------------------------------------------------------------------------------------------------------------------
-
-- (IBAction) openMoveLabelSheet:(id)sender
-{
-	HistoryPaneController*	theHistoryPane = [myDocument theHistoryPaneController];
-	BOOL wasShowingHistoryPane = [myDocument showingHistoryPane];
-	[myDocument actionSwitchViewToHistoryPane:sender];				// Open the log inspector
-	[[myDocument toolbarSearchField] setStringValue:@""];			// reset the search term
-	if (!wasShowingHistoryPane)
-		[[theHistoryPane logTableView] scrollToCurrentRevision:sender];			// Scroll to the current revision
-	[self setTheNewNameFieldValue:@""];
-	[self setTheRevisionFieldValue:[[theHistoryPane logTableView] chosenRevision]];
-	[commitMessageTextView setString:@""];
-	[self setForceValue:NO];
-	[self updateButtonsAndMessages];
-	[NSApp beginSheet:theMoveLabelSheet modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
-}
-
-
-// Open the add label sheet and fill in the label name with the given label name and set the force flag to true. The user then
-// needs to fill in the new revision number.
-- (void) openMoveLabelSheetForMoveLabel:(LabelData*)label
-{
-	HistoryPaneController*	theHistoryPane = [myDocument theHistoryPaneController];
-	BOOL wasShowingHistoryPane = [myDocument showingHistoryPane];
-	[myDocument actionSwitchViewToHistoryPane:self];				// Open the log inspector
-	[[myDocument toolbarSearchField] setStringValue:@""];			// reset the search term
-	if (!wasShowingHistoryPane)
-		[[theHistoryPane logTableView] scrollToCurrentRevision:self];			// Scroll to the current revision
-	
-	
-	switch ([label labelType])
-	{
-		case eLocalTag:		[moveLabelTabView selectTabViewItemAtIndex:0];	break;
-		case eGlobalTag:	[moveLabelTabView selectTabViewItemAtIndex:1];	break;
-		case eBookmark:		[moveLabelTabView selectTabViewItemAtIndex:2];	break;
-		case eActiveBranch:
-		case eInactiveBranch:
-		case eClosedBranch: [moveLabelTabView selectTabViewItemAtIndex:3];	break;
-	}
-	
-	[self setTheNewNameFieldValue:[label name]];
-	[self setForceValue:YES];
-	[self setTheRevisionFieldValue:@""];
-	[commitMessageTextView setString:[NSString stringWithFormat:@"Move label %@", [label name]]];
-	[self updateButtonsAndMessages];
-	[NSApp beginSheet:theMoveLabelSheet modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];	
-}
-
-
-
-
-- (void) sheetButtonOkForMoveLabelSheet:(id)sender
-{
-	[theMoveLabelSheet makeFirstResponder:theMoveLabelSheet];	// Make the text fields of the sheet commit any changes they currently have
+	NSString* newTitle = [NSString stringWithFormat:@"Reverting All Files in %@", [myDocument selectedRepositoryShortName]];
+	[moveLabelSheetTitle setStringValue:newTitle];
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+	[self openMoveLabelSheetWithPaths:[NSArray arrayWithObject:rootPath] andRevision:[myDocument getHGParent1Revision]];
+}
 
-	NSString* command = @"";
-	switch (moveLabelTabNumber_)
-	{
-		case eMoveLabelTabLocalTag:	command = @"tag";		break;
-		case eMoveLabelTabGlobalTag:	command = @"tag";		break;
-		case eMoveLabelTabBookmark:	command = @"bookmark";	break;
-		case eMoveLabelTabBranch:	command = @"branch";	break;
-	}
-	NSMutableArray* argsLabel = [NSMutableArray arrayWithObjects:command, nil ];
-	if (moveLabelTabNumber_ != eMoveLabelTabBranch)
-		[argsLabel addObject: @"--rev" followedBy:theRevisionFieldValue_];
-	if (forceValue_ == YES)
-		[argsLabel addObject: @"--force"];
-	if (moveLabelTabNumber_ == eMoveLabelTabLocalTag)
-		[argsLabel addObject: @"--local"];
-	if (moveLabelTabNumber_ == eMoveLabelTabBranch && [[commitMessageTextView string] length] > 0)
-		[argsLabel addObject: @"--message" followedBy:[commitMessageTextView string]];
-	[argsLabel addObject:theNewNameFieldValue_];
-	ExecutionResult results = [myDocument executeMercurialWithArgs:argsLabel fromRoot:rootPath whileDelayingEvents:YES];
+- (IBAction) openMoveLabelSheetWithSelectedFiles:(id)sender
+{
+	NSString* newTitle = [NSString stringWithFormat:@"Reverting Selected Files in %@", [myDocument selectedRepositoryShortName]];
+	[moveLabelSheetTitle setStringValue:newTitle];
+	NSArray* paths = [myDocument absolutePathsOfBrowserChosenFiles];
+	if ([paths count] <= 0)
+	{ PlayBeep(); DebugLog(@"No files are selected to revert"); return; }
 	
-	if ([results.errStr length] > 0)
+	[self openMoveLabelSheetWithPaths:paths  andRevision:[myDocument getHGParent1Revision]];
+}
+
+
+- (IBAction) sheetButtonOkForMoveLabelSheet:(id)sender;
+{
+	NSString* versionToRevertTo = [logTableView selectedRevision];
+	BOOL didReversion = [myDocument primaryActionRevertFiles:absolutePathsOfFilesToRevert toVersion:versionToRevertTo];
+	if (!didReversion)
 		return;
 	
 	[NSApp endSheet:theMoveLabelSheet];
 	[theMoveLabelSheet orderOut:sender];
-	[myDocument postNotificationWithName:kUnderlyingRepositoryChanged];
+}
+
+- (IBAction) sheetButtonCancelForMoveLabelSheet:(id)sender;
+{
+	[NSApp endSheet:theMoveLabelSheet];
+	[theMoveLabelSheet orderOut:sender];
 }
 
 
-- (IBAction) sheetButtonCancelForMoveLabelSheet:(id)sender
+- (IBAction) sheetButtonViewDifferencesForMoveLabelSheet:(id)sender
 {
-	[theMoveLabelSheet makeFirstResponder:theMoveLabelSheet];	// Make the text fields of the sheet commit any changes they currently have
-	[NSApp endSheet:theMoveLabelSheet];
-	[theMoveLabelSheet orderOut:sender];
+	NSString* versionToRevertTo = [logTableView selectedRevision];
+	[myDocument viewDifferencesInCurrentRevisionFor:absolutePathsOfFilesToRevert toRevision:versionToRevertTo];
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Table Delegate Methods
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (void) logTableViewSelectionDidChange:(LogTableView*)theLogTable;
+{
+	[sheetInformativeMessageTextField setAttributedStringValue: [self formattedSheetMessage]];
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Create Sheet Message
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (NSAttributedString*) formattedSheetMessage
+{
+	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
+	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"The contents of the files within the selected file paths will be replaced with their contents as of version ")];
+	NSString* rev = [logTableView selectedRevision];
+	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(rev ? rev : @"-")];
+	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@". Any tracked files which have been modified will be moved aside. Any newly added or removed files will return to their former status.")];
+	return newSheetMessage;
 }
 
 
