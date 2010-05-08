@@ -20,6 +20,7 @@
 #import "ResultsWindowController.h"
 #import "LogTableView.h"
 #import "AddLabelSheetController.h"
+#import "MoveLabelSheetController.h"
 #import "JHAccordionView.h"
 
 @implementation HistoryPaneController
@@ -202,7 +203,7 @@
 		NSRunAlertPanel(@"No Label Selected", @"You need to select a label first to move it", @"Ok", nil, nil);
 		return;
 	}
-	[[myDocument theAddLabelSheetController] openAddLabelSheetForMoveLabel:label];
+	[[myDocument theMoveLabelSheetController] openMoveLabelSheetForMoveLabel:label];
 }
 
 
