@@ -735,8 +735,6 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 
 - (NSColor*) specialBackingColorForRow:(NSInteger)rowIndex
 {
-	// We don't know what type of object theController is so here we disambiguate and depending on the answer we make the correct
-	// object call.
 	RepositoryData* repositoryData = [self repositoryData];
 	LogEntry* entry = [self entryForTableRow:rowIndex];
 	
