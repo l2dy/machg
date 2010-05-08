@@ -1101,6 +1101,17 @@ void _DebugLog(const char* file, int lineNumber, const char* funcName, NSString*
 
 
 // MARK: -
+@implementation NSColor ( NSColorPlusExtensions )
+- (NSColor*) intensifySaturationAndBrightness:(double)factor
+{
+	CGFloat h,s,b,a;
+	[self getHue:&h saturation:&s brightness:&b alpha:&a];
+	return [NSColor colorWithCalibratedHue: h saturation:s*factor brightness:b*factor alpha:a];
+}
+@end
+
+
+// MARK: -
 @implementation NSView ( NSViewPlusExtensions )
 
 - (void)	setCenterX:(CGFloat)coord

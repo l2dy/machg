@@ -839,6 +839,12 @@ void _DebugLog(const char* file, int lineNumber, const char* funcName, NSString*
 
 
 // MARK: -
+@interface NSColor ( NSColorPlusExtensions )
+- (NSColor*) intensifySaturationAndBrightness:(double)factor;
+@end
+
+
+// MARK: -
 @interface NSView ( NSViewPlusExtensions )
 - (void)	setCenterX:(CGFloat)coord;
 - (void)	setMinX:(CGFloat)coord;

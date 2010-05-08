@@ -250,17 +250,17 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 	}
 	else if (IsNotEmpty([entry_ branch]))
 	{
-		fillColor   = LogEntryTableBranchHighlightColor();
+		fillColor   = [LogEntryTableBranchHighlightColor() intensifySaturationAndBrightness:4.0];
 		strokeColor = defaultRed;
 	}
 	else if (IsNotEmpty([entry_ bookmarks]))
 	{
-		fillColor = LogEntryTableBookmarkHighlightColor();
+		fillColor = [LogEntryTableBookmarkHighlightColor() intensifySaturationAndBrightness:4.0];
 		strokeColor = defaultRed;
 	}
 	else if (IsNotEmpty([entry_ tags]))
 	{
-		fillColor = LogEntryTableTagHighlightColor();
+		fillColor = [LogEntryTableTagHighlightColor() intensifySaturationAndBrightness:4.0];
 		strokeColor = defaultRed;
 	}
 	
