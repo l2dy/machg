@@ -30,7 +30,8 @@ id QuietApplicationWithBundleIdentifier(NSString* ident)
     return application;
 }
 
-
+// If this breaks in the future we can just go back to the way things where and use
+//    DoTerminalScript([NSString stringWithFormat:@"cd '%@'", path]) sort of thing.
 void OpenTerminalAt(NSString* path)
 {	
 	// Connect to the Terminal. It is running now...maybe with a blank
