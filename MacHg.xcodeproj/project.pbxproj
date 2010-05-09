@@ -145,6 +145,7 @@
 		969BD94811953E54007AA6D9 /* AddLabelSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 969BD94611953E54007AA6D9 /* AddLabelSheet.xib */; };
 		969BD95511953FAA007AA6D9 /* MoveLabelSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 969BD95411953FAA007AA6D9 /* MoveLabelSheetController.m */; };
 		969BD95811953FB1007AA6D9 /* MoveLabelSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 969BD95611953FB1007AA6D9 /* MoveLabelSheet.xib */; };
+		969BDCC1119659FC007AA6D9 /* tb-terminal.png in Resources */ = {isa = PBXBuildFile; fileRef = 969BDCC0119659FC007AA6D9 /* tb-terminal.png */; };
 		969C525B112EC73800FA7C33 /* HistoryEditSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 969C525A112EC73800FA7C33 /* HistoryEditSheetController.m */; };
 		969C525E112EC73E00FA7C33 /* HistoryEditSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 969C525C112EC73E00FA7C33 /* HistoryEditSheet.xib */; };
 		969C52F8112EE44700FA7C33 /* StripSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 969C52F7112EE44700FA7C33 /* StripSheetController.m */; };
@@ -402,6 +403,7 @@
 		969BD95311953FAA007AA6D9 /* MoveLabelSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MoveLabelSheetController.h; sourceTree = "<group>"; };
 		969BD95411953FAA007AA6D9 /* MoveLabelSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoveLabelSheetController.m; sourceTree = "<group>"; };
 		969BD95711953FB1007AA6D9 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MoveLabelSheet.xib; sourceTree = SOURCE_ROOT; };
+		969BDCC0119659FC007AA6D9 /* tb-terminal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tb-terminal.png"; sourceTree = "<group>"; };
 		969C5259112EC73800FA7C33 /* HistoryEditSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HistoryEditSheetController.h; sourceTree = "<group>"; };
 		969C525A112EC73800FA7C33 /* HistoryEditSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HistoryEditSheetController.m; sourceTree = "<group>"; };
 		969C525D112EC73E00FA7C33 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/HistoryEditSheet.xib; sourceTree = SOURCE_ROOT; };
@@ -605,6 +607,7 @@
 				9609EF4411391D3C0077E178 /* tb-browserPane.png */,
 				9609EF4511391D3C0077E178 /* tb-DiffInspectorPane.png */,
 				9609EF4611391D3C0077E178 /* tb-LogListPane.png */,
+				969BDCC0119659FC007AA6D9 /* tb-terminal.png */,
 				9600C2C310CD3D9F00CD8D28 /* toolbar_resolved.png */,
 			);
 			name = ToolbarItems;
@@ -1395,6 +1398,7 @@
 				9637C8C3118E9C300000C14B /* ActionDropButtonSizeSmall.png in Resources */,
 				969BD94811953E54007AA6D9 /* AddLabelSheet.xib in Resources */,
 				969BD95811953FB1007AA6D9 /* MoveLabelSheet.xib in Resources */,
+				969BDCC1119659FC007AA6D9 /* tb-terminal.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
