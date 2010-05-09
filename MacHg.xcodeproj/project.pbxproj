@@ -1278,6 +1278,7 @@
 				8D15AC330486D014006FF6A4 /* Frameworks */,
 				963DBD9410C7D07500189853 /* Copy Files (Frameworks) */,
 				96DCCC2E10CD424000C843C9 /* Copy Files (Mercurial) */,
+				969BDCFD1196844A007AA6D9 /* Set BuildHashKey */,
 			);
 			buildRules = (
 			);
@@ -1403,6 +1404,23 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		969BDCFD1196844A007AA6D9 /* Set BuildHashKey */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputPaths = (
+			);
+			name = "Set BuildHashKey";
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /usr/bin/python;
+			shellScript = "import os, subprocess, re, sys\n\ntargetBuildDir = os.getenv(\"TARGET_BUILD_DIR\")\ngetChangeset = subprocess.Popen('hg parent --template \"{node|short}\" --cwd ' + targetBuildDir, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)\n\nif (getChangeset.stderr.read() != \"\"):\n\tprint \"Error in obtaining current changeset of the Mercurial repository\"\n\tsys.exit(0)   # if you want the build to fail here since the changeset is malformed change this to sys.exit(1) \n\nchangeset = getChangeset.stdout.read()\nif (not re.search(\"^[0-9a-f]{12}$\", changeset)):\n\tprint \"Current changeset of the Mercurial repository is malformed\"\n\tsys.exit(0)   # if you want the build to fail here since the changeset is malformed change this to sys.exit(1) \n\ninfoPlist = os.path.join(targetBuildDir, \"MacHg.app/Contents/Info.plist\")\nif  not os.path.exists(infoPlist):\n\tprint \"Cannot locate MacHg.app/Contents/Info.plist\"\n\tsys.exit(1)   # if you want the build to not fail here change this to sys.exit(0) \n\nresult  = subprocess.Popen('/usr/libexec/PlistBuddy -c \"Delete BuildHashKey\" ' + infoPlist, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)\nresult  = subprocess.Popen('/usr/libexec/PlistBuddy -c \"Add BuildHashKey string '+ changeset + '\" ' + infoPlist, stdout=subprocess.PIPE, stderr=subprocess.PIPE, shell=True)\n\nprint \"MacHg BuildHashKey set to \" + changeset";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		8D15AC300486D014006FF6A4 /* Sources */ = {
