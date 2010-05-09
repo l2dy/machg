@@ -666,7 +666,7 @@
 
 - (void) setEntry:(LogEntry*)entry
 {
-	if (entry)
+	if (entry && [entry revision])
 		[revisionStringToLogEntry_  synchronizedSetObject:entry forKey:[entry revision]];
 }
 
