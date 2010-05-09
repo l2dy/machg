@@ -119,11 +119,17 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK: Utilities
+// MARK: Version Utilities
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (NSString*) shortVersionNumberString	{ return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]; }
 - (NSString*) shortVersionString		{ return [NSString stringWithFormat:@"Version:%@", [self shortVersionNumberString]]; }
+- (NSString*) macHgBuildHashKeyString
+{
+	NSString* key = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"BuildHashKey"];
+	return key ? key : @"";
+}
+
 - (NSString*) mercurialVersionString
 {
 	NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"version", nil];
@@ -131,6 +137,20 @@
 	NSArray* versionParts = [result.outStr componentsSeparatedByString:@"\n"];
 	NSString* versionString = ([versionParts count] > 0) ? [versionParts objectAtIndex:0] : @"";
 	return versionString;
+}
+
+- (NSAttributedString*) fullVersionString
+{
+	NSMutableAttributedString* version = [[NSMutableAttributedString alloc] init];	
+	[version appendString:[self shortVersionString] withAttributes:systemFontAttributes];
+	[version appendString:[NSString stringWithFormat:@" (%@)",[self macHgBuildHashKeyString]] withAttributes:smallGraySystemFontAttributes];
+	
+	// Switch the version string to center aligned
+	NSMutableParagraphStyle* ps = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+	[ps setAlignment:NSCenterTextAlignment];
+	NSDictionary* newParagraphStyle = [NSDictionary dictionaryWithObject:ps forKey:NSParagraphStyleAttributeName];
+	[version addAttributes:newParagraphStyle range:NSMakeRange(0, [version length])];
+	return version;
 }
 
 

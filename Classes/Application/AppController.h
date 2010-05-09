@@ -57,9 +57,13 @@
 // About Box
 - (IBAction)  showAboutBox:(id)sender;
 - (void)	  webView:(WebView*)webView decidePolicyForNavigationAction:(NSDictionary*)actionInformation request:(NSURLRequest*)request frame:(WebFrame*)frame decisionListener:(id < WebPolicyDecisionListener >)listener;
+
+// Version Utilities
 - (NSString*) shortVersionString;
 - (NSString*) shortVersionNumberString;
+- (NSString*) macHgBuildHashKeyString;
 - (NSString*) mercurialVersionString;
+- (NSAttributedString*) fullVersionString;
 
 
 // Help Menus
