@@ -248,6 +248,11 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 		fillColor   = [NSColor whiteColor];
 		strokeColor = [NSColor grayColor];
 	}
+	else if ([[logTableView repositoryData] revisionIsParent:[entry_ revision]])
+	{
+		fillColor   = [LogEntryTableParentHighlightColor() intensifySaturationAndBrightness:4.0];
+		strokeColor = defaultRed;
+	}
 	else if (IsNotEmpty([entry_ branch]))
 	{
 		fillColor   = [LogEntryTableBranchHighlightColor() intensifySaturationAndBrightness:4.0];
