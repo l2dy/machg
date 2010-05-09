@@ -20,6 +20,7 @@
 #import "AppController.h"
 #import "SingleTimedQueue.h"
 #import "NSString+SymlinksAndAliases.h"
+#import "ShellHere.h"
 
 @interface Sidebar (PrivateMethods)
 - (void) updateInformationTextView;
@@ -761,8 +762,7 @@
 		PlayBeep();
 		return;
 	}
-	NSString* theCommand = [NSString stringWithFormat:@"cd '%@'",[node path]];
-	DoTerminalScript(theCommand);
+	OpenTerminalAt([node path]);
 }
 
 

@@ -15,6 +15,7 @@
 #import "TaskExecutions.h"
 #import "MonitorFSEvents.h"
 #import "RepositoryData.h"
+#import "ShellHere.h"
 
 
 
@@ -279,8 +280,7 @@
 	NSString* theDir = [self enclosingDirectoryOfBrowserChosenFiles];
 	if (!theDir)
 		theDir = [self absolutePathOfRepositoryRoot];
-	NSString* theCommand = [NSString stringWithFormat:@"cd '%@'",theDir];
-	DoTerminalScript(theCommand);
+	OpenTerminalAt(theDir);
 }
 
 

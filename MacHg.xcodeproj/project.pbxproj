@@ -146,6 +146,8 @@
 		969BD95511953FAA007AA6D9 /* MoveLabelSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 969BD95411953FAA007AA6D9 /* MoveLabelSheetController.m */; };
 		969BD95811953FB1007AA6D9 /* MoveLabelSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 969BD95611953FB1007AA6D9 /* MoveLabelSheet.xib */; };
 		969BDCC1119659FC007AA6D9 /* tb-terminal.png in Resources */ = {isa = PBXBuildFile; fileRef = 969BDCC0119659FC007AA6D9 /* tb-terminal.png */; };
+		969BDDF91196B0C0007AA6D9 /* ShellHere.m in Sources */ = {isa = PBXBuildFile; fileRef = 969BDDF61196B0C0007AA6D9 /* ShellHere.m */; };
+		969BDE151196B347007AA6D9 /* ScriptingBridge.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 969BDE141196B347007AA6D9 /* ScriptingBridge.framework */; };
 		969C525B112EC73800FA7C33 /* HistoryEditSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 969C525A112EC73800FA7C33 /* HistoryEditSheetController.m */; };
 		969C525E112EC73E00FA7C33 /* HistoryEditSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 969C525C112EC73E00FA7C33 /* HistoryEditSheet.xib */; };
 		969C52F8112EE44700FA7C33 /* StripSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 969C52F7112EE44700FA7C33 /* StripSheetController.m */; };
@@ -404,6 +406,11 @@
 		969BD95411953FAA007AA6D9 /* MoveLabelSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MoveLabelSheetController.m; sourceTree = "<group>"; };
 		969BD95711953FB1007AA6D9 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MoveLabelSheet.xib; sourceTree = SOURCE_ROOT; };
 		969BDCC0119659FC007AA6D9 /* tb-terminal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tb-terminal.png"; sourceTree = "<group>"; };
+		969BDDF21196B0C0007AA6D9 /* Finder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Finder.h; sourceTree = "<group>"; };
+		969BDDF51196B0C0007AA6D9 /* ShellHere.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ShellHere.h; sourceTree = "<group>"; };
+		969BDDF61196B0C0007AA6D9 /* ShellHere.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ShellHere.m; sourceTree = "<group>"; };
+		969BDDF71196B0C0007AA6D9 /* Terminal.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Terminal.h; sourceTree = "<group>"; };
+		969BDE141196B347007AA6D9 /* ScriptingBridge.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ScriptingBridge.framework; path = System/Library/Frameworks/ScriptingBridge.framework; sourceTree = SDKROOT; };
 		969C5259112EC73800FA7C33 /* HistoryEditSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HistoryEditSheetController.h; sourceTree = "<group>"; };
 		969C525A112EC73800FA7C33 /* HistoryEditSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HistoryEditSheetController.m; sourceTree = "<group>"; };
 		969C525D112EC73E00FA7C33 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/HistoryEditSheet.xib; sourceTree = SOURCE_ROOT; };
@@ -454,6 +461,7 @@
 				9657059A113B1455009FE4C5 /* WebKit.framework in Frameworks */,
 				9624175E1180A3570077F655 /* QuartzCore.framework in Frameworks */,
 				962ED0AC1187885A0072211F /* Sparkle.framework in Frameworks */,
+				969BDE151196B347007AA6D9 /* ScriptingBridge.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -463,6 +471,7 @@
 		1058C7A6FEA54F5311CA2CBB /* Linked Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				969BDE141196B347007AA6D9 /* ScriptingBridge.framework */,
 				962ED0AB1187885A0072211F /* Sparkle.framework */,
 				1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */,
 				963DBD5710C7D03100189853 /* BWToolkitFramework.framework */,
@@ -832,6 +841,7 @@
 				9631D0601107A7E90007FDF2 /* LNCStopwatch */,
 				9631D0631107A7E90007FDF2 /* MAAttachedWindow */,
 				9631D0681107A7E90007FDF2 /* RegexKitLite */,
+				969BDDF11196B0C0007AA6D9 /* ShellHere */,
 			);
 			name = ExternalClasses;
 			path = Classes/ExternalClasses;
@@ -1201,6 +1211,17 @@
 			path = MoveLabelSheet;
 			sourceTree = "<group>";
 		};
+		969BDDF11196B0C0007AA6D9 /* ShellHere */ = {
+			isa = PBXGroup;
+			children = (
+				969BDDF21196B0C0007AA6D9 /* Finder.h */,
+				969BDDF71196B0C0007AA6D9 /* Terminal.h */,
+				969BDDF51196B0C0007AA6D9 /* ShellHere.h */,
+				969BDDF61196B0C0007AA6D9 /* ShellHere.m */,
+			);
+			path = ShellHere;
+			sourceTree = "<group>";
+		};
 		969C5258112EC73800FA7C33 /* HistoryEditSheet */ = {
 			isa = PBXGroup;
 			children = (
@@ -1497,6 +1518,7 @@
 				9637C8C9118E9C5A0000C14B /* NSString+SymlinksAndAliases.m in Sources */,
 				969BD94511953E43007AA6D9 /* AddLabelSheetController.m in Sources */,
 				969BD95511953FAA007AA6D9 /* MoveLabelSheetController.m in Sources */,
+				969BDDF91196B0C0007AA6D9 /* ShellHere.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
