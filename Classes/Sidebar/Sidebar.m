@@ -486,6 +486,9 @@
 	{
 		RepositoryData* repositoryData = [myDocument repositoryData];
 		NSString* parentRevisions = [repositoryData getHGParentsRevisions];
+		NSString* parentRevision  = [repositoryData getHGParent1Revision];
+		if (!parentRevisions || !parentRevision)
+			return attrString;
 		LogEntry* parentEntry = [repositoryData entryForRevisionString: [repositoryData getHGParent1Revision]];
 		NSArray*  tags        = [parentEntry tags];
 		NSArray*  bookmarks   = [parentEntry bookmarks];
