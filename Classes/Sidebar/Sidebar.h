@@ -55,6 +55,7 @@
 - (SidebarNode*) selectedNode;
 - (SidebarNode*) chosenNode;				// If a node was clicked on (that triggered an action) then return
 											// that, or else return the selected node
+- (SidebarNode*) lastSectionNode;
 
 // Expand/Collapse Methods
 - (void) expandAll;

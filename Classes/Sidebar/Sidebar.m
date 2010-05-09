@@ -615,13 +615,18 @@
 	if (existingNode)
 	{
 		NSInteger existingIndex = [[existingNode parent] indexOfChildNode:existingNode];
-		if (existingIndex != NSNotFound)
+		if (existingIndex != NSNotFound && [existingNode parent])
+		{
 			[[existingNode parent] insertChild:newNode atIndex:existingIndex + 1];
-		else
-			[[root_ children] addObject:newNode];
+			[self reloadData];
+			return;
+		}
 	}
-	else
-		[[root_ children] addObject:newNode];
+	SidebarNode* node = [self lastSectionNode];
+	if (!node)
+		node = root_;
+	[[node children] addObject:newNode];
+	[newNode setParent:node];
 	[self reloadData];
 }
 
@@ -788,6 +793,32 @@
 	root_ = [root_ copyNodeTree];	// We do this to ensure the parent pointers are correct.
 	return self;
 }
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Section Nodes
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (void) allSectionNodesOf:(SidebarNode*)node storedIn:(NSMutableArray*)arr
+{
+	if ([node isSectionNode])
+		[arr addObject:node];
+	for (SidebarNode* child in [node children])
+		[self allSectionNodesOf:child storedIn:arr];
+}
+
+// Produce a list of a reference of each section group in the sidebar tree
+- (NSArray*) allSectionNodes
+{
+	NSMutableArray* arr = [[NSMutableArray alloc]init];
+	[self allSectionNodesOf:root_ storedIn:arr];
+	return arr;
+}
+
+- (SidebarNode*) lastSectionNode	{ return [[self allSectionNodes] lastObject]; }
 
 
 
