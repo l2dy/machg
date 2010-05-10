@@ -77,6 +77,7 @@ NSString* const MHGDefaultAnnotationOptionNumber		= @"DefaultAnnotationOptionNum
 NSString* const MHGDefaultAnnotationOptionText			= @"DefaultAnnotationOptionText";
 NSString* const MHGDefaultAnnotationOptionUser			= @"DefaultAnnotationOptionUser";
 NSString* const MHGDefaultHGIgnoreContents              = @"DefaultHGIgnoreContents";
+NSString* const MHGDefaultRevisionSortOrder				= @"DefaultRevisionSortOrder";
 NSString* const MHGDefaultWorkspacePath					= @"DefaultWorkspacePath";
 NSString* const MHGDisplayFileIconsInBrowser			= @"DisplayFileIconsInBrowser";
 NSString* const MHGDisplayResultsOfAddRemoveRenameFiles	= @"DisplayResultsOfAddRemoveRenameFiles";
@@ -105,11 +106,11 @@ NSString* const MHGFontSizeOfBrowserItems				= @"FontSizeOfBrowserItems";
 NSString* const MHGHandleCommandDefaults				= @"HandleCommandDefaults";
 NSString* const MHGHandleGeneratedOrigFiles				= @"HandleGeneratedOrigFiles";
 NSString* const MHGLaunchCount							= @"LaunchCount";
+NSString* const MHGLogEntryTableBookmarkHighlightColor	= @"LogEntryTableBookmarkHighlightColor";
+NSString* const MHGLogEntryTableBranchHighlightColor	= @"LogEntryTableBranchHighlightColor";
+NSString* const MHGLogEntryTableDisplayChangesetColumn	= @"LogEntryTableDisplayChangesetColumn";
 NSString* const MHGLogEntryTableParentHighlightColor	= @"LogEntryTableParentHighlightColor";
 NSString* const MHGLogEntryTableTagHighlightColor		= @"LogEntryTableTagHighlightColor";
-NSString* const MHGLogEntryTableBranchHighlightColor	= @"LogEntryTableBranchHighlightColor";
-NSString* const MHGLogEntryTableBookmarkHighlightColor	= @"LogEntryTableBookmarkHighlightColor";
-NSString* const MHGLogEntryTableDisplayChangesetColumn	= @"LogEntryTableDisplayChangesetColumn";
 NSString* const MHGLoggingLevelForHGCommands			= @"LoggingLevelForHGCommands";
 NSString* const MHGMacHgLogFileLocation					= @"MacHgLogFileLocation";
 NSString* const MHGOnStartupOpen						= @"OnApplicationStartupOpenWhat";
@@ -127,7 +128,6 @@ NSString* const MHGSizeOfBrowserColumns					= @"SizeOfBrowserColumns";
 NSString* const MHGUseFileMergeForDiff					= @"UseFileMergeForDiff";
 NSString* const MHGUseFileMergeForMerge					= @"UseFileMergeForMerge";
 NSString* const MHGUseWhichMercurialBinary				= @"UseWhichMercurialBinary";
-
 
 
 
@@ -213,6 +213,7 @@ HandleCommandDefaultsOption	HandleCommandDefaultsFromDefaults()		{ return enumFr
 HandleOrigFilesOption		HandleGeneratedOrigFilesFromDefaults()	{ return enumFromDefaultsForKey(MHGHandleGeneratedOrigFiles); }
 OnStartupOpenWhatOption		OnStartupOpenFromDefaults()				{ return enumFromDefaultsForKey(MHGOnStartupOpen); }
 UseWhichMercurialOption		UseWhichMercurialBinaryFromDefaults()	{ return enumFromDefaultsForKey(MHGUseWhichMercurialBinary); }
+DefaultRevisionSortOrderOption DefaultRevisionSortOrderFromDefaults()	{ return enumFromDefaultsForKey(MHGDefaultRevisionSortOrder); }
 
 
 

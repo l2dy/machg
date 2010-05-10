@@ -597,9 +597,10 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 			order = [[newDescriptors firstObject] ascending];
 		else
 		{
-			NSSortDescriptor* newDescriptor = [[NSSortDescriptor alloc] initWithKey:@"revision" ascending:YES];
+			DefaultRevisionSortOrderOption defaultOrder = DefaultRevisionSortOrderFromDefaults();
+			order = (eSortRevisionsAscending == defaultOrder);
+			NSSortDescriptor* newDescriptor = [[NSSortDescriptor alloc] initWithKey:@"revision" ascending:order];
 			[self setSortDescriptors:[NSArray arrayWithObject:newDescriptor]];
-			order = YES;
 		}
 	}
 	@catch (NSException* ne) { order = YES; }

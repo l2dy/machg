@@ -139,6 +139,12 @@ typedef enum
 
 typedef enum
 {
+	eSortRevisionsAscending	 = 0,
+	eSortRevisionsDescending = 1
+} DefaultRevisionSortOrderOption;
+
+typedef enum
+{
 	eExcludeHGRCCommandDefaults	= 0,
 	eIncludeHGRCCommandDefaults	= 1
 } HandleCommandDefaultsOption;
@@ -331,6 +337,7 @@ extern NSString* const MHGDefaultAnnotationOptionNumber;
 extern NSString* const MHGDefaultAnnotationOptionText;
 extern NSString* const MHGDefaultAnnotationOptionUser;
 extern NSString* const MHGDefaultHGIgnoreContents;
+extern NSString* const MHGDefaultRevisionSortOrder;
 extern NSString* const MHGDefaultWorkspacePath;
 extern NSString* const MHGDisplayFileIconsInBrowser;
 extern NSString* const MHGDisplayResultsOfAddRemoveRenameFiles;
@@ -359,11 +366,11 @@ extern NSString* const MHGFontSizeOfBrowserItems;
 extern NSString* const MHGHandleCommandDefaults;
 extern NSString* const MHGHandleGeneratedOrigFiles;
 extern NSString* const MHGLaunchCount;
+extern NSString* const MHGLogEntryTableBookmarkHighlightColor;
+extern NSString* const MHGLogEntryTableBranchHighlightColor;
+extern NSString* const MHGLogEntryTableDisplayChangesetColumn;
 extern NSString* const MHGLogEntryTableParentHighlightColor;
 extern NSString* const MHGLogEntryTableTagHighlightColor;
-extern NSString* const MHGLogEntryTableBranchHighlightColor;
-extern NSString* const MHGLogEntryTableBookmarkHighlightColor;
-extern NSString* const MHGLogEntryTableDisplayChangesetColumn;
 extern NSString* const MHGLoggingLevelForHGCommands;
 extern NSString* const MHGMacHgLogFileLocation;
 extern NSString* const MHGOnStartupOpen;
@@ -446,16 +453,18 @@ NSColor*	LogEntryTableBranchHighlightColor();
 NSColor*	LogEntryTableBookmarkHighlightColor();
 
 
-AfterMergeSwitchToOption	AfterMergeSwitchToFromDefaults();
-AfterMergeDoOption			AfterMergeDoFromDefaults();
-HandleCommandDefaultsOption	HandleCommandDefaultsFromDefaults();
-HandleOrigFilesOption		HandleGeneratedOrigFilesFromDefaults();
-UseWhichMercurialOption		UseWhichMercurialBinaryFromDefaults();
-OnStartupOpenWhatOption		OnStartupOpenFromDefaults();
-BrowserDoubleClickAction	browserBehaviourDoubleClick();
-BrowserDoubleClickAction	browserBehaviourCommandDoubleClick();
-BrowserDoubleClickAction	browserBehaviourOptionDoubleClick();
-BrowserDoubleClickAction	browserBehaviourCommandOptionDoubleClick();
+AfterMergeSwitchToOption		AfterMergeSwitchToFromDefaults();
+AfterMergeDoOption				AfterMergeDoFromDefaults();
+HandleCommandDefaultsOption		HandleCommandDefaultsFromDefaults();
+HandleOrigFilesOption			HandleGeneratedOrigFilesFromDefaults();
+UseWhichMercurialOption			UseWhichMercurialBinaryFromDefaults();
+OnStartupOpenWhatOption			OnStartupOpenFromDefaults();
+DefaultRevisionSortOrderOption	DefaultRevisionSortOrderFromDefaults();
+
+BrowserDoubleClickAction		browserBehaviourDoubleClick();
+BrowserDoubleClickAction		browserBehaviourCommandDoubleClick();
+BrowserDoubleClickAction		browserBehaviourOptionDoubleClick();
+BrowserDoubleClickAction		browserBehaviourCommandOptionDoubleClick();
 
 
 
