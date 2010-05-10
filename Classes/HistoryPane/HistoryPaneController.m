@@ -53,13 +53,14 @@
 {
 	[self observe:kRepositoryDataDidChange	from:[self myDocument]  byCalling:@selector(refreshHistoryPane:)];
 	[self observe:kRepositoryDataIsNew		from:[self myDocument]  byCalling:@selector(refreshHistoryPane:)];
-	[self observe:kLogEntriesDidChange			from:[self myDocument]  byCalling:@selector(refreshHistoryPane:)];
+	[self observe:kLogEntriesDidChange		from:[self myDocument]  byCalling:@selector(refreshHistoryPane:)];
 
 	[self openSplitViewPaneToDefaultHeight: self];
 	NSString* fileName = [myDocument documentNameForAutosave];
 	[accordionView setAutosaveName:[NSString stringWithFormat:@"File:%@:HistoryPaneSplitPositions", fileName]];
 	[logTableView setAutosaveTableColumns:YES];
 	[logTableView setAutosaveName:[NSString stringWithFormat:@"File:%@:HistoryTableViewColumnPositions", fileName]];
+	[logTableView resetTable:self];
 	[theLabelsTableView_ setAutosaveTableColumns:YES];
 	[theLabelsTableView_ setAutosaveName:[NSString stringWithFormat:@"File:%@:HistoryLabelsTableViewColumnPositions", fileName]];
 	
