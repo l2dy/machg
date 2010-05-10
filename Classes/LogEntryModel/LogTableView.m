@@ -589,22 +589,18 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 
 - (BOOL) sortRevisionOrder
 {
-	BOOL order;
 	@try
 	{
 		NSArray* newDescriptors = [self sortDescriptors];
 		if (IsNotEmpty(newDescriptors))
-			order = [[newDescriptors firstObject] ascending];
-		else
-		{
-			DefaultRevisionSortOrderOption defaultOrder = DefaultRevisionSortOrderFromDefaults();
-			order = (eSortRevisionsAscending == defaultOrder);
-			NSSortDescriptor* newDescriptor = [[NSSortDescriptor alloc] initWithKey:@"revision" ascending:order];
-			[self setSortDescriptors:[NSArray arrayWithObject:newDescriptor]];
-		}
+			for (NSSortDescriptor* descriptor in newDescriptors)
+				if ([[descriptor key] isEqualToString:@"revision"])
+					return [descriptor ascending];
+
+		DefaultRevisionSortOrderOption defaultOrder = DefaultRevisionSortOrderFromDefaults();
+		return (eSortRevisionsAscending == defaultOrder);
 	}
-	@catch (NSException* ne) { order = YES; }
-	return order;
+	@catch (NSException* ne) { return YES; }
 }
 
 - (NSArray*) sortTableRowsAccordingToDescriptors:(NSArray*)newTableRows
