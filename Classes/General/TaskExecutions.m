@@ -11,6 +11,16 @@
 #import "AppController.h"
 #import "Common.h"
 
+// This isn't really an error for us so go ahead and prune the missing extensions warnings.
+ExecutionResult PruneMissingExtensionsErrors(ExecutionResult results)
+{
+	if (IsEmpty(results.errStr))
+		return results;
+	NSString* regex = @"*** failed to import extension (.*?) from (.*?): (.*?)\n";
+	results.errStr = [results.errStr stringByReplacingOccurrencesOfRegex:regex withString:@""];
+	results.errStr = results.errStr ? results.errStr : @"";
+	return results;
+}
 
 #pragma mark -
 @implementation TaskExecutions
@@ -203,6 +213,7 @@
 	NSMutableArray* newArgs = [self preProcessMercurialCommandArgs:args fromRoot:rootPath];
 	NSString* hgBinary = executableLocationHG();
 	results = [TaskExecutions synchronouslyExecute:hgBinary withArgs:newArgs onTask:theTask];
+	results = PruneMissingExtensionsErrors(results);
 	[TaskExecutions logAndReportAnyErrors:log forResults:results];
 	return results;
 }
