@@ -113,8 +113,10 @@ static void FSEventsCallBack_(ConstFSEventStreamRef streamRef, void* clientCallB
 {
 	if (!isWatchingPaths)
 		return @"The event stream is not running. Start it by calling: startWatchingPaths:";
-	
-	return (NSString*)FSEventStreamCopyDescription(eventStream);
+	CFStringRef desc = FSEventStreamCopyDescription(eventStream);
+	NSString* ans = [NSString stringWithString:(NSString*)desc];
+	CFRelease(desc);
+	return ans;
 }
 
 /**
