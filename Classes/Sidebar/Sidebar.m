@@ -912,6 +912,14 @@
 
 	[queueForAutomaticOutgoingComputation_ addBlockOperation:^{
 		NSArray* compatibleRepositories = [self allCompatibleRepositories:theSelectedNode];
+
+		// Order local repositories before server repositories for speed
+		compatibleRepositories = [compatibleRepositories sortedArrayUsingComparator: ^(id obj1, id obj2) {
+			if ([obj1 nodeKind] < [obj2 nodeKind]) return (NSComparisonResult)NSOrderedAscending;			
+			if ([obj1 nodeKind] > [obj2 nodeKind]) return (NSComparisonResult)NSOrderedDescending;
+			return (NSComparisonResult)NSOrderedSame;
+		}];
+		
 		for (SidebarNode* repo in compatibleRepositories)
 		{
 			__block NSTask* theTask = [[NSTask alloc]init];
