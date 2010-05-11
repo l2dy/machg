@@ -601,6 +601,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 		return (eSortRevisionsAscending == defaultOrder);
 	}
 	@catch (NSException* ne) { return YES; }
+	return YES;
 }
 
 - (NSArray*) sortTableRowsAccordingToDescriptors:(NSArray*)newTableRows
