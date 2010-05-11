@@ -331,15 +331,8 @@
 	[[NSUserDefaultsController sharedUserDefaultsController] revertToInitialValues:nil];
 }
 
-- (IBAction) resetPreferences: (id)sender
-{
-	[PreferenceController resetPreferences:sender];
-}
-
-- (IBAction) showPreferences:(id)sender
-{
-	[[PreferenceController sharedPrefsWindowController] showWindow:nil];
-}
+- (IBAction) resetPreferences:(id)sender	{ [AppController resetUserPreferences]; }
+- (IBAction) showPreferences:(id)sender		{ [[PreferenceController sharedPrefsWindowController] showWindow:nil]; }
 
 
 

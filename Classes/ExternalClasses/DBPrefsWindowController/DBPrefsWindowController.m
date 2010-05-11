@@ -114,6 +114,14 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 
 
 
+- (void)addView:(NSView *)view label:(NSString *)label imageName:(NSString*)imageName
+{
+	[self addView:view
+			label:label
+			image:[NSImage imageNamed:imageName]];
+	
+}
+
 
 - (void)addView:(NSView *)view label:(NSString *)label
 {

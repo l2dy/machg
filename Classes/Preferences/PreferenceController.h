@@ -21,7 +21,7 @@
 }
 
 - (IBAction) displayPreferencesChanged:(id)sender;
-+ (IBAction) resetPreferences:(id)sender;
+- (IBAction) resetPreferences:(id)sender;
 - (IBAction) repositoryEditingPreferencesChanged:(id)sender;
 
 @end

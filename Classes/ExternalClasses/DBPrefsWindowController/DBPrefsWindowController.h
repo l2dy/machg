@@ -64,6 +64,8 @@
 
 - (void)addView:(NSView *)view label:(NSString *)label;
 - (void)addView:(NSView *)view label:(NSString *)label image:(NSImage *)image;
+- (void)addView:(NSView *)view label:(NSString *)label imageName:(NSString*)imageName;
+
 
 - (BOOL)crossFade;
 - (void)setCrossFade:(BOOL)fade;

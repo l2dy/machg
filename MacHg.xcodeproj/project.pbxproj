@@ -176,8 +176,6 @@
 		96DD29CD112AE56D00A57BD3 /* CollapseSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96DD29CB112AE56D00A57BD3 /* CollapseSheet.xib */; };
 		96FF036111991C21006EC616 /* DBPrefsWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96FF036011991C21006EC616 /* DBPrefsWindowController.m */; };
 		96FF03A81199200E006EC616 /* UpdatePreferences.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 96FF03A71199200E006EC616 /* UpdatePreferences.tiff */; };
-		96FF03AA11992015006EC616 /* AdvancedPreferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 96FF03A911992015006EC616 /* AdvancedPreferences.png */; };
-		96FF03AC11992019006EC616 /* GeneralPreferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 96FF03AB11992019006EC616 /* GeneralPreferences.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -454,8 +452,6 @@
 		96FF035F11991C21006EC616 /* DBPrefsWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBPrefsWindowController.h; sourceTree = "<group>"; };
 		96FF036011991C21006EC616 /* DBPrefsWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBPrefsWindowController.m; sourceTree = "<group>"; };
 		96FF03A71199200E006EC616 /* UpdatePreferences.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = UpdatePreferences.tiff; sourceTree = "<group>"; };
-		96FF03A911992015006EC616 /* AdvancedPreferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AdvancedPreferences.png; sourceTree = "<group>"; };
-		96FF03AB11992019006EC616 /* GeneralPreferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GeneralPreferences.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -584,11 +580,9 @@
 		9600C2A210CD3D9F00CD8D28 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
-				96FF03AB11992019006EC616 /* GeneralPreferences.png */,
 				9600C2A410CD3D9F00CD8D28 /* AppearancePreferences.png */,
 				9600C2A310CD3D9F00CD8D28 /* AlertPreferences.png */,
 				9600C2A510CD3D9F00CD8D28 /* MercurialPreferences.png */,
-				96FF03A911992015006EC616 /* AdvancedPreferences.png */,
 				96FF03A71199200E006EC616 /* UpdatePreferences.tiff */,
 			);
 			name = Preferences;
@@ -1440,8 +1434,6 @@
 				969BD95811953FB1007AA6D9 /* MoveLabelSheet.xib in Resources */,
 				969BDCC1119659FC007AA6D9 /* tb-terminal.png in Resources */,
 				96FF03A81199200E006EC616 /* UpdatePreferences.tiff in Resources */,
-				96FF03AA11992015006EC616 /* AdvancedPreferences.png in Resources */,
-				96FF03AC11992019006EC616 /* GeneralPreferences.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

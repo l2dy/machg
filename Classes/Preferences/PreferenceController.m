@@ -15,37 +15,20 @@
 
 - (void)setupToolbar
 {	
-	[self addView:generalPreferenceView		label:@"GeneralPreferences"];
-	[self addView:appearancePreferenceView	label:@"AppearancePreferences"];
-	[self addView:mercurialPreferenceView	label:@"MercurialPreferences"];
-	[self addView:messagesPreferenceView	label:@"AlertPreferences"];
-	[self addView:advancedPreferenceView	label:@"AdvancedPreferences"];
-	[self addView:updatePreferenceView		label:@"UpdatePreferences"];
+	[self addView:generalPreferenceView		label:@"General"	imageName:@"NSPreferencesGeneral"];
+	[self addView:appearancePreferenceView	label:@"Appearance" imageName:@"AppearancePreferences"];
+	[self addView:mercurialPreferenceView	label:@"Mercurial"	imageName:@"MercurialPreferences"];
+	[self addView:messagesPreferenceView	label:@"Messages"	imageName:@"AlertPreferences"];
+	[self addView:advancedPreferenceView	label:@"Advanced"	imageName:@"NSAdvanced"];
+	[self addView:updatePreferenceView		label:@"Updates"	imageName:@"UpdatePreferences"];
 	
 	// Optional configuration settings.
 	[self setCrossFade:[[NSUserDefaults standardUserDefaults] boolForKey:@"PreferencesFadeSwitch"]];
 	[self setShiftSlowsAnimation:[[NSUserDefaults standardUserDefaults] boolForKey:@"PreferencesShiftSlowsAnimation"]];
 }
 
-- (IBAction) displayPreferencesChanged:(id)sender
-{
-	[self postNotificationWithName:kBrowserDisplayPreferencesChanged];
-}
-
-+ (IBAction) resetPreferences:(id)sender
-{
-	// load the default values for the user defaults
-	NSString*	  userDefaultsValuesPath = [[NSBundle mainBundle] pathForResource:@"UserDefaults" ofType:@"plist"];
-	NSDictionary* userDefaultsValuesDict = [NSDictionary dictionaryWithContentsOfFile:userDefaultsValuesPath];
-	
-	[[NSUserDefaultsController sharedUserDefaultsController] setInitialValues:userDefaultsValuesDict];
-	[[NSUserDefaultsController sharedUserDefaultsController] revertToInitialValues:nil];
-}
-
-
-- (IBAction) repositoryEditingPreferencesChanged:(id)sender
-{
-	[[AppController sharedAppController] checkConfigFileForEditingExtensions:NO];
-}
+- (IBAction) displayPreferencesChanged:(id)sender			{ [self postNotificationWithName:kBrowserDisplayPreferencesChanged]; }
+- (IBAction) resetPreferences:(id)sender					{ [AppController resetUserPreferences]; }
+- (IBAction) repositoryEditingPreferencesChanged:(id)sender	{ [[AppController sharedAppController] checkConfigFileForEditingExtensions:NO]; }
 
 @end
