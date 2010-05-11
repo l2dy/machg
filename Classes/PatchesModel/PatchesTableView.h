@@ -74,9 +74,13 @@
 
 
 @interface PatchesTableCommitMessageCell : PatchesTableCell
-{
-}
+{}
 @end
+
+@interface PatchesTablePatchNameCell : PatchesTableCell
+{}
+@end
+
 
 @interface PatchesTableButtonCell : NSButtonCell
 {

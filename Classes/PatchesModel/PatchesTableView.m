@@ -232,7 +232,13 @@
 }
 
 
-
+- (BOOL)tableView:(NSTableView *)aTableView shouldEditTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
+{
+	NSString* requestedColumn = [aTableColumn identifier];
+	if ([requestedColumn isEqualToString:@"patchName"])
+		return NO;
+	return YES;
+}
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -494,6 +500,52 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
     }
 }
 
+@end
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  PatchesTablePatchNameCell
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+
+@implementation PatchesTablePatchNameCell : PatchesTableCell
+
+// Expansion tool tip support
+- (NSRect) expansionFrameWithFrame:(NSRect)cellFrame inView:(NSView*)view
+{
+    NSAttributedString* message = [self attributedStringValue];
+	
+	NSString* fullPath = [patch_ path];
+	NSDictionary* attributes = [message attributesOfWholeString];
+	message = [NSAttributedString string:fullPath withAttributes:attributes];
+	
+	cellFrame = UnionSize(cellFrame, [message size]);
+	// We want to make the cell *slightly* larger; it looks better when showing the expansion tool tip.
+	cellFrame.size.width += 4.0;
+	cellFrame.origin.x   -= 2.0;
+    return cellFrame;
+}
+
+- (void) drawWithExpansionFrame:(NSRect)cellFrame inView:(NSView*)view
+{
+    NSAttributedString* message = [self attributedStringValue];
+	
+	NSString* fullPath = [patch_ path];
+	NSDictionary* attributes = [message attributesOfWholeString];
+	message = [NSAttributedString string:fullPath withAttributes:attributes];
+
+	cellFrame = UnionSize(cellFrame, [message size]);
+    if ([message length] > 0)
+	{
+        cellFrame.origin.x += 2.0;
+        cellFrame.size.width -= 2.0;
+        [message drawInRect:cellFrame];
+    }
+}
 @end
 
 

@@ -58,6 +58,7 @@
 - (void) setDate:(NSString*)date;
 - (void) setCommitMessage:(NSString*)message;
 - (void) setParent:(NSString*)parent;
+- (NSString*) patchName;
 
 - (BOOL) isModified;
 

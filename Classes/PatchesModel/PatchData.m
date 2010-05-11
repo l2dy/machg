@@ -219,6 +219,7 @@
 // MARK:  Quieres
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+- (NSString*) patchName							{ return [path_ lastPathComponent]; }
 - (NSString*) author							{ return author_; }
 - (NSString*) date								{ return date_; }
 - (NSString*) commitMessage						{ return commitMessage_; }
