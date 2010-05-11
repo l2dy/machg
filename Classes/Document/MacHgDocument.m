@@ -992,6 +992,12 @@
 	return YES;
 }
 
+- (void) saveDocumentIfNamed
+{
+	NSString* fileName = [[[self fileURL] path] lastPathComponent];
+	if (fileName)
+		[self saveDocument:self];
+}
 
 
 

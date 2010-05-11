@@ -334,6 +334,10 @@
 - (BOOL)		repositoryIsSelectedAndReady;
 
 
+// Saving
+- (void)		saveDocumentIfNamed;
+
+
 // RepositoryData handling
 - (RepositoryData*)	 repositoryData;
 - (void)		initializeRepositoryData;

@@ -415,6 +415,7 @@
 
 		[self reloadData];
 		[self selectNode:currentSelectedNode];
+		[myDocument saveDocumentIfNamed];
 		return YES;
 	}
 
@@ -450,6 +451,7 @@
 		if (newSelectedNode)
 			[self selectNode:newSelectedNode];
 		[self outlineViewSelectionDidChange:nil];
+		[myDocument saveDocumentIfNamed];
 		return YES;
 	}
 	
@@ -720,6 +722,7 @@
 		[self deselectAll:self];
 		[self reloadData];
 		[myDocument actionSwitchViewToBackingPane:self];
+		[myDocument saveDocumentIfNamed];
 		return;
 	};
 	
@@ -735,6 +738,7 @@
 	}
 	[self deselectAll:self];
 	[self reloadData];
+	[myDocument saveDocumentIfNamed];
 	[myDocument actionSwitchViewToBackingPane:self];
 }
 

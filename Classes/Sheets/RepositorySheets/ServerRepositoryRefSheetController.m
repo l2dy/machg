@@ -140,6 +140,7 @@
 	[NSApp endSheet:theWindow];
 	[theWindow orderOut:sender];
 	[[myDocument sidebar] reloadData];
+	[myDocument saveDocumentIfNamed];
 	[myDocument postNotificationWithName:kSidebarSelectionDidChange];
 }
 
