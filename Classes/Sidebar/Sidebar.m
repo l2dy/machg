@@ -355,17 +355,19 @@
 	// Look for a server in [paths].default
 	NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"paths.default", nil];
 	ExecutionResult result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:file];
-	BOOL isServer = [result.outStr matchesRegex:@"^ssh|http|https://"	options:RKLMultiline];
+	NSString* serverPath = result.outStr;
+	BOOL isServer = [serverPath matchesRegex:@"^ssh|http|https://"	options:RKLMultiline];
 	if (!isServer || IsNotEmpty(result.errStr))
 		return NO;
 	
 	// If the server is already present in the document don't add it again.
 	NSArray* allRepositories = [self allRepositories];
 	for (SidebarNode* repo in allRepositories)
-		if ([repo isServerRepositoryRef] && [[repo path] isEqualToString:result.outStr])
+		if ([repo isServerRepositoryRef] && [[repo path] isEqualToString:serverPath])
 			return NO;
 	
-	SidebarNode* serverNode = [SidebarNode nodeWithCaption:[file lastPathComponent]  forServerPath:result.outStr];
+	SidebarNode* serverNode = [SidebarNode nodeWithCaption:[file lastPathComponent]  forServerPath:serverPath];
+	[[AppController sharedAppController] computeRepositoryIdentityForPath:serverPath];
 	[targetParent insertChild:serverNode atIndex:index];
 	return YES;
 }
