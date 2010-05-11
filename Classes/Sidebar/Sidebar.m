@@ -355,7 +355,7 @@
 	// Look for a server in [paths].default
 	NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"paths.default", nil];
 	ExecutionResult result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:file];
-	NSString* serverPath = result.outStr;
+	NSString* serverPath = trimString(result.outStr);
 	BOOL isServer = [serverPath matchesRegex:@"^ssh|http|https://"	options:RKLMultiline];
 	if (!isServer || IsNotEmpty(result.errStr))
 		return NO;
@@ -363,7 +363,7 @@
 	// If the server is already present in the document don't add it again.
 	NSArray* allRepositories = [self allRepositories];
 	for (SidebarNode* repo in allRepositories)
-		if ([repo isServerRepositoryRef] && [[repo path] isEqualToString:serverPath])
+		if ([repo isServerRepositoryRef] && [trimString([repo path]) isEqualToString:serverPath])
 			return NO;
 	
 	SidebarNode* serverNode = [SidebarNode nodeWithCaption:[file lastPathComponent]  forServerPath:serverPath];
