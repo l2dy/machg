@@ -48,6 +48,7 @@
 
 // Preferences
 + (void)	  initializePreferenceDefaults;
++ (void)	  resetUserPreferences;
 - (IBAction)  resetPreferences: (id)sender;
 - (IBAction)  showPreferences:(id)sender;
 
