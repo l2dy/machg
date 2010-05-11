@@ -632,8 +632,7 @@
 	SidebarNode* node = [self lastSectionNode];
 	if (!node)
 		node = root_;
-	[[node children] addObject:newNode];
-	[newNode setParent:node];
+	[node addChild:newNode];
 	[self reloadData];
 }
 
