@@ -13,6 +13,7 @@
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<integer value="945"/>
+			<integer value="930"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -42,7 +43,7 @@
 				<bool key="NSSharedInstance">YES</bool>
 			</object>
 			<object class="NSView" id="945562250">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">256</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1645,7 +1646,7 @@
 																		<object class="NSTextFieldCell" key="NSCell" id="766839751">
 																			<int key="NSCellFlags">68288064</int>
 																			<int key="NSCellFlags2">272761856</int>
-																			<string key="NSContents">Hightlight Color</string>
+																			<string key="NSContents">Highlight Color</string>
 																			<reference key="NSSupport" ref="26"/>
 																			<reference key="NSControlView" ref="822923894"/>
 																			<reference key="NSBackgroundColor" ref="148478507"/>
@@ -1715,6 +1716,7 @@
 					</object>
 				</object>
 				<string key="NSFrameSize">{822, 631}</string>
+				<reference key="NSSuperview"/>
 			</object>
 			<object class="NSMenu" id="886653824">
 				<string key="NSTitle"/>
@@ -3512,7 +3514,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{63, 343}, {822, 631}}</string>
+					<string>{{20, 343}, {822, 631}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3721,7 +3723,7 @@
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">../MacHg/Classes/HistoryPane/HistoryPaneController.h</string>
+						<string key="minorKey">Classes/HistoryPane/HistoryPaneController.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -3748,9 +3750,9 @@
 							<string>NSView</string>
 						</object>
 					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="204147408">
+					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="227766352">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">../MacHg/Classes/HistoryPane/JHAccordionView.h</string>
+						<string key="minorKey">Classes/HistoryPane/JHAccordionView.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -3783,7 +3785,7 @@
 							<string>JHAccordionSubView</string>
 						</object>
 					</object>
-					<reference key="sourceIdentifier" ref="204147408"/>
+					<reference key="sourceIdentifier" ref="227766352"/>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">JHAccordionView</string>
@@ -3861,15 +3863,15 @@
 					<string key="superclassName">NSImageCell</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">../MacHg/Classes/LogEntryModel/LogGraphCell.h</string>
+						<string key="minorKey">Classes/LogEntryModel/LogGraphCell.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">LogTableTextFieldCell</string>
 					<string key="superclassName">NSTextFieldCell</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="390752744">
+					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="35306106">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">../MacHg/Classes/LogEntryModel/LogTableView.h</string>
+						<string key="minorKey">Classes/LogEntryModel/LogTableView.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -3909,7 +3911,7 @@
 							<string>id</string>
 						</object>
 					</object>
-					<reference key="sourceIdentifier" ref="390752744"/>
+					<reference key="sourceIdentifier" ref="35306106"/>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">MacHgDocument</string>
@@ -4138,7 +4140,7 @@
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">../MacHg/Classes/UtilityClasses/ScrollToForLogTable/ScrollToForLogTable.h</string>
+						<string key="minorKey">Classes/UtilityClasses/ScrollToForLogTable/ScrollToForLogTable.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
