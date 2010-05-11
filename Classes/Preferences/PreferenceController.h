@@ -8,17 +8,20 @@
 //
 
 #import <Cocoa/Cocoa.h>
+#import "DBPrefsWindowController.h"
 
-
-@interface PreferenceController : NSWindowController
+@interface PreferenceController : DBPrefsWindowController
 {
+	IBOutlet NSView* generalPreferenceView;
+	IBOutlet NSView* appearancePreferenceView;
+	IBOutlet NSView* mercurialPreferenceView;
+	IBOutlet NSView* messagesPreferenceView;
+	IBOutlet NSView* advancedPreferenceView;
+	IBOutlet NSView* updatePreferenceView;
 }
 
-- (PreferenceController*) initPreferenceController;
-- (BOOL)	 windowShouldClose;
-
 - (IBAction) displayPreferencesChanged:(id)sender;
-- (IBAction) resetPreferences:(id)sender;
++ (IBAction) resetPreferences:(id)sender;
 - (IBAction) repositoryEditingPreferencesChanged:(id)sender;
 
 @end

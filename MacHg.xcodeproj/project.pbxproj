@@ -59,7 +59,6 @@
 		962ED0AC1187885A0072211F /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 962ED0AB1187885A0072211F /* Sparkle.framework */; };
 		962ED0B61187887C0072211F /* Sparkle.framework in Copy Files (Frameworks) */ = {isa = PBXBuildFile; fileRef = 962ED0AB1187885A0072211F /* Sparkle.framework */; };
 		962ED0BC11878A120072211F /* macHgPublicKey_dsa.pem in Resources */ = {isa = PBXBuildFile; fileRef = 962ED0BB11878A120072211F /* macHgPublicKey_dsa.pem */; };
-		962ED0D81187A55B0072211F /* UpdatePreferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 962ED0D71187A55B0072211F /* UpdatePreferences.png */; };
 		9630898E11820711006E45A8 /* ImportPatchesSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9630898D11820711006E45A8 /* ImportPatchesSheetController.m */; };
 		963089911182071B006E45A8 /* ImportPatchesSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9630898F1182071B006E45A8 /* ImportPatchesSheet.xib */; };
 		9631D0501107A7E20007FDF2 /* CloneSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9631D0351107A7E20007FDF2 /* CloneSheetController.m */; };
@@ -175,6 +174,10 @@
 		96DCD03C10CD430600C843C9 /* LocalMercurial in Copy Files (Mercurial) */ = {isa = PBXBuildFile; fileRef = 96DCCE2710CD430000C843C9 /* LocalMercurial */; };
 		96DD29CA112AE56200A57BD3 /* CollapseSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96DD29C9112AE56200A57BD3 /* CollapseSheetController.m */; };
 		96DD29CD112AE56D00A57BD3 /* CollapseSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96DD29CB112AE56D00A57BD3 /* CollapseSheet.xib */; };
+		96FF036111991C21006EC616 /* DBPrefsWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96FF036011991C21006EC616 /* DBPrefsWindowController.m */; };
+		96FF03A81199200E006EC616 /* UpdatePreferences.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 96FF03A71199200E006EC616 /* UpdatePreferences.tiff */; };
+		96FF03AA11992015006EC616 /* AdvancedPreferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 96FF03A911992015006EC616 /* AdvancedPreferences.png */; };
+		96FF03AC11992019006EC616 /* GeneralPreferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 96FF03AB11992019006EC616 /* GeneralPreferences.png */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -269,7 +272,6 @@
 		962ED05211875AED0072211F /* PatchesTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PatchesTableView.m; sourceTree = "<group>"; };
 		962ED0AB1187885A0072211F /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = LinkedLibraries/Sparkle.framework; sourceTree = "<group>"; };
 		962ED0BB11878A120072211F /* macHgPublicKey_dsa.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = macHgPublicKey_dsa.pem; path = Plists/macHgPublicKey_dsa.pem; sourceTree = "<group>"; };
-		962ED0D71187A55B0072211F /* UpdatePreferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = UpdatePreferences.png; sourceTree = "<group>"; };
 		9630898C11820711006E45A8 /* ImportPatchesSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImportPatchesSheetController.h; sourceTree = "<group>"; };
 		9630898D11820711006E45A8 /* ImportPatchesSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImportPatchesSheetController.m; sourceTree = "<group>"; };
 		963089901182071B006E45A8 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/ImportPatchesSheet.xib; sourceTree = SOURCE_ROOT; };
@@ -449,6 +451,11 @@
 		96DD29C8112AE56200A57BD3 /* CollapseSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollapseSheetController.h; sourceTree = "<group>"; };
 		96DD29C9112AE56200A57BD3 /* CollapseSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollapseSheetController.m; sourceTree = "<group>"; };
 		96DD29CC112AE56D00A57BD3 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/CollapseSheet.xib; sourceTree = SOURCE_ROOT; };
+		96FF035F11991C21006EC616 /* DBPrefsWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBPrefsWindowController.h; sourceTree = "<group>"; };
+		96FF036011991C21006EC616 /* DBPrefsWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBPrefsWindowController.m; sourceTree = "<group>"; };
+		96FF03A71199200E006EC616 /* UpdatePreferences.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = UpdatePreferences.tiff; sourceTree = "<group>"; };
+		96FF03A911992015006EC616 /* AdvancedPreferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AdvancedPreferences.png; sourceTree = "<group>"; };
+		96FF03AB11992019006EC616 /* GeneralPreferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = GeneralPreferences.png; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -577,10 +584,12 @@
 		9600C2A210CD3D9F00CD8D28 /* Preferences */ = {
 			isa = PBXGroup;
 			children = (
-				9600C2A310CD3D9F00CD8D28 /* AlertPreferences.png */,
+				96FF03AB11992019006EC616 /* GeneralPreferences.png */,
 				9600C2A410CD3D9F00CD8D28 /* AppearancePreferences.png */,
+				9600C2A310CD3D9F00CD8D28 /* AlertPreferences.png */,
 				9600C2A510CD3D9F00CD8D28 /* MercurialPreferences.png */,
-				962ED0D71187A55B0072211F /* UpdatePreferences.png */,
+				96FF03A911992015006EC616 /* AdvancedPreferences.png */,
+				96FF03A71199200E006EC616 /* UpdatePreferences.tiff */,
 			);
 			name = Preferences;
 			path = Images/Preferences;
@@ -841,6 +850,7 @@
 				9631D0601107A7E90007FDF2 /* LNCStopwatch */,
 				9631D0631107A7E90007FDF2 /* MAAttachedWindow */,
 				9631D0681107A7E90007FDF2 /* RegexKitLite */,
+				96FF035E11991C21006EC616 /* DBPrefsWindowController */,
 				969BDDF11196B0C0007AA6D9 /* ShellHere */,
 			);
 			name = ExternalClasses;
@@ -1287,6 +1297,15 @@
 			path = CollapseSheet;
 			sourceTree = "<group>";
 		};
+		96FF035E11991C21006EC616 /* DBPrefsWindowController */ = {
+			isa = PBXGroup;
+			children = (
+				96FF035F11991C21006EC616 /* DBPrefsWindowController.h */,
+				96FF036011991C21006EC616 /* DBPrefsWindowController.m */,
+			);
+			path = DBPrefsWindowController;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -1409,7 +1428,6 @@
 				9610639B117C6E4000FF7EB2 /* ActionDrop24.png in Resources */,
 				963089911182071B006E45A8 /* ImportPatchesSheet.xib in Resources */,
 				962ED0BC11878A120072211F /* macHgPublicKey_dsa.pem in Resources */,
-				962ED0D81187A55B0072211F /* UpdatePreferences.png in Resources */,
 				9637C872118E9A4D0000C14B /* InitializationWizard.xib in Resources */,
 				9637C879118E9A730000C14B /* ExportPatchesSheet.xib in Resources */,
 				9637C8A8118E9ACB0000C14B /* HistoryPane.xib in Resources */,
@@ -1421,6 +1439,9 @@
 				969BD94811953E54007AA6D9 /* AddLabelSheet.xib in Resources */,
 				969BD95811953FB1007AA6D9 /* MoveLabelSheet.xib in Resources */,
 				969BDCC1119659FC007AA6D9 /* tb-terminal.png in Resources */,
+				96FF03A81199200E006EC616 /* UpdatePreferences.tiff in Resources */,
+				96FF03AA11992015006EC616 /* AdvancedPreferences.png in Resources */,
+				96FF03AC11992019006EC616 /* GeneralPreferences.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1519,6 +1540,7 @@
 				969BD94511953E43007AA6D9 /* AddLabelSheetController.m in Sources */,
 				969BD95511953FAA007AA6D9 /* MoveLabelSheetController.m in Sources */,
 				969BDDF91196B0C0007AA6D9 /* ShellHere.m in Sources */,
+				96FF036111991C21006EC616 /* DBPrefsWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

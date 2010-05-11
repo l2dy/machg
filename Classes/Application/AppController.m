@@ -99,13 +99,6 @@
 }
 
 
-- (PreferenceController*) thePreferenceController
-{
-	if (!thePreferenceController_)
-		thePreferenceController_ = [[PreferenceController alloc] initPreferenceController];
-	return thePreferenceController_;
-}
-
 - (InitializationWizardController*) theInitilizationWizardController
 {
 	if (!theInitilizationWizardController_)
@@ -340,12 +333,12 @@
 
 - (IBAction) resetPreferences: (id)sender
 {
-	[[self thePreferenceController] resetPreferences:sender];
+	[PreferenceController resetPreferences:sender];
 }
 
 - (IBAction) showPreferences:(id)sender
 {
-	[[self thePreferenceController] showWindow:self];
+	[[PreferenceController sharedPrefsWindowController] showWindow:nil];
 }
 
 

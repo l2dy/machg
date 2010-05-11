@@ -13,17 +13,18 @@
 
 @implementation PreferenceController
 
-- (PreferenceController*) initPreferenceController
-{
-	[NSBundle loadNibNamed:@"Preferences" owner:self];
-	return self;
-}
-
-
-- (BOOL) windowShouldClose
-{
-//	[[self window] hide
-	return NO;
+- (void)setupToolbar
+{	
+	[self addView:generalPreferenceView		label:@"GeneralPreferences"];
+	[self addView:appearancePreferenceView	label:@"AppearancePreferences"];
+	[self addView:mercurialPreferenceView	label:@"MercurialPreferences"];
+	[self addView:messagesPreferenceView	label:@"AlertPreferences"];
+	[self addView:advancedPreferenceView	label:@"AdvancedPreferences"];
+	[self addView:updatePreferenceView		label:@"UpdatePreferences"];
+	
+	// Optional configuration settings.
+	[self setCrossFade:[[NSUserDefaults standardUserDefaults] boolForKey:@"PreferencesFadeSwitch"]];
+	[self setShiftSlowsAnimation:[[NSUserDefaults standardUserDefaults] boolForKey:@"PreferencesShiftSlowsAnimation"]];
 }
 
 - (IBAction) displayPreferencesChanged:(id)sender
@@ -31,7 +32,7 @@
 	[self postNotificationWithName:kBrowserDisplayPreferencesChanged];
 }
 
-- (IBAction) resetPreferences:(id)sender
++ (IBAction) resetPreferences:(id)sender
 {
 	// load the default values for the user defaults
 	NSString*	  userDefaultsValuesPath = [[NSBundle mainBundle] pathForResource:@"UserDefaults" ofType:@"plist"];

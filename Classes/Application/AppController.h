@@ -23,7 +23,6 @@
 @interface AppController : NSObject <NSApplicationDelegate>
 {
 	BOOL applicationHasStarted;
-	PreferenceController*		thePreferenceController_;
 	InitializationWizardController* theInitilizationWizardController_;
 
 	IBOutlet WebView*			creditsWebview;
@@ -39,7 +38,6 @@
 }
 
 + (AppController*)				sharedAppController;
-- (PreferenceController*)		thePreferenceController;
 - (InitializationWizardController*) theInitilizationWizardController;
 
 
