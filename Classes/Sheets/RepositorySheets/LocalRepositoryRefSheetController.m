@@ -137,7 +137,7 @@
 	else
 		[self clearSheetFieldValues];
 
-	[theTitleText setStringValue:@"Configure Repository"];
+	[self validateButtons:self];
 	[NSApp beginSheet:theWindow modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
 }
 
