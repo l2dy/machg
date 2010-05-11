@@ -53,6 +53,7 @@ ExecutionResult PruneMissingExtensionsErrors(ExecutionResult results)
 + (ExecutionResult) synchronouslyExecute:(NSString*)cmd withArgs:(NSArray*)args onTask:(NSTask*)theTask
 {
 	NSTask* task = theTask ? theTask : [[NSTask alloc] init];
+	[task setEnvironment:[NSDictionary dictionaryWithObject:@"en_US.UTF-8" forKey:@"LANG"]];
 	[task startExecution:cmd withArgs:args];
 	return [task extractResults];
 }
