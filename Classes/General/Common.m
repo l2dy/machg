@@ -128,6 +128,7 @@ NSString* const MHGSizeOfBrowserColumns					= @"SizeOfBrowserColumns";
 NSString* const MHGUseFileMergeForDiff					= @"UseFileMergeForDiff";
 NSString* const MHGUseFileMergeForMerge					= @"UseFileMergeForMerge";
 NSString* const MHGUseWhichMercurialBinary				= @"UseWhichMercurialBinary";
+NSString* const MHGWarnAboutBadMercurialConfiguration   = @"WarnAboutBadMercurialConfiguration";
 
 
 
@@ -184,6 +185,7 @@ BOOL		ShowUnknownFilesInBrowserFromDefaults()					{ return boolFromDefaultsForKe
 BOOL		ShowUnresolvedFilesInBrowserFromDefaults()				{ return boolFromDefaultsForKey(MHGShowUnresolvedFilesInBrowser); }
 BOOL		UseFileMergeForDiffFromDefaults()						{ return boolFromDefaultsForKey(MHGUseFileMergeForDiff); }
 BOOL		UseFileMergeForMergeFromDefaults()						{ return boolFromDefaultsForKey(MHGUseFileMergeForMerge); }
+BOOL		WarnAboutBadMercurialConfigurationFromDefaults()		{ return boolFromDefaultsForKey(MHGWarnAboutBadMercurialConfiguration); }
 
 
 NSColor*	LogEntryTableParentHighlightColor()						{ return colorFromDefaultsForKey(MHGLogEntryTableParentHighlightColor); }

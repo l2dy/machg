@@ -247,6 +247,17 @@
 
 
 
+- (void) checkForMercurialWarnings
+{
+	NSArray* versionArgs = [NSArray arrayWithObject:@"version"];
+	NSString* hgBinary = executableLocationHG();
+	ExecutionResult results = [TaskExecutions synchronouslyExecute:hgBinary withArgs:versionArgs onTask:nil];
+	if (IsNotEmpty(results.errStr))
+	{
+		NSString* mainMessage = [NSString stringWithFormat:@"The version of Mercurial included with MacHg is producing the following warnings:\n\n%@\n\nMacHg might not function as intended. To resolve this check your configuration settings in your .hgrc file.", results.errStr];
+		RunCriticalAlertPanelWithSuppression(@"Mercurial Warnings", mainMessage, @"Ok", nil, MHGWarnAboutBadMercurialConfiguration);	
+	}
+}
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -270,8 +281,9 @@
 	[[NSUserDefaults standardUserDefaults] setInteger:launchCount +1 forKey:MHGLaunchCount];
 
 	[self checkConfigFileForUserName];
-	[self checkConfigFileForEditingExtensions:YES];	
+	[self checkConfigFileForEditingExtensions:YES];
 	[self checkForFileMerge];
+	[self checkForMercurialWarnings];
 }
 
 

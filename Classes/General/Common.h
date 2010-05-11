@@ -388,6 +388,7 @@ extern NSString* const MHGSizeOfBrowserColumns;
 extern NSString* const MHGUseFileMergeForDiff;
 extern NSString* const MHGUseFileMergeForMerge;
 extern NSString* const MHGUseWhichMercurialBinary;
+extern NSString* const MHGWarnAboutBadMercurialConfiguration;
 
 
 
@@ -433,6 +434,7 @@ BOOL		ShowUnknownFilesInBrowserFromDefaults();
 BOOL		ShowUnresolvedFilesInBrowserFromDefaults();
 BOOL		UseFileMergeForDiffFromDefaults();
 BOOL		UseFileMergeForMergeFromDefaults();
+BOOL		WarnAboutBadMercurialConfigurationFromDefaults();
 
 
 
