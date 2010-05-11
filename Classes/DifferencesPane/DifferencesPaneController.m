@@ -65,6 +65,13 @@
 	[mainSplitView setPosition:400 ofDividerAtIndex:0];
 	
 	[compareLogTableView setCanSelectIncompleteRevision:YES];
+	
+	NSString* fileName = [myDocument documentNameForAutosave];
+	[baseLogTableView setAutosaveTableColumns:YES];
+	[baseLogTableView setAutosaveName:[NSString stringWithFormat:@"File:%@:DifferencesBaseTableViewColumnPositions", fileName]];
+	[compareLogTableView setAutosaveTableColumns:YES];
+	[compareLogTableView setAutosaveName:[NSString stringWithFormat:@"File:%@:DifferencesCompareTableViewColumnPositions", fileName]];
+	
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	if (rootPath)
 		[theBrowser refreshBrowserPaths:[RepositoryPaths fromRootPath:rootPath] resumeEventsWhenFinished:NO];
