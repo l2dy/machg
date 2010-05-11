@@ -387,55 +387,6 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 	return NO;
 }
 
-
-
-//- (BOOL)outlineView:(NSOutlineView*)outlineView  acceptDrop:(id<NSDraggingInfo>)info  item:(id)targetItem  childIndex:(NSInteger)index
-//{
-//	NSPasteboard* pboard = [info draggingPasteboard];	// get the pasteboard
-//	
-//	Patch* targetParent = targetItem;
-//	if (targetParent == nil)
-//		targetParent = root_;
-//	
-//	// We are dragging files in from the finder.
-//	if ([pboard availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]])
-//	{
-//		PatchData* copiedTree = [root_ copyNodeTree];
-//		[[self prepareUndoWithTarget:self] setRootAndUpdate:copiedTree];
-//		[[self undoManager] setActionName:@"Drag"];
-//		
-//		NSArray* filenames = [pboard propertyListForType:NSFilenamesPboardType];
-//		PatchData* newSelectedNode = nil;
-//		for (id file in filenames)
-//			if (pathIsDirectory(file) && repositoryExistsAtPath(file))
-//			{
-//				PatchData* node = [PatchData nodeForLocalURL:file];
-//				[targetParent insertChild:node atIndex:index];
-//				[[AppController sharedAppController] computeRepositoryIdentityForPath:file];
-//				newSelectedNode = node;
-//			}
-//		
-//		for (id file in filenames)
-//			if (pathIsDirectory(file) && !repositoryExistsAtPath(file))
-//			{
-//				NSString* fileName = [[NSFileManager defaultManager] displayNameAtPath:file];
-//				[[myDocument theLocalRepositoryRefSheetController] openSheetForNewRepositoryRefNamed:fileName atPath:file addNewRepositoryRefTo:targetParent atIndex:index];
-//				return YES;
-//			}
-//		
-//		[self reloadData];
-//		if (newSelectedNode)
-//			[self selectNode:newSelectedNode];
-//		[self outlineViewSelectionDidChange:nil];
-//		return YES;
-//	}
-//	
-//	return YES;
-//}
-//
-
-
-
 @end
 
 
