@@ -25,7 +25,7 @@ initrepo ()
     done
 
     cd ..
-    hg clone r r2
+    hg clone r r2 | grep -v updating
     cd r2
     for x in d e f ; do
         echo $x > $x

@@ -185,8 +185,9 @@ def histedit(ui, repo, *parent, **opts):
         elif parent:
             parent = parent[0]
 
-        dest, revs, checkout = hg.parseurl(
-            ui.expandpath(parent or 'default-push', parent or 'default'), ['tip'])
+        parsed = hg.parseurl(ui.expandpath(parent or 'default-push',
+                                           parent or 'default'), ['tip'])
+        dest, revs = parsed[:2]
         if revs:
             revs = [repo.lookup(rev) for rev in revs]
 
@@ -230,9 +231,11 @@ def histedit(ui, repo, *parent, **opts):
                               extra=oldctx.extra())
 
         if action in ('e', 'edit', 'p', 'pick', ):
-            replaced.append(oldctx.node())
+            if new != oldctx.node():
+                replaced.append(oldctx.node())
             if new:
-                created.append(new)
+                if new != oldctx.node():
+                    created.append(new)
                 parentctx = repo[new]
         else: # fold
             if new:
@@ -292,6 +295,7 @@ def histedit(ui, repo, *parent, **opts):
 
         if opts.get('rules') != "" :
             rules = ''.join(opts['rules'])
+            ui.write(rules)
         else:
             rules += editcomment % (node.hex(parent)[:12], node.hex(tip)[:12], )
             rules = ui.edit(rules, ui.username())
@@ -392,7 +396,7 @@ cmdtable = {
           ('o', 'outgoing', False, 'changesets not found in destination'),
           ('f', 'force', False, 'force outgoing even for unrelated repositories'),
           ('',  'startingrules', False, 'issue the starting rules before editing. Useful for gui clients'),
-          ('',  'rules',  [], 'accept rules specified here instead of interactively edited by the user. Useful for gui clients')
+          ('',  'rules',  '', 'accept rules specified here instead of interactively edited by the user. Useful for gui clients')
           ],
          __doc__,
          ),
