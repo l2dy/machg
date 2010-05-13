@@ -11,8 +11,6 @@
 #import "AppController.h"
 #import "Common.h"
 
-// This isn't really an error for us so go ahead and prune the missing extensions warnings.
-
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -22,6 +20,7 @@
 // MARK: -
 
 @implementation ExecutionResult
+
 @synthesize generatingCmd = generatingCmd_;
 @synthesize generatingArgs = generatingArgs_;
 @synthesize result = result_;
@@ -39,14 +38,6 @@
 	return newResult;
 }
 
-- (void) pruneMissingExtensionsErrors
-{
-	if (IsEmpty(errStr_))
-		return;
-	NSString* regex = @"*** failed to import extension (.*?) from (.*?): (.*?)\n";
-	errStr_ = [errStr_ stringByReplacingOccurrencesOfRegex:regex withString:@""];
-	errStr_ = errStr_ ? errStr_ : @"";
-}
 
 + (ExecutionResult*) extractResults:(NSTask*)task
 {
@@ -65,6 +56,18 @@
 	return results;
 }
 
+// This isn't really an error for us so go ahead and prune the missing extensions warnings.
+- (void) pruneMissingExtensionsErrors
+{
+	if (IsEmpty(errStr_))
+		return;
+	NSString* regex = @"*** failed to import extension (.*?) from (.*?): (.*?)\n";
+	errStr_ = [errStr_ stringByReplacingOccurrencesOfRegex:regex withString:@""];
+	errStr_ = errStr_ ? errStr_ : @"";
+}
+
+- (BOOL) hasErrors		{ return result_ != 0 || [errStr_ isMatchedByRegex:@"^(?i)abort" options:RKLMultiline]; }
+- (BOOL) hasWarnings	{ return IsNotEmpty(errStr_) && ![self hasErrors]; }
 
 @end
 
