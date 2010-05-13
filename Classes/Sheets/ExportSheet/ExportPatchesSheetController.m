@@ -140,7 +140,7 @@
 	NSMutableArray* argsDiff = nil;
 	NSString* fileNameTemplate = [self patchNameOption];
 	fileNameTemplate  = [fileNameTemplate stringByReplacingOccurrencesOfRegex:@"\\%N" withString:intAsString(numberOfPatches)];
-	BOOL changingFileName = [fileNameTemplate matchesRegex:@"\\%[nrRhH]" options:RKLNoOptions];
+	BOOL changingFileName = [fileNameTemplate isMatchedByRegex:@"\\%[nrRhH]" options:RKLNoOptions];
 
 	if (exportPatchesForLowHigh)
 	{

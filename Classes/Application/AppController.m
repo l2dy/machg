@@ -183,12 +183,12 @@
 	NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"extensions", nil];
 	ExecutionResult result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
 
-	BOOL addExtDiff      = ![result.outStr matchesRegex:@"^extensions\\.hgext\\.extdiff\\s*="	options:RKLMultiline];
-	BOOL addExtBookmarks = ![result.outStr matchesRegex:@"^extensions\\.hgext\\.bookmarks\\s*=" options:RKLMultiline];
-	BOOL addExtMq		 = ![result.outStr matchesRegex:@"^extensions\\.hgext\\.mq\\s*="		options:RKLMultiline];
-	BOOL addExtRebase    = ![result.outStr matchesRegex:@"^extensions\\.hgext\\.rebase\\s*="	options:RKLMultiline];
-	BOOL addExtHistEdit	 = ![result.outStr matchesRegex:@"^extensions\\.hgext\\.histedit\\s*="  options:RKLMultiline];
-	BOOL addExtCollapse  = ![result.outStr matchesRegex:@"^extensions\\.hgext\\.collapse\\s*="  options:RKLMultiline];
+	BOOL addExtDiff      = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.extdiff\\s*="	options:RKLMultiline];
+	BOOL addExtBookmarks = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.bookmarks\\s*=" options:RKLMultiline];
+	BOOL addExtMq		 = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.mq\\s*="		options:RKLMultiline];
+	BOOL addExtRebase    = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.rebase\\s*="	options:RKLMultiline];
+	BOOL addExtHistEdit	 = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.histedit\\s*="  options:RKLMultiline];
+	BOOL addExtCollapse  = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.collapse\\s*="  options:RKLMultiline];
 
 	// Create the named versioned application support extensions directory
 	NSError* theError;

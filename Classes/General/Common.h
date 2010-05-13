@@ -768,7 +768,7 @@ void _DebugLog(const char* file, int lineNumber, const char* funcName, NSString*
 - (BOOL)	getCapturesWithRegexAndTrimedComponents:(NSString*)regEx  firstComponent:(NSString**)first  secondComponent:(NSString**)second  thirdComponent:(NSString**)third;
 - (BOOL)	getCapturesWithRegexAndTrimedComponents:(NSString*)regEx  firstComponent:(NSString**)first  secondComponent:(NSString**)second  thirdComponent:(NSString**)third  fourthComponent:(NSString**)fourth;
 
-- (BOOL)	matchesRegex:(NSString*)regEx options:(RKLRegexOptions)options;
+- (BOOL)	isMatchedByRegex:(NSString*)regEx options:(RKLRegexOptions)options;
 - (BOOL)	containsString:(NSString*)str;
 @end
 

@@ -888,7 +888,7 @@ void _DebugLog(const char* file, int lineNumber, const char* funcName, NSString*
 
 
 
-- (BOOL) matchesRegex:(NSString*)regEx options:(RKLRegexOptions)options
+- (BOOL) isMatchedByRegex:(NSString*)regEx options:(RKLRegexOptions)options
 {
 	NSRange MaximumRange = NSMakeRange(0UL,NSUIntegerMax);
 	NSRange foundRange = [self rangeOfRegex:regEx options:options inRange:MaximumRange capture:0L error:nil];
