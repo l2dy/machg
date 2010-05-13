@@ -128,7 +128,7 @@
 	
 	// Execute the push command
 	[myDocument dispatchToMercurialQueuedWithDescription:@"Pushing Changesets" process:^{
-		ExecutionResult results = [myDocument executeMercurialWithArgs:argsPush  fromRoot:rootPath  whileDelayingEvents:YES];
+		ExecutionResult* results = [myDocument executeMercurialWithArgs:argsPush  fromRoot:rootPath  whileDelayingEvents:YES];
 		[myDocument postNotificationWithName:kCompatibleRepositoryChanged];
 		if (DisplayResultsOfPushingFromDefaults())
 		{

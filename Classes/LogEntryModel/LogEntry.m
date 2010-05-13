@@ -326,7 +326,7 @@ void setupGlobalsForPartsAndTemplate()
 	{
 		dispatch_async(globalQueue(), ^{
 			NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log", @"--rev", revision_, @"--template", templateStringFull, nil];	// templateStringFull is global set in setupGlobalsForPartsAndTemplate()
-			ExecutionResult hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:[collection_ rootPath]  logging:eLoggingNone];
+			ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:[collection_ rootPath]  logging:eLoggingNone];
 			
 			NSArray* lines = [hgLogResults.outStr componentsSeparatedByString:entrySeparator];
 			[self loadLogResultLineFull:[lines objectAtIndex:0]];
@@ -342,7 +342,7 @@ void setupGlobalsForPartsAndTemplate()
 	if (loadStatus_ == eLogEntryLoadedPending || loadStatus_ == eLogEntryLoadedPartially)
 	{
 		NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log", @"--rev", revision_, @"--template", templateStringFull, nil];	// templateStringFull is global set in setupGlobalsForPartsAndTemplate()
-		ExecutionResult hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:[collection_ rootPath]  logging:eLoggingNone];
+		ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:[collection_ rootPath]  logging:eLoggingNone];
 		
 		NSArray* lines = [hgLogResults.outStr componentsSeparatedByString:entrySeparator];
 		[self loadLogResultLineFull:[lines objectAtIndex:0]];
@@ -365,7 +365,7 @@ void setupGlobalsForPartsAndTemplate()
 	if (loadStatus_ == eLogEntryLoadedPending || loadStatus_ == eLogEntryLoadedPartially)
 	{
 		NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log", @"--rev", revision_, @"--template", templateStringFull, nil];	// templateStringFull is global set in setupGlobalsForPartsAndTemplate()
-		ExecutionResult hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:[collection_ rootPath]  logging:eLoggingNone];
+		ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:[collection_ rootPath]  logging:eLoggingNone];
 		NSArray* lines = [hgLogResults.outStr componentsSeparatedByString:entrySeparator];
 		[self loadLogResultLineFull:[lines objectAtIndex:0]];
 	}

@@ -126,7 +126,7 @@
 - (NSString*) mercurialVersionString
 {
 	NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"version", nil];
-	ExecutionResult result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
+	ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
 	NSArray* versionParts = [result.outStr componentsSeparatedByString:@"\n"];
 	NSString* versionString = ([versionParts count] > 0) ? [versionParts objectAtIndex:0] : @"";
 	return versionString;
@@ -158,7 +158,7 @@
 - (void) checkConfigFileForUserName
 {
 	NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"ui.username", nil];
-	ExecutionResult result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
+	ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
 	if (IsEmpty(result.outStr))
 		[[self theInitilizationWizardController] showWizard];	
 }
@@ -181,7 +181,7 @@
 	
 	// Look for [extensions]\nhgext.extdiff = and if we don't find it add it to the default .hgrc file. This allows us to do diffs, etc.
 	NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"extensions", nil];
-	ExecutionResult result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
+	ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
 
 	BOOL addExtDiff      = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.extdiff\\s*="	options:RKLMultiline];
 	BOOL addExtBookmarks = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.bookmarks\\s*=" options:RKLMultiline];
@@ -251,7 +251,7 @@
 {
 	NSArray* versionArgs = [NSArray arrayWithObject:@"version"];
 	NSString* hgBinary = executableLocationHG();
-	ExecutionResult results = [TaskExecutions synchronouslyExecute:hgBinary withArgs:versionArgs onTask:nil];
+	ExecutionResult* results = [TaskExecutions synchronouslyExecute:hgBinary withArgs:versionArgs onTask:nil];
 	if (IsNotEmpty(results.errStr))
 	{
 		NSString* mainMessage = [NSString stringWithFormat:@"The version of Mercurial included with MacHg is producing the following warnings:\n\n%@\n\nMacHg might not function as intended. To resolve this check your configuration settings in your .hgrc file.", results.errStr];
@@ -462,7 +462,7 @@
 	dispatch_async(globalQueue(), ^{
 		NSMutableArray* argsIdentify = [NSMutableArray arrayWithObjects:@"identify", @"--rev", @"0", @"--id", @"--quiet", path, nil];
 		__block NSTask* theTask = [[NSTask alloc]init];
-		__block ExecutionResult results;
+		__block ExecutionResult* results;
 		dispatchWithTimeOut(globalQueue(), timeOutInSeconds, ^{
 			results = [TaskExecutions executeMercurialWithArgs:argsIdentify fromRoot:@"/tmp" logging:eLoggingNone onTask:theTask];
 		});

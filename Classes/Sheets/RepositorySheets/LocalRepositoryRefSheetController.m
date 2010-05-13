@@ -159,7 +159,7 @@
 		if (!repositoryExists)
 		{
 			NSMutableArray* argsInit = [NSMutableArray arrayWithObjects:@"init", newPath, nil];
-			ExecutionResult initResults = [myDocument  executeMercurialWithArgs:argsInit  fromRoot:@"/" whileDelayingEvents:YES];
+			ExecutionResult* initResults = [myDocument  executeMercurialWithArgs:argsInit  fromRoot:@"/" whileDelayingEvents:YES];
 			if (IsNotEmpty(initResults.errStr))
 				[NSException raise:@"Initialize Repository" format:@"Mercurial could not initialize a repository at %@", newPath, nil];
 
@@ -171,7 +171,7 @@
 				[NSException raise:@"Initialize Repository" format:@"MacHg could not create .hgignore file at %@ while initializing the repository.", hgignorePath, nil];
 				
 			NSMutableArray* argsCommit = [NSMutableArray arrayWithObjects:@"commit", @"--addremove", @".hgignore", @"--message", @"initialize repository", nil];
-			ExecutionResult commitResults = [myDocument  executeMercurialWithArgs:argsCommit  fromRoot:newPath  whileDelayingEvents:YES];
+			ExecutionResult* commitResults = [myDocument  executeMercurialWithArgs:argsCommit  fromRoot:newPath  whileDelayingEvents:YES];
 			if (IsNotEmpty(commitResults.errStr))
 				[NSException raise:@"Initialize Repository" format:@"Mercurial could not commit %@ while initializing the repository.", hgignorePath, nil];
 		}

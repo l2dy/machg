@@ -172,7 +172,7 @@
 		if ([patch dontCommitOption])			[argsImport addObject:@"--no-commit"];
 		if (guessRenames_)						[argsImport addObject:@"--similarity" followedBy:intAsString(constrainInteger((int)round(100 * guessSimilarityFactor_), 0, 100))];
 		[argsImport addObject:[patch path]];
-		ExecutionResult result = [TaskExecutions executeMercurialWithArgs:argsImport  fromRoot:rootPath];
+		ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsImport  fromRoot:rootPath];
 		if (!IsEmpty(result.errStr))
 			break;
 		[patchesTable removePatchAtIndex:0];

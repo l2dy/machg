@@ -129,7 +129,7 @@
 
 	[argsRebase addObject: (result == NSAlertDefaultReturn ? @"--continue" : @"--abort")];
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
-	ExecutionResult results = [myDocument  executeMercurialWithArgs:argsRebase  fromRoot:rootPath  whileDelayingEvents:YES];
+	ExecutionResult* results = [myDocument  executeMercurialWithArgs:argsRebase  fromRoot:rootPath  whileDelayingEvents:YES];
 	if (results.outStr)
 	{
 		NSString* operation = (result == NSAlertDefaultReturn ? @"Continue" : @"Abort");

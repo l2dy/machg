@@ -124,7 +124,7 @@
 	[argsHistoryEdit addObject: (result == NSAlertDefaultReturn ? @"--continue" : @"--abort")];
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	
-	ExecutionResult results = [myDocument  executeMercurialWithArgs:argsHistoryEdit  fromRoot:rootPath  whileDelayingEvents:YES];
+	ExecutionResult* results = [myDocument  executeMercurialWithArgs:argsHistoryEdit  fromRoot:rootPath  whileDelayingEvents:YES];
 
 	if (results.outStr)
 	{
@@ -226,7 +226,7 @@
 	[argsHistoryEdit addObject:@"--startingrules"];
 	[argsHistoryEdit addObject:intAsString(pair.lowRevision)];
 		
-	ExecutionResult results = [myDocument  executeMercurialWithArgs:argsHistoryEdit  fromRoot:rootPath  whileDelayingEvents:YES];
+	ExecutionResult* results = [myDocument  executeMercurialWithArgs:argsHistoryEdit  fromRoot:rootPath  whileDelayingEvents:YES];
 	if (results.result != 0)
 		return;
 	[[confirmationSheetMessage textStorage] setAttributedString:normalSheetMessageAttributedString(results.outStr)];

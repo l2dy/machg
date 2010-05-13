@@ -38,19 +38,23 @@ typedef enum
 	NSString* outStr_;			// The output received on stdOut due to executing the command
 	NSString* errStr_;			// The output received on stdErr due to executing the command
 }
+
 @property (readonly, assign) NSString* generatingCmd;
 @property (readonly, assign) NSArray*  generatingArgs;
 @property (readonly, assign) int	   result;
 @property (readonly, assign) NSString* outStr;
 @property (readonly, assign) NSString* errStr;
+
++ (ExecutionResult*) extractResults:(NSTask*)task;
++ (ExecutionResult*) resultWithCmd:(NSString*)cmd args:(NSArray*)args result:(int)result outStr:(NSString*)outStr errStr:(NSString*)errStr;
+
 @end
 
 
 
 
 // NSTask category extensions
-@interface NSTask (NSTaskPlusResultExtraction)
-- (ExecutionResult) extractResults;
+@interface NSTask (NSTaskPlusExtensions)
 - (void) startExecution:(NSString*)cmd withArgs:(NSArray*)args;
 - (void) cancelTask;
 @end
@@ -75,21 +79,21 @@ typedef enum
 
 
 // General Task handling.
-+ (ExecutionResult) synchronouslyExecute:(NSString*)cmd withArgs:(NSArray*)args onTask:(NSTask*)theTask;
++ (ExecutionResult*) synchronouslyExecute:(NSString*)cmd withArgs:(NSArray*)args onTask:(NSTask*)theTask;
 + (NSMutableArray*) parseArguments:(NSString*)args;
 + (NSMutableArray*) filterOptions:(NSArray*)options byValidOptions:(NSArray*)validOptions;
 
 
 // Mercurial task handling
-+ (void)			logMercurialResult:(ExecutionResult)results;
-+ (void)			logAndReportAnyErrors:(LoggingEnum)log forResults:(ExecutionResult)results;
-+ (BOOL)			taskWasKilled:(ExecutionResult)results;
++ (void)			logMercurialResult:(ExecutionResult*)results;
++ (void)			logAndReportAnyErrors:(LoggingEnum)log forResults:(ExecutionResult*)results;
++ (BOOL)			taskWasKilled:(ExecutionResult*)results;
 
 + (NSMutableArray*) preProcessMercurialCommandArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath;
 
-+ (ExecutionResult) executeMercurialWithArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath;
-+ (ExecutionResult) executeMercurialWithArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath  logging:(LoggingEnum)log;
-+ (ExecutionResult) executeMercurialWithArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath  logging:(LoggingEnum)log  onTask:(NSTask*)theTask;
++ (ExecutionResult*) executeMercurialWithArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath;
++ (ExecutionResult*) executeMercurialWithArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath  logging:(LoggingEnum)log;
++ (ExecutionResult*) executeMercurialWithArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath  logging:(LoggingEnum)log  onTask:(NSTask*)theTask;
 
 @end
 

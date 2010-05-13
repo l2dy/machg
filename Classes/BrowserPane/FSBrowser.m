@@ -370,7 +370,7 @@
 	NSMutableArray* argsResolveStatus = [NSMutableArray arrayWithObjects:@"resolve", @"--list", nil];
 	[argsResolveStatus addObjectsFromArray:absolutePaths];
 
-	ExecutionResult results = [TaskExecutions executeMercurialWithArgs:argsResolveStatus fromRoot:rootPath  logging:eLoggingNone];
+	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsResolveStatus fromRoot:rootPath  logging:eLoggingNone];
 	if ([results.errStr length] > 0)
 	{
 		[TaskExecutions logMercurialResult:results];

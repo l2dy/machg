@@ -338,7 +338,7 @@
 	[argsStatus addObject:@"--rev" followedBy:revNumbers];
 	[argsStatus addObjectsFromArray:absolutePaths];
 
-	ExecutionResult results = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:rootPath  logging:eLoggingNone];
+	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:rootPath  logging:eLoggingNone];
 	if ([results.errStr length] > 0)
 	{
 		[TaskExecutions logMercurialResult:results];

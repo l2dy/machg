@@ -170,7 +170,7 @@
 		{
 			// For the incomplete version since writing this file can't be handled by export we have to use diff instead.
 			// Substitute the %_ control characters for their values and then write the diff to the file
-			ExecutionResult result = [myDocument  executeMercurialWithArgs:argsDiff  fromRoot:rootPath  whileDelayingEvents:YES];
+			ExecutionResult* result = [myDocument  executeMercurialWithArgs:argsDiff  fromRoot:rootPath  whileDelayingEvents:YES];
 			if (result.outStr)
 			{
 				NSString* patchFileName = fileNameTemplate;

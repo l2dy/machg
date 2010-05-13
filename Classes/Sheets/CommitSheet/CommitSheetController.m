@@ -84,7 +84,7 @@
 
 	// Report the branch we are about to commit on in the dialog
 	NSMutableArray* argsBranch = [NSMutableArray arrayWithObjects:@"branch", nil];
-	ExecutionResult hgBranchResults = [TaskExecutions executeMercurialWithArgs:argsBranch  fromRoot:rootPath  logging:eLoggingNone];
+	ExecutionResult* hgBranchResults = [TaskExecutions executeMercurialWithArgs:argsBranch  fromRoot:rootPath  logging:eLoggingNone];
 	NSString* newBranchSheetString = [NSString stringWithFormat:@"to branch: %@", hgBranchResults.outStr];
 	[commitSheetBranchString setStringValue: newBranchSheetString];
 
@@ -98,13 +98,13 @@
 	// Show the files which are about to be changed in the commit sheet.
 	NSMutableArray* argsStatus = [NSMutableArray arrayWithObjects:@"status", @"--modified", @"--added", @"--removed", nil];
 	[argsStatus addObjectsFromArray: absolutePathsOfFilesToCommit];
-	ExecutionResult hgStatusResults = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:rootPath  logging:eLoggingNone];
+	ExecutionResult* hgStatusResults = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:rootPath  logging:eLoggingNone];
 	changedFilesTableSourceData = [hgStatusResults.outStr componentsSeparatedByString:@"\n"];
 	[changedFilesTableView reloadData];
 	
 	// Fetch the last 10 log comments and set the sources so that the table view of these in the commit sheet shows them correctly.
 	NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log", @"--limit", @"10", @"--template", @"{desc}\n#^&^#\n", nil];
-	ExecutionResult hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:rootPath  logging:eLoggingNone];
+	ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:rootPath  logging:eLoggingNone];
 	logCommentsTableSourceData = [hgLogResults.outStr componentsSeparatedByString:@"\n#^&^#\n"];
 	[previousCommitMessagesTableView reloadData];
 }

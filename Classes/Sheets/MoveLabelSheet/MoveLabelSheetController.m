@@ -127,7 +127,7 @@
 		[argsMoveLabel addObject: @"--local"];
 	[argsMoveLabel addObject: @"--force"];
 	[argsMoveLabel addObject:[labelToMove_ name]];
-	ExecutionResult results = [myDocument executeMercurialWithArgs:argsMoveLabel fromRoot:rootPath whileDelayingEvents:YES];
+	ExecutionResult* results = [myDocument executeMercurialWithArgs:argsMoveLabel fromRoot:rootPath whileDelayingEvents:YES];
 	
 	if ([results.errStr length] > 0)
 		return;

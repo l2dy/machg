@@ -127,7 +127,7 @@
 		if (!parents_)
 		{
 			NSMutableArray* argParents = [NSMutableArray arrayWithObjects:@"parents", @"--template", @"{rev}:{node|short} ", nil];
-			ExecutionResult results = [TaskExecutions executeMercurialWithArgs:argParents fromRoot:rootPath_];
+			ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argParents fromRoot:rootPath_];
 			parents_ = trimString(results.outStr);
 		}
 	}
@@ -206,7 +206,7 @@
 		if (!tip_)
 		{
 			NSMutableArray* argsTip = [NSMutableArray arrayWithObjects:@"tip", @"--template", @"{rev}:{node|short}", nil];
-			ExecutionResult results = [TaskExecutions executeMercurialWithArgs:argsTip fromRoot:rootPath_];
+			ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsTip fromRoot:rootPath_];
 			tip_ = results.outStr;
 		}
 	}
@@ -236,7 +236,7 @@
 		if (!branchName_)
 		{
 			NSMutableArray* argsBranch = [NSMutableArray arrayWithObjects:@"branch", nil];
-			ExecutionResult results = [TaskExecutions executeMercurialWithArgs:argsBranch fromRoot:rootPath_];
+			ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsBranch fromRoot:rootPath_];
 			branchName_ = trimString(results.outStr);
 		}
 	}
@@ -261,7 +261,7 @@
 		if (!heads_)
 		{
 			NSMutableArray* argsHeads = [NSMutableArray arrayWithObjects:@"heads", @"--active", @"--template", @"{rev}:{node|short} ", nil];
-			ExecutionResult results = [TaskExecutions executeMercurialWithArgs:argsHeads fromRoot: rootPath_ logging:eLoggingNone];
+			ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsHeads fromRoot: rootPath_ logging:eLoggingNone];
 			heads_ = trimString(results.outStr);
 		}
 	}
@@ -323,7 +323,7 @@
 				revisionToLabels_ = [[NSMutableDictionary alloc] init];
 
 			NSMutableArray* bookmarksArgs = [NSMutableArray arrayWithObjects:@"bookmarks", @"--verbose", nil];
-			ExecutionResult bookmarksResults = [TaskExecutions executeMercurialWithArgs:bookmarksArgs fromRoot: rootPath_ logging:eLoggingNone];
+			ExecutionResult* bookmarksResults = [TaskExecutions executeMercurialWithArgs:bookmarksArgs fromRoot: rootPath_ logging:eLoggingNone];
 			NSString* rawBookmarks = trimString(bookmarksResults.outStr);
 			NSArray* bookmarkLines = [rawBookmarks componentsSeparatedByString:@"\n"];
 			
@@ -343,7 +343,7 @@
 			bookmarkToLabelDictionary_ = bookmarkToLabelDict;
 			
 			NSMutableArray* tagsArgs = [NSMutableArray arrayWithObjects:@"tags", @"--verbose", nil];
-			ExecutionResult tagsResults = [TaskExecutions executeMercurialWithArgs:tagsArgs fromRoot: rootPath_ logging:eLoggingNone];
+			ExecutionResult* tagsResults = [TaskExecutions executeMercurialWithArgs:tagsArgs fromRoot: rootPath_ logging:eLoggingNone];
 			NSString* rawTags = trimString(tagsResults.outStr);
 			NSArray* tagLines = [rawTags componentsSeparatedByString:@"\n"];
 
@@ -401,7 +401,7 @@
 			if (!revisionToLabels_)
 				revisionToLabels_ = [[NSMutableDictionary alloc] init];
 			NSMutableArray* branchArgs = [NSMutableArray arrayWithObjects:@"branches", nil];
-			ExecutionResult results = [TaskExecutions executeMercurialWithArgs:branchArgs fromRoot: rootPath_ logging:eLoggingNone];
+			ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:branchArgs fromRoot: rootPath_ logging:eLoggingNone];
 			NSString* rawBranches = trimString(results.outStr);
 			NSArray* branchLines = [rawBranches componentsSeparatedByString:@"\n"];
 
@@ -677,7 +677,7 @@
 	NSString* revLimits     = [NSString stringWithFormat:@"%d:%d", lowLimit, highLimit];
 	NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log", @"--rev", revLimits, @"--template", templateStringShort, nil];	// templateStringShort is global set in setupGlobalsForPartsAndTemplate()
 	dispatch_async(globalQueue(), ^{
-		ExecutionResult hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:rootPath_  logging:eLoggingNone];
+		ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:rootPath_  logging:eLoggingNone];
 		NSArray* lines = [hgLogResults.outStr componentsSeparatedByString:entrySeparator];
 		NSMutableArray* entries = [[NSMutableArray alloc] init];
 		for (NSString* line in lines)

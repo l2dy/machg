@@ -125,7 +125,7 @@
 	
 	// Execute the pull command
 	[myDocument dispatchToMercurialQueuedWithDescription:@"Pulling Changesets" process:^{
-		ExecutionResult results = [myDocument executeMercurialWithArgs:argsPull  fromRoot:rootPath  whileDelayingEvents:YES];
+		ExecutionResult* results = [myDocument executeMercurialWithArgs:argsPull  fromRoot:rootPath  whileDelayingEvents:YES];
 		if (DisplayResultsOfPullingFromDefaults())
 		{
 			NSString* messageString = [NSString stringWithFormat:@"Results of Pulling “%@” into “%@”", pullSourceName, pullDestinationName];

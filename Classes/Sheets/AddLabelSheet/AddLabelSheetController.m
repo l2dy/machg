@@ -225,7 +225,7 @@ NSString* kTheRevisionFieldValue = @"theRevisionFieldValue";
 	if (addLabelTabNumber_ == eAddLabelTabBranch && [[commitMessageTextView string] length] > 0)
 		[argsLabel addObject: @"--message" followedBy:[commitMessageTextView string]];
 	[argsLabel addObject:theNewNameFieldValue_];
-	ExecutionResult results = [myDocument executeMercurialWithArgs:argsLabel fromRoot:rootPath whileDelayingEvents:YES];
+	ExecutionResult* results = [myDocument executeMercurialWithArgs:argsLabel fromRoot:rootPath whileDelayingEvents:YES];
 	
 	if ([results.errStr length] > 0)
 		return;

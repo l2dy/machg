@@ -172,7 +172,7 @@
 	[self setConnectionFromFieldsForSource:sourceNode_];		// Cache advanced option settings for this source.
 
 	[myDocument dispatchToMercurialQueuedWithDescription:cloneDescription  process:^{
-		ExecutionResult results = [TaskExecutions  executeMercurialWithArgs:argsClone  fromRoot:@"/tmp"];
+		ExecutionResult* results = [TaskExecutions  executeMercurialWithArgs:argsClone  fromRoot:@"/tmp"];
 		if (IsEmpty(results.errStr))
 			dispatch_async(mainQueue(), ^{
 				SidebarNode* newNode = [SidebarNode nodeWithCaption:destinationName  forLocalPath:destinationPath];

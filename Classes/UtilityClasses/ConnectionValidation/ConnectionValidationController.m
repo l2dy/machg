@@ -88,7 +88,7 @@
 									 ^{
 										 [self showValidationProgressIndicator];
 										 NSMutableArray* argsIdentify = [NSMutableArray arrayWithObjects:@"identify", @"--rev", @"0", [serverTextField stringValue], nil];
-										 ExecutionResult results = [TaskExecutions executeMercurialWithArgs:argsIdentify  fromRoot:@"/tmp"  logging:eLogAllToFile];
+										 ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsIdentify  fromRoot:@"/tmp"  logging:eLogAllToFile];
 										 
 										// If our results are still relevant show the success or failure result
 										 if ([queueForConnectionValidation_ operationNumber] == validationAttempt)

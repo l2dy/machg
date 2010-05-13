@@ -12,20 +12,12 @@
 #import "Common.h"
 
 // This isn't really an error for us so go ahead and prune the missing extensions warnings.
-ExecutionResult PruneMissingExtensionsErrors(ExecutionResult results)
-{
-	if (IsEmpty(results.errStr))
-		return results;
-	NSString* regex = @"*** failed to import extension (.*?) from (.*?): (.*?)\n";
-	results.errStr = [results.errStr stringByReplacingOccurrencesOfRegex:regex withString:@""];
-	results.errStr = results.errStr ? results.errStr : @"";
-	return results;
-}
+
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK:  ExecutionResult
+// MARK:  ExecutionResult*
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 
@@ -35,6 +27,45 @@ ExecutionResult PruneMissingExtensionsErrors(ExecutionResult results)
 @synthesize result = result_;
 @synthesize outStr = outStr_;
 @synthesize errStr = errStr_;
+
++ (ExecutionResult*) resultWithCmd:(NSString*)cmd args:(NSArray*)args result:(int)result outStr:(NSString*)outStr errStr:(NSString*)errStr;
+{
+	ExecutionResult* newResult = [[ExecutionResult alloc]init];
+	newResult->generatingCmd_ = cmd;
+	newResult->generatingArgs_ = args;
+	newResult->result_ = result;
+	newResult->outStr_ = outStr;
+	newResult->errStr_ = errStr;
+	return newResult;
+}
+
+- (void) pruneMissingExtensionsErrors
+{
+	if (IsEmpty(errStr_))
+		return;
+	NSString* regex = @"*** failed to import extension (.*?) from (.*?): (.*?)\n";
+	errStr_ = [errStr_ stringByReplacingOccurrencesOfRegex:regex withString:@""];
+	errStr_ = errStr_ ? errStr_ : @"";
+}
+
++ (ExecutionResult*) extractResults:(NSTask*)task
+{
+	ExecutionResult* results = [[ExecutionResult alloc]init];
+	NSPipe* outPipe = [task standardOutput];												// get the standard output
+	NSPipe* errPipe = [task standardError];													// get the standard error
+	NSData* outData = [[outPipe fileHandleForReading] readDataToEndOfFileIgnoringErros];	// Read the output
+	NSData* errData = [[errPipe fileHandleForReading] readDataToEndOfFileIgnoringErros];	// Read the output
+	[task waitUntilExit];	// Wait *after* the data read. Seems counter intuitive but see the Cocodev articles about NSTask
+	results->generatingCmd_   = [task launchPath];
+	results->generatingArgs_  = [NSArray arrayWithArray:[task arguments]];
+	results->outStr_ = [[NSString alloc] initWithData:outData  encoding:NSUTF8StringEncoding];
+	results->errStr_ = [[NSString alloc] initWithData:errData  encoding:NSUTF8StringEncoding];
+	results->result_ = [task terminationStatus];
+	[task cancelTask];
+	return results;
+}
+
+
 @end
 
 
@@ -74,12 +105,12 @@ ExecutionResult PruneMissingExtensionsErrors(ExecutionResult results)
 // MARK: Core Execution
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-+ (ExecutionResult) synchronouslyExecute:(NSString*)cmd withArgs:(NSArray*)args onTask:(NSTask*)theTask
++ (ExecutionResult*) synchronouslyExecute:(NSString*)cmd withArgs:(NSArray*)args onTask:(NSTask*)theTask
 {
 	NSTask* task = theTask ? theTask : [[NSTask alloc] init];
 	[task setEnvironment:[NSDictionary dictionaryWithObject:@"en_US.UTF-8" forKey:@"LANG"]];
 	[task startExecution:cmd withArgs:args];
-	return [task extractResults];
+	return [ExecutionResult extractResults:task];
 }
 
 
@@ -147,7 +178,7 @@ ExecutionResult PruneMissingExtensionsErrors(ExecutionResult results)
 // MARK: Mercurial execution
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-+(void) logMercurialResult:(ExecutionResult)results
++(void) logMercurialResult:(ExecutionResult*)results
 {
 	NSMutableString* theCommandAsString = [[NSMutableString alloc] init];
 	NSArray* args = results.generatingArgs;
@@ -161,7 +192,7 @@ ExecutionResult PruneMissingExtensionsErrors(ExecutionResult results)
 }
 
 
-+ (void) logAndReportAnyErrors:(LoggingEnum)log forResults:(ExecutionResult)result
++ (void) logAndReportAnyErrors:(LoggingEnum)log forResults:(ExecutionResult*)result
 {
 	// Write to log files.
 	int level = LoggingLevelForHGCommands();
@@ -180,7 +211,7 @@ ExecutionResult PruneMissingExtensionsErrors(ExecutionResult results)
 		}
 }
 
-+ (BOOL) taskWasKilled:(ExecutionResult)results
++ (BOOL) taskWasKilled:(ExecutionResult*)results
 {
 	return (results.result == SIGTERM || (results.result == 255 && [results.errStr isEqualToString:@"killed!\n"]));
 }
@@ -215,30 +246,23 @@ ExecutionResult PruneMissingExtensionsErrors(ExecutionResult results)
 
 
 // Execute the hg command with the arguments args putting results into pipe and reading the data from that and returning it.
-+ (ExecutionResult) executeMercurialWithArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath
++ (ExecutionResult*) executeMercurialWithArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath
 {
 	return [TaskExecutions executeMercurialWithArgs:args  fromRoot:rootPath   logging:eLogAllIssueErrors  onTask:nil];
 }
-+ (ExecutionResult) executeMercurialWithArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath logging:(LoggingEnum)log
++ (ExecutionResult*) executeMercurialWithArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath logging:(LoggingEnum)log
 {
 	return [TaskExecutions executeMercurialWithArgs:args  fromRoot:rootPath   logging:log onTask:nil];
 }
-+ (ExecutionResult) executeMercurialWithArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath  logging:(LoggingEnum)log  onTask:(NSTask*)theTask
++ (ExecutionResult*) executeMercurialWithArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath  logging:(LoggingEnum)log  onTask:(NSTask*)theTask
 {
-	ExecutionResult results;
 	if (!rootPath)
-	{
-		results.outStr = @"";
-		results.errStr = @"Null root path";
-		results.result = 255;
-		results.generatingCmd  = executableLocationHG();
-		results.generatingArgs = [NSArray arrayWithArray:args];
-		return results;
-	}
+		return [ExecutionResult resultWithCmd:executableLocationHG() args:[NSArray arrayWithArray:args] result:255 outStr: @"" errStr:@"Null root path"];
+
 	NSMutableArray* newArgs = [self preProcessMercurialCommandArgs:args fromRoot:rootPath];
 	NSString* hgBinary = executableLocationHG();
-	results = [TaskExecutions synchronouslyExecute:hgBinary withArgs:newArgs onTask:theTask];
-	results = PruneMissingExtensionsErrors(results);
+	ExecutionResult* results = [TaskExecutions synchronouslyExecute:hgBinary withArgs:newArgs onTask:theTask];
+	[results pruneMissingExtensionsErrors];
 	[TaskExecutions logAndReportAnyErrors:log forResults:results];
 	return results;
 }
@@ -305,25 +329,7 @@ OSStatus DoTerminalScript(NSString* script)
 // MARK: Extensions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-@implementation NSTask (NSTaskPlusResultExtraction)
-
-- (ExecutionResult) extractResults
-{
-	ExecutionResult results;
-	NSPipe* outPipe = [self standardOutput];												// get the standard output
-	NSPipe* errPipe = [self standardError];													// get the standard error
-	NSData* outData = [[outPipe fileHandleForReading] readDataToEndOfFileIgnoringErros];	// Read the output
-	NSData* errData = [[errPipe fileHandleForReading] readDataToEndOfFileIgnoringErros];	// Read the output
-	[self waitUntilExit];	// Wait *after* the data read. Seems counter intuitive but see the Cocodev articles about NSTask
-	results.generatingCmd   = [self launchPath];
-	results.generatingArgs  = [NSArray arrayWithArray:[self arguments]];
-	results.outStr = [[NSString alloc] initWithData:outData  encoding:NSUTF8StringEncoding];
-	results.errStr = [[NSString alloc] initWithData:errData  encoding:NSUTF8StringEncoding];
-	results.result = [self terminationStatus];
-	[self cancelTask];
-	return results;
-}
-
+@implementation NSTask (NSTaskPlusExtensions)
 
 - (void) startExecution:(NSString*)cmd withArgs:(NSArray*)args
 {

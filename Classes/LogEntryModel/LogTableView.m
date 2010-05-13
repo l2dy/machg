@@ -700,7 +700,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 			NSString* rootPath      = [repositoryData rootPath];
 			NSString* revLimits     = [NSString stringWithFormat:@"%d:%d", 0, [repositoryData computeNumberOfRealRevisions]];
 			NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log",  @"--rev", revLimits, @"--template", @"{rev}\n", @"--keyword", theSearchFilter_, nil];
-			ExecutionResult hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:rootPath  logging:eLoggingNone];
+			ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:rootPath  logging:eLoggingNone];
 			
 			NSArray* revisions = [hgLogResults.outStr componentsSeparatedByString:@"\n"];
 			for (NSString* revision in revisions)

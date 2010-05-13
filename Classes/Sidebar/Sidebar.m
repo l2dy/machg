@@ -356,7 +356,7 @@
 {
 	// Look for a server in [paths].default
 	NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"paths", nil];
-	ExecutionResult result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:file];
+	ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:file];
 
 	NSString* serverPath = nil;
 	NSArray* parts = [result.outStr captureComponentsMatchedByRegex:@"^paths\\.(?:default|default-push)\\s*=\\s*((?:ssh|http|https)://.*?)$" options:RKLMultiline range:NSMaxiumRange error:NULL];
@@ -937,7 +937,7 @@
 									 // Main Block
 									 ^{
 										 NSMutableArray* argsOutgoing = [NSMutableArray arrayWithObjects:@"outgoing", @"--quiet", @"--template", @"+", [repo path], nil];
-										 ExecutionResult results = [TaskExecutions executeMercurialWithArgs:argsOutgoing  fromRoot:rootPath  logging:eLoggingNone  onTask:theTask];
+										 ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsOutgoing  fromRoot:rootPath  logging:eLoggingNone  onTask:theTask];
 										 dispatch_async(mainQueue(), ^{
 											 if (![rootPath isEqualTo:[[self selectedNode] path]])
 												 return;
@@ -973,7 +973,7 @@
 									 // Main Block
 									 ^{
 										 NSMutableArray* argsOutgoing = [NSMutableArray arrayWithObjects:@"incoming", @"--quiet", @"--template", @"-", [repo path], nil];
-										 ExecutionResult results = [TaskExecutions executeMercurialWithArgs:argsOutgoing  fromRoot:rootPath  logging:eLoggingNone  onTask:theTask];
+										 ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsOutgoing  fromRoot:rootPath  logging:eLoggingNone  onTask:theTask];
 										 dispatch_async(mainQueue(), ^{
 											 if (![rootPath isEqualTo:[[self selectedNode] path]])
 												 return;

@@ -224,7 +224,7 @@
 
 
 // Refresh / Regenrate Browser
-- (ExecutionResult) executeMercurialWithArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath whileDelayingEvents:(BOOL)delay;
+- (ExecutionResult*) executeMercurialWithArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath whileDelayingEvents:(BOOL)delay;
 - (void)		delayEventsUntilFinishBlock:(BlockProcess) theBlock;
 - (void)		addToChangedPathsDuringSuspension:(NSArray*)paths;
 - (void)		resumeEvents;

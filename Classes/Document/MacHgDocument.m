@@ -216,7 +216,7 @@
 	if (NO)
 	{
 		NSMutableArray* argsStatus = [NSMutableArray arrayWithObjects:@"status", @"--cwd",@"/Users/jason/bin", nil];
-		ExecutionResult results = [TaskExecutions synchronouslyExecute:executableLocationHG() withArgs:argsStatus onTask:nil];
+		ExecutionResult* results = [TaskExecutions synchronouslyExecute:executableLocationHG() withArgs:argsStatus onTask:nil];
 		if (IsNotEmpty(results.errStr))
 		{
 			DebugLog(@"Calling mercurial is not working");
@@ -1098,12 +1098,12 @@
 		{ [changedPathsDuringSuspension_ addObjectsFromArray:paths]; }
 }
 
-- (ExecutionResult) executeMercurialWithArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath whileDelayingEvents:(BOOL)delay
+- (ExecutionResult*) executeMercurialWithArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath whileDelayingEvents:(BOOL)delay
 {
 	if (!delay)
 		return [TaskExecutions  executeMercurialWithArgs:args  fromRoot:rootPath];
 
-	__block ExecutionResult results;
+	__block ExecutionResult* results;
 	[self delayEventsUntilFinishBlock:^{
 		results = [TaskExecutions  executeMercurialWithArgs:args  fromRoot:rootPath];
 	}];
@@ -1254,7 +1254,7 @@
 	[argsStatus addObjectsFromArray:paths];
 	NSString* rootPath = [self absolutePathOfRepositoryRoot];
 
-	ExecutionResult results = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:rootPath  logging:eLoggingNone];
+	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:rootPath  logging:eLoggingNone];
 	
 	if ([results.errStr length] > 0)
 	{
@@ -1359,7 +1359,7 @@
 	if (ShowModifiedFilesInBrowserFromDefaults())	[argsStatus addObject:@"--modified"];
 	[argsStatus addObjectsFromArray:absolutePaths];
 
-	ExecutionResult results = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:rootPath  logging:eLoggingNone onTask:nil];
+	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:rootPath  logging:eLoggingNone onTask:nil];
 
 	if ([results.errStr length] > 0)
 	{
@@ -1800,7 +1800,7 @@
 			[argsAddRemove addObject:@"--similarity" followedBy:AddRemoveSimilarityFactorFromDefaults()];
 		[argsAddRemove addObjectsFromArray:theSelectedFiles];
 		
-		__block ExecutionResult results;
+		__block ExecutionResult* results;
 		[self delayEventsUntilFinishBlock:^{
 			results = [TaskExecutions executeMercurialWithArgs:argsAddRemove  fromRoot:rootPath];
 			[self addToChangedPathsDuringSuspension:theSelectedFiles];
@@ -1854,7 +1854,7 @@
 		if (clean)
 			[argsUpdate addObject:@"--clean"];
 
-		ExecutionResult results = [self executeMercurialWithArgs:argsUpdate  fromRoot:rootPath whileDelayingEvents:YES];
+		ExecutionResult* results = [self executeMercurialWithArgs:argsUpdate  fromRoot:rootPath whileDelayingEvents:YES];
 
 		if (DisplayResultsOfUpdatingFromDefaults())
 		{
@@ -1903,7 +1903,7 @@
 		[argsMerge addObject:@"--config" followedBy:cmdOverride];		
 	}
 
-	__block ExecutionResult results;
+	__block ExecutionResult* results;
 	[self delayEventsUntilFinishBlock:^{
 		results = [TaskExecutions executeMercurialWithArgs:argsMerge  fromRoot:rootPath];
 		[self addToChangedPathsDuringSuspension:rootPathAsArray];
@@ -2004,7 +2004,7 @@
 	NSString* thisRepositoryName = [self selectedRepositoryShortName];
 	[self dispatchToMercurialQueuedWithDescription:@"Generating Manifest" process:^{
 		NSMutableArray* argsManifest = [NSMutableArray arrayWithObjects:@"manifest", @"--rev", version, nil];
-		ExecutionResult results = [self executeMercurialWithArgs:argsManifest  fromRoot:rootPath  whileDelayingEvents:YES];
+		ExecutionResult* results = [self executeMercurialWithArgs:argsManifest  fromRoot:rootPath  whileDelayingEvents:YES];
 		NSString* messageString = [NSString stringWithFormat:@"Manifest of “%@” revision “%@”", thisRepositoryName, version];
 		NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
 		[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:@"Manifest Results"];
@@ -2034,7 +2034,7 @@
 				NSMutableArray* argsAnnotate = [NSMutableArray arrayWithObjects:@"annotate", @"--rev", version, nil];
 				[argsAnnotate addObjectsFromArray:options];
 				[argsAnnotate addObject:file];
-				ExecutionResult results = [TaskExecutions executeMercurialWithArgs:argsAnnotate  fromRoot:rootPath];
+				ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsAnnotate  fromRoot:rootPath];
 				NSString* fileName = [file lastPathComponent];
 				NSString* messageString = [NSString stringWithFormat:@"Annotations of “%@” for revision “%@”", fileName, version];
 				NSString* windowTitle   = [NSString stringWithFormat:@"%@ : %@ Annotations", fileName, version];
@@ -2054,7 +2054,7 @@
 		if (versionToCompareTo)
 			[statusArgs addObject:@"--rev" followedBy:versionToCompareTo];
 		[statusArgs addObjectsFromArray:absolutePaths];
-		ExecutionResult statusResults = [TaskExecutions executeMercurialWithArgs:statusArgs fromRoot:rootPath  logging:eLoggingNone];
+		ExecutionResult* statusResults = [TaskExecutions executeMercurialWithArgs:statusArgs fromRoot:rootPath  logging:eLoggingNone];
 		NSArray* filesWhichHaveDifferences = [trimTrailingString(statusResults.outStr) componentsSeparatedByString:@"\n"];
 		
 		int numberOfFilesToDiff = [filesWhichHaveDifferences count];

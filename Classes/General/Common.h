@@ -47,6 +47,7 @@
 // Processes
 @class ProcessListController;
 @class TaskExecutions;
+@class ExecutionResult;
 
 // Document
 @class MacHgDocument;
