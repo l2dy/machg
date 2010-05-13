@@ -22,6 +22,8 @@
 #import "NSString+SymlinksAndAliases.h"
 #import "ShellHere.h"
 
+#define NSMaxiumRange    ((NSRange){.location= 0UL, .length= NSUIntegerMax})
+
 @interface Sidebar (PrivateMethods)
 - (void) updateInformationTextView;
 @end
@@ -353,11 +355,14 @@
 - (SidebarNode*) serverIfAvailableAndNotPresent:(NSString*)file
 {
 	// Look for a server in [paths].default
-	NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"paths.default", nil];
+	NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"paths", nil];
 	ExecutionResult result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:file];
-	NSString* serverPath = trimString(result.outStr);
-	BOOL isServer = [serverPath matchesRegex:@"^ssh|http|https://"	options:RKLMultiline];
-	if (!isServer || IsNotEmpty(result.errStr))
+
+	NSString* serverPath = nil;
+	NSArray* parts = [result.outStr captureComponentsMatchedByRegex:@"^paths\\.(?:default|default-push)\\s*=\\s*((?:ssh|http|https)://.*?)$" options:RKLMultiline range:NSMaxiumRange error:NULL];
+	if ([parts count] >= 1)
+		serverPath = trimString([parts objectAtIndex:1]);
+	if (!serverPath || IsNotEmpty(result.errStr))
 		return NO;
 	
 	// If the server is already present in the document don't add it again.
