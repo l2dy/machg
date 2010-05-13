@@ -111,7 +111,7 @@
 }
 
 
-- (IBAction) sheetButtonOk:(id)sender;
+- (IBAction) sheetButtonOk:(id)sender
 {
 	[theWindow makeFirstResponder:theWindow];	// Make the text fields of the sheet commit any changes they currently have
 
@@ -144,7 +144,7 @@
 	[myDocument postNotificationWithName:kSidebarSelectionDidChange];
 }
 
-- (IBAction) sheetButtonCancel:(id)sender;
+- (IBAction) sheetButtonCancel:(id)sender
 {
 	[theWindow makeFirstResponder:theWindow];	// Make the text fields of the sheet commit any changes they currently have
 	[NSApp endSheet:theWindow];
