@@ -66,8 +66,9 @@
 	errStr_ = errStr_ ? errStr_ : @"";
 }
 
-- (BOOL) hasErrors		{ return result_ != 0 || [errStr_ isMatchedByRegex:@"^(?i)abort" options:RKLMultiline]; }
+- (BOOL) hasErrors		{ return result_ != 0 || (IsNotEmpty(errStr_) && [errStr_ isMatchedByRegex:@"^(?i)abort" options:RKLMultiline]); }
 - (BOOL) hasWarnings	{ return IsNotEmpty(errStr_) && ![self hasErrors]; }
+- (BOOL) hasNoErrors	{ return ![self hasErrors]; }
 
 @end
 

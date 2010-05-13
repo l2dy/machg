@@ -49,6 +49,7 @@ typedef enum
 + (ExecutionResult*) resultWithCmd:(NSString*)cmd args:(NSArray*)args result:(int)result outStr:(NSString*)outStr errStr:(NSString*)errStr;
 
 - (BOOL) hasErrors;
+- (BOOL) hasNoErrors;
 - (BOOL) hasWarnings;
 
 @end
