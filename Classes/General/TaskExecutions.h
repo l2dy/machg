@@ -30,6 +30,23 @@ typedef enum
 } LoggingEnum;
 
 
+@interface ExecutionResult : NSObject
+{
+	NSString* generatingCmd_;	// The command that was executed
+	NSArray*  generatingArgs_;	// The arguments used to the command
+	int		  result_;			// The result of executing the command
+	NSString* outStr_;			// The output received on stdOut due to executing the command
+	NSString* errStr_;			// The output received on stdErr due to executing the command
+}
+@property (readonly, assign) NSString* generatingCmd;
+@property (readonly, assign) NSArray*  generatingArgs;
+@property (readonly, assign) int	   result;
+@property (readonly, assign) NSString* outStr;
+@property (readonly, assign) NSString* errStr;
+@end
+
+
+
 
 // NSTask category extensions
 @interface NSTask (NSTaskPlusResultExtraction)

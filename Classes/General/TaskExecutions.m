@@ -22,7 +22,31 @@ ExecutionResult PruneMissingExtensionsErrors(ExecutionResult results)
 	return results;
 }
 
-#pragma mark -
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  ExecutionResult
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+
+@implementation ExecutionResult
+@synthesize generatingCmd = generatingCmd_;
+@synthesize generatingArgs = generatingArgs_;
+@synthesize result = result_;
+@synthesize outStr = outStr_;
+@synthesize errStr = errStr_;
+@end
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  TaskExecutions
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+
 @implementation TaskExecutions
 
 + (TaskExecutions*) theInstance

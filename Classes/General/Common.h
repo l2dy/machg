@@ -231,16 +231,6 @@ typedef struct
 	NSString*	highRevision;
 } LowHighStringPair;
 
-typedef struct
-{
-	NSString* generatingCmd;	// The command that was executed
-	NSArray*  generatingArgs;	// The arguments used to the command
-	int		  result;			// The result of executing the command
-	NSString* outStr;			// The output received on stdOut due to executing the command
-	NSString* errStr;			// The output received on stdErr due to executing the command
-} ExecutionResult;
-
-
 
 extern NSString* const kSidebarPBoardType;
 extern NSString* const kSidebarRootInitializationDummy;
