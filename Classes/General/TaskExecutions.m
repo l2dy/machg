@@ -69,6 +69,8 @@
 - (BOOL) hasErrors		{ return result_ != 0 || (IsNotEmpty(errStr_) && [errStr_ isMatchedByRegex:@"^(?i)abort" options:RKLMultiline]); }
 - (BOOL) hasWarnings	{ return IsNotEmpty(errStr_) && ![self hasErrors]; }
 - (BOOL) hasNoErrors	{ return ![self hasErrors]; }
+- (BOOL) isClean		{ return result_ == 0 && IsEmpty(errStr_); }
+
 
 @end
 
@@ -204,15 +206,14 @@
 		[self logMercurialResult:result];
 
 	// report errors if we asked for error reporting
-	if (IsNotEmpty(result.errStr) && result.result != 0)
-		if (bitsInCommon(log, eIssueErrorsInAlerts))
-		{
-			NSString* errorMessage = [NSString stringWithFormat:@"Error During %@", [[result.generatingArgs objectAtIndex:0] capitalizedString]];
-			NSString* fullErrorMessage = [NSString stringWithFormat:@"Mercurial reported error number %d:\n%@", result.result, result.errStr];
-			dispatch_async(mainQueue(), ^{
-				NSRunAlertPanel(errorMessage, fullErrorMessage, @"Ok", nil, nil);
-			});
-		}
+	if ([result hasErrors] && bitsInCommon(log, eIssueErrorsInAlerts))
+	{
+		NSString* errorMessage = [NSString stringWithFormat:@"Error During %@", [[result.generatingArgs objectAtIndex:0] capitalizedString]];
+		NSString* fullErrorMessage = [NSString stringWithFormat:@"Mercurial reported error number %d:\n%@", result.result, result.errStr];
+		dispatch_async(mainQueue(), ^{
+			NSRunAlertPanel(errorMessage, fullErrorMessage, @"Ok", nil, nil);
+		});
+	}
 }
 
 + (BOOL) taskWasKilled:(ExecutionResult*)results

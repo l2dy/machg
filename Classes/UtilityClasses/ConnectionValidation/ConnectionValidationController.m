@@ -94,7 +94,7 @@
 										 if ([queueForConnectionValidation_ operationNumber] == validationAttempt)
 										 {
 											 [self hideValidationProgressIndicator];
-											 if (IsNotEmpty(results.outStr) && [results.outStr length] >= 12 && IsEmpty(results.errStr) && (results.result == 0 ))
+											 if (IsNotEmpty(results.outStr) && [results.outStr length] >= 12 && [results isClean])
 												 [self showGoodValidationGraphicAndMessage];
 											 else
 												 [self showBadValidationGraphicAndMessage];

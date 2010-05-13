@@ -129,7 +129,7 @@
 	[argsMoveLabel addObject:[labelToMove_ name]];
 	ExecutionResult* results = [myDocument executeMercurialWithArgs:argsMoveLabel fromRoot:rootPath whileDelayingEvents:YES];
 	
-	if ([results.errStr length] > 0)
+	if ([results hasErrors])
 		return;
 	
 	[NSApp endSheet:theMoveLabelSheet];

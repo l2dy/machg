@@ -362,7 +362,7 @@
 	NSArray* parts = [result.outStr captureComponentsMatchedByRegex:@"^paths\\.(?:default|default-push)\\s*=\\s*((?:ssh|http|https)://.*?)$" options:RKLMultiline range:NSMaxiumRange error:NULL];
 	if ([parts count] >= 1)
 		serverPath = trimString([parts objectAtIndex:1]);
-	if (!serverPath || IsNotEmpty(result.errStr))
+	if (!serverPath || [result hasErrors])
 		return NO;
 	
 	// If the server is already present in the document don't add it again.
@@ -941,7 +941,7 @@
 										 dispatch_async(mainQueue(), ^{
 											 if (![rootPath isEqualTo:[[self selectedNode] path]])
 												 return;
-											 if (IsEmpty(results.errStr))
+											 if ([results hasNoErrors])
 												 [outgoingCounts setObject:intAsString([results.outStr length]) forKey:[repo path]];
 											 else
 												 [outgoingCounts setObject:@"-" forKey:[repo path]];
@@ -977,7 +977,7 @@
 										 dispatch_async(mainQueue(), ^{
 											 if (![rootPath isEqualTo:[[self selectedNode] path]])
 												 return;
-											 if (IsEmpty(results.errStr))
+											 if ([results hasNoErrors])
 												 [incomingCounts setObject:intAsString([results.outStr length]) forKey:[repo path]];
 											 else
 												 [incomingCounts setObject:@"-" forKey:[repo path]];

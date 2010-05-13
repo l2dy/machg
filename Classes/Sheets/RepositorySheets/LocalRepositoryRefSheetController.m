@@ -160,7 +160,7 @@
 		{
 			NSMutableArray* argsInit = [NSMutableArray arrayWithObjects:@"init", newPath, nil];
 			ExecutionResult* initResults = [myDocument  executeMercurialWithArgs:argsInit  fromRoot:@"/" whileDelayingEvents:YES];
-			if (IsNotEmpty(initResults.errStr))
+			if ([initResults hasErrors] || [initResults hasWarnings])
 				[NSException raise:@"Initialize Repository" format:@"Mercurial could not initialize a repository at %@", newPath, nil];
 
 			NSFileManager* fileManager = [NSFileManager defaultManager];
@@ -172,7 +172,7 @@
 				
 			NSMutableArray* argsCommit = [NSMutableArray arrayWithObjects:@"commit", @"--addremove", @".hgignore", @"--message", @"initialize repository", nil];
 			ExecutionResult* commitResults = [myDocument  executeMercurialWithArgs:argsCommit  fromRoot:newPath  whileDelayingEvents:YES];
-			if (IsNotEmpty(commitResults.errStr))
+			if ([commitResults hasErrors] || [commitResults hasWarnings])
 				[NSException raise:@"Initialize Repository" format:@"Mercurial could not commit %@ while initializing the repository.", hgignorePath, nil];
 		}
 		

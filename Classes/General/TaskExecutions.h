@@ -51,6 +51,7 @@ typedef enum
 - (BOOL) hasErrors;
 - (BOOL) hasNoErrors;
 - (BOOL) hasWarnings;
+- (BOOL) isClean;
 
 @end
 

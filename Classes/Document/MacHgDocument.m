@@ -217,7 +217,7 @@
 	{
 		NSMutableArray* argsStatus = [NSMutableArray arrayWithObjects:@"status", @"--cwd",@"/Users/jason/bin", nil];
 		ExecutionResult* results = [TaskExecutions synchronouslyExecute:executableLocationHG() withArgs:argsStatus onTask:nil];
-		if (IsNotEmpty(results.errStr))
+		if ([results hasErrors])
 		{
 			DebugLog(@"Calling mercurial is not working");
 			return;
@@ -1256,7 +1256,7 @@
 
 	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:rootPath  logging:eLoggingNone];
 	
-	if ([results.errStr length] > 0)
+	if ([results hasErrors])
 	{
 		PlayBeep();
 		return;
@@ -1364,10 +1364,9 @@
 	if ([results.errStr length] > 0)
 	{
 		[TaskExecutions logMercurialResult:results];
-		// error code 255 is fatal signal this by returning nil. Maybe later we will return error codes.
-		if ([results.errStr isEqual:@"255"])
+		// for an error rather than warning fail by returning nil. Maybe later we will return error codes.
+		if ([results hasErrors])
 			return  nil;			
-		// PlayBeep();
 	}
 	return [results.outStr componentsSeparatedByString:@"\n"];
 }
@@ -1909,7 +1908,7 @@
 		[self addToChangedPathsDuringSuspension:rootPathAsArray];
 	}];
 	
-	if ([results.errStr isMatchedByRegex:@"abort"])
+	if ([results hasErrors])
 		return NO;
 
 	switch (AfterMergeSwitchToFromDefaults())

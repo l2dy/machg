@@ -173,7 +173,7 @@
 
 	[myDocument dispatchToMercurialQueuedWithDescription:cloneDescription  process:^{
 		ExecutionResult* results = [TaskExecutions  executeMercurialWithArgs:argsClone  fromRoot:@"/tmp"];
-		if (IsEmpty(results.errStr))
+		if ([results hasNoErrors])
 			dispatch_async(mainQueue(), ^{
 				SidebarNode* newNode = [SidebarNode nodeWithCaption:destinationName  forLocalPath:destinationPath];
 				[[AppController sharedAppController] computeRepositoryIdentityForPath:destinationPath];

@@ -227,7 +227,7 @@ NSString* kTheRevisionFieldValue = @"theRevisionFieldValue";
 	[argsLabel addObject:theNewNameFieldValue_];
 	ExecutionResult* results = [myDocument executeMercurialWithArgs:argsLabel fromRoot:rootPath whileDelayingEvents:YES];
 	
-	if ([results.errStr length] > 0)
+	if ([results hasErrors])
 		return;
 	
 	[NSApp endSheet:theAddLabelSheet];

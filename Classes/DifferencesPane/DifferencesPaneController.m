@@ -339,7 +339,7 @@
 	[argsStatus addObjectsFromArray:absolutePaths];
 
 	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:rootPath  logging:eLoggingNone];
-	if ([results.errStr length] > 0)
+	if ([results hasErrors])
 	{
 		[TaskExecutions logMercurialResult:results];
 		return nil;
