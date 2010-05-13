@@ -348,9 +348,9 @@
 }
 
 
-// If we are dragging a repository folder into the sidebar in the finder, check to see is the repository has a stored reference to
-// the server and if the server is not present in the document then add it to the sidebar as well.
-- (BOOL) addServerIfAvailableAndNotPresent:(NSString*)file  at:(SidebarNode*)targetParent index:(NSInteger)index
+// If we are adding a local repository to the document, check to see is the repository has a stored reference to the server and if
+// the server is not present in the document then return a server node which can be added to the document as well.
+- (SidebarNode*) serverIfAvailableAndNotPresent:(NSString*)file
 {
 	// Look for a server in [paths].default
 	NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"paths.default", nil];
@@ -368,8 +368,7 @@
 	
 	SidebarNode* serverNode = [SidebarNode nodeWithCaption:[file lastPathComponent]  forServerPath:serverPath];
 	[[AppController sharedAppController] computeRepositoryIdentityForPath:serverPath];
-	[targetParent insertChild:serverNode atIndex:index];
-	return YES;
+	return serverNode;
 }
 
 
@@ -432,10 +431,12 @@
 		for (id file in resolvedFilenames)
 			if (pathIsExistentDirectory(file) && repositoryExistsAtPath(file))
 			{
-				SidebarNode* node = [SidebarNode nodeForLocalURL:file];
+				SidebarNode* node   = [SidebarNode nodeForLocalURL:file];
+				SidebarNode* server = [self serverIfAvailableAndNotPresent:file];
 				[targetParent insertChild:node atIndex:index];
 				[[AppController sharedAppController] computeRepositoryIdentityForPath:file];
-				[self addServerIfAvailableAndNotPresent:file at:targetParent index:index];
+				if (server)
+					[targetParent insertChild:server atIndex:index];
 				newSelectedNode = node;
 			}
 

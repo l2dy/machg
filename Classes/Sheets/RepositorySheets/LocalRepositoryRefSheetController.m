@@ -186,16 +186,25 @@
 		}
 		else
 		{
-			SidebarNode* newNode = [SidebarNode nodeWithCaption:newName  forLocalPath:newPath];
+			SidebarNode* newNode   = [SidebarNode nodeWithCaption:newName  forLocalPath:newPath];
+			SidebarNode* newServer = [[myDocument sidebar] serverIfAvailableAndNotPresent:newPath];
+			[[AppController sharedAppController] computeRepositoryIdentityForPath:newPath];
 			[newNode refreshNodeIcon];
 			if (addNewRepositoryRefTo)
+			{
 				[addNewRepositoryRefTo insertChild:newNode atIndex:addNewRepositoryRefAtIndex];
+				if (newServer)
+					[addNewRepositoryRefTo insertChild:newServer atIndex:addNewRepositoryRefAtIndex];
+			}
 			else
+			{
+				if (newServer)
+					[[myDocument sidebar] addSidebarNode:newServer];
 				[[myDocument sidebar] addSidebarNode:newNode];
+			}
 			[[myDocument sidebar] reloadData];
 			[[myDocument sidebar] selectNode:newNode];
 		}
-		[[AppController sharedAppController] computeRepositoryIdentityForPath:newPath];
 
 		[myDocument postNotificationWithName:kRepositoryRootChanged];
 	}
