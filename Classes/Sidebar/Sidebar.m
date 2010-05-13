@@ -941,7 +941,7 @@
 										 dispatch_async(mainQueue(), ^{
 											 if (![rootPath isEqualTo:[[self selectedNode] path]])
 												 return;
-											 if ([results hasNoErrors])
+											 if ([results.errStr length] == 0)
 												 [outgoingCounts setObject:intAsString([results.outStr length]) forKey:[repo path]];
 											 else
 												 [outgoingCounts setObject:@"-" forKey:[repo path]];
@@ -977,7 +977,7 @@
 										 dispatch_async(mainQueue(), ^{
 											 if (![rootPath isEqualTo:[[self selectedNode] path]])
 												 return;
-											 if ([results hasNoErrors])
+											 if ([results.errStr length] == 0)
 												 [incomingCounts setObject:intAsString([results.outStr length]) forKey:[repo path]];
 											 else
 												 [incomingCounts setObject:@"-" forKey:[repo path]];
