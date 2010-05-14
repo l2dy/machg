@@ -101,7 +101,6 @@ NSString* const MHGDisplayWarningForTagRemoval			= @"DisplayWarningForTagRemoval
 NSString* const MHGDisplayWarningForUntrackingFiles		= @"DisplayWarningForUntrackingFiles";
 NSString* const MHGDisplayWarningForUpdating			= @"DisplayWarningForUpdating";
 NSString* const MHGExecutableLocationHG					= @"ExecutableLocationHG";
-NSString* const MHGExecutableLocationOpenDiff			= @"ExecutableLocationOpenDiff";
 NSString* const MHGFontSizeOfBrowserItems				= @"FontSizeOfBrowserItems";
 NSString* const MHGHandleCommandDefaults				= @"HandleCommandDefaults";
 NSString* const MHGHandleGeneratedOrigFiles				= @"HandleGeneratedOrigFiles";
@@ -125,9 +124,11 @@ NSString* const MHGShowResolvedFilesInBrowser			= @"ShowResolvedFilesInBrowser";
 NSString* const MHGShowUnknownFilesInBrowser			= @"ShowUnknownFilesInBrowser";
 NSString* const MHGShowUnresolvedFilesInBrowser			= @"ShowUnresolvedFilesInBrowser";
 NSString* const MHGSizeOfBrowserColumns					= @"SizeOfBrowserColumns";
+NSString* const MHGToolNameForDiffing					= @"ToolNameForDiffing";
 NSString* const MHGUseFileMergeForDiff					= @"UseFileMergeForDiff";
 NSString* const MHGUseFileMergeForMerge					= @"UseFileMergeForMerge";
 NSString* const MHGUseWhichMercurialBinary				= @"UseWhichMercurialBinary";
+NSString* const MHGUseWhichToolForDiffing				= @"UseWhichToolForDiffing";
 NSString* const MHGWarnAboutBadMercurialConfiguration   = @"WarnAboutBadMercurialConfiguration";
 
 
@@ -195,11 +196,11 @@ NSColor*	LogEntryTableBookmarkHighlightColor()					{ return colorFromDefaultsFor
 
 
 NSString*	AddRemoveSimilarityFactorFromDefaults()					{ return intAsString((int)(round(100 * floatFromDefaultsForKey(MHGAddRemoveSimilarityFactor)))); }
+NSString*	DefaultHGIgnoreContentsFromDefaults()					{ return stringFromDefaultsForKey(MHGDefaultHGIgnoreContents); }
 NSString*	DefaultWorkspacePathFromDefaults()						{ return [stringFromDefaultsForKey(MHGDefaultWorkspacePath) stringByStandardizingPath]; }
 NSString*	ExecutableLocationHGFromDefaults()						{ return stringFromDefaultsForKey(MHGExecutableLocationHG); }
-NSString*	ExecutableLocationOpenDiffFromDefaults()				{ return stringFromDefaultsForKey(MHGExecutableLocationOpenDiff); }
 NSString*	MacHgLogFileLocation()									{ return stringFromDefaultsForKey(MHGMacHgLogFileLocation); }
-NSString*	DefaultHGIgnoreContentsFromDefaults()					{ return stringFromDefaultsForKey(MHGDefaultHGIgnoreContents); }
+NSString*	ToolNameForDiffingFromDefaults()						{ return stringFromDefaultsForKey(MHGToolNameForDiffing); }
 float		fontSizeOfBrowserItemsFromDefaults()					{ return floatFromDefaultsForKey(MHGFontSizeOfBrowserItems); }
 float		sizeOfBrowserColumnsFromDefaults()						{ return floatFromDefaultsForKey(MHGSizeOfBrowserColumns); }
 int			LoggingLevelForHGCommands()								{ return integerFromDefaultsForKey(MHGLoggingLevelForHGCommands); }
@@ -211,11 +212,12 @@ BrowserDoubleClickAction browserBehaviourDoubleClick()				{ return enumFromDefau
 BrowserDoubleClickAction browserBehaviourOptionDoubleClick()		{ return enumFromDefaultsForKey(MHGBrowserBehaviourOptionDoubleClick); }
 AfterMergeDoOption			AfterMergeDoFromDefaults()				{ return enumFromDefaultsForKey(MHGAfterMergeDo); }
 AfterMergeSwitchToOption	AfterMergeSwitchToFromDefaults()		{ return enumFromDefaultsForKey(MHGAfterMergeSwitchTo); }
+DefaultRevisionSortOrderOption DefaultRevisionSortOrderFromDefaults() { return enumFromDefaultsForKey(MHGDefaultRevisionSortOrder); }
 HandleCommandDefaultsOption	HandleCommandDefaultsFromDefaults()		{ return enumFromDefaultsForKey(MHGHandleCommandDefaults); }
 HandleOrigFilesOption		HandleGeneratedOrigFilesFromDefaults()	{ return enumFromDefaultsForKey(MHGHandleGeneratedOrigFiles); }
 OnStartupOpenWhatOption		OnStartupOpenFromDefaults()				{ return enumFromDefaultsForKey(MHGOnStartupOpen); }
+ToolForDiffing				UseWhichToolForDiffingFromDefaults()	{ return enumFromDefaultsForKey(MHGUseWhichToolForDiffing); }
 UseWhichMercurialOption		UseWhichMercurialBinaryFromDefaults()	{ return enumFromDefaultsForKey(MHGUseWhichMercurialBinary); }
-DefaultRevisionSortOrderOption DefaultRevisionSortOrderFromDefaults()	{ return enumFromDefaultsForKey(MHGDefaultRevisionSortOrder); }
 
 
 

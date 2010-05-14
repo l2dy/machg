@@ -1897,9 +1897,8 @@
 	if (UseFileMergeForMergeFromDefaults())
 	{
 		[argsMerge addObject:@"--config" followedBy:@"merge-tools.filemerge.args= $local $other -ancestor $base -merge $output"];
-		NSString* absPathToDiffScript = [NSString stringWithFormat:@"%@/%@",[[NSBundle mainBundle] resourcePath], @"opendiff-w.sh"];
-		NSString* cmdOverride = [NSString stringWithFormat:@"merge-tools.filemerge.executable=%@",absPathToDiffScript];
-		[argsMerge addObject:@"--config" followedBy:cmdOverride];		
+		[argsMerge addObject:@"--config" followedBy: fstr(@"merge-tools.filemerge.executable=%@/opendiff-w.sh",[[NSBundle mainBundle] resourcePath]) ];
+		[argsMerge addObject:@"--config" followedBy: @"merge-tools.priority=100"];	// Use FileMerge with a priority of 100. This should be more than the other tools.
 	}
 
 	__block ExecutionResult* results;
@@ -2068,9 +2067,16 @@
 
 		for (NSString* file in filesWhichHaveDifferences)
 			dispatch_group_async(group, globalQueue(), ^{
-				NSString* cmd = UseFileMergeForDiffFromDefaults() ? @"opendiff" : @"diff";
+				NSString* cmd;
+				if (UseWhichToolForDiffingFromDefaults() == eUseFileMergeForDiffs)
+					cmd = @"opendiff";
+				else if (IsNotEmpty(ToolNameForDiffingFromDefaults()))
+					cmd = ToolNameForDiffingFromDefaults();
+				else
+					cmd = @"diff";
+
 				NSMutableArray* diffArgs = [NSMutableArray arrayWithObjects: cmd, @"--cwd", rootPath, nil];
-				if (UseFileMergeForDiffFromDefaults())
+				if (UseWhichToolForDiffingFromDefaults() == eUseFileMergeForDiffs)
 				{
 					NSString* absPathToDiffScript = [NSString stringWithFormat:@"%@/%@",[[NSBundle mainBundle] resourcePath], @"fmdiff.sh"];
 					NSString* cmdOverride = [NSString stringWithFormat:@"extdiff.cmd.opendiff=%@",absPathToDiffScript];

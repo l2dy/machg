@@ -152,6 +152,13 @@ typedef enum
 
 typedef enum
 {
+	eUseFileMergeForDiffs = 0,
+	eUseOtherForDiffs	  = 1,
+	eUseNothingForDiffs	  = 2
+} ToolForDiffing;
+
+typedef enum
+{
 	eMoveOrigFilesToTrash = 0,
 	eLeaveOrigFilesAlone  = 1
 } HandleOrigFilesOption;
@@ -352,7 +359,6 @@ extern NSString* const MHGDisplayWarningForTagRemoval;
 extern NSString* const MHGDisplayWarningForUntrackingFiles;
 extern NSString* const MHGDisplayWarningForUpdating;
 extern NSString* const MHGExecutableLocationHG;
-extern NSString* const MHGExecutableLocationOpenDiff;
 extern NSString* const MHGFontSizeOfBrowserItems;
 extern NSString* const MHGHandleCommandDefaults;
 extern NSString* const MHGHandleGeneratedOrigFiles;
@@ -376,9 +382,10 @@ extern NSString* const MHGShowResolvedFilesInBrowser;
 extern NSString* const MHGShowUnknownFilesInBrowser;
 extern NSString* const MHGShowUnresolvedFilesInBrowser;
 extern NSString* const MHGSizeOfBrowserColumns;
-extern NSString* const MHGUseFileMergeForDiff;
+extern NSString* const MHGToolNameForDiffing;
 extern NSString* const MHGUseFileMergeForMerge;
 extern NSString* const MHGUseWhichMercurialBinary;
+extern NSString* const MHGUseWhichToolForDiffing;
 extern NSString* const MHGWarnAboutBadMercurialConfiguration;
 
 
@@ -435,24 +442,25 @@ float		sizeOfBrowserColumnsFromDefaults();
 int			LoggingLevelForHGCommands();
 int			LaunchCountFromDefaults();
 NSString*	AddRemoveSimilarityFactorFromDefaults();
+NSString*	DefaultHGIgnoreContentsFromDefaults();
 NSString*	DefaultWorkspacePathFromDefaults();
 NSString*	ExecutableLocationHGFromDefaults();
-NSString*	ExecutableLocationOpenDiffFromDefaults();
 NSString*	MacHgLogFileLocation();
-NSString*	DefaultHGIgnoreContentsFromDefaults();
+NSString*	ToolNameForDiffingFromDefaults();
 NSColor*	LogEntryTableTagHighlightColor();
 NSColor*	LogEntryTableParentHighlightColor();
 NSColor*	LogEntryTableBranchHighlightColor();
 NSColor*	LogEntryTableBookmarkHighlightColor();
 
 
-AfterMergeSwitchToOption		AfterMergeSwitchToFromDefaults();
 AfterMergeDoOption				AfterMergeDoFromDefaults();
+AfterMergeSwitchToOption		AfterMergeSwitchToFromDefaults();
+DefaultRevisionSortOrderOption	DefaultRevisionSortOrderFromDefaults();
 HandleCommandDefaultsOption		HandleCommandDefaultsFromDefaults();
 HandleOrigFilesOption			HandleGeneratedOrigFilesFromDefaults();
-UseWhichMercurialOption			UseWhichMercurialBinaryFromDefaults();
 OnStartupOpenWhatOption			OnStartupOpenFromDefaults();
-DefaultRevisionSortOrderOption	DefaultRevisionSortOrderFromDefaults();
+ToolForDiffing					UseWhichToolForDiffingFromDefaults();
+UseWhichMercurialOption			UseWhichMercurialBinaryFromDefaults();
 
 BrowserDoubleClickAction		browserBehaviourDoubleClick();
 BrowserDoubleClickAction		browserBehaviourCommandDoubleClick();
