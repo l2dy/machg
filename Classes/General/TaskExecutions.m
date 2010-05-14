@@ -61,16 +61,26 @@
 {
 	if (IsEmpty(errStr_))
 		return;
-	NSString* regex = @"*** failed to import extension (.*?) from (.*?): (.*?)\n";
+	NSString* regex = @"\\*\\*\\* failed to import extension (.*?)\n";
 	errStr_ = [errStr_ stringByReplacingOccurrencesOfRegex:regex withString:@""];
-	errStr_ = errStr_ ? errStr_ : @"";
+	errStr_ = errStr_ ? trimString(errStr_) : @"";
 }
 
-- (BOOL) hasErrors		{ return IsNotEmpty(errStr_) && ( result_ != 0 || [errStr_ isMatchedByRegex:@"^(?i)abort" options:RKLMultiline]); }
+- (BOOL) hasErrors		{ return ( result_ == 1 && IsNotEmpty(errStr_)) || result_ > 1 || result_ < 0 || [errStr_ isMatchedByRegex:@"^(?i)abort" options:RKLMultiline]; }
 - (BOOL) hasWarnings	{ return IsNotEmpty(errStr_) && ![self hasErrors]; }
 - (BOOL) hasNoErrors	{ return ![self hasErrors]; }
 - (BOOL) isClean		{ return result_ == 0 && IsEmpty(errStr_); }
 
+- (NSString*) description
+{
+	NSString* cmdPart       = [generatingCmd_ isEqualToString:executableLocationHG()] ? @"localhg" : generatingCmd_;
+	NSString* cmdClause     = fstr(@"%@ %@", cmdPart, [generatingArgs_ componentsJoinedByString:@" "]);
+	NSMutableArray* clauses = [[NSMutableArray alloc]init];
+	if (IsNotEmpty(errStr_))	[clauses addObject: fstr(@"err:%@", errStr_)];
+	if (IsNotEmpty(outStr_))	[clauses addObject: fstr(@"stdout:%@", outStr_)];
+	[clauses addObject:cmdClause];
+	return fstr(@"<%@ { code:%d, %@} >", [self className], result_, [clauses componentsJoinedByString:@", "]);
+}
 
 @end
 
@@ -209,7 +219,11 @@
 	if ([result hasErrors] && bitsInCommon(log, eIssueErrorsInAlerts))
 	{
 		NSString* errorMessage = [NSString stringWithFormat:@"Error During %@", [[result.generatingArgs objectAtIndex:0] capitalizedString]];
-		NSString* fullErrorMessage = [NSString stringWithFormat:@"Mercurial reported error number %d:\n%@", result.result, result.errStr];
+
+		// This is a hurestic see the thread I started Versioning of Extensions and Matt's rather empty response here http:
+		// www.selenic.com/pipermail/mercurial/2010-May/032095.html
+		NSString* errorString = IsEmpty(result.errStr) ? result.outStr : result.errStr;
+		NSString* fullErrorMessage = [NSString stringWithFormat:@"Mercurial reported error number %d:\n%@", result.result, errorString];
 		dispatch_async(mainQueue(), ^{
 			NSRunAlertPanel(errorMessage, fullErrorMessage, @"Ok", nil, nil);
 		});
