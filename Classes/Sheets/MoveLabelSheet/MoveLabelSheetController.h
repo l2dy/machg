@@ -35,8 +35,8 @@
 
 
 // Action Methods
-- (IBAction) sheetButtonOkForMoveLabelSheet:(id)sender;
-- (IBAction) sheetButtonCancelForMoveLabelSheet:(id)sender;
+- (IBAction) sheetButtonOk:(id)sender;
+- (IBAction) sheetButtonCancel:(id)sender;
 - (void)	 openMoveLabelSheetForMoveLabel:(LabelData*)label;
 
 

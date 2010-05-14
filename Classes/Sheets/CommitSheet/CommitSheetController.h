@@ -40,9 +40,9 @@
 
 - (IBAction) openCommitSheetWithAllFiles:(id)sender;
 - (IBAction) openCommitSheetWithSelectedFiles:(id)sender;
-- (IBAction) commitSheetButtonOk:(id)sender;
+- (IBAction) sheetButtonOk:(id)sender;
+- (IBAction) sheetButtonCancel:(id)sender;
 - (IBAction) commitSheetButtonDiffAll:(id)sender;
-- (IBAction) commitSheetButtonCancel:(id)sender;
 - (IBAction) handleChangedFilesTableClick:(id)sender;
 - (IBAction) handleChangedFilesTableDoubleClick:(id)sender;
 @end

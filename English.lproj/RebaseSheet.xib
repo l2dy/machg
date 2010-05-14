@@ -1327,22 +1327,6 @@
 					<int key="connectionID">185</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">sheetButtonCancelForRebaseSheet:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="427118545"/>
-					</object>
-					<int key="connectionID">186</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">sheetButtonOkForRebaseSheet:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="131696825"/>
-					</object>
-					<int key="connectionID">187</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">detailedEntryTextView</string>
 						<reference key="source" ref="694674460"/>
@@ -1541,6 +1525,22 @@
 						<reference key="destination" ref="1001"/>
 					</object>
 					<int key="connectionID">352</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">sheetButtonCancel:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="427118545"/>
+					</object>
+					<int key="connectionID">353</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">sheetButtonOk:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="131696825"/>
+					</object>
+					<int key="connectionID">354</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -2448,7 +2448,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">352</int>
+			<int key="maxID">354</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2562,8 +2562,8 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>openRebaseSheetWithSelectedRevisions:</string>
 							<string>scrollToCurrentRevision:</string>
-							<string>sheetButtonCancelForRebaseSheet:</string>
-							<string>sheetButtonOkForRebaseSheet:</string>
+							<string>sheetButtonCancel:</string>
+							<string>sheetButtonOk:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>

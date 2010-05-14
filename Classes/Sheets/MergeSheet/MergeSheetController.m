@@ -87,7 +87,7 @@
 }
 
 
-- (IBAction) sheetButtonOkForMergeSheet:(id)sender;
+- (IBAction) sheetButtonOk:(id)sender;
 {
 	[mergeSheetWindow makeFirstResponder:mergeSheetWindow]; // Make the text fields of the sheet commit any changes they currently have
 	[NSApp endSheet:mergeSheetWindow];
@@ -98,7 +98,7 @@
 }
 
 
-- (IBAction) sheetButtonCancelForMergeSheet:(id)sender;
+- (IBAction) sheetButtonCancel:(id)sender;
 {
 	[mergeSheetWindow makeFirstResponder:mergeSheetWindow]; // Make the text fields of the sheet commit any changes they currently have
 	[NSApp endSheet:mergeSheetWindow];

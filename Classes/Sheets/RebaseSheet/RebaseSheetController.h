@@ -51,8 +51,8 @@
 
 // Action Methods
 - (IBAction) openRebaseSheetWithSelectedRevisions:(id)sender;
-- (IBAction) sheetButtonOkForRebaseSheet:(id)sender;
-- (IBAction) sheetButtonCancelForRebaseSheet:(id)sender;
+- (IBAction) sheetButtonOk:(id)sender;
+- (IBAction) sheetButtonCancel:(id)sender;
 
 
 // Table delegate methods

@@ -108,7 +108,7 @@
 }
 
 
-- (IBAction) sheetButtonOkForExportPatchesSheet:(id)sender
+- (IBAction) sheetButtonOk:(id)sender
 {
 	[theExportPatchesSheet makeFirstResponder:theExportPatchesSheet];	// Make the text fields of the sheet commit any changes they currently have
 	[NSApp endSheet:theExportPatchesSheet];
@@ -189,7 +189,7 @@
 	}];	
 }
 
-- (IBAction) sheetButtonCancelForExportPatchesSheet:(id)sender
+- (IBAction) sheetButtonCancel:(id)sender
 {
 	[NSApp endSheet:theExportPatchesSheet];
 	[theExportPatchesSheet orderOut:sender];

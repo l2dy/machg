@@ -931,22 +931,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
-						<string key="label">sheetButtonOkForMergeSheet:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="674633371"/>
-					</object>
-					<int key="connectionID">209</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">sheetButtonCancelForMergeSheet:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="387147098"/>
-					</object>
-					<int key="connectionID">210</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
 						<string key="label">sheetButtonViewDifferencesForMergeSheet:</string>
 						<reference key="source" ref="1001"/>
 						<reference key="destination" ref="521837655"/>
@@ -1008,6 +992,22 @@
 						<reference key="destination" ref="1001"/>
 					</object>
 					<int key="connectionID">236</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">sheetButtonCancel:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="387147098"/>
+					</object>
+					<int key="connectionID">237</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">sheetButtonOk:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="674633371"/>
+					</object>
+					<int key="connectionID">238</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1608,7 +1608,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">236</int>
+			<int key="maxID">238</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1690,8 +1690,8 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>openMergeSheet:</string>
-							<string>sheetButtonCancelForMergeSheet:</string>
-							<string>sheetButtonOkForMergeSheet:</string>
+							<string>sheetButtonCancel:</string>
+							<string>sheetButtonOk:</string>
 							<string>sheetButtonViewDifferencesForMergeSheet:</string>
 							<string>validateButtons:</string>
 						</object>

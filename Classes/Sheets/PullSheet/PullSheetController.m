@@ -93,7 +93,7 @@
 }
 
 
-- (IBAction) sheetButtonOkForPullSheet:(id)sender;
+- (IBAction) sheetButtonOk:(id)sender;
 {
 	[sheetWindow makeFirstResponder:sheetWindow]; // Make the text fields of the sheet commit any changes they currently have
 	[NSApp endSheet:sheetWindow];
@@ -140,7 +140,7 @@
 	[pullDestination addRecentConnection:pullSource];
 }
 
-- (IBAction) sheetButtonCancelForPullSheet:(id)sender;
+- (IBAction) sheetButtonCancel:(id)sender;
 {
 	[sheetWindow makeFirstResponder:sheetWindow]; // Make the text fields of the sheet commit any changes they currently have
 	[NSApp endSheet:sheetWindow];

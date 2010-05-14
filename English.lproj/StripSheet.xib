@@ -880,22 +880,6 @@
 					<int key="connectionID">186</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">sheetButtonOkForStripSheet:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="131696825"/>
-					</object>
-					<int key="connectionID">187</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">sheetButtonCancelForStripSheet:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="427118545"/>
-					</object>
-					<int key="connectionID">188</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">window</string>
 						<reference key="source" ref="1001"/>
@@ -926,6 +910,22 @@
 						<reference key="destination" ref="1001"/>
 					</object>
 					<int key="connectionID">200</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">sheetButtonCancel:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="427118545"/>
+					</object>
+					<int key="connectionID">201</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">sheetButtonOk:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="131696825"/>
+					</object>
+					<int key="connectionID">202</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1467,7 +1467,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">200</int>
+			<int key="maxID">202</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1590,8 +1590,8 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>openStripSheetWithSelectedRevisions:</string>
 							<string>scrollToCurrentRevision:</string>
-							<string>sheetButtonCancelForStripSheet:</string>
-							<string>sheetButtonOkForStripSheet:</string>
+							<string>sheetButtonCancel:</string>
+							<string>sheetButtonOk:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>

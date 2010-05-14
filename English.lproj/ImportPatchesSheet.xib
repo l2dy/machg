@@ -21,7 +21,6 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="35"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -59,7 +58,7 @@
 				<string key="NSWindowContentMaxSize">{1.79769e+308, 1.79769e+308}</string>
 				<string key="NSWindowContentMinSize">{700, 500}</string>
 				<object class="NSView" key="NSWindowView" id="803546326">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<object class="NSMutableArray" key="NSSubviews">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1087,7 +1086,6 @@
 						</object>
 					</object>
 					<string key="NSFrameSize">{837, 699}</string>
-					<reference key="NSSuperview"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
 				<string key="NSMinSize">{700, 522}</string>
@@ -1144,22 +1142,6 @@
 						<reference key="destination" ref="471338142"/>
 					</object>
 					<int key="connectionID">199</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">sheetButtonOkForImportPatchesSheet:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="715708594"/>
-					</object>
-					<int key="connectionID">200</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">sheetButtonCancelForImportPatchesSheet:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="766248391"/>
-					</object>
-					<int key="connectionID">201</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -1280,6 +1262,22 @@
 						<reference key="destination" ref="722233196"/>
 					</object>
 					<int key="connectionID">257</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">sheetButtonCancel:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="766248391"/>
+					</object>
+					<int key="connectionID">258</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">sheetButtonOk:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="715708594"/>
+					</object>
+					<int key="connectionID">259</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1967,7 +1965,7 @@ dGVyLiAgKC0tc2ltaWxhcml0eSBvcHRpb24pA</string>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">257</int>
+			<int key="maxID">259</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1998,8 +1996,8 @@ dGVyLiAgKC0tc2ltaWxhcml0eSBvcHRpb24pA</string>
 							<string>addPatches:</string>
 							<string>openImportPatchesSheet:</string>
 							<string>removeSelectedPatches:</string>
-							<string>sheetButtonCancelForImportPatchesSheet:</string>
-							<string>sheetButtonOkForImportPatchesSheet:</string>
+							<string>sheetButtonCancel:</string>
+							<string>sheetButtonOk:</string>
 							<string>validate:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">

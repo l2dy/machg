@@ -91,7 +91,7 @@
 }
 
 
-- (IBAction) sheetButtonOkForRenameFileSheet:(id)sender
+- (IBAction) sheetButtonOk:(id)sender
 {
 	if (DisplayWarningForRenamingFilesFromDefaults())
 	{
@@ -119,7 +119,7 @@
 	[theRenameFileSheet orderOut:sender];
 }
 
-- (IBAction) sheetButtonCancelForRenameFileSheet:(id)sender
+- (IBAction) sheetButtonCancel:(id)sender
 {
 	[NSApp endSheet:theRenameFileSheet];
 	[theRenameFileSheet orderOut:sender];

@@ -145,7 +145,7 @@
 }
 
 
-- (IBAction) sheetButtonOkForImportPatchesSheet:(id)sender
+- (IBAction) sheetButtonOk:(id)sender
 {
 	
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
@@ -186,7 +186,7 @@
 }
 
 
-- (IBAction) sheetButtonCancelForImportPatchesSheet:(id)sender
+- (IBAction) sheetButtonCancel:(id)sender
 {
 	[NSApp endSheet:theImportPatchesSheet];
 	[theImportPatchesSheet orderOut:sender];

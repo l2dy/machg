@@ -161,7 +161,7 @@
 
 
 
-- (IBAction) commitSheetButtonOk:(id)sender
+- (IBAction) sheetButtonOk:(id)sender
 {
 	// This is more a check here, error handling should have caught this before now if the files were empty.
 	if (!absolutePathsOfFilesToCommit || [absolutePathsOfFilesToCommit count] <= 0)
@@ -203,7 +203,7 @@
 }
 
 
-- (IBAction) commitSheetButtonCancel:(id)sender
+- (IBAction) sheetButtonCancel:(id)sender
 {
 	[NSApp endSheet:theCommitSheet];
 	[theCommitSheet orderOut:sender];

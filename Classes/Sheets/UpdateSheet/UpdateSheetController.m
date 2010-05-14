@@ -87,7 +87,7 @@
 }
 
 
-- (IBAction) sheetButtonOkForUpdateSheet:(id)sender
+- (IBAction) sheetButtonOk:(id)sender
 {
 	NSString* versionToUpdateTo = [logTableView selectedRevision];
 	BOOL didReversion = [myDocument primaryActionUpdateFilesToVersion:versionToUpdateTo withCleanOption:[self cleanUpdate]];
@@ -98,7 +98,7 @@
 	[theUpdateSheet orderOut:sender];
 }
 
-- (IBAction) sheetButtonCancelForUpdateSheet:(id)sender
+- (IBAction) sheetButtonCancel:(id)sender
 {
 	[NSApp endSheet:theUpdateSheet];
 	[theUpdateSheet orderOut:sender];

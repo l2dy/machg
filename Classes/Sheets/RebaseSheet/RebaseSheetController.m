@@ -206,7 +206,7 @@
 }
 
 
-- (IBAction) sheetButtonOkForRebaseSheet:(id)sender;
+- (IBAction) sheetButtonOk:(id)sender;
 {
 	[NSApp endSheet:theRebaseSheet];
 	[theRebaseSheet orderOut:sender];
@@ -234,7 +234,7 @@
 	}];	
 }
 
-- (IBAction) sheetButtonCancelForRebaseSheet:(id)sender;
+- (IBAction) sheetButtonCancel:(id)sender;
 {
 	[NSApp endSheet:theRebaseSheet];
 	[theRebaseSheet orderOut:sender];

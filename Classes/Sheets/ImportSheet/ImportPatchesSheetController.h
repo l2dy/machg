@@ -46,8 +46,8 @@
 
 // Actions Sheet Management
 - (IBAction) openImportPatchesSheet:(id)sender;
-- (IBAction) sheetButtonOkForImportPatchesSheet:(id)sender;
-- (IBAction) sheetButtonCancelForImportPatchesSheet:(id)sender;
+- (IBAction) sheetButtonOk:(id)sender;
+- (IBAction) sheetButtonCancel:(id)sender;
 
 
 - (NSAttributedString*) formattedSheetMessage;

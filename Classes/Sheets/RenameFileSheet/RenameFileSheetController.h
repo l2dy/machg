@@ -33,8 +33,8 @@
 
 - (IBAction) browseToPath: (id)sender;
 - (IBAction) openRenameFileSheet:(id)sender;
-- (IBAction) sheetButtonOkForRenameFileSheet:(id)sender;
-- (IBAction) sheetButtonCancelForRenameFileSheet:(id)sender;
+- (IBAction) sheetButtonOk:(id)sender;
+- (IBAction) sheetButtonCancel:(id)sender;
 
 
 @end

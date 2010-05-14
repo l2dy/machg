@@ -37,8 +37,8 @@
 
 
 // Sheet button actions
-- (IBAction) sheetButtonOkForOutgoingSheet:(id)sender;
-- (IBAction) sheetButtonCancelForOutgoingSheet:(id)sender;
+- (IBAction) sheetButtonOk:(id)sender;
+- (IBAction) sheetButtonCancel:(id)sender;
 
 
 - (void) controlTextDidChange:(NSNotification*)aNotification;

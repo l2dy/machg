@@ -32,8 +32,8 @@
 
 // Action Methods
 - (IBAction) openStripSheetWithSelectedRevisions:(id)sender;
-- (IBAction) sheetButtonOkForStripSheet:(id)sender;
-- (IBAction) sheetButtonCancelForStripSheet:(id)sender;
+- (IBAction) sheetButtonOk:(id)sender;
+- (IBAction) sheetButtonCancel:(id)sender;
 
 
 // Table delegate methods

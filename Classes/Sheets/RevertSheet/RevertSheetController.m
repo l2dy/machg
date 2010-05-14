@@ -89,7 +89,7 @@
 }
 
 
-- (IBAction) sheetButtonOkForRevertSheet:(id)sender;
+- (IBAction) sheetButtonOk:(id)sender;
 {
 	NSString* versionToRevertTo = [logTableView selectedRevision];
 	BOOL didReversion = [myDocument primaryActionRevertFiles:absolutePathsOfFilesToRevert toVersion:versionToRevertTo];
@@ -100,7 +100,7 @@
 	[theRevertSheet orderOut:sender];
 }
 
-- (IBAction) sheetButtonCancelForRevertSheet:(id)sender;
+- (IBAction) sheetButtonCancel:(id)sender;
 {
 	[NSApp endSheet:theRevertSheet];
 	[theRevertSheet orderOut:sender];

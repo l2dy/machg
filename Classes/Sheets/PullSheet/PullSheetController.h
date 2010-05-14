@@ -29,8 +29,8 @@
 - (IBAction) validateButtons:(id)sender;
 
 // Sheet button actions
-- (IBAction) sheetButtonOkForPullSheet:(id)sender;
-- (IBAction) sheetButtonCancelForPullSheet:(id)sender;
+- (IBAction) sheetButtonOk:(id)sender;
+- (IBAction) sheetButtonCancel:(id)sender;
 
 
 - (void) controlTextDidChange:(NSNotification*)aNotification;

@@ -202,7 +202,7 @@ NSString* kTheRevisionFieldValue = @"theRevisionFieldValue";
 }
 
 
-- (void) sheetButtonOkForAddLabelSheet:(id)sender
+- (void) sheetButtonOk:(id)sender
 {
 	[theAddLabelSheet makeFirstResponder:theAddLabelSheet];	// Make the text fields of the sheet commit any changes they currently have
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
@@ -236,7 +236,7 @@ NSString* kTheRevisionFieldValue = @"theRevisionFieldValue";
 }
 
 
-- (IBAction) sheetButtonCancelForAddLabelSheet:(id)sender
+- (IBAction) sheetButtonCancel:(id)sender
 {
 	[theAddLabelSheet makeFirstResponder:theAddLabelSheet];	// Make the text fields of the sheet commit any changes they currently have
 	[NSApp endSheet:theAddLabelSheet];

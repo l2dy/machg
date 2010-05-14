@@ -82,7 +82,7 @@
 }
 
 
-- (void) sheetButtonOkForMoveLabelSheet:(id)sender
+- (void) sheetButtonOk:(id)sender
 {
 	[theMoveLabelSheet makeFirstResponder:theMoveLabelSheet];	// Make the text fields of the sheet commit any changes they currently have
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
@@ -139,7 +139,7 @@
 
 
 
-- (IBAction) sheetButtonCancelForMoveLabelSheet:(id)sender;
+- (IBAction) sheetButtonCancel:(id)sender;
 {
 	[NSApp endSheet:theMoveLabelSheet];
 	[theMoveLabelSheet orderOut:sender];

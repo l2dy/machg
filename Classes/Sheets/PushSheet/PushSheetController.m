@@ -96,7 +96,7 @@
 }
 
 
-- (IBAction) sheetButtonOkForPushSheet:(id)sender;
+- (IBAction) sheetButtonOk:(id)sender;
 {
 	[sheetWindow makeFirstResponder:sheetWindow]; // Make the text fields of the sheet commit any changes they currently have
 	[NSApp endSheet:sheetWindow];
@@ -145,7 +145,7 @@
 	[pushDestination addRecentConnection:pushSource];
 }
 
-- (IBAction) sheetButtonCancelForPushSheet:(id)sender;
+- (IBAction) sheetButtonCancel:(id)sender;
 {
 	[sheetWindow makeFirstResponder:sheetWindow]; // Make the text fields of the sheet commit any changes they currently have
 	[NSApp endSheet:sheetWindow];

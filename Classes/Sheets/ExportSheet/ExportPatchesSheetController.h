@@ -46,8 +46,8 @@
 
 // Action Methods
 - (IBAction) openExportPatchesSheetWithSelectedRevisions:(id)sender;
-- (IBAction) sheetButtonOkForExportPatchesSheet:(id)sender;
-- (IBAction) sheetButtonCancelForExportPatchesSheet:(id)sender;
+- (IBAction) sheetButtonOk:(id)sender;
+- (IBAction) sheetButtonCancel:(id)sender;
 - (IBAction) sheetButtonViewDifferencesForExportPatchesSheet:(id)sender;
 
 

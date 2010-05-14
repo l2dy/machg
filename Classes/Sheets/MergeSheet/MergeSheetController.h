@@ -42,8 +42,8 @@
 
 // Action methods
 - (IBAction) openMergeSheet:(id)sender;
-- (IBAction) sheetButtonOkForMergeSheet:(id)sender;
-- (IBAction) sheetButtonCancelForMergeSheet:(id)sender;
+- (IBAction) sheetButtonOk:(id)sender;
+- (IBAction) sheetButtonCancel:(id)sender;
 - (IBAction) sheetButtonViewDifferencesForMergeSheet:(id)sender;
 
 

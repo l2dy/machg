@@ -37,8 +37,8 @@
 // Action Methods
 - (IBAction) openRevertSheetWithAllFiles:(id)sender;
 - (IBAction) openRevertSheetWithSelectedFiles:(id)sender;
-- (IBAction) sheetButtonOkForRevertSheet:(id)sender;
-- (IBAction) sheetButtonCancelForRevertSheet:(id)sender;
+- (IBAction) sheetButtonOk:(id)sender;
+- (IBAction) sheetButtonCancel:(id)sender;
 - (IBAction) sheetButtonViewDifferencesForRevertSheet:(id)sender;
 
 

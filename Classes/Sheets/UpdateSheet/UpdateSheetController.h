@@ -40,8 +40,8 @@
 - (IBAction) validate:(id)sender;
 - (void)     openUpdateSheetWithRevision:(NSString*)revision;
 - (IBAction) openUpdateSheetWithCurrentRevision:(id)sender;
-- (IBAction) sheetButtonOkForUpdateSheet:(id)sender;
-- (IBAction) sheetButtonCancelForUpdateSheet:(id)sender;
+- (IBAction) sheetButtonOk:(id)sender;
+- (IBAction) sheetButtonCancel:(id)sender;
 - (IBAction) sheetButtonViewDifferencesForUpdateSheet:(id)sender;
 
 

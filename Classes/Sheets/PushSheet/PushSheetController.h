@@ -29,8 +29,8 @@
 
 
 // Sheet button actions
-- (IBAction) sheetButtonOkForPushSheet:(id)sender;
-- (IBAction) sheetButtonCancelForPushSheet:(id)sender;
+- (IBAction) sheetButtonOk:(id)sender;
+- (IBAction) sheetButtonCancel:(id)sender;
 
 
 - (void) controlTextDidChange:(NSNotification*)aNotification;

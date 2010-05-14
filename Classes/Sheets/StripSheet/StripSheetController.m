@@ -138,7 +138,7 @@
 }
 
 
-- (IBAction) sheetButtonOkForStripSheet:(id)sender;
+- (IBAction) sheetButtonOk:(id)sender;
 {
 	[NSApp endSheet:theStripSheet];
 	[theStripSheet orderOut:sender];
@@ -160,7 +160,7 @@
 		[myDocument  executeMercurialWithArgs:argsStrip  fromRoot:rootPath  whileDelayingEvents:YES]; }];
 }
 
-- (IBAction) sheetButtonCancelForStripSheet:(id)sender;
+- (IBAction) sheetButtonCancel:(id)sender;
 {
 	[NSApp endSheet:theStripSheet];
 	[theStripSheet orderOut:sender];
