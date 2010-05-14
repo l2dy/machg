@@ -658,7 +658,14 @@ extern void PlayBeep();
 static inline NSRect UnionWidthHeight(NSRect r, CGFloat w, CGFloat h) { r.size.width = MAX(r.size.width, w); r.size.height = MAX(r.size.height, h); return r;}
 static inline NSRect UnionSize(NSRect r, NSSize s) { r.size.width = MAX(r.size.width, s.width); r.size.height = MAX(r.size.height, s.height); return r;}
 
-
+static inline NSString* fstr(NSString* format, ...)
+{
+    va_list args;
+    va_start(args, format);
+    NSString* string = [[NSString alloc] initWithFormat:format arguments:args];
+    va_end(args);
+    return string;
+}
 
 
 
