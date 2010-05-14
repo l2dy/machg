@@ -28,4 +28,10 @@
 	[[self nextResponder] flagsChanged:theEvent];
 }
 
+- (IBAction) cancel:(id)sender
+{
+	if ([self respondsToSelector:@selector(sheetButtonCancel:)])
+		[self performSelector:@selector(sheetButtonCancel:) withObject:self];
+}
+
 @end
