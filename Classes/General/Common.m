@@ -697,26 +697,17 @@ void printChildViewHierarchy(NSView* view)
 
 void printAttributesForString(NSAttributedString* string)
 {
-    NSDictionary* attributeDict;
     NSRange effectiveRange = { 0, 0 };
-	
-    do {
-        NSRange range;
-        range = NSMakeRange (NSMaxRange(effectiveRange),
-                             [string length] - NSMaxRange(effectiveRange));
-		
-        attributeDict = [string attributesAtIndex: range.location
-							longestEffectiveRange: &effectiveRange
-										  inRange: range];
-		
-        NSLog (@"Range: %@  Attributes: %@",
-               NSStringFromRange(effectiveRange), attributeDict);
-		
+    do
+	{
+		NSRange range = NSMakeRange (NSMaxRange(effectiveRange), [string length] - NSMaxRange(effectiveRange));
+		NSDictionary* attributeDict = [string attributesAtIndex: range.location longestEffectiveRange: &effectiveRange inRange: range];
+        DebugLog(@"Range: %@  Attributes: %@", NSStringFromRange(effectiveRange), attributeDict);
     } while (NSMaxRange(effectiveRange) < [string length]);
 	
 }
 
-void _DebugLog(const char* file, int lineNumber, const char* funcName, NSString* format,...)
+void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString* format,...)
 {
 	va_list ap;
 	

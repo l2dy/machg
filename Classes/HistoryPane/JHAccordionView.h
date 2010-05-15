@@ -42,6 +42,4 @@
 	BOOL draggingDivider1;
 }
 
-- (IBAction) doSomething:(id)sender;
-
 @end

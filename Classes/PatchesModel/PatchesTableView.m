@@ -327,7 +327,6 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 - (NSDragOperation) tableView:(NSTableView*)tv validateDrop:(id <NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)op
 {
     // Add code here to validate the drop
-    NSLog(@"validate Drop");
 	NSPasteboard* pboard = [info draggingPasteboard];	// get the pasteboard
 	if ([pboard availableTypeFromArray:[NSArray arrayWithObject:kPatchesTablePBoardType]])
 	{

@@ -716,11 +716,11 @@ void printParentViewHierarchy(NSView* aView);
 void printAttributesForString(NSAttributedString* string);
 
 #ifdef DEBUG
-#  define DebugLog(args...) _DebugLog(__FILE__,__LINE__,__PRETTY_FUNCTION__,args)
+#  define DebugLog(args...) DebugLog_(__FILE__,__LINE__,__PRETTY_FUNCTION__,args)
 #else
 #  define DebugLog(x...) do {} while(0)
 #endif
-void _DebugLog(const char* file, int lineNumber, const char* funcName, NSString* format,...);
+void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString* format,...);
 
 
 

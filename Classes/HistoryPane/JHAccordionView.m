@@ -363,11 +363,4 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 	[pane3Box needsDisplay];
 }
 
-
-- (IBAction) doSomething:(id)sender
-{
-	NSLog(@"Doing something");
-}
-
-
 @end

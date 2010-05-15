@@ -1176,13 +1176,12 @@
 
 
 - (IBAction)	actionTestListingItem:(id)sender
-{
-	
+{	
 	return;
-	DebugLog(@"Currently watching Paths:%@", [events_ isWatchingPaths] ? @"Yes":@"No");
-	NSMutableArray* watchedPaths  = [events_ watchedPaths];
-	DebugLog(@"The currently watched  Paths : %@", watchedPaths);
-	DebugLog(@"streamDescription %@", [events_ streamDescription]);
+//	DebugLog(@"Currently watching Paths:%@", [events_ isWatchingPaths] ? @"Yes":@"No");
+//	NSMutableArray* watchedPaths  = [events_ watchedPaths];
+//	DebugLog(@"The currently watched  Paths : %@", watchedPaths);
+//	DebugLog(@"streamDescription %@", [events_ streamDescription]);
 }
 
 
