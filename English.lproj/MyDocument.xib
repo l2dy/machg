@@ -22,8 +22,8 @@
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<integer value="100302"/>
-			<integer value="100274"/>
 			<integer value="100334"/>
+			<integer value="100274"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -2122,11 +2122,11 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
-						<string key="label">sidebarMenuOpenTerminalHere:</string>
+						<string key="label">mainMenuOpenTerminalHere:</string>
 						<reference key="source" ref="613418571"/>
 						<reference key="destination" ref="1039606225"/>
 					</object>
-					<int key="connectionID">100438</int>
+					<int key="connectionID">100439</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -2913,6 +2913,7 @@
 					<string>100419.IBPluginDependency</string>
 					<string>100420.IBPluginDependency</string>
 					<string>100421.IBPluginDependency</string>
+					<string>100437.IBPluginDependency</string>
 					<string>5.IBEditorWindowLastContentRect</string>
 					<string>5.IBPluginDependency</string>
 					<string>5.IBWindowTemplateEditedContentRect</string>
@@ -3022,6 +3023,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{161, 71}, {893, 491}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{161, 71}, {893, 491}}</string>
@@ -3049,7 +3051,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">100438</int>
+			<int key="maxID">100439</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3090,6 +3092,7 @@
 							<string>mainMenuMarkResolvedSelectedFiles:</string>
 							<string>mainMenuMergeWith:</string>
 							<string>mainMenuNoAction:</string>
+							<string>mainMenuOpenTerminalHere:</string>
 							<string>mainMenuOutgoingToRepository:</string>
 							<string>mainMenuPullFromRepository:</string>
 							<string>mainMenuPushToRepository:</string>
@@ -3120,6 +3123,7 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>

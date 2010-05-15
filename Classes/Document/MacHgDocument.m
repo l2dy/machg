@@ -887,6 +887,7 @@
 	// ------
 	if (theAction == @selector(sidebarMenuRevealRepositoryInFinder:))	return [self repositoryIsSelectedAndReady];
 	if (theAction == @selector(sidebarMenuOpenTerminalHere:))			return [self repositoryIsSelectedAndReady];
+	if (theAction == @selector(mainMenuOpenTerminalHere:))				return [self repositoryIsSelectedAndReady];
 	if (theAction == @selector(actionTestListingItem:))					return !showingSheet_ && ([sidebar_ selectedNode] ? YES : NO);
 	
 	if (theAction == @selector(browserMenuOpenSelectedFilesInFinder:))	return [self repositoryIsSelectedAndReady] && [self nodesAreChosenInBrowser];
@@ -1545,7 +1546,15 @@
 - (IBAction) sidebarMenuRemoveSidebarItem:(id)sender			{ return [sidebar_ sidebarMenuRemoveSidebarItem:sender]; }
 - (IBAction) sidebarMenuRevealRepositoryInFinder:(id)sender		{ return [sidebar_ sidebarMenuRevealRepositoryInFinder:sender]; }
 - (IBAction) sidebarMenuOpenTerminalHere:(id)sender				{ return [sidebar_ sidebarMenuOpenTerminalHere:sender]; }
-
+- (IBAction) mainMenuOpenTerminalHere:(id)sender
+{
+	if ([self showingBrowserPane] && [self nodesAreChosenInBrowser])
+		[self browserMenuOpenTerminalHere:sender];
+	else if ([self showingDifferencesPane])
+		[[self theDifferencesPaneController] differencesMenuOpenTerminalHere:sender];
+	else
+		[self sidebarMenuOpenTerminalHere:sender];
+}
 
 
 

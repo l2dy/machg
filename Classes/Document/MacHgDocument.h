@@ -305,6 +305,7 @@
 - (IBAction)	sidebarMenuRemoveSidebarItem:(id)sender;
 - (IBAction)	sidebarMenuRevealRepositoryInFinder:(id)sender;
 - (IBAction)	sidebarMenuOpenTerminalHere:(id)sender;
+- (IBAction)	mainMenuOpenTerminalHere:(id)sender;
 
 
 // History Editing Actions
