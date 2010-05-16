@@ -12,6 +12,7 @@
 #import "PreferenceController.h"
 #import "InitializationWizardController.h"
 #import "LogEntry.h"
+#import "EMKeychainItem.h"
 
 @implementation AppController
 
@@ -73,6 +74,24 @@
 	italicVirginSidebarFontAttributes	= [NSDictionary dictionaryWithObjectsAndKeys: smallSystemFont, NSFontAttributeName, darkGreen, NSForegroundColorAttributeName, ps, NSParagraphStyleAttributeName, [NSNumber numberWithFloat:0.15], NSObliquenessAttributeName, nil];
 
 	//grayedAttributes   = [NSDictionary dictionaryWithObjectsAndKeys: textFont,       NSFontAttributeName, greyColor, NSForegroundColorAttributeName, ps, NSParagraphStyleAttributeName, nil];
+	
+	[EMGenericKeychainItem addGenericKeychainItemForService:@"MacHgAppService" withUsername:@"JoeFred" password:@"supersecure!"];
+	[EMGenericKeychainItem addGenericKeychainItemForService:@"MacHgAppService" withUsername:@"JoeFred" password:@"supersecure!"];
+
+	//[EMInternetKeychainItem addInternetKeychainItemForServer:@"jasonfharris.billy.com" withUsername:@"sjobs" password:@"magic" path:@"/httpdocs" port:21 protocol:kSecProtocolTypeFTP];
+			
+	//Grab the keychain item.
+	//EMInternetKeychainItem* keychainItem = [EMInternetKeychainItem internetKeychainItemForServer:@"apple.com" withUsername:@"sjobs" path:@"/httpdocs" port:21 protocol:kSecProtocolTypeFTP];
+
+	EMInternetKeychainItem* keychainItem = [EMInternetKeychainItem internetKeychainItemForServer:@"jasonfharris.billy.com" withUsername:@"sjobs" path:@"/httpdocs" port:21 protocol:kSecProtocolTypeFTP];
+
+	//Grab the password.
+	NSString* password = keychainItem.password;
+	
+	//Change the username and password. (This automatically saves to keychain, etc.)
+	keychainItem.username = @"phil";
+	keychainItem.password = @"philsnewpassword";
+	
 	
 }
 
