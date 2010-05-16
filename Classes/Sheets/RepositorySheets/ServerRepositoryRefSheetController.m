@@ -21,6 +21,7 @@
 @synthesize serverFieldValue    = serverFieldValue_;
 @synthesize password			= password_;
 @synthesize needsPassword		= needsPassword_;
+@synthesize showRealPassword	= showRealPassword_;
 
 
 

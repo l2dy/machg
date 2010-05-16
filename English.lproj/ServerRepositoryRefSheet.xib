@@ -11,7 +11,7 @@
 			<string key="com.brandonwalkin.BWToolkit">1.2.2</string>
 		</dictionary>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-			<integer value="300"/>
+			<integer value="301"/>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -45,13 +45,13 @@
 						<object class="NSButton" id="432104545">
 							<reference key="NSNextResponder" ref="250803238"/>
 							<int key="NSvFlags">289</int>
-							<string key="NSFrame">{{491, 12}, {147, 32}}</string>
+							<string key="NSFrame">{{488, 12}, {146, 32}}</string>
 							<reference key="NSSuperview" ref="250803238"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="360737946">
 								<int key="NSCellFlags">67239424</int>
 								<int key="NSCellFlags2">134217728</int>
-								<string key="NSContents">Bookmark Server</string>
+								<string key="NSContents">Configure Server</string>
 								<object class="NSFont" key="NSSupport" id="879497694">
 									<string key="NSName">LucidaGrande</string>
 									<double key="NSSize">13</double>
@@ -69,7 +69,7 @@
 						<object class="NSTextField" id="62166892">
 							<reference key="NSNextResponder" ref="250803238"/>
 							<int key="NSvFlags">266</int>
-							<string key="NSFrame">{{117, 92}, {515, 22}}</string>
+							<string key="NSFrame">{{117, 92}, {511, 22}}</string>
 							<reference key="NSSuperview" ref="250803238"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="136763236">
@@ -147,7 +147,7 @@
 						<object class="NSTextField" id="543452023">
 							<reference key="NSNextResponder" ref="250803238"/>
 							<int key="NSvFlags">266</int>
-							<string key="NSFrame">{{117, 124}, {515, 22}}</string>
+							<string key="NSFrame">{{117, 124}, {511, 22}}</string>
 							<reference key="NSSuperview" ref="250803238"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="701816222">
@@ -184,7 +184,7 @@
 						<object class="NSButton" id="323443333">
 							<reference key="NSNextResponder" ref="250803238"/>
 							<int key="NSvFlags">289</int>
-							<string key="NSFrame">{{383, 12}, {96, 32}}</string>
+							<string key="NSFrame">{{376, 12}, {96, 32}}</string>
 							<reference key="NSSuperview" ref="250803238"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="387441560">
@@ -311,7 +311,7 @@
 						<object class="NSTextField" id="566645101">
 							<reference key="NSNextResponder" ref="250803238"/>
 							<int key="NSvFlags">289</int>
-							<string key="NSFrame">{{421, 3}, {19, 14}}</string>
+							<string key="NSFrame">{{414, 3}, {19, 14}}</string>
 							<reference key="NSSuperview" ref="250803238"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="954860236">
@@ -330,7 +330,7 @@
 						<object class="NSTextField" id="955320804">
 							<reference key="NSNextResponder" ref="250803238"/>
 							<int key="NSvFlags">289</int>
-							<string key="NSFrame">{{557, 3}, {15, 14}}</string>
+							<string key="NSFrame">{{553, 3}, {15, 14}}</string>
 							<reference key="NSSuperview" ref="250803238"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="553789670">
@@ -392,7 +392,7 @@
 						<object class="NSSecureTextField" id="494610969">
 							<reference key="NSNextResponder" ref="250803238"/>
 							<int key="NSvFlags">266</int>
-							<string key="NSFrame">{{239, 59}, {393, 22}}</string>
+							<string key="NSFrame">{{239, 59}, {389, 22}}</string>
 							<reference key="NSSuperview" ref="250803238"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSSecureTextFieldCell" key="NSCell" id="12947309">
@@ -407,6 +407,50 @@
 								<array key="NSAllowedInputLocales">
 									<string>NSAllRomanInputSourcesLocaleIdentifier</string>
 								</array>
+							</object>
+						</object>
+						<object class="NSButton" id="816759484">
+							<reference key="NSNextResponder" ref="250803238"/>
+							<int key="NSvFlags">265</int>
+							<string key="NSFrame">{{636, 62}, {37, 17}}</string>
+							<reference key="NSSuperview" ref="250803238"/>
+							<bool key="NSEnabled">YES</bool>
+							<object class="NSButtonCell" key="NSCell" id="1057837744">
+								<int key="NSCellFlags">67239424</int>
+								<int key="NSCellFlags2">134479872</int>
+								<string key="NSContents">Show</string>
+								<object class="NSFont" key="NSSupport" id="22">
+									<string key="NSName">LucidaGrande</string>
+									<double key="NSSize">9</double>
+									<int key="NSfFlags">3614</int>
+								</object>
+								<reference key="NSControlView" ref="816759484"/>
+								<int key="NSButtonFlags">-1232846593</int>
+								<int key="NSButtonFlags2">164</int>
+								<string key="NSAlternateContents"/>
+								<string key="NSKeyEquivalent"/>
+								<int key="NSPeriodicDelay">400</int>
+								<int key="NSPeriodicInterval">75</int>
+							</object>
+						</object>
+						<object class="NSButton" id="328258143">
+							<reference key="NSNextResponder" ref="250803238"/>
+							<int key="NSvFlags">265</int>
+							<string key="NSFrame">{{638, 94}, {33, 17}}</string>
+							<reference key="NSSuperview" ref="250803238"/>
+							<bool key="NSEnabled">YES</bool>
+							<object class="NSButtonCell" key="NSCell" id="605515755">
+								<int key="NSCellFlags">-2080244224</int>
+								<int key="NSCellFlags2">134479872</int>
+								<string key="NSContents">Test</string>
+								<reference key="NSSupport" ref="22"/>
+								<reference key="NSControlView" ref="328258143"/>
+								<int key="NSButtonFlags">-2038152961</int>
+								<int key="NSButtonFlags2">164</int>
+								<string key="NSAlternateContents"/>
+								<string key="NSKeyEquivalent"/>
+								<int key="NSPeriodicDelay">400</int>
+								<int key="NSPeriodicInterval">75</int>
 							</object>
 						</object>
 					</array>
@@ -666,6 +710,42 @@
 					</object>
 					<int key="connectionID">437</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">hidden: needsPassword</string>
+						<reference key="source" ref="816759484"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="816759484"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">hidden: needsPassword</string>
+							<string key="NSBinding">hidden</string>
+							<string key="NSKeyPath">needsPassword</string>
+							<object class="NSDictionary" key="NSOptions">
+								<string key="NS.key.0">NSValueTransformerName</string>
+								<string key="NS.object.0">NSNegateBoolean</string>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">445</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: showRealPassword</string>
+						<reference key="source" ref="816759484"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="816759484"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">value: showRealPassword</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">showRealPassword</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">446</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -727,6 +807,8 @@
 							<reference ref="321717511"/>
 							<reference ref="1043462223"/>
 							<reference ref="494610969"/>
+							<reference ref="816759484"/>
+							<reference ref="328258143"/>
 						</array>
 						<reference key="parent" ref="530833982"/>
 					</object>
@@ -943,6 +1025,32 @@
 						<reference key="object" ref="12947309"/>
 						<reference key="parent" ref="494610969"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">438</int>
+						<reference key="object" ref="816759484"/>
+						<array class="NSMutableArray" key="children">
+							<reference ref="1057837744"/>
+						</array>
+						<reference key="parent" ref="250803238"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">439</int>
+						<reference key="object" ref="1057837744"/>
+						<reference key="parent" ref="816759484"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">440</int>
+						<reference key="object" ref="328258143"/>
+						<array class="NSMutableArray" key="children">
+							<reference ref="605515755"/>
+						</array>
+						<reference key="parent" ref="250803238"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">441</int>
+						<reference key="object" ref="605515755"/>
+						<reference key="parent" ref="328258143"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -1008,12 +1116,16 @@
 				<string key="427.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="428.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="429.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="438.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="439.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="440.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="441.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">437</int>
+			<int key="maxID">446</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
