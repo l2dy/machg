@@ -345,7 +345,7 @@ void moveFilesToTheTrash(NSArray* absolutePaths)
 }
 
 
-static NSString* CaseSensitiveFilePath(NSString* filePath)
+NSString* caseSensitiveFilePath(NSString* filePath)
 {
 	NSFileManager* fileManager = [NSFileManager defaultManager];
     const char* cFilePath = [fileManager fileSystemRepresentationWithPath:filePath];
@@ -367,19 +367,25 @@ BOOL pathIsLink(NSString* path)
 	return fileAttributes ? [[fileAttributes fileType] isEqualToString:NSFileTypeSymbolicLink] : NO;
 }
 
+BOOL pathIsExistent(NSString* path)
+{
+	BOOL isDir = NO;
+	BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir];
+	return exists;
+}
 
 BOOL pathIsExistentDirectory(NSString* path)
 {
 	BOOL isDir = NO;
 	BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir];
-	return (exists && isDir) ? [CaseSensitiveFilePath(path) isEqualToString:path] : NO;
+	return (exists && isDir);
 }
 
 BOOL pathIsExistentFile(NSString* path)
 {
 	BOOL isDir = NO;
 	BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir];
-	return (exists && !isDir) ? [CaseSensitiveFilePath(path) isEqualToString:path] : NO;
+	return (exists && !isDir);
 }
 
 

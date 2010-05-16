@@ -563,7 +563,9 @@ NSArray*	parentPaths(NSArray* filteredPaths, NSString* rootPath);// Return the a
 																	// "escape" outside of the rootPath.
 
 void		moveFilesToTheTrash(NSArray* absolutePaths);
+NSString*	caseSensitiveFilePath(NSString* filePath);
 BOOL		pathIsLink(NSString* path);
+BOOL		pathIsExistent(NSString* path);
 BOOL		pathIsExistentDirectory(NSString* path);
 BOOL		pathIsExistentFile(NSString* path);
 BOOL		pathIsReadable(NSString* path);

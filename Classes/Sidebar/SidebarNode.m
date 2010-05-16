@@ -12,6 +12,7 @@
 #import "SidebarNode.h"
 #import "TaskExecutions.h"
 #import "AppController.h"
+#import "NSString+SymlinksAndAliases.h"
 
 @implementation SidebarNode
 
@@ -219,6 +220,17 @@
 	isExpanded = [coder decodeBoolForKey:@"nodeIsExpanded"];
 	path       = [coder decodeObjectForKey:@"path"];
 	recentConnections  = [coder decodeObjectForKey:@"recentConnections"];
+	
+	if ([self isLocalRepositoryRef] && path)
+	{
+		if ([path length] < PATH_MAX)
+		{
+			path = [path stringByResolvingSymlinksAndAliases];
+			path = caseSensitiveFilePath(path);
+		}
+		else
+			NSRunCriticalAlertPanel(@"Max Path Length exceeded", fstr(@"The maximum path length for the path to the repository root was exceeded. Functionality for this repository could be erratic. The path is", path), @"Ok", nil, nil);
+	}
 
 	if ([self isRepositoryRef] && path)
 	{
