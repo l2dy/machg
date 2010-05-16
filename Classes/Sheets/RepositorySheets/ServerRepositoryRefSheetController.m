@@ -84,6 +84,7 @@
 	[self clearSheetFieldValues];
 	nodeToConfigure = nil;
 	[theTitleText setStringValue:@"Add Server Repository"];
+	[okButton setTitle:@"Add Server"];
 
 	[NSApp beginSheet:theWindow modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
 }
@@ -108,6 +109,7 @@
 		[self clearSheetFieldValues];
 
 	[theTitleText setStringValue:@"Configure Server Repository"];
+	[okButton setTitle:@"Configure Server"];
 	[self validateButtons:self];
 	[NSApp beginSheet:theWindow modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
 }
