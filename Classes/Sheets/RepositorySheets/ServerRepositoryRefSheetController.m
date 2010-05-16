@@ -19,6 +19,8 @@
 @implementation ServerRepositoryRefSheetController
 @synthesize shortNameFieldValue = shortNameFieldValue_;
 @synthesize serverFieldValue    = serverFieldValue_;
+@synthesize password			= password_;
+@synthesize needsPassword		= needsPassword_;
 
 
 

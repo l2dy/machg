@@ -24,9 +24,13 @@
 	NSString*			shortNameFieldValue_;
 	NSString*			serverFieldValue_;
 	SidebarNode*		nodeToConfigure;
+	NSString*			password_;
+	BOOL				needsPassword_;
 }
 @property (readwrite,assign) NSString*	  shortNameFieldValue;
 @property (readwrite,assign) NSString*	  serverFieldValue;
+@property (readwrite,assign) NSString*	  password;
+@property (readwrite,assign) BOOL		  needsPassword;
 
 - (ServerRepositoryRefSheetController*) initServerRepositoryRefSheetControllerWithDocument:(MacHgDocument*)doc;
 
