@@ -11,7 +11,7 @@
 			<string key="com.brandonwalkin.BWToolkit">1.2.2</string>
 		</dictionary>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-			<integer value="301"/>
+			<integer value="300"/>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -36,8 +36,8 @@
 				<string key="NSWindowTitle">Add Repository</string>
 				<string key="NSWindowClass">NSWindow</string>
 				<nil key="NSViewClass"/>
-				<string key="NSWindowContentMaxSize">{1.79769e+308, 1.79769e+308}</string>
-				<string key="NSWindowContentMinSize">{620, 223}</string>
+				<string key="NSWindowContentMaxSize">{1500, 260}</string>
+				<string key="NSWindowContentMinSize">{620, 260}</string>
 				<object class="NSView" key="NSWindowView" id="250803238">
 					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
@@ -414,8 +414,8 @@
 					<reference key="NSSuperview"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
-				<string key="NSMinSize">{620, 245}</string>
-				<string key="NSMaxSize">{1.79769e+308, 1.79769e+308}</string>
+				<string key="NSMinSize">{620, 282}</string>
+				<string key="NSMaxSize">{1500, 282}</string>
 			</object>
 			<object class="NSUserDefaultsController" id="164822282">
 				<bool key="NSSharedInstance">YES</bool>
@@ -612,22 +612,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: values.needsPassword</string>
-						<reference key="source" ref="1043462223"/>
-						<reference key="destination" ref="164822282"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="1043462223"/>
-							<reference key="NSDestination" ref="164822282"/>
-							<string key="NSLabel">value: values.needsPassword</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">values.needsPassword</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">431</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
 						<string key="label">hidden: needsPassword</string>
 						<reference key="source" ref="494610969"/>
 						<reference key="destination" ref="1001"/>
@@ -665,6 +649,22 @@
 						</object>
 					</object>
 					<int key="connectionID">435</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: needsPassword</string>
+						<reference key="source" ref="1043462223"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="1043462223"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">value: needsPassword</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">needsPassword</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">437</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -952,10 +952,10 @@
 				<string key="300.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="300.IBWindowTemplateEditedContentRect">{{161, 452}, {681, 260}}</string>
 				<boolean value="NO" key="300.NSWindowTemplate.visibleAtLaunch"/>
-				<boolean value="NO" key="300.windowTemplate.hasMaxSize"/>
+				<boolean value="YES" key="300.windowTemplate.hasMaxSize"/>
 				<boolean value="YES" key="300.windowTemplate.hasMinSize"/>
-				<string key="300.windowTemplate.maxSize">{1500, 223}</string>
-				<string key="300.windowTemplate.minSize">{620, 223}</string>
+				<string key="300.windowTemplate.maxSize">{1500, 260}</string>
+				<string key="300.windowTemplate.minSize">{620, 260}</string>
 				<string key="301.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<object class="NSMutableDictionary" key="311.IBAttributePlaceholdersKey">
 					<string key="NS.key.0">ToolTip</string>
@@ -1013,7 +1013,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">435</int>
+			<int key="maxID">437</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
