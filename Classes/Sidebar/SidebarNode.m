@@ -24,6 +24,7 @@
 @synthesize recentConnections;
 @synthesize icon;
 @synthesize isExpanded;
+@synthesize hasPassword;
 
 
 
@@ -45,6 +46,7 @@
 		recentConnections = nil;
 		icon		= nil;
 		isExpanded	= NO;
+		hasPassword = NO;
 	}
 	
 	return self;
@@ -168,6 +170,7 @@
 	newNode->path		 = path;
 	newNode->icon        = icon;
 	newNode->isExpanded	 = isExpanded;
+	newNode->hasPassword = hasPassword;
 
 	if (children)
 	{
@@ -202,6 +205,7 @@
 	[coder encodeObject:children forKey:@"children"];
 	[coder encodeObject:shortName forKey:@"caption"];
 	[coder encodeBool:isExpanded forKey:@"nodeIsExpanded"];
+	[coder encodeBool:hasPassword forKey:@"nodeHasPassword"];
 	[coder encodeObject:path forKey:@"path"];
 	[coder encodeObject:recentConnections forKey:@"recentConnections"];
 
@@ -214,11 +218,12 @@
 - (id) initWithCoder:(NSCoder*)coder
 {
 	[super init];
-	nodeKind   = [coder decodeIntForKey:@"nodeType"];
-	children   = [coder decodeObjectForKey:@"children"];
-	shortName  = [coder decodeObjectForKey:@"caption"];
-	isExpanded = [coder decodeBoolForKey:@"nodeIsExpanded"];
-	path       = [coder decodeObjectForKey:@"path"];
+	nodeKind	= [coder decodeIntForKey:@"nodeType"];
+	children	= [coder decodeObjectForKey:@"children"];
+	shortName	= [coder decodeObjectForKey:@"caption"];
+	isExpanded	= [coder decodeBoolForKey:@"nodeIsExpanded"];
+	hasPassword	= [coder decodeBoolForKey:@"nodeHasPassword"];
+	path		= [coder decodeObjectForKey:@"path"];
 	recentConnections  = [coder decodeObjectForKey:@"recentConnections"];
 	
 	if ([self isLocalRepositoryRef] && path)
