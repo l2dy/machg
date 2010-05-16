@@ -409,13 +409,13 @@
 								</array>
 							</object>
 						</object>
-						<object class="NSButton" id="816759484">
+						<object class="NSButton" id="980234671">
 							<reference key="NSNextResponder" ref="250803238"/>
 							<int key="NSvFlags">265</int>
 							<string key="NSFrame">{{636, 62}, {37, 17}}</string>
 							<reference key="NSSuperview" ref="250803238"/>
 							<bool key="NSEnabled">YES</bool>
-							<object class="NSButtonCell" key="NSCell" id="1057837744">
+							<object class="NSButtonCell" key="NSCell" id="466581824">
 								<int key="NSCellFlags">67239424</int>
 								<int key="NSCellFlags2">134479872</int>
 								<string key="NSContents">Show</string>
@@ -424,7 +424,7 @@
 									<double key="NSSize">9</double>
 									<int key="NSfFlags">3614</int>
 								</object>
-								<reference key="NSControlView" ref="816759484"/>
+								<reference key="NSControlView" ref="980234671"/>
 								<int key="NSButtonFlags">-1232846593</int>
 								<int key="NSButtonFlags2">164</int>
 								<string key="NSAlternateContents"/>
@@ -433,18 +433,18 @@
 								<int key="NSPeriodicInterval">75</int>
 							</object>
 						</object>
-						<object class="NSButton" id="328258143">
+						<object class="NSButton" id="66085599">
 							<reference key="NSNextResponder" ref="250803238"/>
 							<int key="NSvFlags">265</int>
 							<string key="NSFrame">{{638, 94}, {33, 17}}</string>
 							<reference key="NSSuperview" ref="250803238"/>
 							<bool key="NSEnabled">YES</bool>
-							<object class="NSButtonCell" key="NSCell" id="605515755">
+							<object class="NSButtonCell" key="NSCell" id="642388793">
 								<int key="NSCellFlags">-2080244224</int>
 								<int key="NSCellFlags2">134479872</int>
 								<string key="NSContents">Test</string>
 								<reference key="NSSupport" ref="22"/>
-								<reference key="NSControlView" ref="328258143"/>
+								<reference key="NSControlView" ref="66085599"/>
 								<int key="NSButtonFlags">-2038152961</int>
 								<int key="NSButtonFlags2">164</int>
 								<string key="NSAlternateContents"/>
@@ -713,10 +713,10 @@
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
 						<string key="label">hidden: needsPassword</string>
-						<reference key="source" ref="816759484"/>
+						<reference key="source" ref="980234671"/>
 						<reference key="destination" ref="1001"/>
 						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="816759484"/>
+							<reference key="NSSource" ref="980234671"/>
 							<reference key="NSDestination" ref="1001"/>
 							<string key="NSLabel">hidden: needsPassword</string>
 							<string key="NSBinding">hidden</string>
@@ -733,10 +733,10 @@
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
 						<string key="label">value: showRealPassword</string>
-						<reference key="source" ref="816759484"/>
+						<reference key="source" ref="980234671"/>
 						<reference key="destination" ref="1001"/>
 						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="816759484"/>
+							<reference key="NSSource" ref="980234671"/>
 							<reference key="NSDestination" ref="1001"/>
 							<string key="NSLabel">value: showRealPassword</string>
 							<string key="NSBinding">value</string>
@@ -745,6 +745,22 @@
 						</object>
 					</object>
 					<int key="connectionID">446</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">passwordTextField</string>
+						<reference key="source" ref="271946156"/>
+						<reference key="destination" ref="494610969"/>
+					</object>
+					<int key="connectionID">447</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">hasPassword</string>
+						<reference key="source" ref="271946156"/>
+						<reference key="destination" ref="1043462223"/>
+					</object>
+					<int key="connectionID">448</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -807,8 +823,8 @@
 							<reference ref="321717511"/>
 							<reference ref="1043462223"/>
 							<reference ref="494610969"/>
-							<reference ref="816759484"/>
-							<reference ref="328258143"/>
+							<reference ref="980234671"/>
+							<reference ref="66085599"/>
 						</array>
 						<reference key="parent" ref="530833982"/>
 					</object>
@@ -1027,29 +1043,29 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">438</int>
-						<reference key="object" ref="816759484"/>
+						<reference key="object" ref="980234671"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="1057837744"/>
+							<reference ref="466581824"/>
 						</array>
 						<reference key="parent" ref="250803238"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">439</int>
-						<reference key="object" ref="1057837744"/>
-						<reference key="parent" ref="816759484"/>
+						<reference key="object" ref="466581824"/>
+						<reference key="parent" ref="980234671"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">440</int>
-						<reference key="object" ref="328258143"/>
+						<reference key="object" ref="66085599"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="605515755"/>
+							<reference ref="642388793"/>
 						</array>
 						<reference key="parent" ref="250803238"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">441</int>
-						<reference key="object" ref="605515755"/>
-						<reference key="parent" ref="328258143"/>
+						<reference key="object" ref="642388793"/>
+						<reference key="parent" ref="66085599"/>
 					</object>
 				</array>
 			</object>
@@ -1125,7 +1141,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">446</int>
+			<int key="maxID">448</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1153,7 +1169,9 @@
 						<string key="NS.object.0">id</string>
 					</object>
 					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="hasPassword">NSButton</string>
 						<string key="parentController">id</string>
+						<string key="passwordTextField">NSTextField</string>
 						<string key="repositoryConnectionStatusImage">NSImageView</string>
 						<string key="repositoryConnectionStatusMessage">NSTextField</string>
 						<string key="serverTextField">NSTextField</string>

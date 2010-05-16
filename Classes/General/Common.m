@@ -480,6 +480,28 @@ NSArray* getListOfFilePathsFromOpenPanel(NSString* startingPath)
 
 
 
+NSString* FullServerURL(NSString* baseURL, BOOL usesPassword, NSString* password)
+{
+	if (!usesPassword)
+		return baseURL;
+	if (!baseURL)
+		return nil;
+	NSString* protocolAndName;
+	NSString* server;	
+	if ([baseURL getCapturesWithRegexAndComponents:@"(.*?)(@.*)"  firstComponent:&protocolAndName  secondComponent:&server])
+		return fstr(@"%@:%@%@",protocolAndName, password, server);
+
+	NSString* protocol;
+	NSString* rest;
+	if ([baseURL getCapturesWithRegexAndComponents:@"(.*?://)(.*)"  firstComponent:&protocol  secondComponent:&rest])
+		return fstr(@"%@%@%@",protocolAndName, password, rest);
+
+	NSRunAlertPanel(@"Badly Formed Server URL", fstr(@"The server URL %@ is not of the form protocol://username@server", baseURL), @"Ok", nil, nil);
+	return nil;
+}
+
+
+
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
