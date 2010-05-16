@@ -86,6 +86,7 @@ static NSString* kMacHgApp		= @"MacHgApp";
 {
 	[self clearSheetFieldValues];
 	[self setNeedsPassword:NO];
+	[self setPassword:@""];
 	nodeToConfigure = nil;
 	passwordKeyChainItem_ = nil;
 	[theTitleText setStringValue:@"Add Server Repository"];
@@ -114,9 +115,15 @@ static NSString* kMacHgApp		= @"MacHgApp";
 	
 	[self setNeedsPassword:[node hasPassword]];
 	if ([self needsPassword])
+	{
 		passwordKeyChainItem_ = [EMGenericKeychainItem genericKeychainItemForService:kMacHgApp withUsername:[node path]];
+		[self setPassword:passwordKeyChainItem_.password];
+	}
 	else
+	{
 		passwordKeyChainItem_ = nil;
+		[self setPassword:@""];
+	}
 
 	[theTitleText setStringValue:@"Configure Server Repository"];
 	[okButton setTitle:@"Configure Server"];
