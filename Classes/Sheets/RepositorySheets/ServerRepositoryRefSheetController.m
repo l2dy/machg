@@ -16,6 +16,8 @@
 #import "AppController.h"
 
 
+static NSString* kMacHgApp		= @"MacHgApp";
+
 @implementation ServerRepositoryRefSheetController
 @synthesize shortNameFieldValue = shortNameFieldValue_;
 @synthesize serverFieldValue    = serverFieldValue_;
@@ -83,10 +85,11 @@
 - (void) openSheetForNewRepositoryRef
 {
 	[self clearSheetFieldValues];
+	[self setNeedsPassword:NO];
 	nodeToConfigure = nil;
+	passwordKeyChainItem_ = nil;
 	[theTitleText setStringValue:@"Add Server Repository"];
 	[okButton setTitle:@"Add Server"];
-
 	[NSApp beginSheet:theWindow modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
 }
 
@@ -108,6 +111,12 @@
 	}
 	else
 		[self clearSheetFieldValues];
+	
+	[self setNeedsPassword:[node hasPassword]];
+	if ([self needsPassword])
+		passwordKeyChainItem_ = [EMGenericKeychainItem genericKeychainItemForService:kMacHgApp withUsername:[node path]];
+	else
+		passwordKeyChainItem_ = nil;
 
 	[theTitleText setStringValue:@"Configure Server Repository"];
 	[okButton setTitle:@"Configure Server"];
@@ -130,16 +139,30 @@
 	{
 		[theSidebar removeConnectionsFor:[nodeToConfigure path]];
 		[nodeToConfigure setPath:newPath];
+		[nodeToConfigure setHasPassword:needsPassword_];
 		[nodeToConfigure setShortName:newName];
 		[nodeToConfigure refreshNodeIcon];
 	}
 	else
 	{
 		SidebarNode* newNode = [SidebarNode nodeWithCaption:newName  forServerPath:newPath];
+		[newNode setHasPassword:needsPassword_];
 		[newNode refreshNodeIcon];
 		[[myDocument sidebar] addSidebarNode:newNode];
 	}
 
+	if (needsPassword_)
+	{
+		if (!passwordKeyChainItem_)
+			passwordKeyChainItem_ = [EMGenericKeychainItem addGenericKeychainItemForService:kMacHgApp withUsername:newPath password:[self password]];
+		else
+		{
+			passwordKeyChainItem_.username = newPath;
+			passwordKeyChainItem_.password = [self password];
+		}
+	}
+		
+	
 	[[AppController sharedAppController] computeRepositoryIdentityForPath:newPath];
 	
 	[NSApp endSheet:theWindow];

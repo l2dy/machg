@@ -9,6 +9,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "Common.h"
+#import "EMKeychainItem.h"
 
 @interface ServerRepositoryRefSheetController : BaseSheetWindowController
 {
@@ -27,6 +28,7 @@
 	NSString*			password_;
 	BOOL				needsPassword_;
 	BOOL				showRealPassword_;
+	EMGenericKeychainItem* passwordKeyChainItem_;
 }
 @property (readwrite,assign) NSString*	  shortNameFieldValue;
 @property (readwrite,assign) NSString*	  serverFieldValue;
