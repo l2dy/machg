@@ -14,7 +14,7 @@
 #import "SidebarNode.h"
 #import "ConnectionValidationController.h"
 #import "AppController.h"
-
+#import "SingleTimedQueue.h"
 
 static NSString* kMacHgApp		= @"MacHgApp";
 
@@ -26,7 +26,10 @@ static NSString* kMacHgApp		= @"MacHgApp";
 @synthesize showRealPassword	= showRealPassword_;
 
 
-
+- (void) awakeFromNib
+{
+	timeoutQueueForSecurity_ = [SingleTimedQueue SingleTimedQueueExecutingOn:globalQueue() withTimeDelay:60.0 descriptiveName:@"queueForSecurityTimeout"];	// Our security details will timeout in 60 seconds
+}
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -75,8 +78,35 @@ static NSString* kMacHgApp		= @"MacHgApp";
 }
 
 
+const char* macHgAuth = "com.jasonfharris.machg.viewpasswords";
 
+- (IBAction) authorize:(id)sender
+{
+	AuthorizationRef myAuthorizationRef;
+	OSStatus myStatus;
+	myStatus = AuthorizationCreate (NULL, kAuthorizationEmptyEnvironment, kAuthorizationFlagDefaults, &myAuthorizationRef);
+	
+	AuthorizationItem myItems[1];
+	
+	myItems[0].name = macHgAuth;
+	myItems[0].valueLength = 0;
+	myItems[0].value = NULL;
+	myItems[0].flags = 0;
+	
+	AuthorizationRights myRights;
+	myRights.count = sizeof (myItems) / sizeof (myItems[0]);
+	myRights.items = myItems;
+	
+	
+	AuthorizationFlags myFlags = kAuthorizationFlagDefaults | kAuthorizationFlagInteractionAllowed | kAuthorizationFlagExtendRights;
+	
+	myStatus = AuthorizationCopyRights (myAuthorizationRef, &myRights, kAuthorizationEmptyEnvironment, myFlags, NULL);
 
+	[timeoutQueueForSecurity_ addBlockOperation:^{
+		AuthorizationFree(myAuthorizationRef, kAuthorizationFlagDestroyRights);
+	}];
+	DebugLog(@"%d", myStatus);
+}
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 //  Actions AddRepository   --------------------------------------------------------------------------------------------------------

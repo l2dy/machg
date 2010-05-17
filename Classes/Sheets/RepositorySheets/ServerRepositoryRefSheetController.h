@@ -30,6 +30,8 @@
 	BOOL				needsPassword_;
 	BOOL				showRealPassword_;
 	EMGenericKeychainItem* passwordKeyChainItem_;
+	
+	SingleTimedQueue*	timeoutQueueForSecurity_;
 }
 @property (readwrite,assign) NSString*	  shortNameFieldValue;
 @property (readwrite,assign) NSString*	  serverFieldValue;
@@ -42,6 +44,8 @@
 - (IBAction) validateButtons:(id)sender;
 - (IBAction) sheetButtonOk:(id)sender;
 - (IBAction) sheetButtonCancel:(id)sender;
+- (IBAction) authorize:(id)sender;
+
 
 - (void)	openSheetForNewRepositoryRef;
 - (void)	openSheetForConfigureRepositoryRef:(SidebarNode*)node;
@@ -49,5 +53,7 @@
 
 // Delegate Methods for text fields
 - (void)	 controlTextDidChange:(NSNotification*)aNotification;
+
+
 
 @end
