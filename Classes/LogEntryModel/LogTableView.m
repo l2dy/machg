@@ -654,13 +654,14 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	if (IsNotEmpty(theSearchFilter_))
 		return;
 	
-	@synchronized(theLogGraph_)
+	LogGraph* currentLogGraph = theLogGraph_;
+	@synchronized(currentLogGraph)
 	{
 		LowHighPair limits = [self logGraphLimits];
-		if ([theLogGraph_ limitsDiffer:limits])
+		if ([currentLogGraph limitsDiffer:limits])
 		{
 			[self setNeedsDisplay:YES];
-			[theLogGraph_ computeColumnsOfRevisionsForLimits:limits];
+			[currentLogGraph computeColumnsOfRevisionsForLimits:limits];
 		}		
 	}
 }
