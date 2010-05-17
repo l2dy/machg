@@ -18,6 +18,7 @@
 	IBOutlet ConnectionValidationController*	theConnectionValidationController;
 	IBOutlet NSTextField*						theTitleText;
 	IBOutlet NSTextField*						theServerTextField;
+	IBOutlet NSTextField*						thePasswordTextField;
 
 	
 	MacHgDocument*		myDocument;

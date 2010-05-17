@@ -762,6 +762,22 @@
 					</object>
 					<int key="connectionID">448</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">thePasswordTextField</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="494610969"/>
+					</object>
+					<int key="connectionID">449</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">delegate</string>
+						<reference key="source" ref="494610969"/>
+						<reference key="destination" ref="1001"/>
+					</object>
+					<int key="connectionID">450</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -1141,7 +1157,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">448</int>
+			<int key="maxID">450</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1204,6 +1220,7 @@
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="okButton">NSButton</string>
 						<string key="theConnectionValidationController">ConnectionValidationController</string>
+						<string key="thePasswordTextField">NSTextField</string>
 						<string key="theServerTextField">NSTextField</string>
 						<string key="theTitleText">NSTextField</string>
 						<string key="theWindow">NSWindow</string>

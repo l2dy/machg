@@ -70,7 +70,7 @@ static NSString* kMacHgApp		= @"MacHgApp";
 {
 	BOOL valid = ([[self serverFieldValue] length] > 0) && ([[self shortNameFieldValue] length] > 0);
 	[okButton setEnabled:valid];
-	if (sender == theServerTextField || sender == self)
+	if (sender == theServerTextField || sender == self || sender == thePasswordTextField)
 		[theConnectionValidationController testConnection:sender];
 }
 
