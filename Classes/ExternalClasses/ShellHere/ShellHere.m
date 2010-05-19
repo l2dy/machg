@@ -58,12 +58,51 @@ void OpenTerminalAt(NSString* path)
 		}
 	
 	// Create a "cd" command.
-	NSString* command = 
-	[NSString stringWithFormat: @"cd %@", quotePath(path)];
+	NSString* command = [NSString stringWithFormat: @"cd %@", quotePath(path)];
 	
 	// Run the script.
-	[terminal doScript: command in: currentTab];
+	[terminal doScript:command in:currentTab];
 	
+	// Activate the Terminal. Hopefully, the new window is already open and
+	// is will be brought to the front.
+	[terminal activate];
+}
+
+void DoCommandsInTerminalAt(NSArray* cmds, NSString* path)
+{	
+	// Connect to the Terminal. It is running now...maybe with a blank
+	// terminal window.
+	TerminalApplication* terminal = QuietApplicationWithBundleIdentifier(@"com.apple.Terminal");
+	
+	// Find out if the Terminal is already running.
+	bool terminalWasRunning = [terminal isRunning];
+	
+	// Get the Terminal windows.
+	SBElementArray* terminalWindows = [terminal windows];
+	
+	TerminalTab* currentTab = nil;
+	
+	// If there is only a single window with a single tab, Terminal may 
+	// have been just launched. If so, I want to use the new window.
+	if(!terminalWasRunning)
+		for(TerminalWindow* terminalWindow in terminalWindows)
+		{
+			SBElementArray* windowTabs = [terminalWindow tabs];
+			
+			for(TerminalTab* tab in windowTabs)
+				currentTab = tab;
+		}
+	
+	// Create a "cd" command.
+	NSString* cdCmd = [NSString stringWithFormat: @"cd %@", quotePath(path)];
+	
+	// get to the correct place.
+	TerminalTab* newTab = [terminal doScript:cdCmd in:currentTab];
+	
+	// Do the actual command
+	for (NSString* cmd in cmds)
+		[terminal doScript:cmd in:newTab];
+
 	// Activate the Terminal. Hopefully, the new window is already open and
 	// is will be brought to the front.
 	[terminal activate];

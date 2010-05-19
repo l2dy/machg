@@ -8,3 +8,4 @@
 //
 
 void OpenTerminalAt(NSString* path);
+void DoCommandsInTerminalAt(NSArray* cmds, NSString* path);
