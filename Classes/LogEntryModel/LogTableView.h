@@ -61,7 +61,6 @@
 - (id)			tableView:(NSTableView*)aTableView  objectValueForTableColumn:(NSTableColumn*)aTableColumn  row:(NSInteger)requestedRow;
 - (void)		tableView:(NSTableView*)aTableView  willDisplayCell:(id)aCell forTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex;
 - (void)		tableViewSelectionDidChange:(NSNotification*)aNotification;
-- (void)		tableView:(NSTableView*)aTableView sortDescriptorsDidChange:(NSArray*)oldDescriptors;
 
 
 // Query The Table

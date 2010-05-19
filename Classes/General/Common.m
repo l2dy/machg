@@ -77,7 +77,7 @@ NSString* const MHGDefaultAnnotationOptionNumber		= @"DefaultAnnotationOptionNum
 NSString* const MHGDefaultAnnotationOptionText			= @"DefaultAnnotationOptionText";
 NSString* const MHGDefaultAnnotationOptionUser			= @"DefaultAnnotationOptionUser";
 NSString* const MHGDefaultHGIgnoreContents              = @"DefaultHGIgnoreContents";
-NSString* const MHGDefaultRevisionSortOrder				= @"DefaultRevisionSortOrder";
+NSString* const MHGRevisionSortOrder					= @"RevisionSortOrder";
 NSString* const MHGDefaultWorkspacePath					= @"DefaultWorkspacePath";
 NSString* const MHGDisplayFileIconsInBrowser			= @"DisplayFileIconsInBrowser";
 NSString* const MHGDisplayResultsOfAddRemoveRenameFiles	= @"DisplayResultsOfAddRemoveRenameFiles";
@@ -212,7 +212,7 @@ BrowserDoubleClickAction browserBehaviourDoubleClick()				{ return enumFromDefau
 BrowserDoubleClickAction browserBehaviourOptionDoubleClick()		{ return enumFromDefaultsForKey(MHGBrowserBehaviourOptionDoubleClick); }
 AfterMergeDoOption			AfterMergeDoFromDefaults()				{ return enumFromDefaultsForKey(MHGAfterMergeDo); }
 AfterMergeSwitchToOption	AfterMergeSwitchToFromDefaults()		{ return enumFromDefaultsForKey(MHGAfterMergeSwitchTo); }
-DefaultRevisionSortOrderOption DefaultRevisionSortOrderFromDefaults() { return enumFromDefaultsForKey(MHGDefaultRevisionSortOrder); }
+RevisionSortOrderOption		RevisionSortOrderFromDefaults()			{ return enumFromDefaultsForKey(MHGRevisionSortOrder); }
 HandleCommandDefaultsOption	HandleCommandDefaultsFromDefaults()		{ return enumFromDefaultsForKey(MHGHandleCommandDefaults); }
 HandleOrigFilesOption		HandleGeneratedOrigFilesFromDefaults()	{ return enumFromDefaultsForKey(MHGHandleGeneratedOrigFiles); }
 OnStartupOpenWhatOption		OnStartupOpenFromDefaults()				{ return enumFromDefaultsForKey(MHGOnStartupOpen); }

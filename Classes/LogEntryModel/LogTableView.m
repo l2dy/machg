@@ -24,11 +24,14 @@ const NSInteger MaxNumberOfDetailedEntriesToShow = 10;
 NSString* kKeyPathTagHighColor		= @"values.LogEntryTableTagHighlightColor";
 NSString* kKeyPathParentHighColor	= @"values.LogEntryTableParentHighlightColor";
 NSString* kKeyPathBranchHighColor	= @"values.LogEntryTableBranchHighlightColor";
-NSString* kKeyPathBookmarkHighColor = @"values.LogEntryTableBookmarkHighlightColor";
+NSString* kKeyPathBookmarkHighColor	= @"values.LogEntryTableBookmarkHighlightColor";
+NSString* kKeyPathRevisionSortOrder	= @"values.RevisionSortOrder";
 
 
 @interface LogTableView (PrivateAPI)
 - (LowHighPair) logGraphLimits;
+- (void)		resortTable;
+- (BOOL)		sortRevisionOrder;
 @end
 
 
@@ -73,7 +76,7 @@ NSString* kKeyPathBookmarkHighColor = @"values.LogEntryTableBookmarkHighlightCol
 {
 	[self observe:kRepositoryDataIsNew		from:[self myDocument]  byCalling:@selector(repositoryDataIsNew)];
 	[self observe:kRepositoryDataDidChange	from:[self myDocument]  byCalling:@selector(resetTable:)];
-	[self observe:kLogEntriesDidChange			from:[self myDocument]  byCalling:@selector(logEntriesDidChange:)];
+	[self observe:kLogEntriesDidChange		from:[self myDocument]  byCalling:@selector(logEntriesDidChange:)];
 	queueForDetailedEntryDisplay_ = [SingleTimedQueue SingleTimedQueueExecutingOn:globalQueue() withTimeDelay:0.10 descriptiveName:@"queueForDetailedEntryDisplay"];	// Our display of the detailed entry information will occur after 0.10 seconds
 
 	// Bind the show / hide of the column to the preferences LogEntryTableDisplayChangesetColumn which is bound to a checkbox in the prefs.
@@ -87,6 +90,7 @@ NSString* kKeyPathBookmarkHighColor = @"values.LogEntryTableBookmarkHighlightCol
 	[defaults  addObserver:self  forKeyPath:kKeyPathParentHighColor		options:NSKeyValueObservingOptionNew  context:NULL];
 	[defaults  addObserver:self  forKeyPath:kKeyPathBranchHighColor		options:NSKeyValueObservingOptionNew  context:NULL];
 	[defaults  addObserver:self  forKeyPath:kKeyPathBookmarkHighColor	options:NSKeyValueObservingOptionNew  context:NULL];
+	[defaults  addObserver:self  forKeyPath:kKeyPathRevisionSortOrder	options:NSKeyValueObservingOptionNew  context:NULL];
 
 	[self setDataSource:self];
 	[self setDelegate:self];		// This table handles its own delegate methods
@@ -145,6 +149,8 @@ NSString* kKeyPathBookmarkHighColor = @"values.LogEntryTableBookmarkHighlightCol
 {
     if ([keyPath isEqualToString:kKeyPathTagHighColor] || [keyPath isEqualToString:kKeyPathParentHighColor] || [keyPath isEqualToString:kKeyPathBranchHighColor] || [keyPath isEqualToString:kKeyPathBookmarkHighColor])
 		[self refreshTable:self];
+	if ([keyPath isEqualToString:kKeyPathRevisionSortOrder])
+		[self resortTable];
 }
 
 
@@ -578,6 +584,15 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 		[super selectRowIndexes:indexes byExtendingSelection:extend]; });
 }
 
+- (void)tableView:(NSTableView*)tableView didClickTableColumn:(NSTableColumn*)tableColumn
+{
+	if (tableColumn && [[tableColumn identifier] isEqualToString:@"revision"])
+	{
+		RevisionSortOrderOption newOrder = [self sortRevisionOrder] ? eSortRevisionsDescending : eSortRevisionsAscending; 
+		[[NSUserDefaults standardUserDefaults] setInteger:newOrder forKey:MHGRevisionSortOrder];
+	}
+}
+
 
 
 
@@ -587,35 +602,30 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 // MARK: Sorting
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BOOL) sortRevisionOrder
-{
-	@try
-	{
-		NSArray* newDescriptors = [self sortDescriptors];
-		if (IsNotEmpty(newDescriptors))
-			for (NSSortDescriptor* descriptor in newDescriptors)
-				if ([[descriptor key] isEqualToString:@"revision"])
-					return [descriptor ascending];
+- (BOOL) sortRevisionOrder	{ return RevisionSortOrderFromDefaults() == eSortRevisionsAscending; }
 
-		DefaultRevisionSortOrderOption defaultOrder = DefaultRevisionSortOrderFromDefaults();
-		return (eSortRevisionsAscending == defaultOrder);
-	}
-	@catch (NSException* ne) { return YES; }
-	return YES;
-}
-
-- (NSArray*) sortTableRowsAccordingToDescriptors:(NSArray*)newTableRows
+- (NSArray*) sortTableRowsAccordingToSortOrder:(NSArray*)newTableRows
 {
 	ComparitorFunction func = [self sortRevisionOrder] ? sortIntsAscending : sortIntsDescending;
 	return [NSMutableArray arrayWithArray:[newTableRows sortedArrayUsingFunction:func context:NULL]];
 }
 
-- (void) tableView:(NSTableView*)aTableView sortDescriptorsDidChange:(NSArray*)oldDescriptors
+- (void) setSortDescriptorsAccordingToDefaults
+{
+	NSSortDescriptor* descriptor = [NSSortDescriptor sortDescriptorWithKey:@"revision" ascending:[self sortRevisionOrder] comparator:^(id obj1, id obj2) {
+		if ([obj1 integerValue] > [obj2 integerValue])	return (NSComparisonResult)NSOrderedDescending;
+		if ([obj1 integerValue] < [obj2 integerValue])	return (NSComparisonResult)NSOrderedAscending;
+		return (NSComparisonResult)NSOrderedSame;}];
+	[self setSortDescriptors:[NSArray arrayWithObject:descriptor]];
+}
+
+- (void) resortTable
 {
 	NSString* selectedRev = [self selectedRevision];
-	theTableRows_ = [self sortTableRowsAccordingToDescriptors:theTableRows_];
+	[self setSortDescriptorsAccordingToDefaults];
+	theTableRows_ = [self sortTableRowsAccordingToSortOrder:theTableRows_];
 	[self scrollToRevision:selectedRev];
-	[aTableView reloadData];
+	[self reloadData];
 }
 
 
@@ -714,8 +724,9 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 			for (int tableRow = 0; tableRow < numberOfRevisions + 1; tableRow++)  // We go from 0 to numberOfRevisions so need +1 here.
 				[newTableRows addObject:intAsString(tableRow)];
 		}
-			
-		theTableRows_ = [self sortTableRowsAccordingToDescriptors:newTableRows];
+
+		[self setSortDescriptorsAccordingToDefaults];
+		theTableRows_ = [self sortTableRowsAccordingToSortOrder:newTableRows];
 		[self setNumberOfTableRows:[theTableRows_ count]];
 
 		theLogGraph_ = [[LogGraph alloc] initWithRepositoryData:repositoryData andOldCollection: oldRepositoryData_];

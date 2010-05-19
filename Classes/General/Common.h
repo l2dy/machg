@@ -142,7 +142,7 @@ typedef enum
 {
 	eSortRevisionsAscending	 = 0,
 	eSortRevisionsDescending = 1
-} DefaultRevisionSortOrderOption;
+} RevisionSortOrderOption;
 
 typedef enum
 {
@@ -335,7 +335,7 @@ extern NSString* const MHGDefaultAnnotationOptionNumber;
 extern NSString* const MHGDefaultAnnotationOptionText;
 extern NSString* const MHGDefaultAnnotationOptionUser;
 extern NSString* const MHGDefaultHGIgnoreContents;
-extern NSString* const MHGDefaultRevisionSortOrder;
+extern NSString* const MHGRevisionSortOrder;
 extern NSString* const MHGDefaultWorkspacePath;
 extern NSString* const MHGDisplayFileIconsInBrowser;
 extern NSString* const MHGDisplayResultsOfAddRemoveRenameFiles;
@@ -455,7 +455,7 @@ NSColor*	LogEntryTableBookmarkHighlightColor();
 
 AfterMergeDoOption				AfterMergeDoFromDefaults();
 AfterMergeSwitchToOption		AfterMergeSwitchToFromDefaults();
-DefaultRevisionSortOrderOption	DefaultRevisionSortOrderFromDefaults();
+RevisionSortOrderOption			RevisionSortOrderFromDefaults();
 HandleCommandDefaultsOption		HandleCommandDefaultsFromDefaults();
 HandleOrigFilesOption			HandleGeneratedOrigFilesFromDefaults();
 OnStartupOpenWhatOption			OnStartupOpenFromDefaults();
@@ -476,9 +476,9 @@ BrowserDoubleClickAction		browserBehaviourCommandOptionDoubleClick();
 // MARK: Globals
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-extern NSNumber*			NOasNumber;
-extern NSNumber*			YESasNumber;
-extern NSNumber*			SlotNumber;
+extern NSNumber*		NOasNumber;
+extern NSNumber*		YESasNumber;
+extern NSNumber*		SlotNumber;
 
 
 // Font Attributes
@@ -518,12 +518,13 @@ static inline void dispatchGroupFinish(dispatch_group_t group)						{ dispatch_r
 void dispatchWithTimeOut(dispatch_queue_t q, NSTimeInterval t, BlockProcess theBlock);
 void dispatchWithTimeOutBlock(dispatch_queue_t q, NSTimeInterval t, BlockProcess mainBlock, BlockProcess timeoutBlock);
 
-static inline void dispatchSpliced(dispatch_queue_t q, BlockProcess theBlock)		{
-																						if (dispatch_get_current_queue() != q)
-																							dispatch_sync(q, theBlock);
-																						else
-																							theBlock();
-																					}
+static inline void dispatchSpliced(dispatch_queue_t q, BlockProcess theBlock)
+{
+	if (dispatch_get_current_queue() != q)
+		dispatch_sync(q, theBlock);
+	else
+		theBlock();
+}
 
 static inline void NoAnimationBlock(BlockProcess theBlock)
 {

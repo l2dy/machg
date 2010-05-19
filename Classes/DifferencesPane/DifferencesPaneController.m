@@ -69,8 +69,10 @@
 	NSString* fileName = [myDocument documentNameForAutosave];
 	[baseLogTableView setAutosaveTableColumns:YES];
 	[baseLogTableView setAutosaveName:[NSString stringWithFormat:@"File:%@:DifferencesBaseTableViewColumnPositions", fileName]];
+	[baseLogTableView reloadData];
 	[compareLogTableView setAutosaveTableColumns:YES];
 	[compareLogTableView setAutosaveName:[NSString stringWithFormat:@"File:%@:DifferencesCompareTableViewColumnPositions", fileName]];
+	[compareLogTableView reloadData];
 	
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	if (rootPath)
