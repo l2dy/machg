@@ -15,6 +15,8 @@
 #import "ConnectionValidationController.h"
 #import "AppController.h"
 #import "SingleTimedQueue.h"
+#import "ShellHere.h"
+
 
 static NSString* kMacHgApp		= @"MacHgApp";
 
@@ -26,10 +28,7 @@ static NSString* kMacHgApp		= @"MacHgApp";
 @synthesize showRealPassword	= showRealPassword_;
 
 
-- (void) awakeFromNib
-{
-	timeoutQueueForSecurity_ = [SingleTimedQueue SingleTimedQueueExecutingOn:globalQueue() withTimeDelay:60.0 descriptiveName:@"queueForSecurityTimeout"];	// Our security details will timeout in 60 seconds
-}
+
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -78,16 +77,19 @@ static NSString* kMacHgApp		= @"MacHgApp";
 }
 
 
-const char* macHgAuth = "com.jasonfharris.machg.viewpasswords";
 
-- (IBAction) authorize:(id)sender
+- (BOOL) authorizeForShowingPassword;
 {
+	const char* macHgAuth = "com.jasonfharris.machg.viewpasswords";
+	static SingleTimedQueue* timeoutQueueForSecurity_ = NULL;
+	if (!timeoutQueueForSecurity_)
+		timeoutQueueForSecurity_ = [SingleTimedQueue SingleTimedQueueExecutingOn:globalQueue() withTimeDelay:60.0 descriptiveName:@"queueForSecurityTimeout"];	// Our security details will timeout in 60 seconds
+	
 	AuthorizationRef myAuthorizationRef;
 	OSStatus myStatus;
 	myStatus = AuthorizationCreate (NULL, kAuthorizationEmptyEnvironment, kAuthorizationFlagDefaults, &myAuthorizationRef);
 	
 	AuthorizationItem myItems[1];
-	
 	myItems[0].name = macHgAuth;
 	myItems[0].valueLength = 0;
 	myItems[0].value = NULL;
@@ -96,20 +98,25 @@ const char* macHgAuth = "com.jasonfharris.machg.viewpasswords";
 	AuthorizationRights myRights;
 	myRights.count = sizeof (myItems) / sizeof (myItems[0]);
 	myRights.items = myItems;
-	
-	
+		
 	AuthorizationFlags myFlags = kAuthorizationFlagDefaults | kAuthorizationFlagInteractionAllowed | kAuthorizationFlagExtendRights;
 	
 	myStatus = AuthorizationCopyRights (myAuthorizationRef, &myRights, kAuthorizationEmptyEnvironment, myFlags, NULL);
 
+	// We timeout after 60 seconds if we don't use show the password again
 	[timeoutQueueForSecurity_ addBlockOperation:^{
 		AuthorizationFree(myAuthorizationRef, kAuthorizationFlagDestroyRights);
 	}];
-	DebugLog(@"%d", myStatus);
+	return myStatus == noErr;
 }
 
+
+
+
+
 // -----------------------------------------------------------------------------------------------------------------------------------------
-//  Actions AddRepository   --------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Sheet Opening
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (void) openSheetForNewRepositoryRef
@@ -159,6 +166,28 @@ const char* macHgAuth = "com.jasonfharris.machg.viewpasswords";
 	[okButton setTitle:@"Configure Server"];
 	[self validateButtons:self];
 	[NSApp beginSheet:theWindow modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+//  Actions AddRepository   --------------------------------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (IBAction) testConnectionInTerminal:(id)sender;
+{
+	if (![self authorizeForShowingPassword])
+		return;
+	NSString* setLocalHgCommand = fstr(@"LOCALHG='%@'",executableLocationHG());
+	NSString* fullServerURL = FullServerURL(serverFieldValue_, needsPassword_, password_);
+	NSMutableArray* argsIdentify = [NSMutableArray arrayWithObjects:@"identify", @"--rev", @"0", fullServerURL, nil];
+	NSMutableArray* newArgs = [TaskExecutions preProcessMercurialCommandArgs:argsIdentify fromRoot:@"/tmp"];
+	[newArgs insertObject:@"$LOCALHG" atIndex:0];
+	NSString* identityCommand = [newArgs componentsJoinedByString:@" "];
+	NSArray* commands = [NSArray arrayWithObjects:setLocalHgCommand, identityCommand, nil]; 
+	DoCommandsInTerminalAt(commands, @"/tmp");
 }
 
 
