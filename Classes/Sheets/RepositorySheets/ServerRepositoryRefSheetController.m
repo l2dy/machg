@@ -98,10 +98,18 @@ static NSString* kMacHgApp		= @"MacHgApp";
 	AuthorizationRights myRights;
 	myRights.count = sizeof (myItems) / sizeof (myItems[0]);
 	myRights.items = myItems;
-		
+
+	const char* cPrompt = [@"Administrative access is needed to expose the server password:\n\n" UTF8String];
+	AuthorizationItem envItems[1];
+    envItems[0].name = kAuthorizationEnvironmentPrompt;
+    envItems[0].value = (void*)cPrompt;
+    envItems[0].valueLength = strlen(cPrompt);
+    envItems[0].flags = 0;
+	AuthorizationItemSet environment = { 1, envItems };
+	
 	AuthorizationFlags myFlags = kAuthorizationFlagDefaults | kAuthorizationFlagInteractionAllowed | kAuthorizationFlagExtendRights;
 	
-	myStatus = AuthorizationCopyRights (myAuthorizationRef, &myRights, kAuthorizationEmptyEnvironment, myFlags, NULL);
+	myStatus = AuthorizationCopyRights (myAuthorizationRef, &myRights, &environment, myFlags, NULL);
 
 	// We timeout after 60 seconds if we don't use show the password again
 	[timeoutQueueForSecurity_ addBlockOperation:^{
