@@ -204,7 +204,7 @@ static NSString* kMacHgApp		= @"MacHgApp";
 
 - (IBAction) testConnectionInTerminal:(id)sender
 {
-	if (![self authorizeForShowingPassword])
+	if (needsPassword_ && ![self authorizeForShowingPassword])
 		return;
 	NSString* setLocalHgCommand = fstr(@"LOCALHG='%@'",executableLocationHG());
 	NSString* fullServerURL = FullServerURL(serverFieldValue_, needsPassword_, password_);
