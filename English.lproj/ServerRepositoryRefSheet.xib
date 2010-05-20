@@ -409,18 +409,18 @@
 								</array>
 							</object>
 						</object>
-						<object class="NSTextField" id="594353485">
+						<object class="NSTextField" id="628671480">
 							<reference key="NSNextResponder" ref="250803238"/>
 							<int key="NSvFlags">266</int>
 							<string key="NSFrame">{{239, 59}, {389, 22}}</string>
 							<reference key="NSSuperview" ref="250803238"/>
 							<bool key="NSEnabled">YES</bool>
-							<object class="NSTextFieldCell" key="NSCell" id="1058687796">
+							<object class="NSTextFieldCell" key="NSCell" id="579478425">
 								<int key="NSCellFlags">-1803944383</int>
 								<int key="NSCellFlags2">272630784</int>
 								<string key="NSContents"/>
 								<reference key="NSSupport" ref="879497694"/>
-								<reference key="NSControlView" ref="594353485"/>
+								<reference key="NSControlView" ref="628671480"/>
 								<bool key="NSDrawsBackground">YES</bool>
 								<reference key="NSBackgroundColor" ref="788587792"/>
 								<reference key="NSTextColor" ref="21086600"/>
@@ -470,18 +470,18 @@
 								<int key="NSPeriodicInterval">75</int>
 							</object>
 						</object>
-						<object class="NSTextField" id="569680807">
+						<object class="NSTextField" id="738910475">
 							<reference key="NSNextResponder" ref="250803238"/>
 							<int key="NSvFlags">268</int>
 							<string key="NSFrame">{{301, 162}, {243, 17}}</string>
 							<reference key="NSSuperview" ref="250803238"/>
 							<bool key="NSEnabled">YES</bool>
-							<object class="NSTextFieldCell" key="NSCell" id="882968495">
+							<object class="NSTextFieldCell" key="NSCell" id="317153207">
 								<int key="NSCellFlags">68288064</int>
 								<int key="NSCellFlags2">272630784</int>
 								<string key="NSContents">Label</string>
 								<reference key="NSSupport" ref="879497694"/>
-								<reference key="NSControlView" ref="569680807"/>
+								<reference key="NSControlView" ref="738910475"/>
 								<reference key="NSBackgroundColor" ref="284772987"/>
 								<reference key="NSTextColor" ref="281321110"/>
 							</object>
@@ -676,7 +676,7 @@
 						<string key="label">hidden: needsPassword</string>
 						<reference key="source" ref="494610969"/>
 						<reference key="destination" ref="1001"/>
-						<object class="NSNibBindingConnector" key="connector" id="576425327">
+						<object class="NSNibBindingConnector" key="connector" id="261172231">
 							<reference key="NSSource" ref="494610969"/>
 							<reference key="NSDestination" ref="1001"/>
 							<string key="NSLabel">hidden: needsPassword</string>
@@ -748,22 +748,6 @@
 					<int key="connectionID">445</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: showRealPassword</string>
-						<reference key="source" ref="980234671"/>
-						<reference key="destination" ref="1001"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="980234671"/>
-							<reference key="NSDestination" ref="1001"/>
-							<string key="NSLabel">value: showRealPassword</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">showRealPassword</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">446</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">passwordTextField</string>
 						<reference key="source" ref="271946156"/>
@@ -806,10 +790,10 @@
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
 						<string key="label">hidden: needsPassword</string>
-						<reference key="source" ref="594353485"/>
+						<reference key="source" ref="628671480"/>
 						<reference key="destination" ref="1001"/>
-						<object class="NSNibBindingConnector" key="connector" id="102819902">
-							<reference key="NSSource" ref="594353485"/>
+						<object class="NSNibBindingConnector" key="connector" id="612177111">
+							<reference key="NSSource" ref="628671480"/>
 							<reference key="NSDestination" ref="1001"/>
 							<string key="NSLabel">hidden: needsPassword</string>
 							<string key="NSBinding">hidden</string>
@@ -826,10 +810,10 @@
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
 						<string key="label">hidden2: showRealPassword</string>
-						<reference key="source" ref="594353485"/>
+						<reference key="source" ref="628671480"/>
 						<reference key="destination" ref="1001"/>
 						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="594353485"/>
+							<reference key="NSSource" ref="628671480"/>
 							<reference key="NSDestination" ref="1001"/>
 							<string key="NSLabel">hidden2: showRealPassword</string>
 							<string key="NSBinding">hidden2</string>
@@ -841,7 +825,7 @@
 								<integer value="-1" key="NSNullPlaceholder"/>
 								<string key="NSValueTransformerName">NSNegateBoolean</string>
 							</dictionary>
-							<reference key="NSPreviousConnector" ref="102819902"/>
+							<reference key="NSPreviousConnector" ref="612177111"/>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
@@ -864,7 +848,7 @@
 								<integer value="-1" key="NSNotApplicablePlaceholder"/>
 								<integer value="-1" key="NSNullPlaceholder"/>
 							</dictionary>
-							<reference key="NSPreviousConnector" ref="576425327"/>
+							<reference key="NSPreviousConnector" ref="261172231"/>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
@@ -873,10 +857,10 @@
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
 						<string key="label">value: password</string>
-						<reference key="source" ref="569680807"/>
+						<reference key="source" ref="738910475"/>
 						<reference key="destination" ref="1001"/>
 						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="569680807"/>
+							<reference key="NSSource" ref="738910475"/>
 							<reference key="NSDestination" ref="1001"/>
 							<string key="NSLabel">value: password</string>
 							<string key="NSBinding">value</string>
@@ -889,10 +873,10 @@
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
 						<string key="label">value: password</string>
-						<reference key="source" ref="594353485"/>
+						<reference key="source" ref="628671480"/>
 						<reference key="destination" ref="1001"/>
 						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="594353485"/>
+							<reference key="NSSource" ref="628671480"/>
 							<reference key="NSDestination" ref="1001"/>
 							<string key="NSLabel">value: password</string>
 							<string key="NSBinding">value</string>
@@ -930,7 +914,7 @@
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">theUnsecurePasswordTextField</string>
 						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="594353485"/>
+						<reference key="destination" ref="628671480"/>
 					</object>
 					<int key="connectionID">474</int>
 				</object>
@@ -941,6 +925,14 @@
 						<reference key="destination" ref="980234671"/>
 					</object>
 					<int key="connectionID">475</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">toggleShowPassword:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="980234671"/>
+					</object>
+					<int key="connectionID">476</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1005,8 +997,8 @@
 							<reference ref="494610969"/>
 							<reference ref="980234671"/>
 							<reference ref="66085599"/>
-							<reference ref="594353485"/>
-							<reference ref="569680807"/>
+							<reference ref="628671480"/>
+							<reference ref="738910475"/>
 						</array>
 						<reference key="parent" ref="530833982"/>
 					</object>
@@ -1252,30 +1244,30 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">459</int>
-						<reference key="object" ref="594353485"/>
+						<reference key="object" ref="628671480"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="1058687796"/>
+							<reference ref="579478425"/>
 						</array>
 						<reference key="parent" ref="250803238"/>
 						<string key="objectName">UnsecurePassword</string>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">460</int>
-						<reference key="object" ref="1058687796"/>
-						<reference key="parent" ref="594353485"/>
+						<reference key="object" ref="579478425"/>
+						<reference key="parent" ref="628671480"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">469</int>
-						<reference key="object" ref="569680807"/>
+						<reference key="object" ref="738910475"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="882968495"/>
+							<reference ref="317153207"/>
 						</array>
 						<reference key="parent" ref="250803238"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">470</int>
-						<reference key="object" ref="882968495"/>
-						<reference key="parent" ref="569680807"/>
+						<reference key="object" ref="317153207"/>
+						<reference key="parent" ref="738910475"/>
 					</object>
 				</array>
 			</object>
@@ -1342,8 +1334,24 @@
 				<string key="427.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="428.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="429.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<object class="NSMutableDictionary" key="438.IBAttributePlaceholdersKey">
+					<string key="NS.key.0">ToolTip</string>
+					<object class="IBToolTipAttribute" key="NS.object.0">
+						<string key="name">ToolTip</string>
+						<reference key="object" ref="980234671"/>
+						<string key="toolTip">Show the password</string>
+					</object>
+				</object>
 				<string key="438.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="439.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<object class="NSMutableDictionary" key="440.IBAttributePlaceholdersKey">
+					<string key="NS.key.0">ToolTip</string>
+					<object class="IBToolTipAttribute" key="NS.object.0">
+						<string key="name">ToolTip</string>
+						<reference key="object" ref="66085599"/>
+						<string key="toolTip">Test the server URL in the terminal</string>
+					</object>
+				</object>
 				<string key="440.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="441.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="459.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1355,7 +1363,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">475</int>
+			<int key="maxID">476</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1414,6 +1422,7 @@
 						<string key="sheetButtonCancel:">id</string>
 						<string key="sheetButtonOk:">id</string>
 						<string key="testConnectionInTerminal:">id</string>
+						<string key="toggleShowPassword:">id</string>
 						<string key="validateButtons:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">

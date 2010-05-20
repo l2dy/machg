@@ -25,7 +25,6 @@ static NSString* kMacHgApp		= @"MacHgApp";
 @synthesize serverFieldValue    = serverFieldValue_;
 @synthesize password			= password_;
 @synthesize needsPassword		= needsPassword_;
-@synthesize showRealPassword	= showRealPassword_;
 
 
 
@@ -114,8 +113,22 @@ static NSString* kMacHgApp		= @"MacHgApp";
 	// We timeout after 60 seconds if we don't use show the password again
 	[timeoutQueueForSecurity_ addBlockOperation:^{
 		AuthorizationFree(myAuthorizationRef, kAuthorizationFlagDestroyRights);
+		[self setShowRealPassword:NO];
 	}];
 	return myStatus == noErr;
+}
+
+
+- (BOOL) showRealPassword	{ return showRealPassword_; }
+- (void) setShowRealPassword:(BOOL)val
+{
+	if (val != showRealPassword_)
+	{
+		[self willChangeValueForKey:@"showRealPassword"];
+		showRealPassword_ = val;
+		[self didChangeValueForKey:@"showRealPassword"];
+	}
+	[showPasswordButton setState:val];
 }
 
 
@@ -132,7 +145,7 @@ static NSString* kMacHgApp		= @"MacHgApp";
 	[self clearSheetFieldValues];
 	[self setNeedsPassword:NO];
 	[self setPassword:@""];
-	[showPasswordButton setState:NSOnState];
+	[self setShowRealPassword:YES];
 
 	nodeToConfigure = nil;
 	passwordKeyChainItem_ = nil;
@@ -165,12 +178,13 @@ static NSString* kMacHgApp		= @"MacHgApp";
 	{
 		passwordKeyChainItem_ = [EMGenericKeychainItem genericKeychainItemForService:kMacHgApp withUsername:[node path]];
 		[self setPassword:passwordKeyChainItem_.password];
+		[self setShowRealPassword:NO];
 	}
 	else
 	{
 		passwordKeyChainItem_ = nil;
 		[self setPassword:@""];
-		[showPasswordButton setState:NSOnState];
+		[self setShowRealPassword:YES];
 	}
 
 	[theTitleText setStringValue:@"Configure Server Repository"];
@@ -184,7 +198,8 @@ static NSString* kMacHgApp		= @"MacHgApp";
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
-//  Actions AddRepository   --------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Actions AddRepository
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (IBAction) testConnectionInTerminal:(id)sender
@@ -204,18 +219,19 @@ static NSString* kMacHgApp		= @"MacHgApp";
 
 - (IBAction) toggleShowPassword:(id)sender
 {
-	if ([showPasswordButton state] == NSOnState)
+	if ([self showRealPassword] == YES)
 	{
 		[self setShowRealPassword:NO];
-		[showPasswordButton setState:NSOffState];
+		return;
 	}
-	if ([showPasswordButton state] == NSOffState)
+
+	if (![self authorizeForShowingPassword])
 	{
-		if (![self authorizeForShowingPassword])
-			return;
-		[self setShowRealPassword:NO];		
-		[showPasswordButton setState:NSOnState];
+		[showPasswordButton setState:NSOffState];
+		return;
 	}
+
+	[self setShowRealPassword:YES];
 }
 
 

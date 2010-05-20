@@ -37,23 +37,29 @@
 @property (readwrite,assign) NSString*	  serverFieldValue;
 @property (readwrite,assign) NSString*	  password;
 @property (readwrite,assign) BOOL		  needsPassword;
-@property (readwrite,assign) BOOL		  showRealPassword;
 
+
+- (BOOL) showRealPassword;
+- (void) setShowRealPassword:(BOOL)val;		// Setting this enables / disables the show password button
+
+
+// Initilization
 - (ServerRepositoryRefSheetController*) initServerRepositoryRefSheetControllerWithDocument:(MacHgDocument*)doc;
 
-- (IBAction) validateButtons:(id)sender;
-- (IBAction) sheetButtonOk:(id)sender;
-- (IBAction) sheetButtonCancel:(id)sender;
-- (IBAction) testConnectionInTerminal:(id)sender;
 
-
+// Sheet opening
 - (void)	openSheetForNewRepositoryRef;
 - (void)	openSheetForConfigureRepositoryRef:(SidebarNode*)node;
 
 
+// Actions
+- (IBAction) validateButtons:(id)sender;
+- (IBAction) sheetButtonOk:(id)sender;
+- (IBAction) sheetButtonCancel:(id)sender;
+- (IBAction) testConnectionInTerminal:(id)sender;
+- (IBAction) toggleShowPassword:(id)sender;
+
 // Delegate Methods for text fields
 - (void)	 controlTextDidChange:(NSNotification*)aNotification;
-
-
 
 @end
