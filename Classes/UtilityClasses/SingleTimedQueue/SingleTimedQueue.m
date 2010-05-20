@@ -59,6 +59,14 @@
 	suspended_ = YES;
 }
 
+- (void) resetTimer
+{
+	[timer_ invalidate];	
+	if (!suspended_)
+		dispatchSpliced(mainQueue(), ^{
+			timer_ = [NSTimer scheduledTimerWithTimeInterval:delay_ target:self selector:@selector(executeTheBlock:) userInfo:nil repeats:NO];
+		});	
+}
 
 // I would like to have the resumeQueue actually call executeTheBlock and do the dispatch_async(dispatchQueue_, block_), but
 // strangely this is always locking up in an internal call to _dispatch_Block_copy and I don't know why. So for now just delete

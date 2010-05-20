@@ -38,6 +38,7 @@
 - (void) invalidateBlocksOnQueue;
 - (void) suspendQueue;
 - (void) resumeQueue;
+- (void) resetTimer;
 - (BOOL) operationQueued;
 
 
