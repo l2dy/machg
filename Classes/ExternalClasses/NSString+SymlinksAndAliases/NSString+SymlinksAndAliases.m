@@ -99,9 +99,9 @@
 			//
 			NSString* symlinkPath = [path stringByConditionallyResolvingSymlink];
 			if (!symlinkPath)
-			{
 				return nil;
-			}
+			if (path == symlinkPath)
+				return path;
 			path = symlinkPath;
 		}
 		else
@@ -112,8 +112,7 @@
 		//
 		// Use lstat to determine if the file is a symlink
 		//
-		if (lstat([[NSFileManager defaultManager]
-			fileSystemRepresentationWithPath:path], &fileInfo) < 0)
+		if (lstat([[NSFileManager defaultManager] fileSystemRepresentationWithPath:path], &fileInfo) < 0)
 		{
 			path = nil;
 			continue;
