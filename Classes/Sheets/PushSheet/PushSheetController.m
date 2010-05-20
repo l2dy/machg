@@ -124,7 +124,7 @@
 		[opt addOptionToArgs:argsPush];
 	if (allowOperationWithAnyRepository_ || [forceOption optionIsSet])
 			[argsPush addObject:@"--force"];
-	[argsPush addObject:[pushDestination path]];
+	[argsPush addObject:[pushDestination fullURLPath]];
 	
 	// Execute the push command
 	[myDocument dispatchToMercurialQueuedWithDescription:@"Pushing Changesets" process:^{

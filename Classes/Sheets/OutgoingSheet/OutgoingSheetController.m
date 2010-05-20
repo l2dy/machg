@@ -121,7 +121,7 @@
 		[opt addOptionToArgs:argsOutgoing];
 	if (allowOperationWithAnyRepository_ || [forceOption optionIsSet])
 		[argsOutgoing addObject:@"--force"];
-	[argsOutgoing addObject:[outgoingDestination path]];
+	[argsOutgoing addObject:[outgoingDestination fullURLPath]];
 	
 	// Execute the outgoing command
 	[myDocument dispatchToMercurialQueuedWithDescription:@"Outgoing Changesets" process:^{

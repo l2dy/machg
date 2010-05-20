@@ -152,7 +152,6 @@
 	[[theSidebar prepareUndoWithTarget:theSidebar] setRootAndUpdate:[[theSidebar root] copyNodeTree]];
 	[[theSidebar undoManager] setActionName: @"Clone Repository"];
 
-	NSString* sourcePath  = [sourceNode_ path];
 	NSString* sourceName  = [sourceNode_ shortName];
 	NSString* destinationName  = [shortNameFieldValue_ copy];
 	NSString* destinationPath  = [pathFieldValue_ copy];
@@ -167,7 +166,7 @@
 		for (NSString* rev in revs)
 			[argsClone addObject:@"--rev" followedBy:rev];
 	}
-	[argsClone addObject:sourcePath followedBy:destinationPath];
+	[argsClone addObject:[sourceNode_ fullURLPath] followedBy:destinationPath];
 	
 	[self setConnectionFromFieldsForSource:sourceNode_];		// Cache advanced option settings for this source.
 

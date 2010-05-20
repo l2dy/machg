@@ -121,7 +121,7 @@
 		[opt addOptionToArgs:argsPull];
 	if (allowOperationWithAnyRepository_ || [forceOption optionIsSet])
 		[argsPull addObject:@"--force"];
-	[argsPull addObject:[pullSource path]];
+	[argsPull addObject:[pullSource fullURLPath]];
 	
 	// Execute the pull command
 	[myDocument dispatchToMercurialQueuedWithDescription:@"Pulling Changesets" process:^{

@@ -118,7 +118,7 @@
 		[opt addOptionToArgs:argsIncoming];
 	if (allowOperationWithAnyRepository_ || [forceOption optionIsSet])
 		[argsIncoming addObject:@"--force"];
-	[argsIncoming addObject:[incomingSource path]];
+	[argsIncoming addObject:[incomingSource fullURLPath]];
 	
 	// Execute the incoming command
 	[myDocument dispatchToMercurialQueuedWithDescription:@"Incoming Changesets" process:^{
