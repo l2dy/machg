@@ -11,6 +11,7 @@
 #import "TaskExecutions.h"
 #import "MacHgDocument.h"
 #import "SingleTimedQueue.h"
+#import "ServerRepositoryRefSheetController.h"
 
 @implementation ConnectionValidationController
 
@@ -77,7 +78,7 @@
 	// Once we are validating we try to validate during 20 seconds, upon doing the validation if our results are still relevant
 	// (ie another verification hasn't yet been requested) then we put up the success / fail of the validation. If we timed out
 	// and again our results are still relevant then we put up the failure of the validation.
-	if (IsNotEmpty([serverTextField stringValue]))
+	if (IsNotEmpty([theServerRefController serverFieldValue]))
 	{
 		NSInteger validationAttempt = [queueForConnectionValidation_ operationNumber] + 1;	// Once we add the next block operation, the operationNumber will be
 																							// incremented so + 1 will give the operationNumber we are just about to get...
@@ -87,7 +88,7 @@
 									 // Main Block
 									 ^{
 										 [self showValidationProgressIndicator];
-										 NSString* fullServerURL = FullServerURL([serverTextField stringValue], [hasPassword state], [passwordTextField stringValue]);
+										 NSString* fullServerURL = FullServerURL([theServerRefController serverFieldValue], [theServerRefController needsPassword], [theServerRefController password]);
 										 NSMutableArray* argsIdentify = [NSMutableArray arrayWithObjects:@"identify", @"--rev", @"0", fullServerURL, nil];
 										 ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsIdentify  fromRoot:@"/tmp"  logging:eLogAllToFile];
 										 

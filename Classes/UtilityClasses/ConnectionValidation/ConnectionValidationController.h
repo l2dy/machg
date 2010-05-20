@@ -15,10 +15,8 @@
 {
 	IBOutlet NSImageView*		repositoryConnectionStatusImage;
 	IBOutlet NSTextField*		repositoryConnectionStatusMessage;
-	IBOutlet NSTextField*		serverTextField;
-	IBOutlet NSTextField*		passwordTextField;
-	IBOutlet NSButton*			hasPassword;	
 	IBOutlet NSProgressIndicator* validationProgressIndicator;
+	IBOutlet ServerRepositoryRefSheetController* theServerRefController;
 
 	IBOutlet id <AccessesDocument> parentController;
 
