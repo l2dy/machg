@@ -13,7 +13,6 @@
 #import "TaskExecutions.h"
 #import "AppController.h"
 #import "NSString+SymlinksAndAliases.h"
-#import "EMKeychainItem.h"
 
 @implementation SidebarNode
 
@@ -200,8 +199,7 @@
 {
 	if (!hasPassword || ![self isServerRepositoryRef])
 		return path;	
-	EMGenericKeychainItem* passwordItem = [EMGenericKeychainItem genericKeychainItemForService:kMacHgApp withUsername:path];
-	return FullServerURL(path, YES, passwordItem.password);
+	return FullServerURL(path, YES);
 }
 
 
@@ -255,6 +253,14 @@
 			NSRunCriticalAlertPanel(@"Max Path Length exceeded", fstr(@"The maximum path length for the path to the repository root was exceeded. Functionality for this repository could be erratic. The path is", path), @"Ok", nil, nil);
 	}
 
+	if ([self isServerRepositoryRef] && path)
+	{
+		if (hasPassword)
+			[[[AppController sharedAppController] urlUsesPassword] addObject:path];
+		else
+			[[[AppController sharedAppController] urlUsesPassword] removeObject:path];		
+	}
+	
 	if ([self isRepositoryRef] && path)
 	{
 		NSString* repositoryIdentity = [coder decodeObjectForKey:@"repositoryIdentity"];

@@ -12,10 +12,9 @@
 #import "PreferenceController.h"
 #import "InitializationWizardController.h"
 #import "LogEntry.h"
-#import "EMKeychainItem.h"
 
 @implementation AppController
-
+@synthesize urlUsesPassword = urlUsesPassword_;
 
 
 
@@ -84,6 +83,7 @@
 	repositoryIdentityForPath_	        = [[NSMutableDictionary alloc]init];
 	computingRepositoryIdentityForPath_ = [[NSMutableDictionary alloc]init];
 	dirtyRepositoryIdentityForPath_     = [[NSMutableDictionary alloc]init];
+	urlUsesPassword_					= [[NSMutableSet alloc]init];
 	return self;
 }
 
@@ -440,6 +440,9 @@
 	if (!path)
 		return;
 	
+	if ([[self urlUsesPassword] containsObject:path])
+		path = FullServerURL(path, YES);
+
 	// If we are already computing the root changeset then don't compute it again
 	if ([computingRepositoryIdentityForPath_ synchronizedObjectForKey:path])
 		return;

@@ -32,14 +32,17 @@
 																		// Ie for /Users/jason/Development/MyProject the value might be 2e7ba9cebde9
 	NSMutableDictionary*		dirtyRepositoryIdentityForPath_;		// This dictionary contains the paths of repositories where we need to recompute
 																		// the root changesets
+	NSMutableSet*				urlUsesPassword_;						// If the url is in the set of url's that need a password then lookup
+																		// the password in the key chain.
 	NSMutableDictionary*		computingRepositoryIdentityForPath_;	// This dictionary contains the paths of the repositories we are
 																		// currently computing the changesets of.
 	NSTimer*					periodicCheckingForRepositoryIdentity;
 }
+@property (nonatomic, assign) NSMutableSet*	urlUsesPassword;
+
 
 + (AppController*)				sharedAppController;
 - (InitializationWizardController*) theInitilizationWizardController;
-
 
 // Initialization
 - (void)	  applicationDidFinishLaunching:(NSNotification*)aNotification;
