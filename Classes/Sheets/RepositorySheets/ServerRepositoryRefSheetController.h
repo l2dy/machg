@@ -15,10 +15,12 @@
 {
 	IBOutlet NSWindow*							theWindow;
 	IBOutlet NSButton*							okButton;
+	IBOutlet NSButton*							showPasswordButton;
 	IBOutlet ConnectionValidationController*	theConnectionValidationController;
 	IBOutlet NSTextField*						theTitleText;
 	IBOutlet NSTextField*						theServerTextField;
-	IBOutlet NSTextField*						thePasswordTextField;
+	IBOutlet NSTextField*						theSecurePasswordTextField;
+	IBOutlet NSTextField*						theUnsecurePasswordTextField;
 
 	
 	MacHgDocument*		myDocument;

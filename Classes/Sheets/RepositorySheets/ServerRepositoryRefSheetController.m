@@ -72,7 +72,7 @@ static NSString* kMacHgApp		= @"MacHgApp";
 {
 	BOOL valid = ([[self serverFieldValue] length] > 0) && ([[self shortNameFieldValue] length] > 0);
 	[okButton setEnabled:valid];
-	if (sender == theServerTextField || sender == self || sender == thePasswordTextField)
+	if (sender == theServerTextField || sender == self || sender == theSecurePasswordTextField || sender == theUnsecurePasswordTextField)
 		[theConnectionValidationController testConnection:sender];
 }
 
@@ -132,6 +132,8 @@ static NSString* kMacHgApp		= @"MacHgApp";
 	[self clearSheetFieldValues];
 	[self setNeedsPassword:NO];
 	[self setPassword:@""];
+	[showPasswordButton setState:NSOnState];
+
 	nodeToConfigure = nil;
 	passwordKeyChainItem_ = nil;
 	[theTitleText setStringValue:@"Add Server Repository"];
@@ -168,6 +170,7 @@ static NSString* kMacHgApp		= @"MacHgApp";
 	{
 		passwordKeyChainItem_ = nil;
 		[self setPassword:@""];
+		[showPasswordButton setState:NSOnState];
 	}
 
 	[theTitleText setStringValue:@"Configure Server Repository"];
@@ -184,7 +187,7 @@ static NSString* kMacHgApp		= @"MacHgApp";
 //  Actions AddRepository   --------------------------------------------------------------------------------------------------------
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (IBAction) testConnectionInTerminal:(id)sender;
+- (IBAction) testConnectionInTerminal:(id)sender
 {
 	if (![self authorizeForShowingPassword])
 		return;
@@ -196,6 +199,23 @@ static NSString* kMacHgApp		= @"MacHgApp";
 	NSString* identityCommand = [newArgs componentsJoinedByString:@" "];
 	NSArray* commands = [NSArray arrayWithObjects:setLocalHgCommand, identityCommand, nil]; 
 	DoCommandsInTerminalAt(commands, @"/tmp");
+}
+
+
+- (IBAction) toggleShowPassword:(id)sender
+{
+	if ([showPasswordButton state] == NSOnState)
+	{
+		[self setShowRealPassword:NO];
+		[showPasswordButton setState:NSOffState];
+	}
+	if ([showPasswordButton state] == NSOffState)
+	{
+		if (![self authorizeForShowingPassword])
+			return;
+		[self setShowRealPassword:NO];		
+		[showPasswordButton setState:NSOnState];
+	}
 }
 
 
