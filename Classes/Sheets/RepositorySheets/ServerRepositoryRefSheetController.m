@@ -215,7 +215,7 @@
 	if (needsPassword_ && ![self authorizeForShowingPassword])
 		return;
 	NSString* setLocalHgCommand = fstr(@"LOCALHG='%@'",executableLocationHG());
-	NSString* fullServerURL = FullServerURL(serverFieldValue_, needsPassword_, password_);
+	NSString* fullServerURL = FullServerURLWithPassword(serverFieldValue_, needsPassword_, password_);
 	NSMutableArray* argsIdentify = [NSMutableArray arrayWithObjects:@"identify", @"--rev", @"0", fullServerURL, nil];
 	NSMutableArray* newArgs = [TaskExecutions preProcessMercurialCommandArgs:argsIdentify fromRoot:@"/tmp"];
 	[newArgs insertObject:@"$LOCALHG" atIndex:0];

@@ -9,6 +9,7 @@
 
 #import "Common.h"
 #import "RegexKitLite.h"
+#import "EMKeychainItem.h"
 
 
 
@@ -482,7 +483,7 @@ NSArray* getListOfFilePathsFromOpenPanel(NSString* startingPath)
 
 
 
-NSString* FullServerURL(NSString* baseURL, BOOL usesPassword, NSString* password)
+NSString* FullServerURLWithPassword(NSString* baseURL, BOOL usesPassword, NSString* password)
 {
 	if (!usesPassword)
 		return baseURL;
@@ -502,6 +503,13 @@ NSString* FullServerURL(NSString* baseURL, BOOL usesPassword, NSString* password
 	return nil;
 }
 
+NSString*	FullServerURL(NSString* baseURL, BOOL usesPassword)
+{
+	if (!usesPassword)
+		return baseURL;
+	EMGenericKeychainItem* passwordItem = [EMGenericKeychainItem genericKeychainItemForService:kMacHgApp withUsername:baseURL];
+	return FullServerURLWithPassword(baseURL, YES, passwordItem.password);
+}
 
 
 

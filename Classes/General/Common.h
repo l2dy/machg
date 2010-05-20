@@ -585,7 +585,8 @@ NSArray*	pruneContainedPaths(NSArray* paths);
 // MARK:  URL operations
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-NSString*	FullServerURL(NSString* baseURL, BOOL usesPassword, NSString* password);
+NSString*	FullServerURLWithPassword(NSString* baseURL, BOOL usesPassword, NSString* password);	// Specify password (used during server configuration)
+NSString*	FullServerURL(NSString* baseURL, BOOL usesPassword);						// Use password from the keychain
 
 
 
