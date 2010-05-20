@@ -244,6 +244,7 @@ extern NSString* const kSidebarPBoardType;
 extern NSString* const kSidebarRootInitializationDummy;
 
 extern NSString* const kPatchesTablePBoardType;
+extern NSString* const kMacHgApp;
 
 
 

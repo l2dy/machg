@@ -22,6 +22,8 @@
 NSString* const kSidebarPBoardType						= @"SidebarNodePBoardType";
 NSString* const kSidebarRootInitializationDummy			= @"SidebarRootInitializationDummy";
 NSString* const kPatchesTablePBoardType					= @"PatchesTablePBoardType";
+NSString* const kMacHgApp								= @"MacHgApp";
+
 
 // Notifications
 NSString* const kRepositoryRootChanged					= @"RepositoryRootChanged";
