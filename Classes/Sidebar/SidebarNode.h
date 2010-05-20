@@ -82,6 +82,10 @@ typedef enum
 - (NSAttributedString*) attributedStringForNode;
 
 
+// Full URL
+- (NSString*) fullURLPath;
+
+
 // Undo handling
 - (SidebarNode*) copyNodeTree;
 

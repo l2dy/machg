@@ -13,6 +13,7 @@
 #import "TaskExecutions.h"
 #import "AppController.h"
 #import "NSString+SymlinksAndAliases.h"
+#import "EMKeychainItem.h"
 
 @implementation SidebarNode
 
@@ -184,6 +185,23 @@
 		newNode->recentConnections = [NSMutableArray arrayWithArray:recentConnections];
 
 	return newNode;
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  FullPath
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (NSString*) fullURLPath
+{
+	if (!hasPassword || ![self isServerRepositoryRef])
+		return path;	
+	EMGenericKeychainItem* passwordItem = [EMGenericKeychainItem genericKeychainItemForService:kMacHgApp withUsername:path];
+	return FullServerURL(path, YES, passwordItem.password);
 }
 
 
