@@ -52,7 +52,7 @@
 
 - (BOOL)      optionIsSet								{ return ([optionSwitchButton state] == NSOnState); }
 - (NSString*) optionValue								{ return [self optionIsSet] ? [optionValueField stringValue] : nil; }
-- (void)	  setOptionValue:(NSString*)value			{ [optionValueField setStringValue:value?value:@""]; [self setOverallState:value?YES:NO]; }
+- (void)	  setOptionValue:(NSString*)value			{ [optionValueField setStringValue:nonNil(value)]; [self setOverallState:value?YES:NO]; }
 
 - (IBAction)  setOptionValueStateFromButton:(id)sender
 {

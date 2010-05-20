@@ -489,12 +489,12 @@ NSString* FullServerURL(NSString* baseURL, BOOL usesPassword, NSString* password
 	NSString* protocolAndName;
 	NSString* server;	
 	if ([baseURL getCapturesWithRegexAndComponents:@"(.*?)(@.*)"  firstComponent:&protocolAndName  secondComponent:&server])
-		return fstr(@"%@:%@%@",protocolAndName, password, server);
+		return fstr(@"%@:%@%@", nonNil(protocolAndName), nonNil(password), nonNil(server));
 
 	NSString* protocol;
 	NSString* rest;
 	if ([baseURL getCapturesWithRegexAndComponents:@"(.*?://)(.*)"  firstComponent:&protocol  secondComponent:&rest])
-		return fstr(@"%@%@%@",protocolAndName, password, rest);
+		return fstr(@"%@%@%@", nonNil(protocol), nonNil(password), nonNil(rest));
 
 	NSRunAlertPanel(@"Badly Formed Server URL", fstr(@"The server URL %@ is not of the form protocol://username@server", baseURL), @"Ok", nil, nil);
 	return nil;
@@ -563,6 +563,10 @@ NSString* riffleComponents(NSArray* components, NSString* separator)
 	return [components componentsJoinedByString:separator];
 }
 
+NSString*	nonNil(NSString* string)
+{
+	return string ? string : @"";
+}
 
 NSString* trimString(NSString* string)
 {

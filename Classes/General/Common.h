@@ -614,7 +614,7 @@ NSString*	trimTrailingString(NSString* string);
 NSString*	collapseWhiteSpace(NSString* string);
 BOOL		stringIsNonWhiteSpace(NSString* string);
 NSString*	riffleComponents(NSArray* components, NSString* separator);
-
+NSString*	nonNil(NSString* string);
 
 
 

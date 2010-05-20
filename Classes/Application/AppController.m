@@ -120,7 +120,7 @@
 - (NSString*) macHgBuildHashKeyString
 {
 	NSString* key = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"BuildHashKey"];
-	return key ? key : @"";
+	return nonNil(key);
 }
 
 - (NSString*) mercurialVersionString
