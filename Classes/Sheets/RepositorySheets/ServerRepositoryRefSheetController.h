@@ -32,6 +32,7 @@
 	BOOL				needsPassword_;
 	BOOL				showRealPassword_;
 	EMGenericKeychainItem* passwordKeyChainItem_;
+	SingleTimedQueue*	timeoutQueueForSecurity_;
 }
 @property (readwrite,assign) NSString*	  shortNameFieldValue;
 @property (readwrite,assign) NSString*	  serverFieldValue;

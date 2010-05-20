@@ -18,8 +18,6 @@
 #import "ShellHere.h"
 
 
-static NSString* kMacHgApp		= @"MacHgApp";
-
 @implementation ServerRepositoryRefSheetController
 @synthesize shortNameFieldValue = shortNameFieldValue_;
 @synthesize serverFieldValue    = serverFieldValue_;
@@ -42,7 +40,10 @@ static NSString* kMacHgApp		= @"MacHgApp";
 	return self;
 }
 
-
+- (void) awakeFromNib
+{
+	timeoutQueueForSecurity_ = [SingleTimedQueue SingleTimedQueueExecutingOn:globalQueue() withTimeDelay:60.0 descriptiveName:@"queueForSecurityTimeout"];	// Our security details will timeout in 60 seconds
+}
 
 
 
@@ -72,17 +73,25 @@ static NSString* kMacHgApp		= @"MacHgApp";
 	BOOL valid = ([[self serverFieldValue] length] > 0) && ([[self shortNameFieldValue] length] > 0);
 	[okButton setEnabled:valid];
 	if (sender == theServerTextField || sender == self || sender == theSecurePasswordTextField || sender == theUnsecurePasswordTextField)
+	{
+		[timeoutQueueForSecurity_ resetTimer];
 		[theConnectionValidationController testConnection:sender];
+	}
 }
 
+
+- (void) removeAuthorization
+{
+	AuthorizationRef myAuthorizationRef;
+	AuthorizationCreate(NULL, kAuthorizationEmptyEnvironment, kAuthorizationFlagDefaults, &myAuthorizationRef);
+	AuthorizationFree(myAuthorizationRef, kAuthorizationFlagDestroyRights);	
+	[self setShowRealPassword:NO];
+}
 
 
 - (BOOL) authorizeForShowingPassword;
 {
 	const char* macHgAuth = "com.jasonfharris.machg.viewpasswords";
-	static SingleTimedQueue* timeoutQueueForSecurity_ = NULL;
-	if (!timeoutQueueForSecurity_)
-		timeoutQueueForSecurity_ = [SingleTimedQueue SingleTimedQueueExecutingOn:globalQueue() withTimeDelay:60.0 descriptiveName:@"queueForSecurityTimeout"];	// Our security details will timeout in 60 seconds
 	
 	AuthorizationRef myAuthorizationRef;
 	OSStatus myStatus;
@@ -112,8 +121,7 @@ static NSString* kMacHgApp		= @"MacHgApp";
 
 	// We timeout after 60 seconds if we don't use show the password again
 	[timeoutQueueForSecurity_ addBlockOperation:^{
-		AuthorizationFree(myAuthorizationRef, kAuthorizationFlagDestroyRights);
-		[self setShowRealPassword:NO];
+		[self removeAuthorization];
 	}];
 	return myStatus == noErr;
 }
