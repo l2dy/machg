@@ -23,7 +23,6 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="74"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -62,7 +61,7 @@
 				<string key="NSWindowContentMaxSize">{1.79769e+308, 1.79769e+308}</string>
 				<string key="NSWindowContentMinSize">{255, 500}</string>
 				<object class="NSView" key="NSWindowView" id="15021353">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">4352</int>
 					<object class="NSMutableArray" key="NSSubviews">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -318,7 +317,6 @@ CkNvcHlyaWdodCDCqSAyMDEwIEphc29uIEYgSGFycmlzLgpBbGwgcmlnaHRzIHJlc2VydmVkLg</stri
 						</object>
 					</object>
 					<string key="NSFrameSize">{347, 551}</string>
-					<reference key="NSSuperview"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
 				<string key="NSMinSize">{255, 522}</string>
@@ -602,7 +600,7 @@ CkNvcHlyaWdodCDCqSAyMDEwIEphc29uIEYgSGFycmlzLgpBbGwgcmlnaHRzIHJlc2VydmVkLg</stri
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>openBugReportPage:</string>
 							<string>openQuickStartPage:</string>
-							<string>openRelaseNotes:</string>
+							<string>openReleaseNotes:</string>
 							<string>resetPreferences:</string>
 							<string>showAboutBox:</string>
 							<string>showPreferences:</string>

@@ -12,7 +12,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="546"/>
+			<integer value="106"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1692,6 +1692,14 @@
 									<reference key="NSOnImage" ref="385016679"/>
 									<reference key="NSMixedImage" ref="150129030"/>
 								</object>
+								<object class="NSMenuItem" id="14126598">
+									<reference key="NSMenu" ref="555861590"/>
+									<string key="NSTitle">Visit Website</string>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="385016679"/>
+									<reference key="NSMixedImage" ref="150129030"/>
+								</object>
 								<object class="NSMenuItem" id="1032904973">
 									<reference key="NSMenu" ref="555861590"/>
 									<string key="NSTitle">Report a bug</string>
@@ -2292,14 +2300,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
-						<string key="label">openRelaseNotes:</string>
-						<reference key="source" ref="569835777"/>
-						<reference key="destination" ref="987456689"/>
-					</object>
-					<int key="connectionID">978</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
 						<string key="label">openQuickStartPage:</string>
 						<reference key="source" ref="569835777"/>
 						<reference key="destination" ref="834143732"/>
@@ -2666,6 +2666,22 @@
 					</object>
 					<int key="connectionID">1047</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">openWebsite:</string>
+						<reference key="source" ref="569835777"/>
+						<reference key="destination" ref="14126598"/>
+					</object>
+					<int key="connectionID">1050</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">openReleaseNotes:</string>
+						<reference key="source" ref="569835777"/>
+						<reference key="destination" ref="987456689"/>
+					</object>
+					<int key="connectionID">1051</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -2922,6 +2938,7 @@
 							<reference ref="834143732"/>
 							<reference ref="840567837"/>
 							<reference ref="987456689"/>
+							<reference ref="14126598"/>
 						</object>
 						<reference key="parent" ref="281597450"/>
 					</object>
@@ -3956,6 +3973,11 @@
 						<reference key="object" ref="702446638"/>
 						<reference key="parent" ref="272824431"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">1048</int>
+						<reference key="object" ref="14126598"/>
+						<reference key="parent" ref="555861590"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -3970,6 +3992,7 @@
 					<string>1039.IBPluginDependency</string>
 					<string>1044.IBPluginDependency</string>
 					<string>1044.ImportedFromIB2</string>
+					<string>1048.IBPluginDependency</string>
 					<string>106.IBEditorWindowLastContentRect</string>
 					<string>106.IBPluginDependency</string>
 					<string>106.ImportedFromIB2</string>
@@ -4252,7 +4275,8 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
-					<string>{{592, 554}, {166, 93}}</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>{{592, 534}, {166, 113}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -4541,7 +4565,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">1047</int>
+			<int key="maxID">1051</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -4555,13 +4579,15 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>openBugReportPage:</string>
 							<string>openQuickStartPage:</string>
-							<string>openRelaseNotes:</string>
+							<string>openReleaseNotes:</string>
+							<string>openWebsite:</string>
 							<string>resetPreferences:</string>
 							<string>showAboutBox:</string>
 							<string>showPreferences:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>

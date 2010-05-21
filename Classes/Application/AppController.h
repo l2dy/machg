@@ -71,7 +71,8 @@
 // Help Menus
 - (IBAction)  openQuickStartPage:(id)sender;
 - (IBAction)  openBugReportPage:(id)sender;
-- (IBAction)  openRelaseNotes:(id)sender;
+- (IBAction)  openReleaseNotes:(id)sender;
+- (IBAction)  openWebsite:(id)sender;
 
 
 // Changeset handling
