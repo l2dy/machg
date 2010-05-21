@@ -16,12 +16,29 @@
 #import "TextButtonCell.h"
 
 
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Local Statics
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
 static NSArray*  namesOfPartsShort  = nil;
 static NSArray*  namesOfPartsFull   = nil;
 NSString* templateStringShort = nil;
 NSString* templateStringFull  = nil;
 NSString* const entrySeparator      = @"\n\n‹‡›\n";			// We just need to choose two strings which will never be used inside the *comment* of a commit. (Its not disastrous if
 NSString* const entryPartSeparator	= @"\n‹,›\n";			// they are though its just the entry for that will display missing....)
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Local Utilities
+// -----------------------------------------------------------------------------------------------------------------------------------------
 
 void setupGlobalsForPartsAndTemplate()
 {
@@ -37,6 +54,16 @@ void setupGlobalsForPartsAndTemplate()
 	namesOfPartsFull    = [NSArray arrayWithObjects:@"revision", @"author",          @"shortDate",  @"fullDate",       @"parents",   @"changeset",    @"filesAdded",  @"filesModified", @"filesRemoved",  @"shortComment",     @"fullComment", nil];
 	templateStringFull  = [[templateParts componentsJoinedByString:entryPartSeparator] stringByAppendingString:entrySeparator];
 }
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  LogEntry
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
 
 @implementation LogEntry
 
