@@ -21,11 +21,12 @@
 
 #define MMAX(A,B)	(((A) > (B)) ? (A) : (B))
 const NSInteger MaxNumberOfDetailedEntriesToShow = 10;
-NSString* kKeyPathTagHighColor		= @"values.LogEntryTableTagHighlightColor";
-NSString* kKeyPathParentHighColor	= @"values.LogEntryTableParentHighlightColor";
-NSString* kKeyPathBranchHighColor	= @"values.LogEntryTableBranchHighlightColor";
-NSString* kKeyPathBookmarkHighColor	= @"values.LogEntryTableBookmarkHighlightColor";
-NSString* kKeyPathRevisionSortOrder	= @"values.RevisionSortOrder";
+NSString* kKeyPathTagHighColor				= @"values.LogEntryTableTagHighlightColor";
+NSString* kKeyPathParentHighColor			= @"values.LogEntryTableParentHighlightColor";
+NSString* kKeyPathBranchHighColor			= @"values.LogEntryTableBranchHighlightColor";
+NSString* kKeyPathBookmarkHighColor			= @"values.LogEntryTableBookmarkHighlightColor";
+NSString* kKeyPathDisplayChangesetColumn	= @"values.LogEntryTableDisplayChangesetColumn";
+NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 
 
 @interface LogTableView (PrivateAPI)
@@ -83,7 +84,7 @@ NSString* kKeyPathRevisionSortOrder	= @"values.RevisionSortOrder";
 	id defaults = [NSUserDefaultsController sharedUserDefaultsController];
 	NSDictionary* negateValueTransformer = [NSDictionary dictionaryWithObject:NSNegateBooleanTransformerName forKey:@"NSValueTransformerName"];
 	NSTableColumn* col = [self tableColumnWithIdentifier:@"changeset"];
-	[col  bind:@"hidden"  toObject:defaults  withKeyPath:@"values.LogEntryTableDisplayChangesetColumn"  options:negateValueTransformer];
+	[col  bind:@"hidden"  toObject:defaults  withKeyPath:kKeyPathDisplayChangesetColumn  options:negateValueTransformer];
 	
 	// Receive a notification when the tag highlight color changes.
 	[defaults  addObserver:self  forKeyPath:kKeyPathTagHighColor		options:NSKeyValueObservingOptionNew  context:NULL];
@@ -621,10 +622,10 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 
 - (void) resortTable
 {
-	NSString* selectedRev = [self selectedRevision];
+	NSArray* selectedRevisions = [self selectedRevisions];
 	[self setSortDescriptorsAccordingToDefaults];
 	theTableRows_ = [self sortTableRowsAccordingToSortOrder:theTableRows_];
-	[self scrollToRevision:selectedRev];
+	[self selectAndScrollToRevisions:selectedRevisions];
 	[self reloadData];
 }
 
