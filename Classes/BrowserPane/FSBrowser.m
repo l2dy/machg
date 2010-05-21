@@ -104,6 +104,7 @@
 {
 	[self setRowHeightForFont];
 	BrowserSelectionState* theSavedState = [BrowserSelectionState saveBrowserState:self];
+	[self setDefaultColumnWidth:sizeOfBrowserColumnsFromDefaults()];
 	[self reloadData:self];
 	[theSavedState restoreBrowserSelection];				// restore the selection and the scroll positions of the columns and the horizontal scroll
 	[parentController updateCurrentPreviewImage];
