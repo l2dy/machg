@@ -13,6 +13,8 @@
 #import "TaskExecutions.h"
 #import "MacHgDocument.h"
 #import "LabelData.h"
+#import "TextButtonCell.h"
+
 
 static NSArray*  namesOfPartsShort  = nil;
 static NSArray*  namesOfPartsFull   = nil;
@@ -251,6 +253,7 @@ void setupGlobalsForPartsAndTemplate()
 // MARK: Formatted Entries
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+
 - (NSAttributedString*) composeFormattedVerboseEntry
 {
 	NSMutableAttributedString* verboseEntry = [[NSMutableAttributedString alloc] init];
@@ -305,11 +308,51 @@ void setupGlobalsForPartsAndTemplate()
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Removed:\t")];
 		[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@\n", filesRemoved_])];
 	}
+	
+//	// Create a file wrapper with an image.
+//	NSString * imgName = @"GoodNetwork.png";
+//	NSFileWrapper *fwrap = [[[NSFileWrapper alloc] initRegularFileWithContents:
+//							 [[NSImage imageNamed:@"GoodNetwork.png"] TIFFRepresentation]] autorelease];
+//	[fwrap setFilename:imgName];
+//	[fwrap setPreferredFilename:imgName];
+//	
+//	// Create an attachment with the file wrapper
+//	NSTextAttachment * ta = [[[NSTextAttachment alloc] initWithFileWrapper:fwrap] autorelease];
+//	
+//	// Append the attachment to the end of the attributed string
+//	// (assumes "attrStr" already exists).
+//	[verboseEntry appendAttributedString:[NSAttributedString attributedStringWithAttachment:ta]];
+
+	
+	// Create a file wrapper with an image.
+	NSString * imgName = @"GoodNetwork.png";
+	NSFileWrapper *fwrap = [[[NSFileWrapper alloc] initRegularFileWithContents:
+							 [[NSImage imageNamed:@"GoodNetwork.png"] TIFFRepresentation]] autorelease];
+	[fwrap setFilename:imgName];
+	[fwrap setPreferredFilename:imgName];
+	
+	// Create an attachment with the file wrapper
+	NSTextAttachment * ta = [[[NSTextAttachment alloc] initWithFileWrapper:fwrap] autorelease];
+	TextButtonCell* tbc = [[TextButtonCell alloc] init];
+	[tbc setTitle:@"MyButton"];
+	[tbc setBezelStyle:NSRoundRectBezelStyle];
+	[ta setAttachmentCell:tbc];
+	
+	// Append the attachment to the end of the attributed string
+	// (assumes "attrStr" already exists).
+	[verboseEntry appendAttributedString:[NSAttributedString attributedStringWithAttachment:ta]];
+
+	
+	
+	
+	
 	if (stringIsNonWhiteSpace(fullComment_))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Description:\t")];
 		[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@\n", fullComment_])];
 	}
+	
+	
 	return verboseEntry;
 }
 
