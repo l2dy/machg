@@ -470,22 +470,6 @@
 								<int key="NSPeriodicInterval">75</int>
 							</object>
 						</object>
-						<object class="NSTextField" id="764729484">
-							<reference key="NSNextResponder" ref="250803238"/>
-							<int key="NSvFlags">268</int>
-							<string key="NSFrame">{{301, 162}, {243, 17}}</string>
-							<reference key="NSSuperview" ref="250803238"/>
-							<bool key="NSEnabled">YES</bool>
-							<object class="NSTextFieldCell" key="NSCell" id="189017924">
-								<int key="NSCellFlags">68288064</int>
-								<int key="NSCellFlags2">272630784</int>
-								<string key="NSContents">Label</string>
-								<reference key="NSSupport" ref="879497694"/>
-								<reference key="NSControlView" ref="764729484"/>
-								<reference key="NSBackgroundColor" ref="284772987"/>
-								<reference key="NSTextColor" ref="281321110"/>
-							</object>
-						</object>
 					</array>
 					<string key="NSFrameSize">{681, 260}</string>
 					<reference key="NSSuperview"/>
@@ -833,22 +817,6 @@
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
 						<string key="label">value: password</string>
-						<reference key="source" ref="764729484"/>
-						<reference key="destination" ref="1001"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="764729484"/>
-							<reference key="NSDestination" ref="1001"/>
-							<string key="NSLabel">value: password</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">password</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">471</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: password</string>
 						<reference key="source" ref="539491529"/>
 						<reference key="destination" ref="1001"/>
 						<object class="NSNibBindingConnector" key="connector">
@@ -990,7 +958,6 @@
 							<reference ref="980234671"/>
 							<reference ref="66085599"/>
 							<reference ref="539491529"/>
-							<reference ref="764729484"/>
 						</array>
 						<reference key="parent" ref="530833982"/>
 					</object>
@@ -1248,19 +1215,6 @@
 						<reference key="object" ref="593880950"/>
 						<reference key="parent" ref="539491529"/>
 					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">469</int>
-						<reference key="object" ref="764729484"/>
-						<array class="NSMutableArray" key="children">
-							<reference ref="189017924"/>
-						</array>
-						<reference key="parent" ref="250803238"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">470</int>
-						<reference key="object" ref="189017924"/>
-						<reference key="parent" ref="764729484"/>
-					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -1348,8 +1302,6 @@
 				<string key="441.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="459.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="460.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="469.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="470.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
