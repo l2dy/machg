@@ -336,6 +336,8 @@ void setupGlobalsForPartsAndTemplate()
 	TextButtonCell* tbc = [[TextButtonCell alloc] init];
 	[tbc setTitle:@"MyButton"];
 	[tbc setBezelStyle:NSRoundRectBezelStyle];
+	[tbc setTarget:[collection_ myDocument]];
+	[tbc setAction:@selector(actionSwitchViewToBrowserPane:)];
 	[ta setAttachmentCell:tbc];
 	
 	// Append the attachment to the end of the attributed string
