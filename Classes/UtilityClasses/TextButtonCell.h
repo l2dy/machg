@@ -14,6 +14,8 @@
 	NSTextAttachment* parentAttacment;
 }
 
+- (void) setButtonTitle:(NSString*)title;
+
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)aView;
 - (BOOL)wantsToTrackMouse;
 

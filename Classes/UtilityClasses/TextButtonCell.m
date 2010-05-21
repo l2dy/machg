@@ -7,7 +7,7 @@
 //
 
 #import "TextButtonCell.h"
-
+#import "Common.h"
 
 @implementation TextButtonCell
 
@@ -16,7 +16,21 @@
 {
 	NSAttributedString* title = [self attributedTitle];
 	NSSize s = [title size];
-	return NSMakeRect(0, -6, s.width + 30, 22);	
+	return NSMakeRect(0, -7, s.width + 30, 22);	
+}
+
+- (void) setButtonTitle:(NSString*)title
+{
+	static NSDictionary* theDictionary = nil;
+	if (theDictionary == nil)
+	{
+		NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+		[paragraphStyle setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
+		[paragraphStyle setAlignment:NSCenterTextAlignment];
+		NSFont* font = [NSFont controlContentFontOfSize:[NSFont systemFontSize]];
+		theDictionary = [NSDictionary dictionaryWithObjectsAndKeys: font, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil];
+	}
+	[self setAttributedTitle:[NSAttributedString string:title withAttributes:theDictionary]];
 }
 
 
@@ -24,6 +38,12 @@
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)aView
 {
 	[super drawWithFrame:cellFrame inView:aView];
+}
+
+- (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
+{
+	cellFrame.origin.y -= 1;
+	[super drawInteriorWithFrame:cellFrame inView:controlView];
 }
 
 - (BOOL)wantsToTrackMouse
