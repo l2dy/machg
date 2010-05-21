@@ -440,8 +440,9 @@
 	if (!path)
 		return;
 	
+	NSString* fullPath = path;
 	if ([[self urlUsesPassword] containsObject:path])
-		path = FullServerURL(path, YES);
+		fullPath = FullServerURL(path, YES);
 
 	// If we are already computing the root changeset then don't compute it again
 	if ([computingRepositoryIdentityForPath_ synchronizedObjectForKey:path])
@@ -469,7 +470,7 @@
 	NSTimeInterval timeOutInSeconds = 5.0 * pow(2.0, attempts);
 	
 	dispatch_async(globalQueue(), ^{
-		NSMutableArray* argsIdentify = [NSMutableArray arrayWithObjects:@"identify", @"--rev", @"0", @"--id", @"--quiet", path, nil];
+		NSMutableArray* argsIdentify = [NSMutableArray arrayWithObjects:@"identify", @"--rev", @"0", @"--id", @"--quiet", fullPath, nil];
 		__block NSTask* theTask = [[NSTask alloc]init];
 		__block ExecutionResult* results;
 		dispatchWithTimeOut(globalQueue(), timeOutInSeconds, ^{
