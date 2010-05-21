@@ -11,6 +11,16 @@
 
 @implementation TextButtonCell
 
+
+- (NSRect) buttonFrameSize
+{
+	NSAttributedString* title = [self attributedTitle];
+	NSSize s = [title size];
+	return NSMakeRect(0, -6, s.width + 30, 22);	
+}
+
+
+
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)aView
 {
 	[super drawWithFrame:cellFrame inView:aView];
@@ -43,12 +53,14 @@
 
 - (NSPoint)cellBaselineOffset
 {
-	return NSMakePoint(0, 0);
+	NSRect titleRect = [self titleRectForBounds:[self buttonFrameSize]];
+	CGFloat baseline = ceil(NSMinY(titleRect) + [[self font] ascender]);
+	return NSMakePoint(0, baseline);
 }
 
 - (NSRect)cellFrameForTextContainer:(NSTextContainer*)textContainer proposedLineFragment:(NSRect)lineFrag glyphPosition:(NSPoint)position characterIndex:(NSUInteger)charIndex
 {
-	return NSMakeRect(0,0,100,22);
+	return [self buttonFrameSize];
 }
 
 - (NSTextAttachment *)attachment
