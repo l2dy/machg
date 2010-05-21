@@ -65,20 +65,8 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK: validateButtons
+// MARK:  Autherization
 // -----------------------------------------------------------------------------------------------------------------------------------------
-
-- (IBAction) validateButtons:(id)sender
-{
-	BOOL valid = ([[self serverFieldValue] length] > 0) && ([[self shortNameFieldValue] length] > 0);
-	[okButton setEnabled:valid];
-	if (sender == theServerTextField || sender == self || sender == theSecurePasswordTextField || sender == theUnsecurePasswordTextField)
-	{
-		[timeoutQueueForSecurity_ resetTimer];
-		[theConnectionValidationController testConnection:sender];
-	}
-}
-
 
 - (void) removeAuthorization
 {
@@ -141,6 +129,26 @@
 
 
 
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: validateButtons
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (IBAction) validateButtons:(id)sender
+{
+	BOOL valid = ([[self serverFieldValue] length] > 0) && ([[self shortNameFieldValue] length] > 0);
+	[okButton setEnabled:valid];
+	if (sender == theServerTextField || sender == self || sender == theSecurePasswordTextField || sender == theUnsecurePasswordTextField)
+	{
+		[theConnectionValidationController testConnection:sender];
+		[timeoutQueueForSecurity_ addBlockOperation:^{
+			[self removeAuthorization];
+		}];
+		
+	}
+}
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
