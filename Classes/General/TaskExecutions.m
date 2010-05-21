@@ -200,10 +200,11 @@
 	NSArray* args = results.generatingArgs;
 	for (id s in args)
 		[theCommandAsString appendFormat:@"%@ ", s];
+	NSString* filteredCommandString = [theCommandAsString stringByReplacingOccurrencesOfRegex:@"((?:ssh|http|https)://.*?):.*?@" withString:@"$1:***@"];
 	NSString* currentTime = [[NSDate date] description];
 	NSString* hgBinary = executableLocationHG();
 	NSString* message = [NSString stringWithFormat:@"MacHg issued(%@):\n%@ %@\nResult code was:%d\nStandard out was:\n%@\nStandard error was:\n%@\n\n\n",
-						 currentTime, hgBinary, theCommandAsString, results.result, results.outStr, results.errStr];
+						 currentTime, hgBinary, filteredCommandString, results.result, results.outStr, results.errStr];
 	[[NSFileManager defaultManager] appendString:message toFilePath:MacHgLogFileLocation()];
 }
 
