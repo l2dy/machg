@@ -70,6 +70,8 @@
 - (NSString*)	revisionForTableRow:(NSInteger)rowNum;
 - (NSInteger)	tableRowForRevision:(NSString*)revision;
 - (NSInteger)	tableRowForIntegerRevision:(NSInteger)revisionInt;
+- (NSInteger)	closestTableRowForRevision:(NSString*)revision;
+
 - (BOOL)		includeIncompleteRevision;
 - (NSString*)	incompleteRevision;
 

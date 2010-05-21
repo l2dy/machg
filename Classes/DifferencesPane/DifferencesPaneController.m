@@ -152,12 +152,31 @@
 //  Actions Refresh   ----------------------------------------------------------------------------------------------------------------------
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-
+// We should open the differences pane to show the differences of the rows selected in the history pane.
 - (IBAction) openDifferencesPane:(id)sender
 {
 	[self refreshDifferencesPane:sender];
-	[baseLogTableView scrollToCurrentRevision:sender];
-	[compareLogTableView scrollToCurrentRevision:self];
+	LowHighPair pair  = [[[myDocument theHistoryPaneController] logTableView] parentToHighestSelectedRevisions];
+	NSString* lowRev  = (pair.lowRevision != NSNotFound)  ? intAsString(pair.lowRevision)  : [myDocument getHGParent1Revision];
+	NSString* highRev = (pair.highRevision != NSNotFound) ? intAsString(pair.highRevision) : [myDocument getHGParent1Revision];
+	NSInteger lowRow  = [baseLogTableView closestTableRowForRevision:lowRev];
+	NSInteger highRow = [baseLogTableView closestTableRowForRevision:highRev];
+
+	[baseLogTableView scrollToRevision:lowRev];
+
+	if (lowRow != NSNotFound && highRow != NSNotFound)
+	{
+		dispatch_async(mainQueue(), ^{
+			[compareLogTableView scrollToRangeOfRowsLow:lowRow high:lowRow];
+			[compareLogTableView scrollRowToVisible:highRow];
+			[compareLogTableView selectRowIndexes:[NSIndexSet indexSetWithIndex:highRow] byExtendingSelection:NO];
+		});		
+	}
+	else if (lowRow != NSNotFound)
+		[compareLogTableView scrollToRevision:lowRev];
+	else if (highRow != NSNotFound)
+		[compareLogTableView scrollToRevision:highRev];
+	
 	[self setButtonStatesToTheirPreferenceValues];
 }
 
@@ -171,7 +190,7 @@
 - (void) scrollToSelected
 {
 	[baseLogTableView scrollToSelected:self];
-	[compareLogTableView scrollToSelected:self];
+	[compareLogTableView scrollRowToVisible:[compareLogTableView selectedRow]];
 }
 
 - (IBAction) redisplayBrowser:(id)sender

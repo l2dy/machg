@@ -229,8 +229,8 @@ typedef enum
 
 typedef struct
 {
-	int	lowRevision;
-	int	highRevision;
+	NSInteger	lowRevision;
+	NSInteger	highRevision;
 } LowHighPair;
 
 typedef struct
