@@ -177,6 +177,7 @@
 		96DCD03C10CD430600C843C9 /* LocalMercurial in Copy Files (Mercurial) */ = {isa = PBXBuildFile; fileRef = 96DCCE2710CD430000C843C9 /* LocalMercurial */; };
 		96DD29CA112AE56200A57BD3 /* CollapseSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96DD29C9112AE56200A57BD3 /* CollapseSheetController.m */; };
 		96DD29CD112AE56D00A57BD3 /* CollapseSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96DD29CB112AE56D00A57BD3 /* CollapseSheet.xib */; };
+		96F5A1B811A7004D00707404 /* TextButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96F5A1B711A7004D00707404 /* TextButtonCell.m */; };
 		96FF036111991C21006EC616 /* DBPrefsWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96FF036011991C21006EC616 /* DBPrefsWindowController.m */; };
 		96FF03A81199200E006EC616 /* UpdatePreferences.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 96FF03A71199200E006EC616 /* UpdatePreferences.tiff */; };
 /* End PBXBuildFile section */
@@ -456,6 +457,8 @@
 		96DD29C8112AE56200A57BD3 /* CollapseSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollapseSheetController.h; sourceTree = "<group>"; };
 		96DD29C9112AE56200A57BD3 /* CollapseSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollapseSheetController.m; sourceTree = "<group>"; };
 		96DD29CC112AE56D00A57BD3 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/CollapseSheet.xib; sourceTree = SOURCE_ROOT; };
+		96F5A1B611A7004D00707404 /* TextButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextButtonCell.h; sourceTree = "<group>"; };
+		96F5A1B711A7004D00707404 /* TextButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextButtonCell.m; sourceTree = "<group>"; };
 		96FF035F11991C21006EC616 /* DBPrefsWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBPrefsWindowController.h; sourceTree = "<group>"; };
 		96FF036011991C21006EC616 /* DBPrefsWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBPrefsWindowController.m; sourceTree = "<group>"; };
 		96FF03A71199200E006EC616 /* UpdatePreferences.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = UpdatePreferences.tiff; sourceTree = "<group>"; };
@@ -1058,6 +1061,8 @@
 				9672AC5D114B796A00312CE2 /* SingleTimedQueue */,
 				9637C8B0118E9BB40000C14B /* ScrollToForLogTable */,
 				9672AC60114B796A00312CE2 /* Titled Button */,
+				96F5A1B611A7004D00707404 /* TextButtonCell.h */,
+				96F5A1B711A7004D00707404 /* TextButtonCell.m */,
 			);
 			name = UtilityClasses;
 			path = Classes/UtilityClasses;
@@ -1555,6 +1560,7 @@
 				969BDDF91196B0C0007AA6D9 /* ShellHere.m in Sources */,
 				96FF036111991C21006EC616 /* DBPrefsWindowController.m in Sources */,
 				9605BBD0119C0D7D002EEA47 /* EMKeychainItem.m in Sources */,
+				96F5A1B811A7004D00707404 /* TextButtonCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
