@@ -351,17 +351,10 @@ void setupGlobalsForPartsAndTemplate()
 //	[verboseEntry appendAttributedString:[NSAttributedString attributedStringWithAttachment:ta]];
 
 	
-	// Create a file wrapper with an image.
-	NSString * imgName = @"GoodNetwork.png";
-	NSFileWrapper *fwrap = [[[NSFileWrapper alloc] initRegularFileWithContents:
-							 [[NSImage imageNamed:@"GoodNetwork.png"] TIFFRepresentation]] autorelease];
-	[fwrap setFilename:imgName];
-	[fwrap setPreferredFilename:imgName];
-	
-	// Create an attachment with the file wrapper
-	NSTextAttachment * ta = [[[NSTextAttachment alloc] initWithFileWrapper:fwrap] autorelease];
+	// Create an attachment consisting of the button
+	NSTextAttachment * ta = [[NSTextAttachment alloc] init];
 	TextButtonCell* tbc = [[TextButtonCell alloc] init];
-	[tbc setTitle:@"MyButton"];
+	[tbc setButtonTitle:@"MyButton"];
 	[tbc setBezelStyle:NSRoundRectBezelStyle];
 	[tbc setTarget:[collection_ myDocument]];
 	[tbc setAction:@selector(actionSwitchViewToBrowserPane:)];
