@@ -624,7 +624,8 @@
 			if (rowIndex != NSNotFound)
 				[rowIndexes addIndex:rowIndex];
 		}
-		[theBrowser selectRowIndexes:rowIndexes inColumn:(col-1)];
+		if (IsNotEmpty(rowIndexes))
+			[theBrowser selectRowIndexes:rowIndexes inColumn:(col-1)];
 	}
 	[[theBrowser window] makeFirstResponder:theBrowser];
 
