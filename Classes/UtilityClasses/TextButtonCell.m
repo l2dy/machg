@@ -58,7 +58,10 @@
 
 - (BOOL)trackMouse:(NSEvent *)theEvent inRect:(NSRect)cellFrame ofView:(NSView *)aTextView atCharacterIndex:(NSUInteger)charIndex untilMouseUp:(BOOL)flag
 {
-	return [self trackMouse:theEvent inRect:cellFrame ofView:aTextView untilMouseUp:flag];
+	[self highlight:YES withFrame:cellFrame inView:aTextView];
+	BOOL ans = [self trackMouse:theEvent inRect:cellFrame ofView:aTextView untilMouseUp:NO];
+	[self highlight:NO withFrame:cellFrame inView:aTextView];
+	return ans;
 }
 
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)aView characterIndex:(NSUInteger)charIndex
