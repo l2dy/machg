@@ -335,22 +335,7 @@ void setupGlobalsForPartsAndTemplate()
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Removed:\t")];
 		[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@\n", filesRemoved_])];
 	}
-	
-//	// Create a file wrapper with an image.
-//	NSString * imgName = @"GoodNetwork.png";
-//	NSFileWrapper *fwrap = [[[NSFileWrapper alloc] initRegularFileWithContents:
-//							 [[NSImage imageNamed:@"GoodNetwork.png"] TIFFRepresentation]] autorelease];
-//	[fwrap setFilename:imgName];
-//	[fwrap setPreferredFilename:imgName];
-//	
-//	// Create an attachment with the file wrapper
-//	NSTextAttachment * ta = [[[NSTextAttachment alloc] initWithFileWrapper:fwrap] autorelease];
-//	
-//	// Append the attachment to the end of the attributed string
-//	// (assumes "attrStr" already exists).
-//	[verboseEntry appendAttributedString:[NSAttributedString attributedStringWithAttachment:ta]];
 
-	
 	// Create an attachment consisting of the button
 	NSTextAttachment * ta = [[NSTextAttachment alloc] init];
 	TextButtonCell* tbc = [[TextButtonCell alloc] init];
@@ -359,14 +344,8 @@ void setupGlobalsForPartsAndTemplate()
 	[tbc setTarget:[collection_ myDocument]];
 	[tbc setAction:@selector(actionSwitchViewToBrowserPane:)];
 	[ta setAttachmentCell:tbc];
-	
-	// Append the attachment to the end of the attributed string
-	// (assumes "attrStr" already exists).
-	[verboseEntry appendAttributedString:[NSAttributedString attributedStringWithAttachment:ta]];
 
-	
-	
-	
+	[verboseEntry appendAttributedString:[NSAttributedString attributedStringWithAttachment:ta]];
 	
 	if (stringIsNonWhiteSpace(fullComment_))
 	{
