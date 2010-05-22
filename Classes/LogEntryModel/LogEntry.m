@@ -14,6 +14,7 @@
 #import "MacHgDocument.h"
 #import "LabelData.h"
 #import "TextButtonCell.h"
+#import "DiffTextButtonCell.h"
 
 
 
@@ -329,24 +330,29 @@ void setupGlobalsForPartsAndTemplate()
 	if (stringIsNonWhiteSpace(filesModified_))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Modified:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@\n", filesModified_])];
+		NSArray* files = [filesModified_ componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+		for (NSString* file in files)
+		{
+			NSTextAttachment* ta     = [[NSTextAttachment alloc] init];
+			DiffTextButtonCell* dtbc = [[DiffTextButtonCell alloc] initWithLogEntry:self];
+			[dtbc setBackingLogEntry:self];
+			[dtbc setButtonTitle:file];
+			[dtbc setFileNameFromRelativeName:file];
+			[dtbc setBezelStyle:NSRoundRectBezelStyle];
+			[dtbc setTarget:dtbc];
+			[dtbc setAction:@selector(displayDiff:)];
+			[ta setAttachmentCell:dtbc];
+			[verboseEntry appendAttributedString: normalAttributedString(@" ")];
+			[verboseEntry appendAttributedString: [NSAttributedString attributedStringWithAttachment:ta]];
+			[verboseEntry appendAttributedString: normalAttributedString(@"\n")];
+		}
+		//[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@\n", filesModified_])];
 	}
 	if (stringIsNonWhiteSpace(filesRemoved_))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Removed:\t")];
 		[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@\n", filesRemoved_])];
 	}
-
-	// Create an attachment consisting of the button
-	NSTextAttachment * ta = [[NSTextAttachment alloc] init];
-	TextButtonCell* tbc = [[TextButtonCell alloc] init];
-	[tbc setButtonTitle:@"MyButton"];
-	[tbc setBezelStyle:NSRoundRectBezelStyle];
-	[tbc setTarget:[collection_ myDocument]];
-	[tbc setAction:@selector(actionSwitchViewToBrowserPane:)];
-	[ta setAttachmentCell:tbc];
-
-	[verboseEntry appendAttributedString:[NSAttributedString attributedStringWithAttachment:ta]];
 	
 	if (stringIsNonWhiteSpace(fullComment_))
 	{
