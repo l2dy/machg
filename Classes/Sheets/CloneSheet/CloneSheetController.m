@@ -181,6 +181,7 @@
 				[[myDocument sidebar] reloadData];
 				[myDocument postNotificationWithName:kRepositoryRootChanged];
 				[myDocument refreshBrowserContent:self];
+				[myDocument saveDocumentIfNamed];
 			});
 	}];
 	
