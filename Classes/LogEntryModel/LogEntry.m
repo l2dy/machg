@@ -322,10 +322,23 @@ void setupGlobalsForPartsAndTemplate()
 		[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@   ", shortDate_])];
 		[verboseEntry appendAttributedString: grayedAttributedString([NSString stringWithFormat:@"(%@)\n", fullDate_])];
 	}
+	if (stringIsNonWhiteSpace(fullComment_))
+	{
+		[verboseEntry appendAttributedString: categoryAttributedString(@"Description:\t")];
+		[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@\n", fullComment_])];
+	}	
 	if (stringIsNonWhiteSpace(filesAdded_))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Added:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@\n", filesAdded_])];
+		NSArray* files = [filesAdded_ componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+		for (NSString* file in files)
+		{
+			NSTextAttachment* attachment = [DiffTextButtonCell diffButtonAttachmentWithLogEntry:self andFile:file andType:eDiffFileAdded];
+			[verboseEntry appendAttributedString: normalAttributedString(@" ")];
+			[verboseEntry appendAttributedString: [NSAttributedString attributedStringWithAttachment:attachment]];
+			[verboseEntry appendAttributedString: normalAttributedString(@"\n")];
+		}
+		//[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@\n", filesAdded_])];		
 	}
 	if (stringIsNonWhiteSpace(filesModified_))
 	{
@@ -343,14 +356,17 @@ void setupGlobalsForPartsAndTemplate()
 	if (stringIsNonWhiteSpace(filesRemoved_))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Removed:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@\n", filesRemoved_])];
+		NSArray* files = [filesRemoved_ componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
+		for (NSString* file in files)
+		{
+			NSTextAttachment* attachment = [DiffTextButtonCell diffButtonAttachmentWithLogEntry:self andFile:file andType:eDiffFileRemoved];
+			[verboseEntry appendAttributedString: normalAttributedString(@" ")];
+			[verboseEntry appendAttributedString: [NSAttributedString attributedStringWithAttachment:attachment]];
+			[verboseEntry appendAttributedString: normalAttributedString(@"\n")];
+		}
+		//[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@\n", filesRemoved_])];
 	}
 	
-	if (stringIsNonWhiteSpace(fullComment_))
-	{
-		[verboseEntry appendAttributedString: categoryAttributedString(@"Description:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@\n", fullComment_])];
-	}
 	
 	
 	return verboseEntry;
