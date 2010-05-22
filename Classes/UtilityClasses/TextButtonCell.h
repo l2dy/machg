@@ -11,11 +11,17 @@
 
 @interface TextButtonCell : NSButtonCell <NSTextAttachmentCell>
 {
-	NSTextAttachment* parentAttacment;
+	NSTextAttachment*	parentAttacment;
+	NSRect				currentCellFrame;		// We cache this for use during tracking since this buttoncell doesn't actually
+												// live in a control view.
+	id					trueTarget;				// We intercept the target to be ourselves so store the true target if we actually
+												// want to send the true action to the true target
+	SEL					trueAction;				// We intercept the target to be ourselves so store the true action if we actually
+												// want to send the true action to the true target
+	BOOL				doActionAfterTrack;		// After finishing the tracking should we actually send the action to the target?
 }
 
 - (void) setButtonTitle:(NSString*)title;
-
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)aView;
 - (BOOL)wantsToTrackMouse;
 

@@ -12,6 +12,49 @@
 @implementation TextButtonCell
 
 
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Initialization
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (id) init
+{
+	if ((self = [super init]))
+	{
+		[super setTarget:self];
+		[super setAction:@selector(forwardActionAfterTrackedClick:)];
+		trueTarget = nil;
+		trueAction = nil;
+	}
+	return self;
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Handling of targets & actions
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (void) setTarget:(id)object
+{
+	trueTarget = object;
+	[super setTarget:self];
+}
+- (void) setAction:(SEL)action
+{
+	trueAction = action;
+	[super setAction:@selector(forwardActionAfterTrackedClick:)];
+}
+
+- (IBAction) forwardActionAfterTrackedClick:(id)sender
+{
+	if (doActionAfterTrack)
+		[trueTarget performSelector:trueAction withObject:sender];
+}
+
 - (NSRect) buttonFrameSize
 {
 	NSAttributedString* title = [self attributedTitle];
@@ -35,16 +78,35 @@
 
 
 
-- (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)aView
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Tracking for NSTextAttachmentCell Protocol
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+
+
+- (BOOL)startTrackingAt:(NSPoint)startPoint inView:(NSView *)controlView
 {
-	[super drawWithFrame:cellFrame inView:aView];
+	doActionAfterTrack = YES;
+	return YES;
 }
 
-- (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
+- (BOOL)continueTracking:(NSPoint)lastPoint at:(NSPoint)currentPoint inView:(NSView *)controlView
 {
-	cellFrame.origin.y -= 1;
-	[super drawInteriorWithFrame:cellFrame inView:controlView];
+	if (!NSPointInRect(currentPoint, currentCellFrame) && NSPointInRect(lastPoint, currentCellFrame))
+		[self highlight:NO withFrame:currentCellFrame inView:controlView];
+	else if (NSPointInRect(currentPoint, currentCellFrame) && !NSPointInRect(lastPoint, currentCellFrame))
+		[self highlight:YES withFrame:currentCellFrame inView:controlView];
+	return YES;
 }
+
+- (void)stopTracking:(NSPoint)lastPoint at:(NSPoint)stopPoint inView:(NSView *)controlView mouseIsUp:(BOOL)flag
+{
+	doActionAfterTrack = NSPointInRect(stopPoint, currentCellFrame) && flag;
+}
+
 
 - (BOOL)wantsToTrackMouse
 {
@@ -58,10 +120,31 @@
 
 - (BOOL)trackMouse:(NSEvent *)theEvent inRect:(NSRect)cellFrame ofView:(NSView *)aTextView atCharacterIndex:(NSUInteger)charIndex untilMouseUp:(BOOL)flag
 {
+	currentCellFrame = cellFrame;
 	[self highlight:YES withFrame:cellFrame inView:aTextView];
-	BOOL ans = [self trackMouse:theEvent inRect:cellFrame ofView:aTextView untilMouseUp:NO];
+	BOOL ans = [super trackMouse:theEvent inRect:cellFrame ofView:aTextView untilMouseUp:YES];
 	[self highlight:NO withFrame:cellFrame inView:aTextView];
 	return ans;
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Drawing for NSTextAttachmentCell Protocol
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)aView
+{
+	[super drawWithFrame:cellFrame inView:aView];
+}
+
+- (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
+{
+	cellFrame.origin.y -= 1;
+	[super drawInteriorWithFrame:cellFrame inView:controlView];
 }
 
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)aView characterIndex:(NSUInteger)charIndex
@@ -86,12 +169,17 @@
 	return [self buttonFrameSize];
 }
 
-- (NSTextAttachment *)attachment
-{
-	return parentAttacment;
-}
 
-- (void)setAttachment:(NSTextAttachment *)anAttachment
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Parent Attachment
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (NSTextAttachment *)attachment	{ return parentAttacment; }
+- (void)setAttachment:(NSTextAttachment*) anAttachment
 {
 	parentAttacment = anAttachment;
 }
