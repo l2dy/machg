@@ -43,6 +43,18 @@
 }
 
 
++ (NSTextAttachment*) diffButtonAttachmentWithLogEntry:(LogEntry*)entry andFile:(NSString*)file andType:(DiffButtonType)t
+{
+	NSTextAttachment* attachment     = [[NSTextAttachment alloc] init];
+	DiffTextButtonCell* dtbc = [[DiffTextButtonCell alloc] initWithLogEntry:entry];
+	[dtbc setButtonTitle:file];
+	[dtbc setFileNameFromRelativeName:file];
+	[dtbc setBezelStyle:NSRoundRectBezelStyle];
+	[dtbc setTarget:dtbc];
+	[dtbc setAction:@selector(displayDiff:)];
+	[attachment setAttachmentCell:dtbc];
+	return attachment;
+}
 
 
 

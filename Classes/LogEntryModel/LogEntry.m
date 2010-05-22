@@ -333,17 +333,9 @@ void setupGlobalsForPartsAndTemplate()
 		NSArray* files = [filesModified_ componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
 		for (NSString* file in files)
 		{
-			NSTextAttachment* ta     = [[NSTextAttachment alloc] init];
-			DiffTextButtonCell* dtbc = [[DiffTextButtonCell alloc] initWithLogEntry:self];
-			[dtbc setBackingLogEntry:self];
-			[dtbc setButtonTitle:file];
-			[dtbc setFileNameFromRelativeName:file];
-			[dtbc setBezelStyle:NSRoundRectBezelStyle];
-			[dtbc setTarget:dtbc];
-			[dtbc setAction:@selector(displayDiff:)];
-			[ta setAttachmentCell:dtbc];
+			NSTextAttachment* attachment = [DiffTextButtonCell diffButtonAttachmentWithLogEntry:self andFile:file andType:eDiffFileChanged];
 			[verboseEntry appendAttributedString: normalAttributedString(@" ")];
-			[verboseEntry appendAttributedString: [NSAttributedString attributedStringWithAttachment:ta]];
+			[verboseEntry appendAttributedString: [NSAttributedString attributedStringWithAttachment:attachment]];
 			[verboseEntry appendAttributedString: normalAttributedString(@"\n")];
 		}
 		//[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@\n", filesModified_])];

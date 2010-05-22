@@ -9,13 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "LogEntry.h"
 #import "TextButtonCell.h"
-
-typedef enum
-{
-	eDiffFileAdded	 = 0,
-	eDiffFileChanged = 1,
-	eDiffFileRemoved = 2
-} DiffButtonType;
+#import "Common.h"
 
 @interface DiffTextButtonCell : TextButtonCell
 {
@@ -30,6 +24,7 @@ typedef enum
 
 // Initilization
 - (id) initWithLogEntry:(LogEntry*)entry;
++ (NSTextAttachment*) diffButtonAttachmentWithLogEntry:(LogEntry*)entry andFile:(NSString*)file andType:(DiffButtonType)t;
 
 // Set members
 - (void) setButtonTitle:(NSString*)title;

@@ -115,6 +115,13 @@ typedef enum
 
 typedef enum
 {
+	eDiffFileAdded	 = 0,
+	eDiffFileChanged = 1,
+	eDiffFileRemoved = 2
+} DiffButtonType;
+
+typedef enum
+{
 	eUseMercurialBinaryIncludedInMacHg	= 0,
 	eUseMercurialBinarySpecifiedByUser	= 1
 } UseWhichMercurialOption;
