@@ -270,6 +270,7 @@ void setupGlobalsForPartsAndTemplate()
 - (NSArray*)	childrenOfEntry			{ return [collection_ childrenOfRev:stringAsNumber([self revision])]; }
 - (NSString*)	changesetInShortForm	{ return [changeset_ substringToIndex:MIN(12,[changeset_ length])]; }
 - (BOOL)	    isFullyLoaded			{ return loadStatus_ == eLogEntryLoadedFully; }
+- (RepositoryData*) repositoryData		{ return collection_; }
 
 
 

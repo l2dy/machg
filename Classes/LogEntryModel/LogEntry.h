@@ -72,6 +72,8 @@ extern void setupGlobalsForPartsAndTemplate();
 - (NSArray*)  childrenOfEntry;
 - (NSString*) changesetInShortForm;
 - (BOOL)	  isFullyLoaded;
+- (RepositoryData*) repositoryData;
+
 
 // Presentation of Entry
 - (void)	displayFormattedVerboseEntryIn:(id)container;
