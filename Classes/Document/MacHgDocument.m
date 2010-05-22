@@ -2101,6 +2101,7 @@
 				[task setArguments:diffArgs];
 				[task launch];			// Start the process
 			});
+		dispatchGroupWaitAndFinish(group);
 	}];
 }
 
