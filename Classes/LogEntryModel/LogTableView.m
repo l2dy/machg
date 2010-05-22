@@ -452,7 +452,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	if ([requestedColumn isEqualToString:@"graph"])
 		return [NSImage imageNamed:@"StatusAdded.png"];
 	
-	NSString* requestedRowCol = [requestedLogEntry valueForKey:requestedColumn];
+	id requestedRowCol = [requestedLogEntry valueForKey:requestedColumn];
 	if (requestedRowCol)
 		return requestedRowCol;
 	

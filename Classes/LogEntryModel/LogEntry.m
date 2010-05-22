@@ -15,6 +15,7 @@
 #import "LabelData.h"
 #import "TextButtonCell.h"
 #import "DiffTextButtonCell.h"
+#import "LabelTextButtonCell.h"
 
 
 
@@ -431,7 +432,18 @@ void setupGlobalsForPartsAndTemplate()
 	return fullComment_;
 }
 
-
+- (NSAttributedString*) labelsAndShortComment
+{
+	NSMutableAttributedString* str = [[NSMutableAttributedString alloc]init];
+	for (NSString* tag in tags_)
+	{
+		LabelData* label = [[collection_ tagToLabelDictionary] objectForKey:tag];
+		NSTextAttachment* attachment = [LabelTextButtonCell labelButtonAttachmentWithLabel:label andLogEntry:self];
+		[str appendAttributedString: [NSAttributedString attributedStringWithAttachment:attachment]];
+	}
+	[str appendAttributedString:[NSAttributedString string:shortComment_ withAttributes:systemFontAttributes]];
+	return str;
+}
 
 
 
