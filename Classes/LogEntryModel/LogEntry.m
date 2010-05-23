@@ -483,6 +483,7 @@ void setupGlobalsForPartsAndTemplate()
 		{
 			NSTextAttachment* attachment = [LabelTextButtonCell labelButtonAttachmentWithLabel:label andLogEntry:self];
 			[str appendAttributedString: [NSAttributedString attributedStringWithAttachment:attachment]];
+			[str appendAttributedString: [NSAttributedString string:@" " withAttributes:smallSystemFontAttributes]];
 		}
 	}
 	for (NSString* tag in tags_)
@@ -492,6 +493,7 @@ void setupGlobalsForPartsAndTemplate()
 		{
 			NSTextAttachment* attachment = [LabelTextButtonCell labelButtonAttachmentWithLabel:label andLogEntry:self];
 			[str appendAttributedString: [NSAttributedString attributedStringWithAttachment:attachment]];
+			[str appendAttributedString: [NSAttributedString string:@" " withAttributes:smallSystemFontAttributes]];
 		}
 	}
 	if (branch_)
@@ -501,6 +503,7 @@ void setupGlobalsForPartsAndTemplate()
 		{
 			NSTextAttachment* attachment = [LabelTextButtonCell labelButtonAttachmentWithLabel:label andLogEntry:self];
 			[str appendAttributedString: [NSAttributedString attributedStringWithAttachment:attachment]];
+			[str appendAttributedString: [NSAttributedString string:@" " withAttributes:smallSystemFontAttributes]];
 		}
 	}
 	if (shortComment_)
