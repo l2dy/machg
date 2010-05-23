@@ -33,6 +33,7 @@
 	BOOL				showRealPassword_;
 	EMGenericKeychainItem* passwordKeyChainItem_;
 	SingleTimedQueue*	timeoutQueueForSecurity_;
+	BOOL				cloneAfterAddition_;
 }
 @property (readwrite,assign) NSString*	  shortNameFieldValue;
 @property (readwrite,assign) NSString*	  serverFieldValue;
@@ -51,6 +52,7 @@
 // Sheet opening
 - (void)	openSheetForNewRepositoryRef;
 - (void)	openSheetForConfigureRepositoryRef:(SidebarNode*)node;
+- (void)	openSheetForAddAndClone;
 
 
 // Actions

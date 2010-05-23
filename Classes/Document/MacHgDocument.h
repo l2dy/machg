@@ -307,6 +307,7 @@
 - (IBAction)	sidebarMenuRevealRepositoryInFinder:(id)sender;
 - (IBAction)	sidebarMenuOpenTerminalHere:(id)sender;
 - (IBAction)	mainMenuOpenTerminalHere:(id)sender;
+- (IBAction)	mainMenuAddAndCloneServerRepositoryRef:(id)sender;
 
 
 // History Editing Actions

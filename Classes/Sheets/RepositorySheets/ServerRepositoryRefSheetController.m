@@ -165,9 +165,26 @@
 
 	nodeToConfigure = nil;
 	passwordKeyChainItem_ = nil;
+	cloneAfterAddition_ = NO;
 	[theTitleText setStringValue:@"Add Server Repository"];
 	[okButton setTitle:@"Add Server"];
 	[NSApp beginSheet:theWindow modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+}
+
+
+- (void) openSheetForAddAndClone
+{
+	[self clearSheetFieldValues];
+	[self setNeedsPassword:NO];
+	[self setPassword:@""];
+	[self setShowRealPassword:YES];
+	
+	nodeToConfigure = nil;
+	passwordKeyChainItem_ = nil;
+	cloneAfterAddition_ = YES;
+	[theTitleText setStringValue:@"Add and Clone Server Repository"];
+	[okButton setTitle:@"Add and Clone"];
+	[NSApp beginSheet:theWindow modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];	
 }
 
 
@@ -205,6 +222,7 @@
 
 	[theTitleText setStringValue:@"Configure Server Repository"];
 	[okButton setTitle:@"Configure Server"];
+	cloneAfterAddition_ = NO;
 	[self validateButtons:self];
 	[NSApp beginSheet:theWindow modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
 }
@@ -275,6 +293,7 @@
 		[newNode setHasPassword:needsPassword_];
 		[newNode refreshNodeIcon];
 		[[myDocument sidebar] addSidebarNode:newNode];
+		[theSidebar selectNode:newNode];
 	}
 
 	if (needsPassword_)
@@ -296,6 +315,8 @@
 	[[myDocument sidebar] reloadData];
 	[myDocument saveDocumentIfNamed];
 	[myDocument postNotificationWithName:kSidebarSelectionDidChange];
+	if (cloneAfterAddition_)
+		[myDocument mainMenuCloneRepository:self];
 }
 
 - (IBAction) sheetButtonCancel:(id)sender

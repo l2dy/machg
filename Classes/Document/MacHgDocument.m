@@ -1557,6 +1557,7 @@
 	else
 		[self sidebarMenuOpenTerminalHere:sender];
 }
+- (IBAction) mainMenuAddAndCloneServerRepositoryRef:(id)sender	{ [[self theServerRepositoryRefSheetController] openSheetForAddAndClone]; }
 
 
 

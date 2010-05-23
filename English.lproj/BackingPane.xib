@@ -243,7 +243,7 @@
 						<bool key="NSTransparent">NO</bool>
 						<object class="NSColor" key="NSFillColor2">
 							<int key="NSColorSpace">1</int>
-							<bytes key="NSRGB">MC44NzA1ODgyMzUzIDAuODk4MDM5MjE1NyAwLjkxNzY0NzA1ODgAA</bytes>
+							<bytes key="NSRGB">MC44NzA1ODgyNDMgMC44OTgwMzkyMjE4IDAuOTE3NjQ3MDYzNwA</bytes>
 						</object>
 					</object>
 				</array>
@@ -261,6 +261,22 @@
 						<reference key="destination" ref="93727628"/>
 					</object>
 					<int key="connectionID">47</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">mainMenuAddAndCloneServerRepositoryRef:</string>
+						<reference key="source" ref="1003"/>
+						<reference key="destination" ref="73992133"/>
+					</object>
+					<int key="connectionID">56</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">sidebarMenuAddLocalRepositoryRef:</string>
+						<reference key="source" ref="1003"/>
+						<reference key="destination" ref="183957451"/>
+					</object>
+					<int key="connectionID">57</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -407,38 +423,10 @@
 				<string key="31.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="37.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="38.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="39.CustomClassName">HelpButton</string>
-				<object class="NSMutableDictionary" key="39.IBAttributePlaceholdersKey">
-					<string key="NS.key.0">IBUserDefinedRuntimeAttributesPlaceholderName</string>
-					<object class="IBUserDefinedRuntimeAttributesPlaceholder" key="NS.object.0">
-						<string key="name">IBUserDefinedRuntimeAttributesPlaceholderName</string>
-						<reference key="object" ref="183957451"/>
-						<array key="userDefinedRuntimeAttributes">
-							<object class="IBUserDefinedRuntimeAttribute">
-								<string key="typeIdentifier">com.apple.InterfaceBuilder.userDefinedRuntimeAttributeType.string</string>
-								<string key="keyPath">helpAnchorName</string>
-								<string key="value">CreatingANewLocalRepository</string>
-							</object>
-						</array>
-					</object>
-				</object>
+				<dictionary class="NSMutableDictionary" key="39.IBAttributePlaceholdersKey"/>
 				<string key="39.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="40.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="41.CustomClassName">HelpButton</string>
-				<object class="NSMutableDictionary" key="41.IBAttributePlaceholdersKey">
-					<string key="NS.key.0">IBUserDefinedRuntimeAttributesPlaceholderName</string>
-					<object class="IBUserDefinedRuntimeAttributesPlaceholder" key="NS.object.0">
-						<string key="name">IBUserDefinedRuntimeAttributesPlaceholderName</string>
-						<reference key="object" ref="73992133"/>
-						<array key="userDefinedRuntimeAttributes">
-							<object class="IBUserDefinedRuntimeAttribute">
-								<string key="typeIdentifier">com.apple.InterfaceBuilder.userDefinedRuntimeAttributeType.string</string>
-								<string key="keyPath">helpAnchorName</string>
-								<string key="value">CloningARepository</string>
-							</object>
-						</array>
-					</object>
-				</object>
+				<dictionary class="NSMutableDictionary" key="41.IBAttributePlaceholdersKey"/>
 				<string key="41.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="42.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="43.CustomClassName">HelpButton</string>
@@ -497,7 +485,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">55</int>
+			<int key="maxID">57</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -530,6 +518,89 @@
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
+					<string key="className">MacHgDocument</string>
+					<string key="superclassName">NSDocument</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="actionSwitchViewToBackingPane:">id</string>
+						<string key="actionSwitchViewToBrowserPane:">id</string>
+						<string key="actionSwitchViewToDifferencesPane:">id</string>
+						<string key="actionSwitchViewToHistoryPane:">id</string>
+						<string key="actionTestListingItem:">id</string>
+						<string key="browserMenuOpenSelectedFilesInFinder:">id</string>
+						<string key="browserMenuOpenTerminalHere:">id</string>
+						<string key="browserMenuRevealSelectedFilesInFinder:">id</string>
+						<string key="mainMenuAddAndCloneServerRepositoryRef:">id</string>
+						<string key="mainMenuAddLabelToCurrentRevision:">id</string>
+						<string key="mainMenuAddRenameRemoveAllFiles:">id</string>
+						<string key="mainMenuAddRenameRemoveSelectedFiles:">id</string>
+						<string key="mainMenuAddSelectedFiles:">id</string>
+						<string key="mainMenuAnnotateSelectedFiles:">id</string>
+						<string key="mainMenuCloneRepository:">id</string>
+						<string key="mainMenuCollapseChangesets:">id</string>
+						<string key="mainMenuCommitAllFiles:">id</string>
+						<string key="mainMenuCommitSelectedFiles:">id</string>
+						<string key="mainMenuDeleteSelectedFiles:">id</string>
+						<string key="mainMenuDiffAllFiles:">id</string>
+						<string key="mainMenuDiffSelectedFiles:">id</string>
+						<string key="mainMenuExportPatches:">id</string>
+						<string key="mainMenuHistoryEditChangesets:">id</string>
+						<string key="mainMenuIgnoreSelectedFiles:">id</string>
+						<string key="mainMenuImportPatches:">id</string>
+						<string key="mainMenuIncomingFromRepository:">id</string>
+						<string key="mainMenuManifestOfCurrentVersion:">id</string>
+						<string key="mainMenuMarkResolvedSelectedFiles:">id</string>
+						<string key="mainMenuMergeWith:">id</string>
+						<string key="mainMenuNoAction:">id</string>
+						<string key="mainMenuOpenTerminalHere:">id</string>
+						<string key="mainMenuOutgoingToRepository:">id</string>
+						<string key="mainMenuPullFromRepository:">id</string>
+						<string key="mainMenuPushToRepository:">id</string>
+						<string key="mainMenuRebaseChangesets:">id</string>
+						<string key="mainMenuRemergeSelectedFiles:">id</string>
+						<string key="mainMenuRenameSelectedFile:">id</string>
+						<string key="mainMenuRevertAllFiles:">id</string>
+						<string key="mainMenuRevertAllFilesToVersion:">id</string>
+						<string key="mainMenuRevertSelectedFiles:">id</string>
+						<string key="mainMenuRevertSelectedFilesToVersion:">id</string>
+						<string key="mainMenuRollbackCommit:">id</string>
+						<string key="mainMenuStripChangesets:">id</string>
+						<string key="mainMenuUnignoreSelectedFiles:">id</string>
+						<string key="mainMenuUntrackSelectedFiles:">id</string>
+						<string key="mainMenuUpdateRepository:">id</string>
+						<string key="mainMenuUpdateRepositoryToVersion:">id</string>
+						<string key="refreshBrowserContent:">id</string>
+						<string key="searchFieldChanged:">id</string>
+						<string key="sidebarMenuAddLocalRepositoryRef:">id</string>
+						<string key="sidebarMenuAddNewSidebarGroupItem:">id</string>
+						<string key="sidebarMenuAddServerRepositoryRef:">id</string>
+						<string key="sidebarMenuConfigureLocalRepositoryRef:">id</string>
+						<string key="sidebarMenuConfigureServerRepositoryRef:">id</string>
+						<string key="sidebarMenuOpenTerminalHere:">id</string>
+						<string key="sidebarMenuRemoveSidebarItem:">id</string>
+						<string key="sidebarMenuRevealRepositoryInFinder:">id</string>
+						<string key="testBrowserLoad:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="informationAndActivityBox_">NSBox</string>
+						<string key="informationBox_">NSBox</string>
+						<string key="mainContentBox">NSBox</string>
+						<string key="mainSplitView">BWSplitView</string>
+						<string key="mainWindow_">NSWindow</string>
+						<string key="sidebarAndInformation_">ThickSplitView</string>
+						<string key="sidebar_">Sidebar</string>
+						<string key="theProcessListController_">ProcessListController</string>
+						<string key="toolbarSearchField_">NSSearchField</string>
+						<string key="toolbarSearchItem_">NSToolbarItem</string>
+						<string key="updateAlertAccessoryAlertSuppressionCheckBox">NSButton</string>
+						<string key="updateAlertAccessoryCleanCheckBox">NSButton</string>
+						<string key="updateAlertAccessoryView">NSView</string>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">Classes/Document/MacHgDocument.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
 					<string key="className">NSObject</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="143233862">
 						<string key="majorKey">IBProjectSource</string>
@@ -537,11 +608,75 @@
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
+					<string key="className">NSTableView</string>
+					<reference key="sourceIdentifier" ref="143233862"/>
+				</object>
+				<object class="IBPartialClassDescription">
 					<string key="className">NSView</string>
 					<reference key="sourceIdentifier" ref="143233862"/>
 				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">ProcessListController</string>
+					<string key="superclassName">NSObject</string>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="activityBox">NSBox</string>
+						<string key="informationAndActivityBox">NSBox</string>
+						<string key="informationBox">NSBox</string>
+						<string key="myDocument">MacHgDocument</string>
+						<string key="processListTableView">NSTableView</string>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">Classes/Sidebar/ProcessListController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">Sidebar</string>
+					<string key="superclassName">NSOutlineView</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="reloadSidebarData:">id</string>
+						<string key="sidebarMenuAddLocalRepositoryRef:">id</string>
+						<string key="sidebarMenuAddNewSidebarGroupItem:">id</string>
+						<string key="sidebarMenuAddServerRepositoryRef:">id</string>
+						<string key="sidebarMenuConfigureLocalRepositoryRef:">id</string>
+						<string key="sidebarMenuConfigureServerRepositoryRef:">id</string>
+						<string key="sidebarMenuOpenTerminalHere:">id</string>
+						<string key="sidebarMenuRemoveSidebarItem:">id</string>
+						<string key="sidebarMenuRevealRepositoryInFinder:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="informationTextView_">NSTextView</string>
+						<string key="myDocument">MacHgDocument</string>
+						<string key="repositoryPathControl_">NSPathControl</string>
+						<string key="sidebarContextualMenu">NSMenu</string>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">Classes/Sidebar/Sidebar.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">ThickSplitView</string>
+					<string key="superclassName">NSSplitView</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">Classes/Sidebar/ThickSplitView.h</string>
+					</object>
+				</object>
 			</array>
 			<array class="NSMutableArray" key="referencedPartialClassDescriptionsV3.2+">
+				<object class="IBPartialClassDescription">
+					<string key="className">BWSplitView</string>
+					<string key="superclassName">NSSplitView</string>
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">toggleCollapse:</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">BWToolkitFramework.framework/Headers/BWSplitView.h</string>
+					</object>
+				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">NSActionCell</string>
 					<string key="superclassName">NSCell</string>
@@ -638,6 +773,29 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="827476648">
 						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">AppKit.framework/Headers/NSControl.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSDocument</string>
+					<string key="superclassName">NSObject</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="printDocument:">id</string>
+						<string key="revertDocumentToSaved:">id</string>
+						<string key="runPageLayout:">id</string>
+						<string key="saveDocument:">id</string>
+						<string key="saveDocumentAs:">id</string>
+						<string key="saveDocumentTo:">id</string>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">AppKit.framework/Headers/NSDocument.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSDocument</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">AppKit.framework/Headers/NSDocumentScripting.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -743,7 +901,7 @@
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="41806583">
 						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">AppKit.framework/Headers/NSOutlineView.h</string>
 					</object>
@@ -764,14 +922,14 @@
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="687079230">
 						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">AppKit.framework/Headers/NSTableView.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">NSObject</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="969022445">
 						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">AppKit.framework/Headers/NSToolbarItem.h</string>
 					</object>
@@ -920,6 +1078,41 @@
 					<string key="className">NSObject</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">QuartzCore.framework/Headers/CAAnimation.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">QuartzCore.framework/Headers/CALayer.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">QuartzCore.framework/Headers/CIImageProvider.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">Sparkle.framework/Headers/SUAppcast.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">Sparkle.framework/Headers/SUUpdater.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">WebKit.framework/Headers/WebDownload.h</string>
 					</object>
 				</object>
@@ -987,6 +1180,19 @@
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
+					<string key="className">NSOutlineView</string>
+					<string key="superclassName">NSTableView</string>
+					<reference key="sourceIdentifier" ref="41806583"/>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSPathControl</string>
+					<string key="superclassName">NSControl</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">AppKit.framework/Headers/NSPathControl.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
 					<string key="className">NSResponder</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
@@ -1000,6 +1206,56 @@
 						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">AppKit.framework/Headers/NSResponder.h</string>
 					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSSearchField</string>
+					<string key="superclassName">NSTextField</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">AppKit.framework/Headers/NSSearchField.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSSplitView</string>
+					<string key="superclassName">NSView</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">AppKit.framework/Headers/NSSplitView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSTableView</string>
+					<string key="superclassName">NSControl</string>
+					<reference key="sourceIdentifier" ref="687079230"/>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSText</string>
+					<string key="superclassName">NSView</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">AppKit.framework/Headers/NSText.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSTextField</string>
+					<string key="superclassName">NSControl</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">AppKit.framework/Headers/NSTextField.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSTextView</string>
+					<string key="superclassName">NSText</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">AppKit.framework/Headers/NSTextView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSToolbarItem</string>
+					<string key="superclassName">NSObject</string>
+					<reference key="sourceIdentifier" ref="969022445"/>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">NSView</string>
@@ -1046,6 +1302,35 @@
 						<string key="minorKey">AppKit.framework/Headers/NSViewController.h</string>
 					</object>
 				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSWindow</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">AppKit.framework/Headers/NSDrawer.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSWindow</string>
+					<string key="superclassName">NSResponder</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">AppKit.framework/Headers/NSWindow.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSWindow</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">AppKit.framework/Headers/NSWindowScripting.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSWindow</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">BWToolkitFramework.framework/Headers/NSWindow+BWAdditions.h</string>
+					</object>
+				</object>
 			</array>
 		</object>
 		<int key="IBDocument.localizationMode">0</int>
@@ -1054,7 +1339,7 @@
 			<integer value="1060" key="NS.object.0"/>
 		</object>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
-		<string key="IBDocument.LastKnownRelativeProjectPath">../MacHG.xcodeproj</string>
+		<string key="IBDocument.LastKnownRelativeProjectPath">../MacHg.xcodeproj</string>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 	</data>
 </archive>
