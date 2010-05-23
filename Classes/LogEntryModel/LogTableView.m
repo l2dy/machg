@@ -756,12 +756,12 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	NSColor* backColor = nil;
 	if ([repositoryData revisionIsParent:[entry revision]])
 		backColor = LogEntryTableParentHighlightColor();
-	else if (IsNotEmpty([entry branch]))
-		backColor = LogEntryTableBranchHighlightColor();
-	else if (IsNotEmpty([entry bookmarks]))
-		backColor = LogEntryTableBookmarkHighlightColor();
-	else if (IsNotEmpty([entry tags]))
-		backColor = LogEntryTableTagHighlightColor();
+//	else if (IsNotEmpty([entry branch]))
+//		backColor = LogEntryTableBranchHighlightColor();
+//	else if (IsNotEmpty([entry bookmarks]))
+//		backColor = LogEntryTableBookmarkHighlightColor();
+//	else if (IsNotEmpty([entry tags]))
+//		backColor = LogEntryTableTagHighlightColor();
 	
 	// If we have no special backing return nil and let callers call their super class and get normal highlighting.
 	if (!backColor)

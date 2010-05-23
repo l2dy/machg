@@ -28,10 +28,9 @@
 
 // Set members
 - (void) setButtonTitle:(NSString*)title;
-- (void) setFileNameFromRelativeName:(NSString*)relativeName;
 
 
 // Actions
-- (IBAction) displayLabel:(id)sender;
+- (IBAction) gotoLabel:(id)sender;
 
 @end

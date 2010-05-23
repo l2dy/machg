@@ -435,13 +435,35 @@ void setupGlobalsForPartsAndTemplate()
 - (NSAttributedString*) labelsAndShortComment
 {
 	NSMutableAttributedString* str = [[NSMutableAttributedString alloc]init];
+	for (NSString* bookmark in bookmarks_)
+	{
+		LabelData* label = [[collection_ bookmarkToLabelDictionary] objectForKey:bookmark];
+		if (label)
+		{
+			NSTextAttachment* attachment = [LabelTextButtonCell labelButtonAttachmentWithLabel:label andLogEntry:self];
+			[str appendAttributedString: [NSAttributedString attributedStringWithAttachment:attachment]];
+		}
+	}
 	for (NSString* tag in tags_)
 	{
 		LabelData* label = [[collection_ tagToLabelDictionary] objectForKey:tag];
-		NSTextAttachment* attachment = [LabelTextButtonCell labelButtonAttachmentWithLabel:label andLogEntry:self];
-		[str appendAttributedString: [NSAttributedString attributedStringWithAttachment:attachment]];
+		if (label)
+		{
+			NSTextAttachment* attachment = [LabelTextButtonCell labelButtonAttachmentWithLabel:label andLogEntry:self];
+			[str appendAttributedString: [NSAttributedString attributedStringWithAttachment:attachment]];
+		}
 	}
-	[str appendAttributedString:[NSAttributedString string:shortComment_ withAttributes:systemFontAttributes]];
+	if (branch_)
+	{
+		LabelData* label = [[collection_ branchToLabelDictionary] objectForKey:branch_];
+		if (label)
+		{
+			NSTextAttachment* attachment = [LabelTextButtonCell labelButtonAttachmentWithLabel:label andLogEntry:self];
+			[str appendAttributedString: [NSAttributedString attributedStringWithAttachment:attachment]];
+		}
+	}
+	if (shortComment_)
+		[str appendAttributedString:[NSAttributedString string:shortComment_ withAttributes:smallSystemFontAttributes]];
 	return str;
 }
 

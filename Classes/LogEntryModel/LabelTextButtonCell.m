@@ -99,44 +99,23 @@
 {
 	NSAttributedString* title = [self attributedTitle];
 	NSSize s = [title size];
-	return NSMakeRect(0, -7, s.width + 5, 19);	
+	return NSMakeRect(0, -5, s.width + 15, 16);	
 }
 
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)aView
 {
-	NSBezierPath* path = [NSBezierPath bezierPathWithRoundedRect:cellFrame xRadius:4.0 yRadius:4.0];
-
-	static NSColor* defaultRed;
-	if (!defaultRed)
-		defaultRed = [NSColor colorWithCalibratedRed:0.5 green:0.0 blue:0.0 alpha:1.0];
-	NSColor* fillColor   = defaultRed;
-	NSColor* strokeColor = nil;
+	NSBezierPath* path   = [NSBezierPath bezierPathWithRoundedRect:cellFrame xRadius:4.0 yRadius:4.0];
+	NSColor* fillColor   = [NSColor lightGrayColor];
+	NSColor* strokeColor = [NSColor blackColor];
 	
-	if ([[entry_ repositoryData] incompleteRevisionEntry] == entry_)
-	{
-		fillColor   = [NSColor whiteColor];
-		strokeColor = [NSColor grayColor];
-	}
-	else if ([[entry_ repositoryData] revisionIsParent:[entry_ revision]])
-	{
-		fillColor   = [LogEntryTableParentHighlightColor() intensifySaturationAndBrightness:4.0];
-		strokeColor = defaultRed;
-	}
+	if ([[entry_ repositoryData] revisionIsParent:[entry_ revision]])
+		fillColor   = LogEntryTableParentHighlightColor();
 	else if (IsNotEmpty([entry_ branch]))
-	{
-		fillColor   = [LogEntryTableBranchHighlightColor() intensifySaturationAndBrightness:4.0];
-		strokeColor = defaultRed;
-	}
+		fillColor   = LogEntryTableBranchHighlightColor();
 	else if (IsNotEmpty([entry_ bookmarks]))
-	{
-		fillColor = [LogEntryTableBookmarkHighlightColor() intensifySaturationAndBrightness:4.0];
-		strokeColor = defaultRed;
-	}
+		fillColor = LogEntryTableBookmarkHighlightColor();
 	else if (IsNotEmpty([entry_ tags]))
-	{
-		fillColor = [LogEntryTableTagHighlightColor() intensifySaturationAndBrightness:4.0];
-		strokeColor = defaultRed;
-	}
+		fillColor = LogEntryTableTagHighlightColor();
 	
 	if (fillColor)
 	{
