@@ -45,8 +45,8 @@
 //	syntax "patch" "\.(patch|diff)$"
 //	color brightgreen "^\+.*"
 //	color green "^\+\+\+.*"
-//	color brightblue "^ .*"
-//	color brightred "^-.*"
+//	color lightBlue "^ .*"
+//	color lightRed "^-.*"
 //	color red "^---.*"
 //	color brightyellow "^@@.*"
 //	color magenta "^diff.*"
@@ -59,11 +59,11 @@
 	
 	static NSMutableDictionary* lightGreen = nil;
 	static NSMutableDictionary* green = nil;
-	static NSMutableDictionary* brightBlue = nil;
-	static NSMutableDictionary* brightRed = nil;
+	static NSMutableDictionary* lightBlue = nil;
+	static NSMutableDictionary* lightRed = nil;
 	static NSMutableDictionary* red = nil;
-	static NSMutableDictionary* black = nil;
-	static NSMutableDictionary* yellow = nil;
+	static NSMutableDictionary* normal = nil;
+	static NSMutableDictionary* linePart = nil;
 	static NSMutableDictionary* magenta = nil;
 
 	if (!lightGreen)
@@ -80,22 +80,22 @@
 		theDictionary = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil];
 		
 		lightGreen	= [NSMutableDictionary dictionaryWithDictionary:theDictionary];
-		brightBlue	= [NSMutableDictionary dictionaryWithDictionary:theDictionary];
-		brightRed	= [NSMutableDictionary dictionaryWithDictionary:theDictionary];
+		lightBlue	= [NSMutableDictionary dictionaryWithDictionary:theDictionary];
+		lightRed	= [NSMutableDictionary dictionaryWithDictionary:theDictionary];
 		green		= [NSMutableDictionary dictionaryWithDictionary:theDictionary];
 		red			= [NSMutableDictionary dictionaryWithDictionary:theDictionary];
-		yellow		= [NSMutableDictionary dictionaryWithDictionary:theDictionary];
+		linePart	= [NSMutableDictionary dictionaryWithDictionary:theDictionary];
 		magenta		= [NSMutableDictionary dictionaryWithDictionary:theDictionary];
-		black		= [NSMutableDictionary dictionaryWithDictionary:theDictionary];
+		normal		= [NSMutableDictionary dictionaryWithDictionary:theDictionary];
 
-		[lightGreen	setObject:[NSColor colorWithDeviceRed:(  0.0/255.0) green:(180.0/255.0) blue:(  0.0/255.0) alpha:1.0] forKey:NSForegroundColorAttributeName];
-		[brightBlue	setObject:[NSColor colorWithDeviceRed:(  0.0/255.0) green:(  0.0/255.0) blue:(180.0/255.0) alpha:1.0] forKey:NSForegroundColorAttributeName];
-		[brightRed	setObject:[NSColor colorWithDeviceRed:(180.0/255.0) green:(  0.0/255.0) blue:(  0.0/255.0) alpha:1.0] forKey:NSForegroundColorAttributeName];
-		[green		setObject:[NSColor colorWithDeviceRed:(  0.0/255.0) green:(128.0/255.0) blue:(  0.0/255.0) alpha:1.0] forKey:NSForegroundColorAttributeName];
-		[red		setObject:[NSColor colorWithDeviceRed:(180.0/255.0) green:(  0.0/255.0) blue:(  0.0/255.0) alpha:1.0] forKey:NSForegroundColorAttributeName];
-		[yellow		setObject:[NSColor colorWithDeviceRed:(128.0/255.0) green:(128.0/255.0) blue:(  0.0/255.0) alpha:1.0] forKey:NSForegroundColorAttributeName];
-		[magenta	setObject:[NSColor colorWithDeviceRed:(128.0/255.0) green:(  0.0/255.0) blue:(128.0/255.0) alpha:1.0] forKey:NSForegroundColorAttributeName];
-		[black		setObject:[NSColor colorWithDeviceRed:(  0.0/255.0) green:(  0.0/255.0) blue:(  0.0/255.0) alpha:1.0] forKey:NSForegroundColorAttributeName];
+		[lightGreen	setObject:[NSColor colorWithDeviceRed:(217.0/255.0) green:(255.0/255.0) blue:(186.0/255.0) alpha:1.0] forKey:NSBackgroundColorAttributeName];
+		[lightBlue	setObject:[NSColor colorWithDeviceRed:(202.0/255.0) green:(238.0/255.0) blue:(255.0/255.0) alpha:1.0] forKey:NSBackgroundColorAttributeName];
+		[lightRed	setObject:[NSColor colorWithDeviceRed:(255.0/255.0) green:(220.0/255.0) blue:(220.0/255.0) alpha:1.0] forKey:NSBackgroundColorAttributeName];
+		[green		setObject:[NSColor colorWithDeviceRed:(160.0/255.0) green:(255.0/255.0) blue:(160.0/255.0) alpha:1.0] forKey:NSBackgroundColorAttributeName];
+		[red		setObject:[NSColor colorWithDeviceRed:(255.0/255.0) green:(160.0/255.0) blue:(160.0/255.0) alpha:1.0] forKey:NSBackgroundColorAttributeName];
+		[linePart	setObject:[NSColor colorWithDeviceRed:(230.0/255.0) green:(230.0/255.0) blue:(230.0/255.0) alpha:1.0] forKey:NSBackgroundColorAttributeName];
+		[linePart	setObject:[NSColor colorWithDeviceRed:(128.0/255.0) green:(128.0/255.0) blue:(128.0/255.0) alpha:1.0] forKey:NSForegroundColorAttributeName];
+		[magenta	setObject:[NSColor colorWithDeviceRed:(255.0/255.0) green:(200.0/255.0) blue:(255.0/255.0) alpha:1.0] forKey:NSBackgroundColorAttributeName];
 	}
 
 	
@@ -110,14 +110,14 @@
 	
 	for (NSString* line in lines)
 	{		
-			 if ([line isMatchedByRegex:@"^\\+.*"])			[colorized appendAttributedString:[NSAttributedString string:line withAttributes:lightGreen]];
-		else if ([line isMatchedByRegex:@"^\\+\\+\\+.*"])	[colorized appendAttributedString:[NSAttributedString string:line withAttributes:green]];
-		else if ([line isMatchedByRegex:@"^ .*"])			[colorized appendAttributedString:[NSAttributedString string:line withAttributes:brightBlue]];
-		else if ([line isMatchedByRegex:@"^-.*"])			[colorized appendAttributedString:[NSAttributedString string:line withAttributes:brightRed]];
+		     if ([line isMatchedByRegex:@"^\\+\\+\\+.*"])	[colorized appendAttributedString:[NSAttributedString string:line withAttributes:green]];
+		else if ([line isMatchedByRegex:@"^\\+.*"])			[colorized appendAttributedString:[NSAttributedString string:line withAttributes:lightGreen]];
+		else if ([line isMatchedByRegex:@"^ .*"])			[colorized appendAttributedString:[NSAttributedString string:line withAttributes:normal]];
 		else if ([line isMatchedByRegex:@"^---.*"])			[colorized appendAttributedString:[NSAttributedString string:line withAttributes:red]];
-		else if ([line isMatchedByRegex:@"^@@.*"])			[colorized appendAttributedString:[NSAttributedString string:line withAttributes:yellow]];
+		else if ([line isMatchedByRegex:@"^-.*"])			[colorized appendAttributedString:[NSAttributedString string:line withAttributes:lightRed]];
+		else if ([line isMatchedByRegex:@"^@@.*"])			[colorized appendAttributedString:[NSAttributedString string:line withAttributes:linePart]];
 		else if ([line isMatchedByRegex:@"^diff.*"])		[colorized appendAttributedString:[NSAttributedString string:line withAttributes:magenta]];
-		else												[colorized appendAttributedString:[NSAttributedString string:line withAttributes:black]];
+		else												[colorized appendAttributedString:[NSAttributedString string:line withAttributes:normal]];
 	}
 	return colorized;
 }
