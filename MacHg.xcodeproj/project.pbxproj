@@ -1895,6 +1895,7 @@
 				LIBRARY_SEARCH_PATHS = "$(inherited)";
 				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = MacHg;
+				VALID_ARCHS = "i386 x86_64";
 			};
 			name = Release;
 		};
