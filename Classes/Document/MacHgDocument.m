@@ -741,6 +741,8 @@
 - (BOOL)	showingBrowserOrHistoryPane						{ return currentPane_ == eBrowserPaneView || currentPane_ == eHistoryPaneView; }
 - (BOOL)	showingBrowserOrDifferencesPane					{ return currentPane_ == eBrowserPaneView || currentPane_ == eDifferencesPaneView; }
 - (BOOL)	showingBrowserOrHistoryOrDifferencesPane		{ return currentPane_ == eBrowserPaneView || currentPane_ == eHistoryPaneView || currentPane_ == eDifferencesPaneView; }
+- (BOOL)	showingASheet									{ return showingSheet_; }
+
 
 - (IBAction) actionSwitchViewToBrowserPane:(id)sender		{ [self setCurrentPane:eBrowserPaneView]; }
 - (IBAction) actionSwitchViewToBackingPane:(id)sender		{ [self setCurrentPane:eBackingPaneView]; }
@@ -779,7 +781,7 @@
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (void) windowWillBeginSheet:(NSNotification*)notification	{ showingSheet_ = YES; }
-- (void) windowDidEndSheet:(NSNotification*)notification		{ showingSheet_ = NO;  }
+- (void) windowDidEndSheet:(NSNotification*)notification	{ showingSheet_ = NO;  }
 
 
 

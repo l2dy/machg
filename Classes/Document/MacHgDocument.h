@@ -168,6 +168,7 @@
 - (BOOL)		showingBrowserOrHistoryPane;
 - (BOOL)		showingBrowserOrDifferencesPane;
 - (BOOL)		showingBrowserOrHistoryOrDifferencesPane;
+- (BOOL)		showingASheet;
 - (PaneViewNum)	currentPane;
 - (void)		setCurrentPane:(PaneViewNum)paneNum;
 - (IBAction)	actionSwitchViewToBrowserPane:(id)sender;
