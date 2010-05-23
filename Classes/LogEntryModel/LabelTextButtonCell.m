@@ -73,7 +73,6 @@
 		NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
 		[paragraphStyle setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
 		[paragraphStyle setAlignment:NSCenterTextAlignment];
-		//NSFont* textFont = [NSFont fontWithName:@"Verdana" size:[NSFont smallSystemFontSize]];
 		NSFont* font = [NSFont fontWithName:@"Helvetica"  size:[NSFont smallSystemFontSize]];
 		theDictionary = [NSDictionary dictionaryWithObjectsAndKeys: font, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil];
 	}
@@ -91,7 +90,9 @@
 
 - (IBAction) gotoLabel:(id)sender
 {
-	MacHgDocument* document = [[entry_ repositoryData] myDocument];
+	// I am not sure what action clicking on the label should have for now.
+	//	MacHgDocument* document = [[entry_ repositoryData] myDocument];
+	//	if (![document showingASheet] && [document showingHistoryPane])		
 }
 
 
@@ -99,22 +100,25 @@
 {
 	NSAttributedString* title = [self attributedTitle];
 	NSSize s = [title size];
-	return NSMakeRect(0, -5, s.width + 15, 16);	
+	return NSMakeRect(0, -5, s.width + 15, 15);	
 }
 
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)aView
 {
-	NSBezierPath* path   = [NSBezierPath bezierPathWithRoundedRect:cellFrame xRadius:4.0 yRadius:4.0];
+	NSRect newRect = cellFrame;
+	newRect.origin.y -= 0.5;
+	newRect.origin.x += 0.5;
+	newRect.size.width -= 1.0;
+	NSBezierPath* path   = [NSBezierPath bezierPathWithRoundedRect:newRect xRadius:4.0 yRadius:4.0];
 	NSColor* fillColor   = [NSColor lightGrayColor];
 	NSColor* strokeColor = [NSColor blackColor];
-	
-	if ([[entry_ repositoryData] revisionIsParent:[entry_ revision]])
-		fillColor   = LogEntryTableParentHighlightColor();
-	else if (IsNotEmpty([entry_ branch]))
+
+	[path setLineWidth:0];
+	if ([label_ isBranch])
 		fillColor   = LogEntryTableBranchHighlightColor();
-	else if (IsNotEmpty([entry_ bookmarks]))
+	else if ([label_ isBookmark])
 		fillColor = LogEntryTableBookmarkHighlightColor();
-	else if (IsNotEmpty([entry_ tags]))
+	else if ([label_ isTag])
 		fillColor = LogEntryTableTagHighlightColor();
 	
 	if (fillColor)
