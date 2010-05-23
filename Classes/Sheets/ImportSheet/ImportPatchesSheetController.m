@@ -163,9 +163,9 @@
 		if (!patch)
 			break;
 
-		if ([patch authorIsModified])			[argsImport addObject:@"--user" followedBy:[patch author]];
-		if ([patch dateIsModified])				[argsImport addObject:@"--date" followedBy:[patch date]];
-		if ([patch commitMessageIsModified])	[argsImport addObject:@"--date" followedBy:[patch commitMessage]];
+		if ([patch authorIsModified])			[argsImport addObject:@"--user"    followedBy:[patch author]];
+		if ([patch dateIsModified])				[argsImport addObject:@"--date"    followedBy:[patch date]];
+		if ([patch commitMessageIsModified])	[argsImport addObject:@"--message" followedBy:[patch commitMessage]];
 		if ([patch forceOption])				[argsImport addObject:@"--force"];
 		if ([patch exactOption])				[argsImport addObject:@"--exact"];
 		if ([patch importBranchOption])			[argsImport addObject:@"--import-branch"];
