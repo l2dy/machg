@@ -395,6 +395,10 @@
 		[[self prepareUndoWithTarget:self] setRootAndUpdate:copiedTree];
 		[[self undoManager] setActionName:@"Drag"];
 		
+		// We can't drag the item onto itself
+		if ([dragNodesArray count] == 1 && [dragNodesArray objectAtIndex:0] == targetParent)
+			return NO;
+		
 		// Compute new offset
 		for (NSInteger i = 0; i < [dragNodesArray count]; ++i)
 		{
