@@ -55,7 +55,7 @@ extern void setupGlobalsForPartsAndTemplate();
 - (NSString*) branch;
 - (NSString*) labels;
 
-- (NSAttributedString*) labelsAndShortComment;
+- (id) labelsAndShortComment;
 
 // Creation of LogEntries from results
 + (LogEntry*) fromLogResultLineShort:(NSString*)line  forRepositoryData:(RepositoryData*)collection;

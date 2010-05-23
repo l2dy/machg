@@ -432,8 +432,11 @@ void setupGlobalsForPartsAndTemplate()
 	return fullComment_;
 }
 
-- (NSAttributedString*) labelsAndShortComment
+- (id) labelsAndShortComment
 {
+	if (IsEmpty(bookmarks_) && IsEmpty(tags_) && IsEmpty(branch_))
+		return shortComment_;
+
 	NSMutableAttributedString* str = [[NSMutableAttributedString alloc]init];
 	for (NSString* bookmark in bookmarks_)
 	{
