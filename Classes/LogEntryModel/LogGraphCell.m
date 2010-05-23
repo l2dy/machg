@@ -281,7 +281,8 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 	}
 }
 
-- (NSSize) cellSize {
+- (NSSize) cellSize
+{
     // NSSize cellSize = [super cellSize];
 	// DebugLog(@"naturalSize is %f,%f", cellSize.width, cellSize.height);
 	//    cellSize.width += (image ? [image size].width : 0) + 3;

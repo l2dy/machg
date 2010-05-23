@@ -103,7 +103,7 @@
 	return NSMakeRect(0, -5, s.width + 15, 15);	
 }
 
-- (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)aView
+- (void)drawWithFrame:(NSRect)cellFrame inView:(NSView*)aView
 {
 	NSRect newRect = cellFrame;
 	newRect.origin.y -= 0.5;
@@ -135,7 +135,7 @@
 	[super drawInteriorWithFrame:cellFrame inView:aView];
 }
 
-- (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView *)controlView
+- (void)drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView*)controlView
 {
 	cellFrame.origin.y -= 1;
 	[super drawInteriorWithFrame:cellFrame inView:controlView];

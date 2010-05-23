@@ -23,7 +23,7 @@
 }
 
 - (void) setButtonTitle:(NSString*)title;
-- (void)drawWithFrame:(NSRect)cellFrame inView:(NSView *)aView;
+- (void)drawWithFrame:(NSRect)cellFrame inView:(NSView*)aView;
 - (BOOL)wantsToTrackMouse;
 
 @end

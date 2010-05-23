@@ -232,7 +232,7 @@
 }
 
 
-- (BOOL)tableView:(NSTableView *)aTableView shouldEditTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
+- (BOOL)tableView:(NSTableView*)aTableView shouldEditTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
 {
 	NSString* requestedColumn = [aTableColumn identifier];
 	if ([requestedColumn isEqualToString:@"patchName"])
