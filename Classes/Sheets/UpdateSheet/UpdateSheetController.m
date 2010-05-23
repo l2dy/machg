@@ -137,16 +137,36 @@
 
 - (NSAttributedString*) formattedSheetMessage
 {
+	BOOL outstandingChanges = [myDocument repositoryHasFilesWhichContainStatus:eHGStatusChangedInSomeWay];
+
 	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
+	
+	if (outstandingChanges)
+	{
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"There are outstanding ")];
+		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(@"uncommitted")];
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" modifications to the files in the repository. ")];
+	}
+		
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"The repository will be restored to the state of version ")];
 	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString([logTableView selectedRevision])];
+	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@".")];
+	
+	if (!outstandingChanges)
+		return newSheetMessage;
+	
 	if ([self cleanUpdate])
 	{
-		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@". Any modified files will be ")];
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" The modified files will be ")];
 		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(@"overwritten")];
 		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@".")];
-	}else
-		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@". Any modified files will be moved aside.")];
+	}
+	else
+	{
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" The modifications to the files will be transplanted to the new version ")];
+		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString([logTableView selectedRevision])];
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@".")];
+	}
 	return newSheetMessage;
 }
 
