@@ -149,7 +149,7 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 		}
 		NSInteger minTableRow = [logTableView tableRowForIntegerRevision:minRev];
 		NSInteger maxTableRow = [logTableView tableRowForIntegerRevision:maxRev];
-		NSIndexSet* firstLastIndexSet = [NSIndexSet indexSetWithIndexesInRange:NSMakeRangeFirstLast(minTableRow, maxTableRow)];
+		NSIndexSet* firstLastIndexSet = [NSIndexSet indexSetWithIndexesInRange:MakeRangeFirstLast(minTableRow, maxTableRow)];
 		[logTableView selectAndScrollToIndexSet:firstLastIndexSet];
 	}
 	else
@@ -241,7 +241,7 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 
 - (NSIndexSet*) tableView:(NSTableView*)tableView selectionIndexesForProposedSelection:(NSIndexSet*)proposedSelectionIndexes
 {
-	NSRange range = NSMakeRangeFirstLast([proposedSelectionIndexes firstIndex], [proposedSelectionIndexes lastIndex]);
+	NSRange range = MakeRangeFirstLast([proposedSelectionIndexes firstIndex], [proposedSelectionIndexes lastIndex]);
 	return [NSIndexSet indexSetWithIndexesInRange:range];
 }
 

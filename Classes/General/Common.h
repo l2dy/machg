@@ -679,7 +679,7 @@ static inline BOOL IsEmpty(id thing)
 
 static inline BOOL IsNotEmpty(id thing) { return !IsEmpty(thing); }
 
-NS_INLINE NSRange		NSMakeRangeFirstLast(NSUInteger first, NSUInteger last)	{ return (NSRange){.location = first, .length = last + 1 - first}; }
+NS_INLINE NSRange		MakeRangeFirstLast(NSUInteger first, NSUInteger last)	{ NSUInteger min = MIN(first, last); NSUInteger max = MAX(first, last); return (NSRange){.location = min, .length = max + 1 - min}; }
 NS_INLINE LowHighPair	MakeLowHighPair(NSInteger low, NSInteger high)			{ return (LowHighPair){.lowRevision = low, .highRevision = high}; }
 
 #define MakeNSValue(type,obj) ([NSValue value:&obj  withObjCType:@encode(type)])
