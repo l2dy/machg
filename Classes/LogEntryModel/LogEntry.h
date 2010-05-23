@@ -32,9 +32,9 @@ extern void setupGlobalsForPartsAndTemplate();
 	NSString* 	branch_;
 	NSString* 	labels_;					// This is the combination of tags, branches, and bookmarks
 	NSString*	changeset_;
-	NSString*	filesAdded_;
-	NSString*	filesModified_;
-	NSString*	filesRemoved_;
+	NSArray*	filesAdded_;
+	NSArray*	filesModified_;
+	NSArray*	filesRemoved_;
 }
 
 @property (readwrite,assign) LogEntryLoadStatus loadStatus;
@@ -46,9 +46,9 @@ extern void setupGlobalsForPartsAndTemplate();
 @property (readwrite,assign) NSString* 	fullComment;
 @property (readwrite,assign) NSString* 	parents;
 @property (readwrite,assign) NSString*	changeset;
-@property (readwrite,assign) NSString*	filesAdded;
-@property (readwrite,assign) NSString*	filesModified;
-@property (readwrite,assign) NSString*	filesRemoved;
+@property (readwrite,assign) NSArray*	filesAdded;
+@property (readwrite,assign) NSArray*	filesModified;
+@property (readwrite,assign) NSArray*	filesRemoved;
 
 - (NSArray*)  tags;
 - (NSArray*)  bookmarks;
@@ -56,6 +56,7 @@ extern void setupGlobalsForPartsAndTemplate();
 - (NSString*) labels;
 
 - (id) labelsAndShortComment;
+
 
 // Creation of LogEntries from results
 + (LogEntry*) fromLogResultLineShort:(NSString*)line  forRepositoryData:(RepositoryData*)collection;
@@ -68,12 +69,14 @@ extern void setupGlobalsForPartsAndTemplate();
 - (void)	  loadLogResultLineShort:(NSString*)line;
 - (void)	  loadLogResultLineFull: (NSString*)line;
 
+
 // Query the LogEntry
 - (NSArray*)  parentsOfEntry;
 - (NSArray*)  childrenOfEntry;
 - (NSString*) changesetInShortForm;
 - (BOOL)	  isFullyLoaded;
 - (RepositoryData*) repositoryData;
+- (NSString*) firstParent;
 
 
 // Presentation of Entry

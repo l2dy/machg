@@ -16,6 +16,7 @@
 #import "TextButtonCell.h"
 #import "DiffTextButtonCell.h"
 #import "LabelTextButtonCell.h"
+#import "FSNodeInfo.h"
 
 
 
@@ -52,8 +53,8 @@ void setupGlobalsForPartsAndTemplate()
 	namesOfPartsShort   = [NSArray arrayWithObjects:@"revision", @"author",          @"shortDate",  @"parents",   @"changeset",    @"shortComment",     nil];
 	templateStringShort = [[templateParts componentsJoinedByString:entryPartSeparator] stringByAppendingString:entrySeparator];
 
-	templateParts       = [NSArray arrayWithObjects:@"{rev}",    @"{author|person}", @"{date|age}", @"{date|isodate}", @"{parents}", @"{node|short}", @"{file_adds}", @"{file_mods}",   @"{file_dels}",   @"{desc|firstline}", @"{desc}",      nil];
-	namesOfPartsFull    = [NSArray arrayWithObjects:@"revision", @"author",          @"shortDate",  @"fullDate",       @"parents",   @"changeset",    @"filesAdded",  @"filesModified", @"filesRemoved",  @"shortComment",     @"fullComment", nil];
+	templateParts       = [NSArray arrayWithObjects:@"{rev}",    @"{author|person}", @"{date|age}", @"{date|isodate}", @"{parents}", @"{node|short}",  @"{desc|firstline}", @"{desc}",      nil];
+	namesOfPartsFull    = [NSArray arrayWithObjects:@"revision", @"author",          @"shortDate",  @"fullDate",       @"parents",   @"changeset",     @"shortComment",     @"fullComment", nil];
 	templateStringFull  = [[templateParts componentsJoinedByString:entryPartSeparator] stringByAppendingString:entrySeparator];
 }
 
@@ -218,9 +219,9 @@ void setupGlobalsForPartsAndTemplate()
 	entry->branch_ = @"";
 	entry->tags_ = [[NSArray alloc]init];
 	[entry setChangeset:@""];
-	[entry setFilesAdded:@""];
-	[entry setFilesModified:@""];
-	[entry setFilesRemoved:@""];
+	[entry setFilesAdded:nil];
+	[entry setFilesModified:nil];
+	[entry setFilesRemoved:nil];
 	return entry;
 }
 
@@ -273,6 +274,12 @@ void setupGlobalsForPartsAndTemplate()
 - (NSString*)	changesetInShortForm	{ return [changeset_ substringToIndex:MIN(12,[changeset_ length])]; }
 - (BOOL)	    isFullyLoaded			{ return loadStatus_ == eLogEntryLoadedFully; }
 - (RepositoryData*) repositoryData		{ return collection_; }
+- (NSString*)	firstParent
+{
+	if (IsNotEmpty(parents_))
+		return [[self parentsOfEntry] objectAtIndex:0];	
+	return intAsString(MAX(0, stringAsInt(revision_) - 1));	
+}
 
 
 
@@ -328,50 +335,91 @@ void setupGlobalsForPartsAndTemplate()
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Description:\t")];
 		[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@\n", fullComment_])];
 	}	
-	if (stringIsNonWhiteSpace(filesAdded_))
+	if (IsNotEmpty(filesAdded_))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Added:\t")];
-		NSArray* files = [filesAdded_ componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-		for (NSString* file in files)
+		for (NSString* file in filesAdded_)
 		{
 			NSTextAttachment* attachment = [DiffTextButtonCell diffButtonAttachmentWithLogEntry:self andFile:file andType:eDiffFileAdded];
 			[verboseEntry appendAttributedString: normalAttributedString(@" ")];
 			[verboseEntry appendAttributedString: [NSAttributedString attributedStringWithAttachment:attachment]];
 			[verboseEntry appendAttributedString: normalAttributedString(@"\n")];
 		}
-		//[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@\n", filesAdded_])];		
 	}
-	if (stringIsNonWhiteSpace(filesModified_))
+	if (IsNotEmpty(filesModified_))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Modified:\t")];
-		NSArray* files = [filesModified_ componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-		for (NSString* file in files)
+		for (NSString* file in filesModified_)
 		{
 			NSTextAttachment* attachment = [DiffTextButtonCell diffButtonAttachmentWithLogEntry:self andFile:file andType:eDiffFileChanged];
 			[verboseEntry appendAttributedString: normalAttributedString(@" ")];
 			[verboseEntry appendAttributedString: [NSAttributedString attributedStringWithAttachment:attachment]];
 			[verboseEntry appendAttributedString: normalAttributedString(@"\n")];
 		}
-		//[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@\n", filesModified_])];
 	}
-	if (stringIsNonWhiteSpace(filesRemoved_))
+	if (IsNotEmpty(filesRemoved_))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Removed:\t")];
-		NSArray* files = [filesRemoved_ componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceAndNewlineCharacterSet]];
-		for (NSString* file in files)
+		for (NSString* file in filesRemoved_)
 		{
 			NSTextAttachment* attachment = [DiffTextButtonCell diffButtonAttachmentWithLogEntry:self andFile:file andType:eDiffFileRemoved];
 			[verboseEntry appendAttributedString: normalAttributedString(@" ")];
 			[verboseEntry appendAttributedString: [NSAttributedString attributedStringWithAttachment:attachment]];
 			[verboseEntry appendAttributedString: normalAttributedString(@"\n")];
 		}
-		//[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@\n", filesRemoved_])];
 	}
-	
 	
 	
 	return verboseEntry;
 }
+
+
+- (void) fullyLoadEntry
+{
+	NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log", @"--rev", revision_, @"--template", templateStringFull, nil];	// templateStringFull is global set in setupGlobalsForPartsAndTemplate()
+	ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:[collection_ rootPath]  logging:eLoggingNone];
+	NSArray* lines = [hgLogResults.outStr componentsSeparatedByString:entrySeparator];
+	[self loadLogResultLineFull:[lines objectAtIndex:0]];
+	
+
+	NSMutableArray* modified = nil;
+	NSMutableArray* added    = nil;
+	NSMutableArray* removed  = nil;
+	NSString* revisionNumbers = fstr(@"%@%:%@", [self firstParent], revision_);
+
+	NSMutableArray* argsStatus = [NSMutableArray arrayWithObjects:@"status", @"--rev", revisionNumbers, @"--added", @"--removed", @"--modified", nil];
+	ExecutionResult* hgStatusResults = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:[collection_ rootPath]  logging:eLoggingNone];
+	NSArray* hgStatusLines = [hgStatusResults.outStr componentsSeparatedByString:@"\n"];
+	for (NSString* statusLine in hgStatusLines)
+	{
+		// If this particular status line is malformed skip this line.
+		if ([statusLine length] < 3)
+			continue;
+		
+		NSString* statusLetter   = [statusLine substringToIndex:1];
+		HGStatus  theStatus      = [FSNodeInfo statusEnumFromLetter:statusLetter];
+		NSString* statusPath     = [statusLine substringFromIndex:2];
+		if (theStatus == eHGStatusModified)
+		{
+			if (!modified) modified = [[NSMutableArray alloc]init];
+			[modified addObject:statusPath];
+		}
+		else if (theStatus == eHGStatusAdded)
+		{
+			if (!added) added = [[NSMutableArray alloc]init];
+			[added addObject:statusPath];
+		}
+		else if (theStatus == eHGStatusRemoved)
+		{
+			if (!removed) removed = [[NSMutableArray alloc]init];
+			[removed addObject:statusPath];
+		}
+	}
+	filesAdded_	   = [NSArray arrayWithArray:added];
+	filesModified_ = [NSArray arrayWithArray:modified];
+	filesRemoved_  = [NSArray arrayWithArray:removed];	
+}
+
 
 - (void) displayFormattedVerboseEntryIn:(id)container
 {
@@ -385,11 +433,7 @@ void setupGlobalsForPartsAndTemplate()
 	if (loadStatus_ == eLogEntryLoadedPending || loadStatus_ == eLogEntryLoadedPartially)
 	{
 		dispatch_async(globalQueue(), ^{
-			NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log", @"--rev", revision_, @"--template", templateStringFull, nil];	// templateStringFull is global set in setupGlobalsForPartsAndTemplate()
-			ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:[collection_ rootPath]  logging:eLoggingNone];
-			
-			NSArray* lines = [hgLogResults.outStr componentsSeparatedByString:entrySeparator];
-			[self loadLogResultLineFull:[lines objectAtIndex:0]];
+			[self fullyLoadEntry];
 			if ([container isKindOfClass:[NSTextView class]])
 				[[container textStorage] setAttributedString:[self composeFormattedVerboseEntry]];
 		});
@@ -400,13 +444,7 @@ void setupGlobalsForPartsAndTemplate()
 - (NSAttributedString*) formattedBriefEntry
 {
 	if (loadStatus_ == eLogEntryLoadedPending || loadStatus_ == eLogEntryLoadedPartially)
-	{
-		NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log", @"--rev", revision_, @"--template", templateStringFull, nil];	// templateStringFull is global set in setupGlobalsForPartsAndTemplate()
-		ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:[collection_ rootPath]  logging:eLoggingNone];
-		
-		NSArray* lines = [hgLogResults.outStr componentsSeparatedByString:entrySeparator];
-		[self loadLogResultLineFull:[lines objectAtIndex:0]];
-	}
+		[self fullyLoadEntry];
 	
 	NSMutableAttributedString* verboseEntry = [[NSMutableAttributedString alloc] init];
 	[verboseEntry appendAttributedString: categoryAttributedString(@"Commit:\t")];

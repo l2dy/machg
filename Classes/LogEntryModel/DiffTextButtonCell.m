@@ -114,14 +114,7 @@
 {
 	MacHgDocument* document = [[backingLogEntry_ repositoryData] myDocument];
 	NSString* rev       = [backingLogEntry_ revision];
-	NSArray* parents    = [backingLogEntry_ parentsOfEntry];
-	NSString* parentRev = nil;
-
-	if (IsNotEmpty(parents))
-		parentRev = [parents objectAtIndex:0];
-	else
-		parentRev = intAsString(MAX(0, stringAsInt(rev) - 1));
-
+	NSString* parentRev = [backingLogEntry_ firstParent];
 	NSString* revisionNumbers = fstr(@"%@%:%@", parentRev, rev);
 
 	[document viewDifferencesInCurrentRevisionFor:[NSArray arrayWithObject:absoluteFileName_] toRevision:revisionNumbers];
