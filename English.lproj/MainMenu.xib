@@ -73,7 +73,7 @@
 								</object>
 								<object class="NSMenuItem" id="702446638">
 									<reference key="NSMenu" ref="272824431"/>
-									<string key="NSTitle">Check for Updates...</string>
+									<string key="NSTitle">Check for Updates…</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSKeyEquivModMask">1048576</int>
 									<int key="NSMnemonicLoc">2147483647</int>
@@ -310,7 +310,7 @@
 								</object>
 								<object class="NSMenuItem" id="133908414">
 									<reference key="NSMenu" ref="287065493"/>
-									<string key="NSTitle">Import Patches...</string>
+									<string key="NSTitle">Import Patches…</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="385016679"/>
@@ -318,7 +318,7 @@
 								</object>
 								<object class="NSMenuItem" id="216077607">
 									<reference key="NSMenu" ref="287065493"/>
-									<string key="NSTitle">Export Patches...</string>
+									<string key="NSTitle">Export Patches…</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="385016679"/>
@@ -667,7 +667,7 @@
 								<bool key="EncodedWithXMLCoder">YES</bool>
 								<object class="NSMenuItem" id="471712500">
 									<reference key="NSMenu" ref="387742784"/>
-									<string key="NSTitle">Commit Selected Files...</string>
+									<string key="NSTitle">Commit Selected Files…</string>
 									<string key="NSKeyEquiv">S</string>
 									<int key="NSKeyEquivModMask">1048576</int>
 									<int key="NSMnemonicLoc">2147483647</int>
@@ -677,7 +677,7 @@
 								<object class="NSMenuItem" id="353991124">
 									<reference key="NSMenu" ref="387742784"/>
 									<bool key="NSIsAlternate">YES</bool>
-									<string key="NSTitle">Commit All Files...</string>
+									<string key="NSTitle">Commit All Files…</string>
 									<string key="NSKeyEquiv">s</string>
 									<int key="NSKeyEquivModMask">1572864</int>
 									<int key="NSMnemonicLoc">2147483647</int>
@@ -754,7 +754,7 @@
 								</object>
 								<object class="NSMenuItem" id="331362214">
 									<reference key="NSMenu" ref="387742784"/>
-									<string key="NSTitle">Revert Selected Files to Version...</string>
+									<string key="NSTitle">Revert Selected Files to Version…</string>
 									<string key="NSKeyEquiv">R</string>
 									<int key="NSKeyEquivModMask">1048576</int>
 									<int key="NSMnemonicLoc">2147483647</int>
@@ -764,7 +764,7 @@
 								<object class="NSMenuItem" id="186577769">
 									<reference key="NSMenu" ref="387742784"/>
 									<bool key="NSIsAlternate">YES</bool>
-									<string key="NSTitle">Revert All Files to Version...</string>
+									<string key="NSTitle">Revert All Files to Version…</string>
 									<string key="NSKeyEquiv">R</string>
 									<int key="NSKeyEquivModMask">1572864</int>
 									<int key="NSMnemonicLoc">2147483647</int>
@@ -798,7 +798,7 @@
 								</object>
 								<object class="NSMenuItem" id="422853800">
 									<reference key="NSMenu" ref="387742784"/>
-									<string key="NSTitle">Rename Selected File...</string>
+									<string key="NSTitle">Rename Selected File…</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="385016679"/>
@@ -899,7 +899,7 @@
 								<bool key="EncodedWithXMLCoder">YES</bool>
 								<object class="NSMenuItem" id="1050198375">
 									<reference key="NSMenu" ref="1038298959"/>
-									<string key="NSTitle">Clone...</string>
+									<string key="NSTitle">Clone…</string>
 									<string key="NSKeyEquiv">k</string>
 									<int key="NSKeyEquivModMask">1048576</int>
 									<int key="NSMnemonicLoc">2147483647</int>
@@ -909,7 +909,7 @@
 								</object>
 								<object class="NSMenuItem" id="476439310">
 									<reference key="NSMenu" ref="1038298959"/>
-									<string key="NSTitle">Pull from...</string>
+									<string key="NSTitle">Pull from…</string>
 									<string key="NSKeyEquiv">L</string>
 									<int key="NSKeyEquivModMask">1048576</int>
 									<int key="NSMnemonicLoc">2147483647</int>
@@ -919,7 +919,7 @@
 								</object>
 								<object class="NSMenuItem" id="321200172">
 									<reference key="NSMenu" ref="1038298959"/>
-									<string key="NSTitle">Push to...</string>
+									<string key="NSTitle">Push to…</string>
 									<string key="NSKeyEquiv">H</string>
 									<int key="NSKeyEquivModMask">1048576</int>
 									<int key="NSMnemonicLoc">2147483647</int>
@@ -929,7 +929,7 @@
 								</object>
 								<object class="NSMenuItem" id="152210593">
 									<reference key="NSMenu" ref="1038298959"/>
-									<string key="NSTitle">Incoming...</string>
+									<string key="NSTitle">Incoming…</string>
 									<string key="NSKeyEquiv">i</string>
 									<int key="NSKeyEquivModMask">1048576</int>
 									<int key="NSMnemonicLoc">2147483647</int>
@@ -939,7 +939,7 @@
 								</object>
 								<object class="NSMenuItem" id="160071050">
 									<reference key="NSMenu" ref="1038298959"/>
-									<string key="NSTitle">Outgoing...</string>
+									<string key="NSTitle">Outgoing…</string>
 									<string key="NSKeyEquiv">O</string>
 									<int key="NSKeyEquivModMask">1048576</int>
 									<int key="NSMnemonicLoc">2147483647</int>
@@ -968,7 +968,7 @@
 								</object>
 								<object class="NSMenuItem" id="150221364">
 									<reference key="NSMenu" ref="1038298959"/>
-									<string key="NSTitle">Update Repository to Version...</string>
+									<string key="NSTitle">Update Repository to Version…</string>
 									<string key="NSKeyEquiv">U</string>
 									<int key="NSKeyEquivModMask">1048576</int>
 									<int key="NSMnemonicLoc">2147483647</int>
@@ -977,7 +977,7 @@
 								</object>
 								<object class="NSMenuItem" id="249896574">
 									<reference key="NSMenu" ref="1038298959"/>
-									<string key="NSTitle">Merge...</string>
+									<string key="NSTitle">Merge…</string>
 									<string key="NSKeyEquiv">m</string>
 									<int key="NSKeyEquivModMask">1048576</int>
 									<int key="NSMnemonicLoc">2147483647</int>
@@ -997,7 +997,7 @@
 								</object>
 								<object class="NSMenuItem" id="730272878">
 									<reference key="NSMenu" ref="1038298959"/>
-									<string key="NSTitle">Collapse Changesets...</string>
+									<string key="NSTitle">Collapse Changesets…</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="385016679"/>
@@ -1005,7 +1005,7 @@
 								</object>
 								<object class="NSMenuItem" id="603181923">
 									<reference key="NSMenu" ref="1038298959"/>
-									<string key="NSTitle">Edit Changesets...</string>
+									<string key="NSTitle">Edit Changesets…</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="385016679"/>
@@ -1013,7 +1013,7 @@
 								</object>
 								<object class="NSMenuItem" id="993350178">
 									<reference key="NSMenu" ref="1038298959"/>
-									<string key="NSTitle">Strip Changesets...</string>
+									<string key="NSTitle">Strip Changesets…</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="385016679"/>
@@ -1021,7 +1021,7 @@
 								</object>
 								<object class="NSMenuItem" id="972358786">
 									<reference key="NSMenu" ref="1038298959"/>
-									<string key="NSTitle">Rebase Changesets...</string>
+									<string key="NSTitle">Rebase Changesets…</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="385016679"/>
@@ -1047,7 +1047,7 @@
 								</object>
 								<object class="NSMenuItem" id="581424913">
 									<reference key="NSMenu" ref="1038298959"/>
-									<string key="NSTitle">Add Revision Label...</string>
+									<string key="NSTitle">Add Revision Label…</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="385016679"/>
@@ -1065,7 +1065,7 @@
 								</object>
 								<object class="NSMenuItem" id="1022659741">
 									<reference key="NSMenu" ref="1038298959"/>
-									<string key="NSTitle">Add Local Repository...</string>
+									<string key="NSTitle">Add Local Repository…</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="385016679"/>
@@ -1073,7 +1073,7 @@
 								</object>
 								<object class="NSMenuItem" id="744929394">
 									<reference key="NSMenu" ref="1038298959"/>
-									<string key="NSTitle">Add Server Repository...</string>
+									<string key="NSTitle">Add Server Repository…</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="385016679"/>
@@ -1097,7 +1097,7 @@
 								</object>
 								<object class="NSMenuItem" id="64121616">
 									<reference key="NSMenu" ref="1038298959"/>
-									<string key="NSTitle">Configure Selected Repository...</string>
+									<string key="NSTitle">Configure Selected Repository…</string>
 									<string key="NSKeyEquiv"/>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="385016679"/>
@@ -4337,7 +4337,7 @@
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
-					<string>{{233, 259}, {240, 243}}</string>
+					<string>{{208, 404}, {240, 243}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -4382,7 +4382,7 @@
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
-					<string>{{768, 573}, {194, 73}}</string>
+					<string>{{521, 574}, {194, 73}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -4398,7 +4398,7 @@
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
-					<string>{{495, 389}, {231, 113}}</string>
+					<string>{{471, 534}, {231, 113}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -4406,7 +4406,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{430, 459}, {83, 43}}</string>
+					<string>{{405, 604}, {83, 43}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -4453,7 +4453,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{499, 203}, {336, 443}}</string>
+					<string>{{252, 204}, {336, 443}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -4473,7 +4473,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{314, 174}, {310, 473}}</string>
+					<string>{{314, 174}, {311, 473}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -4514,7 +4514,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
-					<string>{{166, 394}, {206, 253}}</string>
+					<string>{{166, 394}, {207, 253}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -4844,6 +4844,7 @@
 							<string>browserMenuOpenSelectedFilesInFinder:</string>
 							<string>browserMenuOpenTerminalHere:</string>
 							<string>browserMenuRevealSelectedFilesInFinder:</string>
+							<string>mainMenuAddAndCloneServerRepositoryRef:</string>
 							<string>mainMenuAddLabelToCurrentRevision:</string>
 							<string>mainMenuAddRenameRemoveAllFiles:</string>
 							<string>mainMenuAddRenameRemoveSelectedFiles:</string>
@@ -4896,6 +4897,7 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>

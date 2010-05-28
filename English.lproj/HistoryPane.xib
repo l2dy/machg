@@ -12,7 +12,6 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="945"/>
 			<integer value="585"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
@@ -1541,7 +1540,7 @@
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<object class="NSMenuItem" id="134642559">
 						<reference key="NSMenu" ref="886653824"/>
-						<string key="NSTitle">Add Revision Label...</string>
+						<string key="NSTitle">Add Revision Label…</string>
 						<string key="NSKeyEquiv"/>
 						<int key="NSMnemonicLoc">2147483647</int>
 						<object class="NSCustomResource" key="NSOnImage" id="591860921">
@@ -1623,7 +1622,7 @@
 					</object>
 					<object class="NSMenuItem" id="482568947">
 						<reference key="NSMenu" ref="886653824"/>
-						<string key="NSTitle">Import Patches...</string>
+						<string key="NSTitle">Import Patches…</string>
 						<string key="NSKeyEquiv"/>
 						<int key="NSMnemonicLoc">2147483647</int>
 						<reference key="NSOnImage" ref="591860921"/>
@@ -1631,7 +1630,7 @@
 					</object>
 					<object class="NSMenuItem" id="610587452">
 						<reference key="NSMenu" ref="886653824"/>
-						<string key="NSTitle">Export Patches...</string>
+						<string key="NSTitle">Export Patches…</string>
 						<string key="NSKeyEquiv"/>
 						<int key="NSMnemonicLoc">2147483647</int>
 						<reference key="NSOnImage" ref="591860921"/>
@@ -1649,7 +1648,7 @@
 					</object>
 					<object class="NSMenuItem" id="982023397">
 						<reference key="NSMenu" ref="886653824"/>
-						<string key="NSTitle">Collapse Changesets...</string>
+						<string key="NSTitle">Collapse Changesets…</string>
 						<string key="NSKeyEquiv"/>
 						<int key="NSMnemonicLoc">2147483647</int>
 						<reference key="NSOnImage" ref="591860921"/>
@@ -1657,7 +1656,7 @@
 					</object>
 					<object class="NSMenuItem" id="500727534">
 						<reference key="NSMenu" ref="886653824"/>
-						<string key="NSTitle">Edit Changesets...</string>
+						<string key="NSTitle">Edit Changesets…</string>
 						<string key="NSKeyEquiv"/>
 						<int key="NSMnemonicLoc">2147483647</int>
 						<reference key="NSOnImage" ref="591860921"/>
@@ -1665,7 +1664,7 @@
 					</object>
 					<object class="NSMenuItem" id="439573777">
 						<reference key="NSMenu" ref="886653824"/>
-						<string key="NSTitle">Strip Changesets...</string>
+						<string key="NSTitle">Strip Changesets…</string>
 						<string key="NSKeyEquiv"/>
 						<int key="NSMnemonicLoc">2147483647</int>
 						<reference key="NSOnImage" ref="591860921"/>
@@ -1673,7 +1672,7 @@
 					</object>
 					<object class="NSMenuItem" id="612777809">
 						<reference key="NSMenu" ref="886653824"/>
-						<string key="NSTitle">Rebase Changesets...</string>
+						<string key="NSTitle">Rebase Changesets…</string>
 						<string key="NSKeyEquiv"/>
 						<int key="NSMnemonicLoc">2147483647</int>
 						<reference key="NSOnImage" ref="591860921"/>
@@ -1687,7 +1686,7 @@
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<object class="NSMenuItem" id="459589586">
 						<reference key="NSMenu" ref="38680503"/>
-						<string key="NSTitle">Add Revision Label...</string>
+						<string key="NSTitle">Add Revision Label…</string>
 						<string key="NSKeyEquiv"/>
 						<int key="NSMnemonicLoc">2147483647</int>
 						<reference key="NSOnImage" ref="591860921"/>
@@ -1695,7 +1694,7 @@
 					</object>
 					<object class="NSMenuItem" id="908562197">
 						<reference key="NSMenu" ref="38680503"/>
-						<string key="NSTitle">Move Label...</string>
+						<string key="NSTitle">Move Label…</string>
 						<string key="NSKeyEquiv"/>
 						<int key="NSMnemonicLoc">2147483647</int>
 						<reference key="NSOnImage" ref="591860921"/>
@@ -3513,6 +3512,7 @@
 							<string>browserMenuOpenSelectedFilesInFinder:</string>
 							<string>browserMenuOpenTerminalHere:</string>
 							<string>browserMenuRevealSelectedFilesInFinder:</string>
+							<string>mainMenuAddAndCloneServerRepositoryRef:</string>
 							<string>mainMenuAddLabelToCurrentRevision:</string>
 							<string>mainMenuAddRenameRemoveAllFiles:</string>
 							<string>mainMenuAddRenameRemoveSelectedFiles:</string>
@@ -3565,6 +3565,7 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
