@@ -102,7 +102,7 @@
 {
 	if ([myDocument repositoryHasFilesWhichContainStatus:eHGStatusCommittable])
 	{
-		NSRunAlertPanel(@"Outstanding Changes", @"Stripping is only allowed in repositories with no outstanding uncommitted changes.", @"Ok", nil, nil);
+		NSRunAlertPanel(@"Outstanding Changes", @"Stripping is only allowed in repositories with no outstanding uncommitted changes.", @"OK", nil, nil);
 		return;
 	}	
 		

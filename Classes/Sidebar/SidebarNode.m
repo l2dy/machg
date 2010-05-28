@@ -250,7 +250,7 @@
 			path = caseSensitiveFilePath(path);
 		}
 		else
-			NSRunCriticalAlertPanel(@"Max Path Length exceeded", fstr(@"The maximum path length for the path to the repository root was exceeded. Functionality for this repository could be erratic. The path is", path), @"Ok", nil, nil);
+			NSRunCriticalAlertPanel(@"Max Path Length exceeded", fstr(@"The maximum path length for the path to the repository root was exceeded. Functionality for this repository could be erratic. The path is", path), @"OK", nil, nil);
 	}
 
 	if ([self isServerRepositoryRef] && path)

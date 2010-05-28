@@ -208,7 +208,7 @@
 	@catch (NSException* e)
 	{
 		if ([[e name] isEqualTo:@"Initialize Repository"])
-			NSRunAlertPanel(@"Initialize Repository", [e reason], @"Ok", nil, nil);
+			NSRunAlertPanel(@"Initialize Repository", [e reason], @"OK", nil, nil);
 		else
 			[e raise];
 	}

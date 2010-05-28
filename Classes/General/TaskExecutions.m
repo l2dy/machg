@@ -226,7 +226,7 @@
 		NSString* errorString = IsEmpty(result.errStr) ? result.outStr : result.errStr;
 		NSString* fullErrorMessage = [NSString stringWithFormat:@"Mercurial reported error number %d:\n%@", result.result, errorString];
 		dispatch_async(mainQueue(), ^{
-			NSRunAlertPanel(errorMessage, fullErrorMessage, @"Ok", nil, nil);
+			NSRunAlertPanel(errorMessage, fullErrorMessage, @"OK", nil, nil);
 		});
 	}
 }

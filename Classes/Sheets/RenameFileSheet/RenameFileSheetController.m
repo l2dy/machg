@@ -50,14 +50,14 @@
 	if ([theSelectedFiles count] < 1)
 	{
 		PlayBeep();
-		NSRunAlertPanel(@"No File Selected", @"You need to select a file to rename", @"Ok", nil, nil);
+		NSRunAlertPanel(@"No File Selected", @"You need to select a file to rename", @"OK", nil, nil);
 		return;
 	}
 	
 	if (![theSelectedFiles count] > 1)
 	{
 		PlayBeep();
-		NSRunAlertPanel(@"Too Many Files Selected", @"You need to select just a single file to rename", @"Ok", nil, nil);
+		NSRunAlertPanel(@"Too Many Files Selected", @"You need to select just a single file to rename", @"OK", nil, nil);
 		return;
 	}
 	
@@ -68,7 +68,7 @@
 	{
 		PlayBeep();
 		NSString* subMessage = [NSString stringWithFormat:@"“%@” is a directory. Mercurial only permits renaming files", [filePath lastPathComponent]];
-		NSRunAlertPanel(@"Rename Not Allowed", subMessage, @"Ok", nil, nil);
+		NSRunAlertPanel(@"Rename Not Allowed", subMessage, @"OK", nil, nil);
 		return;
 	}
 
@@ -76,7 +76,7 @@
 	{
 		PlayBeep();
 		NSString* subMessage = [NSString stringWithFormat:@"“%@” is not managed by Mercurial. You can rename or relocate the file in the finder without incident.", [filePath lastPathComponent]];
-		NSRunAlertPanel(@"File Not Under Management", subMessage, @"Ok", nil, nil);
+		NSRunAlertPanel(@"File Not Under Management", subMessage, @"OK", nil, nil);
 		return;
 	}
 	

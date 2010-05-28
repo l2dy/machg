@@ -769,14 +769,14 @@
 	if (!node)
 	{
 		PlayBeep();
-		NSRunAlertPanel(@"No Bookmark Selected", @"You need to select a local bookmark", @"Ok", nil, nil);
+		NSRunAlertPanel(@"No Bookmark Selected", @"You need to select a local bookmark", @"OK", nil, nil);
 		return;
 	}
 
 	if (![node isLocalRepositoryRef])
 	{
 		PlayBeep();
-		NSRunAlertPanel(@"No Local Bookmark Selected", @"You need to select a local bookmark", @"Ok", nil, nil);
+		NSRunAlertPanel(@"No Local Bookmark Selected", @"You need to select a local bookmark", @"OK", nil, nil);
 		return;
 	}
 	

@@ -209,7 +209,7 @@
 	if (!addExtDiff && !addExtBookmarks && !addExtMq && !addExtRebase && !addExtHistEdit && !addExtCollapse)
 	{
 		if (!onStartup)
-			NSRunAlertPanel(@"Editing Extensions Enabled", @"The history editing extensions are enabled in your mercurial configuration file (.hgrc).", @"Ok", nil, nil);
+			NSRunAlertPanel(@"Editing Extensions Enabled", @"The history editing extensions are enabled in your mercurial configuration file (.hgrc).", @"OK", nil, nil);
 		return;
 	}
 	
@@ -235,14 +235,14 @@
 		NSString* message = onStartup ? @"History editing was previously enabled, yet some extensions where not enabled in your mercurial configuration file (.hgrc). The necessary extensions have been re-enabled in your mercurial configuration file at %@. These extensions are used when you edit a repositories history from within MacHg. Having these extensions enabled does not effect any other standard mercurial operations." :
 										@"History editing in MacHg has been enabled. The necessary extensions have been enabled in your mercurial configuration file at %@. These extensions are used when you edit a repositories history from within MacHg. Having these extensions enabled does not effect any other standard mercurial operations.";
 		NSString* completeMessage = [NSString stringWithFormat:message, dotHGRC];
-		NSRunAlertPanel(@"Editing Extensions Enabled", completeMessage, @"Ok", nil, nil);
+		NSRunAlertPanel(@"Editing Extensions Enabled", completeMessage, @"OK", nil, nil);
 	}
 }
 
 - (void) checkForFileMerge
 {
 	if(![[NSWorkspace sharedWorkspace] fullPathForApplication:@"FileMerge"])
-		NSRunCriticalAlertPanel(@"FileMerge not found", @"FileMerge was not found on this system. Please install the developer tools from the system disk which came with your computer (they contain the application FileMerge). MacHg can function without FileMerge but you cannot view any diffs, since this is the tool MacHg uses to view diffs.", @"Ok", nil, nil);
+		NSRunCriticalAlertPanel(@"FileMerge not found", @"FileMerge was not found on this system. Please install the developer tools from the system disk which came with your computer (they contain the application FileMerge). MacHg can function without FileMerge but you cannot view any diffs, since this is the tool MacHg uses to view diffs.", @"OK", nil, nil);
 }
 
 
@@ -255,12 +255,12 @@
 	if ([results hasWarnings])
 	{
 		NSString* mainMessage = [NSString stringWithFormat:@"The version of Mercurial included with MacHg is producing the following warnings:\n\n%@\n\nMacHg might not function as intended. To resolve this check your configuration settings in your .hgrc file.", results.errStr];
-		RunCriticalAlertPanelWithSuppression(@"Mercurial Warnings", mainMessage, @"Ok", nil, MHGWarnAboutBadMercurialConfiguration);	
+		RunCriticalAlertPanelWithSuppression(@"Mercurial Warnings", mainMessage, @"OK", nil, MHGWarnAboutBadMercurialConfiguration);	
 	}	
 	if ([results hasErrors])
 	{
 		NSString* mainMessage = [NSString stringWithFormat:@"The version of Mercurial included with MacHg is producing the following Errors:\n\n%@\n\nMacHg cannot proceed. To resolve this check your configuration settings in your .hgrc file.", results.errStr];
-		NSRunCriticalAlertPanel(@"Mercurial Errors", mainMessage, @"Ok", nil, nil);
+		NSRunCriticalAlertPanel(@"Mercurial Errors", mainMessage, @"OK", nil, nil);
 		[NSApp terminate:self];
 	}
 }

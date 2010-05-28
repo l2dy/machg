@@ -130,7 +130,7 @@
 	{
 		NSString* operation = (result == NSAlertDefaultReturn ? @"Continue" : @"Abort");
 		NSString* titleMessage = [NSString stringWithFormat:@"Results of History Edit %@",operation];
-		NSRunAlertPanel(titleMessage, @"Mercurial reported the result of the history edit %@:\n\ncode %d:\n%@", @"Ok", nil, nil, operation, results.result, results.outStr);
+		NSRunAlertPanel(titleMessage, @"Mercurial reported the result of the history edit %@:\n\ncode %d:\n%@", @"OK", nil, nil, operation, results.result, results.outStr);
 	}
 }
 
@@ -153,7 +153,7 @@
 	
 	if ([myDocument repositoryHasFilesWhichContainStatus:eHGStatusCommittable])
 	{
-		NSRunAlertPanel(@"Outstanding Changes", @"History editing is only allowed in repositories with no outstanding uncommitted changes.", @"Ok", nil, nil);
+		NSRunAlertPanel(@"Outstanding Changes", @"History editing is only allowed in repositories with no outstanding uncommitted changes.", @"OK", nil, nil);
 		return;
 	}
 	

@@ -499,7 +499,7 @@ NSString* FullServerURLWithPassword(NSString* baseURL, BOOL usesPassword, NSStri
 	if ([baseURL getCapturesWithRegexAndComponents:@"(.*?://)(.*)"  firstComponent:&protocol  secondComponent:&rest])
 		return fstr(@"%@%@%@", nonNil(protocol), nonNil(password), nonNil(rest));
 
-	NSRunAlertPanel(@"Badly Formed Server URL", fstr(@"The server URL %@ is not of the form protocol://username@server", baseURL), @"Ok", nil, nil);
+	NSRunAlertPanel(@"Badly Formed Server URL", fstr(@"The server URL %@ is not of the form protocol://username@server", baseURL), @"OK", nil, nil);
 	return nil;
 }
 
