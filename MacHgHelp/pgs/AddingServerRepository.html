@@ -42,7 +42,7 @@
 </div>
 
 <p> <a href="help:anchor=AboutRepositories_ServerRepositories bookID=MacHg Help">External repositories</a>, when "added" to your MacHg documents, are included just as references. Once
-   you have a server reference in your document, you will then be able to <a href="help:anchor=PushingChanges bookID=MacHg Help">push</a> (upload) changes from your computer to that server or <a href="help:anchor=PullingChanges bookID=MacHg Help">pull</a> (download) changes from that server to your computer. </p>
+   you have a server reference in your document, you will then be able to <a href="help:anchor=CloningARepository bookID=MacHg Help">clone</a> (copy) the repository on the server, <a href="help:anchor=PushingChanges bookID=MacHg Help">push</a> (upload) changes from your computer to that server or <a href="help:anchor=PullingChanges bookID=MacHg Help">pull</a> (download) changes from that server to your computer. </p>
 
 <div class="task-box-spacing">
 
@@ -69,8 +69,32 @@
          <li>
             <p>In the dialog that appears, enter a short name of your choosing to help you identify the external repository. This short name will be used in the left <a href="help:anchor=AboutRepositoryLists bookID=MacHg Help">sidebar</a> and in other places to refer to this external repository.</p>
          </li>
+         <li>
+            <p>Once you have entered a shortname and Server URL the connection will be automatically tested. You can however click the small button labeled 'test' to test the connection to the server in the terminal. This is sometimes useful to diagnose problems.</p>
+         </li>
       </ol>
    </div>
 </div>
+<div class="important">
+
+   <p> <span class="important-prefix">Important:</span> Removing a repository just removes the <strong>reference</strong> to the repository. It doesn't actually move the folder of files to the trash, or remove the repository from the server. However, when deleting a local repository, you are given the option of moving the actual repository (the folder of files on your machine) to the trash. Choose this option with care.</p>
+</div>
+<div class="important">
+
+   <p> <span class="important-prefix">Note:</span>If you store the password directly in the "Server URL" field, the password will be stored in cleartext in your MacHg document. The password will still <strong>always</strong> be sent in an encrypted form if you are using https or ssh since this is part of the protocol. You can, if desired, store your password in the system keychain by checking the option 'Use Password:'.</p>
+</div>
+
+<div id="rule">
+   <hr />
+</div>
+
+<div id="linkinternalbox">
+   <h3>Related Topics</h3>
+
+   <p class="linkinternal"><a href="help:anchor=AboutSecurityAndPasswords bookID=MacHg Help">About Security And Passwords</a></p>
+
+</div>
+
+
 </body>
 </html>
