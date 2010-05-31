@@ -11,7 +11,7 @@
 			<string key="NS.object.0">740</string>
 		</object>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-			<integer value="37"/>
+			<integer value="38"/>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -103,7 +103,7 @@
 															<string>NeXT Encapsulated PostScript v1.2 pasteboard type</string>
 															<string>NeXT TIFF v4.0 pasteboard type</string>
 														</set>
-														<string key="NSFrame">{{18, 60}, {469, 246}}</string>
+														<string key="NSFrame">{{31, 100}, {421, 205}}</string>
 														<reference key="NSSuperview" ref="866118483"/>
 														<int key="NSViewLayerContentsRedrawPolicy">2</int>
 														<bool key="NSEnabled">YES</bool>
