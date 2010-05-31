@@ -13,10 +13,22 @@
 @interface BackingPaneController : NSViewController <AccessesDocument>
 {
 	MacHgDocument*	myDocument;
+	IBOutlet NSBox*	backingBox;
+	IBOutlet NSBox*	buttonBox;
 }
 
+@property (nonatomic, assign) NSBox* buttonBox;
+@property (nonatomic, assign) NSBox* backingBox;
 @property (readwrite,assign) MacHgDocument*  myDocument;
 
 - (BackingPaneController*) initBackingPaneControllerWithDocument:(MacHgDocument*)doc;
+
+@end
+
+// This box draws itself with a radial gradiant centered on the centering Object
+@interface RadialGradiantBox : NSBox
+{
+	IBOutlet NSView*	centeringObject;
+}
 
 @end
