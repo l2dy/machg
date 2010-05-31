@@ -163,12 +163,20 @@
 		[[self theInitilizationWizardController] showWizard];	
 }
 
-- (NSString*) applicationSupportFolder;
+- (NSString*) applicationSupportVersionedFolder;
 {
 	NSArray* searchPaths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
 	NSString* applicationSupportFolder = [searchPaths objectAtIndex:0];
 	return [NSString stringWithFormat:@"%@/%@/%@", applicationSupportFolder, [[NSProcessInfo processInfo] processName], [self shortVersionNumberString]];
 }
+
+- (NSString*) applicationSupportFolder;
+{
+	NSArray* searchPaths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
+	NSString* applicationSupportFolder = [searchPaths objectAtIndex:0];
+	return fstr(@"%@/%@", applicationSupportFolder, [[NSProcessInfo processInfo] processName]);
+}
+
 
 
 - (void) checkConfigFileForEditingExtensions:(BOOL)onStartup;
@@ -192,7 +200,7 @@
 
 	// Create the named versioned application support extensions directory
 	NSError* theError;
-	NSString* supportFolder = [[self applicationSupportFolder] stringByAppendingPathComponent:@"extensions"];
+	NSString* supportFolder = [[self applicationSupportVersionedFolder] stringByAppendingPathComponent:@"extensions"];
 	[fileManager createDirectoryAtPath:supportFolder withIntermediateDirectories:YES attributes:nil error:&theError];
 	
 	NSString* histeditDest = [supportFolder stringByAppendingPathComponent:@"histedit.py"];
@@ -309,7 +317,26 @@
 				if ([[NSFileManager defaultManager] fileExistsAtPath:[url path]])
 					if ([docController openDocumentWithContentsOfURL:url display:YES error:nil])
 						return NO;
+
+		// look for ~/Application Support/MacHg/Repositories.machg
+		NSString* defaultDocumentPath = fstr(@"%@/Repositories.mchg",[self applicationSupportFolder]);
+		NSURL* defaultURL = [NSURL fileURLWithPath:defaultDocumentPath];
+		if ([[NSFileManager defaultManager] fileExistsAtPath:[defaultURL path]])
+			if ([docController openDocumentWithContentsOfURL:defaultURL display:YES error:nil])
+				return NO;
+
+		// create document ~/Application Support/MacHg/Repositories.machg
+		NSError* err = nil;
+		MacHgDocument* newDoc = [docController openUntitledDocumentAndDisplay:YES error:&err];
+		if (newDoc)
+		{
+			[newDoc saveToURL:defaultURL ofType:@"MacHgDocument" forSaveOperation:NSSaveAsOperation error:&err];
+			[newDoc showWindows];
+			return NO;
+		}
+		return YES;
 	}
+
 	startingUp = NO;
 	
 	if (OnStartupOpenFromDefaults() == eDontOpenAnything)
