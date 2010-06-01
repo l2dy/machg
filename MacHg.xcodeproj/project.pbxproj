@@ -178,6 +178,7 @@
 		96DCD03C10CD430600C843C9 /* LocalMercurial in Copy Files (Mercurial) */ = {isa = PBXBuildFile; fileRef = 96DCCE2710CD430000C843C9 /* LocalMercurial */; };
 		96DD29CA112AE56200A57BD3 /* CollapseSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96DD29C9112AE56200A57BD3 /* CollapseSheetController.m */; };
 		96DD29CD112AE56D00A57BD3 /* CollapseSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96DD29CB112AE56D00A57BD3 /* CollapseSheet.xib */; };
+		96DF426511B48DC700D986FF /* RadialGradiantBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 96DF426411B48DC700D986FF /* RadialGradiantBox.m */; };
 		96F5A4DE11A8185800707404 /* TextButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96F5A4DD11A8185800707404 /* TextButtonCell.m */; };
 		96F5A4FA11A81B5B00707404 /* DiffTextButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96F5A4F911A81B5B00707404 /* DiffTextButtonCell.m */; };
 		96F5A70D11A879F100707404 /* LabelTextButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96F5A70C11A879F100707404 /* LabelTextButtonCell.m */; };
@@ -461,6 +462,8 @@
 		96DD29C8112AE56200A57BD3 /* CollapseSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollapseSheetController.h; sourceTree = "<group>"; };
 		96DD29C9112AE56200A57BD3 /* CollapseSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollapseSheetController.m; sourceTree = "<group>"; };
 		96DD29CC112AE56D00A57BD3 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/CollapseSheet.xib; sourceTree = SOURCE_ROOT; };
+		96DF426311B48DC700D986FF /* RadialGradiantBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RadialGradiantBox.h; sourceTree = "<group>"; };
+		96DF426411B48DC700D986FF /* RadialGradiantBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RadialGradiantBox.m; sourceTree = "<group>"; };
 		96F5A4DC11A8185800707404 /* TextButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextButtonCell.h; sourceTree = "<group>"; };
 		96F5A4DD11A8185800707404 /* TextButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextButtonCell.m; sourceTree = "<group>"; };
 		96F5A4F811A81B5B00707404 /* DiffTextButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DiffTextButtonCell.h; sourceTree = "<group>"; };
@@ -1065,6 +1068,7 @@
 		9672AC50114B796A00312CE2 /* UtilityClasses */ = {
 			isa = PBXGroup;
 			children = (
+				96DF426211B48DC700D986FF /* RadialGradiantBox */,
 				9606EE15115670FD00968DE8 /* Help Button */,
 				9672ADCA114BD22A00312CE2 /* CommandKeyTextField */,
 				9672AC51114B796A00312CE2 /* ConnectionValidation */,
@@ -1329,6 +1333,15 @@
 			path = CollapseSheet;
 			sourceTree = "<group>";
 		};
+		96DF426211B48DC700D986FF /* RadialGradiantBox */ = {
+			isa = PBXGroup;
+			children = (
+				96DF426311B48DC700D986FF /* RadialGradiantBox.h */,
+				96DF426411B48DC700D986FF /* RadialGradiantBox.m */,
+			);
+			path = RadialGradiantBox;
+			sourceTree = "<group>";
+		};
 		96F5A4DB11A8185800707404 /* TextButtonCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -1585,6 +1598,7 @@
 				96F5A4DE11A8185800707404 /* TextButtonCell.m in Sources */,
 				96F5A4FA11A81B5B00707404 /* DiffTextButtonCell.m in Sources */,
 				96F5A70D11A879F100707404 /* LabelTextButtonCell.m in Sources */,
+				96DF426511B48DC700D986FF /* RadialGradiantBox.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

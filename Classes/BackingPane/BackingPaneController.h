@@ -25,10 +25,3 @@
 
 @end
 
-// This box draws itself with a radial gradiant centered on the centering Object
-@interface RadialGradiantBox : NSBox
-{
-	IBOutlet NSView*	centeringObject;
-}
-
-@end
