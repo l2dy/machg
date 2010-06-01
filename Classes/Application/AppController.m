@@ -432,7 +432,7 @@
 }
 - (IBAction) openBugReportPage:(id)sender
 {
-	NSURL* bugReportPage = [NSURL URLWithString:@"http://bitbucket.org/jfh/machg/issues/"];
+	NSURL* bugReportPage = [NSURL URLWithString:@"http://bitbucket.org/jfh/machg/issues?status=new&status=open"];
 	[[NSWorkspace sharedWorkspace] openURL:bugReportPage];
 }
 - (IBAction) openReleaseNotes:(id)sender
