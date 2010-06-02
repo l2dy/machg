@@ -165,7 +165,7 @@
 		96B57DF310D54805003638DF /* pull_32.png in Resources */ = {isa = PBXBuildFile; fileRef = 96B57DF110D54804003638DF /* pull_32.png */; };
 		96B57DF410D54805003638DF /* push_32.png in Resources */ = {isa = PBXBuildFile; fileRef = 96B57DF210D54804003638DF /* push_32.png */; };
 		96C0039B10D065540039010B /* FolderOpen32.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C0039A10D065540039010B /* FolderOpen32.png */; };
-		96C613A911B40B0D00B54B09 /* MacHgSpash.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C613A811B40B0D00B54B09 /* MacHgSpash.png */; };
+		96C613A911B40B0D00B54B09 /* MacHgSplash.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C613A811B40B0D00B54B09 /* MacHgSplash.png */; };
 		96C98EA5113B70C2006816C0 /* MacHgsmaller.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C98EA4113B70C2006816C0 /* MacHgsmaller.png */; };
 		96D2477D117BC1810030815B /* ThickSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D2477C117BC1810030815B /* ThickSplitView.m */; };
 		96D5FFF81114E83900EE672E /* MyWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D5FFF71114E83900EE672E /* MyWindowController.m */; };
@@ -445,7 +445,7 @@
 		96B57DF110D54804003638DF /* pull_32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pull_32.png; path = SheetIcons/pull_32.png; sourceTree = "<group>"; };
 		96B57DF210D54804003638DF /* push_32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = push_32.png; path = SheetIcons/push_32.png; sourceTree = "<group>"; };
 		96C0039A10D065540039010B /* FolderOpen32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = FolderOpen32.png; path = ButtonIcons/FolderOpen32.png; sourceTree = "<group>"; };
-		96C613A811B40B0D00B54B09 /* MacHgSpash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MacHgSpash.png; path = SplashTitles/MacHgSpash.png; sourceTree = "<group>"; };
+		96C613A811B40B0D00B54B09 /* MacHgSplash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MacHgSplash.png; path = SplashTitles/MacHgSplash.png; sourceTree = "<group>"; };
 		96C98EA4113B70C2006816C0 /* MacHgsmaller.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MacHgsmaller.png; path = SplashTitles/MacHgsmaller.png; sourceTree = "<group>"; };
 		96D2477B117BC1810030815B /* ThickSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThickSplitView.h; sourceTree = "<group>"; };
 		96D2477C117BC1810030815B /* ThickSplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThickSplitView.m; sourceTree = "<group>"; };
@@ -731,7 +731,7 @@
 		961D519F115BC5DE0064A4DA /* SplashTitles */ = {
 			isa = PBXGroup;
 			children = (
-				96C613A811B40B0D00B54B09 /* MacHgSpash.png */,
+				96C613A811B40B0D00B54B09 /* MacHgSplash.png */,
 				966818CA10CEF0BB001D178B /* HGsplashliquifyadjust4.png */,
 				96C98EA4113B70C2006816C0 /* MacHgsmaller.png */,
 			);
@@ -1507,7 +1507,7 @@
 				969BD95811953FB1007AA6D9 /* MoveLabelSheet.xib in Resources */,
 				969BDCC1119659FC007AA6D9 /* tb-terminal.png in Resources */,
 				96FF03A81199200E006EC616 /* UpdatePreferences.tiff in Resources */,
-				96C613A911B40B0D00B54B09 /* MacHgSpash.png in Resources */,
+				96C613A911B40B0D00B54B09 /* MacHgSplash.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
