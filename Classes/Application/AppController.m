@@ -12,6 +12,7 @@
 #import "PreferenceController.h"
 #import "InitializationWizardController.h"
 #import "LogEntry.h"
+#import "RadialGradiantBox.h"
 
 @implementation AppController
 @synthesize urlUsesPassword = urlUsesPassword_;
@@ -116,7 +117,9 @@
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (NSString*) shortVersionNumberString	{ return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]; }
-- (NSString*) shortVersionString		{ return [NSString stringWithFormat:@"Version:%@", [self shortVersionNumberString]]; }
+- (NSString*) shortVersionString		{ return fstr(@"Version:%@", [self shortVersionNumberString]); }
+- (NSString*) macHgShortVersionString	{ return fstr(@"MacHg %@", [self shortVersionNumberString]); }
+
 - (NSString*) macHgBuildHashKeyString
 {
 	NSString* key = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"BuildHashKey"];
@@ -125,12 +128,33 @@
 
 - (NSString*) mercurialVersionString
 {
-	NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"version", nil];
-	ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
-	NSArray* versionParts = [result.outStr componentsSeparatedByString:@"\n"];
-	NSString* versionString = ([versionParts count] > 0) ? [versionParts objectAtIndex:0] : @"";
-	return versionString;
+	static NSString* versionString = nil;
+	if (!versionString)
+	{
+		NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"version", @"--quiet", nil];
+		ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
+		NSArray* versionParts = [result.outStr componentsSeparatedByString:@"\n"];
+		versionString = ([versionParts count] > 0) ? [versionParts objectAtIndex:0] : nil;
+	}
+	return versionString ? versionString : @"";
 }
+
+- (NSString*) shortMercurialVersionNumberString
+{
+	NSString* shortNumber;
+	BOOL matched = [[self mercurialVersionString] getCapturesWithRegexAndComponents:@"Mercurial Distributed SCM \\(version ([0-9\\.]+)\\+[0-9\\.]+\\)" firstComponent:&shortNumber];
+	return matched ? shortNumber : @"";
+}
+
+- (NSString*) mercurialBuildHashKeyString
+{
+	NSString* hashKeyString;
+	BOOL matched = [[self mercurialVersionString] getCapturesWithRegexAndComponents:@"Mercurial Distributed SCM \\(version [0-9\\.]+\\+([0-9\\.]+)\\)" firstComponent:&hashKeyString];
+	return matched ? hashKeyString : @"";
+}
+
+- (NSString*) shortMercurialVersionString	{ return fstr(@"Mercurial SCM %@", [self shortMercurialVersionNumberString]); }
+
 
 - (NSAttributedString*) fullVersionString
 {
@@ -391,6 +415,9 @@
 - (IBAction) showAboutBox:(id)sender
 {
 	[NSBundle loadNibNamed:@"About" owner:self];
+	[backingBox setRadius:[NSNumber numberWithFloat:190.0]];
+	[backingBox setOffsetFromCenter:NSMakePoint(0.0, -40.0)];
+	[backingBox setNeedsDisplay:YES];
 	NSURL* creditsURL = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/MacHGHelp/%@",[[NSBundle mainBundle] resourcePath], @"Credits.html"]];
 	[[creditsWebview mainFrame] loadRequest:[NSURLRequest requestWithURL:creditsURL]];
 }

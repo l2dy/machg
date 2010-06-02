@@ -33,18 +33,13 @@
 // MARK:  Initilization
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (id) init
+- (void) awakeFromNib
 {
-	self = [super init];
-	if (self)
-	{
-		offsetFromCenter_ = NSMakePoint(0.0, 0.0);
-		radius_ = [NSNumber numberWithFloat:450.0];
-		foregroundFilters_ = nil;
-		backgroundFilters_ = nil;
-		lastCenterForGradiant_ = nil;
-	}
-	return self;
+	offsetFromCenter_ = NSMakePoint(0.0, 0.0);
+	radius_ = [NSNumber numberWithFloat:450.0];
+	foregroundFilters_ = nil;
+	backgroundFilters_ = nil;
+	lastCenterForGradiant_ = nil;
 }
 
 

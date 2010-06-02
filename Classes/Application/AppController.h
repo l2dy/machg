@@ -26,6 +26,7 @@
 	InitializationWizardController* theInitilizationWizardController_;
 
 	IBOutlet WebView*			creditsWebview;
+	IBOutlet RadialGradiantBox*	backingBox;
 	
 	TaskExecutions*				theTaskExecutions;						// We have this reference to ensure garbage collection doesn't collect this.
 	NSMutableDictionary*		repositoryIdentityForPath_;				// This dictionary contains the collection of root changesets for a given path.
@@ -61,10 +62,13 @@
 - (void)	  webView:(WebView*)webView decidePolicyForNavigationAction:(NSDictionary*)actionInformation request:(NSURLRequest*)request frame:(WebFrame*)frame decisionListener:(id < WebPolicyDecisionListener >)listener;
 
 // Version Utilities
-- (NSString*) shortVersionString;
-- (NSString*) shortVersionNumberString;
-- (NSString*) macHgBuildHashKeyString;
-- (NSString*) mercurialVersionString;
+- (NSString*) shortVersionString;					// Eg "Version:0.9.5"
+- (NSString*) shortVersionNumberString;				// Eg "0.9.5"
+- (NSString*) macHgShortVersionString;				// Eg "MacHg 0.9.5"
+- (NSString*) macHgBuildHashKeyString;				// Eg "df3754a23dd7"
+- (NSString*) shortMercurialVersionNumberString;	// Eg "1.5.3"
+- (NSString*) shortMercurialVersionString;			// Eg "Mercurial SCM 1.5.3"
+- (NSString*) mercurialBuildHashKeyString;			// Eg "20100514"
 - (NSAttributedString*) fullVersionString;
 
 

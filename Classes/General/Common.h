@@ -87,6 +87,7 @@
 @class LNCStopwatch;
 @class AttachedWindowController;
 @class DisclosureBoxController;
+@class RadialGradiantBox;
 @class OptionController;
 @class SingleTimedQueue;
 @class ThickSplitView;
