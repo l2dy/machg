@@ -1903,7 +1903,7 @@
 				OTHER_CFLAGS = "-DDEBUG";
 				OTHER_LDFLAGS = "-licucore";
 				PRODUCT_NAME = MacHg;
-				VALID_ARCHS = i386;
+				VALID_ARCHS = "x86_64 i386";
 			};
 			name = Debug;
 		};
