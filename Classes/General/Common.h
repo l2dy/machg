@@ -628,6 +628,8 @@ NSString*	nonNil(NSString* string);
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 NSString*	executableLocationHG();								// The resolved executable location
+NSString*	applicationSupportFolder();							// the resolved app support dir eg				~/Library/Application Support/MacHg
+NSString*	applicationSupportVersionedFolder();				// the resolved versioned app support dir eg	~/Library/Application Support/MacHg/0.9.5
 
 
 static inline NSString*	intAsString(int i)				{ return [NSString stringWithFormat:@"%d", i]; }

@@ -554,6 +554,32 @@ NSString* executableLocationHG()
 }
 
 
+NSString* applicationSupportVersionedFolder()
+{
+	static NSString* answer = nil;
+	if (!answer)
+	{
+		NSArray* searchPaths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
+		NSString* applicationSupportFolder = [searchPaths objectAtIndex:0];
+		NSString* shortVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+		answer = fstr(@"%@/%@/%@", applicationSupportFolder, [[NSProcessInfo processInfo] processName], shortVersion);
+	}
+	return answer;
+}
+
+NSString* applicationSupportFolder()
+{
+	static NSString* answer = nil;
+	if (!answer)
+	{
+		NSArray* searchPaths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
+		NSString* applicationSupportFolder = [searchPaths objectAtIndex:0];
+		answer = fstr(@"%@/%@", applicationSupportFolder, [[NSProcessInfo processInfo] processName]);
+	}
+	return answer;
+}
+
+
 int	bitCount(int num)
 {
 	int count = 0;

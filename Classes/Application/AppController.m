@@ -187,21 +187,6 @@
 		[[self theInitilizationWizardController] showWizard];	
 }
 
-- (NSString*) applicationSupportVersionedFolder;
-{
-	NSArray* searchPaths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
-	NSString* applicationSupportFolder = [searchPaths objectAtIndex:0];
-	return [NSString stringWithFormat:@"%@/%@/%@", applicationSupportFolder, [[NSProcessInfo processInfo] processName], [self shortVersionNumberString]];
-}
-
-- (NSString*) applicationSupportFolder;
-{
-	NSArray* searchPaths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
-	NSString* applicationSupportFolder = [searchPaths objectAtIndex:0];
-	return fstr(@"%@/%@", applicationSupportFolder, [[NSProcessInfo processInfo] processName]);
-}
-
-
 
 - (void) checkConfigFileForEditingExtensions:(BOOL)onStartup;
 {
@@ -224,7 +209,7 @@
 
 	// Create the named versioned application support extensions directory
 	NSError* theError;
-	NSString* supportFolder = [[self applicationSupportVersionedFolder] stringByAppendingPathComponent:@"extensions"];
+	NSString* supportFolder = [applicationSupportVersionedFolder() stringByAppendingPathComponent:@"extensions"];
 	[fileManager createDirectoryAtPath:supportFolder withIntermediateDirectories:YES attributes:nil error:&theError];
 	
 	NSString* histeditDest = [supportFolder stringByAppendingPathComponent:@"histedit.py"];
@@ -343,7 +328,7 @@
 						return NO;
 
 		// look for ~/Application Support/MacHg/Repositories.machg
-		NSString* defaultDocumentPath = fstr(@"%@/Repositories.mchg",[self applicationSupportFolder]);
+		NSString* defaultDocumentPath = fstr(@"%@/Repositories.mchg", applicationSupportFolder());
 		NSURL* defaultURL = [NSURL fileURLWithPath:defaultDocumentPath];
 		if ([[NSFileManager defaultManager] fileExistsAtPath:[defaultURL path]])
 			if ([docController openDocumentWithContentsOfURL:defaultURL display:YES error:nil])
