@@ -246,8 +246,12 @@
 	{
 		if ([path length] < PATH_MAX)
 		{
+			NSString* cachedPath = path;
 			path = [path stringByResolvingSymlinksAndAliases];
-			path = caseSensitiveFilePath(path);
+			if (path)
+				path = caseSensitiveFilePath(path);
+			else
+				path = cachedPath;
 		}
 		else
 			NSRunCriticalAlertPanel(@"Max Path Length exceeded", fstr(@"The maximum path length for the path to the repository root was exceeded. Functionality for this repository could be erratic. The path is", path), @"OK", nil, nil);
