@@ -1935,7 +1935,7 @@
 	}
 	
 	if (DisplayWarningForPostMergeFromDefaults())
-		NSRunAlertPanel(@"Merged Files", @"You now need to examine the merged files, resolve and conflicts, and finally commit all the merged files to complete the merge.", @"OK", nil, nil);
+		NSRunAlertPanel(@"Merged Files", @"You now need to examine the merged files, resolve any conflicts, and finally commit all the merged files to complete the merge.", @"OK", nil, nil);
 
 	switch (AfterMergeDoFromDefaults())
 	{
