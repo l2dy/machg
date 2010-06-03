@@ -175,11 +175,12 @@
 		96DCCC1E10CD41B100C843C9 /* fmdiff.sh in Resources */ = {isa = PBXBuildFile; fileRef = 96DCCC1B10CD41B100C843C9 /* fmdiff.sh */; };
 		96DCCC1F10CD41B100C843C9 /* localhg in Resources */ = {isa = PBXBuildFile; fileRef = 96DCCC1C10CD41B100C843C9 /* localhg */; };
 		96DCCC2010CD41B100C843C9 /* spawnshellatpath in Resources */ = {isa = PBXBuildFile; fileRef = 96DCCC1D10CD41B100C843C9 /* spawnshellatpath */; };
-		96DCD03C10CD430600C843C9 /* LocalMercurial in Copy Files (Mercurial) */ = {isa = PBXBuildFile; fileRef = 96DCCE2710CD430000C843C9 /* LocalMercurial */; };
 		96DD29CA112AE56200A57BD3 /* CollapseSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96DD29C9112AE56200A57BD3 /* CollapseSheetController.m */; };
 		96DD29CD112AE56D00A57BD3 /* CollapseSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96DD29CB112AE56D00A57BD3 /* CollapseSheet.xib */; };
 		96DF426511B48DC700D986FF /* RadialGradiantBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 96DF426411B48DC700D986FF /* RadialGradiantBox.m */; };
 		96DF437111B5209C00D986FF /* RelativePositionedBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 96DF437011B5209C00D986FF /* RelativePositionedBox.m */; };
+		96DF546311B83DF900D986FF /* LocalMercurial in Resources */ = {isa = PBXBuildFile; fileRef = 96DF51E211B83DF900D986FF /* LocalMercurial */; };
+		96DF546411B83E1E00D986FF /* LocalMercurial in Copy Files (Mercurial) */ = {isa = PBXBuildFile; fileRef = 96DF51E211B83DF900D986FF /* LocalMercurial */; };
 		96F5A4DE11A8185800707404 /* TextButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96F5A4DD11A8185800707404 /* TextButtonCell.m */; };
 		96F5A4FA11A81B5B00707404 /* DiffTextButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96F5A4F911A81B5B00707404 /* DiffTextButtonCell.m */; };
 		96F5A70D11A879F100707404 /* LabelTextButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96F5A70C11A879F100707404 /* LabelTextButtonCell.m */; };
@@ -207,7 +208,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				96DCD03C10CD430600C843C9 /* LocalMercurial in Copy Files (Mercurial) */,
+				96DF546411B83E1E00D986FF /* LocalMercurial in Copy Files (Mercurial) */,
 			);
 			name = "Copy Files (Mercurial)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -459,7 +460,6 @@
 		96DCCC1B10CD41B100C843C9 /* fmdiff.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = fmdiff.sh; path = scripts/fmdiff.sh; sourceTree = SOURCE_ROOT; };
 		96DCCC1C10CD41B100C843C9 /* localhg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = localhg; path = scripts/localhg; sourceTree = SOURCE_ROOT; };
 		96DCCC1D10CD41B100C843C9 /* spawnshellatpath */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = spawnshellatpath; path = scripts/spawnshellatpath; sourceTree = SOURCE_ROOT; };
-		96DCCE2710CD430000C843C9 /* LocalMercurial */ = {isa = PBXFileReference; includeInIndex = 0; lastKnownFileType = folder; path = LocalMercurial; sourceTree = SOURCE_ROOT; };
 		96DD29C8112AE56200A57BD3 /* CollapseSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollapseSheetController.h; sourceTree = "<group>"; };
 		96DD29C9112AE56200A57BD3 /* CollapseSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollapseSheetController.m; sourceTree = "<group>"; };
 		96DD29CC112AE56D00A57BD3 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/CollapseSheet.xib; sourceTree = SOURCE_ROOT; };
@@ -467,6 +467,7 @@
 		96DF426411B48DC700D986FF /* RadialGradiantBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RadialGradiantBox.m; sourceTree = "<group>"; };
 		96DF436F11B5209C00D986FF /* RelativePositionedBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RelativePositionedBox.h; sourceTree = "<group>"; };
 		96DF437011B5209C00D986FF /* RelativePositionedBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RelativePositionedBox.m; sourceTree = "<group>"; };
+		96DF51E211B83DF900D986FF /* LocalMercurial */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LocalMercurial; sourceTree = "<group>"; };
 		96F5A4DC11A8185800707404 /* TextButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextButtonCell.h; sourceTree = "<group>"; };
 		96F5A4DD11A8185800707404 /* TextButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextButtonCell.m; sourceTree = "<group>"; };
 		96F5A4F811A81B5B00707404 /* DiffTextButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DiffTextButtonCell.h; sourceTree = "<group>"; };
@@ -548,7 +549,7 @@
 				9672AC50114B796A00312CE2 /* UtilityClasses */,
 				9631D05A1107A7E90007FDF2 /* ExternalClasses */,
 				2A37F4AFFDCFA73011CA2CEA /* Other Sources */,
-				96DCCE2710CD430000C843C9 /* LocalMercurial */,
+				96DF51E211B83DF900D986FF /* LocalMercurial */,
 				2A37F4B8FDCFA73011CA2CEA /* Resources */,
 				2A37F4C3FDCFA73011CA2CEA /* Frameworks */,
 				19C28FB0FE9D524F11CA2CBB /* Products */,
@@ -1508,6 +1509,7 @@
 				969BDCC1119659FC007AA6D9 /* tb-terminal.png in Resources */,
 				96FF03A81199200E006EC616 /* UpdatePreferences.tiff in Resources */,
 				96C613A911B40B0D00B54B09 /* MacHgSplash.png in Resources */,
+				96DF546311B83DF900D986FF /* LocalMercurial in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
