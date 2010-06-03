@@ -3,7 +3,7 @@
 #  Copyright 2005-2009 Matt Mackall <mpm@selenic.com> and others
 #
 # This software may be used and distributed according to the terms of the
-# GNU General Public License version 2, incorporated herein by reference.
+# GNU General Public License version 2 or any later version.
 
 # Notes for hg->hg conversion:
 #
@@ -36,7 +36,8 @@ class mercurial_sink(converter_sink):
             try:
                 self.repo = hg.repository(self.ui, path)
                 if not self.repo.local():
-                    raise NoRepo(_('%s is not a local Mercurial repo') % path)
+                    raise NoRepo(_('%s is not a local Mercurial repository')
+                                 % path)
             except error.RepoError, err:
                 ui.traceback()
                 raise NoRepo(err.args[0])
@@ -45,11 +46,13 @@ class mercurial_sink(converter_sink):
                 ui.status(_('initializing destination %s repository\n') % path)
                 self.repo = hg.repository(self.ui, path, create=True)
                 if not self.repo.local():
-                    raise NoRepo(_('%s is not a local Mercurial repo') % path)
+                    raise NoRepo(_('%s is not a local Mercurial repository')
+                                 % path)
                 self.created.append(path)
             except error.RepoError:
                 ui.traceback()
-                raise NoRepo("could not create hg repo %s as sink" % path)
+                raise NoRepo(_("could not create hg repository %s as sink")
+                             % path)
         self.lock = None
         self.wlock = None
         self.filemapmode = False
@@ -61,8 +64,10 @@ class mercurial_sink(converter_sink):
 
     def after(self):
         self.ui.debug('run hg sink post-conversion action\n')
-        self.lock.release()
-        self.wlock.release()
+        if self.lock:
+            self.lock.release()
+        if self.wlock:
+            self.wlock.release()
 
     def revmapfile(self):
         return os.path.join(self.path, ".hg", "shamap")
@@ -72,7 +77,7 @@ class mercurial_sink(converter_sink):
 
     def getheads(self):
         h = self.repo.changelog.heads()
-        return [ hex(x) for x in h ]
+        return [hex(x) for x in h]
 
     def setbranch(self, branch, pbranches):
         if not self.clonebranches:
@@ -145,8 +150,10 @@ class mercurial_sink(converter_sink):
             m1node = self.repo.changelog.read(bin(parents[0]))[0]
             parent = parents[0]
 
-        if len(parents) < 2: parents.append(nullid)
-        if len(parents) < 2: parents.append(nullid)
+        if len(parents) < 2:
+            parents.append(nullid)
+        if len(parents) < 2:
+            parents.append(nullid)
         p2 = parents.pop(0)
 
         text = commit.desc
@@ -159,8 +166,8 @@ class mercurial_sink(converter_sink):
         while parents:
             p1 = p2
             p2 = parents.pop(0)
-            ctx = context.memctx(self.repo, (p1, p2), text, files.keys(), getfilectx,
-                                 commit.author, commit.date, extra)
+            ctx = context.memctx(self.repo, (p1, p2), text, files.keys(),
+                                 getfilectx, commit.author, commit.date, extra)
             self.repo.commitctx(ctx)
             text = "(octopus merge fixup)\n"
             p2 = hex(self.repo.changelog.tip())
@@ -220,7 +227,7 @@ class mercurial_source(converter_source):
                 raise error.RepoError()
         except error.RepoError:
             ui.traceback()
-            raise NoRepo("%s is not a local Mercurial repo" % path)
+            raise NoRepo(_("%s is not a local Mercurial repository") % path)
         self.lastrev = None
         self.lastctx = None
         self._changescache = None

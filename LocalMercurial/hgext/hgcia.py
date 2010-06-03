@@ -1,5 +1,7 @@
 # Copyright (C) 2007-8 Brendan Cully <brendan@kublai.com>
-# Published under the GNU GPL
+#
+# This software may be used and distributed according to the terms of the
+# GNU General Public License version 2 or any later version.
 
 """hooks for integrating with the CIA.vc notification service
 
@@ -195,7 +197,10 @@ class hgcia(object):
 
     def sendrpc(self, msg):
         srv = xmlrpclib.Server(self.ciaurl)
-        srv.hub.deliver(msg)
+        res = srv.hub.deliver(msg)
+        if res is not True:
+            raise util.Abort(_('%s returned an error: %s') %
+                             (self.ciaurl, res))
 
     def sendemail(self, address, data):
         p = email.Parser.Parser()

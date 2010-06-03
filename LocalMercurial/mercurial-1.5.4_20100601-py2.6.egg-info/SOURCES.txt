@@ -8,6 +8,7 @@ hgext/bugzilla.py
 hgext/children.py
 hgext/churn.py
 hgext/color.py
+hgext/eol.py
 hgext/extdiff.py
 hgext/fetch.py
 hgext/gpg.py
@@ -21,10 +22,12 @@ hgext/notify.py
 hgext/pager.py
 hgext/parentrevspec.py
 hgext/patchbomb.py
+hgext/progress.py
 hgext/purge.py
 hgext/rebase.py
 hgext/record.py
 hgext/relink.py
+hgext/schemes.py
 hgext/share.py
 hgext/transplant.py
 hgext/win32mbcs.py
@@ -111,6 +114,7 @@ mercurial/strutil.py
 mercurial/subrepo.py
 mercurial/tags.py
 mercurial/templatefilters.py
+mercurial/templatekw.py
 mercurial/templater.py
 mercurial/transaction.py
 mercurial/ui.py

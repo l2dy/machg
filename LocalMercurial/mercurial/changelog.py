@@ -3,7 +3,7 @@
 # Copyright 2005-2007 Matt Mackall <mpm@selenic.com>
 #
 # This software may be used and distributed according to the terms of the
-# GNU General Public License version 2, incorporated herein by reference.
+# GNU General Public License version 2 or any later version.
 
 from node import bin, hex, nullid
 from i18n import _
@@ -78,7 +78,7 @@ class appender(object):
             doff = self.offset - self.size
             self.data.insert(0, "".join(self.data))
             del self.data[1:]
-            s = self.data[0][doff:doff+count]
+            s = self.data[0][doff:doff + count]
             self.offset += len(s)
             ret += s
         return ret
@@ -218,8 +218,13 @@ class changelog(revlog.revlog):
             parseddate = "%d %d" % util.parsedate(date)
         else:
             parseddate = "%d %d" % util.makedate()
-        if extra and extra.get("branch") in ("default", ""):
-            del extra["branch"]
+        if extra:
+            branch = extra.get("branch")
+            if branch in ("default", ""):
+                del extra["branch"]
+            elif branch in (".", "null", "tip"):
+                raise error.RevlogError(_('the name \'%s\' is reserved')
+                                        % branch)
         if extra:
             extra = encodeextra(extra)
             parseddate = "%s %s" % (parseddate, extra)

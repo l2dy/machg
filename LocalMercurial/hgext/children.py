@@ -6,7 +6,7 @@
 # Thomas Arendsen Hein <thomas@intevation.de>
 #
 # This software may be used and distributed according to the terms of the
-# GNU General Public License version 2, incorporated herein by reference.
+# GNU General Public License version 2 or any later version.
 
 '''command to display child changesets'''
 
@@ -33,7 +33,7 @@ def children(ui, repo, file_=None, **opts):
     displayer = cmdutil.show_changeset(ui, repo, opts)
     for cctx in ctx.children():
         displayer.show(cctx)
-
+    displayer.close()
 
 cmdtable = {
     "children":

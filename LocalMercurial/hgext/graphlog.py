@@ -3,7 +3,7 @@
 # Copyright 2007 Joel Rosdahl <joel@rosdahl.net>
 #
 # This software may be used and distributed according to the terms of the
-# GNU General Public License version 2, incorporated herein by reference.
+# GNU General Public License version 2 or any later version.
 
 '''command to view revision graphs from a shell
 
@@ -12,7 +12,7 @@ commands. When this options is given, an ASCII representation of the
 revision graph is also shown.
 '''
 
-import os, sys
+import os
 from mercurial.cmdutil import revrange, show_changeset
 from mercurial.commands import templateopts
 from mercurial.i18n import _
@@ -218,7 +218,8 @@ def check_unsupported_flags(opts):
                "only_merges", "user", "only_branch", "prune", "newest_first",
                "no_merges", "include", "exclude"]:
         if op in opts and opts[op]:
-            raise util.Abort(_("--graph option is incompatible with --%s") % op)
+            raise util.Abort(_("--graph option is incompatible with --%s")
+                             % op.replace("_", "-"))
 
 def generate(ui, dag, displayer, showparents, edgefn):
     seen, state = [], asciistate()
@@ -241,15 +242,16 @@ def graphlog(ui, repo, path=None, **opts):
     check_unsupported_flags(opts)
     limit = cmdutil.loglimit(opts)
     start, stop = get_revs(repo, opts["rev"])
-    stop = max(stop, start - limit + 1)
     if start == nullrev:
         return
 
     if path:
         path = util.canonpath(repo.root, os.getcwd(), path)
     if path: # could be reset in canonpath
-        revdag = graphmod.filerevs(repo, path, start, stop)
+        revdag = graphmod.filerevs(repo, path, start, stop, limit)
     else:
+        if limit is not None:
+            stop = max(stop, start - limit + 1)
         revdag = graphmod.revisions(repo, start, stop)
 
     displayer = show_changeset(ui, repo, opts, buffered=True)
@@ -259,7 +261,7 @@ def graphlog(ui, repo, path=None, **opts):
 def graphrevs(repo, nodes, opts):
     limit = cmdutil.loglimit(opts)
     nodes.reverse()
-    if limit < sys.maxint:
+    if limit is not None:
         nodes = nodes[:limit]
     return graphmod.nodes(repo, nodes)
 
@@ -274,12 +276,12 @@ def goutgoing(ui, repo, dest=None, **opts):
     """
 
     check_unsupported_flags(opts)
-    dest, revs, checkout = hg.parseurl(
-        ui.expandpath(dest or 'default-push', dest or 'default'),
-        opts.get('rev'))
+    dest = ui.expandpath(dest or 'default-push', dest or 'default')
+    dest, branches = hg.parseurl(dest, opts.get('branch'))
+    revs, checkout = hg.addbranchrevs(repo, repo, branches, opts.get('rev'))
+    other = hg.repository(cmdutil.remoteui(ui, opts), dest)
     if revs:
         revs = [repo.lookup(rev) for rev in revs]
-    other = hg.repository(cmdutil.remoteui(ui, opts), dest)
     ui.status(_('comparing with %s\n') % url.hidepassword(dest))
     o = repo.findoutgoing(other, force=opts.get('force'))
     if not o:
@@ -303,8 +305,9 @@ def gincoming(ui, repo, source="default", **opts):
     """
 
     check_unsupported_flags(opts)
-    source, revs, checkout = hg.parseurl(ui.expandpath(source), opts.get('rev'))
+    source, branches = hg.parseurl(ui.expandpath(source), opts.get('branch'))
     other = hg.repository(cmdutil.remoteui(repo, opts), source)
+    revs, checkout = hg.addbranchrevs(repo, other, branches, opts.get('rev'))
     ui.status(_('comparing with %s\n') % url.hidepassword(source))
     if revs:
         revs = [other.lookup(rev) for rev in revs]

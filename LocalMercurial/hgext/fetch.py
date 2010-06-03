@@ -3,7 +3,7 @@
 # Copyright 2006 Vadim Gelfer <vadim.gelfer@gmail.com>
 #
 # This software may be used and distributed according to the terms of the
-# GNU General Public License version 2, incorporated herein by reference.
+# GNU General Public License version 2 or any later version.
 
 '''pull, update and merge in one command'''
 
@@ -81,7 +81,6 @@ def fetch(ui, repo, source='default', **opts):
 
         # Is this a simple fast-forward along the current branch?
         newheads = repo.branchheads(branch)
-        newheads = [head for head in newheads if len(repo[head].children()) == 0]
         newchildren = repo.changelog.nodesbetween([parent], newheads)[2]
         if len(newheads) == 1:
             if newchildren[0] != parent:

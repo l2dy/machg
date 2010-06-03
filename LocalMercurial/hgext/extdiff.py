@@ -3,7 +3,7 @@
 # Copyright 2006 Vadim Gelfer <vadim.gelfer@gmail.com>
 #
 # This software may be used and distributed according to the terms of the
-# GNU General Public License version 2, incorporated herein by reference.
+# GNU General Public License version 2 or any later version.
 
 '''command to allow external programs to compare revisions
 
@@ -43,7 +43,7 @@ fast (at least faster than having to compare the entire tree).
 
 from mercurial.i18n import _
 from mercurial.node import short, nullid
-from mercurial import cmdutil, util, commands
+from mercurial import cmdutil, util, commands, encoding
 import os, shlex, shutil, tempfile, re
 
 def snapshot(ui, repo, files, node, tmproot):
@@ -126,7 +126,7 @@ def dodiff(ui, repo, diffcmd, diffopts, pats, opts):
     modadd = mod_a | add_a | mod_b | add_b
     common = modadd | rem_a | rem_b
     if not common:
-       return 0
+        return 0
 
     tmproot = tempfile.mkdtemp(prefix='extdiff.')
     try:
@@ -146,10 +146,10 @@ def dodiff(ui, repo, diffcmd, diffopts, pats, opts):
         if node2:
             dir2 = snapshot(ui, repo, modadd, node2, tmproot)[0]
         elif len(common) > 1:
-            #we only actually need to get the files to copy back to the working
-            #dir in this case (because the other cases are: diffing 2 revisions
-            #or single file -- in which case the file is already directly passed
-            #to the diff tool).
+            #we only actually need to get the files to copy back to
+            #the working dir in this case (because the other cases
+            #are: diffing 2 revisions or single file -- in which case
+            #the file is already directly passed to the diff tool).
             dir2, fns_and_mtime = snapshot(ui, repo, modadd, None, tmproot)
         else:
             # This lets the diff tool open the changed file directly
@@ -169,8 +169,9 @@ def dodiff(ui, repo, diffcmd, diffopts, pats, opts):
                     dir1b = os.devnull
             dir2 = os.path.join(dir2root, dir2, common_file)
 
-        # Function to quote file/dir names in the argument string
-        # When not operating in 3-way mode, an empty string is returned for parent2
+        # Function to quote file/dir names in the argument string.
+        # When not operating in 3-way mode, an empty string is
+        # returned for parent2
         replace = dict(parent=dir1a, parent1=dir1a, parent2=dir1b, child=dir2)
         def quote(match):
             key = match.group()[1:]
@@ -238,7 +239,8 @@ def uisetup(ui):
     for cmd, path in ui.configitems('extdiff'):
         if cmd.startswith('cmd.'):
             cmd = cmd[4:]
-            if not path: path = cmd
+            if not path:
+                path = cmd
             diffopts = ui.config('extdiff', 'opts.' + cmd, '')
             diffopts = diffopts and [diffopts] or []
         elif cmd.startswith('opts.'):
@@ -253,18 +255,28 @@ def uisetup(ui):
         def save(cmd, path, diffopts):
             '''use closure to save diff command to use'''
             def mydiff(ui, repo, *pats, **opts):
-                return dodiff(ui, repo, path, diffopts, pats, opts)
-            mydiff.__doc__ = _('''\
+                return dodiff(ui, repo, path, diffopts + opts['option'],
+                              pats, opts)
+            doc = _('''\
 use %(path)s to diff repository (or selected files)
 
-    Show differences between revisions for the specified files, using the
-    %(path)s program.
+    Show differences between revisions for the specified files, using
+    the %(path)s program.
 
-    When two revision arguments are given, then changes are shown between
-    those revisions. If only one revision is specified then that revision is
-    compared to the working directory, and, when no revisions are specified,
-    the working directory files are compared to its parent.\
+    When two revision arguments are given, then changes are shown
+    between those revisions. If only one revision is specified then
+    that revision is compared to the working directory, and, when no
+    revisions are specified, the working directory files are compared
+    to its parent.\
 ''') % dict(path=util.uirepr(path))
+
+            # We must translate the docstring right away since it is
+            # used as a format string. The string will unfortunately
+            # be translated again in commands.helpcmd and this will
+            # fail when the docstring contains non-ASCII characters.
+            # Decoding the string to a Unicode string here (using the
+            # right encoding) prevents that.
+            mydiff.__doc__ = doc.decode(encoding.encoding)
             return mydiff
         cmdtable[cmd] = (save(cmd, path, diffopts),
                          cmdtable['extdiff'][1][1:],

@@ -3,7 +3,7 @@
 # Copyright 2006 Vadim Gelfer <vadim.gelfer@gmail.com>
 #
 # This software may be used and distributed according to the terms of the
-# GNU General Public License version 2, incorporated herein by reference.
+# GNU General Public License version 2 or any later version.
 
 import util, error
 from i18n import _
@@ -33,11 +33,14 @@ class StreamException(Exception):
 #
 #   server writes out raw file data.
 
-def stream_out(repo, untrusted=False):
+def allowed(ui):
+    return ui.configbool('server', 'uncompressed', True, untrusted=True)
+
+def stream_out(repo):
     '''stream out all metadata files in repository.
     writes to file-like object, must support write() and optional flush().'''
 
-    if not repo.ui.configbool('server', 'uncompressed', untrusted=untrusted):
+    if not allowed(repo.ui):
         raise StreamException(1)
 
     entries = []

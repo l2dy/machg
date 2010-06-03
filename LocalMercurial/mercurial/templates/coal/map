@@ -23,6 +23,11 @@ searchentry = ../paper/shortlogentry.tmpl
 changeset = ../paper/changeset.tmpl
 manifest = ../paper/manifest.tmpl
 
+nav = '{before%naventry} {after%naventry}'
+navshort = '{before%navshortentry}{after%navshortentry}'
+navgraph = '{before%navgraphentry}{after%navgraphentry}'
+filenav = '{before%filenaventry}{after%filenaventry}'
+
 direntry = '
   <tr class="fileline parity{parity}">
     <td class="name">
@@ -147,7 +152,7 @@ branchentry = '
 changelogtag = '<span class="tag">{name|escape}</span> '
 changesettag = '<span class="tag">{tag|escape}</span> '
 changelogbranchhead = '<span class="branchhead">{name|escape}</span> '
-changelogbranchname = '<span class="branchname">{name|escape}</span> ' 
+changelogbranchname = '<span class="branchname">{name|escape}</span> '
 
 filediffparent = '
   <tr>
@@ -176,7 +181,7 @@ indexentry = '
     <td><a href="{url}{sessionvars%urlparameter}">{name|escape}</a></td>
     <td>{description}</td>
     <td>{contact|obfuscate}</td>
-    <td class="age">{lastchange|age} ago</td>
+    <td class="age">{lastchange|age}</td>
     <td class="indexlinks">{archives%indexarchiveentry}</td>
   </tr>\n'
 indexarchiveentry = '<a href="{url}archive/{node|short}{extension|urlescape}">&nbsp;&darr;{type|escape}</a>'

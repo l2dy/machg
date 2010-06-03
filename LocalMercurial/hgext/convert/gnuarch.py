@@ -4,7 +4,7 @@
 #  and others
 #
 # This software may be used and distributed according to the terms of the
-# GNU General Public License version 2, incorporated herein by reference.
+# GNU General Public License version 2 or any later version.
 
 from common import NoRepo, commandline, commit, converter_source
 from mercurial.i18n import _
@@ -31,7 +31,8 @@ class gnuarch_source(converter_source, commandline):
         super(gnuarch_source, self).__init__(ui, path, rev=rev)
 
         if not os.path.exists(os.path.join(path, '{arch}')):
-            raise NoRepo(_("%s does not look like a GNU Arch repo") % path)
+            raise NoRepo(_("%s does not look like a GNU Arch repository")
+                         % path)
 
         # Could use checktool, but we want to check for baz or tla.
         self.execmd = None
@@ -89,7 +90,8 @@ class gnuarch_source(converter_source, commandline):
 
             # Get the complete list of revisions for that tree version
             output, status = self.runlines('revisions', '-r', '-f', treeversion)
-            self.checkexit(status, 'failed retrieveing revisions for %s' % treeversion)
+            self.checkexit(status, 'failed retrieveing revisions for %s'
+                           % treeversion)
 
             # No new iteration unless a revision has a continuation-of header
             treeversion = None
@@ -116,7 +118,8 @@ class gnuarch_source(converter_source, commandline):
                 # or if we have to 'jump' to a different treeversion given
                 # by the continuation-of header.
                 if self.changes[rev].continuationof:
-                    treeversion = '--'.join(self.changes[rev].continuationof.split('--')[:-1])
+                    treeversion = '--'.join(
+                        self.changes[rev].continuationof.split('--')[:-1])
                     break
 
                 # If we reached a base-0 revision w/o any continuation-of
@@ -170,7 +173,7 @@ class gnuarch_source(converter_source, commandline):
 
         for src in self.changes[rev].ren_dirs:
             to = self.changes[rev].ren_dirs[src]
-            chgs, cps = self._rendirchanges(src, to);
+            chgs, cps = self._rendirchanges(src, to)
             changes += [(f, rev) for f in chgs]
             copies.update(cps)
 
@@ -220,7 +223,7 @@ class gnuarch_source(converter_source, commandline):
         return data, mode
 
     def _exclude(self, name):
-        exclude = [ '{arch}', '.arch-ids', '.arch-inventory' ]
+        exclude = ['{arch}', '.arch-ids', '.arch-inventory']
         for exc in exclude:
             if name.find(exc) != -1:
                 return True
@@ -285,7 +288,8 @@ class gnuarch_source(converter_source, commandline):
 
             # Commit revision origin when dealing with a branch or tag
             if 'Continuation-of' in catlog:
-                self.changes[rev].continuationof = self.recode(catlog['Continuation-of'])
+                self.changes[rev].continuationof = self.recode(
+                    catlog['Continuation-of'])
         except Exception:
             raise util.Abort(_('could not parse cat-log of %s') % rev)
 

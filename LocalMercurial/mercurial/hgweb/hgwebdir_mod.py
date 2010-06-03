@@ -4,13 +4,13 @@
 # Copyright 2005, 2006 Matt Mackall <mpm@selenic.com>
 #
 # This software may be used and distributed according to the terms of the
-# GNU General Public License version 2, incorporated herein by reference.
+# GNU General Public License version 2 or any later version.
 
-import os, re, time
+import os, re, time, urlparse
 from mercurial.i18n import _
 from mercurial import ui, hg, util, templater
 from mercurial import error, encoding
-from common import ErrorResponse, get_mtime, staticfile, paritygen,\
+from common import ErrorResponse, get_mtime, staticfile, paritygen, \
                    get_contact, HTTP_OK, HTTP_NOT_FOUND, HTTP_SERVER_ERROR
 from hgweb_mod import hgweb
 from request import wsgirequest
@@ -48,6 +48,7 @@ class hgwebdir(object):
         self.conf = conf
         self.baseui = baseui
         self.lastrefresh = 0
+        self.motd = None
         self.refresh()
 
     def refresh(self):
@@ -55,40 +56,40 @@ class hgwebdir(object):
             return
 
         if self.baseui:
-            self.ui = self.baseui.copy()
+            u = self.baseui.copy()
         else:
-            self.ui = ui.ui()
-            self.ui.setconfig('ui', 'report_untrusted', 'off')
-            self.ui.setconfig('ui', 'interactive', 'off')
+            u = ui.ui()
+            u.setconfig('ui', 'report_untrusted', 'off')
+            u.setconfig('ui', 'interactive', 'off')
 
         if not isinstance(self.conf, (dict, list, tuple)):
             map = {'paths': 'hgweb-paths'}
-            self.ui.readconfig(self.conf, remap=map, trust=True)
-            paths = self.ui.configitems('hgweb-paths')
+            u.readconfig(self.conf, remap=map, trust=True)
+            paths = u.configitems('hgweb-paths')
         elif isinstance(self.conf, (list, tuple)):
             paths = self.conf
         elif isinstance(self.conf, dict):
             paths = self.conf.items()
 
-        encoding.encoding = self.ui.config('web', 'encoding',
-                                           encoding.encoding)
-        self.motd = self.ui.config('web', 'motd')
-        self.style = self.ui.config('web', 'style', 'paper')
-        self.stripecount = self.ui.config('web', 'stripes', 1)
-        if self.stripecount:
-            self.stripecount = int(self.stripecount)
-        self._baseurl = self.ui.config('web', 'baseurl')
-
-        self.repos = findrepos(paths)
-        for prefix, root in self.ui.configitems('collections'):
+        repos = findrepos(paths)
+        for prefix, root in u.configitems('collections'):
             prefix = util.pconvert(prefix)
             for path in util.walkrepos(root, followsym=True):
                 repo = os.path.normpath(path)
                 name = util.pconvert(repo)
                 if name.startswith(prefix):
                     name = name[len(prefix):]
-                self.repos.append((name.lstrip('/'), repo))
+                repos.append((name.lstrip('/'), repo))
 
+        self.repos = repos
+        self.ui = u
+        encoding.encoding = self.ui.config('web', 'encoding',
+                                           encoding.encoding)
+        self.style = self.ui.config('web', 'style', 'paper')
+        self.stripecount = self.ui.config('web', 'stripes', 1)
+        if self.stripecount:
+            self.stripecount = int(self.stripecount)
+        self._baseurl = self.ui.config('web', 'baseurl')
         self.lastrefresh = time.time()
 
     def run(self):
@@ -229,13 +230,12 @@ class hgwebdir(object):
                     parts.insert(0, req.env['PATH_INFO'].rstrip('/'))
                 if req.env['SCRIPT_NAME']:
                     parts.insert(0, req.env['SCRIPT_NAME'])
-                m = re.match('((?:https?://)?)(.*)', '/'.join(parts))
-                # squish repeated slashes out of the path component
-                url = m.group(1) + re.sub('/+', '/', m.group(2)) + '/'
+                url = re.sub(r'/+', '/', '/'.join(parts) + '/')
 
                 # update time with local timezone
                 try:
-                    d = (get_mtime(path), util.makedate()[1])
+                    r = hg.repository(self.ui, path)
+                    d = (get_mtime(r.spath), util.makedate()[1])
                 except OSError:
                     continue
 
@@ -283,8 +283,7 @@ class hgwebdir(object):
                 for column in sortable]
 
         self.refresh()
-        if self._baseurl is not None:
-            req.env['SCRIPT_NAME'] = self._baseurl
+        self.updatereqenv(req.env)
 
         return tmpl("index", entries=entries, subdir=subdir,
                     sortcolumn=sortcolumn, descending=descending,
@@ -307,8 +306,7 @@ class hgwebdir(object):
         def config(section, name, default=None, untrusted=True):
             return self.ui.config(section, name, default, untrusted)
 
-        if self._baseurl is not None:
-            req.env['SCRIPT_NAME'] = self._baseurl
+        self.updatereqenv(req.env)
 
         url = req.env.get('SCRIPT_NAME', '')
         if not url.endswith('/'):
@@ -323,7 +321,7 @@ class hgwebdir(object):
         style, mapfile = templater.stylemap(styles)
         if style == styles[0]:
             vars['style'] = style
-        
+
         start = url[-1] == '?' and '&' or '?'
         sessionvars = webutil.sessionvars(vars, start)
         staticurl = config('web', 'staticurl') or url + 'static/'
@@ -338,3 +336,19 @@ class hgwebdir(object):
                                              "staticurl": staticurl,
                                              "sessionvars": sessionvars})
         return tmpl
+
+    def updatereqenv(self, env):
+        def splitnetloc(netloc):
+            if ':' in netloc:
+                return netloc.split(':', 1)
+            else:
+                return (netloc, None)
+
+        if self._baseurl is not None:
+            urlcomp = urlparse.urlparse(self._baseurl)
+            host, port = splitnetloc(urlcomp[1])
+            path = urlcomp[2]
+            env['SERVER_NAME'] = host
+            if port:
+                env['SERVER_PORT'] = port
+            env['SCRIPT_NAME'] = path

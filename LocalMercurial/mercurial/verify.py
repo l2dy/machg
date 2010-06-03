@@ -3,7 +3,7 @@
 # Copyright 2006, 2007 Matt Mackall <mpm@selenic.com>
 #
 # This software may be used and distributed according to the terms of the
-# GNU General Public License version 2, incorporated herein by reference.
+# GNU General Public License version 2 or any later version.
 
 from node import nullid, short
 from i18n import _
@@ -120,7 +120,9 @@ def _verify(repo):
     ui.status(_("checking changesets\n"))
     seen = {}
     checklog(cl, "changelog", 0)
+    total = len(repo)
     for i in repo:
+        ui.progress(_('checking'), i, total=total)
         n = cl.node(i)
         checkentry(cl, i, n, seen, [i], "changelog")
 
@@ -131,11 +133,14 @@ def _verify(repo):
                 filelinkrevs.setdefault(f, []).append(i)
         except Exception, inst:
             exc(i, _("unpacking changeset %s") % short(n), inst)
+    ui.progress(_('checking'), None)
 
     ui.status(_("checking manifests\n"))
     seen = {}
     checklog(mf, "manifest", 0)
+    total = len(mf)
     for i in mf:
+        ui.progress(_('checking'), i, total=total)
         n = mf.node(i)
         lr = checkentry(mf, i, n, seen, mflinkrevs.get(n, []), "manifest")
         if n in mflinkrevs:
@@ -151,21 +156,31 @@ def _verify(repo):
                     filenodes.setdefault(f, {}).setdefault(fn, lr)
         except Exception, inst:
             exc(lr, _("reading manifest delta %s") % short(n), inst)
+    ui.progress(_('checking'), None)
 
     ui.status(_("crosschecking files in changesets and manifests\n"))
 
+    total = len(mflinkrevs) + len(filelinkrevs) + len(filenodes)
+    count = 0
     if havemf:
-        for c,m in sorted([(c, m) for m in mflinkrevs for c in mflinkrevs[m]]):
+        for c, m in sorted([(c, m) for m in mflinkrevs
+                            for c in mflinkrevs[m]]):
+            count += 1
+            ui.progress(_('crosschecking'), count, total=total)
             err(c, _("changeset refers to unknown manifest %s") % short(m))
         mflinkrevs = None # del is bad here due to scope issues
 
         for f in sorted(filelinkrevs):
+            count += 1
+            ui.progress(_('crosschecking'), count, total=total)
             if f not in filenodes:
                 lr = filelinkrevs[f][0]
                 err(lr, _("in changeset but not in manifest"), f)
 
     if havecl:
         for f in sorted(filenodes):
+            count += 1
+            ui.progress(_('crosschecking'), count, total=total)
             if f not in filelinkrevs:
                 try:
                     fl = repo.file(f)
@@ -173,6 +188,8 @@ def _verify(repo):
                 except:
                     lr = None
                 err(lr, _("in manifest but not in changeset"), f)
+
+    ui.progress(_('crosschecking'), None)
 
     ui.status(_("checking files\n"))
 
@@ -184,7 +201,9 @@ def _verify(repo):
             storefiles.add(f)
 
     files = sorted(set(filenodes) | set(filelinkrevs))
-    for f in files:
+    total = len(files)
+    for i, f in enumerate(files):
+        ui.progress(_('checking'), i, item=f, total=total)
         try:
             linkrevs = filelinkrevs[f]
         except KeyError:
@@ -259,9 +278,10 @@ def _verify(repo):
 
         # cross-check
         if f in filenodes:
-            fns = [(lr, n) for n,lr in filenodes[f].iteritems()]
+            fns = [(lr, n) for n, lr in filenodes[f].iteritems()]
             for lr, node in sorted(fns):
                 err(lr, _("%s in manifests not found") % short(node), f)
+    ui.progress(_('checking'), None)
 
     for f in storefiles:
         warn(_("warning: orphan revlog '%s'") % f)

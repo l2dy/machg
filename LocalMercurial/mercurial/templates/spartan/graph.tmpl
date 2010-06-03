@@ -23,7 +23,7 @@
 <p>
 <label for="search1">search:</label>
 <input name="rev" id="search1" type="text" size="30">
-navigate: <small class="navigate">{changenav%navgraphentry}</small>
+navigate: <small class="navigate">{changenav%navgraph}</small>
 </p>
 </form>
 
@@ -55,7 +55,7 @@ graph.edge = function(x0, y0, x1, y1, color) {
 
 var revlink = '<li style="_STYLE"><span class="desc">';
 revlink += '<a href="{url}rev/_NODEID{sessionvars%urlparameter}" title="_NODEID">_DESC</a>';
-revlink += '</span><span class="info">_DATE ago, by _USER</span></li>';
+revlink += '</span><span class="info">_DATE, by _USER</span></li>';
 
 graph.vertex = function(x, y, color, parity, cur) {
 	
@@ -89,7 +89,7 @@ graph.render(data);
 <p>
 <label for="search1">search:</label>
 <input name="rev" id="search1" type="text" size="30">
-navigate: <small class="navigate">{changenav%navgraphentry}</small>
+navigate: <small class="navigate">{changenav%navgraph}</small>
 </p>
 </form>
 

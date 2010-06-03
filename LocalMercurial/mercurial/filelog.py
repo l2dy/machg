@@ -3,7 +3,7 @@
 # Copyright 2005-2007 Matt Mackall <mpm@selenic.com>
 #
 # This software may be used and distributed according to the terms of the
-# GNU General Public License version 2, incorporated herein by reference.
+# GNU General Public License version 2 or any later version.
 
 import revlog
 
@@ -17,7 +17,7 @@ class filelog(revlog.revlog):
         if not t.startswith('\1\n'):
             return t
         s = t.index('\1\n', 2)
-        return t[s+2:]
+        return t[s + 2:]
 
     def _readmeta(self, node):
         t = self.revision(node)
@@ -35,7 +35,7 @@ class filelog(revlog.revlog):
         if meta or text.startswith('\1\n'):
             mt = ""
             if meta:
-                mt = ["%s: %s\n" % (k, v) for k, v in meta.iteritems()]
+                mt = ["%s: %s\n" % (k, v) for k, v in sorted(meta.iteritems())]
             text = "\1\n%s\1\n%s" % ("".join(mt), text)
         return self.addrevision(text, transaction, link, p1, p2)
 
@@ -61,7 +61,7 @@ class filelog(revlog.revlog):
         """compare text with a given file revision"""
 
         # for renames, we have to go the slow way
-        if self.renamed(node):
+        if text.startswith('\1\n') or self.renamed(node):
             t2 = self.read(node)
             return t2 != text
 

@@ -3,7 +3,7 @@
 # Copyright 2005, 2006 Matt Mackall <mpm@selenic.com>
 #
 # This software may be used and distributed according to the terms of the
-# GNU General Public License version 2, incorporated herein by reference.
+# GNU General Public License version 2 or any later version.
 
 import encoding
 import gettext, sys, os
@@ -48,5 +48,8 @@ def gettext(message):
         # An unknown encoding results in a LookupError.
         return message
 
-_ = gettext
+if 'HGPLAIN' in os.environ:
+    _ = lambda message: message
+else:
+    _ = gettext
 

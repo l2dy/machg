@@ -3,8 +3,7 @@
 # Copyright 2006 Vadim Gelfer <vadim.gelfer@gmail.com>
 #
 # This software may be used and distributed according to the terms of the
-# GNU General Public License version 2, incorporated herein by reference.
-#
+# GNU General Public License version 2 or any later version.
 
 '''hooks for controlling repository access
 
@@ -25,7 +24,7 @@ is no way to distinguish them.
 To use this hook, configure the acl extension in your hgrc like this::
 
   [extensions]
-  hgext.acl =
+  acl =
 
   [hooks]
   pretxnchangegroup.acl = python:hgext.acl.hook
@@ -64,7 +63,7 @@ def buildmatch(ui, repo, user, key):
         return None
 
     pats = [pat for pat, users in ui.configitems(key)
-            if user in users.replace(',', ' ').split()]
+            if users == '*' or user in users.replace(',', ' ').split()]
     ui.debug('acl: %s enabled, %d entries for user %s\n' %
              (key, len(pats), user))
     if pats:

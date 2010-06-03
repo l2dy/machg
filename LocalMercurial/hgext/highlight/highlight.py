@@ -3,13 +3,13 @@
 #  Copyright 2007-2009 Adam Hupp <adam@hupp.org> and others
 #
 # This software may be used and distributed according to the terms of the
-# GNU General Public License version 2, incorporated herein by reference.
+# GNU General Public License version 2 or any later version.
 #
 # The original module was split in an interface and an implementation
 # file to defer pygments loading and speedup extension setup.
 
 from mercurial import demandimport
-demandimport.ignore.extend(['pkgutil', 'pkg_resources', '__main__',])
+demandimport.ignore.extend(['pkgutil', 'pkg_resources', '__main__'])
 from mercurial import util, encoding
 
 from pygments import highlight

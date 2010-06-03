@@ -3,7 +3,7 @@
 #  Copyright 2005-2009 Matt Mackall <mpm@selenic.com> and others
 #
 # This software may be used and distributed according to the terms of the
-# GNU General Public License version 2, incorporated herein by reference.
+# GNU General Public License version 2 or any later version.
 
 from i18n import _
 import osutil
@@ -104,6 +104,18 @@ def pconvert(path):
 
 def localpath(path):
     return path
+
+def samefile(fpath1, fpath2):
+    """Returns whether path1 and path2 refer to the same file. This is only
+    guaranteed to work for files, not directories."""
+    return os.path.samefile(fpath1, fpath2)
+
+def samedevice(fpath1, fpath2):
+    """Returns whether fpath1 and fpath2 are on the same device. This is only
+    guaranteed to work for files, not directories."""
+    st1 = os.lstat(fpath1)
+    st2 = os.lstat(fpath2)
+    return st1.st_dev == st2.st_dev
 
 if sys.platform == 'darwin':
     def realpath(path):
@@ -245,3 +257,34 @@ def groupname(gid=None):
         return grp.getgrgid(gid)[0]
     except KeyError:
         return str(gid)
+
+def spawndetached(args):
+    return os.spawnvp(os.P_NOWAIT | getattr(os, 'P_DETACH', 0),
+                      args[0], args)
+
+def gethgcmd():
+    return sys.argv[:1]
+
+def termwidth_():
+    try:
+        import termios, array, fcntl
+        for dev in (sys.stderr, sys.stdout, sys.stdin):
+            try:
+                try:
+                    fd = dev.fileno()
+                except AttributeError:
+                    continue
+                if not os.isatty(fd):
+                    continue
+                arri = fcntl.ioctl(fd, termios.TIOCGWINSZ, '\0' * 8)
+                return array.array('h', arri)[1]
+            except ValueError:
+                pass
+            except IOError, e:
+                if e[0] == errno.EINVAL:
+                    pass
+                else:
+                    raise
+    except ImportError:
+        pass
+    return 80

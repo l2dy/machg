@@ -40,7 +40,7 @@ files, or words in the commit message</div>
 <div class="navigate">
 <a href="{url}graph/{rev}{lessvars%urlparameter}">less</a>
 <a href="{url}graph/{rev}{morevars%urlparameter}">more</a>
-| rev {rev}: {changenav%navgraphentry}
+| rev {rev}: {changenav%navgraph}
 </div>
 
 <noscript><p>The revision graph only works with JavaScript-enabled browsers.</p></noscript>
@@ -71,7 +71,7 @@ graph.edge = function(x0, y0, x1, y1, color) {
 
 var revlink = '<li style="_STYLE"><span class="desc">';
 revlink += '<a href="{url}rev/_NODEID{sessionvars%urlparameter}" title="_NODEID">_DESC</a>';
-revlink += '</span>_TAGS<span class="info">_DATE ago, by _USER</span></li>';
+revlink += '</span>_TAGS<span class="info">_DATE, by _USER</span></li>';
 
 graph.vertex = function(x, y, color, parity, cur) {
 	
@@ -123,7 +123,7 @@ graph.render(data);
 <div class="navigate">
 <a href="{url}graph/{rev}{lessvars%urlparameter}">less</a>
 <a href="{url}graph/{rev}{morevars%urlparameter}">more</a>
-| rev {rev}: {changenav%navgraphentry}
+| rev {rev}: {changenav%navgraph}
 </div>
 
 </div>

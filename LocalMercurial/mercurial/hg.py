@@ -4,29 +4,48 @@
 # Copyright 2006 Vadim Gelfer <vadim.gelfer@gmail.com>
 #
 # This software may be used and distributed according to the terms of the
-# GNU General Public License version 2, incorporated herein by reference.
+# GNU General Public License version 2 or any later version.
 
 from i18n import _
 from lock import release
 import localrepo, bundlerepo, httprepo, sshrepo, statichttprepo
-import lock, util, extensions, error, encoding
+import lock, util, extensions, error, encoding, node
 import merge as _merge
 import verify as _verify
 import errno, os, shutil
 
 def _local(path):
-    return (os.path.isfile(util.drop_scheme('file', path)) and
-            bundlerepo or localrepo)
+    path = util.expandpath(util.drop_scheme('file', path))
+    return (os.path.isfile(path) and bundlerepo or localrepo)
 
-def parseurl(url, revs=[]):
-    '''parse url#branch, returning url, branch + revs'''
+def addbranchrevs(lrepo, repo, branches, revs):
+    if not branches:
+        return revs or None, revs and revs[0] or None
+    revs = revs and list(revs) or []
+    if not repo.capable('branchmap'):
+        revs.extend(branches)
+        return revs, revs[0]
+    branchmap = repo.branchmap()
+    for branch in branches:
+        if branch == '.':
+            if not lrepo or not lrepo.local():
+                raise util.Abort(_("dirstate branch not accessible"))
+            revs.append(lrepo.dirstate.branch())
+        else:
+            butf8 = encoding.fromlocal(branch)
+            if butf8 in branchmap:
+                revs.extend(node.hex(r) for r in reversed(branchmap[butf8]))
+            else:
+                revs.append(branch)
+    return revs, revs[0]
+
+def parseurl(url, branches=None):
+    '''parse url#branch, returning url, branches+[branch]'''
 
     if '#' not in url:
-        return url, (revs or None), revs and revs[-1] or None
-
+        return url, branches or []
     url, branch = url.split('#', 1)
-    checkout = revs and revs[-1] or branch
-    return url, (revs or []) + [branch], checkout
+    return url, (branches or []) + [branch]
 
 schemes = {
     'bundle': bundlerepo,
@@ -88,14 +107,15 @@ def share(ui, source, dest=None, update=True):
         raise util.Abort(_('can only share local repositories'))
 
     if not dest:
-        dest = os.path.basename(source)
+        dest = defaultdest(source)
     else:
         dest = ui.expandpath(dest)
 
     if isinstance(source, str):
         origsource = ui.expandpath(source)
-        source, rev, checkout = parseurl(origsource, '')
+        source, branches = parseurl(origsource)
         srcrepo = repository(ui, source)
+        rev, checkout = addbranchrevs(srcrepo, srcrepo, branches, None)
     else:
         srcrepo = source
         origsource = source = srcrepo.url()
@@ -147,7 +167,7 @@ def share(ui, source, dest=None, update=True):
         _update(r, uprev)
 
 def clone(ui, source, dest=None, pull=False, rev=None, update=True,
-          stream=False):
+          stream=False, branch=None):
     """Make a copy of an existing repository.
 
     Create a copy of an existing repository in a new directory.  The
@@ -179,16 +199,19 @@ def clone(ui, source, dest=None, pull=False, rev=None, update=True,
     update: update working directory after clone completes, if
     destination is local repository (True means update to default rev,
     anything else is treated as a revision)
+
+    branch: branches to clone
     """
 
     if isinstance(source, str):
         origsource = ui.expandpath(source)
-        source, rev, checkout = parseurl(origsource, rev)
+        source, branch = parseurl(origsource, branch)
         src_repo = repository(ui, source)
     else:
         src_repo = source
+        branch = None
         origsource = source = src_repo.url()
-        checkout = rev and rev[-1] or None
+    rev, checkout = addbranchrevs(src_repo, src_repo, branch, rev)
 
     if dest is None:
         dest = defaultdest(source)
@@ -254,8 +277,9 @@ def clone(ui, source, dest=None, pull=False, rev=None, update=True,
                                      % dest)
                 raise
 
+            hardlink = None
             for f in src_repo.store.copylist():
-                src = os.path.join(src_repo.path, f)
+                src = os.path.join(src_repo.sharedpath, f)
                 dst = os.path.join(dest_path, f)
                 dstbase = os.path.dirname(dst)
                 if dstbase and not os.path.exists(dstbase):
@@ -264,7 +288,7 @@ def clone(ui, source, dest=None, pull=False, rev=None, update=True,
                     if dst.endswith('data'):
                         # lock to avoid premature writing to the target
                         dest_lock = lock.lock(os.path.join(dstbase, "lock"))
-                    util.copyfiles(src, dst)
+                    hardlink = util.copyfiles(src, dst, hardlink)
 
             # we need to re-init the repo after manually copying the data
             # into it
@@ -348,7 +372,8 @@ _update = update
 def clean(repo, node, show_stats=True):
     """forcibly switch the working directory to node, clobbering changes"""
     stats = _merge.update(repo, node, False, True, None)
-    if show_stats: _showstats(repo, stats)
+    if show_stats:
+        _showstats(repo, stats)
     return stats[3] > 0
 
 def merge(repo, node, force=None, remind=True):

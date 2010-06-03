@@ -23,6 +23,11 @@ searchentry = shortlogentry.tmpl
 changeset = changeset.tmpl
 manifest = manifest.tmpl
 
+nav = '{before%naventry} {after%naventry}'
+navshort = '{before%navshortentry}{after%navshortentry}'
+navgraph = '{before%navgraphentry}{after%navgraphentry}'
+filenav = '{before%filenaventry}{after%filenaventry}'
+
 direntry = '
   <tr class="fileline parity{parity}">
     <td class="name">
@@ -147,7 +152,7 @@ branchentry = '
 changelogtag = '<span class="tag">{name|escape}</span> '
 changesettag = '<span class="tag">{tag|escape}</span> '
 changelogbranchhead = '<span class="branchhead">{name|escape}</span> '
-changelogbranchname = '<span class="branchname">{name|escape}</span> ' 
+changelogbranchname = '<span class="branchname">{name|escape}</span> '
 
 filediffparent = '
   <tr>

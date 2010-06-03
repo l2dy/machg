@@ -3,7 +3,7 @@
 #  Copyright 2005-2009 Matt Mackall <mpm@selenic.com> and others
 #
 # This software may be used and distributed according to the terms of the
-# GNU General Public License version 2, incorporated herein by reference.
+# GNU General Public License version 2 or any later version.
 
 '''command to send changesets as (a series of) patch emails
 
@@ -34,6 +34,9 @@ file::
   to = recipient1, recipient2, ...
   cc = cc1, cc2, ...
   bcc = bcc1, bcc2, ...
+
+Use ``[patchbomb]`` as configuration section name if you need to
+override global ``[email]`` address settings.
 
 Then you can use the "hg email" command to mail a series of changesets
 as a patchbomb.
@@ -80,7 +83,7 @@ def prompt(ui, prompt, default=None, rest=':'):
     if not ui.interactive():
         if default is not None:
             return default
-        raise util.Abort(_("%s Please enter a valid value" % (prompt+rest)))
+        raise util.Abort(_("%s Please enter a valid value" % (prompt + rest)))
     if default:
         prompt += ' [%s]' % default
     prompt += rest
@@ -230,14 +233,17 @@ def patchbomb(ui, repo, *revs, **opts):
     def outgoing(dest, revs):
         '''Return the revisions present locally but not in dest'''
         dest = ui.expandpath(dest or 'default-push', dest or 'default')
-        revs = [repo.lookup(rev) for rev in revs]
+        dest, branches = hg.parseurl(dest)
+        revs, checkout = hg.addbranchrevs(repo, repo, branches, revs)
+        if revs:
+            revs = [repo.lookup(rev) for rev in revs]
         other = hg.repository(cmdutil.remoteui(repo, opts), dest)
         ui.status(_('comparing with %s\n') % dest)
         o = repo.findoutgoing(other)
         if not o:
             ui.status(_("no changes found\n"))
             return []
-        o = repo.changelog.nodesbetween(o, revs or None)[0]
+        o = repo.changelog.nodesbetween(o, revs)[0]
         return [str(repo.changelog.rev(r)) for r in o]
 
     def getpatches(revs):
@@ -379,20 +385,21 @@ def patchbomb(ui, repo, *revs, **opts):
     else:
         msgs = getpatchmsgs(list(getpatches(revs)))
 
-    def getaddrs(opt, prpt, default = None):
-        addrs = opts.get(opt) or (ui.config('email', opt) or
-                                  ui.config('patchbomb', opt) or
-                                  prompt(ui, prpt, default)).split(',')
-        return [mail.addressencode(ui, a.strip(), _charsets, opts.get('test'))
-                for a in addrs if a.strip()]
+    def getaddrs(opt, prpt=None, default=None):
+        if opts.get(opt):
+            return mail.addrlistencode(ui, opts.get(opt), _charsets,
+                                       opts.get('test'))
+
+        addrs = (ui.config('email', opt) or
+                 ui.config('patchbomb', opt) or '')
+        if not addrs and prpt:
+            addrs = prompt(ui, prpt, default)
+
+        return mail.addrlistencode(ui, [addrs], _charsets, opts.get('test'))
 
     to = getaddrs('to', 'To')
     cc = getaddrs('cc', 'Cc', '')
-
-    bcc = opts.get('bcc') or (ui.config('email', 'bcc') or
-                          ui.config('patchbomb', 'bcc') or '').split(',')
-    bcc = [mail.addressencode(ui, a.strip(), _charsets, opts.get('test'))
-           for a in bcc if a.strip()]
+    bcc = getaddrs('bcc')
 
     ui.write('\n')
 

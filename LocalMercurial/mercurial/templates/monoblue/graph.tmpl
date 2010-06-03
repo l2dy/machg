@@ -60,7 +60,7 @@
 
     var revlink = '<li style="_STYLE"><span class="desc">';
     revlink += '<a href="{url}rev/_NODEID{sessionvars%urlparameter}" title="_NODEID">_DESC</a>';
-    revlink += '</span>_TAGS<span class="info">_DATE ago, by _USER</span></li>';
+    revlink += '</span>_TAGS<span class="info">_DATE, by _USER</span></li>';
 
     graph.vertex = function(x, y, color, parity, cur) {
 
@@ -76,7 +76,7 @@
         item = item.replace(/_PARITY/, 'parity' + parity);
         item = item.replace(/_NODEID/, cur[0]);
         item = item.replace(/_NODEID/, cur[0]);
-	item = item.replace(/_DESC/, cur[3]);
+        item = item.replace(/_DESC/, cur[3]);
         item = item.replace(/_USER/, cur[4]);
         item = item.replace(/_DATE/, cur[5]);
 
@@ -99,7 +99,7 @@
             tagspan += '</span>';
         }
 
-        item = item.replace(/_TAGS/, tagspan); 
+        item = item.replace(/_TAGS/, tagspan);
         return [bg, item];
 
     }
@@ -112,7 +112,7 @@
     <div class="page-path">
         <a href="{url}graph/{rev}{lessvars%urlparameter}">less</a>
         <a href="{url}graph/{rev}{morevars%urlparameter}">more</a>
-        | {changenav%navgraphentry}
+        | {changenav%navgraph}
     </div>
 
 {footer}

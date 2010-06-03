@@ -9,7 +9,7 @@
 # Copyright 2005, 2006 Matt Mackall <mpm@selenic.com>
 #
 # This software may be used and distributed according to the terms of the
-# GNU General Public License version 2, incorporated herein by reference.
+# GNU General Public License version 2 or any later version.
 
 from i18n import _
 import os, errno
@@ -42,8 +42,6 @@ def _playback(journal, report, opener, entries, unlink=True):
 
 class transaction(object):
     def __init__(self, report, opener, journal, after=None, createmode=None):
-        self.journal = None
-
         self.count = 1
         self.report = report
         self.opener = opener
@@ -75,8 +73,8 @@ class transaction(object):
 
     @active
     def add(self, file, offset, data=None):
-        if file in self.map: return
-
+        if file in self.map:
+            return
         if self._queue:
             self._queue[-1].append((file, offset, data))
             return
@@ -140,16 +138,17 @@ class transaction(object):
         self.count = 0
         self.file.close()
 
-        if not self.entries:
-            if self.journal:
-                os.unlink(self.journal)
-            return
-
-        self.report(_("transaction abort!\n"))
-
         try:
+            if not self.entries:
+                if self.journal:
+                    os.unlink(self.journal)
+                return
+
+            self.report(_("transaction abort!\n"))
+
             try:
-                _playback(self.journal, self.report, self.opener, self.entries, False)
+                _playback(self.journal, self.report, self.opener,
+                          self.entries, False)
                 self.report(_("rollback completed\n"))
             except:
                 self.report(_("rollback failed - please run hg recover\n"))
