@@ -184,19 +184,21 @@
 		else
 		{
 			SidebarNode* newNode   = [SidebarNode nodeWithCaption:newName  forLocalPath:newPath];
-			SidebarNode* newServer = [[myDocument sidebar] serverIfAvailableAndNotPresent:newPath];
+			NSArray* newServers = [[myDocument sidebar] serversIfAvailableAndNotPresent:newPath];
 			[[AppController sharedAppController] computeRepositoryIdentityForPath:newPath];
 			[newNode refreshNodeIcon];
 			if (addNewRepositoryRefTo)
 			{
 				[addNewRepositoryRefTo insertChild:newNode atIndex:addNewRepositoryRefAtIndex];
-				if (newServer)
-					[addNewRepositoryRefTo insertChild:newServer atIndex:addNewRepositoryRefAtIndex];
+				if (newServers)
+					for (SidebarNode* newServer in newServers)
+						[addNewRepositoryRefTo insertChild:newServer atIndex:addNewRepositoryRefAtIndex];
 			}
 			else
 			{
-				if (newServer)
-					[[myDocument sidebar] addSidebarNode:newServer];
+				if (newServers)
+					for (SidebarNode* newServer in newServers)
+						[[myDocument sidebar] addSidebarNode:newServer];
 				[[myDocument sidebar] addSidebarNode:newNode];
 			}
 			[[myDocument sidebar] reloadData];

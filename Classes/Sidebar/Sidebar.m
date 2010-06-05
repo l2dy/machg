@@ -352,28 +352,38 @@
 
 // If we are adding a local repository to the document, check to see is the repository has a stored reference to the server and if
 // the server is not present in the document then return a server node which can be added to the document as well.
-- (SidebarNode*) serverIfAvailableAndNotPresent:(NSString*)file
+- (NSArray*) serversIfAvailableAndNotPresent:(NSString*)file
 {
 	// Look for a server in [paths].default
 	NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"paths", nil];
 	ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:file];
 
-	NSString* serverPath = nil;
-	NSArray* parts = [result.outStr captureComponentsMatchedByRegex:@"^paths\\.(?:default|default-push)\\s*=\\s*((?:ssh|http|https)://.*?)$" options:RKLMultiline range:NSMaxiumRange error:NULL];
-	if ([parts count] >= 1)
-		serverPath = trimString([parts objectAtIndex:1]);
-	if (!serverPath || [result hasErrors])
-		return NO;
-	
-	// If the server is already present in the document don't add it again.
-	NSArray* allRepositories = [self allRepositories];
-	for (SidebarNode* repo in allRepositories)
-		if ([repo isServerRepositoryRef] && [trimString([repo path]) isEqualToString:serverPath])
-			return NO;
-	
-	SidebarNode* serverNode = [SidebarNode nodeWithCaption:[file lastPathComponent]  forServerPath:serverPath];
-	[[AppController sharedAppController] computeRepositoryIdentityForPath:serverPath];
-	return serverNode;
+	NSArray* paths = [result.outStr componentsMatchedByRegex:@"^paths\\.(?:[\\w-]+)\\s*=\\s*((?:ssh|http|https)://.*?)$" options:RKLMultiline range:NSMaxiumRange capture:1L error:NULL];
+	if ([paths count] ==0 || [result hasErrors])
+		return nil;
+
+	NSMutableArray* serversToAdd = [[NSMutableArray alloc]init];
+	NSMutableArray* allRepositories = [NSMutableArray arrayWithArray:[self allRepositories]];
+	for (NSString* serverPath in paths)
+	{
+		NSString* url = trimString(serverPath);
+		
+		// If the server is already present in the document don't add it again.
+		BOOL duplicate = NO;
+		for (SidebarNode* repo in allRepositories)
+			if ([repo isServerRepositoryRef] && [trimString([repo path]) isEqualToString:url])
+			{
+				duplicate = YES;
+				break;
+			}
+		if (duplicate)
+			continue;
+		SidebarNode* serverNode = [SidebarNode nodeWithCaption:[file lastPathComponent]  forServerPath:serverPath];
+		[[AppController sharedAppController] computeRepositoryIdentityForPath:serverPath];
+		[serversToAdd addObject:serverNode];
+		[allRepositories addObject:serverNode];
+	}
+	return serversToAdd;
 }
 
 
@@ -441,11 +451,12 @@
 			if (pathIsExistentDirectory(file) && repositoryExistsAtPath(file))
 			{
 				SidebarNode* node   = [SidebarNode nodeForLocalURL:file];
-				SidebarNode* server = [self serverIfAvailableAndNotPresent:file];
+				NSArray* servers = [self serversIfAvailableAndNotPresent:file];
 				[targetParent insertChild:node atIndex:index];
 				[[AppController sharedAppController] computeRepositoryIdentityForPath:file];
-				if (server)
-					[targetParent insertChild:server atIndex:index];
+				if (servers)
+					for (SidebarNode* serverNode in servers)
+						[targetParent insertChild:serverNode atIndex:index];
 				newSelectedNode = node;
 			}
 
