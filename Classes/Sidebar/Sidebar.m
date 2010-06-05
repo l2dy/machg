@@ -358,15 +358,19 @@
 	NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"paths", nil];
 	ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:file];
 
-	NSArray* paths = [result.outStr componentsMatchedByRegex:@"^paths\\.(?:[\\w-]+)\\s*=\\s*((?:ssh|http|https)://.*?)$" options:RKLMultiline range:NSMaxiumRange capture:1L error:NULL];
+	NSArray* paths = [result.outStr arrayOfCaptureComponentsMatchedByRegex:@"^paths\\.((?:[\\w-]+))\\s*=\\s*((?:ssh|http|https)://.*?)$" options:RKLMultiline range:NSMaxiumRange error:NULL];
 	if ([paths count] ==0 || [result hasErrors])
 		return nil;
 
 	NSMutableArray* serversToAdd = [[NSMutableArray alloc]init];
 	NSMutableArray* allRepositories = [NSMutableArray arrayWithArray:[self allRepositories]];
-	for (NSString* serverPath in paths)
+	NSString* captionBase = [file lastPathComponent];
+	for (NSArray* path in paths)
 	{
+		NSString* serverId = trimString([path objectAtIndex:1]);
+		NSString* serverPath = [path objectAtIndex:2];
 		NSString* url = trimString(serverPath);
+		NSString* caption;
 		
 		// If the server is already present in the document don't add it again.
 		BOOL duplicate = NO;
@@ -378,7 +382,13 @@
 			}
 		if (duplicate)
 			continue;
-		SidebarNode* serverNode = [SidebarNode nodeWithCaption:[file lastPathComponent]  forServerPath:serverPath];
+
+		if ([serverId isEqualToString:@"default"])
+			caption = captionBase;
+		else
+			caption = [NSString stringWithFormat:@"%@ (%@)", captionBase, serverId];
+		
+		SidebarNode* serverNode = [SidebarNode nodeWithCaption:caption forServerPath:serverPath];
 		[[AppController sharedAppController] computeRepositoryIdentityForPath:serverPath];
 		[serversToAdd addObject:serverNode];
 		[allRepositories addObject:serverNode];
