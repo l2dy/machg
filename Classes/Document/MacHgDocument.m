@@ -2047,7 +2047,7 @@
 				NSString* fileName = [file lastPathComponent];
 				NSString* messageString = [NSString stringWithFormat:@"Annotations of “%@” for revision “%@”", fileName, version];
 				NSString* windowTitle   = [NSString stringWithFormat:@"%@ : %@ Annotations", fileName, version];
-				NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
+				NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(nonNil(results.outStr));
 				[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:windowTitle];
 			});
 		dispatchGroupWaitAndFinish(group);
