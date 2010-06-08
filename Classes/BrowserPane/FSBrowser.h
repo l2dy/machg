@@ -65,7 +65,7 @@
 
 
 // Path and Selection Operations
-- (BOOL)		singleFileIsChosenInBrowser;
+- (BOOL)		singleItemIsChosenInBrower;
 - (HGStatus)	statusOfChosenPathsInBrowser;
 - (NSArray*)	absolutePathsOfBrowserSelectedFiles;
 - (NSArray*)	absolutePathsOfBrowserChosenFiles;

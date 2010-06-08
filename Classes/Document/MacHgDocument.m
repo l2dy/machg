@@ -849,7 +849,7 @@
 	if (theAction == @selector(mainMenuDeleteSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self nodesAreChosenInBrowser];
 	if (theAction == @selector(mainMenuUntrackSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusInRepository];
 	if (theAction == @selector(mainMenuAddSelectedFiles:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusAddable];
-	if (theAction == @selector(mainMenuRenameSelectedFile:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusInRepository] && [self singleFileIsChosenInBrowser];
+	if (theAction == @selector(mainMenuRenameSelectedFile:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusInRepository] && [self singleItemIsChosenInBrower];
 	// ------
 	if (theAction == @selector(mainMenuRemergeSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusSecondary];
 	if (theAction == @selector(mainMenuMarkResolvedSelectedFiles:))		return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusUnresolved];
@@ -1225,7 +1225,7 @@
 - (FSBrowser*)		theBrowser								{ return [[self theBrowserPaneController] theBrowser]; }
 - (FSNodeInfo*)		rootNodeInfo							{ return [[self theBrowser] rootNodeInfo]; }
 - (FSNodeInfo*)		nodeForPath:(NSString*)absolutePath		{ return [[self rootNodeInfo] nodeForPathFromRoot:absolutePath]; }
-- (BOOL)			singleFileIsChosenInBrowser				{ return [[self theBrowser] singleFileIsChosenInBrowser]; }
+- (BOOL)			singleItemIsChosenInBrower				{ return [[self theBrowser] singleItemIsChosenInBrower]; }
 - (BOOL)			nodesAreChosenInBrowser					{ return [[self theBrowser] nodesAreChosen]; }
 - (HGStatus)		statusOfChosenPathsInBrowser			{ return [[self theBrowser] statusOfChosenPathsInBrowser]; }
 - (NSArray*)		absolutePathsOfBrowserChosenFiles		{ return [[self theBrowser] absolutePathsOfBrowserChosenFiles]; }
