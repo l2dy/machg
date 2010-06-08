@@ -1225,6 +1225,7 @@
 - (FSBrowser*)		theBrowser								{ return [[self theBrowserPaneController] theBrowser]; }
 - (FSNodeInfo*)		rootNodeInfo							{ return [[self theBrowser] rootNodeInfo]; }
 - (FSNodeInfo*)		nodeForPath:(NSString*)absolutePath		{ return [[self rootNodeInfo] nodeForPathFromRoot:absolutePath]; }
+- (BOOL)			singleFileIsChosenInBrower				{ return [[self theBrowser] singleFileIsChosenInBrower]; }
 - (BOOL)			singleItemIsChosenInBrower				{ return [[self theBrowser] singleItemIsChosenInBrower]; }
 - (BOOL)			nodesAreChosenInBrowser					{ return [[self theBrowser] nodesAreChosen]; }
 - (HGStatus)		statusOfChosenPathsInBrowser			{ return [[self theBrowser] statusOfChosenPathsInBrowser]; }

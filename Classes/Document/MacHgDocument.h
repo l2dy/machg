@@ -197,6 +197,7 @@
 // Query the browsed files of the repository
 - (FSBrowser*)	theBrowser;
 - (FSNodeInfo*)	rootNodeInfo;
+- (BOOL)		singleFileIsChosenInBrower;
 - (BOOL)		singleItemIsChosenInBrower;
 - (BOOL)		nodesAreChosenInBrowser;
 - (BOOL)		pathsAreSelectedInBrowserWhichContainStatus:(HGStatus)status;

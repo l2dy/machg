@@ -39,6 +39,13 @@
 	return (exists && isDir);
 }
 
+- (BOOL) isFile
+{
+	BOOL isDir = NO;
+	BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:absolutePath isDirectory:&isDir];
+	return (exists && !isDir);
+}
+
 
 - (BOOL) isVisible
 {

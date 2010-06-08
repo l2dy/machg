@@ -63,6 +63,7 @@
 - (NSString*)	lastPathComponent;
 - (BOOL)		isLink;
 - (BOOL)		isDirectory;
+- (BOOL)		isFile;
 - (BOOL)		isReadable;
 - (BOOL)		isVisible;
 - (BOOL)		isDirty;

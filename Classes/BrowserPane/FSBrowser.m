@@ -141,6 +141,19 @@
 	return nil;
 }
 
+- (BOOL) singleFileIsChosenInBrower
+{
+	if ([self nodeIsClicked] && [[self clickedNode] isFile])
+		return YES;
+	
+	int selectedColumn = [self selectedColumn];
+	if (selectedColumn >= 0)
+		if ([[self selectedRowIndexesInColumn:selectedColumn] count] == 1)
+			if ([[[self selectedCell] nodeInfo] isFile])
+				return YES;
+	return NO;
+}
+
 
 - (BOOL) singleItemIsChosenInBrower
 {
