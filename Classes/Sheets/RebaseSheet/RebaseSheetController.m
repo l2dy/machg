@@ -222,6 +222,7 @@
 	if (UseWhichMercurialBinaryFromDefaults() == eUseMercurialBinaryIncludedInMacHg)
 		[argsRebase addObject:@"--config" followedBy:@"hgext.rebase="];
 	
+	[argsRebase addObject:@"--detach"];
 	[argsRebase addObject:@"--source" followedBy:intAsString(pair.lowRevision)];
 	[argsRebase addObject:@"--dest" followedBy:destinationRev];
 	if ([self keepOriginalRevisions])
