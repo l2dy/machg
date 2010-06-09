@@ -154,12 +154,6 @@ typedef enum
 
 typedef enum
 {
-	eExcludeHGRCCommandDefaults	= 0,
-	eIncludeHGRCCommandDefaults	= 1
-} HandleCommandDefaultsOption;
-
-typedef enum
-{
 	eUseFileMergeForDiffs = 0,
 	eUseOtherForDiffs	  = 1,
 	eUseNothingForDiffs	  = 2
@@ -465,7 +459,6 @@ NSColor*	LogEntryTableBookmarkHighlightColor();
 AfterMergeDoOption				AfterMergeDoFromDefaults();
 AfterMergeSwitchToOption		AfterMergeSwitchToFromDefaults();
 RevisionSortOrderOption			RevisionSortOrderFromDefaults();
-HandleCommandDefaultsOption		HandleCommandDefaultsFromDefaults();
 HandleOrigFilesOption			HandleGeneratedOrigFilesFromDefaults();
 OnStartupOpenWhatOption			OnStartupOpenFromDefaults();
 ToolForDiffing					UseWhichToolForDiffingFromDefaults();

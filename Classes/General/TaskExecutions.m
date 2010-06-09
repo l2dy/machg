@@ -124,7 +124,11 @@
 + (ExecutionResult*) synchronouslyExecute:(NSString*)cmd withArgs:(NSArray*)args onTask:(NSTask*)theTask
 {
 	NSTask* task = theTask ? theTask : [[NSTask alloc] init];
-	[task setEnvironment:[NSDictionary dictionaryWithObject:@"en_US.UTF-8" forKey:@"LANG"]];
+	[task setEnvironment:[NSDictionary dictionaryWithObjectsAndKeys:
+						  @"UTF-8", @"HGENCODING",
+						  @"1", @"HGPLAIN",
+						  nil
+						  ]];
 	[task startExecution:cmd withArgs:args];
 	return [ExecutionResult extractResults:task];
 }
@@ -244,24 +248,11 @@
 // 3. It sets the command to be non-interactive since we don't want it to halt in its execution.
 + (NSMutableArray*) preProcessMercurialCommandArgs: (NSMutableArray*)args fromRoot:(NSString*)rootPath
 {
-	if (HandleCommandDefaultsFromDefaults() == eExcludeHGRCCommandDefaults)
-	{
-		NSString* hgCmd = [args objectAtIndex:0];
-		NSString* defaultsString = [NSString stringWithFormat:@"defaults.%@=", hgCmd];
-		NSIndexSet* insertionLocation = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, 5)];
-		NSArray* defaultArguments = [NSArray arrayWithObjects: @"--cwd", rootPath, @"--config", defaultsString, @"--noninteractive", nil];
-		NSMutableArray* newArgs = [NSMutableArray arrayWithArray:args];
-		[newArgs insertObjects:defaultArguments  atIndexes:insertionLocation];
-		return newArgs;
-	}
-	else
-	{
-		NSIndexSet* insertionLocation = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, 3)];
-		NSArray* defaultArguments = [NSArray arrayWithObjects: @"--cwd", rootPath, @"--noninteractive", nil];
-		NSMutableArray* newArgs = [NSMutableArray arrayWithArray:args];
-		[newArgs insertObjects:defaultArguments  atIndexes:insertionLocation];
-		return newArgs;
-	}
+	NSIndexSet* insertionLocation = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, 2)];
+	NSArray* defaultArguments = [NSArray arrayWithObjects: @"--cwd", rootPath, nil];
+	NSMutableArray* newArgs = [NSMutableArray arrayWithArray:args];
+	[newArgs insertObjects:defaultArguments  atIndexes:insertionLocation];
+	return newArgs;
 }
 
 

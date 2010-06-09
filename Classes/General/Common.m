@@ -105,7 +105,6 @@ NSString* const MHGDisplayWarningForUntrackingFiles		= @"DisplayWarningForUntrac
 NSString* const MHGDisplayWarningForUpdating			= @"DisplayWarningForUpdating";
 NSString* const MHGExecutableLocationHG					= @"ExecutableLocationHG";
 NSString* const MHGFontSizeOfBrowserItems				= @"FontSizeOfBrowserItems";
-NSString* const MHGHandleCommandDefaults				= @"HandleCommandDefaults";
 NSString* const MHGHandleGeneratedOrigFiles				= @"HandleGeneratedOrigFiles";
 NSString* const MHGLaunchCount							= @"LaunchCount";
 NSString* const MHGLogEntryTableBookmarkHighlightColor	= @"LogEntryTableBookmarkHighlightColor";
@@ -216,7 +215,6 @@ BrowserDoubleClickAction browserBehaviourOptionDoubleClick()		{ return enumFromD
 AfterMergeDoOption			AfterMergeDoFromDefaults()				{ return enumFromDefaultsForKey(MHGAfterMergeDo); }
 AfterMergeSwitchToOption	AfterMergeSwitchToFromDefaults()		{ return enumFromDefaultsForKey(MHGAfterMergeSwitchTo); }
 RevisionSortOrderOption		RevisionSortOrderFromDefaults()			{ return enumFromDefaultsForKey(MHGRevisionSortOrder); }
-HandleCommandDefaultsOption	HandleCommandDefaultsFromDefaults()		{ return enumFromDefaultsForKey(MHGHandleCommandDefaults); }
 HandleOrigFilesOption		HandleGeneratedOrigFilesFromDefaults()	{ return enumFromDefaultsForKey(MHGHandleGeneratedOrigFiles); }
 OnStartupOpenWhatOption		OnStartupOpenFromDefaults()				{ return enumFromDefaultsForKey(MHGOnStartupOpen); }
 ToolForDiffing				UseWhichToolForDiffingFromDefaults()	{ return enumFromDefaultsForKey(MHGUseWhichToolForDiffing); }
