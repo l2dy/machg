@@ -181,6 +181,7 @@
 		96DF437111B5209C00D986FF /* RelativePositionedBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 96DF437011B5209C00D986FF /* RelativePositionedBox.m */; };
 		96DF546311B83DF900D986FF /* LocalMercurial in Resources */ = {isa = PBXBuildFile; fileRef = 96DF51E211B83DF900D986FF /* LocalMercurial */; };
 		96DF546411B83E1E00D986FF /* LocalMercurial in Copy Files (Mercurial) */ = {isa = PBXBuildFile; fileRef = 96DF51E211B83DF900D986FF /* LocalMercurial */; };
+		96DF581611BFC71A00D986FF /* MacHgDocumentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96DF581511BFC71A00D986FF /* MacHgDocumentController.m */; };
 		96F5A4DE11A8185800707404 /* TextButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96F5A4DD11A8185800707404 /* TextButtonCell.m */; };
 		96F5A4FA11A81B5B00707404 /* DiffTextButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96F5A4F911A81B5B00707404 /* DiffTextButtonCell.m */; };
 		96F5A70D11A879F100707404 /* LabelTextButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96F5A70C11A879F100707404 /* LabelTextButtonCell.m */; };
@@ -468,6 +469,8 @@
 		96DF436F11B5209C00D986FF /* RelativePositionedBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RelativePositionedBox.h; sourceTree = "<group>"; };
 		96DF437011B5209C00D986FF /* RelativePositionedBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RelativePositionedBox.m; sourceTree = "<group>"; };
 		96DF51E211B83DF900D986FF /* LocalMercurial */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LocalMercurial; sourceTree = "<group>"; };
+		96DF581411BFC71A00D986FF /* MacHgDocumentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MacHgDocumentController.h; path = Classes/Document/MacHgDocumentController.h; sourceTree = "<group>"; };
+		96DF581511BFC71A00D986FF /* MacHgDocumentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MacHgDocumentController.m; path = Classes/Document/MacHgDocumentController.m; sourceTree = "<group>"; };
 		96F5A4DC11A8185800707404 /* TextButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextButtonCell.h; sourceTree = "<group>"; };
 		96F5A4DD11A8185800707404 /* TextButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextButtonCell.m; sourceTree = "<group>"; };
 		96F5A4F811A81B5B00707404 /* DiffTextButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DiffTextButtonCell.h; sourceTree = "<group>"; };
@@ -1024,6 +1027,8 @@
 				96A377BC10C8EB9F00FA190A /* MacHgDocument.h */,
 				96A377BD10C8EB9F00FA190A /* MacHgDocument.m */,
 				1DDD58280DA1D0D100B32029 /* MyDocument.xib */,
+				96DF581411BFC71A00D986FF /* MacHgDocumentController.h */,
+				96DF581511BFC71A00D986FF /* MacHgDocumentController.m */,
 			);
 			name = MyDocument;
 			sourceTree = "<group>";
@@ -1615,6 +1620,7 @@
 				96F5A70D11A879F100707404 /* LabelTextButtonCell.m in Sources */,
 				96DF426511B48DC700D986FF /* RadialGradiantBox.m in Sources */,
 				96DF437111B5209C00D986FF /* RelativePositionedBox.m in Sources */,
+				96DF581611BFC71A00D986FF /* MacHgDocumentController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
