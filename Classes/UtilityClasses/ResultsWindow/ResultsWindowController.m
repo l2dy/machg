@@ -39,11 +39,13 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 	f.origin.x     = constrain(f.origin.x, 10, MAX(visibleFrame.size.width  - newSize.width  - 20, 10));
 	f.origin.y     = constrain(f.origin.y, 10, MAX(visibleFrame.size.height - newSize.height - 20, 10));
 	
-	[resultsWindow setFrame:f display:YES];
-	[resultsWindow setTitle:windowTitle];
-	[resultsWindow makeKeyAndOrderFront:self];
-	[resultsWindow makeFirstResponder:okButtonForResultsWindow];
-
+	dispatch_async(mainQueue(), ^{
+		[resultsWindow setFrame:f display:YES];
+		[resultsWindow setTitle:windowTitle];
+		[resultsWindow makeKeyAndOrderFront:self];
+		[resultsWindow makeFirstResponder:okButtonForResultsWindow];
+	});
+	
 	return self;
 }
 
