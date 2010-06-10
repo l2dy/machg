@@ -345,7 +345,9 @@
 - (IBAction) validateButtons:(id)sender
 {
 	LabelData* label = [theLabelsTableView_ selectedLabel];
-	[removeLabelButton setEnabled:(label && ![label isOpenHead])];
+	BOOL newState = (label && ![label isOpenHead]);
+	dispatch_async(mainQueue(), ^{
+		[removeLabelButton setEnabled:newState]; });
 }
 
 
