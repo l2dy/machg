@@ -1144,7 +1144,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 @implementation NSAlert ( NSAlertPlusExtensions )
 - (void) addSuppressionCheckBox
 {
-	NSAttributedString* smallSuppressionMessage = [NSAttributedString string:@"Do not show this message again" withAttributes: smallSystemFontAttributes];
+	NSAttributedString* smallSuppressionMessage = [NSAttributedString string:@"Do not show this kind of message again" withAttributes: smallSystemFontAttributes];
 	[self setShowsSuppressionButton:YES];
 	[[self suppressionButton] setAttributedTitle:smallSuppressionMessage];	
 }
