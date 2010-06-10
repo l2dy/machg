@@ -131,7 +131,7 @@
 			NSString* messageString = [NSString stringWithFormat:@"Results of Pulling “%@” into “%@”", pullSourceName, pullDestinationName];
 			NSString* mainMessage = [results.outStr stringByReplacingOccurrencesOfString:@"(run 'hg heads' to see heads, 'hg merge' to merge)" withString:@""];
 			NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(mainMessage);
-			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:@"Pull Results"];
+			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"Pull Results - %@", pullDestinationName)];
 		}
 	}];
 	

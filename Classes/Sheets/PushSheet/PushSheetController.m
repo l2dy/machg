@@ -134,7 +134,7 @@
 		{
 			NSString* messageString = [NSString stringWithFormat:@"Results of Pushing “%@” into “%@”", pushSourceName, pushDestinationName];
 			NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
-			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:@"Push Results"];
+			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"Push Results - %@", pushSourceName)];
 		}
 		if ([pushDestination isVirginRepository])
 			[[AppController sharedAppController] computeRepositoryIdentityForPath:[pushDestination path]];

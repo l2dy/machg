@@ -125,7 +125,7 @@
 		ExecutionResult* results = [myDocument executeMercurialWithArgs:argsIncoming  fromRoot:rootPath  whileDelayingEvents:YES];
 		NSString* messageString = [NSString stringWithFormat:@"Results of Incoming “%@” into “%@”", incomingSourceName, incomingDestinationName];
 		NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
-		[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:@"Incoming Results"];
+		[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"Incoming Results - %@", incomingDestinationName)];
 	}];
 	
 	// Cache the connection parameters

@@ -1819,9 +1819,9 @@
 		
 		if (DisplayResultsOfAddRemoveRenameFilesFromDefaults())
 		{
-			NSString* messageString = [NSString stringWithFormat:@"Results of Add Remove Files in “%@”",  [self selectedRepositoryShortName]];
+			NSString* messageString = fstr(@"Results of Add Remove Files in “%@”", [self selectedRepositoryShortName]);
 			NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
-			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:@"AddRemove Results"];
+			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"AddRemove Results - %@", [self selectedRepositoryShortName])];
 		}		
 	}];
 	return YES;
@@ -1871,7 +1871,7 @@
 		{
 			NSString* messageString = [NSString stringWithFormat:@"Results of Updating “%@”",  [self selectedRepositoryShortName]];
 			NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
-			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:@"Update Results"];
+			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"Update Results - %@", [self selectedRepositoryShortName])];
 		}
 	}];
 	return YES;
@@ -1932,7 +1932,7 @@
 	{
 		NSString* messageString = [NSString stringWithFormat:@"Results of Merging “%@”",  [self selectedRepositoryShortName]];
 		NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
-		[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:@"Merge Results"];
+		[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"Merge Results - %@", [self selectedRepositoryShortName])];
 	}
 	
 	if (DisplayWarningForPostMergeFromDefaults())
@@ -2017,7 +2017,7 @@
 		ExecutionResult* results = [self executeMercurialWithArgs:argsManifest  fromRoot:rootPath  whileDelayingEvents:YES];
 		NSString* messageString = [NSString stringWithFormat:@"Manifest of “%@” revision “%@”", thisRepositoryName, version];
 		NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
-		[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:@"Manifest Results"];
+		[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"Manifest Results - %@", [self selectedRepositoryShortName])];
 	}];
 }
 

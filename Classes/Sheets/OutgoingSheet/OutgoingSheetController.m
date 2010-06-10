@@ -126,9 +126,9 @@
 	// Execute the outgoing command
 	[myDocument dispatchToMercurialQueuedWithDescription:@"Outgoing Changesets" process:^{
 		ExecutionResult* results = [myDocument  executeMercurialWithArgs:argsOutgoing  fromRoot:rootPath  whileDelayingEvents:YES];
-		NSString* messageString = [NSString stringWithFormat:@"Results of Outgoing “%@” into “%@”", outgoingSourceName, outgoingDestinationName];
+		NSString* messageString = fstr(@"Results of Outgoing “%@” into “%@”", outgoingSourceName, outgoingDestinationName);
 		NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
-		[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:@"Outgoing Results"];
+		[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"Outgoing Results - %@", outgoingSourceName)];
 	}];
 	
 	// Cache the connection parameters
