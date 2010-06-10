@@ -100,7 +100,7 @@
 			NSString* symlinkPath = [path stringByConditionallyResolvingSymlink];
 			if (!symlinkPath)
 				return nil;
-			if (path == symlinkPath)
+			if ([path isEqualToString:symlinkPath])
 				return path;
 			path = symlinkPath;
 		}
