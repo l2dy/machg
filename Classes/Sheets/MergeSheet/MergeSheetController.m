@@ -60,6 +60,7 @@
 	NSString* theSelectedRevision = [logTableView selectedRevision];
 	BOOL canMerge = theSelectedRevision && [theSelectedRevision isNotEqualToString:[[myDocument repositoryData]getHGParent1Revision]];
 	[sheetButtonOkForMergeSheet setEnabled:canMerge];
+	[sheetInformativeMessageTextField setAttributedStringValue: [self formattedSheetMessage]];
 }
 
 
@@ -124,7 +125,6 @@
 
 - (void) logTableViewSelectionDidChange:(LogTableView*)theLogTable;
 {
-	[sheetInformativeMessageTextField setAttributedStringValue: [self formattedSheetMessage]];
 	[self validateButtons:self];
 }
 
