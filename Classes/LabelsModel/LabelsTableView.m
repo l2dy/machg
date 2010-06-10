@@ -74,7 +74,7 @@
 {
 	[self observe:kRepositoryDataIsNew		from:[self myDocument]  byCalling:@selector(repositoryDataIsNew)];
 	[self observe:kRepositoryDataDidChange	from:[self myDocument]  byCalling:@selector(logEntriesDidChange:)];
-	[self observe:kLogEntriesDidChange			from:[self myDocument]  byCalling:@selector(logEntriesDidChange:)];
+	[self observe:kLogEntriesDidChange		from:[self myDocument]  byCalling:@selector(logEntriesDidChange:)];
 	
 	// Tell the browser to send us messages when it is clicked.
 	[self setTarget:self];
