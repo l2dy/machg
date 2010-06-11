@@ -326,6 +326,7 @@
 @end
 
 
+// MARK: -
 
 @implementation NoDividerSplitView
 - (void) drawDividerInRect:(NSRect)aRect
