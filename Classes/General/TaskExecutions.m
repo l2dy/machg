@@ -123,12 +123,21 @@
 
 + (ExecutionResult*) synchronouslyExecute:(NSString*)cmd withArgs:(NSArray*)args onTask:(NSTask*)theTask
 {
+	static NSDictionary* env = nil;
+	if (!env)
+	{
+		NSDictionary* processEnv    = [[NSProcessInfo processInfo] environment];
+		NSMutableDictionary* newEnv = [[NSMutableDictionary alloc]init];
+		id socket = [processEnv objectForKey:@"SSH_AUTH_SOCK"];
+		if (socket)
+			[newEnv setObject:socket  forKey:@"SSH_AUTH_SOCK"];
+		[newEnv setObject:@"UTF-8"  forKey:@"HGENCODING"];
+		[newEnv setObject:@"1"		forKey:@"HGPLAIN"];
+		env = [NSDictionary dictionaryWithDictionary:newEnv];
+	}
+
 	NSTask* task = theTask ? theTask : [[NSTask alloc] init];
-	[task setEnvironment:[NSDictionary dictionaryWithObjectsAndKeys:
-						  @"UTF-8", @"HGENCODING",
-						  @"1", @"HGPLAIN",
-						  nil
-						  ]];
+	[task setEnvironment:env];
 	[task startExecution:cmd withArgs:args];
 	return [ExecutionResult extractResults:task];
 }
