@@ -504,9 +504,12 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 		if (!entry)
 			[[detailedEntryTextView textStorage] setAttributedString:grayedAttributedString(@"No Selection")];
 		else if ([entry isFullyLoaded])
-			[entry displayFormattedVerboseEntryIn:detailedEntryTextView];
+			[entry loadAndDisplayFormattedVerboseEntryIn:detailedEntryTextView];
 		else
-			[queueForDetailedEntryDisplay_ addBlockOperation:^{[entry displayFormattedVerboseEntryIn:detailedEntryTextView];}];
+		{
+			[[detailedEntryTextView textStorage] setAttributedString:[entry formattedVerboseEntry]];
+			[queueForDetailedEntryDisplay_ addBlockOperation:^{[entry loadAndDisplayFormattedVerboseEntryIn:detailedEntryTextView];}];
+		}
 		return;
 	}
 	

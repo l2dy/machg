@@ -291,7 +291,7 @@ void setupGlobalsForPartsAndTemplate()
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 
-- (NSAttributedString*) composeFormattedVerboseEntry
+- (NSAttributedString*) formattedVerboseEntry
 {
 	NSMutableAttributedString* verboseEntry = [[NSMutableAttributedString alloc] init];
 	if (YES)
@@ -328,13 +328,20 @@ void setupGlobalsForPartsAndTemplate()
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Date:\t")];
 		[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@   ", shortDate_])];
-		[verboseEntry appendAttributedString: grayedAttributedString([NSString stringWithFormat:@"(%@)\n", fullDate_])];
+		[verboseEntry appendAttributedString: grayedAttributedString([NSString stringWithFormat:@"(%@)\n", fullDate_ ? fullDate_ : @""])];
 	}
+
 	if (stringIsNonWhiteSpace(fullComment_))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Description:\t")];
 		[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@\n", fullComment_])];
-	}	
+	}
+	else if (stringIsNonWhiteSpace(shortComment_))
+	{
+		[verboseEntry appendAttributedString: categoryAttributedString(@"Description:\t")];
+		[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@\n", shortComment_])];
+	}
+	
 	if (IsNotEmpty(filesAdded_))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Added:\t")];
@@ -376,6 +383,9 @@ void setupGlobalsForPartsAndTemplate()
 
 - (void) fullyLoadEntry
 {
+	if ([self isFullyLoaded])
+		return;
+
 	NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log", @"--rev", revision_, @"--template", templateStringFull, nil];	// templateStringFull is global set in setupGlobalsForPartsAndTemplate()
 	ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:[collection_ rootPath]  logging:eLoggingNone];
 	NSArray* lines = [hgLogResults.outStr componentsSeparatedByString:entrySeparator];
@@ -421,12 +431,12 @@ void setupGlobalsForPartsAndTemplate()
 }
 
 
-- (void) displayFormattedVerboseEntryIn:(id)container
+- (void) loadAndDisplayFormattedVerboseEntryIn:(id)container
 {
-	if (loadStatus_ == eLogEntryLoadedFully)
+	if ([self isFullyLoaded])
 	{
 		if ([container isKindOfClass:[NSTextView class]])
-			[[container textStorage] setAttributedString:[self composeFormattedVerboseEntry]];
+			[[container textStorage] setAttributedString:[self formattedVerboseEntry]];
 		return;
 	}
 
@@ -435,7 +445,7 @@ void setupGlobalsForPartsAndTemplate()
 		dispatch_async(globalQueue(), ^{
 			[self fullyLoadEntry];
 			if ([container isKindOfClass:[NSTextView class]])
-				[[container textStorage] setAttributedString:[self composeFormattedVerboseEntry]];
+				[[container textStorage] setAttributedString:[self formattedVerboseEntry]];
 		});
 	}
 }
@@ -443,9 +453,7 @@ void setupGlobalsForPartsAndTemplate()
 
 - (NSAttributedString*) formattedBriefEntry
 {
-	if (loadStatus_ == eLogEntryLoadedPending || loadStatus_ == eLogEntryLoadedPartially)
-		[self fullyLoadEntry];
-	
+	[self fullyLoadEntry];
 	NSMutableAttributedString* verboseEntry = [[NSMutableAttributedString alloc] init];
 	[verboseEntry appendAttributedString: categoryAttributedString(@"Commit:\t")];
 	[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@ ", revision_])];

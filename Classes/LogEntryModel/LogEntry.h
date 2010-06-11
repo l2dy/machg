@@ -80,8 +80,9 @@ extern void setupGlobalsForPartsAndTemplate();
 
 
 // Presentation of Entry
-- (void)	displayFormattedVerboseEntryIn:(id)container;
+- (void)	loadAndDisplayFormattedVerboseEntryIn:(id)container;
 - (NSAttributedString*)	formattedBriefEntry;
+- (NSAttributedString*) formattedVerboseEntry;
 - (NSString*) fullCommentSynchronous;
 
 @end
