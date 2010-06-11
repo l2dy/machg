@@ -715,6 +715,7 @@ NSInteger sortIntsDescending(id num1, id num2, void* context);
 
 NSAttributedString*	emphasizedSheetMessageAttributedString(NSString* string);
 NSAttributedString*	normalSheetMessageAttributedString(NSString* string);
+NSAttributedString* grayedSheetMessageAttributedString(NSString* string);
 NSAttributedString*	fixedWidthResultsMessageAttributedString(NSString* string);
 
 

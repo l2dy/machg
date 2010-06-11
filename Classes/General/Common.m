@@ -679,6 +679,20 @@ NSDictionary* normalSheetMessageFontAttributes()
 	return theDictionary;
 }
 
+NSDictionary* grayedSheetMessageFontAttributes()
+{
+	static NSDictionary* theDictionary = nil;
+	if (theDictionary == nil)
+	{
+		NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+		[paragraphStyle setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
+		NSColor* textColor = [NSColor grayColor];
+		NSFont* font = [NSFont messageFontOfSize:[NSFont smallSystemFontSize]];
+		theDictionary = [NSDictionary dictionaryWithObjectsAndKeys: font, NSFontAttributeName, textColor, NSForegroundColorAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil];
+	}
+	return theDictionary;
+}
+
 NSDictionary* fixedWidthResultsMessageFontAttributes()
 {
 	static NSDictionary* theDictionary = nil;
@@ -695,8 +709,9 @@ NSDictionary* fixedWidthResultsMessageFontAttributes()
 	return theDictionary;
 }
 
-NSAttributedString*      emphasizedSheetMessageAttributedString(NSString* string) { return [NSAttributedString string:string withAttributes:emphasizedSheetMessageFontAttributes()]; }
-NSAttributedString*          normalSheetMessageAttributedString(NSString* string) { return [NSAttributedString string:string withAttributes:normalSheetMessageFontAttributes()]; }
+NSAttributedString*       emphasizedSheetMessageAttributedString(NSString* string) { return [NSAttributedString string:string withAttributes:emphasizedSheetMessageFontAttributes()]; }
+NSAttributedString*           normalSheetMessageAttributedString(NSString* string) { return [NSAttributedString string:string withAttributes:normalSheetMessageFontAttributes()]; }
+NSAttributedString*           grayedSheetMessageAttributedString(NSString* string) { return [NSAttributedString string:string withAttributes:grayedSheetMessageFontAttributes()]; }
 NSAttributedString*     fixedWidthResultsMessageAttributedString(NSString* string) { return [NSAttributedString string:string withAttributes:fixedWidthResultsMessageFontAttributes()]; }
 
 

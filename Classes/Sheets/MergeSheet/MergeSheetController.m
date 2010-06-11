@@ -11,8 +11,19 @@
 #import "MacHgDocument.h"
 #import "ResultsWindowController.h"
 
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  MergeSheetController
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+
 @interface MergeSheetController (PrivateAPI)
-- (NSAttributedString*) formattedSheetMessage;
+- (NSAttributedString*) normalFormattedSheetMessage;
+- (NSAttributedString*) ancestorFormattedSheetMessage;
 @end
 
 
@@ -63,9 +74,43 @@
 - (IBAction) validateButtons:(id)sender
 {
 	NSString* theSelectedRevision = [logTableView selectedRevision];
-	BOOL canMerge = theSelectedRevision && [theSelectedRevision isNotEqualToString:[[myDocument repositoryData]getHGParent1Revision]];
-	[sheetButtonOkForMergeSheet setEnabled:canMerge];
-	[sheetInformativeMessageTextField setAttributedStringValue: [self formattedSheetMessage]];
+	NSString* theParentRevision   = [[myDocument repositoryData]getHGParent1Revision];
+	BOOL canMerge = YES;
+	
+	NSAttributedString* message = nil;
+	
+	if (!theSelectedRevision || [theSelectedRevision isEqualToString:theParentRevision])
+	{
+		message  = normalSheetMessageAttributedString(@"");
+		canMerge = NO;
+	}
+	
+	if (!message)
+	{
+		NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+		NSMutableArray* argsDebugAncestor = [NSMutableArray arrayWithObjects:@"debugancestor", theSelectedRevision, theParentRevision, nil];
+		ExecutionResult* results = [myDocument executeMercurialWithArgs:argsDebugAncestor fromRoot:rootPath whileDelayingEvents:YES];
+		if (results.outStr)
+		{
+			NSString* ancestor = trimString([results.outStr stringByMatching:@"(\\d+):[\\d\\w]+\\s*" capture:1L]);
+			if ([ancestor isEqualToString:theParentRevision] || [ancestor isEqualToString:theSelectedRevision])
+			{
+				message = [self ancestorFormattedSheetMessage];
+				canMerge = NO;
+			}
+		}
+	}
+
+	if (!message)
+	{
+		message = [self normalFormattedSheetMessage];
+		canMerge = YES;
+	}
+	
+	dispatch_async(mainQueue(), ^{
+		[sheetButtonOkForMergeSheet setEnabled:canMerge];
+		[sheetInformativeMessageTextField setAttributedStringValue: message];
+	});
 }
 
 
@@ -142,7 +187,7 @@
 // MARK: Create Sheet Message
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (NSAttributedString*) formattedSheetMessage
+- (NSAttributedString*) normalFormattedSheetMessage
 {
 	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"The revision selected above (")];
@@ -151,6 +196,19 @@
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@") will be merged into the current revision (")];
 	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString([myDocument isCurrentRevisionTip] ? @"tip" : [myDocument getHGParent1Revision])];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@").")];
+	return newSheetMessage;
+}
+
+
+- (NSAttributedString*) ancestorFormattedSheetMessage
+{
+	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
+	[newSheetMessage appendAttributedString: grayedSheetMessageAttributedString(@"Cannot merge (")];
+	NSString* rev = [logTableView selectedRevision];
+	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(rev ? rev : @"-")];
+	[newSheetMessage appendAttributedString: grayedSheetMessageAttributedString(@") into the current revision (")];
+	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString([myDocument isCurrentRevisionTip] ? @"tip" : [myDocument getHGParent1Revision])];
+	[newSheetMessage appendAttributedString: grayedSheetMessageAttributedString(@") since one of the revisions is a direct ancestor of the other.")];
 	return newSheetMessage;
 }
 
