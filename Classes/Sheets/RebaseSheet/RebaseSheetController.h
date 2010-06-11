@@ -58,9 +58,6 @@
 // Table delegate methods
 - (void)	logTableViewSelectionDidChange:(LogTableView*)theLogTable;
 
-
-- (NSAttributedString*) formattedSheetMessage;
-
 @end
 
 

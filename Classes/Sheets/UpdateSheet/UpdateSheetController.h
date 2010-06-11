@@ -33,7 +33,9 @@
 @property (readwrite,assign) MacHgDocument*  myDocument;
 @property BOOL cleanUpdate;
 
+// Initilization
 - (UpdateSheetController*) initUpdateSheetControllerWithDocument:(MacHgDocument*)doc;
+- (void)	 openUpdateSheetWithRevision:(NSString*)revision;
 
 
 // Action Methods
@@ -47,9 +49,6 @@
 
 - (void)	logTableViewSelectionDidChange:(LogTableView*)theLogTable;
 
-
-- (NSAttributedString*) formattedSheetMessage;
-- (void) openUpdateSheetWithRevision:(NSString*)revision;
 
 @end
 

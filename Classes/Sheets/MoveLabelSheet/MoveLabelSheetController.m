@@ -15,6 +15,11 @@
 #import "RepositoryData.h"
 #import "LogTableView.h"
 
+
+@interface MoveLabelSheetController (PrivateAPI)
+- (NSAttributedString*) formattedSheetMessage;
+@end
+
 @implementation MoveLabelSheetController
 @synthesize myDocument;
 

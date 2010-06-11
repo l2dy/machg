@@ -17,6 +17,11 @@
 #import "Sidebar.h"
 #import "SidebarNode.h"
 
+@interface CollapseSheetController (PrivateAPI)
+- (NSAttributedString*) formattedSheetMessage;
+@end
+
+
 @implementation CollapseSheetController
 @synthesize myDocument;
 

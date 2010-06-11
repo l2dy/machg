@@ -15,6 +15,11 @@
 #import "LogTableView.h"
 #import "HistoryPaneController.h"
 
+@interface ExportPatchesSheetController (PrivateAPI)
+- (NSAttributedString*) formattedSheetMessage;
+@end
+
+
 @implementation ExportPatchesSheetController
 
 @synthesize textOption = textOption_;

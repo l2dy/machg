@@ -35,8 +35,10 @@
 
 // Initialization
 - (MergeSheetController*) initMergeSheetControllerWithDocument:(MacHgDocument*)doc;
+- (void)	 openMergeSheetWithRevision:(NSString*)revision;
 
 
+// Validation
 - (IBAction) validateButtons:(id)sender;
 
 
@@ -50,7 +52,5 @@
 // Table delegate methods
 - (void)	logTableViewSelectionDidChange:(LogTableView*)theLogTable;
 
-- (NSAttributedString*) formattedSheetMessage;
-- (void)	openMergeSheetWithRevision:(NSString*)revision;
 
 @end

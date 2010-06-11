@@ -23,6 +23,10 @@
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 
+@interface ImportPatchesSheetController (PrivateAPI)
+- (NSAttributedString*) formattedSheetMessage;
+@end
+
 @implementation ImportPatchesSheetController
 
 @synthesize guessRenames = guessRenames_;

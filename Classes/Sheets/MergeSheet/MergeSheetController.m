@@ -11,6 +11,11 @@
 #import "MacHgDocument.h"
 #import "ResultsWindowController.h"
 
+@interface MergeSheetController (PrivateAPI)
+- (NSAttributedString*) formattedSheetMessage;
+@end
+
+
 @implementation MergeSheetController
 
 @synthesize forceTheMerge						= forceTheMerge_;

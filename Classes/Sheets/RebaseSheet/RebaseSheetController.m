@@ -17,6 +17,12 @@
 #import "Sidebar.h"
 #import "SidebarNode.h"
 
+
+@interface RebaseSheetController (PrivateAPI)
+- (NSAttributedString*) formattedSheetMessage;
+@end
+
+
 @implementation RebaseSheetController
 @synthesize myDocument;
 @synthesize keepOriginalRevisions = keepOriginalRevisions_;

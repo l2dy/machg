@@ -49,8 +49,5 @@
 - (IBAction) sheetButtonOk:(id)sender;
 - (IBAction) sheetButtonCancel:(id)sender;
 
-
-- (NSAttributedString*) formattedSheetMessage;
-
 @end
 

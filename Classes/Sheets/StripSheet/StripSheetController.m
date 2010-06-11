@@ -17,6 +17,12 @@
 #import "Sidebar.h"
 #import "SidebarNode.h"
 
+
+@interface StripSheetController (PrivateAPI)
+- (NSAttributedString*) formattedSheetMessage;
+@end
+
+
 @implementation StripSheetController
 @synthesize myDocument;
 

@@ -17,6 +17,13 @@
 #import "Sidebar.h"
 #import "SidebarNode.h"
 
+
+
+@interface HistoryEditSheetController (PrivateAPI)
+- (NSAttributedString*) formattedSheetMessage;
+@end
+
+
 @implementation HistoryEditSheetController
 @synthesize myDocument;
 

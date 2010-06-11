@@ -40,6 +40,4 @@
 - (void)	logTableViewSelectionDidChange:(LogTableView*)theLogTable;
 
 
-- (NSAttributedString*) formattedSheetMessage;
-
 @end

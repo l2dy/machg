@@ -32,6 +32,7 @@
 
 // Initialization
 - (RevertSheetController*) initRevertSheetControllerWithDocument:(MacHgDocument*)doc;
+- (void)	 openRevertSheetWithPaths:(NSArray*)paths andRevision:(NSString*)revision;
 
 
 // Action Methods
@@ -45,8 +46,5 @@
 // Table delegate methods
 - (void)	logTableViewSelectionDidChange:(LogTableView*)theLogTable;
 
-
-- (NSAttributedString*) formattedSheetMessage;
-- (void) openRevertSheetWithPaths:(NSArray*)paths andRevision:(NSString*)revision;
 
 @end

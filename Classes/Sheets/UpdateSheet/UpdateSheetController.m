@@ -14,6 +14,12 @@
 #import "RepositoryData.h"
 #import "LogTableView.h"
 
+
+@interface UpdateSheetController (PrivateAPI)
+- (NSAttributedString*) formattedSheetMessage;
+@end
+
+
 @implementation UpdateSheetController
 
 @synthesize cleanUpdate = cleanUpdate_;

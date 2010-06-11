@@ -14,6 +14,12 @@
 #import "RepositoryData.h"
 #import "LogTableView.h"
 
+
+@interface RevertSheetController (PrivateAPI)
+- (NSAttributedString*) formattedSheetMessage;
+@end
+
+
 @implementation RevertSheetController
 @synthesize myDocument;
 
