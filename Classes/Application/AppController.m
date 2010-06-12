@@ -179,6 +179,18 @@
 // MARK: Configuration Checking
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+- (void) checkForConfigFile
+{
+	NSString* macHgHGRCFilePath = fstr(@"%@/hgrc",applicationSupportFolder());
+	if (pathIsExistent(macHgHGRCFilePath))
+		return;
+
+	NSFileManager* fileManager = [NSFileManager defaultManager];
+	NSString* sourceMacHgHGRCpath = fstr(@"%@/%@",[[NSBundle mainBundle] resourcePath], @"hgrc");
+	NSError* theError;
+	[fileManager copyItemAtPath:sourceMacHgHGRCpath toPath:macHgHGRCFilePath error:&theError];
+}
+
 - (void) checkConfigFileForUserName
 {
 	NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"ui.username", nil];
