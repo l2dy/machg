@@ -126,6 +126,7 @@
 	static NSDictionary* env = nil;
 	if (!env)
 	{
+		NSString* hgrcPath = fstr(@"%@/hgrc", applicationSupportFolder());
 		NSDictionary* processEnv    = [[NSProcessInfo processInfo] environment];
 		NSMutableDictionary* newEnv = [[NSMutableDictionary alloc]init];
 		[newEnv copyValueOfKey:@"SSH_ASKPASS"	from:processEnv];
@@ -136,6 +137,7 @@
 		[newEnv copyValueOfKey:@"USER"			from:processEnv];
 		[newEnv setObject:@"UTF-8"  forKey:@"HGENCODING"];
 		[newEnv setObject:@"1"		forKey:@"HGPLAIN"];
+		[newEnv setObject:hgrcPath	forKey:@"HGRCPATH"];		
 		env = [NSDictionary dictionaryWithDictionary:newEnv];
 	}
 

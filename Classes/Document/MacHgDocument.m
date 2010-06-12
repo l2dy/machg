@@ -211,21 +211,6 @@
 	[[mainWindow_ windowController] setShouldCascadeWindows: NO];
 	NSString* fileName = [self documentNameForAutosave];
 	[sidebarAndInformation_ setAutosaveName:[NSString stringWithFormat:@"File:%@:LHSSidebarSplitPosition", fileName]];	
-
-	// Test Mercurial is working by logging the status of a simple local directory where we know changes have occurred.
-	if (NO)
-	{
-		NSMutableArray* argsStatus = [NSMutableArray arrayWithObjects:@"status", @"--cwd",@"/Users/jason/bin", nil];
-		ExecutionResult* results = [TaskExecutions synchronouslyExecute:executableLocationHG() withArgs:argsStatus onTask:nil];
-		if ([results hasErrors])
-		{
-			DebugLog(@"Calling mercurial is not working");
-			return;
-		}
-		NSArray* parts = [trimString(results.outStr) componentsSeparatedByString:@"\n"];
-		for (NSString* statusItem in parts)
-			DebugLog(@"%@",statusItem);
-	}
 	
 	// Test string matching.
 	if (NO)
