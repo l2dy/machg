@@ -22,6 +22,7 @@
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<integer value="43"/>
+			<integer value="123"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -510,7 +511,7 @@
 																				<bytes key="NSRGB">MC44Nzc1OTYwMjA3IDAuODc1Njg5OTIzOCAwLjgzMTYzNzIwMzcAA</bytes>
 																			</object>
 																			<double key="NSRowHeight">14</double>
-																			<int key="NSTvFlags">-700448768</int>
+																			<int key="NSTvFlags">-566231040</int>
 																			<reference key="NSDelegate"/>
 																			<reference key="NSDataSource"/>
 																			<int key="NSGridStyleMask">2</int>
@@ -814,14 +815,14 @@
 						</object>
 						<object class="NSButton" id="184352701">
 							<reference key="NSNextResponder" ref="538557104"/>
-							<int key="NSvFlags">292</int>
-							<string key="NSFrame">{{14, 12}, {84, 32}}</string>
+							<int key="NSvFlags">289</int>
+							<string key="NSFrame">{{325, 12}, {119, 32}}</string>
 							<reference key="NSSuperview" ref="538557104"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="237441428">
 								<int key="NSCellFlags">67239424</int>
 								<int key="NSCellFlags2">134217728</int>
-								<string key="NSContents">Diff All</string>
+								<string key="NSContents">Diff Selected</string>
 								<reference key="NSSupport" ref="612085715"/>
 								<reference key="NSControlView" ref="184352701"/>
 								<int key="NSButtonFlags">-2038284033</int>
@@ -942,8 +943,8 @@
 						</object>
 						<object class="NSTextField" id="843705293">
 							<reference key="NSNextResponder" ref="538557104"/>
-							<int key="NSvFlags">292</int>
-							<string key="NSFrame">{{44, 3}, {24, 14}}</string>
+							<int key="NSvFlags">289</int>
+							<string key="NSFrame">{{372, 3}, {24, 14}}</string>
 							<reference key="NSSuperview" ref="538557104"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="566886616">
@@ -959,6 +960,30 @@
 								</object>
 							</object>
 						</object>
+						<object class="BWUnanchoredButton" id="602005739">
+							<reference key="NSNextResponder" ref="538557104"/>
+							<int key="NSvFlags">292</int>
+							<string key="NSFrame">{{20, 31}, {23, 22}}</string>
+							<reference key="NSSuperview" ref="538557104"/>
+							<bool key="NSEnabled">YES</bool>
+							<object class="BWUnanchoredButtonCell" key="NSCell" id="494163643">
+								<int key="NSCellFlags">67239424</int>
+								<int key="NSCellFlags2">134348800</int>
+								<string key="NSContents"/>
+								<reference key="NSSupport" ref="26"/>
+								<reference key="NSControlView" ref="602005739"/>
+								<int key="NSButtonFlags">-2033958657</int>
+								<int key="NSButtonFlags2">163</int>
+								<object class="NSCustomResource" key="NSNormalImage">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">NSRemoveTemplate</string>
+								</object>
+								<string key="NSAlternateContents"/>
+								<string key="NSKeyEquivalent"/>
+								<int key="NSPeriodicDelay">200</int>
+								<int key="NSPeriodicInterval">25</int>
+							</object>
+						</object>
 					</object>
 					<string key="NSFrameSize">{667, 484}</string>
 					<reference key="NSSuperview"/>
@@ -967,6 +992,35 @@
 				<string key="NSMinSize">{500, 422}</string>
 				<string key="NSMaxSize">{3.40282e+38, 3.40282e+38}</string>
 				<string key="NSFrameAutosaveName">CommitSheetWindowFrame</string>
+			</object>
+			<object class="NSMenu" id="417703705">
+				<string key="NSTitle">BrowserContextualMenu</string>
+				<object class="NSMutableArray" key="NSMenuItems">
+					<bool key="EncodedWithXMLCoder">YES</bool>
+					<object class="NSMenuItem" id="960384345">
+						<reference key="NSMenu" ref="417703705"/>
+						<string key="NSTitle">Exclude Selected Files</string>
+						<string key="NSKeyEquiv"/>
+						<int key="NSMnemonicLoc">2147483647</int>
+						<object class="NSCustomResource" key="NSOnImage" id="689809863">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">NSMenuCheckmark</string>
+						</object>
+						<object class="NSCustomResource" key="NSMixedImage" id="744746758">
+							<string key="NSClassName">NSImage</string>
+							<string key="NSResourceName">NSMenuMixedState</string>
+						</object>
+					</object>
+					<object class="NSMenuItem" id="172537192">
+						<reference key="NSMenu" ref="417703705"/>
+						<string key="NSTitle">Diff Selected Files</string>
+						<string key="NSKeyEquiv">d</string>
+						<int key="NSKeyEquivModMask">1048576</int>
+						<int key="NSMnemonicLoc">2147483647</int>
+						<reference key="NSOnImage" ref="689809863"/>
+						<reference key="NSMixedImage" ref="744746758"/>
+					</object>
+				</object>
 			</object>
 		</object>
 		<object class="IBObjectContainer" key="IBDocument.Objects">
@@ -1069,14 +1123,6 @@
 					<int key="connectionID">103</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">commitSheetButtonDiffAll:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="184352701"/>
-					</object>
-					<int key="connectionID">104</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">window</string>
 						<reference key="source" ref="1001"/>
@@ -1099,6 +1145,62 @@
 						<reference key="destination" ref="64017787"/>
 					</object>
 					<int key="connectionID">122</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">menu</string>
+						<reference key="source" ref="9472516"/>
+						<reference key="destination" ref="417703705"/>
+					</object>
+					<int key="connectionID">129</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">diffButton</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="184352701"/>
+					</object>
+					<int key="connectionID">134</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">removePathsButton</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="602005739"/>
+					</object>
+					<int key="connectionID">135</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">commitSheetDiffAction:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="184352701"/>
+					</object>
+					<int key="connectionID">136</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">commitSheetDiffAction:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="172537192"/>
+					</object>
+					<int key="connectionID">137</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">exculdePathsAction:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="960384345"/>
+					</object>
+					<int key="connectionID">138</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">exculdePathsAction:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="602005739"/>
+					</object>
+					<int key="connectionID">139</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1152,6 +1254,7 @@
 							<reference ref="98329776"/>
 							<reference ref="477043679"/>
 							<reference ref="843705293"/>
+							<reference ref="602005739"/>
 						</object>
 						<reference key="parent" ref="983124931"/>
 					</object>
@@ -1473,6 +1576,41 @@
 						<reference key="object" ref="566886616"/>
 						<reference key="parent" ref="843705293"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">123</int>
+						<reference key="object" ref="417703705"/>
+						<object class="NSMutableArray" key="children">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="172537192"/>
+							<reference ref="960384345"/>
+						</object>
+						<reference key="parent" ref="0"/>
+						<string key="objectName">Menu (LabelsContextualMenu)</string>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">124</int>
+						<reference key="object" ref="172537192"/>
+						<reference key="parent" ref="417703705"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">125</int>
+						<reference key="object" ref="960384345"/>
+						<reference key="parent" ref="417703705"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">131</int>
+						<reference key="object" ref="602005739"/>
+						<object class="NSMutableArray" key="children">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="494163643"/>
+						</object>
+						<reference key="parent" ref="538557104"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">132</int>
+						<reference key="object" ref="494163643"/>
+						<reference key="parent" ref="602005739"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -1492,6 +1630,12 @@
 					<string>119.CustomClassName</string>
 					<string>119.IBPluginDependency</string>
 					<string>120.IBPluginDependency</string>
+					<string>123.IBEditorWindowLastContentRect</string>
+					<string>123.IBPluginDependency</string>
+					<string>124.IBPluginDependency</string>
+					<string>125.IBPluginDependency</string>
+					<string>131.IBPluginDependency</string>
+					<string>132.IBPluginDependency</string>
 					<string>41.IBEditorWindowLastContentRect</string>
 					<string>41.IBPluginDependency</string>
 					<string>41.IBWindowTemplateEditedContentRect</string>
@@ -1553,6 +1697,12 @@
 					<string>CommandKeyTextField</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>{{252, 569}, {225, 43}}</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.brandonwalkin.BWToolkit</string>
+					<string>com.brandonwalkin.BWToolkit</string>
 					<string>{{131, 672}, {667, 484}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{131, 672}, {667, 484}}</string>
@@ -1630,7 +1780,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">122</int>
+			<int key="maxID">139</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1666,7 +1816,8 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>commitSheetButtonDiffAll:</string>
+							<string>commitSheetDiffAction:</string>
+							<string>exculdePathsAction:</string>
 							<string>handleChangedFilesTableClick:</string>
 							<string>handleChangedFilesTableDoubleClick:</string>
 							<string>openCommitSheetWithAllFiles:</string>
@@ -1676,6 +1827,7 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -1693,7 +1845,9 @@
 							<string>commitMessageTextView</string>
 							<string>commitSheetBranchString</string>
 							<string>commitSheetTitle</string>
+							<string>diffButton</string>
 							<string>previousCommitMessagesTableView</string>
+							<string>removePathsButton</string>
 							<string>theCommitSheet</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -1702,7 +1856,9 @@
 							<string>NSTextView</string>
 							<string>NSTextField</string>
 							<string>NSTextField</string>
+							<string>NSButton</string>
 							<string>NSTableView</string>
+							<string>NSButton</string>
 							<string>NSWindow</string>
 						</object>
 					</object>
@@ -1730,6 +1886,14 @@
 			<object class="NSMutableArray" key="referencedPartialClassDescriptionsV3.2+">
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<object class="IBPartialClassDescription">
+					<string key="className">BWAnchoredButtonCell</string>
+					<string key="superclassName">NSButtonCell</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">BWToolkitFramework.framework/Headers/BWAnchoredButtonCell.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
 					<string key="className">BWGradientBox</string>
 					<string key="superclassName">NSView</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
@@ -1747,6 +1911,22 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">BWToolkitFramework.framework/Headers/BWSplitView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">BWUnanchoredButton</string>
+					<string key="superclassName">NSButton</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">BWToolkitFramework.framework/Headers/BWUnanchoredButton.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">BWUnanchoredButtonCell</string>
+					<string key="superclassName">BWAnchoredButtonCell</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">BWToolkitFramework.framework/Headers/BWUnanchoredButtonCell.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -1853,6 +2033,14 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="232178182">
 						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">AppKit.framework/Headers/NSMenu.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSMenuItem</string>
+					<string key="superclassName">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="790006809">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">AppKit.framework/Headers/NSMenuItem.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -2305,10 +2493,7 @@
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">NSView</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBFrameworkSource</string>
-						<string key="minorKey">AppKit.framework/Headers/NSMenuItem.h</string>
-					</object>
+					<reference key="sourceIdentifier" ref="790006809"/>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">NSView</string>

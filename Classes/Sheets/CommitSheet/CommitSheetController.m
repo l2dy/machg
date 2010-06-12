@@ -12,6 +12,19 @@
 #import "TaskExecutions.h"
 
 
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  CommitSheetController
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+
+@interface CommitSheetController (PrivateAPI)
+- (IBAction) validateButtons:(id)sender;
+@end
+
 @implementation CommitSheetController
 @synthesize myDocument;
 
@@ -58,9 +71,8 @@
 
 - (IBAction) handleChangedFilesTableDoubleClick:(id)sender
 {
-	NSString* statusAndFile = [changedFilesTableSourceData objectAtIndex:[changedFilesTableView clickedRow]];
-	NSArray* theRelativePathAsArray = [NSArray arrayWithObject:[statusAndFile substringFromIndex:2]];
-	[myDocument viewDifferencesInCurrentRevisionFor:theRelativePathAsArray toRevision:nil];	// no revision means don't include the --rev option
+	NSArray* chosenFiles = [self chosenFilesToCommit];
+	[myDocument viewDifferencesInCurrentRevisionFor:chosenFiles toRevision:nil];	// no revision means don't include the --rev option
 	[theCommitSheet makeFirstResponder:commitMessageTextView];
 }
 
@@ -76,10 +88,20 @@
 	[theCommitSheet makeFirstResponder:commitMessageTextView];
 }
 
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Sheet opening
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
 - (void) openCommitSheetWithPaths:(NSArray*)paths
 {
 	changedFilesTableSourceData = nil;
 	logCommentsTableSourceData = nil;
+	exculdedPaths = nil;
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 
 	// Report the branch we are about to commit on in the dialog
@@ -93,13 +115,15 @@
 	[NSApp beginSheet:theCommitSheet modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
 	[theCommitSheet makeFirstResponder:commitMessageTextView];
 
-	absolutePathsOfFilesToCommit = [myDocument filterPaths:paths byBitfield:eHGStatusChangedInSomeWay];
+	NSArray* absolutePathsOfFilesToCommit = [myDocument filterPaths:paths byBitfield:eHGStatusChangedInSomeWay];
 	
 	// Show the files which are about to be changed in the commit sheet.
 	NSMutableArray* argsStatus = [NSMutableArray arrayWithObjects:@"status", @"--modified", @"--added", @"--removed", nil];
 	[argsStatus addObjectsFromArray: absolutePathsOfFilesToCommit];
 	ExecutionResult* hgStatusResults = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:rootPath  logging:eLoggingNone];
-	changedFilesTableSourceData = [hgStatusResults.outStr componentsSeparatedByString:@"\n"];
+	changedFilesTableSourceData = [NSMutableArray arrayWithArray:[hgStatusResults.outStr componentsSeparatedByString:@"\n"]];
+	if (IsEmpty([changedFilesTableSourceData lastObject]))
+		[changedFilesTableSourceData removeLastObject];
 	[changedFilesTableView reloadData];
 	
 	// Fetch the last 10 log comments and set the sources so that the table view of these in the commit sheet shows them correctly.
@@ -107,6 +131,7 @@
 	ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:rootPath  logging:eLoggingNone];
 	logCommentsTableSourceData = [hgLogResults.outStr componentsSeparatedByString:@"\n#^&^#\n"];
 	[previousCommitMessagesTableView reloadData];
+	[self validateButtons:self];
 }
 
 
@@ -141,6 +166,42 @@
 	[self openCommitSheetWithPaths:paths];
 }
 
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+//  Validation   ---------------------------------------------------------------------------------------------------------------------------
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+
+- (BOOL) validateUserInterfaceItem:(id < NSValidatedUserInterfaceItem >)anItem
+{
+	SEL theAction = [anItem action];	
+	// CommitSheet contextual items
+	if (theAction == @selector(commitSheetDiffAction:))			return [self filesToCommitAreSelected];
+	if (theAction == @selector(exculdePathsAction:))			return [self filesToCommitAreSelected];
+	return [myDocument validateUserInterfaceItem:anItem];
+}
+
+
+- (IBAction) validateButtons:(id)sender
+{
+	BOOL pathsAreSelected = [changedFilesTableView numberOfSelectedRows] > 0;
+	NSString* diffButtonMessage = pathsAreSelected ? @"Diff Selected" : @"Diff All";
+	
+	dispatch_async(mainQueue(), ^{
+		[diffButton setTitle:diffButtonMessage];
+		[removePathsButton setEnabled:pathsAreSelected];
+	});
+}
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Table Handling
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
 - (NSInteger) numberOfRowsInTableView:(NSTableView*)aTableView
 {
 	if (aTableView == changedFilesTableView)
@@ -159,12 +220,94 @@
 	return @" ";
 }
 
+- (void)tableViewSelectionDidChange:(NSNotification*)aNotification
+{
+	if ([aNotification object] == changedFilesTableView)
+		[self validateButtons:self];
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  ChangedFiles TableView
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (BOOL) filesToCommitAreSelected	{ return [changedFilesTableView numberOfSelectedRows] > 0; }
+
+- (NSArray*) filesToCommit
+{
+	NSMutableArray* toCommit = [[NSMutableArray alloc]init];
+	for (NSString* file in changedFilesTableSourceData)
+	{
+		NSString* relativePath = [file substringFromIndex:2];
+		NSString* absolutePath = [[myDocument absolutePathOfRepositoryRoot] stringByAppendingPathComponent:relativePath];
+		[toCommit addObject:absolutePath];
+	};
+	return toCommit;
+}
+
+- (NSArray*) selectedFilesToCommit
+{
+	NSMutableArray* selectedCommitFiles = [[NSMutableArray alloc]init];
+	NSIndexSet* rows = [changedFilesTableView selectedRowIndexes];
+	[rows enumerateIndexesUsingBlock:^(NSUInteger row, BOOL* stop) {
+		NSString* item = [changedFilesTableSourceData objectAtIndex:row];
+		NSString* relativePath = [item substringFromIndex:2];
+		NSString* absolutePath = [[myDocument absolutePathOfRepositoryRoot] stringByAppendingPathComponent:relativePath];
+		[selectedCommitFiles addObject:absolutePath];
+	}];
+	return selectedCommitFiles;
+}
+
+- (NSString*) chosenFileToCommit
+{
+	NSString* file = [changedFilesTableSourceData objectAtIndex:[changedFilesTableView chosenRow]];
+	NSString* relativePath = [file substringFromIndex:2];
+	NSString* absolutePath = [[myDocument absolutePathOfRepositoryRoot] stringByAppendingPathComponent:relativePath];	
+	return absolutePath;
+}
+
+- (NSArray*) chosenFilesToCommit
+{
+	if (![changedFilesTableView rowWasClicked] || [[changedFilesTableView selectedRowIndexes] containsIndex:[changedFilesTableView clickedRow]])
+		return [self selectedFilesToCommit];
+	return [NSArray arrayWithObject:[self chosenFileToCommit]];
+}
+
+- (NSIndexSet*) chosenIndexesOfFilesToCommit
+{
+	if (![changedFilesTableView rowWasClicked] || [[changedFilesTableView selectedRowIndexes] containsIndex:[changedFilesTableView clickedRow]])
+		return [changedFilesTableView selectedRowIndexes];
+	return [NSIndexSet indexSetWithIndex:[changedFilesTableView chosenRow]];
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Actions
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (IBAction) exculdePathsAction:(id)sender
+{
+	if (!exculdedPaths)
+		exculdedPaths = [[NSMutableArray alloc]init];
+	[exculdedPaths addObjectsFromArray:[self chosenFilesToCommit]];
+	[changedFilesTableSourceData removeObjectsAtIndexes:[self chosenIndexesOfFilesToCommit]];
+	[changedFilesTableView reloadData];
+	[changedFilesTableView deselectAll:self];
+}
 
 
 - (IBAction) sheetButtonOk:(id)sender
 {
 	// This is more a check here, error handling should have caught this before now if the files were empty.
-	if (!absolutePathsOfFilesToCommit || [absolutePathsOfFilesToCommit count] <= 0)
+	if (!changedFilesTableSourceData || [changedFilesTableSourceData count] <= 0)
 	{
 		PlayBeep();
 		DebugLog(@"Nothing to commit");
@@ -178,14 +321,14 @@
 	[myDocument dispatchToMercurialQueuedWithDescription:@"Committing Files" process:^{
 		NSString* theMessage = [commitMessageTextView string];
 		NSMutableArray* args = [NSMutableArray arrayWithObjects:@"commit", @"--message", theMessage, nil];
-		NSArray* dirtifyPaths = committingAllFiles ? [myDocument absolutePathOfRepositoryRootAsArray] : absolutePathsOfFilesToCommit;
+		NSArray* dirtifyPaths = committingAllFiles ? [myDocument absolutePathOfRepositoryRootAsArray] : [self filesToCommit];
 		if (committingAllFiles)
 			[myDocument registerPendingRefresh:dirtifyPaths];
 		else
 		{
 			// absolutePathsOfFilesToCommit is set when the sheet is opened.
 			[myDocument registerPendingRefresh:dirtifyPaths];
-			[args addObjectsFromArray:absolutePathsOfFilesToCommit];
+			[args addObjectsFromArray:[self filesToCommit]];
 		}
 		[myDocument delayEventsUntilFinishBlock:^{
 			[TaskExecutions executeMercurialWithArgs:args  fromRoot:rootPath];
@@ -197,9 +340,10 @@
 }
 
 
-- (IBAction) commitSheetButtonDiffAll:(id)sender
+- (IBAction) commitSheetDiffAction:(id)sender
 {
-	[myDocument viewDifferencesInCurrentRevisionFor:absolutePathsOfFilesToCommit toRevision:nil]; // nil indicates the current revision
+	NSArray* pathsToDiff = [self filesToCommitAreSelected] ? [self chosenFilesToCommit] : [self filesToCommit];
+	[myDocument viewDifferencesInCurrentRevisionFor:pathsToDiff toRevision:nil]; // nil indicates the current revision
 }
 
 
