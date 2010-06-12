@@ -161,6 +161,7 @@
 		96A377DB10C8EC5400FA190A /* About.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96A377D710C8EC5400FA190A /* About.xib */; };
 		96A377DC10C8EC5400FA190A /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96A377D910C8EC5400FA190A /* MainMenu.xib */; };
 		96A377EA10C8ECDD00FA190A /* TaskExecutions.m in Sources */ = {isa = PBXBuildFile; fileRef = 96A377E910C8ECDD00FA190A /* TaskExecutions.m */; };
+		96AD9B5911C42EDC00F5C82E /* hgrc in Resources */ = {isa = PBXBuildFile; fileRef = 96AD9B5811C42EDC00F5C82E /* hgrc */; };
 		96B1C98B1159C00500752DF2 /* MacHgHelp in Resources */ = {isa = PBXBuildFile; fileRef = 96B1C9451159C00500752DF2 /* MacHgHelp */; };
 		96B57DF310D54805003638DF /* pull_32.png in Resources */ = {isa = PBXBuildFile; fileRef = 96B57DF110D54804003638DF /* pull_32.png */; };
 		96B57DF410D54805003638DF /* push_32.png in Resources */ = {isa = PBXBuildFile; fileRef = 96B57DF210D54804003638DF /* push_32.png */; };
@@ -179,7 +180,6 @@
 		96DD29CD112AE56D00A57BD3 /* CollapseSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96DD29CB112AE56D00A57BD3 /* CollapseSheet.xib */; };
 		96DF426511B48DC700D986FF /* RadialGradiantBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 96DF426411B48DC700D986FF /* RadialGradiantBox.m */; };
 		96DF437111B5209C00D986FF /* RelativePositionedBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 96DF437011B5209C00D986FF /* RelativePositionedBox.m */; };
-		96DF546311B83DF900D986FF /* LocalMercurial in Resources */ = {isa = PBXBuildFile; fileRef = 96DF51E211B83DF900D986FF /* LocalMercurial */; };
 		96DF546411B83E1E00D986FF /* LocalMercurial in Copy Files (Mercurial) */ = {isa = PBXBuildFile; fileRef = 96DF51E211B83DF900D986FF /* LocalMercurial */; };
 		96DF581611BFC71A00D986FF /* MacHgDocumentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96DF581511BFC71A00D986FF /* MacHgDocumentController.m */; };
 		96F5A4DE11A8185800707404 /* TextButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96F5A4DD11A8185800707404 /* TextButtonCell.m */; };
@@ -443,6 +443,7 @@
 		96A377DA10C8EC5400FA190A /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = SOURCE_ROOT; };
 		96A377E810C8ECDD00FA190A /* TaskExecutions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskExecutions.h; sourceTree = "<group>"; };
 		96A377E910C8ECDD00FA190A /* TaskExecutions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskExecutions.m; sourceTree = "<group>"; };
+		96AD9B5811C42EDC00F5C82E /* hgrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = hgrc; sourceTree = "<group>"; };
 		96B1C9451159C00500752DF2 /* MacHgHelp */ = {isa = PBXFileReference; lastKnownFileType = folder; path = MacHgHelp; sourceTree = "<group>"; };
 		96B57DF110D54804003638DF /* pull_32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pull_32.png; path = SheetIcons/pull_32.png; sourceTree = "<group>"; };
 		96B57DF210D54804003638DF /* push_32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = push_32.png; path = SheetIcons/push_32.png; sourceTree = "<group>"; };
@@ -1325,6 +1326,7 @@
 		96DCCC1A10CD41B100C843C9 /* scripts */ = {
 			isa = PBXGroup;
 			children = (
+				96AD9B5811C42EDC00F5C82E /* hgrc */,
 				96DCCC1B10CD41B100C843C9 /* fmdiff.sh */,
 				9606F3441157F1F100968DE8 /* opendiff-w.sh */,
 				96DCCC1C10CD41B100C843C9 /* localhg */,
@@ -1461,6 +1463,7 @@
 				9600C2F210CD3D9F00CD8D28 /* Push.png in Resources */,
 				9600C2FF10CD3D9F00CD8D28 /* toolbar_resolved.png in Resources */,
 				9600C32010CD3F9300CD8D28 /* UserDefaults.plist in Resources */,
+				96AD9B5911C42EDC00F5C82E /* hgrc in Resources */,
 				96DCCC1E10CD41B100C843C9 /* fmdiff.sh in Resources */,
 				96DCCC1F10CD41B100C843C9 /* localhg in Resources */,
 				9606F3451157F1F100968DE8 /* opendiff-w.sh in Resources */,
@@ -1514,7 +1517,6 @@
 				969BDCC1119659FC007AA6D9 /* tb-terminal.png in Resources */,
 				96FF03A81199200E006EC616 /* UpdatePreferences.tiff in Resources */,
 				96C613A911B40B0D00B54B09 /* MacHgSplash.png in Resources */,
-				96DF546311B83DF900D986FF /* LocalMercurial in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

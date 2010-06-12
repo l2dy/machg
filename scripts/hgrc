@@ -1,0 +1,69 @@
+[ui]
+username = jfh <jason@jasonfharris.com>
+ignore.other = ~/.hgignore
+editor = /Applications/TextEdit.app/Contents/MacOS/TextEdit
+ssh = ssh -C
+
+
+
+[diff]
+git = True
+
+
+
+[extensions]
+hgext.extdiff =
+hgext.bookmarks =
+hgext.mq =
+hgext.rebase =
+hgext.histedit=
+hgext.collapse=
+
+
+
+[extdiff]
+#cmd.opendiff = /Users/jason/bin/cvsScripts/fmdiff.sh
+
+#cmd.arxdiff = /Users/jason/bin/AraxisUtilities/compare
+#opts.arxdiff = -2
+
+#cmd.kdiff = /Users/jason/bin/kdiff3.app/Contents/MacOS/kdiff3
+
+#cmd.diffmerge = /Users/jason/bin/diffmerge.sh
+
+#cmd.chdiff =
+#opts.chdiff = --wait
+
+#cmd.deltawalker = /Users/jason/bin/deltawalker-diff.sh
+
+#cmd.ksdiff = /usr/local/bin/ksdiff-wrapper
+#opts.ksdiff = hg
+
+
+
+[merge-tools]
+#filemerge.executable = fmdiff.sh
+#filemerge.args = $local $other -ancestor $base -merge $output
+#filemerge.executable = /Users/jason/bin/cvsScripts/opendiff-w
+#filemerge.priority = 3
+
+# kdiff3.executable = /Users/jason/bin/kdiff3.app/Contents/MacOS/kdiff3
+# kdiff3.args = $base $local $other -o $output
+# kdiff3.priority = 1
+# 
+# araxismergetool.premerge = False
+# araxismergetool.args = $other $base $local $output
+# araxismergetool.executable = /Users/jason/bin/AraxisUtilities/araxishgmerge
+# araxismergetool.checkconflict = True
+# araxismergetool.binary = True
+# araxismergetool.gui =  True
+# araxismergetool.priority = 2
+# 
+# diffmerge.executable = /Users/jason/bin/diffmerge.sh
+# diffmerge.args = --result=$output -t1="Local Version" -t2=$output -t3="Other Version" --caption=$output  $local $base $other
+# diffmerge.binary = False
+# diffmerge.symlinks = False
+# diffmerge.gui = True
+# diffmerge.premerge = True
+# diffmerge.priority = 3
+
