@@ -708,9 +708,11 @@
 	// With the shift key down, do slow-mo animation
 	if ([[NSApp currentEvent] modifierFlags] & NSShiftKeyMask)
 	    [[NSAnimationContext currentContext] setDuration:1.0];
+	if (![mainWindow_ isVisible])
+		[[NSAnimationContext currentContext] setDuration:0.0];
 	
 	// Call the animator instead of the view / window directly to switch the view out.
-	[[mainContentBox animator] setContentView:newView];	
+	[[mainContentBox animator] setContentView:newView];
 	[[mainWindow_ animator] setFrame:newFrame display:YES];
 
 	// After the animation has finished the selected rows in the logtables might actually be out of visible range due to the
