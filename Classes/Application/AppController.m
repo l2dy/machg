@@ -160,7 +160,7 @@
 {
 	NSMutableAttributedString* version = [[NSMutableAttributedString alloc] init];	
 	[version appendString:[self shortVersionString] withAttributes:systemFontAttributes];
-	[version appendString:[NSString stringWithFormat:@" (%@)",[self macHgBuildHashKeyString]] withAttributes:smallGraySystemFontAttributes];
+	[version appendString:fstr(@" (%@)",[self macHgBuildHashKeyString]) withAttributes:smallGraySystemFontAttributes];
 	
 	// Switch the version string to center aligned
 	NSMutableParagraphStyle* ps = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
@@ -226,8 +226,8 @@
 	
 	NSString* histeditDest = [supportFolder stringByAppendingPathComponent:@"histedit.py"];
 	NSString* collapseDest = [supportFolder stringByAppendingPathComponent:@"collapse.py"];
-	NSString* histeditSource = [NSString stringWithFormat:@"%@/%@",[[NSBundle mainBundle] builtInPlugInsPath], @"LocalMercurial/hgext/histedit/__init__.py"];
-	NSString* collapseSource = [NSString stringWithFormat:@"%@/%@",[[NSBundle mainBundle] builtInPlugInsPath], @"LocalMercurial/hgext/collapse.py"];
+	NSString* histeditSource = fstr(@"%@/%@",[[NSBundle mainBundle] builtInPlugInsPath], @"LocalMercurial/hgext/histedit/__init__.py");
+	NSString* collapseSource = fstr(@"%@/%@",[[NSBundle mainBundle] builtInPlugInsPath], @"LocalMercurial/hgext/collapse.py");
 	
 	//NSDictionary* dict = [manager attributesOfItemAtPath:histeditDest error:&theError];
 	if (![fileManager isReadableFileAtPath:histeditDest])
@@ -250,12 +250,12 @@
 	if (addExtRebase)		[fileManager appendString:@"hgext.rebase=\n"	toFilePath:dotHGRC];
 	if (addExtHistEdit)
 	{
-		NSString* extensionPath = [NSString stringWithFormat:@"hgext.histedit=%@\n", histeditDest];
+		NSString* extensionPath = fstr(@"hgext.histedit=%@\n", histeditDest);
 		[fileManager appendString:extensionPath toFilePath:dotHGRC];
 	}
 	if (addExtCollapse)
 	{
-		NSString* extensionPath = [NSString stringWithFormat:@"hgext.collapse=%@\n", collapseDest];
+		NSString* extensionPath = fstr(@"hgext.collapse=%@\n", collapseDest);
 		[fileManager appendString:extensionPath toFilePath:dotHGRC];
 	}
 
@@ -263,7 +263,7 @@
 	{
 		NSString* message = onStartup ? @"History editing was previously enabled, yet some extensions where not enabled in your mercurial configuration file (.hgrc). The necessary extensions have been re-enabled in your mercurial configuration file at %@. These extensions are used when you edit a repositories history from within MacHg. Having these extensions enabled does not effect any other standard mercurial operations." :
 										@"History editing in MacHg has been enabled. The necessary extensions have been enabled in your mercurial configuration file at %@. These extensions are used when you edit a repositories history from within MacHg. Having these extensions enabled does not effect any other standard mercurial operations.";
-		NSString* completeMessage = [NSString stringWithFormat:message, dotHGRC];
+		NSString* completeMessage = fstr(message, dotHGRC);
 		NSRunAlertPanel(@"Editing Extensions Enabled", completeMessage, @"OK", nil, nil);
 	}
 }
@@ -283,12 +283,12 @@
 	ExecutionResult* results = [TaskExecutions synchronouslyExecute:hgBinary withArgs:versionArgs onTask:nil];
 	if ([results hasWarnings] && WarnAboutBadMercurialConfigurationFromDefaults())
 	{
-		NSString* mainMessage = [NSString stringWithFormat:@"The version of Mercurial included with MacHg is producing the following warnings:\n\n%@\n\nMacHg might not function as intended. To resolve this check your configuration settings in your .hgrc file.", results.errStr];
+		NSString* mainMessage = fstr(@"The version of Mercurial included with MacHg is producing the following warnings:\n\n%@\n\nMacHg might not function as intended. To resolve this check your configuration settings in your .hgrc file.", results.errStr);
 		RunCriticalAlertPanelWithSuppression(@"Mercurial Warnings", mainMessage, @"OK", nil, MHGWarnAboutBadMercurialConfiguration);	
 	}	
 	if ([results hasErrors])
 	{
-		NSString* mainMessage = [NSString stringWithFormat:@"The version of Mercurial included with MacHg is producing the following Errors:\n\n%@\n\nMacHg cannot proceed. To resolve this check your configuration settings in your .hgrc file.", results.errStr];
+		NSString* mainMessage = fstr(@"The version of Mercurial included with MacHg is producing the following Errors:\n\n%@\n\nMacHg cannot proceed. To resolve this check your configuration settings in your .hgrc file.", results.errStr);
 		NSRunCriticalAlertPanel(@"Mercurial Errors", mainMessage, @"OK", nil, nil);
 		[NSApp terminate:self];
 	}
@@ -304,7 +304,7 @@
 {
 	[self setupGlobals];
 	// mv now old log file ontop of old old log file name
-	NSString* oldMacHgLogFileLocation = [NSString stringWithFormat:@"%@.old",MacHgLogFileLocation()];
+	NSString* oldMacHgLogFileLocation = fstr(@"%@.old",MacHgLogFileLocation());
 	[TaskExecutions synchronouslyExecute:@"/bin/mv" withArgs:[NSArray arrayWithObjects:@"-f", MacHgLogFileLocation(), oldMacHgLogFileLocation, nil] onTask:nil];
 }
 
@@ -415,7 +415,7 @@
 	[backingBox setRadius:[NSNumber numberWithFloat:190.0]];
 	[backingBox setOffsetFromCenter:NSMakePoint(0.0, -40.0)];
 	[backingBox setNeedsDisplay:YES];
-	NSURL* creditsURL = [NSURL fileURLWithPath:[NSString stringWithFormat:@"%@/MacHGHelp/%@",[[NSBundle mainBundle] resourcePath], @"Credits.html"]];
+	NSURL* creditsURL = [NSURL fileURLWithPath:fstr(@"%@/MacHGHelp/%@",[[NSBundle mainBundle] resourcePath], @"Credits.html")];
 	[[creditsWebview mainFrame] loadRequest:[NSURLRequest requestWithURL:creditsURL]];
 }
 
