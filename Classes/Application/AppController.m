@@ -179,6 +179,16 @@
 // MARK: Configuration Checking
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+- (void) checkForSupportDirectory
+{
+	if (pathIsExistent(applicationSupportFolder()))
+		return;
+
+	NSFileManager* fileManager = [NSFileManager defaultManager];
+	NSError* theError;
+	[fileManager createDirectoryAtPath:applicationSupportFolder() withIntermediateDirectories:YES attributes:nil error:&theError];
+}
+
 - (void) checkForConfigFile
 {
 	NSString* macHgHGRCFilePath = fstr(@"%@/hgrc",applicationSupportFolder());
@@ -202,13 +212,7 @@
 
 - (void) checkConfigFileForEditingExtensions:(BOOL)onStartup;
 {
-	// If history editing is not allowed then we don't need to turn the extensions on.
-	if (!AllowHistoryEditingOfRepositoryFromDefaults())
-		return;
-
-	NSFileManager* fileManager = [NSFileManager defaultManager];
-	
-	// Look for [extensions]\nhgext.extdiff = and if we don't find it add it to the default .hgrc file. This allows us to do diffs, etc.
+	// Find out which extensions are enabled
 	NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"extensions", nil];
 	ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
 
@@ -219,59 +223,29 @@
 	BOOL addExtHistEdit	 = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.histedit\\s*="  options:RKLMultiline];
 	BOOL addExtCollapse  = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.collapse\\s*="  options:RKLMultiline];
 
-	// Create the named versioned application support extensions directory
-	NSError* theError;
-	NSString* supportFolder = [applicationSupportVersionedFolder() stringByAppendingPathComponent:@"extensions"];
-	[fileManager createDirectoryAtPath:supportFolder withIntermediateDirectories:YES attributes:nil error:&theError];
-	
-	NSString* histeditDest = [supportFolder stringByAppendingPathComponent:@"histedit.py"];
-	NSString* collapseDest = [supportFolder stringByAppendingPathComponent:@"collapse.py"];
-	NSString* histeditSource = fstr(@"%@/%@",[[NSBundle mainBundle] builtInPlugInsPath], @"LocalMercurial/hgext/histedit/__init__.py");
-	NSString* collapseSource = fstr(@"%@/%@",[[NSBundle mainBundle] builtInPlugInsPath], @"LocalMercurial/hgext/collapse.py");
-	
-	//NSDictionary* dict = [manager attributesOfItemAtPath:histeditDest error:&theError];
-	if (![fileManager isReadableFileAtPath:histeditDest])
-		[fileManager copyItemAtPath:histeditSource toPath:histeditDest error:&theError];
-	if (![fileManager isReadableFileAtPath:collapseDest])
-		[fileManager copyItemAtPath:collapseSource toPath:collapseDest error:&theError];
-	
-	if (!addExtDiff && !addExtBookmarks && !addExtMq && !addExtRebase && !addExtHistEdit && !addExtCollapse)
+	if (addExtDiff || addExtBookmarks || addExtMq || addExtRebase || addExtHistEdit || addExtCollapse)
 	{
-		if (!onStartup)
-			NSRunAlertPanel(@"Editing Extensions Enabled", @"The history editing extensions are enabled in your mercurial configuration file (.hgrc).", @"OK", nil, nil);
-		return;
-	}
-	
-	NSString* dotHGRC = [NSHomeDirectory() stringByAppendingPathComponent:@".hgrc"];
-	[fileManager appendString:@"\n[extensions]\n" toFilePath:dotHGRC];
-	if (addExtDiff)			[fileManager appendString:@"hgext.extdiff=\n"	toFilePath:dotHGRC];
-	if (addExtBookmarks)	[fileManager appendString:@"hgext.bookmarks=\n" toFilePath:dotHGRC];
-	if (addExtMq)			[fileManager appendString:@"hgext.mq=\n"		toFilePath:dotHGRC];
-	if (addExtRebase)		[fileManager appendString:@"hgext.rebase=\n"	toFilePath:dotHGRC];
-	if (addExtHistEdit)
-	{
-		NSString* extensionPath = fstr(@"hgext.histedit=%@\n", histeditDest);
-		[fileManager appendString:extensionPath toFilePath:dotHGRC];
-	}
-	if (addExtCollapse)
-	{
-		NSString* extensionPath = fstr(@"hgext.collapse=%@\n", collapseDest);
-		[fileManager appendString:extensionPath toFilePath:dotHGRC];
+		NSFileManager* fileManager = [NSFileManager defaultManager];
+		NSString* macHgHGRCFilePath = fstr(@"%@/hgrc",applicationSupportFolder());
+		[fileManager appendString:@"\n[extensions]\n" toFilePath:macHgHGRCFilePath];
+		if (addExtDiff)			[fileManager appendString:@"hgext.extdiff=\n"	toFilePath:macHgHGRCFilePath];
+		if (addExtBookmarks)	[fileManager appendString:@"hgext.bookmarks=\n" toFilePath:macHgHGRCFilePath];
+		if (addExtMq)			[fileManager appendString:@"hgext.mq=\n"		toFilePath:macHgHGRCFilePath];
+		if (addExtRebase)		[fileManager appendString:@"hgext.rebase=\n"	toFilePath:macHgHGRCFilePath];
+		if (addExtHistEdit)		[fileManager appendString:@"hgext.histedit=\n"	toFilePath:macHgHGRCFilePath];
+		if (addExtCollapse)		[fileManager appendString:@"hgext.collapse=\n"	toFilePath:macHgHGRCFilePath];
 	}
 
-	if (!addExtMq && !addExtRebase && !addExtHistEdit && !addExtCollapse)
-	{
-		NSString* message = onStartup ? @"History editing was previously enabled, yet some extensions where not enabled in your mercurial configuration file (.hgrc). The necessary extensions have been re-enabled in your mercurial configuration file at %@. These extensions are used when you edit a repositories history from within MacHg. Having these extensions enabled does not effect any other standard mercurial operations." :
-										@"History editing in MacHg has been enabled. The necessary extensions have been enabled in your mercurial configuration file at %@. These extensions are used when you edit a repositories history from within MacHg. Having these extensions enabled does not effect any other standard mercurial operations.";
-		NSString* completeMessage = fstr(message, dotHGRC);
-		NSRunAlertPanel(@"Editing Extensions Enabled", completeMessage, @"OK", nil, nil);
-	}
+	if (!onStartup)
+		NSRunAlertPanel(@"Editing Extensions Enabled", @"The history editing extensions are enabled.", @"OK", nil, nil);
 }
 
 - (void) checkForFileMerge
 {
-	if(![[NSWorkspace sharedWorkspace] fullPathForApplication:@"FileMerge"])
+	if (![[NSWorkspace sharedWorkspace] fullPathForApplication:@"FileMerge"])
 		NSRunCriticalAlertPanel(@"FileMerge not found", @"FileMerge was not found on this system. Please install the developer tools from the system disk which came with your computer (they contain the application FileMerge). MacHg can function without FileMerge but you cannot view any diffs, since this is the tool MacHg uses to view diffs.", @"OK", nil, nil);
+	if (!pathIsExistent(@"/usr/bin/opendiff"))
+		NSRunCriticalAlertPanel(@"Opendiff not found", @"/usr/bin/opendiff was not found on this system. Please install the developer tools from the system disk which came with your computer (they contain the application FileMerge). MacHg can function without FileMerge but you cannot view any diffs, since this is the tool MacHg uses to view diffs.", @"OK", nil, nil);
 }
 
 
@@ -315,6 +289,8 @@
 	NSInteger launchCount = [[NSUserDefaults standardUserDefaults] integerForKey:MHGLaunchCount];
 	[[NSUserDefaults standardUserDefaults] setInteger:launchCount +1 forKey:MHGLaunchCount];
 
+	[self checkForSupportDirectory];
+	[self checkForConfigFile];
 	[self checkConfigFileForUserName];
 	[self checkConfigFileForEditingExtensions:YES];
 	[self checkForFileMerge];
