@@ -12,13 +12,8 @@
 		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
 		9600C2C410CD3D9F00CD8D28 /* APPL.icns in Resources */ = {isa = PBXBuildFile; fileRef = 9600C28510CD3D9F00CD8D28 /* APPL.icns */; };
 		9600C2C510CD3D9F00CD8D28 /* BadNetwork.png in Resources */ = {isa = PBXBuildFile; fileRef = 9600C28610CD3D9F00CD8D28 /* BadNetwork.png */; };
-		9600C2C610CD3D9F00CD8D28 /* BadRepository.png in Resources */ = {isa = PBXBuildFile; fileRef = 9600C28710CD3D9F00CD8D28 /* BadRepository.png */; };
 		9600C2CB10CD3D9F00CD8D28 /* Blank.png in Resources */ = {isa = PBXBuildFile; fileRef = 9600C28C10CD3D9F00CD8D28 /* Blank.png */; };
-		9600C2D410CD3D9F00CD8D28 /* FolderOpen.png in Resources */ = {isa = PBXBuildFile; fileRef = 9600C29510CD3D9F00CD8D28 /* FolderOpen.png */; };
-		9600C2D510CD3D9F00CD8D28 /* FolderOpen25.png in Resources */ = {isa = PBXBuildFile; fileRef = 9600C29610CD3D9F00CD8D28 /* FolderOpen25.png */; };
-		9600C2D610CD3D9F00CD8D28 /* FolderPict.png in Resources */ = {isa = PBXBuildFile; fileRef = 9600C29710CD3D9F00CD8D28 /* FolderPict.png */; };
 		9600C2DB10CD3D9F00CD8D28 /* GoodNetwork.png in Resources */ = {isa = PBXBuildFile; fileRef = 9600C29C10CD3D9F00CD8D28 /* GoodNetwork.png */; };
-		9600C2DC10CD3D9F00CD8D28 /* GoodRepository.png in Resources */ = {isa = PBXBuildFile; fileRef = 9600C29D10CD3D9F00CD8D28 /* GoodRepository.png */; };
 		9600C2DF10CD3D9F00CD8D28 /* MacHgDocument.icns in Resources */ = {isa = PBXBuildFile; fileRef = 9600C2A010CD3D9F00CD8D28 /* MacHgDocument.icns */; };
 		9600C2E110CD3D9F00CD8D28 /* AlertPreferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 9600C2A310CD3D9F00CD8D28 /* AlertPreferences.png */; };
 		9600C2E210CD3D9F00CD8D28 /* AppearancePreferences.png in Resources */ = {isa = PBXBuildFile; fileRef = 9600C2A410CD3D9F00CD8D28 /* AppearancePreferences.png */; };
@@ -120,7 +115,6 @@
 		96680DA710CDD789001D178B /* FSNodeInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 96680DA410CDD789001D178B /* FSNodeInfo.m */; };
 		966810C510CE7425001D178B /* BackingPaneController.m in Sources */ = {isa = PBXBuildFile; fileRef = 966810C410CE7425001D178B /* BackingPaneController.m */; };
 		966810D710CE7546001D178B /* BackingPane.xib in Resources */ = {isa = PBXBuildFile; fileRef = 966810D510CE7546001D178B /* BackingPane.xib */; };
-		966818CB10CEF0BB001D178B /* HGsplashliquifyadjust4.png in Resources */ = {isa = PBXBuildFile; fileRef = 966818CA10CEF0BB001D178B /* HGsplashliquifyadjust4.png */; };
 		9672AC4F114B78F400312CE2 /* BaseSheetWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9672AC4E114B78F400312CE2 /* BaseSheetWindowController.m */; };
 		9672AC63114B796A00312CE2 /* ConnectionValidationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9672AC53114B796A00312CE2 /* ConnectionValidationController.m */; };
 		9672AC64114B796A00312CE2 /* DisclosureBoxController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9672AC56114B796A00312CE2 /* DisclosureBoxController.m */; };
@@ -163,9 +157,6 @@
 		96A377EA10C8ECDD00FA190A /* TaskExecutions.m in Sources */ = {isa = PBXBuildFile; fileRef = 96A377E910C8ECDD00FA190A /* TaskExecutions.m */; };
 		96AD9B5911C42EDC00F5C82E /* hgrc in Resources */ = {isa = PBXBuildFile; fileRef = 96AD9B5811C42EDC00F5C82E /* hgrc */; };
 		96B1C98B1159C00500752DF2 /* MacHgHelp in Resources */ = {isa = PBXBuildFile; fileRef = 96B1C9451159C00500752DF2 /* MacHgHelp */; };
-		96B57DF310D54805003638DF /* pull_32.png in Resources */ = {isa = PBXBuildFile; fileRef = 96B57DF110D54804003638DF /* pull_32.png */; };
-		96B57DF410D54805003638DF /* push_32.png in Resources */ = {isa = PBXBuildFile; fileRef = 96B57DF210D54804003638DF /* push_32.png */; };
-		96C0039B10D065540039010B /* FolderOpen32.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C0039A10D065540039010B /* FolderOpen32.png */; };
 		96C613A911B40B0D00B54B09 /* MacHgSplash.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C613A811B40B0D00B54B09 /* MacHgSplash.png */; };
 		96C98EA5113B70C2006816C0 /* MacHgsmaller.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C98EA4113B70C2006816C0 /* MacHgsmaller.png */; };
 		96D2477D117BC1810030815B /* ThickSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D2477C117BC1810030815B /* ThickSplitView.m */; };
@@ -228,13 +219,8 @@
 		8D15AC370486D014006FF6A4 /* MacHg.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacHg.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9600C28510CD3D9F00CD8D28 /* APPL.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = APPL.icns; path = ApplicationIcons/APPL.icns; sourceTree = "<group>"; };
 		9600C28610CD3D9F00CD8D28 /* BadNetwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BadNetwork.png; path = NetworkStatus/BadNetwork.png; sourceTree = "<group>"; };
-		9600C28710CD3D9F00CD8D28 /* BadRepository.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BadRepository.png; path = NetworkStatus/BadRepository.png; sourceTree = "<group>"; };
 		9600C28C10CD3D9F00CD8D28 /* Blank.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Blank.png; path = Images/Blank.png; sourceTree = SOURCE_ROOT; };
-		9600C29510CD3D9F00CD8D28 /* FolderOpen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = FolderOpen.png; path = ButtonIcons/FolderOpen.png; sourceTree = "<group>"; };
-		9600C29610CD3D9F00CD8D28 /* FolderOpen25.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = FolderOpen25.png; path = ButtonIcons/FolderOpen25.png; sourceTree = "<group>"; };
-		9600C29710CD3D9F00CD8D28 /* FolderPict.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = FolderPict.png; path = ButtonIcons/FolderPict.png; sourceTree = "<group>"; };
 		9600C29C10CD3D9F00CD8D28 /* GoodNetwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = GoodNetwork.png; path = NetworkStatus/GoodNetwork.png; sourceTree = "<group>"; };
-		9600C29D10CD3D9F00CD8D28 /* GoodRepository.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = GoodRepository.png; path = NetworkStatus/GoodRepository.png; sourceTree = "<group>"; };
 		9600C2A010CD3D9F00CD8D28 /* MacHgDocument.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = MacHgDocument.icns; path = ApplicationIcons/MacHgDocument.icns; sourceTree = "<group>"; };
 		9600C2A310CD3D9F00CD8D28 /* AlertPreferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AlertPreferences.png; path = Images/Preferences/AlertPreferences.png; sourceTree = SOURCE_ROOT; };
 		9600C2A410CD3D9F00CD8D28 /* AppearancePreferences.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AppearancePreferences.png; path = Images/Preferences/AppearancePreferences.png; sourceTree = SOURCE_ROOT; };
@@ -377,7 +363,6 @@
 		966810C310CE7425001D178B /* BackingPaneController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackingPaneController.h; sourceTree = "<group>"; };
 		966810C410CE7425001D178B /* BackingPaneController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackingPaneController.m; sourceTree = "<group>"; };
 		966810D610CE7546001D178B /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/BackingPane.xib; sourceTree = SOURCE_ROOT; };
-		966818CA10CEF0BB001D178B /* HGsplashliquifyadjust4.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = HGsplashliquifyadjust4.png; path = SplashTitles/HGsplashliquifyadjust4.png; sourceTree = "<group>"; };
 		9672AC4D114B78F400312CE2 /* BaseSheetWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseSheetWindowController.h; sourceTree = "<group>"; };
 		9672AC4E114B78F400312CE2 /* BaseSheetWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseSheetWindowController.m; sourceTree = "<group>"; };
 		9672AC52114B796A00312CE2 /* ConnectionValidationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectionValidationController.h; sourceTree = "<group>"; };
@@ -445,9 +430,6 @@
 		96A377E910C8ECDD00FA190A /* TaskExecutions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskExecutions.m; sourceTree = "<group>"; };
 		96AD9B5811C42EDC00F5C82E /* hgrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = hgrc; sourceTree = "<group>"; };
 		96B1C9451159C00500752DF2 /* MacHgHelp */ = {isa = PBXFileReference; lastKnownFileType = folder; path = MacHgHelp; sourceTree = "<group>"; };
-		96B57DF110D54804003638DF /* pull_32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pull_32.png; path = SheetIcons/pull_32.png; sourceTree = "<group>"; };
-		96B57DF210D54804003638DF /* push_32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = push_32.png; path = SheetIcons/push_32.png; sourceTree = "<group>"; };
-		96C0039A10D065540039010B /* FolderOpen32.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = FolderOpen32.png; path = ButtonIcons/FolderOpen32.png; sourceTree = "<group>"; };
 		96C613A811B40B0D00B54B09 /* MacHgSplash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MacHgSplash.png; path = SplashTitles/MacHgSplash.png; sourceTree = "<group>"; };
 		96C98EA4113B70C2006816C0 /* MacHgsmaller.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MacHgsmaller.png; path = SplashTitles/MacHgsmaller.png; sourceTree = "<group>"; };
 		96D2477B117BC1810030815B /* ThickSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThickSplitView.h; sourceTree = "<group>"; };
@@ -694,10 +676,6 @@
 				96138846116B437D0022F368 /* ActionDrop.png */,
 				9637C8C2118E9C300000C14B /* ActionDropButtonSizeSmall.png */,
 				9610639A117C6E4000FF7EB2 /* ActionDrop24.png */,
-				9600C29510CD3D9F00CD8D28 /* FolderOpen.png */,
-				9600C29610CD3D9F00CD8D28 /* FolderOpen25.png */,
-				96C0039A10D065540039010B /* FolderOpen32.png */,
-				9600C29710CD3D9F00CD8D28 /* FolderPict.png */,
 			);
 			name = ButtonIcons;
 			sourceTree = "<group>";
@@ -715,9 +693,7 @@
 			isa = PBXGroup;
 			children = (
 				9600C28610CD3D9F00CD8D28 /* BadNetwork.png */,
-				9600C28710CD3D9F00CD8D28 /* BadRepository.png */,
 				9600C29C10CD3D9F00CD8D28 /* GoodNetwork.png */,
-				9600C29D10CD3D9F00CD8D28 /* GoodRepository.png */,
 			);
 			name = NetworkStatus;
 			sourceTree = "<group>";
@@ -725,8 +701,6 @@
 		961D516E115BC17B0064A4DA /* SheetIcons */ = {
 			isa = PBXGroup;
 			children = (
-				96B57DF110D54804003638DF /* pull_32.png */,
-				96B57DF210D54804003638DF /* push_32.png */,
 				969754B710DE28CD00F02ACF /* pull_32h.png */,
 				969754C210DE296A00F02ACF /* push_32h.png */,
 			);
@@ -737,7 +711,6 @@
 			isa = PBXGroup;
 			children = (
 				96C613A811B40B0D00B54B09 /* MacHgSplash.png */,
-				966818CA10CEF0BB001D178B /* HGsplashliquifyadjust4.png */,
 				96C98EA4113B70C2006816C0 /* MacHgsmaller.png */,
 			);
 			name = SplashTitles;
@@ -1435,13 +1408,8 @@
 				96024EF310CD3144000E1790 /* Preferences.xib in Resources */,
 				9600C2C410CD3D9F00CD8D28 /* APPL.icns in Resources */,
 				9600C2C510CD3D9F00CD8D28 /* BadNetwork.png in Resources */,
-				9600C2C610CD3D9F00CD8D28 /* BadRepository.png in Resources */,
 				9600C2CB10CD3D9F00CD8D28 /* Blank.png in Resources */,
-				9600C2D410CD3D9F00CD8D28 /* FolderOpen.png in Resources */,
-				9600C2D510CD3D9F00CD8D28 /* FolderOpen25.png in Resources */,
-				9600C2D610CD3D9F00CD8D28 /* FolderPict.png in Resources */,
 				9600C2DB10CD3D9F00CD8D28 /* GoodNetwork.png in Resources */,
-				9600C2DC10CD3D9F00CD8D28 /* GoodRepository.png in Resources */,
 				9600C2DF10CD3D9F00CD8D28 /* MacHgDocument.icns in Resources */,
 				9600C2E110CD3D9F00CD8D28 /* AlertPreferences.png in Resources */,
 				9600C2E210CD3D9F00CD8D28 /* AppearancePreferences.png in Resources */,
@@ -1469,11 +1437,7 @@
 				9606F3451157F1F100968DE8 /* opendiff-w.sh in Resources */,
 				96DCCC2010CD41B100C843C9 /* spawnshellatpath in Resources */,
 				966810D710CE7546001D178B /* BackingPane.xib in Resources */,
-				966818CB10CEF0BB001D178B /* HGsplashliquifyadjust4.png in Resources */,
-				96C0039B10D065540039010B /* FolderOpen32.png in Resources */,
 				96DB336510D43BCB00BB5B08 /* DifferencesPane.xib in Resources */,
-				96B57DF310D54805003638DF /* pull_32.png in Resources */,
-				96B57DF410D54805003638DF /* push_32.png in Resources */,
 				969754B910DE28CD00F02ACF /* pull_32h.png in Resources */,
 				969754C310DE296A00F02ACF /* push_32h.png in Resources */,
 				9631D2E01107A8380007FDF2 /* CloneSheet.xib in Resources */,
