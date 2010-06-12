@@ -1087,6 +1087,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 - (void) synchronizedRemoveObjectForKey:(id)aKey					{ @synchronized(self) { [self removeObjectForKey:aKey]; }; }
 - (void) synchronizedSetValue:(id)value forNumberKey:(NSNumber*)key	{ @synchronized(self) { [self setValue:value forKey:[key stringValue]]; }; }
 - (void) setValue:(id)value forNumberKey:(NSNumber*)key				{ [self setValue:value forKey:[key stringValue]]; }
+- (void) copyValueOfKey:(id)aKey from:(NSDictionary*)aDict			{ id val = [aDict objectForKey:aKey]; if (val) [self setObject:val forKey:aKey]; }
 @end
 
 

@@ -847,6 +847,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 - (void)	synchronizedRemoveObjectForKey:(id)aKey;
 - (void)	synchronizedSetValue:(id)value forNumberKey:(NSNumber*)key;
 - (void)	setValue:(id)value forNumberKey:(NSNumber*)key;
+- (void)	copyValueOfKey:(id)aKey from:(NSDictionary*)aDict;
 @end
 
 

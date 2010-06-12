@@ -128,9 +128,12 @@
 	{
 		NSDictionary* processEnv    = [[NSProcessInfo processInfo] environment];
 		NSMutableDictionary* newEnv = [[NSMutableDictionary alloc]init];
-		id socket = [processEnv objectForKey:@"SSH_AUTH_SOCK"];
-		if (socket)
-			[newEnv setObject:socket  forKey:@"SSH_AUTH_SOCK"];
+		[newEnv copyValueOfKey:@"SSH_ASKPASS"	from:processEnv];
+		[newEnv copyValueOfKey:@"SSH_AUTH_SOCK"	from:processEnv];
+		[newEnv copyValueOfKey:@"HOME"			from:processEnv];
+		[newEnv copyValueOfKey:@"PATH"			from:processEnv];
+		[newEnv copyValueOfKey:@"TMPDIR"		from:processEnv];
+		[newEnv copyValueOfKey:@"USER"			from:processEnv];
 		[newEnv setObject:@"UTF-8"  forKey:@"HGENCODING"];
 		[newEnv setObject:@"1"		forKey:@"HGPLAIN"];
 		env = [NSDictionary dictionaryWithDictionary:newEnv];
