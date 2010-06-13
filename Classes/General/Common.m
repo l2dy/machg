@@ -80,7 +80,6 @@ NSString* const MHGDefaultAnnotationOptionNumber		= @"DefaultAnnotationOptionNum
 NSString* const MHGDefaultAnnotationOptionText			= @"DefaultAnnotationOptionText";
 NSString* const MHGDefaultAnnotationOptionUser			= @"DefaultAnnotationOptionUser";
 NSString* const MHGDefaultHGIgnoreContents              = @"DefaultHGIgnoreContents";
-NSString* const MHGRevisionSortOrder					= @"RevisionSortOrder";
 NSString* const MHGDefaultWorkspacePath					= @"DefaultWorkspacePath";
 NSString* const MHGDisplayFileIconsInBrowser			= @"DisplayFileIconsInBrowser";
 NSString* const MHGDisplayResultsOfAddRemoveRenameFiles	= @"DisplayResultsOfAddRemoveRenameFiles";
@@ -106,6 +105,7 @@ NSString* const MHGDisplayWarningForUpdating			= @"DisplayWarningForUpdating";
 NSString* const MHGExecutableLocationHG					= @"ExecutableLocationHG";
 NSString* const MHGFontSizeOfBrowserItems				= @"FontSizeOfBrowserItems";
 NSString* const MHGHandleGeneratedOrigFiles				= @"HandleGeneratedOrigFiles";
+NSString* const MHGIncludeHomeHgrcInHGRCPATH			= @"IncludeHomeHgrcInHGRCPATH";
 NSString* const MHGLaunchCount							= @"LaunchCount";
 NSString* const MHGLogEntryTableBookmarkHighlightColor	= @"LogEntryTableBookmarkHighlightColor";
 NSString* const MHGLogEntryTableBranchHighlightColor	= @"LogEntryTableBranchHighlightColor";
@@ -115,6 +115,7 @@ NSString* const MHGLogEntryTableTagHighlightColor		= @"LogEntryTableTagHighlight
 NSString* const MHGLoggingLevelForHGCommands			= @"LoggingLevelForHGCommands";
 NSString* const MHGMacHgLogFileLocation					= @"MacHgLogFileLocation";
 NSString* const MHGOnStartupOpen						= @"OnApplicationStartupOpenWhat";
+NSString* const MHGRevisionSortOrder					= @"RevisionSortOrder";
 NSString* const MHGShowAddedFilesInBrowser				= @"ShowAddedFilesInBrowser";
 NSString* const MHGShowCleanFilesInBrowser				= @"ShowCleanFilesInBrowser";
 NSString* const MHGShowFilePreviewInBrowser				= @"ShowFilePreviewInBrowser";
@@ -175,6 +176,7 @@ BOOL		DisplayWarningForRollbackFilesFromDefaults()			{ return boolFromDefaultsFo
 BOOL		DisplayWarningForTagRemovalFromDefaults()				{ return boolFromDefaultsForKey(MHGDisplayWarningForTagRemoval); }
 BOOL		DisplayWarningForUntrackingFilesFromDefaults()			{ return boolFromDefaultsForKey(MHGDisplayWarningForUntrackingFiles); }
 BOOL		DisplayWarningForUpdatingFromDefaults()					{ return boolFromDefaultsForKey(MHGDisplayWarningForUpdating); }
+BOOL		IncludeHomeHgrcInHGRCPATHFromDefaults()					{ return boolFromDefaultsForKey(MHGIncludeHomeHgrcInHGRCPATH); }
 BOOL		LogEntryTableDisplayChangesetColumnFromDefaults()		{ return boolFromDefaultsForKey(MHGLogEntryTableDisplayChangesetColumn); }
 BOOL		ShowAddedFilesInBrowserFromDefaults()					{ return boolFromDefaultsForKey(MHGShowAddedFilesInBrowser); }
 BOOL		ShowCleanFilesInBrowserFromDefaults()					{ return boolFromDefaultsForKey(MHGShowCleanFilesInBrowser); }

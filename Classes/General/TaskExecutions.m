@@ -124,9 +124,11 @@
 + (ExecutionResult*) synchronouslyExecute:(NSString*)cmd withArgs:(NSArray*)args onTask:(NSTask*)theTask
 {
 	static NSDictionary* env = nil;
-	if (!env)
+	static UseWhichMercurialOption include = eUseMercurialBinaryIncludedInMacHg;
+	if (!env || include != UseWhichMercurialBinaryFromDefaults())
 	{
-		NSString* hgrcPath = fstr(@"%@/hgrc", applicationSupportFolder());
+		NSString* dotHGRC = [NSHomeDirectory() stringByAppendingPathComponent:@".hgrc"];
+		NSString* hgrcPath = (include == eUseMercurialBinaryIncludedInMacHg) ? fstr(@"%@/hgrc", applicationSupportFolder()) : fstr(@"%@/hgrc:%@", applicationSupportFolder(), dotHGRC);
 		NSDictionary* processEnv    = [[NSProcessInfo processInfo] environment];
 		NSMutableDictionary* newEnv = [[NSMutableDictionary alloc]init];
 		[newEnv copyValueOfKey:@"SSH_ASKPASS"	from:processEnv];

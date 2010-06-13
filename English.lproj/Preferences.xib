@@ -2258,7 +2258,7 @@
 							<reference key="NSControlView" ref="450949127"/>
 							<int key="NSButtonFlags">-2041822977</int>
 							<int key="NSButtonFlags2">161</int>
-							<object class="NSCustomResource" key="NSNormalImage" id="616395001">
+							<object class="NSCustomResource" key="NSNormalImage" id="1049115919">
 								<string key="NSClassName">NSImage</string>
 								<string key="NSResourceName">AlertPreferences</string>
 							</object>
@@ -2637,18 +2637,18 @@
 						<int key="NSTitlePosition">0</int>
 						<bool key="NSTransparent">NO</bool>
 					</object>
-					<object class="NSButton" id="971167935">
+					<object class="NSButton" id="596548181">
 						<reference key="NSNextResponder" ref="80496157"/>
 						<int key="NSvFlags">268</int>
-						<string key="NSFrame">{{91, 218}, {210, 18}}</string>
+						<string key="NSFrame">{{85, 218}, {216, 18}}</string>
 						<reference key="NSSuperview" ref="80496157"/>
 						<bool key="NSEnabled">YES</bool>
-						<object class="NSButtonCell" key="NSCell" id="72135528">
+						<object class="NSButtonCell" key="NSCell" id="915751851">
 							<int key="NSCellFlags">67239424</int>
 							<int key="NSCellFlags2">0</int>
-							<string key="NSContents">Include ~/.hgrc in HGRCPATH</string>
+							<string key="NSContents">Include '~/.hgrc' in HGRCPATH</string>
 							<reference key="NSSupport" ref="18135699"/>
-							<reference key="NSControlView" ref="971167935"/>
+							<reference key="NSControlView" ref="596548181"/>
 							<int key="NSButtonFlags">1210864127</int>
 							<int key="NSButtonFlags2">2</int>
 							<reference key="NSNormalImage" ref="555975549"/>
@@ -2659,25 +2659,25 @@
 							<int key="NSPeriodicInterval">25</int>
 						</object>
 					</object>
-					<object class="NSPopUpButton" id="41042220">
+					<object class="NSPopUpButton" id="109807944">
 						<reference key="NSNextResponder" ref="80496157"/>
 						<int key="NSvFlags">266</int>
 						<string key="NSFrame">{{126, 184}, {103, 26}}</string>
 						<reference key="NSSuperview" ref="80496157"/>
 						<bool key="NSEnabled">YES</bool>
-						<object class="NSPopUpButtonCell" key="NSCell" id="1007868148">
+						<object class="NSPopUpButtonCell" key="NSCell" id="136743325">
 							<int key="NSCellFlags">-2076049856</int>
 							<int key="NSCellFlags2">2048</int>
 							<reference key="NSSupport" ref="18135699"/>
-							<reference key="NSControlView" ref="41042220"/>
+							<reference key="NSControlView" ref="109807944"/>
 							<int key="NSButtonFlags">109199615</int>
 							<int key="NSButtonFlags2">129</int>
 							<string key="NSAlternateContents"/>
 							<string key="NSKeyEquivalent"/>
 							<int key="NSPeriodicDelay">400</int>
 							<int key="NSPeriodicInterval">75</int>
-							<object class="NSMenuItem" key="NSMenuItem" id="608574697">
-								<reference key="NSMenu" ref="761141133"/>
+							<object class="NSMenuItem" key="NSMenuItem" id="131646471">
+								<reference key="NSMenu" ref="499837177"/>
 								<string key="NSTitle">Other</string>
 								<string key="NSKeyEquiv"/>
 								<int key="NSMnemonicLoc">2147483647</int>
@@ -2685,23 +2685,23 @@
 								<reference key="NSOnImage" ref="124414396"/>
 								<reference key="NSMixedImage" ref="724100393"/>
 								<string key="NSAction">_popUpItemAction:</string>
-								<reference key="NSTarget" ref="1007868148"/>
+								<reference key="NSTarget" ref="136743325"/>
 							</object>
 							<bool key="NSMenuItemRespectAlignment">YES</bool>
-							<object class="NSMenu" key="NSMenu" id="761141133">
+							<object class="NSMenu" key="NSMenu" id="499837177">
 								<string key="NSTitle">OtherViews</string>
 								<array class="NSMutableArray" key="NSMenuItems">
-									<object class="NSMenuItem" id="627932736">
-										<reference key="NSMenu" ref="761141133"/>
+									<object class="NSMenuItem" id="753227608">
+										<reference key="NSMenu" ref="499837177"/>
 										<string key="NSTitle">Bulit In</string>
 										<string key="NSKeyEquiv"/>
 										<int key="NSMnemonicLoc">2147483647</int>
 										<reference key="NSOnImage" ref="124414396"/>
 										<reference key="NSMixedImage" ref="724100393"/>
 										<string key="NSAction">_popUpItemAction:</string>
-										<reference key="NSTarget" ref="1007868148"/>
+										<reference key="NSTarget" ref="136743325"/>
 									</object>
-									<reference ref="608574697"/>
+									<reference ref="131646471"/>
 								</array>
 							</object>
 							<int key="NSSelectedIndex">1</int>
@@ -2711,23 +2711,23 @@
 							<int key="NSArrowPosition">2</int>
 						</object>
 					</object>
-					<object class="NSTextField" id="489863457">
+					<object class="NSTextField" id="1003150959">
 						<reference key="NSNextResponder" ref="80496157"/>
 						<int key="NSvFlags">268</int>
 						<string key="NSFrame">{{17, 190}, {110, 17}}</string>
 						<reference key="NSSuperview" ref="80496157"/>
 						<bool key="NSEnabled">YES</bool>
-						<object class="NSTextFieldCell" key="NSCell" id="357999672">
+						<object class="NSTextFieldCell" key="NSCell" id="379336728">
 							<int key="NSCellFlags">68288064</int>
 							<int key="NSCellFlags2">272630784</int>
 							<string key="NSContents">Mercurial Binary:</string>
 							<reference key="NSSupport" ref="18135699"/>
-							<reference key="NSControlView" ref="489863457"/>
+							<reference key="NSControlView" ref="1003150959"/>
 							<reference key="NSBackgroundColor" ref="606883449"/>
 							<reference key="NSTextColor" ref="588910750"/>
 						</object>
 					</object>
-					<object class="NSTextField" id="128041876">
+					<object class="NSTextField" id="878720169">
 						<reference key="NSNextResponder" ref="80496157"/>
 						<int key="NSvFlags">266</int>
 						<string key="NSFrame">{{234, 187}, {294, 22}}</string>
@@ -2739,27 +2739,27 @@
 							<int key="NSCellFlags2">272630784</int>
 							<string key="NSContents">/tmp/MacHgTransactionLog</string>
 							<reference key="NSSupport" ref="18135699"/>
-							<reference key="NSControlView" ref="128041876"/>
+							<reference key="NSControlView" ref="878720169"/>
 							<bool key="NSDrawsBackground">YES</bool>
 							<reference key="NSBackgroundColor" ref="232492079"/>
 							<reference key="NSTextColor" ref="427612613"/>
 						</object>
 					</object>
-					<object class="NSButton" id="334147899">
+					<object class="NSButton" id="487631897">
 						<reference key="NSNextResponder" ref="80496157"/>
 						<int key="NSvFlags">268</int>
 						<string key="NSFrame">{{533, 186}, {25, 25}}</string>
 						<reference key="NSSuperview" ref="80496157"/>
 						<bool key="NSEnabled">YES</bool>
-						<object class="NSButtonCell" key="NSCell" id="155099225">
+						<object class="NSButtonCell" key="NSCell" id="425227207">
 							<int key="NSCellFlags">67239424</int>
 							<int key="NSCellFlags2">134217728</int>
 							<string key="NSContents"/>
 							<reference key="NSSupport" ref="18135699"/>
-							<reference key="NSControlView" ref="334147899"/>
+							<reference key="NSControlView" ref="487631897"/>
 							<int key="NSButtonFlags">-2041822977</int>
 							<int key="NSButtonFlags2">161</int>
-							<reference key="NSNormalImage" ref="616395001"/>
+							<reference key="NSNormalImage" ref="1049115919"/>
 							<string key="NSAlternateContents"/>
 							<string key="NSKeyEquivalent"/>
 							<int key="NSPeriodicDelay">200</int>
@@ -2900,6 +2900,7 @@
 				<array class="NSMutableArray" key="NSDeclaredKeys">
 					<string>ExecutableLocationHG</string>
 					<string>UseWhichMercurialBinary</string>
+					<string>IncludeHomeHgrcInHGRCPATH</string>
 				</array>
 				<bool key="NSSharedInstance">YES</bool>
 			</object>
@@ -4157,27 +4158,11 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: values.WarnAboutBadMercurialConfiguration</string>
-						<reference key="source" ref="971167935"/>
-						<reference key="destination" ref="946571802"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="971167935"/>
-							<reference key="NSDestination" ref="946571802"/>
-							<string key="NSLabel">value: values.WarnAboutBadMercurialConfiguration</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">values.WarnAboutBadMercurialConfiguration</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">1563</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
 						<string key="label">value: values.ExecutableLocationHG</string>
-						<reference key="source" ref="128041876"/>
+						<reference key="source" ref="878720169"/>
 						<reference key="destination" ref="946571802"/>
 						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="128041876"/>
+							<reference key="NSSource" ref="878720169"/>
 							<reference key="NSDestination" ref="946571802"/>
 							<string key="NSLabel">value: values.ExecutableLocationHG</string>
 							<string key="NSBinding">value</string>
@@ -4194,10 +4179,10 @@
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
 						<string key="label">selectedIndex: values.UseWhichMercurialBinary</string>
-						<reference key="source" ref="41042220"/>
+						<reference key="source" ref="109807944"/>
 						<reference key="destination" ref="946571802"/>
 						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="41042220"/>
+							<reference key="NSSource" ref="109807944"/>
 							<reference key="NSDestination" ref="946571802"/>
 							<string key="NSLabel">selectedIndex: values.UseWhichMercurialBinary</string>
 							<string key="NSBinding">selectedIndex</string>
@@ -4210,10 +4195,10 @@
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
 						<string key="label">hidden: values.UseWhichMercurialBinary</string>
-						<reference key="source" ref="128041876"/>
+						<reference key="source" ref="878720169"/>
 						<reference key="destination" ref="946571802"/>
 						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="128041876"/>
+							<reference key="NSSource" ref="878720169"/>
 							<reference key="NSDestination" ref="946571802"/>
 							<string key="NSLabel">hidden: values.UseWhichMercurialBinary</string>
 							<string key="NSBinding">hidden</string>
@@ -4230,10 +4215,10 @@
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
 						<string key="label">hidden: values.UseWhichMercurialBinary</string>
-						<reference key="source" ref="334147899"/>
+						<reference key="source" ref="487631897"/>
 						<reference key="destination" ref="946571802"/>
 						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="334147899"/>
+							<reference key="NSSource" ref="487631897"/>
 							<reference key="NSDestination" ref="946571802"/>
 							<string key="NSLabel">hidden: values.UseWhichMercurialBinary</string>
 							<string key="NSBinding">hidden</string>
@@ -4246,6 +4231,22 @@
 						</object>
 					</object>
 					<int key="connectionID">1606</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: values.IncludeHomeHgrcInHGRCPATH</string>
+						<reference key="source" ref="596548181"/>
+						<reference key="destination" ref="946571802"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="596548181"/>
+							<reference key="NSDestination" ref="946571802"/>
+							<string key="NSLabel">value: values.IncludeHomeHgrcInHGRCPATH</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">values.IncludeHomeHgrcInHGRCPATH</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">1609</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -5377,11 +5378,11 @@
 							<reference ref="539197989"/>
 							<reference ref="829397851"/>
 							<reference ref="893776528"/>
-							<reference ref="971167935"/>
-							<reference ref="41042220"/>
-							<reference ref="489863457"/>
-							<reference ref="128041876"/>
-							<reference ref="334147899"/>
+							<reference ref="596548181"/>
+							<reference ref="109807944"/>
+							<reference ref="1003150959"/>
+							<reference ref="878720169"/>
+							<reference ref="487631897"/>
 						</array>
 						<reference key="parent" ref="0"/>
 						<string key="objectName">Advanced PreferenceView</string>
@@ -5951,36 +5952,36 @@
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">1561</int>
-						<reference key="object" ref="971167935"/>
+						<reference key="object" ref="596548181"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="72135528"/>
+							<reference ref="915751851"/>
 						</array>
 						<reference key="parent" ref="80496157"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">1562</int>
-						<reference key="object" ref="72135528"/>
-						<reference key="parent" ref="971167935"/>
+						<reference key="object" ref="915751851"/>
+						<reference key="parent" ref="596548181"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">1588</int>
-						<reference key="object" ref="41042220"/>
+						<reference key="object" ref="109807944"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="1007868148"/>
+							<reference ref="136743325"/>
 						</array>
 						<reference key="parent" ref="80496157"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">1589</int>
-						<reference key="object" ref="489863457"/>
+						<reference key="object" ref="1003150959"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="357999672"/>
+							<reference ref="379336728"/>
 						</array>
 						<reference key="parent" ref="80496157"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">1590</int>
-						<reference key="object" ref="128041876"/>
+						<reference key="object" ref="878720169"/>
 						<array class="NSMutableArray" key="children">
 							<reference ref="1546"/>
 						</array>
@@ -5989,52 +5990,52 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">1591</int>
 						<reference key="object" ref="1546"/>
-						<reference key="parent" ref="128041876"/>
+						<reference key="parent" ref="878720169"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">1592</int>
-						<reference key="object" ref="357999672"/>
-						<reference key="parent" ref="489863457"/>
+						<reference key="object" ref="379336728"/>
+						<reference key="parent" ref="1003150959"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">1593</int>
-						<reference key="object" ref="1007868148"/>
+						<reference key="object" ref="136743325"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="761141133"/>
+							<reference ref="499837177"/>
 						</array>
-						<reference key="parent" ref="41042220"/>
+						<reference key="parent" ref="109807944"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">1594</int>
-						<reference key="object" ref="761141133"/>
+						<reference key="object" ref="499837177"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="608574697"/>
-							<reference ref="627932736"/>
+							<reference ref="131646471"/>
+							<reference ref="753227608"/>
 						</array>
-						<reference key="parent" ref="1007868148"/>
+						<reference key="parent" ref="136743325"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">1595</int>
-						<reference key="object" ref="608574697"/>
-						<reference key="parent" ref="761141133"/>
+						<reference key="object" ref="131646471"/>
+						<reference key="parent" ref="499837177"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">1596</int>
-						<reference key="object" ref="627932736"/>
-						<reference key="parent" ref="761141133"/>
+						<reference key="object" ref="753227608"/>
+						<reference key="parent" ref="499837177"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">1600</int>
-						<reference key="object" ref="334147899"/>
+						<reference key="object" ref="487631897"/>
 						<array class="NSMutableArray" key="children">
-							<reference ref="155099225"/>
+							<reference ref="425227207"/>
 						</array>
 						<reference key="parent" ref="80496157"/>
 					</object>
 					<object class="IBObjectRecord">
 						<int key="objectID">1601</int>
-						<reference key="object" ref="155099225"/>
-						<reference key="parent" ref="334147899"/>
+						<reference key="object" ref="425227207"/>
+						<reference key="parent" ref="487631897"/>
 					</object>
 				</array>
 			</object>
@@ -6368,6 +6369,14 @@ dGVyLiAgKC0tc2ltaWxhcml0eSBvcHRpb24pA</string>
 				<string key="1536.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1552.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1553.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<object class="NSMutableDictionary" key="1561.IBAttributePlaceholdersKey">
+					<string key="NS.key.0">ToolTip</string>
+					<object class="IBToolTipAttribute" key="NS.object.0">
+						<string key="name">ToolTip</string>
+						<reference key="object" ref="596548181"/>
+						<string key="toolTip">The base Mercurial configuration path is ~/Application Support/MacHg/hgrc and depending on this value the ~/.hgrc is appended to this configutaion path.</string>
+					</object>
+				</object>
 				<string key="1561.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1562.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<dictionary class="NSMutableDictionary" key="1588.IBAttributePlaceholdersKey"/>
@@ -6385,7 +6394,7 @@ dGVyLiAgKC0tc2ltaWxhcml0eSBvcHRpb24pA</string>
 				<dictionary class="NSMutableDictionary" key="1600.IBAttributePlaceholdersKey">
 					<object class="IBUserDefinedRuntimeAttributesPlaceholder" key="IBUserDefinedRuntimeAttributesPlaceholderName">
 						<string key="name">IBUserDefinedRuntimeAttributesPlaceholderName</string>
-						<reference key="object" ref="334147899"/>
+						<reference key="object" ref="487631897"/>
 						<array key="userDefinedRuntimeAttributes">
 							<object class="IBUserDefinedRuntimeAttribute">
 								<string key="typeIdentifier">com.apple.InterfaceBuilder.userDefinedRuntimeAttributeType.string</string>
@@ -6396,7 +6405,7 @@ dGVyLiAgKC0tc2ltaWxhcml0eSBvcHRpb24pA</string>
 					</object>
 					<object class="IBToolTipAttribute" key="ToolTip">
 						<string key="name">ToolTip</string>
-						<reference key="object" ref="334147899"/>
+						<reference key="object" ref="487631897"/>
 						<string key="toolTip">editing of the repository history is a destructive operation! Please ensure your repository is cloned before using the history editing operations.</string>
 					</object>
 				</dictionary>
@@ -6439,7 +6448,7 @@ dGVyLiAgKC0tc2ltaWxhcml0eSBvcHRpb24pA</string>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">1606</int>
+			<int key="maxID">1609</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
