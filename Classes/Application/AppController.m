@@ -195,10 +195,10 @@
 	if (pathIsExistent(macHgHGRCFilePath))
 		return;
 
-	NSFileManager* fileManager = [NSFileManager defaultManager];
 	NSString* sourceMacHgHGRCpath = fstr(@"%@/%@",[[NSBundle mainBundle] resourcePath], @"hgrc");
-	NSError* theError;
-	[fileManager copyItemAtPath:sourceMacHgHGRCpath toPath:macHgHGRCFilePath error:&theError];
+	NSString* hgrcContents = [NSString stringWithContentsOfFile:sourceMacHgHGRCpath encoding:NSUTF8StringEncoding error:nil];
+	hgrcContents = [hgrcContents stringByReplacingOccurrencesOfString:@"~" withString:NSHomeDirectory()];
+	[hgrcContents writeToFile:macHgHGRCFilePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
 }
 
 - (void) checkConfigFileForUserName
