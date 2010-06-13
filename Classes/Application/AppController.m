@@ -227,13 +227,16 @@
 	{
 		NSFileManager* fileManager = [NSFileManager defaultManager];
 		NSString* macHgHGRCFilePath = fstr(@"%@/hgrc",applicationSupportFolder());
-		[fileManager appendString:@"\n[extensions]\n" toFilePath:macHgHGRCFilePath];
-		if (addExtDiff)			[fileManager appendString:@"hgext.extdiff=\n"	toFilePath:macHgHGRCFilePath];
-		if (addExtBookmarks)	[fileManager appendString:@"hgext.bookmarks=\n" toFilePath:macHgHGRCFilePath];
-		if (addExtMq)			[fileManager appendString:@"hgext.mq=\n"		toFilePath:macHgHGRCFilePath];
-		if (addExtRebase)		[fileManager appendString:@"hgext.rebase=\n"	toFilePath:macHgHGRCFilePath];
-		if (addExtHistEdit)		[fileManager appendString:@"hgext.histedit=\n"	toFilePath:macHgHGRCFilePath];
-		if (addExtCollapse)		[fileManager appendString:@"hgext.collapse=\n"	toFilePath:macHgHGRCFilePath];
+		NSString* homeHGRCpath  = [NSHomeDirectory() stringByAppendingPathComponent:@".hgrc"];
+		NSString* hgrcPath = IncludeMacHgHgrcInHGRCPATHFromDefaults() ? macHgHGRCFilePath : homeHGRCpath;
+		
+		[fileManager appendString:@"\n[extensions]\n" toFilePath:hgrcPath];
+		if (addExtDiff)			[fileManager appendString:@"hgext.extdiff=\n"	toFilePath:hgrcPath];
+		if (addExtBookmarks)	[fileManager appendString:@"hgext.bookmarks=\n" toFilePath:hgrcPath];
+		if (addExtMq)			[fileManager appendString:@"hgext.mq=\n"		toFilePath:hgrcPath];
+		if (addExtRebase)		[fileManager appendString:@"hgext.rebase=\n"	toFilePath:hgrcPath];
+		if (addExtHistEdit)		[fileManager appendString:@"hgext.histedit=\n"	toFilePath:hgrcPath];
+		if (addExtCollapse)		[fileManager appendString:@"hgext.collapse=\n"	toFilePath:hgrcPath];
 	}
 
 	if (!onStartup)
