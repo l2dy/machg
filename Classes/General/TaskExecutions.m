@@ -124,11 +124,20 @@
 + (ExecutionResult*) synchronouslyExecute:(NSString*)cmd withArgs:(NSArray*)args onTask:(NSTask*)theTask
 {
 	static NSDictionary* env = nil;
-	static UseWhichMercurialOption include = eUseMercurialBinaryIncludedInMacHg;
-	if (!env || include != UseWhichMercurialBinaryFromDefaults())
+	static BOOL includeMacHgHgrc = YES;
+	static BOOL includeHomeHgrc  = NO;
+	if (!env || includeHomeHgrc != IncludeHomeHgrcInHGRCPATHFromDefaults() || includeMacHgHgrc != IncludeMacHgHgrcInHGRCPATHFromDefaults())
 	{
-		NSString* dotHGRC = [NSHomeDirectory() stringByAppendingPathComponent:@".hgrc"];
-		NSString* hgrcPath = (include == eUseMercurialBinaryIncludedInMacHg) ? fstr(@"%@/hgrc", applicationSupportFolder()) : fstr(@"%@/hgrc:%@", applicationSupportFolder(), dotHGRC);
+		includeMacHgHgrc = IncludeMacHgHgrcInHGRCPATHFromDefaults();
+		includeHomeHgrc  = IncludeHomeHgrcInHGRCPATHFromDefaults();
+		NSString* macHgHGRCpath = fstr(@"%@/hgrc", applicationSupportFolder());
+		NSString* homeHGRCpath  = [NSHomeDirectory() stringByAppendingPathComponent:@".hgrc"];
+		NSString* hgrcPath = nil;
+		if (includeMacHgHgrc && includeHomeHgrc)
+			hgrcPath = fstr(@"%@:%@", macHgHGRCpath, homeHGRCpath);
+		else
+			hgrcPath = fstr(@"%@", !includeHomeHgrc ? macHgHGRCpath : homeHGRCpath);
+
 		NSDictionary* processEnv    = [[NSProcessInfo processInfo] environment];
 		NSMutableDictionary* newEnv = [[NSMutableDictionary alloc]init];
 		[newEnv copyValueOfKey:@"SSH_ASKPASS"	from:processEnv];

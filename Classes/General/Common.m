@@ -106,6 +106,7 @@ NSString* const MHGExecutableLocationHG					= @"ExecutableLocationHG";
 NSString* const MHGFontSizeOfBrowserItems				= @"FontSizeOfBrowserItems";
 NSString* const MHGHandleGeneratedOrigFiles				= @"HandleGeneratedOrigFiles";
 NSString* const MHGIncludeHomeHgrcInHGRCPATH			= @"IncludeHomeHgrcInHGRCPATH";
+NSString* const MHGIncludeMacHgHgrcInHGRCPATH			= @"IncludeMacHgHgrcInHGRCPATH";
 NSString* const MHGLaunchCount							= @"LaunchCount";
 NSString* const MHGLogEntryTableBookmarkHighlightColor	= @"LogEntryTableBookmarkHighlightColor";
 NSString* const MHGLogEntryTableBranchHighlightColor	= @"LogEntryTableBranchHighlightColor";
@@ -177,6 +178,7 @@ BOOL		DisplayWarningForTagRemovalFromDefaults()				{ return boolFromDefaultsForK
 BOOL		DisplayWarningForUntrackingFilesFromDefaults()			{ return boolFromDefaultsForKey(MHGDisplayWarningForUntrackingFiles); }
 BOOL		DisplayWarningForUpdatingFromDefaults()					{ return boolFromDefaultsForKey(MHGDisplayWarningForUpdating); }
 BOOL		IncludeHomeHgrcInHGRCPATHFromDefaults()					{ return boolFromDefaultsForKey(MHGIncludeHomeHgrcInHGRCPATH); }
+BOOL		IncludeMacHgHgrcInHGRCPATHFromDefaults()				{ return boolFromDefaultsForKey(MHGIncludeMacHgHgrcInHGRCPATH); }
 BOOL		LogEntryTableDisplayChangesetColumnFromDefaults()		{ return boolFromDefaultsForKey(MHGLogEntryTableDisplayChangesetColumn); }
 BOOL		ShowAddedFilesInBrowserFromDefaults()					{ return boolFromDefaultsForKey(MHGShowAddedFilesInBrowser); }
 BOOL		ShowCleanFilesInBrowserFromDefaults()					{ return boolFromDefaultsForKey(MHGShowCleanFilesInBrowser); }

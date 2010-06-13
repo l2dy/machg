@@ -26,4 +26,7 @@
 - (IBAction) openMacHgHGRCFileInExternalEditor:(id)sender;
 - (IBAction) openHomeHGRCFileInExternalEditor:(id)sender;
 
+- (IBAction) switchMacHgHgrc:(id)sender;
+- (IBAction) switchHomeHgrc:(id)sender;
+
 @end
