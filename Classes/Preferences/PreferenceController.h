@@ -23,5 +23,7 @@
 - (IBAction) displayPreferencesChanged:(id)sender;
 - (IBAction) resetPreferences:(id)sender;
 - (IBAction) repositoryEditingPreferencesChanged:(id)sender;
+- (IBAction) openMacHgHGRCFileInExternalEditor:(id)sender;
+- (IBAction) openHomeHGRCFileInExternalEditor:(id)sender;
 
 @end

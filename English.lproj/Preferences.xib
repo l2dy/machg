@@ -11,8 +11,8 @@
 			<string key="NS.object.0">740</string>
 		</object>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-			<integer value="1040"/>
 			<integer value="1253"/>
+			<integer value="1040"/>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2397,7 +2397,7 @@
 					<object class="NSPopUpButton" id="1011209312">
 						<reference key="NSNextResponder" ref="80496157"/>
 						<int key="NSvFlags">266</int>
-						<string key="NSFrame">{{229, 268}, {239, 26}}</string>
+						<string key="NSFrame">{{229, 315}, {239, 26}}</string>
 						<reference key="NSSuperview" ref="80496157"/>
 						<reference key="NSNextKeyView" ref="878924516"/>
 						<bool key="NSEnabled">YES</bool>
@@ -2451,7 +2451,7 @@
 					<object class="NSTextField" id="478277788">
 						<reference key="NSNextResponder" ref="80496157"/>
 						<int key="NSvFlags">268</int>
-						<string key="NSFrame">{{23, 274}, {204, 17}}</string>
+						<string key="NSFrame">{{23, 321}, {204, 17}}</string>
 						<reference key="NSSuperview" ref="80496157"/>
 						<reference key="NSNextKeyView" ref="1011209312"/>
 						<bool key="NSEnabled">YES</bool>
@@ -2490,7 +2490,7 @@
 					<object class="NSButton" id="893776528">
 						<reference key="NSNextResponder" ref="80496157"/>
 						<int key="NSvFlags">268</int>
-						<string key="NSFrame">{{24, 245}, {277, 18}}</string>
+						<string key="NSFrame">{{24, 292}, {277, 18}}</string>
 						<reference key="NSSuperview" ref="80496157"/>
 						<bool key="NSEnabled">YES</bool>
 						<object class="NSButtonCell" key="NSCell" id="818464133">
@@ -2640,7 +2640,7 @@
 					<object class="NSButton" id="596548181">
 						<reference key="NSNextResponder" ref="80496157"/>
 						<int key="NSvFlags">268</int>
-						<string key="NSFrame">{{85, 218}, {216, 18}}</string>
+						<string key="NSFrame">{{85, 247}, {216, 18}}</string>
 						<reference key="NSSuperview" ref="80496157"/>
 						<bool key="NSEnabled">YES</bool>
 						<object class="NSButtonCell" key="NSCell" id="915751851">
@@ -2766,8 +2766,74 @@
 							<int key="NSPeriodicInterval">25</int>
 						</object>
 					</object>
+					<object class="NSButton" id="949112825">
+						<reference key="NSNextResponder" ref="80496157"/>
+						<int key="NSvFlags">268</int>
+						<string key="NSFrame">{{87, 218}, {111, 19}}</string>
+						<reference key="NSSuperview" ref="80496157"/>
+						<bool key="NSEnabled">YES</bool>
+						<object class="NSButtonCell" key="NSCell" id="970116688">
+							<int key="NSCellFlags">-2080244224</int>
+							<int key="NSCellFlags2">134217728</int>
+							<string key="NSContents">edit '~/.hgrc' file</string>
+							<object class="NSFont" key="NSSupport" id="1039998001">
+								<string key="NSName">LucidaGrande</string>
+								<double key="NSSize">12</double>
+								<int key="NSfFlags">16</int>
+							</object>
+							<reference key="NSControlView" ref="949112825"/>
+							<int key="NSButtonFlags">-2038152961</int>
+							<int key="NSButtonFlags2">164</int>
+							<string key="NSAlternateContents"/>
+							<string key="NSKeyEquivalent"/>
+							<int key="NSPeriodicDelay">400</int>
+							<int key="NSPeriodicInterval">75</int>
+						</object>
+					</object>
+					<object class="NSButton" id="629427502">
+						<reference key="NSNextResponder" ref="80496157"/>
+						<int key="NSvFlags">268</int>
+						<string key="NSFrame">{{234, 218}, {131, 19}}</string>
+						<reference key="NSSuperview" ref="80496157"/>
+						<bool key="NSEnabled">YES</bool>
+						<object class="NSButtonCell" key="NSCell" id="410636844">
+							<int key="NSCellFlags">-2080244224</int>
+							<int key="NSCellFlags2">134217728</int>
+							<string key="NSContents">edit MacHg hgrc file</string>
+							<reference key="NSSupport" ref="1039998001"/>
+							<reference key="NSControlView" ref="629427502"/>
+							<int key="NSButtonFlags">-2038152961</int>
+							<int key="NSButtonFlags2">164</int>
+							<string key="NSAlternateContents"/>
+							<string key="NSKeyEquivalent"/>
+							<int key="NSPeriodicDelay">400</int>
+							<int key="NSPeriodicInterval">75</int>
+						</object>
+					</object>
+					<object class="NSBox" id="212457931">
+						<reference key="NSNextResponder" ref="80496157"/>
+						<int key="NSvFlags">12</int>
+						<string key="NSFrame">{{20, 276}, {535, 5}}</string>
+						<reference key="NSSuperview" ref="80496157"/>
+						<string key="NSOffsets">{0, 0}</string>
+						<object class="NSTextFieldCell" key="NSTitleCell">
+							<int key="NSCellFlags">67239424</int>
+							<int key="NSCellFlags2">0</int>
+							<string key="NSContents">Box</string>
+							<reference key="NSSupport" ref="18135699"/>
+							<reference key="NSBackgroundColor" ref="232492079"/>
+							<object class="NSColor" key="NSTextColor">
+								<int key="NSColorSpace">3</int>
+								<bytes key="NSWhite">MCAwLjgwMDAwMDAxMTkAA</bytes>
+							</object>
+						</object>
+						<int key="NSBorderType">3</int>
+						<int key="NSBoxType">2</int>
+						<int key="NSTitlePosition">0</int>
+						<bool key="NSTransparent">NO</bool>
+					</object>
 				</array>
-				<string key="NSFrameSize">{575, 312}</string>
+				<string key="NSFrameSize">{575, 359}</string>
 				<reference key="NSSuperview"/>
 			</object>
 			<object class="NSView" id="929235738">
@@ -2897,11 +2963,6 @@
 				<string key="NSFrameSize">{387, 89}</string>
 			</object>
 			<object class="NSUserDefaultsController" id="946571802">
-				<array class="NSMutableArray" key="NSDeclaredKeys">
-					<string>ExecutableLocationHG</string>
-					<string>UseWhichMercurialBinary</string>
-					<string>IncludeHomeHgrcInHGRCPATH</string>
-				</array>
 				<bool key="NSSharedInstance">YES</bool>
 			</object>
 			<object class="NSCustomObject" id="1056986908">
@@ -4248,6 +4309,22 @@
 					</object>
 					<int key="connectionID">1609</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">openHomeHGRCFileInExternalEditor:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="949112825"/>
+					</object>
+					<int key="connectionID">1621</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">openMacHgHGRCFileInExternalEditor:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="629427502"/>
+					</object>
+					<int key="connectionID">1622</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -5382,6 +5459,9 @@
 							<reference ref="109807944"/>
 							<reference ref="1003150959"/>
 							<reference ref="878720169"/>
+							<reference ref="949112825"/>
+							<reference ref="629427502"/>
+							<reference ref="212457931"/>
 							<reference ref="487631897"/>
 						</array>
 						<reference key="parent" ref="0"/>
@@ -6037,6 +6117,37 @@
 						<reference key="object" ref="425227207"/>
 						<reference key="parent" ref="487631897"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">1610</int>
+						<reference key="object" ref="949112825"/>
+						<array class="NSMutableArray" key="children">
+							<reference ref="970116688"/>
+						</array>
+						<reference key="parent" ref="80496157"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">1611</int>
+						<reference key="object" ref="970116688"/>
+						<reference key="parent" ref="949112825"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">1612</int>
+						<reference key="object" ref="629427502"/>
+						<array class="NSMutableArray" key="children">
+							<reference ref="410636844"/>
+						</array>
+						<reference key="parent" ref="80496157"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">1613</int>
+						<reference key="object" ref="410636844"/>
+						<reference key="parent" ref="629427502"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">1620</int>
+						<reference key="object" ref="212457931"/>
+						<reference key="parent" ref="80496157"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -6280,7 +6391,7 @@ dGVyLiAgKC0tc2ltaWxhcml0eSBvcHRpb24pA</string>
 				<string key="1247.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1248.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1249.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="1253.IBEditorWindowLastContentRect">{{318, 318}, {575, 312}}</string>
+				<string key="1253.IBEditorWindowLastContentRect">{{318, 271}, {575, 359}}</string>
 				<object class="NSMutableDictionary" key="1254.IBAttributePlaceholdersKey">
 					<string key="NS.key.0">ToolTip</string>
 					<object class="IBToolTipAttribute" key="NS.object.0">
@@ -6411,6 +6522,11 @@ dGVyLiAgKC0tc2ltaWxhcml0eSBvcHRpb24pA</string>
 				</dictionary>
 				<string key="1600.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1601.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="1610.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="1611.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="1612.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="1613.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="1620.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="81.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="930.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="973.IBEditorWindowLastContentRect">{{126, 741}, {459, 266}}</string>
@@ -6448,7 +6564,7 @@ dGVyLiAgKC0tc2ltaWxhcml0eSBvcHRpb24pA</string>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">1609</int>
+			<int key="maxID">1622</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -6484,6 +6600,8 @@ dGVyLiAgKC0tc2ltaWxhcml0eSBvcHRpb24pA</string>
 					<string key="superclassName">DBPrefsWindowController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="displayPreferencesChanged:">id</string>
+						<string key="openHomeHGRCFileInExternalEditor:">id</string>
+						<string key="openMacHgHGRCFileInExternalEditor:">id</string>
 						<string key="repositoryEditingPreferencesChanged:">id</string>
 						<string key="resetPreferences:">id</string>
 					</dictionary>
