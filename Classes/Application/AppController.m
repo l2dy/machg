@@ -189,6 +189,7 @@
 	[fileManager createDirectoryAtPath:applicationSupportFolder() withIntermediateDirectories:YES attributes:nil error:&theError];
 }
 
+
 - (void) checkForConfigFile
 {
 	NSString* macHgHGRCFilePath = fstr(@"%@/hgrc",applicationSupportFolder());
@@ -201,12 +202,42 @@
 	[hgrcContents writeToFile:macHgHGRCFilePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
 }
 
+
 - (void) checkConfigFileForUserName
 {
+	// If we can find the user name in our HGRCPATH we are done.
 	NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"ui.username", nil];
 	ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
-	if (IsEmpty(result.outStr))
-		[[self theInitilizationWizardController] showWizard];	
+	if (!IsEmpty(result.outStr))
+		return;
+
+	// Cache the current HGRCPATH, and which hgrc file is dominant.
+	BOOL includeMacHgHgrc = IncludeMacHgHgrcInHGRCPATHFromDefaults();
+	BOOL includeHomeHgrc  = IncludeHomeHgrcInHGRCPATHFromDefaults();
+	NSString* macHgHGRCpath = fstr(@"%@/hgrc", applicationSupportFolder());
+	NSString* homeHGRCpath  = [NSHomeDirectory() stringByAppendingPathComponent:@".hgrc"];
+	NSString* hgrcPath = IncludeMacHgHgrcInHGRCPATHFromDefaults() ? macHgHGRCpath : homeHGRCpath;
+
+	// Switch the hgrc path to include both ~/Application Support/MacHg/hgrc and ~/.hgrc and look for the user name, and then
+	// restore the defaults
+	[[NSUserDefaults standardUserDefaults] setBool:YES forKey:MHGIncludeMacHgHgrcInHGRCPATH];
+	[[NSUserDefaults standardUserDefaults] setBool:YES forKey:MHGIncludeHomeHgrcInHGRCPATH];
+	argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"ui.username", nil];
+	result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
+	[[NSUserDefaults standardUserDefaults] setBool:includeMacHgHgrc forKey:MHGIncludeMacHgHgrcInHGRCPATH];
+	[[NSUserDefaults standardUserDefaults] setBool:includeHomeHgrc  forKey:MHGIncludeHomeHgrcInHGRCPATH];
+
+	// If we find a user name, then copy the user name to the opposite hgrc file.
+	if (!IsEmpty(result.outStr))
+	{
+		NSFileManager* fileManager = [NSFileManager defaultManager];
+		[fileManager appendString:@"\n[ui]\n" toFilePath:hgrcPath];
+		[fileManager appendString:fstr(@"username = %@\n",	result.outStr) toFilePath:hgrcPath];
+		return;
+	}
+	
+	// We can't find a user name we have to ask the user for it
+	[[self theInitilizationWizardController] showWizard];	
 }
 
 
@@ -243,6 +274,7 @@
 		NSRunAlertPanel(@"Editing Extensions Enabled", @"The history editing extensions are enabled.", @"OK", nil, nil);
 }
 
+
 - (void) checkForFileMerge
 {
 	if (![[NSWorkspace sharedWorkspace] fullPathForApplication:@"FileMerge"])
@@ -250,7 +282,6 @@
 	if (!pathIsExistent(@"/usr/bin/opendiff"))
 		NSRunCriticalAlertPanel(@"Opendiff not found", @"/usr/bin/opendiff was not found on this system. Please install the developer tools from the system disk which came with your computer (they contain the application FileMerge). MacHg can function without FileMerge but you cannot view any diffs, since this is the tool MacHg uses to view diffs.", @"OK", nil, nil);
 }
-
 
 
 - (void) checkForMercurialWarningsAndErrors
