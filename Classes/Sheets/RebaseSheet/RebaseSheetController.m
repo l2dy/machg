@@ -139,7 +139,7 @@
 	if (results.outStr)
 	{
 		NSString* operation = (result == NSAlertDefaultReturn ? @"Continue" : @"Abort");
-		NSString* titleMessage = [NSString stringWithFormat:@"Results of Rebase %@",operation];
+		NSString* titleMessage = fstr(@"Results of Rebase %@",operation);
 		NSRunAlertPanel(titleMessage, @"Mercurial reported the result of the rebase %@:\n\ncode %d:\n%@", @"OK", nil, nil, operation, results.result, results.outStr);
 	}
 }
@@ -198,7 +198,7 @@
 	[destinationLogTableView deselectAll:self];
 
 	// Set Sheet Title
-	NSString* newTitle = [NSString stringWithFormat:@"Rebasing Selected Revisions in “%@”", [myDocument selectedRepositoryShortName]];
+	NSString* newTitle = fstr(@"Rebasing Selected Revisions in “%@”", [myDocument selectedRepositoryShortName]);
 	[rebaseSheetTitle setStringValue:newTitle];
 
 	[self setKeepOriginalRevisions:NO];
@@ -221,7 +221,7 @@
 	NSString* repositoryName = [[[myDocument sidebar] selectedNode] shortName];
 	LowHighPair pair = [sourceLogTableView lowestToHighestSelectedRevisions];
 	NSString* destinationRev = [destinationLogTableView selectedRevision];
-	NSString* rebaseDescription = [NSString stringWithFormat:@"rebasing %d-%d in “%@”", pair.lowRevision, pair.highRevision, repositoryName];
+	NSString* rebaseDescription = fstr(@"rebasing %d-%d in “%@”", pair.lowRevision, pair.highRevision, repositoryName);
 	NSMutableArray* argsRebase = [NSMutableArray arrayWithObjects:@"rebase", nil];
 	
 	// If we are using MacHgs rebase command we need to specify that it is in the extensions folder of the included Mercurial

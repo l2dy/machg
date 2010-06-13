@@ -149,7 +149,7 @@
 		NSString* changeset1 = nil;
 		NSString* changeset2 = nil;
 		if ([[self getHGParents] getCapturesWithRegexAndComponents:@"\\d+:([\\d\\w]+)\\s*\\d+:([\\d\\w]+)" firstComponent:&changeset1 secondComponent:&changeset2])
-			parentsChangesets_ = [NSString stringWithFormat:@"%@ %@", changeset1, changeset2];
+			parentsChangesets_ = fstr(@"%@ %@", changeset1, changeset2);
 		else
 			parentsChangesets_ = [self getHGParentsChangeset];
 	}
@@ -181,7 +181,7 @@
 		NSString* revision1 = nil;
 		NSString* revision2 = nil;
 		if ([[self getHGParents] getCapturesWithRegexAndComponents:@"(\\d+):[\\d\\w]+\\s*(\\d+):[\\d\\w]+" firstComponent:&revision1 secondComponent:&revision2])
-			parentsRevisions_ = [NSString stringWithFormat:@"%@ %@", revision1, revision2];
+			parentsRevisions_ = fstr(@"%@ %@", revision1, revision2);
 		else
 			parentsRevisions_ = [self getHGParent1Revision];
 	}
@@ -674,7 +674,7 @@
 - (void) fillTableFrom:(NSInteger)lowLimit to:(NSInteger)highLimit
 {
 	// Now we just fetch the entries from the high limit to the low limit.
-	NSString* revLimits     = [NSString stringWithFormat:@"%d:%d", lowLimit, highLimit];
+	NSString* revLimits     = fstr(@"%d:%d", lowLimit, highLimit);
 	NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log", @"--rev", revLimits, @"--template", templateStringShort, nil];	// templateStringShort is global set in setupGlobalsForPartsAndTemplate()
 	dispatch_async(globalQueue(), ^{
 		ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:rootPath_  logging:eLoggingNone];

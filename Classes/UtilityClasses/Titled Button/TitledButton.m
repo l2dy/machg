@@ -28,7 +28,7 @@
 	NSDictionary* standardAttributes = [NSDictionary dictionaryWithObjectsAndKeys: keyFont, NSFontAttributeName, ps, NSParagraphStyleAttributeName, nil];
 	NSDictionary* grayedAttributes   = [NSDictionary dictionaryWithObjectsAndKeys: keyFont, NSFontAttributeName, [NSColor colorWithDeviceHue:0.0 saturation:0.0 brightness:0.8 alpha:1.0] , NSForegroundColorAttributeName, ps, NSParagraphStyleAttributeName, nil];
 	NSMutableAttributedString* constructDecoratedTitle = [NSMutableAttributedString string:originalTitle withAttributes:standardAttributes];
-	[constructDecoratedTitle appendAttributedString: [NSAttributedString string:[NSString stringWithFormat: @" %@%@", modifiers, key] withAttributes:grayedAttributes]];
+	[constructDecoratedTitle appendAttributedString: [NSAttributedString string:fstr(@" %@%@", modifiers, key) withAttributes:grayedAttributes]];
 	return constructDecoratedTitle;	
 }
 

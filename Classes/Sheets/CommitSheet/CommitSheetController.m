@@ -107,7 +107,7 @@
 	// Report the branch we are about to commit on in the dialog
 	NSMutableArray* argsBranch = [NSMutableArray arrayWithObjects:@"branch", nil];
 	ExecutionResult* hgBranchResults = [TaskExecutions executeMercurialWithArgs:argsBranch  fromRoot:rootPath  logging:eLoggingNone];
-	NSString* newBranchSheetString = [NSString stringWithFormat:@"to branch: %@", hgBranchResults.outStr];
+	NSString* newBranchSheetString = fstr(@"to branch: %@", hgBranchResults.outStr);
 	[commitSheetBranchString setStringValue: newBranchSheetString];
 
 	NSString* currentMessage = [commitMessageTextView string];
@@ -141,7 +141,7 @@
 	
 	committingAllFiles = YES;
 	BOOL mergedState = [[myDocument repositoryData] inMergeState];
-	NSString* newTitle = [NSString stringWithFormat:@"Committing %@ Files in %@", mergedState ? @"Merged" : @"All", [myDocument selectedRepositoryShortName]];
+	NSString* newTitle = fstr(@"Committing %@ Files in %@", mergedState ? @"Merged" : @"All", [myDocument selectedRepositoryShortName]);
 	[commitSheetTitle setStringValue:newTitle];
 	[self openCommitSheetWithPaths:[myDocument absolutePathOfRepositoryRootAsArray]];
 }
@@ -157,7 +157,7 @@
 	[self hookUpClickActions];
 
 	committingAllFiles = NO;
-	NSString* newTitle = [NSString stringWithFormat:@"Committing Selected Files in %@", [myDocument selectedRepositoryShortName]];
+	NSString* newTitle = fstr(@"Committing Selected Files in %@", [myDocument selectedRepositoryShortName]);
 	[commitSheetTitle setStringValue:newTitle];
 	NSArray* paths = [myDocument absolutePathsOfBrowserChosenFiles];
 	if ([paths count] <= 0)

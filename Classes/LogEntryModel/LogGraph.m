@@ -39,7 +39,7 @@
 	return self;
 }
 
-- (NSString*) description { return [NSString stringWithFormat:@"Line from (%@,%@) to (%@,%@)",lowRev,lowCol,highRev,highCol]; }
+- (NSString*) description { return fstr(@"Line from (%@,%@) to (%@,%@)",lowRev,lowCol,highRev,highCol); }
 
 @end
 
@@ -52,7 +52,7 @@
 // MARK: LogGraph
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-inline static NSString* revPair(NSNumber* low, NSNumber* high) { return [NSString stringWithFormat:@"%@:%@",low,high]; }
+inline static NSString* revPair(NSNumber* low, NSNumber* high) { return fstr(@"%@:%@",low,high); }
 
 @implementation LogGraph
 

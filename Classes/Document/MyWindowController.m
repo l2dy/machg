@@ -26,7 +26,7 @@
 {
 	MacHgDocument* myDocument = DynamicCast(MacHgDocument,[self document]);
 	if ([[myDocument sidebar] selectedNodeIsLocalRepositoryRef])
-		return [NSString stringWithFormat:@"%@ - %@", displayName, [[[myDocument sidebar] selectedNode] shortName] ];
+		return fstr(@"%@ - %@", displayName, [[[myDocument sidebar] selectedNode] shortName]);
 	return displayName;
 }
 

@@ -553,7 +553,7 @@ NSString* executableLocationHG()
 	{
 		case eUseMercurialBinarySpecifiedByUser:	return ExecutableLocationHGFromDefaults();
 		default :
-		case eUseMercurialBinaryIncludedInMacHg:	return [NSString stringWithFormat:@"%@/%@",[[NSBundle mainBundle] resourcePath], @"localhg"];
+		case eUseMercurialBinaryIncludedInMacHg:	return fstr(@"%@/%@",[[NSBundle mainBundle] resourcePath], @"localhg");
 	}
 }
 

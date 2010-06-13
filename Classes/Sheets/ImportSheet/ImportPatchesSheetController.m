@@ -67,7 +67,7 @@
 	//	NSMutableArray* newPatches = [[NSMutableArray alloc]init];
 	//	for (int i = 1; i<10; i++)
 	//	{
-	//		NSString* patchPath = [NSString stringWithFormat:@"/Volumes/QuickSilver/Development/sandbox/myrepo/myrepo-feature0%d.patch", i];
+	//		NSString* patchPath = fstr(@"/Volumes/QuickSilver/Development/sandbox/myrepo/myrepo-feature0%d.patch", i);
 	//		PatchData* patch = [PatchData patchDataFromFilePath:patchPath];
 	//		[newPatches addObject:patch];
 	//	}
@@ -138,7 +138,7 @@
 
 - (IBAction) openImportPatchesSheet:(id)sender
 {
-	NSString* newTitle = [NSString stringWithFormat:@"Importing Patches into %@", [myDocument selectedRepositoryShortName]];
+	NSString* newTitle = fstr(@"Importing Patches into %@", [myDocument selectedRepositoryShortName]);
 	[importSheetTitle setStringValue:newTitle];
 	 
 	// Report the branch we are about to import to in the dialog	
@@ -208,7 +208,7 @@
 - (NSAttributedString*) formattedSheetMessage
 {
 	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
-	NSString* message = [NSString stringWithFormat:@"The patches listed above will be imported into the repository %@", [myDocument selectedRepositoryShortName]];
+	NSString* message = fstr(@"The patches listed above will be imported into the repository %@", [myDocument selectedRepositoryShortName]);
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(message)];
 	return newSheetMessage;
 }

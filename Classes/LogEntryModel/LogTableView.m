@@ -517,7 +517,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	{
 		NSIndexSet* rows = [self selectedRowIndexes];
 		LowHighPair lowHigh = [self lowestToHighestSelectedRevisions];
-		NSString* descriptiveString = [NSString stringWithFormat:@"Multiple Selection: %d revisions in range %d to %d", [rows count], lowHigh.lowRevision, lowHigh.highRevision];
+		NSString* descriptiveString = fstr(@"Multiple Selection: %d revisions in range %d to %d", [rows count], lowHigh.lowRevision, lowHigh.highRevision);
 		[[detailedEntryTextView textStorage] setAttributedString:grayedAttributedString(descriptiveString)];
 
 		// If we have more than MaxNumberOfDetailedEntriesToShow things selected then we don't try and give the details of each entry.
@@ -713,7 +713,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 		if (filtered)
 		{
 			NSString* rootPath      = [repositoryData rootPath];
-			NSString* revLimits     = [NSString stringWithFormat:@"%d:%d", 0, [repositoryData computeNumberOfRealRevisions]];
+			NSString* revLimits     = fstr(@"%d:%d", 0, [repositoryData computeNumberOfRealRevisions]);
 			NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log",  @"--rev", revLimits, @"--template", @"{rev}\n", @"--keyword", theSearchFilter_, nil];
 			ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:rootPath  logging:eLoggingNone];
 			

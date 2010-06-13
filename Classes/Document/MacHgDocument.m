@@ -210,7 +210,7 @@
 	[mainSplitView setPosition:200 ofDividerAtIndex:0];
 	[[mainWindow_ windowController] setShouldCascadeWindows: NO];
 	NSString* fileName = [self documentNameForAutosave];
-	[sidebarAndInformation_ setAutosaveName:[NSString stringWithFormat:@"File:%@:LHSSidebarSplitPosition", fileName]];	
+	[sidebarAndInformation_ setAutosaveName:fstr(@"File:%@:LHSSidebarSplitPosition", fileName)];
 	
 	// Test string matching.
 	if (NO)
@@ -582,8 +582,8 @@
 - (void) recordWindowFrameToDefaults
 {
 	NSString* fileName = [self documentNameForAutosave];
-	NSString* originKeyForAutoSave = [NSString stringWithFormat:@"File:%@:originPos", fileName];
-	NSString* rectKeyForAutoSave   = [NSString stringWithFormat:@"File:%@:windowPosForView%d", fileName, currentPane_];
+	NSString* originKeyForAutoSave = fstr(@"File:%@:originPos", fileName);
+	NSString* rectKeyForAutoSave   = fstr(@"File:%@:windowPosForView%d", fileName, currentPane_);
 	NSRect frm = [mainWindow_ frame];
 	NSString* topLeftOriginString = NSStringFromPoint(NSMakePoint(NSMinX(frm), NSMaxY(frm)));	// Record window origin top left
 	NSString* rectString = NSStringFromRect(frm);
@@ -594,8 +594,8 @@
 - (NSRect) getWindowFrameFromDefaults
 {
 	NSString* fileName = [self documentNameForAutosave];
-	NSString* originKeyForAutoSave = [NSString stringWithFormat:@"File:%@:originPos", fileName];
-	NSString* rectKeyForAutoSave   = [NSString stringWithFormat:@"File:%@:windowPosForView%d", fileName, currentPane_];
+	NSString* originKeyForAutoSave = fstr(@"File:%@:originPos", fileName);
+	NSString* rectKeyForAutoSave   = fstr(@"File:%@:windowPosForView%d", fileName, currentPane_);
 	NSString* topLeftOriginString  = [[NSUserDefaults standardUserDefaults] objectForKey:originKeyForAutoSave];
 	NSString* rectString           = [[NSUserDefaults standardUserDefaults] objectForKey:rectKeyForAutoSave];
 	if (!topLeftOriginString || !rectString)
@@ -1700,12 +1700,12 @@
 	if (DisplayWarningForRevertingFilesFromDefaults())
 	{
 		BOOL pathsAreRootPath = [[filteredPaths lastObject] isEqual:[self absolutePathOfRepositoryRoot]];
-		NSString* mainMessage = [NSString stringWithFormat:@"Reverting %@ Files", pathsAreRootPath ? @"All" : @"Selected"];
-		NSString* subMessage  = [NSString stringWithFormat: @"Are you sure you want to revert %@ in the repository “%@” to %@? (Any modified files will be moved to the trash)",
+		NSString* mainMessage = fstr(@"Reverting %@ Files", pathsAreRootPath ? @"All" : @"Selected");
+		NSString* subMessage  = fstr( @"Are you sure you want to revert %@ in the repository “%@” to %@? (Any modified files will be moved to the trash)",
 								 pathsAreRootPath ? @"all files" : @"the selected files",
 								 [self selectedRepositoryShortName],
-								 version ? [NSString stringWithFormat:@"revision “%@”", version] :
-								 ([self isCurrentRevisionTip] ? @"the latest revision" : @"current revision")];
+								 version ? fstr(@"revision “%@”", version) :
+								 ([self isCurrentRevisionTip] ? @"the latest revision" : @"current revision"));
 		
 		int result = RunCriticalAlertPanelOptionsWithSuppression(mainMessage, subMessage, @"Revert", @"Cancel", @"Options...", MHGDisplayWarningForRevertingFiles);
 		if (result == NSAlertThirdButtonReturn) // Options
@@ -1821,11 +1821,11 @@
 	if (DisplayWarningForUpdatingFromDefaults() || [self repositoryHasFilesWhichContainStatus:eHGStatusCommittable])
 	{
 		NSString* mainMessage = @"Updating All Files";
-		NSString* subMessage  = [NSString stringWithFormat: @"Are you sure you want to update the repository “%@” to revision “%@”?",
+		NSString* subMessage  = fstr( @"Are you sure you want to update the repository “%@” to revision “%@”?",
 								 [self selectedRepositoryShortName],
-								 version];
+								 version);
 		if (containsChangedFiles)
-			subMessage = [NSString stringWithFormat:@"There are uncommitted changes. %@", subMessage];
+			subMessage = fstr(@"There are uncommitted changes. %@", subMessage);
 		
 		NSAlert* alert = NewAlertPanel(mainMessage, subMessage, @"Update", @"Cancel", @"Options...");
 		[updateAlertAccessoryCleanCheckBox setState:clean];
@@ -1856,7 +1856,7 @@
 
 		if (DisplayResultsOfUpdatingFromDefaults())
 		{
-			NSString* messageString = [NSString stringWithFormat:@"Results of Updating “%@”",  [self selectedRepositoryShortName]];
+			NSString* messageString = fstr(@"Results of Updating “%@”",  [self selectedRepositoryShortName]);
 			NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
 			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"Update Results - %@", [self selectedRepositoryShortName])];
 		}
@@ -1869,11 +1869,11 @@
 {
 	if (confirm && DisplayWarningForMergingFromDefaults())
 	{
-		NSString* mainMessage = [NSString stringWithFormat:@"Merging %@", mergeVersion];
-		NSString* subMessage  = [NSString stringWithFormat: @"Are you sure you want to merge version %@ into the %@ in the repository “%@”?",
+		NSString* mainMessage = fstr(@"Merging %@", mergeVersion);
+		NSString* subMessage  = fstr( @"Are you sure you want to merge version %@ into the %@ in the repository “%@”?",
 								 mergeVersion,
 								 ([self isCurrentRevisionTip] ? @"latest revision" : @"current revision"),
-								 [self selectedRepositoryShortName]];
+								 [self selectedRepositoryShortName]);
 		
 		int result = RunCriticalAlertPanelOptionsWithSuppression(mainMessage, subMessage, @"Merge", @"Cancel", @"Options...", MHGDisplayWarningForMerging);
 		if (result == NSAlertThirdButtonReturn) // Options
@@ -1917,7 +1917,7 @@
 
 	if (DisplayResultsOfMergingFromDefaults())
 	{
-		NSString* messageString = [NSString stringWithFormat:@"Results of Merging “%@”",  [self selectedRepositoryShortName]];
+		NSString* messageString = fstr(@"Results of Merging “%@”",  [self selectedRepositoryShortName]);
 		NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
 		[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"Merge Results - %@", [self selectedRepositoryShortName])];
 	}
@@ -1941,11 +1941,11 @@
 	if (confirm && DisplayWarningForMergingFromDefaults())
 	{
 		NSString* what = ([absolutePaths count] == 1) ? [[absolutePaths lastObject] lastPathComponent] : @"the selected files";
-		NSString* mainMessage = [NSString stringWithFormat:@"Remerging %@", what];
-		NSString* subMessage  = [NSString stringWithFormat: @"Are you sure you want to throw away any changes you have made to %@ and remerge versions %@ in the repository “%@”?",
+		NSString* mainMessage = fstr(@"Remerging %@", what);
+		NSString* subMessage  = fstr( @"Are you sure you want to throw away any changes you have made to %@ and remerge versions %@ in the repository “%@”?",
 								 what,
 								 [self getHGParentsRevisions],
-								 [self selectedRepositoryShortName]];
+								 [self selectedRepositoryShortName]);
 
 		int result = RunCriticalAlertPanelWithSuppression(mainMessage, subMessage, @"Remerge", @"Cancel", MHGDisplayWarningForMerging);
 		if (result != NSAlertFirstButtonReturn)
@@ -1971,10 +1971,10 @@
 	if (confirm && DisplayWarningForMarkingFilesResolvedFromDefaults())
 	{
 		NSString* what = ([absolutePaths count] == 1) ? [[absolutePaths lastObject] lastPathComponent] : @"the selected files";
-		NSString* mainMessage = [NSString stringWithFormat:@"Marking %@ as resolved", what];
-		NSString* subMessage  = [NSString stringWithFormat: @"Are you sure you want to mark %@ as resolved in the repository “%@”?",
+		NSString* mainMessage = fstr(@"Marking %@ as resolved", what);
+		NSString* subMessage  = fstr( @"Are you sure you want to mark %@ as resolved in the repository “%@”?",
 								 what,
-								 [self selectedRepositoryShortName]];
+								 [self selectedRepositoryShortName]);
 
 		int result = RunCriticalAlertPanelWithSuppression(mainMessage, subMessage, @"Mark Resolved", @"Cancel", MHGDisplayWarningForMarkingFilesResolved);
 		if (result != NSAlertFirstButtonReturn)
@@ -2002,7 +2002,7 @@
 	[self dispatchToMercurialQueuedWithDescription:@"Generating Manifest" process:^{
 		NSMutableArray* argsManifest = [NSMutableArray arrayWithObjects:@"manifest", @"--rev", version, nil];
 		ExecutionResult* results = [self executeMercurialWithArgs:argsManifest  fromRoot:rootPath  whileDelayingEvents:YES];
-		NSString* messageString = [NSString stringWithFormat:@"Manifest of “%@” revision “%@”", thisRepositoryName, version];
+		NSString* messageString = fstr(@"Manifest of “%@” revision “%@”", thisRepositoryName, version);
 		NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
 		[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"Manifest Results - %@", [self selectedRepositoryShortName])];
 	}];
@@ -2033,8 +2033,8 @@
 				[argsAnnotate addObject:file];
 				ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsAnnotate  fromRoot:rootPath];
 				NSString* fileName = [file lastPathComponent];
-				NSString* messageString = [NSString stringWithFormat:@"Annotations of “%@” for revision “%@”", fileName, version];
-				NSString* windowTitle   = [NSString stringWithFormat:@"%@ : %@ Annotations", fileName, version];
+				NSString* messageString = fstr(@"Annotations of “%@” for revision “%@”", fileName, version);
+				NSString* windowTitle   = fstr(@"%@ : %@ Annotations", fileName, version);
 				NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(nonNil(results.outStr));
 				[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:windowTitle];
 			});
@@ -2077,8 +2077,8 @@
 				NSMutableArray* diffArgs = [NSMutableArray arrayWithObjects: cmd, @"--cwd", rootPath, nil];
 				if (UseWhichToolForDiffingFromDefaults() == eUseFileMergeForDiffs)
 				{
-					NSString* absPathToDiffScript = [NSString stringWithFormat:@"%@/%@",[[NSBundle mainBundle] resourcePath], @"fmdiff.sh"];
-					NSString* cmdOverride = [NSString stringWithFormat:@"extdiff.cmd.opendiff=%@",absPathToDiffScript];
+					NSString* absPathToDiffScript = fstr(@"%@/%@",[[NSBundle mainBundle] resourcePath], @"fmdiff.sh");
+					NSString* cmdOverride = fstr(@"extdiff.cmd.opendiff=%@",absPathToDiffScript);
 					[diffArgs addObject:@"--config" followedBy:cmdOverride];
 					[diffArgs addObject:@"--config" followedBy:@"extensions.hgext.extdiff="];
 				}

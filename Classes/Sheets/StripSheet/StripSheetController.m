@@ -116,7 +116,7 @@
 	[logTableView setAction:@selector(handleLogTableViewClick:)];
 	[logTableView setTarget:self];
 	
-	NSString* newTitle = [NSString stringWithFormat:@"Stripping Selected Revisions in “%@”", [myDocument selectedRepositoryShortName]];
+	NSString* newTitle = fstr(@"Stripping Selected Revisions in “%@”", [myDocument selectedRepositoryShortName]);
 	[stripSheetTitle setStringValue:newTitle];
 
 	[logTableView resetTable:self];
@@ -152,14 +152,14 @@
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	NSString* repositoryName = [[[myDocument sidebar] selectedNode] shortName];
 	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
-	NSString* stripDescription = [NSString stringWithFormat:@"Stripping %d in “%@”", pair.lowRevision, repositoryName];
+	NSString* stripDescription = fstr(@"Stripping %d in “%@”", pair.lowRevision, repositoryName);
 	NSMutableArray* argsStrip = [NSMutableArray arrayWithObjects:@"strip", nil];
 	
 	// If we are using MacHgs strip command we need to specify that it is in the extensions folder of the included Mercurial
 	if (UseWhichMercurialBinaryFromDefaults() == eUseMercurialBinaryIncludedInMacHg)
 		[argsStrip addObject:@"--config" followedBy:@"hgext.mq="];
 	[argsStrip addObject:@"--backup"];	
-	NSString* revisionNumber = [NSString stringWithFormat:@"%d", pair.lowRevision];
+	NSString* revisionNumber = fstr(@"%d", pair.lowRevision);
 	[argsStrip addObject:revisionNumber];
 	
 	[myDocument dispatchToMercurialQueuedWithDescription:stripDescription  process:^{

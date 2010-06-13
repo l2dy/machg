@@ -91,7 +91,7 @@
 
 - (IBAction) openSheet:(id)sender;
 {
-	[titleText setStringValue:[NSString stringWithFormat:@"Push from “%@”", [self sourceRepositoryName]]];
+	[titleText setStringValue:fstr(@"Push from “%@”", [self sourceRepositoryName])];
 	[super openSheet:sender];
 }
 
@@ -110,8 +110,8 @@
 	// Display warning if prefs say we should
 	if (DisplayWarningForPushingFromDefaults())
 	{
-		NSString* mainMessage = [NSString stringWithFormat:@"Pushing %@", pushSourceName];
-		NSString* subMessage  = [NSString stringWithFormat: @"Are you sure you want to push the repository “%@” into “%@”?", pushSourceName, pushDestinationName];
+		NSString* mainMessage = fstr(@"Pushing %@", pushSourceName);
+		NSString* subMessage  = fstr( @"Are you sure you want to push the repository “%@” into “%@”?", pushSourceName, pushDestinationName);
 		int result = RunCriticalAlertPanelWithSuppression(mainMessage, subMessage, @"Push", @"Cancel", MHGDisplayWarningForPushing);
 		if (result != NSAlertFirstButtonReturn)
 			return;
@@ -132,7 +132,7 @@
 		[myDocument postNotificationWithName:kCompatibleRepositoryChanged];
 		if (DisplayResultsOfPushingFromDefaults())
 		{
-			NSString* messageString = [NSString stringWithFormat:@"Results of Pushing “%@” into “%@”", pushSourceName, pushDestinationName];
+			NSString* messageString = fstr(@"Results of Pushing “%@” into “%@”", pushSourceName, pushDestinationName);
 			NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
 			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"Push Results - %@", pushSourceName)];
 		}

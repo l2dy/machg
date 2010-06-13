@@ -508,7 +508,7 @@
 
 - (NSString*) description
 {
-	return [NSString stringWithFormat:@"FSNodeInfo: %@:%@, status = %d", relativePath, absolutePath, hgStatus];
+	return fstr(@"FSNodeInfo: %@:%@, status = %d", relativePath, absolutePath, hgStatus);
 }
 
 
@@ -526,23 +526,23 @@ static NSString* stringFromFileSize(NSInteger theSize)
 {
 	float floatSize = theSize;
 	if (theSize<1023)
-		return [NSString stringWithFormat:@"%i bytes\n",theSize];
+		return fstr(@"%i bytes\n",theSize);
 	floatSize = floatSize / 1024;
 	if (floatSize<1023)
-		return [NSString stringWithFormat:@"%1.1f KB\n",floatSize];
+		return fstr(@"%1.1f KB\n",floatSize);
 	floatSize = floatSize / 1024;
 	if (floatSize<1023)
-		return [NSString stringWithFormat:@"%1.1f MB\n",floatSize];
+		return fstr(@"%1.1f MB\n",floatSize);
 	floatSize = floatSize / 1024;
 	
-	return [NSString stringWithFormat:@"%1.1f GB\n",floatSize];
+	return fstr(@"%1.1f GB\n",floatSize);
 }
 
 static NSString* stringFromItemCount(NSInteger theCount)
 {
 	if (theCount == 1)
 		return @"1 item\n";
-	return [NSString stringWithFormat: @"%d items\n", theCount];
+	return fstr( @"%d items\n", theCount);
 }
 
 - (NSAttributedString*) attributedInspectorStringForFSNode
@@ -555,7 +555,7 @@ static NSString* stringFromItemCount(NSInteger theCount)
 		[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
 	}
 	
-	NSMutableAttributedString* attrString = [NSMutableAttributedString string:[NSString stringWithFormat: @"%@\n", [self lastPathComponent]] withAttributes:smallCenteredSystemFontAttributes];
+	NSMutableAttributedString* attrString = [NSMutableAttributedString string:fstr( @"%@\n", [self lastPathComponent]) withAttributes:smallCenteredSystemFontAttributes];
 
 	NSFileManager* fileManager = [NSFileManager defaultManager];
 	NSDictionary* fileAttributes = [fileManager attributesOfItemAtPath:absolutePath error:nil];
@@ -567,11 +567,11 @@ static NSString* stringFromItemCount(NSInteger theCount)
 	
 	NSString* dateModifiedString = [dateFormatter stringFromDate:[fileAttributes fileModificationDate]];
 	[attrString appendAttributedString: [NSAttributedString string:@"Mod. " withAttributes:smallBoldCenteredSystemFontAttributes]];
-	[attrString appendAttributedString: [NSAttributedString string:[NSString stringWithFormat: @"%@\n", dateModifiedString] withAttributes:smallCenteredSystemFontAttributes]];
+	[attrString appendAttributedString: [NSAttributedString string:fstr( @"%@\n", dateModifiedString) withAttributes:smallCenteredSystemFontAttributes]];
 
 	NSString* dateCreatedString = [dateFormatter stringFromDate:[fileAttributes fileCreationDate]];
 	[attrString appendAttributedString: [NSAttributedString string:@"Crd. " withAttributes:smallBoldCenteredSystemFontAttributes]];
-	[attrString appendAttributedString: [NSAttributedString string:[NSString stringWithFormat: @"%@\n", dateCreatedString] withAttributes:smallCenteredSystemFontAttributes]];	
+	[attrString appendAttributedString: [NSAttributedString string:fstr( @"%@\n", dateCreatedString) withAttributes:smallCenteredSystemFontAttributes]];	
 	
 	return attrString;
 }

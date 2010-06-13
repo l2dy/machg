@@ -250,7 +250,7 @@
 // MARK:  Utilities
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (NSString*) description { return [NSString stringWithFormat:@"name:%@, revision:%@, type:%d",name_, revision_, labelType_]; }
+- (NSString*) description { return fstr(@"name:%@, revision:%@, type:%d",name_, revision_, labelType_); }
 
 
 

@@ -68,10 +68,10 @@
 	
 	NSString* fileName = [myDocument documentNameForAutosave];
 	[baseLogTableView setAutosaveTableColumns:YES];
-	[baseLogTableView setAutosaveName:[NSString stringWithFormat:@"File:%@:DifferencesBaseTableViewColumnPositions", fileName]];
+	[baseLogTableView setAutosaveName:fstr(@"File:%@:DifferencesBaseTableViewColumnPositions", fileName)];
 	[baseLogTableView reloadData];
 	[compareLogTableView setAutosaveTableColumns:YES];
-	[compareLogTableView setAutosaveName:[NSString stringWithFormat:@"File:%@:DifferencesCompareTableViewColumnPositions", fileName]];
+	[compareLogTableView setAutosaveName:fstr(@"File:%@:DifferencesCompareTableViewColumnPositions", fileName)];
 	[compareLogTableView reloadData];
 	
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
@@ -142,7 +142,7 @@
 		return nil;
 	if ([compareRev isEqualTo:[compareLogTableView incompleteRevision]])
 		return baseRev;	
-	return [NSString stringWithFormat:@"%@%:%@", baseRev, compareRev];
+	return fstr(@"%@%:%@", baseRev, compareRev);
 }
 
 
@@ -333,8 +333,8 @@
 
 - (void)	logTableViewSelectionDidChange:(LogTableView*)theLogTable
 {
-	[baseHeaderMessage setStringValue:[NSString stringWithFormat:@"Base Revision: %@", [baseLogTableView selectedRevision]]];
-	[compareHeaderMessage setStringValue:[NSString stringWithFormat:@"Compare Revision: %@", [compareLogTableView selectedRevision]]];
+	[baseHeaderMessage setStringValue:fstr(@"Base Revision: %@", [baseLogTableView selectedRevision])];
+	[compareHeaderMessage setStringValue:fstr(@"Compare Revision: %@", [compareLogTableView selectedRevision])];
 	[self redisplayBrowser:self];
 	[[myDocument mainWindow] makeFirstResponder:theLogTable];
 }

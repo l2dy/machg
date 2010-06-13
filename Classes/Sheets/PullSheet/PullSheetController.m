@@ -88,7 +88,7 @@
 
 - (IBAction) openSheet:(id)sender;
 {
-	[titleText setStringValue:[NSString stringWithFormat:@"Pull to “%@”", [self destinationRepositoryName]]];
+	[titleText setStringValue:fstr(@"Pull to “%@”", [self destinationRepositoryName])];
 	[super openSheet:sender];
 }
 
@@ -107,8 +107,8 @@
 	// Display warning if prefs say we should
 	if (DisplayWarningForPullingFromDefaults())
 	{
-		NSString* mainMessage = [NSString stringWithFormat:@"Pulling %@", pullSourceName];
-		NSString* subMessage  = [NSString stringWithFormat: @"Are you sure you want to pull the repository “%@” into “%@”?", pullSourceName, pullDestinationName];
+		NSString* mainMessage = fstr(@"Pulling %@", pullSourceName);
+		NSString* subMessage  = fstr( @"Are you sure you want to pull the repository “%@” into “%@”?", pullSourceName, pullDestinationName);
 		int result = RunCriticalAlertPanelWithSuppression(mainMessage, subMessage, @"Pull", @"Cancel", MHGDisplayWarningForPulling);
 		if (result != NSAlertFirstButtonReturn)
 			return;
@@ -128,7 +128,7 @@
 		ExecutionResult* results = [myDocument executeMercurialWithArgs:argsPull  fromRoot:rootPath  whileDelayingEvents:YES];
 		if (DisplayResultsOfPullingFromDefaults())
 		{
-			NSString* messageString = [NSString stringWithFormat:@"Results of Pulling “%@” into “%@”", pullSourceName, pullDestinationName];
+			NSString* messageString = fstr(@"Results of Pulling “%@” into “%@”", pullSourceName, pullDestinationName);
 			NSString* mainMessage = [results.outStr stringByReplacingOccurrencesOfString:@"(run 'hg heads' to see heads, 'hg merge' to merge)" withString:@""];
 			NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(mainMessage);
 			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"Pull Results - %@", pullDestinationName)];

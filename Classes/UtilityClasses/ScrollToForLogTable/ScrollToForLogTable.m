@@ -53,7 +53,7 @@
 	else
 	{
 		[menuTitle appendAttributedString:[NSAttributedString string:[label name] withAttributes:systemFontAttributes]];
-		[menuTitle appendAttributedString:[NSAttributedString string:[NSString stringWithFormat:@" (%@)",[label revision]] withAttributes:graySystemFontAttributes]];
+		[menuTitle appendAttributedString:[NSAttributedString string:fstr(@" (%@)",[label revision]) withAttributes:graySystemFontAttributes]];
 	}
 	[item setRepresentedObject:label];
 	[item setTarget:self];

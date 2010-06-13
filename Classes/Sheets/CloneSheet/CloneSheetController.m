@@ -120,8 +120,8 @@
 	
 	NSString* sourcePath   = [sourceNode_ path];
 	NSString* sourceName   = [sourceNode_ shortName];
-	NSString* clonePath    = [sourceNode_ isLocalRepositoryRef] ? [NSString stringWithFormat:@"%@Clone", sourcePath] : [DefaultWorkspacePathFromDefaults() stringByAppendingPathComponent:collapseWhiteSpace(sourceName)];
-	NSString* cloneName    = [sourceNode_ isLocalRepositoryRef] ? [NSString stringWithFormat:@"%@Clone", sourceName] : sourceName;
+	NSString* clonePath    = [sourceNode_ isLocalRepositoryRef] ? fstr(@"%@Clone", sourcePath) : [DefaultWorkspacePathFromDefaults() stringByAppendingPathComponent:collapseWhiteSpace(sourceName)];
+	NSString* cloneName    = [sourceNode_ isLocalRepositoryRef] ? fstr(@"%@Clone", sourceName) : sourceName;
 	NSImage* sourceIconImage = [sourceNode_ isLocalRepositoryRef] ? [NSWorkspace iconImageOfSize:[sourceIconWell frame].size forPath:sourcePath] : [NSImage imageNamed:NSImageNameNetwork];
 	
 	NoAnimationBlock(^{
@@ -129,7 +129,7 @@
 		[self setPathFieldValue:clonePath];
 		[sourceIconWell setImage:sourceIconImage];
 		[pullSourceLabel setStringValue:sourceName];
-		[theTitleText setStringValue:[NSString stringWithFormat:@"Clone “%@”", sourceName]];
+		[theTitleText setStringValue:fstr(@"Clone “%@”", sourceName)];
 		[self setFieldsFromConnectionForSource:source];
 		BOOL showAdvancedOptions = [OptionController containsOptionWhichIsSet:cmdOptions];
 		[disclosureController setToOpenState:showAdvancedOptions];
@@ -155,7 +155,7 @@
 	NSString* sourceName  = [sourceNode_ shortName];
 	NSString* destinationName  = [shortNameFieldValue_ copy];
 	NSString* destinationPath  = [pathFieldValue_ copy];
-	NSString* cloneDescription = [NSString stringWithFormat:@"Cloning “%@”", sourceName];
+	NSString* cloneDescription = fstr(@"Cloning “%@”", sourceName);
 
 	NSMutableArray* argsClone = [NSMutableArray arrayWithObjects:@"clone", nil];
 	for (OptionController* opt in cmdOptions)
@@ -206,13 +206,13 @@
 
 - (void) setConnectionFromFieldsForSource:(SidebarNode*)source
 {
-	NSString* partialKey = [NSString stringWithFormat:@"Clone§%@§", [source path]];
+	NSString* partialKey = fstr(@"Clone§%@§", [source path]);
 	[OptionController setConnections:[myDocument connections] fromOptions:cmdOptions  forKey:partialKey];
 }
 
 - (void) setFieldsFromConnectionForSource:(SidebarNode*)source
 {
-	NSString* partialKey = [NSString stringWithFormat:@"Clone§%@§", [source path]];
+	NSString* partialKey = fstr(@"Clone§%@§", [source path]);
 	[OptionController setOptions:cmdOptions fromConnections:[myDocument connections] forKey:partialKey];
 }
 

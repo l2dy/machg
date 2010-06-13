@@ -78,11 +78,11 @@
 
 - (IBAction) openExportPatchesSheetWithSelectedRevisions:(id)sender
 {
-	NSString* newTitle = [NSString stringWithFormat:@"Exporting Selected Patches in %@", [myDocument selectedRepositoryShortName]];
+	NSString* newTitle = fstr(@"Exporting Selected Patches in %@", [myDocument selectedRepositoryShortName]);
 	[exportSheetTitle setStringValue:newTitle];
 	 
 	// Report the branch we are about to export to in the dialog
-	NSString* newSheetMessage = [NSString stringWithFormat:@"The following files will be exported to the versions as of the revision selected below (%@)", [logTableView selectedRevision]];
+	NSString* newSheetMessage = fstr(@"The following files will be exported to the versions as of the revision selected below (%@)", [logTableView selectedRevision]);
 	[sheetInformativeMessageTextField setStringValue: newSheetMessage];
 	
 	[logTableView resetTable:self];
@@ -124,7 +124,7 @@
 	
 	BOOL exportPatchForIncompleteVersion = NO;
 	BOOL exportPatchesForLowHigh = YES;
-	NSString* exportDescription = [NSString stringWithFormat:@"exporting %d-%d", pair.lowRevision, pair.highRevision];
+	NSString* exportDescription = fstr(@"exporting %d-%d", pair.lowRevision, pair.highRevision);
 	if (pair.highRevision == stringAsInt([logTableView incompleteRevision]))
 	{
 		exportPatchForIncompleteVersion = YES;
@@ -136,7 +136,7 @@
 		else
 		{
 			pair.highRevision -= 1;
-			[NSString stringWithFormat:@"exporting %d to current changes", pair.lowRevision];
+			fstr(@"exporting %d to current changes", pair.lowRevision);
 		}
 	}
 	
@@ -150,7 +150,7 @@
 	if (exportPatchesForLowHigh)
 	{
 		argsExportRange = [NSMutableArray arrayWithObjects:@"export", nil];
-		NSString* revisionNumbers = [NSString stringWithFormat:@"%d%:%d", pair.lowRevision, pair.highRevision];
+		NSString* revisionNumbers = fstr(@"%d%:%d", pair.lowRevision, pair.highRevision);
 		
 		if ([self textOption])			[argsExportRange addObject:@"--text"];
 		if ([self gitOption])			[argsExportRange addObject:@"--git"];
@@ -188,7 +188,7 @@
 				if (changingFileName)
 					[result.outStr writeToFile:patchFileName atomically:YES encoding:NSUTF8StringEncoding error:nil];
 				else
-					[[NSFileManager defaultManager] appendString:[NSString stringWithFormat:@"\n\n%@",result.outStr] toFilePath:patchFileName];
+					[[NSFileManager defaultManager] appendString:fstr(@"\n\n%@",result.outStr) toFilePath:patchFileName];
 			}
 		}
 	}];	
@@ -211,7 +211,7 @@
 {
 	NSArray* rootPathAsArray = [myDocument absolutePathOfRepositoryRootAsArray];
 	LowHighPair pair = [logTableView parentToHighestSelectedRevisions];
-	NSString* revisionNumbers = [NSString stringWithFormat:@"%d%:%d", pair.lowRevision, pair.highRevision];
+	NSString* revisionNumbers = fstr(@"%d%:%d", pair.lowRevision, pair.highRevision);
 	[myDocument viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:revisionNumbers];
 }
 

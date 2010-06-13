@@ -99,7 +99,7 @@
 
 - (IBAction) openSheet:(id)sender;
 {
-	[titleText setStringValue:[NSString stringWithFormat:@"Outgoing from “%@”", [self sourceRepositoryName]]];
+	[titleText setStringValue:fstr(@"Outgoing from “%@”", [self sourceRepositoryName])];
 	[super openSheet:sender];
 }
 
@@ -156,13 +156,13 @@
 
 - (void) setConnectionFromFieldsForSource:(SidebarNode*)source andDestination:(SidebarNode*)destination
 {
-	NSString* partialKey = [NSString stringWithFormat:@"Outgoing§%@§%@§", [source path], [destination path]];
+	NSString* partialKey = fstr(@"Outgoing§%@§%@§", [source path], [destination path]);
 	[OptionController setConnections:[myDocument connections] fromOptions:cmdOptions  forKey:partialKey];
 }
 
 - (void) setFieldsFromConnectionForSource:(SidebarNode*)source andDestination:(SidebarNode*)destination
 {
-	NSString* partialKey = [NSString stringWithFormat:@"Outgoing§%@§%@§", [source path], [destination path]];
+	NSString* partialKey = fstr(@"Outgoing§%@§%@§", [source path], [destination path]);
 	[OptionController setOptions:cmdOptions fromConnections:[myDocument connections] forKey:partialKey];
 }
 

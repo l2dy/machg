@@ -75,7 +75,7 @@
 	labelToMove_ = label;
 
 	// Report the label we are about to move
-	NSString* newLabelToMoveMessage = [NSString stringWithFormat:@"%@ to move:%@", [label labelTypeDescription], [label name]];
+	NSString* newLabelToMoveMessage = fstr(@"%@ to move:%@", [label labelTypeDescription], [label name]);
 	[labelToMoveTextField setStringValue:newLabelToMoveMessage];
 	
 	// Update the button and the sheet message
@@ -180,12 +180,12 @@
 	
 	if (!versionToRevertTo || [versionToRevertTo isEqualToString:[labelToMove_ revision]])
 	{
-		NSString* newSheetMessageText = [NSString stringWithFormat:@"select a revision to move the %@ %@ to which is different than the current revision %@", [labelToMove_ labelTypeDescription], [labelToMove_ name], [labelToMove_ revision]];
+		NSString* newSheetMessageText = fstr(@"select a revision to move the %@ %@ to which is different than the current revision %@", [labelToMove_ labelTypeDescription], [labelToMove_ name], [labelToMove_ revision]);
 		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(newSheetMessageText)];
 		return newSheetMessage;
 	}
 
-	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString([NSString stringWithFormat:@"The %@ %@ will be moved from revision ",[labelToMove_ labelTypeDescription], [labelToMove_ name]])];
+	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(fstr(@"The %@ %@ will be moved from revision ",[labelToMove_ labelTypeDescription], [labelToMove_ name]))];
 	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString([labelToMove_ revision])];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" to the selected revision ")];
 	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(versionToRevertTo)];

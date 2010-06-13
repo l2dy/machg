@@ -86,18 +86,18 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 		NSInteger entryIntRev = stringAsInt([entry revision]);
 
 		if (RevOutside(entryIntRev, low, high))
-			return [NSString stringWithFormat:@"Unable to perform collapse because the revision %@ lies outside the range %d to %d.", [entry revision], low, high];
+			return fstr(@"Unable to perform collapse because the revision %@ lies outside the range %d to %d.", [entry revision], low, high);
 
 		NSArray* parentsOfRev  = [entry parentsOfEntry];
 		NSArray* childrenOfRev = [entry childrenOfEntry];
 		if (entryIntRev != low)
 			for (NSNumber* parent in parentsOfRev)
 				if (RevOutside(numberAsInt(parent), low, high) && RevOutside(numberAsInt(parent), entryIntRev - 1, entryIntRev + 1))
-					return [NSString stringWithFormat:@"Unable to perform collapse because one of the selected revisions, %@, has a parent revision %d which lies outside the selected range of revisions %d to %d. All revisions to collapse must have their parents contained in the selected range of revisions.", [entry revision], numberAsInt(parent), low, high];
+					return fstr(@"Unable to perform collapse because one of the selected revisions, %@, has a parent revision %d which lies outside the selected range of revisions %d to %d. All revisions to collapse must have their parents contained in the selected range of revisions.", [entry revision], numberAsInt(parent), low, high);
 		if (entryIntRev != high)
 			for (NSNumber* child in childrenOfRev)
 				if (RevOutside(numberAsInt(child), low, high) && RevOutside(numberAsInt(child), entryIntRev - 1, entryIntRev + 1))
-					return [NSString stringWithFormat:@"Unable to perform collapse because one of the selected revisions, %@, has a child %d which lies outside the selected revisions %d to %d. All revisions to collapse (except the last) must have their children contained in the selected range of revisions.", [entry revision], numberAsInt(child), low, high];
+					return fstr(@"Unable to perform collapse because one of the selected revisions, %@, has a child %d which lies outside the selected revisions %d to %d. All revisions to collapse (except the last) must have their children contained in the selected range of revisions.", [entry revision], numberAsInt(child), low, high);
 	}
 	return nil;
 }
@@ -132,11 +132,11 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 		return;
 	}	
 	
-	NSString* newTitle = [NSString stringWithFormat:@"Collapsing Selected Revisions in “%@”", [myDocument selectedRepositoryShortName]];
+	NSString* newTitle = fstr(@"Collapsing Selected Revisions in “%@”", [myDocument selectedRepositoryShortName]);
 	[collapseSheetTitle setStringValue:newTitle];
 	
 	// Report the branch we are about to collapse on in the dialog
-	NSString* newSheetMessage = [NSString stringWithFormat:@"The following files will be collapsed to the versions as of the revision selected below (%@)", [logTableView selectedRevision]];
+	NSString* newSheetMessage = fstr(@"The following files will be collapsed to the versions as of the revision selected below (%@)", [logTableView selectedRevision]);
 	[sheetInformativeMessageTextField setStringValue: newSheetMessage];
 	
 	[logTableView resetTable:self];
@@ -206,14 +206,14 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	NSString* repositoryName = [[[myDocument sidebar] selectedNode] shortName];
 	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
-	NSString* collapseDescription = [NSString stringWithFormat:@"Collapsing %d-%d in “%@”", pair.lowRevision, pair.highRevision, repositoryName];
+	NSString* collapseDescription = fstr(@"Collapsing %d-%d in “%@”", pair.lowRevision, pair.highRevision, repositoryName);
 	NSMutableArray* argsCollapse  = [NSMutableArray arrayWithObjects:@"collapse", nil];
 
 	// If we are using MacHgs collapse command we need to specify that it is in the extensions folder of the included Mercurial
 	if (UseWhichMercurialBinaryFromDefaults() == eUseMercurialBinaryIncludedInMacHg)
 		[argsCollapse addObject:@"--config" followedBy:@"hgext.collapse="];
 
-	NSString* revisionNumbers = [NSString stringWithFormat:@"%d%:%d", pair.lowRevision, pair.highRevision];
+	NSString* revisionNumbers = fstr(@"%d%:%d", pair.lowRevision, pair.highRevision);
 	[argsCollapse addObject:@"--rev" followedBy:revisionNumbers];
 	[argsCollapse addObject:@"--force"];
 	[argsCollapse addObject:@"--message" followedBy:[combinedCommitMessage string]];

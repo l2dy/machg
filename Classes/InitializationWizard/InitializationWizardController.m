@@ -49,7 +49,7 @@
 - (IBAction) initializationWizardSheetButtonOk:(id)sender
 {
 	NSString* macHgHGRCFilePath = fstr(@"%@/hgrc",applicationSupportFolder());
-	NSString* addition = [NSString stringWithFormat:@"\n[ui]\nusername = %@\n",[self userNameFieldValue]];
+	NSString* addition = fstr(@"\n[ui]\nusername = %@\n",[self userNameFieldValue]);
 	[[NSFileManager defaultManager] appendString:addition toFilePath:macHgHGRCFilePath];
 	
 	[self closeWizard];

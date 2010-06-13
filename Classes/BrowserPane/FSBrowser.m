@@ -396,7 +396,7 @@
 		if (IsNotEmpty(line))
 		{
 			if ([line characterAtIndex:0] == 'R')
-				[newLines addObject:[NSString stringWithFormat:@"S%@",[line substringFromIndex:1]]];
+				[newLines addObject:fstr(@"S%@",[line substringFromIndex:1])];
 			else
 				[newLines addObject:line];
 		}
@@ -520,7 +520,7 @@
 	{
 		NSString* fileName = [[self myDocument] documentNameForAutosave];
 		NSString* repositoryName = [[self myDocument] selectedRepositoryShortName];
-		NSString* columnAutoSaveName = [NSString stringWithFormat:@"File:%@:Repository:%@", fileName ? fileName : @"Untitled", repositoryName ? repositoryName : @"Unnamed"];
+		NSString* columnAutoSaveName = fstr(@"File:%@:Repository:%@", fileName ? fileName : @"Untitled", repositoryName ? repositoryName : @"Unnamed");
 		[self setColumnsAutosaveName:columnAutoSaveName];
 	}
 	absolutePathOfRepositoryRoot_ = [[self myDocument] absolutePathOfRepositoryRoot];

@@ -297,49 +297,49 @@ void setupGlobalsForPartsAndTemplate()
 	if (YES)
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"\nChangeset:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@ : %@\n", revision_, [self changesetInShortForm]])];
+		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@ : %@\n", revision_, [self changesetInShortForm]))];
 	}
 	if (IsNotEmpty([self tags]))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Tags:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@\n", [[self tags] componentsJoinedByString:@", "]])];
+		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", [[self tags] componentsJoinedByString:@", "]))];
 	}
 	if (IsNotEmpty([self bookmarks]))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Bookmarks:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@\n", [[self bookmarks] componentsJoinedByString:@", "]])];
+		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", [[self bookmarks] componentsJoinedByString:@", "]))];
 	}	
 	if (stringIsNonWhiteSpace([self branch]))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Branch:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@\n", [self branch]])];
+		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", [self branch]))];
 	}
 	if (stringIsNonWhiteSpace(parents_))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Parents:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@\n", parents_])];
+		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", parents_))];
 	}
 	if (YES)
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Author:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@\n", author_])];
+		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", author_))];
 	}
 	if (YES)
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Date:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@   ", shortDate_])];
-		[verboseEntry appendAttributedString: grayedAttributedString([NSString stringWithFormat:@"(%@)\n", fullDate_ ? fullDate_ : @""])];
+		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@   ", shortDate_))];
+		[verboseEntry appendAttributedString: grayedAttributedString(fstr(@"(%@)\n", fullDate_ ? fullDate_ : @""))];
 	}
 
 	if (stringIsNonWhiteSpace(fullComment_))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Description:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@\n", fullComment_])];
+		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", fullComment_))];
 	}
 	else if (stringIsNonWhiteSpace(shortComment_))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Description:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@\n", shortComment_])];
+		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", shortComment_))];
 	}
 	
 	if (IsNotEmpty(filesAdded_))
@@ -456,11 +456,11 @@ void setupGlobalsForPartsAndTemplate()
 	[self fullyLoadEntry];
 	NSMutableAttributedString* verboseEntry = [[NSMutableAttributedString alloc] init];
 	[verboseEntry appendAttributedString: categoryAttributedString(@"Commit:\t")];
-	[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@ ", revision_])];
-	[verboseEntry appendAttributedString: grayedAttributedString([NSString stringWithFormat:@"(%@)", author_])];
-	[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@", %@\n", shortDate_])];
+	[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@ ", revision_))];
+	[verboseEntry appendAttributedString: grayedAttributedString(fstr(@"(%@)", author_))];
+	[verboseEntry appendAttributedString: normalAttributedString(fstr(@", %@\n", shortDate_))];
 	[verboseEntry appendAttributedString: categoryAttributedString(@"Description:\t")];
-	[verboseEntry appendAttributedString: normalAttributedString([NSString stringWithFormat:@"%@\n", fullComment_])];
+	[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", fullComment_))];
 
 	return verboseEntry;
 }
@@ -528,7 +528,7 @@ void setupGlobalsForPartsAndTemplate()
 
 - (NSString*) description
 {
-	return [NSString stringWithFormat:@"LogEntry: rev %@, parents %@, comment %@, status %d", revision_, parents_, shortComment_, loadStatus_];
+	return fstr(@"LogEntry: rev %@, parents %@, comment %@, status %d", revision_, parents_, shortComment_, loadStatus_);
 }
 
 @end

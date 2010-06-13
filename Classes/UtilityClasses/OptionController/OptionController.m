@@ -83,7 +83,7 @@
 {
 	if (specialHandling || ![self optionIsSet])
 		return;
-	[args addObject:[NSString stringWithFormat:@"--%@", optionName]];
+	[args addObject:fstr(@"--%@", optionName)];
 	if (optionValueField)
 		[args addObject:[self optionValue]];
 }

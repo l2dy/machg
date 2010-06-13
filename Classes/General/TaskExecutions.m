@@ -177,7 +177,7 @@
 		if ([argPart getCapturesWithRegexAndComponents:regexString firstComponent:&option  secondComponent:&optionArg])
 		{
 			if (IsEmpty(option)) continue;
-			[answer addObject:[NSString stringWithFormat:@"--%@", dupString(option)]];
+			[answer addObject:fstr(@"--%@", dupString(option))];
 			if (IsEmpty(optionArg)) continue;
 			[answer addObject: dupString(optionArg)];
 		}
@@ -232,8 +232,8 @@
 	NSString* filteredCommandString = [theCommandAsString stringByReplacingOccurrencesOfRegex:@"((?:ssh|http|https)://.*?):.*?@" withString:@"$1:***@"];
 	NSString* currentTime = [[NSDate date] description];
 	NSString* hgBinary = executableLocationHG();
-	NSString* message = [NSString stringWithFormat:@"MacHg issued(%@):\n%@ %@\nResult code was:%d\nStandard out was:\n%@\nStandard error was:\n%@\n\n\n",
-						 currentTime, hgBinary, filteredCommandString, results.result, results.outStr, results.errStr];
+	NSString* message = fstr(@"MacHg issued(%@):\n%@ %@\nResult code was:%d\nStandard out was:\n%@\nStandard error was:\n%@\n\n\n",
+						 currentTime, hgBinary, filteredCommandString, results.result, results.outStr, results.errStr);
 	[[NSFileManager defaultManager] appendString:message toFilePath:MacHgLogFileLocation()];
 }
 
@@ -248,12 +248,12 @@
 	// report errors if we asked for error reporting
 	if ([result hasErrors] && bitsInCommon(log, eIssueErrorsInAlerts))
 	{
-		NSString* errorMessage = [NSString stringWithFormat:@"Error During %@", [[result.generatingArgs objectAtIndex:0] capitalizedString]];
+		NSString* errorMessage = fstr(@"Error During %@", [[result.generatingArgs objectAtIndex:0] capitalizedString]);
 
 		// This is a hurestic see the thread I started Versioning of Extensions and Matt's rather empty response here http:
 		// www.selenic.com/pipermail/mercurial/2010-May/032095.html
 		NSString* errorString = IsEmpty(result.errStr) ? result.outStr : result.errStr;
-		NSString* fullErrorMessage = [NSString stringWithFormat:@"Mercurial reported error number %d:\n%@", result.result, errorString];
+		NSString* fullErrorMessage = fstr(@"Mercurial reported error number %d:\n%@", result.result, errorString);
 		dispatch_async(mainQueue(), ^{
 			NSRunAlertPanel(errorMessage, fullErrorMessage, @"OK", nil, nil);
 		});

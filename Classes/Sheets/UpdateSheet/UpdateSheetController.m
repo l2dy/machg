@@ -73,7 +73,7 @@
 
 - (void) openUpdateSheetWithRevision:(NSString*)revision
 {
-	NSString* newTitle = [NSString stringWithFormat:@"Updating All Files in %@", [myDocument selectedRepositoryShortName]];
+	NSString* newTitle = fstr(@"Updating All Files in %@", [myDocument selectedRepositoryShortName]);
 	[updateSheetTitle setStringValue:newTitle];
 	[self setCleanUpdate:NO];
 

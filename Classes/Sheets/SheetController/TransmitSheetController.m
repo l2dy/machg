@@ -104,13 +104,13 @@
 
 - (void) setConnectionFromFieldsForSource:(SidebarNode*)source andDestination:(SidebarNode*)destination
 {
-	NSString* partialKey = [NSString stringWithFormat:@"%@§%@§%@§", [self operationName], [source path], [destination path]];
+	NSString* partialKey = fstr(@"%@§%@§%@§", [self operationName], [source path], [destination path]);
 	[OptionController setConnections:[[self myDocument] connections] fromOptions:cmdOptions  forKey:partialKey];
 }
 
 - (void) setFieldsFromConnectionForSource:(SidebarNode*)source andDestination:(SidebarNode*)destination
 {
-	NSString* partialKey = [NSString stringWithFormat:@"%@§%@§%@§", [self operationName], [source path], [destination path]];
+	NSString* partialKey = fstr(@"%@§%@§%@§", [self operationName], [source path], [destination path]);
 	[OptionController setOptions:cmdOptions fromConnections:[[self myDocument] connections] forKey:partialKey];
 }
 

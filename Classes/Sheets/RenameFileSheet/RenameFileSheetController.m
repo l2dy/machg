@@ -67,7 +67,7 @@
 	if ([theNode isDirectory])
 	{
 		PlayBeep();
-		NSString* subMessage = [NSString stringWithFormat:@"“%@” is a directory. Mercurial only permits renaming files", [filePath lastPathComponent]];
+		NSString* subMessage = fstr(@"“%@” is a directory. Mercurial only permits renaming files", [filePath lastPathComponent]);
 		NSRunAlertPanel(@"Rename Not Allowed", subMessage, @"OK", nil, nil);
 		return;
 	}
@@ -75,7 +75,7 @@
 	if (!bitsInCommon([theNode hgStatus],eHGStatusInRepository))
 	{
 		PlayBeep();
-		NSString* subMessage = [NSString stringWithFormat:@"“%@” is not managed by Mercurial. You can rename or relocate the file in the finder without incident.", [filePath lastPathComponent]];
+		NSString* subMessage = fstr(@"“%@” is not managed by Mercurial. You can rename or relocate the file in the finder without incident.", [filePath lastPathComponent]);
 		NSRunAlertPanel(@"File Not Under Management", subMessage, @"OK", nil, nil);
 		return;
 	}
@@ -95,7 +95,7 @@
 {
 	if (DisplayWarningForRenamingFilesFromDefaults())
 	{
-		NSString* subMessage = [NSString stringWithFormat:@"Are you sure you want to rename “%@” to “%@”?", [theCurrentNameFieldValue_ lastPathComponent], [theNewNameFieldValue_ lastPathComponent]];
+		NSString* subMessage = fstr(@"Are you sure you want to rename “%@” to “%@”?", [theCurrentNameFieldValue_ lastPathComponent], [theNewNameFieldValue_ lastPathComponent]);
 		int result = RunCriticalAlertPanelWithSuppression(@"Renaming Selected File", subMessage, @"Rename", @"Cancel", MHGDisplayWarningForRenamingFiles);
 		if (result != NSAlertFirstButtonReturn)
 			return;

@@ -57,12 +57,12 @@
 
 	[self openSplitViewPaneToDefaultHeight: self];
 	NSString* fileName = [myDocument documentNameForAutosave];
-	[accordionView setAutosaveName:[NSString stringWithFormat:@"File:%@:HistoryPaneSplitPositions", fileName]];
+	[accordionView setAutosaveName:fstr(@"File:%@:HistoryPaneSplitPositions", fileName)];
 	[logTableView setAutosaveTableColumns:YES];
-	[logTableView setAutosaveName:[NSString stringWithFormat:@"File:%@:HistoryTableViewColumnPositions", fileName]];
+	[logTableView setAutosaveName:fstr(@"File:%@:HistoryTableViewColumnPositions", fileName)];
 	[logTableView resetTable:self];
 	[theLabelsTableView_ setAutosaveTableColumns:YES];
-	[theLabelsTableView_ setAutosaveName:[NSString stringWithFormat:@"File:%@:HistoryLabelsTableViewColumnPositions", fileName]];
+	[theLabelsTableView_ setAutosaveName:fstr(@"File:%@:HistoryLabelsTableViewColumnPositions", fileName)];
 	
 	[logTableView setTarget:self];
 	[logTableView setDoubleAction:@selector(handleLogTableViewDoubleClick:)];	
@@ -86,7 +86,7 @@
 // MARK: Actions Notifications & Updating
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (NSString*) searchCaption		{ return [NSString stringWithFormat:@"%d entries shown", [logTableView numberOfTableRows]]; }
+- (NSString*) searchCaption		{ return fstr(@"%d entries shown", [logTableView numberOfTableRows]); }
 
 - (IBAction) refreshHistoryPane:(id)sender
 {
@@ -182,7 +182,7 @@
 {
 	NSArray* rootPathAsArray = [myDocument absolutePathOfRepositoryRootAsArray];
 	LowHighPair pair = [logTableView parentToHighestSelectedRevisions];
-	NSString* revisionNumbers = [NSString stringWithFormat:@"%d%:%d", pair.lowRevision, pair.highRevision];
+	NSString* revisionNumbers = fstr(@"%d%:%d", pair.lowRevision, pair.highRevision);
 	[myDocument viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:revisionNumbers];
 }
 
@@ -232,7 +232,7 @@
 		{
 			if (DisplayWarningForTagRemovalFromDefaults())
 			{
-				NSString* subMessage = [NSString stringWithFormat:@"Are you sure you want to remove the tag “%@” from revision “%@”?", name, rev];
+				NSString* subMessage = fstr(@"Are you sure you want to remove the tag “%@” from revision “%@”?", name, rev);
 				int result = RunCriticalAlertPanelWithSuppression(@"Removing Selected Label", subMessage, @"Remove", @"Cancel", MHGDisplayWarningForTagRemoval);
 				if (result != NSAlertFirstButtonReturn)
 					return;
@@ -249,7 +249,7 @@
 		{
 			if (DisplayWarningForTagRemovalFromDefaults())
 			{
-				NSString* subMessage = [NSString stringWithFormat:@"Are you sure you want to remove the bookmark “%@” from revision “%@”?", name, rev];
+				NSString* subMessage = fstr(@"Are you sure you want to remove the bookmark “%@” from revision “%@”?", name, rev);
 				int result = RunCriticalAlertPanelWithSuppression(@"Removing Selected Label", subMessage, @"Remove", @"Cancel", MHGDisplayWarningForTagRemoval);
 				if (result != NSAlertFirstButtonReturn)
 					return;
@@ -268,9 +268,9 @@
 			{
 				NSString* subMessage;
 				if (needToUpdateToNewRevision)
-					subMessage = [NSString stringWithFormat:@"Are you sure you want to remove the branch “%@” from revision “%@”? (To do this Mercurial needs to update your repository to revision “%@”.)", name, rev];
+					subMessage = fstr(@"Are you sure you want to remove the branch “%@” from revision “%@”? (To do this Mercurial needs to update your repository to revision “%@”.)", name, rev);
 				else
-					subMessage = [NSString stringWithFormat:@"Are you sure you want to remove the branch “%@” from revision “%@”?", name, rev];
+					subMessage = fstr(@"Are you sure you want to remove the branch “%@” from revision “%@”?", name, rev);
 				
 				int result = RunCriticalAlertPanelWithSuppression(@"Removing Selected Label", subMessage, @"Remove", @"Cancel", MHGDisplayWarningForTagRemoval);
 				if (result != NSAlertFirstButtonReturn)

@@ -95,7 +95,7 @@
 
 - (IBAction) openSheet:(id)sender;
 {
-	[titleText setStringValue:[NSString stringWithFormat:@"Incoming to “%@”", [self destinationRepositoryName]]];
+	[titleText setStringValue:fstr(@"Incoming to “%@”", [self destinationRepositoryName])];
 	[super openSheet:sender];
 }
 
@@ -123,7 +123,7 @@
 	// Execute the incoming command
 	[myDocument dispatchToMercurialQueuedWithDescription:@"Incoming Changesets" process:^{
 		ExecutionResult* results = [myDocument executeMercurialWithArgs:argsIncoming  fromRoot:rootPath  whileDelayingEvents:YES];
-		NSString* messageString = [NSString stringWithFormat:@"Results of Incoming “%@” into “%@”", incomingSourceName, incomingDestinationName];
+		NSString* messageString = fstr(@"Results of Incoming “%@” into “%@”", incomingSourceName, incomingDestinationName);
 		NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
 		[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"Incoming Results - %@", incomingDestinationName)];
 	}];

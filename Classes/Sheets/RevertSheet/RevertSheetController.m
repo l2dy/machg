@@ -64,7 +64,7 @@
 - (void) openRevertSheetWithPaths:(NSArray*)paths andRevision:(NSString*)revision
 {
 	// Report the branch we are about to revert on in the dialog
-	NSString* newSheetMessage = [NSString stringWithFormat:@"The following files will be reverted to the versions as of the revision selected below (%@)", [logTableView selectedRevision]];
+	NSString* newSheetMessage = fstr(@"The following files will be reverted to the versions as of the revision selected below (%@)", [logTableView selectedRevision]);
 	[sheetInformativeMessageTextField setStringValue: newSheetMessage];
 	absolutePathsOfFilesToRevert = paths;
 	
@@ -77,7 +77,7 @@
 
 - (IBAction) openRevertSheetWithAllFiles:(id)sender
 {
-	NSString* newTitle = [NSString stringWithFormat:@"Reverting All Files in %@", [myDocument selectedRepositoryShortName]];
+	NSString* newTitle = fstr(@"Reverting All Files in %@", [myDocument selectedRepositoryShortName]);
 	[revertSheetTitle setStringValue:newTitle];
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	[self openRevertSheetWithPaths:[NSArray arrayWithObject:rootPath] andRevision:[myDocument getHGParent1Revision]];
@@ -85,7 +85,7 @@
 
 - (IBAction) openRevertSheetWithSelectedFiles:(id)sender
 {
-	NSString* newTitle = [NSString stringWithFormat:@"Reverting Selected Files in %@", [myDocument selectedRepositoryShortName]];
+	NSString* newTitle = fstr(@"Reverting Selected Files in %@", [myDocument selectedRepositoryShortName]);
 	[revertSheetTitle setStringValue:newTitle];
 	NSArray* paths = [myDocument absolutePathsOfBrowserChosenFiles];
 	if ([paths count] <= 0)

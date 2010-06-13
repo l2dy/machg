@@ -191,7 +191,7 @@
 		NSString* incomingCount = [incomingCounts objectForKey:[node path]];
 		if (node != selectedNode && outgoingCount && incomingCount)
 		{
-			NSString* badgeString = [NSString stringWithFormat:@"%@↓:%@↑",incomingCount, outgoingCount];
+			NSString* badgeString = fstr(@"%@↓:%@↑",incomingCount, outgoingCount);
 			[badgeCell setBadgeString:badgeString];
 			[badgeCell setHasBadge:YES];
 		}
@@ -386,7 +386,7 @@
 		if ([serverId isEqualToString:@"default"])
 			caption = captionBase;
 		else
-			caption = [NSString stringWithFormat:@"%@ (%@)", captionBase, serverId];
+			caption = fstr(@"%@ (%@)", captionBase, serverId);
 		
 		SidebarNode* serverNode = [SidebarNode nodeWithCaption:caption forServerPath:serverPath];
 		[[AppController sharedAppController] computeRepositoryIdentityForPath:serverPath];
@@ -604,28 +604,28 @@
         if (node != nil && [node isLocalRepositoryRef])
 		{
 			[theMenu addItem:[NSMenuItem separatorItem]];
-			[theMenu addItemWithTitle:[NSString stringWithFormat:@"Clone “%@”", [node shortName]]				action:@selector(mainMenuCloneRepository:)					keyEquivalent:@""];
-			[theMenu addItemWithTitle:[NSString stringWithFormat:@"Configure “%@”", [node shortName]]			action:@selector(sidebarMenuConfigureLocalRepositoryRef:)	keyEquivalent:@""];
-			[theMenu addItemWithTitle:[NSString stringWithFormat:@"Delete Reference “%@”", [node shortName]]	action:@selector(sidebarMenuRemoveSidebarItem:)				keyEquivalent:@""];
+			[theMenu addItemWithTitle:fstr(@"Clone “%@”", [node shortName])				action:@selector(mainMenuCloneRepository:)					keyEquivalent:@""];
+			[theMenu addItemWithTitle:fstr(@"Configure “%@”", [node shortName])			action:@selector(sidebarMenuConfigureLocalRepositoryRef:)	keyEquivalent:@""];
+			[theMenu addItemWithTitle:fstr(@"Delete Reference “%@”", [node shortName])	action:@selector(sidebarMenuRemoveSidebarItem:)				keyEquivalent:@""];
 			[theMenu addItem:[NSMenuItem separatorItem]];
-			[theMenu addItemWithTitle:[NSString stringWithFormat:@"Reveal “%@” in Finder", [node shortName]]	action:@selector(sidebarMenuRevealRepositoryInFinder:)		keyEquivalent:@""];
-			[theMenu addItemWithTitle:@"Open Terminal Here"														action:@selector(sidebarMenuOpenTerminalHere:)				keyEquivalent:@""];
+			[theMenu addItemWithTitle:fstr(@"Reveal “%@” in Finder", [node shortName])	action:@selector(sidebarMenuRevealRepositoryInFinder:)		keyEquivalent:@""];
+			[theMenu addItemWithTitle:@"Open Terminal Here"								action:@selector(sidebarMenuOpenTerminalHere:)				keyEquivalent:@""];
 			return;
 		}
 
 		if (node != nil && [node isServerRepositoryRef])
 		{
 			[theMenu addItem:[NSMenuItem separatorItem]];
-			[theMenu addItemWithTitle:[NSString stringWithFormat:@"Clone “%@”", [node shortName]]				action:@selector(mainMenuCloneRepository:)					keyEquivalent:@""];
-			[theMenu addItemWithTitle:[NSString stringWithFormat:@"Configure “%@”", [node shortName]]			action:@selector(sidebarMenuConfigureServerRepositoryRef:)	keyEquivalent:@""];
-			[theMenu addItemWithTitle:[NSString stringWithFormat:@"Delete Reference “%@”", [node shortName]]	action:@selector(sidebarMenuRemoveSidebarItem:)				keyEquivalent:@""];
+			[theMenu addItemWithTitle:fstr(@"Clone “%@”", [node shortName])				action:@selector(mainMenuCloneRepository:)					keyEquivalent:@""];
+			[theMenu addItemWithTitle:fstr(@"Configure “%@”", [node shortName])			action:@selector(sidebarMenuConfigureServerRepositoryRef:)	keyEquivalent:@""];
+			[theMenu addItemWithTitle:fstr(@"Delete Reference “%@”", [node shortName])	action:@selector(sidebarMenuRemoveSidebarItem:)				keyEquivalent:@""];
 			return;
 		}
 
 		if (node != nil)
 		{
 			[theMenu addItem:[NSMenuItem separatorItem]];
-			[theMenu addItemWithTitle:[NSString stringWithFormat:@"Delete Group “%@”", [node shortName]]		action:@selector(sidebarMenuRemoveSidebarItem:)				keyEquivalent:@""];
+			[theMenu addItemWithTitle:fstr(@"Delete Group “%@”", [node shortName])		action:@selector(sidebarMenuRemoveSidebarItem:)				keyEquivalent:@""];
 			return;
 		}
     }
@@ -712,7 +712,7 @@
 	BOOL deleteRepositoryAsWell = NO;
 	if (DisplayWarningForRepositoryDeletionFromDefaults() && [node isExistentLocalRepositoryRef])
 	{
-		NSString* subMessage = [NSString stringWithFormat:@"Are you sure you want to delete the bookmark “%@”", [node shortName]];
+		NSString* subMessage = fstr(@"Are you sure you want to delete the bookmark “%@”", [node shortName]);
 		int result = RunCriticalAlertPanelOptionsWithSuppression( @"Delete Repository Bookmark", subMessage, @"Delete Bookmark", @"Cancel", @"Delete Bookmark and Repository", MHGDisplayWarningForRepositoryDeletion);
 		if (result == NSAlertSecondButtonReturn)
 			return;
@@ -721,21 +721,21 @@
 	}
 	else if (DisplayWarningForRepositoryDeletionFromDefaults() && [node isServerRepositoryRef])
 	{
-		NSString* subMessage = [NSString stringWithFormat:@"Are you sure you want to delete the server bookmark “%@”", [node shortName]];
+		NSString* subMessage = fstr(@"Are you sure you want to delete the server bookmark “%@”", [node shortName]);
 		int result = RunCriticalAlertPanelOptionsWithSuppression( @"Delete Repository Bookmark", subMessage, @"Delete Bookmark", @"Cancel", nil, MHGDisplayWarningForRepositoryDeletion);
 		if (result == NSAlertSecondButtonReturn)
 			return;
 	}
 	else if (DisplayWarningForRepositoryDeletionFromDefaults() && [node isSectionNode])
 	{
-		NSString* subMessage = [NSString stringWithFormat:@"Are you sure you want to delete the group “%@”", [node shortName]];
+		NSString* subMessage = fstr(@"Are you sure you want to delete the group “%@”", [node shortName]);
 		int result = RunCriticalAlertPanelOptionsWithSuppression( @"Delete Group", subMessage, @"Delete Group", @"Cancel", nil, MHGDisplayWarningForRepositoryDeletion);
 		if (result == NSAlertSecondButtonReturn)
 			return;
 	}
 	else if (!DisplayWarningForRepositoryDeletionFromDefaults() && [node isExistentLocalRepositoryRef])
 	{
-		NSString* subMessage = [NSString stringWithFormat:@"The bookmark “%@” will be deleted. Do you also want to move to the trash the underlying repository located at: \n   %@", [node shortName],[node path]];
+		NSString* subMessage = fstr(@"The bookmark “%@” will be deleted. Do you also want to move to the trash the underlying repository located at: \n   %@", [node shortName],[node path]);
 		NSInteger result = NSRunCriticalAlertPanel(@"Delete Repository?", subMessage, @"Leave Repository Alone", @"Delete Repository", nil);
 		if (result == NSAlertAlternateReturn)
 			deleteRepositoryAsWell = YES;
