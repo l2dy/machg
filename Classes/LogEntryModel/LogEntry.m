@@ -49,12 +49,12 @@ void setupGlobalsForPartsAndTemplate()
 	// 'hg log --template "{branches}\n{branch}" --rev tip'
 	// This of course contradicts the output of 'hg branch' and 'hg branches'
 	NSArray* templateParts;
-	templateParts       = [NSArray arrayWithObjects:@"{rev}",    @"{author|person}", @"{date|age}", @"{parents}", @"{node|short}", @"{desc|firstline}", nil];
-	namesOfPartsShort   = [NSArray arrayWithObjects:@"revision", @"author",          @"shortDate",  @"parents",   @"changeset",    @"shortComment",     nil];
+	templateParts       = [NSArray arrayWithObjects:@"{rev}",    @"{author|person}", @"{date}", @"{parents}", @"{node|short}", @"{desc|firstline}", nil];
+	namesOfPartsShort   = [NSArray arrayWithObjects:@"revision", @"author",          @"date",   @"parents",   @"changeset",    @"shortComment",     nil];
 	templateStringShort = [[templateParts componentsJoinedByString:entryPartSeparator] stringByAppendingString:entrySeparator];
 
-	templateParts       = [NSArray arrayWithObjects:@"{rev}",    @"{author|person}", @"{date|age}", @"{date|isodate}", @"{parents}", @"{node|short}",  @"{desc|firstline}", @"{desc}",      nil];
-	namesOfPartsFull    = [NSArray arrayWithObjects:@"revision", @"author",          @"shortDate",  @"fullDate",       @"parents",   @"changeset",     @"shortComment",     @"fullComment", nil];
+	templateParts       = [NSArray arrayWithObjects:@"{rev}",    @"{author|person}", @"{date}", @"{parents}", @"{node|short}",  @"{desc|firstline}", @"{desc}",      nil];
+	namesOfPartsFull    = [NSArray arrayWithObjects:@"revision", @"author",          @"date",   @"parents",   @"changeset",     @"shortComment",     @"fullComment", nil];
 	templateStringFull  = [[templateParts componentsJoinedByString:entryPartSeparator] stringByAppendingString:entrySeparator];
 }
 
@@ -73,8 +73,6 @@ void setupGlobalsForPartsAndTemplate()
 @synthesize		loadStatus = loadStatus_;
 @synthesize		revision = revision_;
 @synthesize 	author = author_;
-@synthesize 	shortDate = shortDate_;
-@synthesize 	fullDate = fullDate_;
 @synthesize 	shortComment = shortComment_;
 @synthesize 	fullComment = fullComment_;
 @synthesize 	parents = parents_;
@@ -101,8 +99,7 @@ void setupGlobalsForPartsAndTemplate()
 		collection_ = collection;
 		revision_ = nil;
 		author_ = nil;
-		shortDate_ = nil;
-		fullDate_ = nil;
+		date_ = nil;
 		shortComment_ = nil;
 		fullComment_ = nil;
 		parents_ = nil;
@@ -212,8 +209,7 @@ void setupGlobalsForPartsAndTemplate()
 	[entry setParents:[collection getHGParents]];
 	[entry setShortComment:@"Current version (not yet committed)."];
 	[entry setFullComment:@"Current version (not yet committed)."];
-	[entry setShortDate:@"now"];
-	[entry setFullDate:@"now"];
+	entry->date_ = [NSDate dateWithTimeIntervalSinceNow:0];
 	[entry setLoadStatus:eLogEntryLoadedFully];
 	[entry setAuthor:@""];
 	entry->branch_ = @"";
@@ -287,6 +283,72 @@ void setupGlobalsForPartsAndTemplate()
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
+// MARK:  Date handling
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (NSString*) shortDate
+{
+	static double kSecond = 1;
+	static double kMinute = 60;
+	static double kHour   = 3600;
+	static double kDay    = 3600 * 24;
+	static double kWeek   = 3600 * 24 * 7;
+	static double kMonth  = 3600 * 24 * 30;
+	static double kYear   = 3600 * 24 * 365;
+	
+	if ([collection_ incompleteRevisionEntry] == self)
+		return @"now";
+	
+	NSDate* now = [NSDate dateWithTimeIntervalSinceNow:0];
+	NSTimeInterval delta = ABS([date_ timeIntervalSinceNow]);
+	
+	NSString* description;
+	BOOL inPast = [date_ isBefore:now];
+	NSString* relation = inPast ? @"ago" : @"in the future"; 
+	if      (delta >= 2 * kYear)	description = fstr(@"%d years %@",   llround(floor(delta / kYear)),   relation);
+	else if (delta >= 2 * kMonth)	description = fstr(@"%d months %@",  llround(floor(delta / kMonth)),  relation);
+	else if (delta >= 2 * kWeek)	description = fstr(@"%d weeks %@",   llround(floor(delta / kWeek)),   relation);
+	else if (delta >= 2 * kDay)		description = fstr(@"%d days %@",    llround(floor(delta / kDay)),    relation);
+	else if (delta >= 2 * kHour)	description = fstr(@"%d hours %@",   llround(floor(delta / kHour)),   relation);
+	else if (delta >= 2 * kMinute)	description = fstr(@"%d minutes %@", llround(floor(delta / kMinute)), relation);
+	else							description = fstr(@"%d seconds %@", llround(floor(delta / kSecond)), relation);
+	return description;
+}
+
+- (NSString*) fullDate
+{
+	if ([collection_ incompleteRevisionEntry] == self)
+		return @"now";
+
+	return [date_ descriptionWithLocale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
+}
+
+- (void) setDate:(NSString*)dateString
+{
+	NSString* base;
+	NSString* rest;
+	BOOL matched = [dateString getCapturesWithRegexAndTrimedComponents:@"(\\d+)\\s*(.*)" firstComponent:&base secondComponent:&rest];
+	if (!matched)
+	{
+		date_ = [NSDate dateWithTimeIntervalSinceNow:0.0];
+		return;
+	}
+	
+	float offset = [rest floatValue];
+	float date = [base floatValue];
+	if (date != NAN && offset != NAN)
+		date_ = [NSDate dateWithTimeIntervalSince1970: date + offset];
+	else if (date != NAN)
+		date_ = [NSDate dateWithTimeIntervalSince1970: date];
+	else
+		date_ = [NSDate dateWithTimeIntervalSinceNow:0.0];
+}
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
 // MARK: Formatted Entries
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -327,8 +389,8 @@ void setupGlobalsForPartsAndTemplate()
 	if (YES)
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Date:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@   ", shortDate_))];
-		[verboseEntry appendAttributedString: grayedAttributedString(fstr(@"(%@)\n", fullDate_ ? fullDate_ : @""))];
+		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@   ", [self shortDate]))];
+		[verboseEntry appendAttributedString: grayedAttributedString(fstr(@"(%@)\n", [self fullDate]))];
 	}
 
 	if (stringIsNonWhiteSpace(fullComment_))
@@ -458,7 +520,7 @@ void setupGlobalsForPartsAndTemplate()
 	[verboseEntry appendAttributedString: categoryAttributedString(@"Commit:\t")];
 	[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@ ", revision_))];
 	[verboseEntry appendAttributedString: grayedAttributedString(fstr(@"(%@)", author_))];
-	[verboseEntry appendAttributedString: normalAttributedString(fstr(@", %@\n", shortDate_))];
+	[verboseEntry appendAttributedString: normalAttributedString(fstr(@", %@\n", [self shortDate]))];
 	[verboseEntry appendAttributedString: categoryAttributedString(@"Description:\t")];
 	[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", fullComment_))];
 

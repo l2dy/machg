@@ -22,8 +22,7 @@ extern void setupGlobalsForPartsAndTemplate();
 	RepositoryData* collection_;
 	NSString* 	revision_;
 	NSString* 	author_;
-	NSString* 	shortDate_;
-	NSString* 	fullDate_;
+	NSDate* 	date_;
 	NSString* 	shortComment_;
 	NSString* 	fullComment_;
 	NSString* 	parents_;
@@ -40,8 +39,6 @@ extern void setupGlobalsForPartsAndTemplate();
 @property (readwrite,assign) LogEntryLoadStatus loadStatus;
 @property (readwrite,assign) NSString* 	revision;
 @property (readwrite,assign) NSString* 	author;
-@property (readwrite,assign) NSString* 	shortDate;
-@property (readwrite,assign) NSString* 	fullDate;
 @property (readwrite,assign) NSString* 	shortComment;
 @property (readwrite,assign) NSString* 	fullComment;
 @property (readwrite,assign) NSString* 	parents;
@@ -77,6 +74,12 @@ extern void setupGlobalsForPartsAndTemplate();
 - (BOOL)	  isFullyLoaded;
 - (RepositoryData*) repositoryData;
 - (NSString*) firstParent;
+
+
+// Date handling
+- (NSString*) shortDate;
+- (NSString*) fullDate;
+- (void)	  setDate:(NSString*)dateString;
 
 
 // Presentation of Entry
