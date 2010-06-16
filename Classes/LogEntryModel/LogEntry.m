@@ -31,8 +31,8 @@ static NSArray*  namesOfPartsShort  = nil;
 static NSArray*  namesOfPartsFull   = nil;
 NSString* templateStringShort = nil;
 NSString* templateStringFull  = nil;
-NSString* const entrySeparator      = @"\n\n‹‡›\n";			// We just need to choose two strings which will never be used inside the *comment* of a commit. (Its not disastrous if
-NSString* const entryPartSeparator	= @"\n‹,›\n";			// they are though its just the entry for that will display missing....)
+NSString* const entrySeparator      = @"\n\n‚Äπ‚Ä°‚Ä∫\n";			// We just need to choose two strings which will never be used inside the *comment* of a commit. (Its not disastrous if
+NSString* const entryPartSeparator	= @"\n‚Äπ,‚Ä∫\n";			// they are though its just the entry for that will display missing....)
 
 
 
@@ -320,7 +320,16 @@ void setupGlobalsForPartsAndTemplate()
 	if ([collection_ incompleteRevisionEntry] == self)
 		return @"now";
 
-	return [date_ descriptionWithLocale:[[NSUserDefaults standardUserDefaults] dictionaryRepresentation]];
+	static NSDateFormatter* dateFormatter = nil;
+	if (!dateFormatter)
+	{
+		dateFormatter = [[NSDateFormatter alloc] init];
+		[dateFormatter setDateStyle:NSDateFormatterLongStyle];
+		[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+		[dateFormatter setDoesRelativeDateFormatting:YES];
+	}
+	
+	return [dateFormatter stringFromDate:date_];
 }
 
 - (void) setDate:(NSString*)dateString
