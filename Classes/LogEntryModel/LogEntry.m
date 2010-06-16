@@ -325,23 +325,7 @@ void setupGlobalsForPartsAndTemplate()
 
 - (void) setDate:(NSString*)dateString
 {
-	NSString* base;
-	NSString* rest;
-	BOOL matched = [dateString getCapturesWithRegexAndTrimedComponents:@"(\\d+)\\s*(.*)" firstComponent:&base secondComponent:&rest];
-	if (!matched)
-	{
-		date_ = [NSDate dateWithTimeIntervalSinceNow:0.0];
-		return;
-	}
-	
-	float offset = [rest floatValue];
-	float date = [base floatValue];
-	if (date != NAN && offset != NAN)
-		date_ = [NSDate dateWithTimeIntervalSince1970: date + offset];
-	else if (date != NAN)
-		date_ = [NSDate dateWithTimeIntervalSince1970: date];
-	else
-		date_ = [NSDate dateWithTimeIntervalSinceNow:0.0];
+	date_ = [NSDate dateWithUTCdatePlusOffset:dateString];
 }
 
 

@@ -1044,10 +1044,27 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 
 // MARK: -
-@implementation NSDate ( NSDatePlusComparisons )
+@implementation NSDate ( NSDatePlusUtilities )
 - (BOOL)	isBefore:(NSDate*)aDate
 {
 	return ([self compare:aDate] == NSOrderedAscending);
+}
++ (NSDate*) dateWithUTCdatePlusOffset:(NSString*)utcDatePlusOffset
+{
+	NSString* base;
+	NSString* rest;
+	BOOL matched = [utcDatePlusOffset getCapturesWithRegexAndTrimedComponents:@"(\\d+)\\s*(.*)" firstComponent:&base secondComponent:&rest];
+	if (!matched)
+		return [NSDate dateWithTimeIntervalSinceNow:0.0];
+	
+	double offset = [rest floatValue];
+	double date   = [base floatValue];
+	if (date != NAN && offset != NAN)
+		return [NSDate dateWithTimeIntervalSince1970: date + offset];
+	if (date != NAN)
+		return [NSDate dateWithTimeIntervalSince1970: date];
+	
+	return [NSDate dateWithTimeIntervalSinceNow:0.0];
 }
 @end
 
