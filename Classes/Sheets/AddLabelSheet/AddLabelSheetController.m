@@ -187,7 +187,7 @@ NSString* kTheRevisionFieldValue = @"theRevisionFieldValue";
 
 - (IBAction) openAddLabelSheet:(id)sender
 {
-	HistoryPaneController*	theHistoryPane = [myDocument theHistoryPaneController];
+	HistoryPaneView* theHistoryPane = [myDocument theHistoryPaneView];
 	BOOL wasShowingHistoryPane = [myDocument showingHistoryPane];
 	[myDocument actionSwitchViewToHistoryPane:sender];				// Open the log inspector
 	[[myDocument toolbarSearchField] setStringValue:@""];			// reset the search term

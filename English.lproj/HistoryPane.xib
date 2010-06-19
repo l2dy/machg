@@ -12,7 +12,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="585"/>
+			<integer value="581"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1781,92 +1781,12 @@
 					<int key="connectionID">731</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">historyMenuDiffAllToChosenRevision:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="747438026"/>
-					</object>
-					<int key="connectionID">739</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">historyMenuRevertAllToChosenRevision:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="421984087"/>
-					</object>
-					<int key="connectionID">740</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">historyMenuUpdateRepositoryToChosenRevision:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="267544846"/>
-					</object>
-					<int key="connectionID">741</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">historyMenuMergeRevision:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="523038910"/>
-					</object>
-					<int key="connectionID">742</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">historyMenuManifestOfChosenRevision:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="64259375"/>
-					</object>
-					<int key="connectionID">743</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">historyMenuViewRevisionDifferences:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="338504833"/>
-					</object>
-					<int key="connectionID">744</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">detailedEntryTextView</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="423346033"/>
-					</object>
-					<int key="connectionID">775</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">detailedEntryTextView</string>
 						<reference key="source" ref="208783626"/>
 						<reference key="destination" ref="423346033"/>
 					</object>
 					<int key="connectionID">776</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">detailsView</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="493621790"/>
-					</object>
-					<int key="connectionID">781</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">historyMenuAddLabelToChosenRevision:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="134642559"/>
-					</object>
-					<int key="connectionID">782</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">logTableView</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="208783626"/>
-					</object>
-					<int key="connectionID">837</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -1997,14 +1917,6 @@
 					<int key="connectionID">911</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">theLabelsTableView_</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="609977039"/>
-					</object>
-					<int key="connectionID">913</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">resetTable:</string>
 						<reference key="source" ref="609977039"/>
@@ -2045,46 +1957,6 @@
 					<int key="connectionID">950</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">labelsMenuRemoveChosenLabel:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="130705725"/>
-					</object>
-					<int key="connectionID">952</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">labelsMenuUpdateRepositoryToChosenRevision:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="654669701"/>
-					</object>
-					<int key="connectionID">953</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">labelsMenuRemoveChosenLabel:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="106307072"/>
-					</object>
-					<int key="connectionID">955</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">historyMenuAddLabelToChosenRevision:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="997326290"/>
-					</object>
-					<int key="connectionID">956</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">historyMenuAddLabelToChosenRevision:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="459589586"/>
-					</object>
-					<int key="connectionID">957</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">buttonsContainerInDivider</string>
 						<reference key="source" ref="939079686"/>
@@ -2117,38 +1989,6 @@
 					<int key="connectionID">963</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">accordionView</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="470152575"/>
-					</object>
-					<int key="connectionID">972</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">removeLabelButton</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="106307072"/>
-					</object>
-					<int key="connectionID">973</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">parentController</string>
-						<reference key="source" ref="208783626"/>
-						<reference key="destination" ref="1001"/>
-					</object>
-					<int key="connectionID">974</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">parentController</string>
-						<reference key="source" ref="609977039"/>
-						<reference key="destination" ref="1001"/>
-					</object>
-					<int key="connectionID">975</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">mainMenuImportPatches:</string>
 						<reference key="source" ref="1003"/>
@@ -2165,12 +2005,188 @@
 					<int key="connectionID">980</int>
 				</object>
 				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">accordionView</string>
+						<reference key="source" ref="945562250"/>
+						<reference key="destination" ref="470152575"/>
+					</object>
+					<int key="connectionID">984</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">logTableView</string>
+						<reference key="source" ref="945562250"/>
+						<reference key="destination" ref="208783626"/>
+					</object>
+					<int key="connectionID">985</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">theLabelsTableView_</string>
+						<reference key="source" ref="945562250"/>
+						<reference key="destination" ref="609977039"/>
+					</object>
+					<int key="connectionID">986</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">removeLabelButton</string>
+						<reference key="source" ref="945562250"/>
+						<reference key="destination" ref="106307072"/>
+					</object>
+					<int key="connectionID">987</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">detailsView</string>
+						<reference key="source" ref="945562250"/>
+						<reference key="destination" ref="493621790"/>
+					</object>
+					<int key="connectionID">988</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">historyMenuAddLabelToChosenRevision:</string>
+						<reference key="source" ref="945562250"/>
+						<reference key="destination" ref="134642559"/>
+					</object>
+					<int key="connectionID">989</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">historyMenuAddLabelToChosenRevision:</string>
+						<reference key="source" ref="945562250"/>
+						<reference key="destination" ref="997326290"/>
+					</object>
+					<int key="connectionID">990</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">historyMenuDiffAllToChosenRevision:</string>
+						<reference key="source" ref="945562250"/>
+						<reference key="destination" ref="747438026"/>
+					</object>
+					<int key="connectionID">991</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">historyMenuRevertAllToChosenRevision:</string>
+						<reference key="source" ref="945562250"/>
+						<reference key="destination" ref="421984087"/>
+					</object>
+					<int key="connectionID">992</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">historyMenuUpdateRepositoryToChosenRevision:</string>
+						<reference key="source" ref="945562250"/>
+						<reference key="destination" ref="267544846"/>
+					</object>
+					<int key="connectionID">993</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">historyMenuMergeRevision:</string>
+						<reference key="source" ref="945562250"/>
+						<reference key="destination" ref="523038910"/>
+					</object>
+					<int key="connectionID">994</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">historyMenuManifestOfChosenRevision:</string>
+						<reference key="source" ref="945562250"/>
+						<reference key="destination" ref="64259375"/>
+					</object>
+					<int key="connectionID">995</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">labelsMenuRemoveChosenLabel:</string>
+						<reference key="source" ref="945562250"/>
+						<reference key="destination" ref="106307072"/>
+					</object>
+					<int key="connectionID">996</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">labelsMenuRemoveChosenLabel:</string>
+						<reference key="source" ref="945562250"/>
+						<reference key="destination" ref="130705725"/>
+					</object>
+					<int key="connectionID">997</int>
+				</object>
+				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">labelsMenuMoveChosenLabel:</string>
-						<reference key="source" ref="1001"/>
+						<reference key="source" ref="945562250"/>
 						<reference key="destination" ref="908562197"/>
 					</object>
-					<int key="connectionID">983</int>
+					<int key="connectionID">998</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">labelsMenuUpdateRepositoryToChosenRevision:</string>
+						<reference key="source" ref="945562250"/>
+						<reference key="destination" ref="654669701"/>
+					</object>
+					<int key="connectionID">999</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">historyMenuViewRevisionDifferences:</string>
+						<reference key="source" ref="945562250"/>
+						<reference key="destination" ref="338504833"/>
+					</object>
+					<int key="connectionID">1000</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">historyMenuAddLabelToChosenRevision:</string>
+						<reference key="source" ref="945562250"/>
+						<reference key="destination" ref="459589586"/>
+					</object>
+					<int key="connectionID">1001</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">parentController</string>
+						<reference key="source" ref="609977039"/>
+						<reference key="destination" ref="945562250"/>
+					</object>
+					<int key="connectionID">1002</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">parentController</string>
+						<reference key="source" ref="208783626"/>
+						<reference key="destination" ref="945562250"/>
+					</object>
+					<int key="connectionID">1003</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">detailedEntryTextView</string>
+						<reference key="source" ref="945562250"/>
+						<reference key="destination" ref="423346033"/>
+					</object>
+					<int key="connectionID">1004</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">parentController</string>
+						<reference key="source" ref="945562250"/>
+						<reference key="destination" ref="1001"/>
+					</object>
+					<int key="connectionID">1005</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">theHistoryPaneView</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="945562250"/>
+					</object>
+					<int key="connectionID">1007</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -3002,6 +3018,7 @@
 					<string>348.IBPluginDependency</string>
 					<string>384.IBPluginDependency</string>
 					<string>415.IBPluginDependency</string>
+					<string>528.CustomClassName</string>
 					<string>528.IBEditorWindowLastContentRect</string>
 					<string>528.IBPluginDependency</string>
 					<string>581.IBPluginDependency</string>
@@ -3119,7 +3136,8 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{20, 343}, {822, 631}}</string>
+					<string>HistoryPaneView</string>
+					<string>{{164, 16}, {822, 631}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3241,7 +3259,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">983</int>
+			<int key="maxID">1007</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3249,6 +3267,26 @@
 				<object class="IBPartialClassDescription">
 					<string key="className">HistoryPaneController</string>
 					<string key="superclassName">NSViewController</string>
+					<object class="NSMutableDictionary" key="outlets">
+						<string key="NS.key.0">theHistoryPaneView</string>
+						<string key="NS.object.0">HistoryPaneView</string>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="175243914">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">Classes/HistoryPane/HistoryPaneController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">HistoryPaneController</string>
+					<string key="superclassName">NSViewController</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBUserSource</string>
+						<string key="minorKey"/>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">HistoryPaneView</string>
+					<string key="superclassName">NSView</string>
 					<object class="NSMutableDictionary" key="actions">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
@@ -3296,6 +3334,7 @@
 							<string>detailedEntryTextView</string>
 							<string>detailsView</string>
 							<string>logTableView</string>
+							<string>parentController</string>
 							<string>removeLabelButton</string>
 							<string>theLabelsTableView_</string>
 						</object>
@@ -3305,22 +3344,12 @@
 							<string>NSTextView</string>
 							<string>NSView</string>
 							<string>LogTableView</string>
+							<string>HistoryPaneController</string>
 							<string>NSButton</string>
 							<string>LabelsTableView</string>
 						</object>
 					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/HistoryPane/HistoryPaneController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">HistoryPaneController</string>
-					<string key="superclassName">NSViewController</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBUserSource</string>
-						<string key="minorKey"/>
-					</object>
+					<reference key="sourceIdentifier" ref="175243914"/>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">JHAccordionSubView</string>
@@ -3562,9 +3591,17 @@
 							<string>sidebarMenuRemoveSidebarItem:</string>
 							<string>sidebarMenuRevealRepositoryInFinder:</string>
 							<string>testBrowserLoad:</string>
+							<string>toolbarAddRenameRemoveFiles:</string>
+							<string>toolbarCommitFiles:</string>
+							<string>toolbarDiffFiles:</string>
+							<string>toolbarUpdate:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>

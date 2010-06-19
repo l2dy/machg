@@ -23,18 +23,19 @@
 #import "MoveLabelSheetController.h"
 #import "JHAccordionView.h"
 
-@implementation HistoryPaneController
-@synthesize myDocument;
-@synthesize logTableView;
-
 
 
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK: Initialization
+// MARK:  HistoryPaneController
 // -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+
+@implementation HistoryPaneController
+@synthesize myDocument;
+@synthesize theHistoryPaneView;
 
 - (HistoryPaneController*) initHistoryPaneControllerWithDocument:(MacHgDocument*)doc
 {
@@ -42,6 +43,35 @@
 	[NSBundle loadNibNamed:@"HistoryPane" owner:self];
 	return self;
 }
+
+- (void) unload
+{
+	[theHistoryPaneView unload];
+}
+
+@end
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  HistoryPaneView
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+
+@implementation HistoryPaneView
+
+@synthesize myDocument;
+@synthesize logTableView;
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Initialization
+// -----------------------------------------------------------------------------------------------------------------------------------------
 
 
 - (IBAction) openSplitViewPaneToDefaultHeight: (id)sender
@@ -51,6 +81,7 @@
 
 - (void) awakeFromNib
 {
+	myDocument = [parentController myDocument];
 	[self observe:kRepositoryDataDidChange	from:[self myDocument]  byCalling:@selector(refreshHistoryPane:)];
 	[self observe:kRepositoryDataIsNew		from:[self myDocument]  byCalling:@selector(refreshHistoryPane:)];
 	[self observe:kLogEntriesDidChange		from:[self myDocument]  byCalling:@selector(refreshHistoryPane:)];
@@ -296,7 +327,7 @@
 - (IBAction) labelsMenuUpdateRepositoryToChosenRevision:(id)sender
 {
 	LabelData* label = [theLabelsTableView_ chosenLabel];
-	[[[myDocument theHistoryPaneController] logTableView] scrollToRevision:[label revision]];
+	[[[myDocument theHistoryPaneView] logTableView] scrollToRevision:[label revision]];
 	[myDocument primaryActionUpdateFilesToVersion:[label revision] withCleanOption:NO];
 }
 

@@ -128,6 +128,10 @@
 @property (readonly,  assign) NSToolbarItem*		toolbarSearchItem;
 
 
+- (DifferencesPaneView*)			theDifferencesPaneView;
+- (HistoryPaneView*)				theHistoryPaneView;
+
+
 // Access the controllers
 - (BrowserPaneController*)			theBrowserPaneController;
 - (HistoryPaneController*)			theHistoryPaneController;

@@ -27,7 +27,7 @@
 
 // Pane Views
 //@class BrowserPaneView;
-//@class HistoryPaneView;
+@class HistoryPaneView;
 @class DifferencesPaneView;
 //@class BackingPaneView;
 

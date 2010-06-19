@@ -561,10 +561,8 @@
 // MARK:  The Views
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (DifferencesPaneView*) theDifferencesPaneView
-{
-	return [[self theDifferencesPaneController] theDifferencesPaneView];
-}
+- (DifferencesPaneView*)	theDifferencesPaneView	{ return [[self theDifferencesPaneController] theDifferencesPaneView]; }
+- (HistoryPaneView*)		theHistoryPaneView		{ return [[self theHistoryPaneController] theHistoryPaneView]; }
 
 
 
@@ -635,7 +633,7 @@
 	switch (paneNum)
 	{
 		case eBrowserPaneView:		return [[self theBrowserPaneController] view];
-		case eHistoryPaneView:		return [[self theHistoryPaneController] view];
+		case eHistoryPaneView:		return [self theHistoryPaneView];
 		case eDifferencesPaneView:	return [self theDifferencesPaneView];
 		case eBackingPaneView:		return [[self theBackingPaneController] view];
 		default:					return nil;
@@ -690,11 +688,11 @@
 	switch (newPaneNum)
 	{
 		case eDifferencesPaneView:		[[self theDifferencesPaneView] openDifferencesPane:self];		break;
-		case eHistoryPaneView:			[[self theHistoryPaneController] refreshHistoryPane:self];			break;
+		case eHistoryPaneView:			[[self theHistoryPaneView] refreshHistoryPane:self];			break;
 	}
 	
-	NSString* searchTerm    = theHistoryPaneController_ ? [[[self theHistoryPaneController] logTableView] theSearchFilter] : @"";
-	NSString* searchCaption = theHistoryPaneController_ ? [[self theHistoryPaneController] searchCaption] : @"Search";
+	NSString* searchTerm    = theHistoryPaneController_ ? [[[self theHistoryPaneView] logTableView] theSearchFilter] : @"";
+	NSString* searchCaption = theHistoryPaneController_ ? [[self theHistoryPaneView] searchCaption] : @"Search";
 	[self setSearchFieldEnabled:(newPaneNum == eHistoryPaneView) value:searchTerm caption:searchCaption];
 	
 	
@@ -718,8 +716,8 @@
 	// resizing of the frame. Thus at the end of the animation make sure you can see the current selection.
 	switch (newPaneNum)
 	{
-		case eDifferencesPaneView:	[NSTimer scheduledTimerWithTimeInterval:[[NSAnimationContext currentContext] duration] target:[self theDifferencesPaneView]		selector:@selector(scrollToSelected) userInfo:nil repeats:NO]; break;
-		case eHistoryPaneView:		[NSTimer scheduledTimerWithTimeInterval:[[NSAnimationContext currentContext] duration] target:[self theHistoryPaneController]	selector:@selector(scrollToSelected) userInfo:nil repeats:NO]; break;
+		case eDifferencesPaneView:	[NSTimer scheduledTimerWithTimeInterval:[[NSAnimationContext currentContext] duration] target:[self theDifferencesPaneView]	selector:@selector(scrollToSelected) userInfo:nil repeats:NO]; break;
+		case eHistoryPaneView:		[NSTimer scheduledTimerWithTimeInterval:[[NSAnimationContext currentContext] duration] target:[self theHistoryPaneView]		selector:@selector(scrollToSelected) userInfo:nil repeats:NO]; break;
 	}
 		
 	[NSAnimationContext endGrouping];
@@ -1323,11 +1321,11 @@
 {
 	if ([self showingHistoryPane])
 	{
-		HistoryPaneController* hpc = [self theHistoryPaneController];
-		LogTableView* logTableView = [hpc logTableView];
+		HistoryPaneView* hpv = [self theHistoryPaneView];
+		LogTableView* logTableView = [hpv logTableView];
 		[logTableView setTheSearchFilter:[[self toolbarSearchField] stringValue]];
-		[logTableView resetTable:hpc];
-		[hpc refreshHistoryPane:sender];
+		[logTableView resetTable:hpv];
+		[hpv refreshHistoryPane:sender];
 	}
 }
 

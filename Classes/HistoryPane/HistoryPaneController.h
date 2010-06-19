@@ -13,11 +13,27 @@
 #import "LabelsTableView.h"
 #import "LogGraph.h"
 
+@interface HistoryPaneController : NSViewController
+{
+	MacHgDocument*				myDocument;
+	IBOutlet HistoryPaneView*	theHistoryPaneView;
+}
+@property (readwrite,assign) MacHgDocument*		myDocument;
+@property (readwrite,assign) HistoryPaneView*	theHistoryPaneView;
+
+// Initialization
+- (HistoryPaneController*) initHistoryPaneControllerWithDocument:(MacHgDocument*)doc;
+- (void) unload;
+
+@end
 
 
-@interface HistoryPaneController : NSViewController < ControllerForLogTableView, ControllerForLabelsTableView, NSUserInterfaceValidations >
+
+
+@interface HistoryPaneView : NSView < ControllerForLogTableView, ControllerForLabelsTableView, NSUserInterfaceValidations >
 {
 	MacHgDocument*			myDocument;
+	IBOutlet HistoryPaneController*  parentController;
 
 	// Main accordion view containing the sub panes.
 	IBOutlet JHAccordionView* accordionView;
@@ -40,7 +56,6 @@
 
 
 // Initializations
-- (HistoryPaneController*) initHistoryPaneControllerWithDocument:(MacHgDocument*)doc;
 - (void)	 unload;
 
 

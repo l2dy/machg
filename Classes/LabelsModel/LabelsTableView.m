@@ -154,7 +154,7 @@
 - (IBAction) labelTableSingleClick:(id) sender
 {
 	LabelData* label = [self chosenLabel];
-	LogTableView* logTable = [[[self myDocument] theHistoryPaneController] logTableView];
+	LogTableView* logTable = [[[self myDocument] theHistoryPaneView] logTableView];
 	[logTable scrollToRevision:[label revision]];
 }
 
@@ -288,7 +288,7 @@
 	LabelData* label = [self chosenLabel];
 	if (label)
 	{
-		LogTableView* logTable = [[[self myDocument] theHistoryPaneController] logTableView];
+		LogTableView* logTable = [[[self myDocument] theHistoryPaneView] logTableView];
 		[logTable scrollToRevision:[label revision]];
 	}
 	[parentController labelsChanged];

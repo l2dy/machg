@@ -141,7 +141,7 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 	
 	[logTableView resetTable:self];
 	
-	NSArray* revs = [[[myDocument theHistoryPaneController] logTableView] chosenRevisions];
+	NSArray* revs = [[[myDocument theHistoryPaneView] logTableView] chosenRevisions];
 	if ([revs count] > 0)
 	{
 		NSInteger minRev = stringAsInt([revs objectAtIndex:0]);
