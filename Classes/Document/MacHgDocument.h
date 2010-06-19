@@ -274,6 +274,13 @@
 - (IBAction)	mainMenuUpdateRepositoryToVersion:(id)sender;
 
 
+// Switching actions
+- (IBAction)	toolbarCommitFiles:(id)sender;
+- (IBAction)	toolbarDiffFiles:(id)sender;
+- (IBAction)	toolbarAddRenameRemoveFiles:(id)sender;
+- (IBAction)	toolbarUpdate:(id)sender;
+
+
 - (IBAction)	mainMenuAddLabelToCurrentRevision:(id)sender;
 - (IBAction)	mainMenuMergeWith:(id)sender;
 - (IBAction)	mainMenuRemergeSelectedFiles:(id)sender;
