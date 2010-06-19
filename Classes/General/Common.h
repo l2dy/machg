@@ -819,8 +819,9 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 // MARK: -
 @interface NSDate ( NSDatePlusUtilities )
-- (BOOL)	isBefore:(NSDate*)aDate;
-+ (NSDate*) dateWithUTCdatePlusOffset:(NSString*)utcDatePlusOffset;
+- (BOOL)	  isBefore:(NSDate*)aDate;
+- (NSString*) isodateDescription;
++ (NSDate*)   dateWithUTCdatePlusOffset:(NSString*)utcDatePlusOffset;
 @end
 
 

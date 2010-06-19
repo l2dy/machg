@@ -1045,11 +1045,10 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 // MARK: -
 @implementation NSDate ( NSDatePlusUtilities )
-- (BOOL)	isBefore:(NSDate*)aDate
-{
-	return ([self compare:aDate] == NSOrderedAscending);
-}
-+ (NSDate*) dateWithUTCdatePlusOffset:(NSString*)utcDatePlusOffset
+- (BOOL)	  isBefore:(NSDate*)aDate	{ return [self compare:aDate] == NSOrderedAscending; }
+- (NSString*) isodateDescription		{ return [self descriptionWithCalendarFormat:nil timeZone:nil locale:nil]; }
+
++ (NSDate*)   dateWithUTCdatePlusOffset:(NSString*)utcDatePlusOffset
 {
 	NSString* base;
 	NSString* rest;
@@ -1124,7 +1123,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 - (NSArray*) synchronizedAllKeys					{ @synchronized(self) { return [self allKeys]; }; /*keep gcc happy*/ return nil; }
 - (NSInteger) synchronizedCount						{ @synchronized(self) { return [self count]; }; /*keep gcc happy*/ return 0; }
 - (id) synchronizedValueForNumberKey:(NSNumber*)key	{ @synchronized(self) { return [self valueForKey:[key stringValue]]; }; /*keep gcc happy*/ return nil; }
-- (id) valueForNumberKey:(NSNumber*)key		{ return [self valueForKey:[key stringValue]]; }
+- (id) valueForNumberKey:(NSNumber*)key				{ return [self valueForKey:[key stringValue]]; }
 @end
 
 
