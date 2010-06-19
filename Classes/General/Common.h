@@ -737,6 +737,7 @@ void printRect(NSString* message, NSRect rect);
 void printPoint(NSString* message, NSPoint point);
 void printChildViewHierarchy(NSView* view);
 void printParentViewHierarchy(NSView* aView);
+void printResponderViewHierarchy(NSWindow* aWindow);
 void printAttributesForString(NSAttributedString* string);
 
 #ifdef DEBUG

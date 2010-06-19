@@ -781,6 +781,26 @@ void printParentViewHierarchy(NSView* aView)
 	}
 }
 
+void printResponderViewHierarchy(NSWindow* aWindow)
+{
+	NSResponder* theResponder = [aWindow firstResponder];
+	while(theResponder)
+	{
+		DebugLog(@"");
+		DebugLog(@"class is %@", [theResponder class]);
+		DebugLog(@"description is %@", [theResponder description]);
+//		if ([theResponder isKindOfClass:[NSView class]])
+//			printRect(@"visible rect", [theResponder visibleRect]);
+//		if ([theResponder isKindOfClass:[NSView class]])
+//			printRect(@"bounds " , [theResponder bounds]);
+//		if ([theView isKindOfClass:[NSClipView class]])
+//			printRect(@"documentVisibleRect " , [(NSClipView*)theView documentVisibleRect]);
+//		if ([theView isKindOfClass:[NSScrollView class]])
+//			printRect(@"documentVisibleRect " , [(NSScrollView*)theView documentVisibleRect]);
+		
+		theResponder = [theResponder nextResponder];
+	}
+}
 
 void printChildViewHierarchyWithIndent(NSView* view, NSString* indent)
 {
