@@ -283,6 +283,7 @@
 - (BOOL) pathsAreSelectedInBrowserWhichContainStatus:(HGStatus)status	{ return bitsInCommon(status, [theBrowser statusOfChosenPathsInBrowser]); }
 - (BOOL) repositoryHasFilesWhichContainStatus:(HGStatus)status			{ return bitsInCommon(status, [[theBrowser rootNodeInfo] hgStatus]); }
 - (BOOL) nodesAreChosenInBrowser										{ return [theBrowser nodesAreChosen]; }
+- (BOOL) toolbarActionAppliesToFilesWith:(HGStatus)status				{ return ([self pathsAreSelectedInBrowserWhichContainStatus:status] || (![self nodesAreChosenInBrowser] && [self repositoryHasFilesWhichContainStatus:status])); }
 
 - (BOOL) validateUserInterfaceItem:(id < NSValidatedUserInterfaceItem >)anItem
 {
