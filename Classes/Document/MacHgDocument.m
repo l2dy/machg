@@ -558,6 +558,20 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
+// MARK:  The Views
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (DifferencesPaneView*) theDifferencesPaneView
+{
+	return [[self theDifferencesPaneController] theDifferencesPaneView];
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
 // MARK:  Document Information
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -622,7 +636,7 @@
 	{
 		case eBrowserPaneView:		return [[self theBrowserPaneController] view];
 		case eHistoryPaneView:		return [[self theHistoryPaneController] view];
-		case eDifferencesPaneView:	return [[self theDifferencesPaneController] view];
+		case eDifferencesPaneView:	return [self theDifferencesPaneView];
 		case eBackingPaneView:		return [[self theBackingPaneController] view];
 		default:					return nil;
 	}
@@ -675,7 +689,7 @@
 	// Specific handling for some panes
 	switch (newPaneNum)
 	{
-		case eDifferencesPaneView:		[[self theDifferencesPaneController] openDifferencesPane:self];		break;
+		case eDifferencesPaneView:		[[self theDifferencesPaneView] openDifferencesPane:self];		break;
 		case eHistoryPaneView:			[[self theHistoryPaneController] refreshHistoryPane:self];			break;
 	}
 	
@@ -704,8 +718,8 @@
 	// resizing of the frame. Thus at the end of the animation make sure you can see the current selection.
 	switch (newPaneNum)
 	{
-		case eDifferencesPaneView:	[NSTimer scheduledTimerWithTimeInterval:[[NSAnimationContext currentContext] duration] target:[self theDifferencesPaneController]	selector:@selector(scrollToSelected) userInfo:nil repeats:NO]; break;
-		case eHistoryPaneView:		[NSTimer scheduledTimerWithTimeInterval:[[NSAnimationContext currentContext] duration] target:[self theHistoryPaneController]		selector:@selector(scrollToSelected) userInfo:nil repeats:NO]; break;
+		case eDifferencesPaneView:	[NSTimer scheduledTimerWithTimeInterval:[[NSAnimationContext currentContext] duration] target:[self theDifferencesPaneView]		selector:@selector(scrollToSelected) userInfo:nil repeats:NO]; break;
+		case eHistoryPaneView:		[NSTimer scheduledTimerWithTimeInterval:[[NSAnimationContext currentContext] duration] target:[self theHistoryPaneController]	selector:@selector(scrollToSelected) userInfo:nil repeats:NO]; break;
 	}
 		
 	[NSAnimationContext endGrouping];
@@ -1576,7 +1590,7 @@
 	if ([self showingBrowserPane] && [self nodesAreChosenInBrowser])
 		[self browserMenuOpenTerminalHere:sender];
 	else if ([self showingDifferencesPane])
-		[[self theDifferencesPaneController] differencesMenuOpenTerminalHere:sender];
+		[[self theDifferencesPaneView] differencesMenuOpenTerminalHere:sender];
 	else
 		[self sidebarMenuOpenTerminalHere:sender];
 }

@@ -19,12 +19,17 @@
 @class SidebarNode;
 @class SidebarCell;
 
-// Panes
+// Pane Contollers
 @class BrowserPaneController;
 @class HistoryPaneController;
 @class DifferencesPaneController;
 @class BackingPaneController;
 
+// Pane Views
+//@class BrowserPaneView;
+//@class HistoryPaneView;
+@class DifferencesPaneView;
+//@class BackingPaneView;
 
 // FSBrowser
 @class FSBrowser;

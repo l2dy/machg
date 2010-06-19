@@ -17,7 +17,42 @@
 #import "FSNodeInfo.h"
 
 
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  DifferencesPaneController
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
 @implementation DifferencesPaneController
+@synthesize myDocument;
+@synthesize theDifferencesPaneView;
+
+- (DifferencesPaneController*) initDifferencesPaneControllerWithDocument:(MacHgDocument*)doc
+{
+	myDocument = doc;
+	[NSBundle loadNibNamed:@"DifferencesPane" owner:self];
+	return self;
+}
+
+- (void) unload
+{
+	[theDifferencesPaneView unload];
+}
+
+@end
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  DifferencesPaneView
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+@implementation DifferencesPaneView
 
 @synthesize showAddedFilesInBrowser      = showAddedFilesInBrowser_;
 @synthesize showIgnoredFilesInBrowser    = showIgnoredFilesInBrowser_;
@@ -35,17 +70,6 @@
 
 
 
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
-// MARK: Initialization
-// -----------------------------------------------------------------------------------------------------------------------------------------
-
-- (DifferencesPaneController*) initDifferencesPaneControllerWithDocument:(MacHgDocument*)doc
-{
-	myDocument = doc;
-	[NSBundle loadNibNamed:@"DifferencesPane" owner:self];
-	return self;
-}
 
 
 - (IBAction) openSplitViewPanesToDefaultHeights: (id)sender
@@ -55,6 +79,7 @@
 
 - (void) awakeFromNib
 {
+	myDocument = [parentController myDocument];
 	[self openSplitViewPanesToDefaultHeights: self];
 
 	// Tell the browser to send us messages when it is clicked.

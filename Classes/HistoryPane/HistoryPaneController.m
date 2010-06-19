@@ -160,7 +160,7 @@
 
 	[myDocument actionSwitchViewToDifferencesPane:sender];
 	NSTimeInterval t = [[NSAnimationContext currentContext] duration];
-	[[myDocument theDifferencesPaneController] performSelector:@selector(compareLowHighValue:) withObject:pairAsValue afterDelay:t];	
+	[[myDocument theDifferencesPaneView] performSelector:@selector(compareLowHighValue:) withObject:pairAsValue afterDelay:t];	
 }
 
 

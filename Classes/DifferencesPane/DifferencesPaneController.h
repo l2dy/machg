@@ -12,8 +12,26 @@
 #import "LogTableView.h"
 #import "FSBrowser.h"
 
-@interface DifferencesPaneController : NSViewController < ControllerForLogTableView, ControllerForFSBrowser, NSUserInterfaceValidations >
+
+
+@interface DifferencesPaneController : NSViewController
 {
+	MacHgDocument*					myDocument;
+	IBOutlet DifferencesPaneView*	theDifferencesPaneView;
+}
+@property (readwrite,assign) MacHgDocument*			myDocument;
+@property (readwrite,assign) DifferencesPaneView*	theDifferencesPaneView;
+
+// Initialization
+- (DifferencesPaneController*) initDifferencesPaneControllerWithDocument:(MacHgDocument*)doc;
+- (void) unload;
+
+@end
+
+
+@interface DifferencesPaneView : NSView < ControllerForLogTableView, ControllerForFSBrowser, NSUserInterfaceValidations >
+{
+	IBOutlet DifferencesPaneController*  parentController;
 	MacHgDocument*				myDocument;
 
 	IBOutlet BWSplitView*		mainSplitView;
@@ -64,10 +82,8 @@
 @property (readwrite,assign) MacHgDocument*  myDocument;
 @property (readwrite,assign) FSBrowser*  theBrowser;
 
-
-// Initialization
-- (DifferencesPaneController*) initDifferencesPaneControllerWithDocument:(MacHgDocument*)doc;
 - (void) unload;
+
 
 
 - (IBAction)	validateButtons:(id)sender;
