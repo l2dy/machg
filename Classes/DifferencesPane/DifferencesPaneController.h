@@ -107,6 +107,8 @@
 - (IBAction)	differencesMenuAnnotateSelectedFiles:(id)sender;
 - (IBAction)	differencesMenuNoAction:(id)sender;
 
+- (IBAction)	mainMenuDiffSelectedFiles:(id)sender;
+
 
 // Validation
 - (BOOL)		validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem;

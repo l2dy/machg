@@ -277,6 +277,12 @@
 	[myDocument viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:[self revisionNumbers]];
 }
 
+- (IBAction)	mainMenuDiffSelectedFiles:(id)sender
+{
+	[self differencesMenuDiffSelectedFiles:sender];
+}
+
+
 - (IBAction) differencesMenuAnnotateSelectedFiles:(id)sender
 {
 	NSArray* selectedFiles = [theBrowser absolutePathsOfBrowserChosenFiles];
@@ -319,6 +325,8 @@
 	if (theAction == @selector(differencesMenuOpenTerminalHere:))				return [myDocument repositoryIsSelectedAndReady];
 	if (theAction == @selector(differencesMenuDiffSelectedFiles:))				return [myDocument repositoryIsSelectedAndReady] && [myDocument showingDifferencesPane] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusModified];
 	if (theAction == @selector(differencesMenuDiffAllFiles:))					return [myDocument repositoryIsSelectedAndReady] && [myDocument showingDifferencesPane] && [self repositoryHasFilesWhichContainStatus:eHGStatusModified];
+	if (theAction == @selector(mainMenuDiffSelectedFiles:))
+		return YES;
 	
 	return [myDocument validateUserInterfaceItem:anItem];
 }
