@@ -175,7 +175,7 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 	NSString* revisionFormat = [[NSArray arrayWithObjects:@"%0", intAsString([intAsString(MAX(start, end)) length]), @"d", nil] componentsJoinedByString:@""];
 	
 	[myDocument dispatchToMercurialQueuedWithDescription:exportDescription  process:^{
-		NSInteger count = 0;
+		NSInteger count = 1;
 		for (LogEntry* entry in entries)
 		{
 			[entry fullyLoadEntry];
@@ -205,11 +205,12 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 				{
 					LogEntry* entry = [[myDocument repositoryData] entryForRevisionString:intAsString(rev)];
 					NSString* header1 = @"# HG changeset patch";
-					NSString* header2 = fstr(@"# User %@", [entry author]);
+					NSString* header2 = fstr(@"# User %@", [entry fullAuthor]);
 					NSString* header3 = fstr(@"# Date %@", [entry isoDate]);
 					NSString* header4 = fstr(@"# Node ID %@", [entry fullChangeset]);
-					NSString* header5 = fstr(@"# Parent %@", [parent fullChangeset]);
-					content = [[NSArray arrayWithObjects:header1, header2, header3, header4, header5, content, nil] componentsJoinedByString:@"\n"];
+					NSString* header5 = fstr(@"# Parent  %@", [parent fullChangeset]);
+					NSString* header6 = fstr(@"%@\n", [entry fullComment]);
+					content = [[NSArray arrayWithObjects:header1, header2, header3, header4, header5, header6, content, nil] componentsJoinedByString:@"\n"];
 				}
 				NSString* patchFileName = fileNameTemplate;
 				patchFileName = [patchFileName stringByReplacingOccurrencesOfRegex:@"\\%R" withString:intAsString(rev)];
