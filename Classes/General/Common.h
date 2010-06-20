@@ -633,13 +633,21 @@ NSString*	nonNil(NSString* string);
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK: Type Conversion
+// MARK: Locations
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 NSString*	executableLocationHG();								// The resolved executable location
 NSString*	applicationSupportFolder();							// the resolved app support dir eg				~/Library/Application Support/MacHg
 NSString*	applicationSupportVersionedFolder();				// the resolved versioned app support dir eg	~/Library/Application Support/MacHg/0.9.5
+NSString*	hgrcPath();											// the search path MacHg will pass to Mercurial to look for hgrc files (Mercurial configuration files.)
 
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Type Conversion
+// -----------------------------------------------------------------------------------------------------------------------------------------
 
 static inline NSString*	intAsString(int i)				{ return [NSString stringWithFormat:@"%d", i]; }
 static inline int		stringAsInt(NSString* str)		{ return [str intValue]; }

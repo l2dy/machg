@@ -806,7 +806,11 @@
 		PlayBeep();
 		return;
 	}
-	OpenTerminalAt([node path]);
+
+	NSString* mhgAlias  = [NSString stringWithFormat: @"alias %@='%@'", @"mhg", executableLocationHG()];
+	NSString* ehgAlias  = [NSString stringWithFormat: @"alias %@='HGPLAIN=1 HGENCODING=UTF-8 HGRCPATH=\"%@\" %@'", @"ehg", hgrcPath(), executableLocationHG()];
+	NSArray* cmds = [NSArray arrayWithObjects:mhgAlias, ehgAlias, nil];
+	DoCommandsInTerminalAt(cmds, [node path]);
 }
 
 

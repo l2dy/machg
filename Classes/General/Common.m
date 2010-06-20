@@ -547,6 +547,14 @@ void PlayBeep()
 }
 
 
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Locations
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
 NSString* executableLocationHG()
 {
 	switch (UseWhichMercurialBinaryFromDefaults())
@@ -583,6 +591,26 @@ NSString* applicationSupportFolder()
 	return answer;
 }
 
+NSString* hgrcPath()
+{
+	BOOL includeMacHgHgrc = IncludeMacHgHgrcInHGRCPATHFromDefaults();
+	BOOL includeHomeHgrc  = IncludeHomeHgrcInHGRCPATHFromDefaults();
+	NSString* macHgHGRCpath = fstr(@"%@/hgrc", applicationSupportFolder());
+	NSString* homeHGRCpath  = [NSHomeDirectory() stringByAppendingPathComponent:@".hgrc"];
+	
+	if (includeMacHgHgrc && includeHomeHgrc)
+		return fstr(@"%@:%@", macHgHGRCpath, homeHGRCpath);
+	return fstr(@"%@", !includeHomeHgrc ? macHgHGRCpath : homeHGRCpath);	
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Bit Operations
+// -----------------------------------------------------------------------------------------------------------------------------------------
 
 int	bitCount(int num)
 {
@@ -596,15 +624,13 @@ int	bitCount(int num)
 }
 
 
-NSString* riffleComponents(NSArray* components, NSString* separator)
-{
-	return [components componentsJoinedByString:separator];
-}
 
-NSString*	nonNil(NSString* string)
-{
-	return string ? string : @"";
-}
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: String Manipulation
+// -----------------------------------------------------------------------------------------------------------------------------------------
 
 NSString* trimString(NSString* string)
 {
@@ -626,6 +652,16 @@ NSString* collapseWhiteSpace(NSString* string)
 BOOL stringIsNonWhiteSpace(NSString* string)
 {
 	return [[string stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]] length] > 0;
+}
+
+NSString* riffleComponents(NSArray* components, NSString* separator)
+{
+	return [components componentsJoinedByString:separator];
+}
+
+NSString*	nonNil(NSString* string)
+{
+	return string ? string : @"";
 }
 
 

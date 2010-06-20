@@ -130,16 +130,10 @@
 	{
 		includeMacHgHgrc = IncludeMacHgHgrcInHGRCPATHFromDefaults();
 		includeHomeHgrc  = IncludeHomeHgrcInHGRCPATHFromDefaults();
-		NSString* macHgHGRCpath = fstr(@"%@/hgrc", applicationSupportFolder());
-		NSString* homeHGRCpath  = [NSHomeDirectory() stringByAppendingPathComponent:@".hgrc"];
-		NSString* hgrcPath = nil;
-		if (includeMacHgHgrc && includeHomeHgrc)
-			hgrcPath = fstr(@"%@:%@", macHgHGRCpath, homeHGRCpath);
-		else
-			hgrcPath = fstr(@"%@", !includeHomeHgrc ? macHgHGRCpath : homeHGRCpath);
+		NSString* hgrc_Path = hgrcPath();
 
 		NSDictionary* processEnv    = [[NSProcessInfo processInfo] environment];
-		NSMutableDictionary* newEnv = [[NSMutableDictionary alloc]init];
+		NSMutableDictionary* newEnv = [NSMutableDictionary dictionaryWithDictionary:processEnv];
 		[newEnv copyValueOfKey:@"SSH_ASKPASS"	from:processEnv];
 		[newEnv copyValueOfKey:@"SSH_AUTH_SOCK"	from:processEnv];
 		[newEnv copyValueOfKey:@"HOME"			from:processEnv];
@@ -148,7 +142,7 @@
 		[newEnv copyValueOfKey:@"USER"			from:processEnv];
 		[newEnv setObject:@"UTF-8"  forKey:@"HGENCODING"];
 		[newEnv setObject:@"1"		forKey:@"HGPLAIN"];
-		[newEnv setObject:hgrcPath	forKey:@"HGRCPATH"];		
+		[newEnv setObject:hgrc_Path	forKey:@"HGRCPATH"];		
 		env = [NSDictionary dictionaryWithDictionary:newEnv];
 	}
 
