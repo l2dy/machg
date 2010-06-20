@@ -1121,10 +1121,15 @@
 {
 	NSMutableArray* filteredPaths = [[NSMutableArray alloc]init];
 	NSString* rootDotHGDirPath = [[self absolutePathOfRepositoryRoot] stringByAppendingPathComponent:@".hg"];
+	NSString* rootDotHGFSChecksDirPath = fstr(@"%@/fschecks", rootDotHGDirPath);
 	BOOL postNotification = NO;
 	for (NSString* path in eventPaths)
 		if (pathContainedIn(rootDotHGDirPath, path))
+		{
+			if (pathContainedIn(rootDotHGFSChecksDirPath, path))
+				continue;	// If the path is further contained in just the fschecks dir then we ignore it since Mercurial uses this internally.
 			postNotification = YES;
+		}
 		else
 			[filteredPaths addObject:path];
 
@@ -1394,7 +1399,7 @@
 	
 	if (DisplayWarningForFileDeletionFromDefaults())
 	{
-		int result = RunCriticalAlertPanelWithSuppression( @"Delete Selected Files", @"Are you sure you want to move t	he selected files to the trash?", @"Delete Files", @"Cancel", MHGDisplayWarningForFileDeletion);
+		int result = RunCriticalAlertPanelWithSuppression( @"Delete Selected Files", @"Are you sure you want to move the selected files to the trash?", @"Delete Files", @"Cancel", MHGDisplayWarningForFileDeletion);
 		if (result != NSAlertFirstButtonReturn)
 			return NO;
 	}
