@@ -114,6 +114,28 @@
 }
 
 
+static NSInteger entrySort(id entry1, id entry2, void* context)
+{
+    int v1 = stringAsInt([entry1 revision]);
+    int v2 = stringAsInt([entry2 revision]);
+    if (v1 < v2)
+        return NSOrderedAscending;
+    if (v1 > v2)
+        return NSOrderedDescending;
+	return NSOrderedSame;
+}
+
+static NSInteger entryReverseSort(id entry1, id entry2, void* context)
+{
+    int v1 = stringAsInt([entry1 revision]);
+    int v2 = stringAsInt([entry2 revision]);
+    if (v1 > v2)
+        return NSOrderedAscending;
+    if (v1 < v2)
+        return NSOrderedDescending;
+	return NSOrderedSame;
+}
+
 - (IBAction) sheetButtonOk:(id)sender
 {
 	[theExportPatchesSheet makeFirstResponder:theExportPatchesSheet];	// Make the text fields of the sheet commit any changes they currently have
@@ -121,37 +143,46 @@
 	[theExportPatchesSheet orderOut:sender];
 	
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
-	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
+	NSArray* entries = [logTableView selectedEntries];
+	NSInteger incompleteRev = stringAsInt([logTableView incompleteRevision]);
+	BOOL singleEntrySelected = [entries count] == 1;
 
-	NSInteger incompleteRev = stringAsInt([logTableView incompleteRevision]);	
+	// Sort the entries into the correct order.
+	if (reversePatchOption_)
+		entries = [entries sortedArrayUsingFunction:entryReverseSort context:NULL];
+	else
+		entries = [entries sortedArrayUsingFunction:entrySort context:NULL];
+	
+	NSInteger start = stringAsInt([[entries firstObject] revision]);
+	NSInteger end   = stringAsInt([[entries lastObject] revision]);
+	BOOL incompleteRevSelected = (incompleteRev == start || incompleteRev == end);
+	
 	NSString* exportDescription;
 	
-	if      (pair.highRevision == pair.lowRevision && !reversePatchOption_ && pair.highRevision == incompleteRev)	exportDescription = fstr(@"exporting current changes", pair.lowRevision);
-	else if (pair.highRevision == pair.lowRevision &&  reversePatchOption_ && pair.highRevision == incompleteRev)	exportDescription = fstr(@"exporting current changes (reversed)", pair.lowRevision);
-	else if (pair.highRevision != pair.lowRevision && !reversePatchOption_ && pair.highRevision == incompleteRev)	exportDescription = fstr(@"exporting %d to current changes", pair.lowRevision);
-	else if (pair.highRevision != pair.lowRevision &&  reversePatchOption_ && pair.highRevision == incompleteRev)	exportDescription = fstr(@"exporting current changes to %d (reversed)", pair.lowRevision);
-	else if (pair.highRevision == pair.lowRevision && !reversePatchOption_ && pair.highRevision != incompleteRev)	exportDescription = fstr(@"exporting %d", pair.lowRevision);
-	else if (pair.highRevision == pair.lowRevision &&  reversePatchOption_ && pair.highRevision != incompleteRev)	exportDescription = fstr(@"exporting %d (reversed)", pair.lowRevision);
-	else if (pair.highRevision != pair.lowRevision && !reversePatchOption_ && pair.highRevision != incompleteRev)	exportDescription = fstr(@"exporting %d - %d", pair.lowRevision, pair.highRevision);
-	else if (pair.highRevision != pair.lowRevision &&  reversePatchOption_ && pair.highRevision != incompleteRev)	exportDescription = fstr(@"exporting %d - %d (reversed)", pair.highRevision, pair.lowRevision);
+	if      ( singleEntrySelected && !reversePatchOption_ &&  incompleteRevSelected)	exportDescription =      @"exporting current changes";
+	else if ( singleEntrySelected &&  reversePatchOption_ &&  incompleteRevSelected)	exportDescription =      @"exporting current changes (reversed)";
+	else if ( singleEntrySelected && !reversePatchOption_ && !incompleteRevSelected)	exportDescription = fstr(@"exporting %d", start);
+	else if ( singleEntrySelected &&  reversePatchOption_ && !incompleteRevSelected)	exportDescription = fstr(@"exporting %d (reversed)", start);
+	else if (!singleEntrySelected && !reversePatchOption_                          )	exportDescription =      @"exporting selected revisions";
+	else if (!singleEntrySelected &&  reversePatchOption_                          )	exportDescription =      @"exporting selected revisions (reversed)";
 	
-	NSInteger numberOfPatches = pair.highRevision - pair.lowRevision + 1;
+	NSInteger numberOfPatches  = [entries count];
 	NSString* fileNameTemplate = [self patchNameOption];
-	fileNameTemplate  = [fileNameTemplate stringByReplacingOccurrencesOfRegex:@"\\%N" withString:intAsString(numberOfPatches)];
+	fileNameTemplate      = [fileNameTemplate stringByReplacingOccurrencesOfRegex:@"\\%N" withString:intAsString(numberOfPatches)];
 	BOOL changingFileName = [fileNameTemplate isMatchedByRegex:@"\\%[nrRhH]" options:RKLNoOptions];
 	
-	NSString* countFormat    = [[NSArray arrayWithObjects:@"%0", intAsString([intAsString(numberOfPatches)   length]), @"d", nil] componentsJoinedByString:@""];
-	NSString* revisionFormat = [[NSArray arrayWithObjects:@"%0", intAsString([intAsString(pair.highRevision) length]), @"d", nil] componentsJoinedByString:@""];
+	NSString* countFormat    = [[NSArray arrayWithObjects:@"%0", intAsString([intAsString(numberOfPatches) length]), @"d", nil] componentsJoinedByString:@""];
+	NSString* revisionFormat = [[NSArray arrayWithObjects:@"%0", intAsString([intAsString(MAX(start, end)) length]), @"d", nil] componentsJoinedByString:@""];
 	
 	[myDocument dispatchToMercurialQueuedWithDescription:exportDescription  process:^{
-
-		NSInteger start = reversePatchOption_ ? pair.highRevision : pair.lowRevision;
-		NSInteger end   = reversePatchOption_ ? pair.lowRevision  : pair.highRevision;
 		NSInteger count = 0;
-		NSInteger rev;
-		for (rev = start; !reversePatchOption_ ? rev <= end : end <= rev; rev = rev + (reversePatchOption_ ? -1 : 1))
+		for (LogEntry* entry in entries)
 		{
-			NSMutableArray* argsDiff = [NSMutableArray arrayWithObjects:@"diff", nil];		
+			[entry fullyLoadEntry];
+			LogEntry* parent = [[myDocument repositoryData] entryForRevisionString:[entry firstParent]];
+			[parent fullyLoadEntry];
+			NSInteger rev = stringAsInt([entry revision]);
+			NSMutableArray* argsDiff = [NSMutableArray arrayWithObjects:@"diff", nil];
 			if ([self textOption])			[argsDiff addObject:@"--text"];
 			if ([self gitOption])			[argsDiff addObject:@"--git"];
 			if ([self noDatesOption])		[argsDiff addObject:@"--nodates"];
@@ -176,7 +207,9 @@
 					NSString* header1 = @"# HG changeset patch";
 					NSString* header2 = fstr(@"# User %@", [entry author]);
 					NSString* header3 = fstr(@"# Date %@", [entry isoDate]);
-					content = [[NSArray arrayWithObjects:header1, header2, header3, content, nil] componentsJoinedByString:@"\n"];
+					NSString* header4 = fstr(@"# Node ID %@", [entry fullChangeset]);
+					NSString* header5 = fstr(@"# Parent %@", [parent fullChangeset]);
+					content = [[NSArray arrayWithObjects:header1, header2, header3, header4, header5, content, nil] componentsJoinedByString:@"\n"];
 				}
 				NSString* patchFileName = fileNameTemplate;
 				patchFileName = [patchFileName stringByReplacingOccurrencesOfRegex:@"\\%R" withString:intAsString(rev)];
