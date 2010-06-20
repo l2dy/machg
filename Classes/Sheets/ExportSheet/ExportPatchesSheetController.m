@@ -26,6 +26,7 @@
 @synthesize gitOption = gitOption_;
 @synthesize noDatesOption = noDatesOption_;
 @synthesize switchParentOption = switchParentOption_;
+@synthesize reversePatchOption = reversePatchOption_;
 @synthesize patchNameOption = patchNameOption_;
 @synthesize myDocument;
 
@@ -121,68 +122,51 @@
 	
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
+
+	NSInteger incompleteRev = stringAsInt([logTableView incompleteRevision]);	
+	NSString* exportDescription;
 	
-	BOOL exportPatchForIncompleteVersion = NO;
-	BOOL exportPatchesForLowHigh = YES;
-	NSString* exportDescription = fstr(@"exporting %d-%d", pair.lowRevision, pair.highRevision);
-	if (pair.highRevision == stringAsInt([logTableView incompleteRevision]))
-	{
-		exportPatchForIncompleteVersion = YES;
-		if (pair.lowRevision == pair.highRevision)
-		{
-			exportPatchesForLowHigh = NO;
-			exportDescription = @"exporting current changes";
-		}
-		else
-		{
-			pair.highRevision -= 1;
-			fstr(@"exporting %d to current changes", pair.lowRevision);
-		}
-	}
+	if      (pair.highRevision == pair.lowRevision && !reversePatchOption_ && pair.highRevision == incompleteRev)	exportDescription = fstr(@"exporting current changes", pair.lowRevision);
+	else if (pair.highRevision == pair.lowRevision &&  reversePatchOption_ && pair.highRevision == incompleteRev)	exportDescription = fstr(@"exporting current changes (reversed)", pair.lowRevision);
+	else if (pair.highRevision != pair.lowRevision && !reversePatchOption_ && pair.highRevision == incompleteRev)	exportDescription = fstr(@"exporting %d to current changes", pair.lowRevision);
+	else if (pair.highRevision != pair.lowRevision &&  reversePatchOption_ && pair.highRevision == incompleteRev)	exportDescription = fstr(@"exporting current changes to %d (reversed)", pair.lowRevision);
+	else if (pair.highRevision == pair.lowRevision && !reversePatchOption_ && pair.highRevision != incompleteRev)	exportDescription = fstr(@"exporting %d", pair.lowRevision);
+	else if (pair.highRevision == pair.lowRevision &&  reversePatchOption_ && pair.highRevision != incompleteRev)	exportDescription = fstr(@"exporting %d (reversed)", pair.lowRevision);
+	else if (pair.highRevision != pair.lowRevision && !reversePatchOption_ && pair.highRevision != incompleteRev)	exportDescription = fstr(@"exporting %d - %d", pair.lowRevision, pair.highRevision);
+	else if (pair.highRevision != pair.lowRevision &&  reversePatchOption_ && pair.highRevision != incompleteRev)	exportDescription = fstr(@"exporting %d - %d (reversed)", pair.highRevision, pair.lowRevision);
 	
-	NSInteger numberOfPatches = (exportPatchForIncompleteVersion ? 1 : 0) + (exportPatchesForLowHigh ? (pair.highRevision - pair.lowRevision + 1) : 0);
-	NSMutableArray* argsExportRange = nil;
-	NSMutableArray* argsDiff = nil;
+	NSInteger numberOfPatches = pair.highRevision - pair.lowRevision + 1;
 	NSString* fileNameTemplate = [self patchNameOption];
 	fileNameTemplate  = [fileNameTemplate stringByReplacingOccurrencesOfRegex:@"\\%N" withString:intAsString(numberOfPatches)];
 	BOOL changingFileName = [fileNameTemplate isMatchedByRegex:@"\\%[nrRhH]" options:RKLNoOptions];
-
-	if (exportPatchesForLowHigh)
-	{
-		argsExportRange = [NSMutableArray arrayWithObjects:@"export", nil];
-		NSString* revisionNumbers = fstr(@"%d%:%d", pair.lowRevision, pair.highRevision);
-		
-		if ([self textOption])			[argsExportRange addObject:@"--text"];
-		if ([self gitOption])			[argsExportRange addObject:@"--git"];
-		if ([self noDatesOption])		[argsExportRange addObject:@"--nodates"];
-		if ([self switchParentOption])	[argsExportRange addObject:@"--switch-parent"];
-		[argsExportRange addObject:@"--output" followedBy:fileNameTemplate];
-		[argsExportRange addObject:revisionNumbers];
-	}
 	
-	if (exportPatchForIncompleteVersion)
-	{
-		argsDiff = [NSMutableArray arrayWithObjects:@"diff", nil];		
-		if ([self textOption])			[argsDiff addObject:@"--text"];
-		if ([self gitOption])			[argsDiff addObject:@"--git"];
-		if ([self noDatesOption])		[argsDiff addObject:@"--nodates"];
-	}
+	NSString* countFormat    = [[NSArray arrayWithObjects:@"%0", intAsString([intAsString(numberOfPatches)   length]), @"d", nil] componentsJoinedByString:@""];
+	NSString* revisionFormat = [[NSArray arrayWithObjects:@"%0", intAsString([intAsString(pair.highRevision) length]), @"d", nil] componentsJoinedByString:@""];
 	
 	[myDocument dispatchToMercurialQueuedWithDescription:exportDescription  process:^{
-		if (exportPatchesForLowHigh)
-			[myDocument  executeMercurialWithArgs:argsExportRange  fromRoot:rootPath  whileDelayingEvents:YES];
-		if (exportPatchForIncompleteVersion)
+
+		NSInteger start = reversePatchOption_ ? pair.highRevision : pair.lowRevision;
+		NSInteger end   = reversePatchOption_ ? pair.lowRevision  : pair.highRevision;
+		NSInteger count = 0;
+		NSInteger rev;
+		for (rev = start; !reversePatchOption_ ? rev <= end : end <= rev; rev = rev + (reversePatchOption_ ? -1 : 1))
 		{
-			// For the incomplete version since writing this file can't be handled by export we have to use diff instead.
-			// Substitute the %_ control characters for their values and then write the diff to the file
+			NSMutableArray* argsDiff = [NSMutableArray arrayWithObjects:@"diff", nil];		
+			if ([self textOption])			[argsDiff addObject:@"--text"];
+			if ([self gitOption])			[argsDiff addObject:@"--git"];
+			if ([self noDatesOption])		[argsDiff addObject:@"--nodates"];
+			if ([self reversePatchOption])	[argsDiff addObject:@"--reverse"];
+			if (rev != incompleteRev)
+				[argsDiff addObject:@"--change" followedBy:intAsString(rev)];
+	
 			ExecutionResult* result = [myDocument  executeMercurialWithArgs:argsDiff  fromRoot:rootPath  whileDelayingEvents:YES];
 			if (result.outStr)
 			{
 				NSString* patchFileName = fileNameTemplate;
-				patchFileName = [patchFileName stringByReplacingOccurrencesOfRegex:@"\\%R" withString:[logTableView incompleteRevision]];
+				patchFileName = [patchFileName stringByReplacingOccurrencesOfRegex:@"\\%R" withString:intAsString(rev)];
 				patchFileName = [patchFileName stringByReplacingOccurrencesOfRegex:@"\\%b" withString:[rootPath lastPathComponent]];
-				patchFileName = [patchFileName stringByReplacingOccurrencesOfRegex:@"\\%n" withString:intAsString(numberOfPatches)];
-				patchFileName = [patchFileName stringByReplacingOccurrencesOfRegex:@"\\%r" withString:[logTableView incompleteRevision]];
+				patchFileName = [patchFileName stringByReplacingOccurrencesOfRegex:@"\\%n" withString:fstr(countFormat,  count)];
+				patchFileName = [patchFileName stringByReplacingOccurrencesOfRegex:@"\\%r" withString:fstr(revisionFormat, rev)];
 				if (![patchFileName isAbsolutePath])
 					patchFileName = [rootPath stringByAppendingPathComponent:patchFileName];
 				if (changingFileName)
@@ -190,6 +174,7 @@
 				else
 					[[NSFileManager defaultManager] appendString:fstr(@"\n\n%@",result.outStr) toFilePath:patchFileName];
 			}
+			count++;
 		}
 	}];	
 }

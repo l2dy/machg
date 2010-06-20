@@ -21,7 +21,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="61"/>
+			<integer value="35"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -356,7 +356,6 @@
 													<int key="NSvFlags">-2147483392</int>
 													<string key="NSFrame">{{1, 182}, {789, 15}}</string>
 													<reference key="NSSuperview" ref="597433057"/>
-													<bool key="NSEnabled">YES</bool>
 													<int key="NSsFlags">1</int>
 													<reference key="NSTarget" ref="597433057"/>
 													<string key="NSAction">_doScroller:</string>
@@ -381,7 +380,7 @@
 											<string key="NSFrameSize">{791, 206}</string>
 											<reference key="NSSuperview" ref="204253249"/>
 											<reference key="NSNextKeyView" ref="977931108"/>
-											<int key="NSsFlags">690</int>
+											<int key="NSsFlags">562</int>
 											<reference key="NSVScroller" ref="619652190"/>
 											<reference key="NSHScroller" ref="302581107"/>
 											<reference key="NSContentView" ref="977931108"/>
@@ -1066,6 +1065,28 @@ dmlzaW9uIG51bWJlcgolaCAgIHNob3J0LWZvcm0gY2hhbmdlc2V0IGhhc2g</string>
 								<reference key="NSTextColor" ref="1032412444"/>
 							</object>
 						</object>
+						<object class="NSButton" id="480348684">
+							<reference key="NSNextResponder" ref="803546326"/>
+							<int key="NSvFlags">289</int>
+							<string key="NSFrame">{{175, 200}, {109, 18}}</string>
+							<reference key="NSSuperview" ref="803546326"/>
+							<bool key="NSEnabled">YES</bool>
+							<object class="NSButtonCell" key="NSCell" id="623802683">
+								<int key="NSCellFlags">67239424</int>
+								<int key="NSCellFlags2">0</int>
+								<string key="NSContents">Reverse Patch</string>
+								<reference key="NSSupport" ref="912308949"/>
+								<reference key="NSControlView" ref="480348684"/>
+								<int key="NSButtonFlags">1211912703</int>
+								<int key="NSButtonFlags2">2</int>
+								<reference key="NSNormalImage" ref="430788356"/>
+								<reference key="NSAlternateImage" ref="744041006"/>
+								<string key="NSAlternateContents"/>
+								<string key="NSKeyEquivalent"/>
+								<int key="NSPeriodicDelay">200</int>
+								<int key="NSPeriodicInterval">25</int>
+							</object>
+						</object>
 					</object>
 					<string key="NSFrameSize">{831, 653}</string>
 					<reference key="NSSuperview"/>
@@ -1274,6 +1295,22 @@ dmlzaW9uIG51bWJlcgolaCAgIHNob3J0LWZvcm0gY2hhbmdlc2V0IGhhc2g</string>
 					</object>
 					<int key="connectionID">171</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: switchParentOption</string>
+						<reference key="source" ref="480348684"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="480348684"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">value: switchParentOption</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">switchParentOption</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">174</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -1337,6 +1374,7 @@ dmlzaW9uIG51bWJlcgolaCAgIHNob3J0LWZvcm0gY2hhbmdlc2V0IGhhc2g</string>
 							<reference ref="346692143"/>
 							<reference ref="376526184"/>
 							<reference ref="52974577"/>
+							<reference ref="480348684"/>
 						</object>
 						<reference key="parent" ref="471338142"/>
 					</object>
@@ -1794,6 +1832,20 @@ dmlzaW9uIG51bWJlcgolaCAgIHNob3J0LWZvcm0gY2hhbmdlc2V0IGhhc2g</string>
 						<reference key="object" ref="1003636359"/>
 						<reference key="parent" ref="472831532"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">172</int>
+						<reference key="object" ref="480348684"/>
+						<object class="NSMutableArray" key="children">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="623802683"/>
+						</object>
+						<reference key="parent" ref="803546326"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">173</int>
+						<reference key="object" ref="623802683"/>
+						<reference key="parent" ref="480348684"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -1837,6 +1889,9 @@ dmlzaW9uIG51bWJlcgolaCAgIHNob3J0LWZvcm0gY2hhbmdlc2V0IGhhc2g</string>
 					<string>146.IBPluginDependency</string>
 					<string>147.IBPluginDependency</string>
 					<string>148.IBPluginDependency</string>
+					<string>172.IBAttributePlaceholdersKey</string>
+					<string>172.IBPluginDependency</string>
+					<string>173.IBPluginDependency</string>
 					<string>34.IBEditorWindowLastContentRect</string>
 					<string>34.IBPluginDependency</string>
 					<string>34.IBWindowTemplateEditedContentRect</string>
@@ -1955,6 +2010,16 @@ dmlzaW9uIG51bWJlcgolaCAgIHNob3J0LWZvcm0gY2hhbmdlc2V0IGhhc2g</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<object class="NSMutableDictionary">
+						<string key="NS.key.0">ToolTip</string>
+						<object class="IBToolTipAttribute" key="NS.object.0">
+							<string key="name">ToolTip</string>
+							<reference key="object" ref="480348684"/>
+							<string key="toolTip">overwrite locally modified files (no backup) (--clean option)</string>
+						</object>
+					</object>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{114, 326}, {831, 653}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{114, 326}, {831, 653}}</string>
@@ -2030,7 +2095,7 @@ dmlzaW9uIG51bWJlcgolaCAgIHNob3J0LWZvcm0gY2hhbmdlc2V0IGhhc2g</string>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">171</int>
+			<int key="maxID">174</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
