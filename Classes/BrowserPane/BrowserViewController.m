@@ -1,5 +1,5 @@
 //
-//  BrowserPaneController.m
+//  BrowserViewController.m
 //  MacHg
 //
 //  Created by Jason Harris on 12/4/09.
@@ -7,13 +7,47 @@
 //  This software is licensed under the "New BSD License". The full license text is given in the file License.txt
 //
 
-#import "BrowserPaneController.h"
+#import "BrowserViewController.h"
 #import "FSBrowserCell.h"
 #import "FSNodeInfo.h"
 
 
 
-@implementation BrowserPaneController
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  BrowserViewController
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+
+@implementation BrowserViewController
+@synthesize myDocument;
+@synthesize theBrowserView;
+
+- (BrowserViewController*) initBrowserViewControllerWithDocument:(MacHgDocument*)doc
+{
+	myDocument = doc;
+	[NSBundle loadNibNamed:@"BrowserView" owner:self];
+	[[theBrowserView theBrowser] reloadData:nil]; 	// Prime the browser with an initial load of data.
+
+	return self;
+}
+
+- (void) unload { [theBrowserView unload]; }
+@end
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  BrowserView
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+
+@implementation BrowserView
 
 @synthesize myDocument;
 @synthesize theBrowser;
@@ -27,15 +61,9 @@
 // MARK: Initialization
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BrowserPaneController*) initBrowserPaneControllerWithDocument:(MacHgDocument*)doc
-{
-	myDocument = doc;
-	[NSBundle loadNibNamed:@"BrowserPane" owner:self];
-	return self;
-}
-
 - (void) awakeFromNib
 {
+	myDocument = [parentContoller myDocument];
 	[self observe:kRepositoryRootChanged		from:[self myDocument]  byCalling:@selector(repositoryRootDidChange)];
 
 	// Tell the browser to send us messages when it is clicked.
@@ -44,8 +72,6 @@
 	[theBrowser setDoubleAction:@selector(browserDoubleClick:)];
 	[theBrowser setAreNodesVirtual:NO];
     
-	// Prime the browser with an initial load of data.
-	[theBrowser reloadData:nil];
 	[theBrowser setIsMainFSBrowser:YES];
 }
 

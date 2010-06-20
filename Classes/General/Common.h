@@ -20,13 +20,13 @@
 @class SidebarCell;
 
 // Pane Contollers
-@class BrowserPaneController;
+@class BrowserViewController;
 @class HistoryViewController;
 @class DifferencesViewController;
 @class BackingViewController;
 
 // Pane Views
-//@class BrowserPaneView;
+@class BrowserView;
 @class HistoryView;
 @class DifferencesView;
 //@class BackingView;
@@ -221,16 +221,16 @@ typedef enum
 
 typedef enum
 {
-	eBrowserPaneView = 0x0,
-	eHistoryView = 0x01,
+	eBrowserView     = 0x0,
+	eHistoryView     = 0x01,
 	eDifferencesView = 0x02,
-	eBackingView = 0x03
+	eBackingView     = 0x03
 } PaneViewNum;
 
 typedef enum
 {
-	eEnabled = 0x0,
-	eDisabled = 0x01,
+	eEnabled   = 0x0,
+	eDisabled  = 0x01,
 	eUnhandled = 0x02,
 } Validation;
 

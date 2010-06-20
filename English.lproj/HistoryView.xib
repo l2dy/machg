@@ -3527,7 +3527,7 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>actionSwitchViewToBackingView:</string>
-							<string>actionSwitchViewToBrowserPane:</string>
+							<string>actionSwitchViewToBrowserView:</string>
 							<string>actionSwitchViewToDifferencesView:</string>
 							<string>actionSwitchViewToHistoryView:</string>
 							<string>actionTestListingItem:</string>

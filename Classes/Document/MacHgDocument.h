@@ -62,7 +62,7 @@
  @private
 	
 	// Pane Controllers
-	BrowserPaneController*				theBrowserPaneController_;
+	BrowserViewController*				theBrowserViewController_;
 	HistoryViewController*				theHistoryViewController_;
 	DifferencesViewController*			theDifferencesViewController_;
 	BackingViewController*				theBackingViewController_;
@@ -127,13 +127,13 @@
 @property (readonly,  assign) NSSearchField*		toolbarSearchField;
 @property (readonly,  assign) NSToolbarItem*		toolbarSearchItem;
 
-
-- (DifferencesView*)				theDifferencesView;
+- (BrowserView*)					theBrowserView;
 - (HistoryView*)					theHistoryView;
+- (DifferencesView*)				theDifferencesView;
 
 
 // Access the controllers
-- (BrowserPaneController*)			theBrowserPaneController;
+- (BrowserViewController*)			theBrowserViewController;
 - (HistoryViewController*)			theHistoryViewController;
 - (DifferencesViewController*)		theDifferencesViewController;
 - (BackingViewController*)			theBackingViewController;
@@ -165,7 +165,7 @@
 
 
 // Pane switching
-- (BOOL)		showingBrowserPane;
+- (BOOL)		showingBrowserView;
 - (BOOL)		showingHistoryView;
 - (BOOL)		showingDifferencesView;
 - (BOOL)		showingBackingView;
@@ -175,7 +175,7 @@
 - (BOOL)		showingASheet;
 - (PaneViewNum)	currentPane;
 - (void)		setCurrentPane:(PaneViewNum)paneNum;
-- (IBAction)	actionSwitchViewToBrowserPane:(id)sender;
+- (IBAction)	actionSwitchViewToBrowserView:(id)sender;
 - (IBAction)	actionSwitchViewToHistoryView:(id)sender;
 - (IBAction)	actionSwitchViewToDifferencesView:(id)sender;
 - (IBAction)	actionSwitchViewToBackingView:(id)sender;

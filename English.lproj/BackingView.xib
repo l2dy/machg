@@ -600,7 +600,7 @@
 					<string key="superclassName">NSDocument</string>
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="actionSwitchViewToBackingView:">id</string>
-						<string key="actionSwitchViewToBrowserPane:">id</string>
+						<string key="actionSwitchViewToBrowserView:">id</string>
 						<string key="actionSwitchViewToDifferencesView:">id</string>
 						<string key="actionSwitchViewToHistoryView:">id</string>
 						<string key="actionTestListingItem:">id</string>

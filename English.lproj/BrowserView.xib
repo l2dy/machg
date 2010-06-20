@@ -39,7 +39,7 @@
 		<object class="NSMutableArray" key="IBDocument.RootObjects" id="1000">
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<object class="NSCustomObject" id="1001">
-				<string key="NSClassName">BrowserPaneController</string>
+				<string key="NSClassName">BrowserViewController</string>
 			</object>
 			<object class="NSCustomObject" id="1003">
 				<string key="NSClassName">FirstResponder</string>
@@ -693,7 +693,7 @@
 					</object>
 				</object>
 				<string key="NSFrameSize">{860, 606}</string>
-				<string key="NSClassName">NSView</string>
+				<string key="NSClassName">BrowserView</string>
 			</object>
 			<object class="NSUserDefaultsController" id="69413389">
 				<bool key="NSSharedInstance">YES</bool>
@@ -898,14 +898,6 @@
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
-						<string key="label">theBrowser</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="636001236"/>
-					</object>
-					<int key="connectionID">9</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
 						<string key="label">view</string>
 						<reference key="source" ref="1001"/>
 						<reference key="destination" ref="453712496"/>
@@ -1041,86 +1033,6 @@
 					<int key="connectionID">63</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">refreshBrowserContent:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="826835531"/>
-					</object>
-					<int key="connectionID">75</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">refreshBrowserContent:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="395479853"/>
-					</object>
-					<int key="connectionID">78</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">refreshBrowserContent:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="676200941"/>
-					</object>
-					<int key="connectionID">79</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">refreshBrowserContent:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="662930869"/>
-					</object>
-					<int key="connectionID">80</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">refreshBrowserContent:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="314563221"/>
-					</object>
-					<int key="connectionID">81</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">refreshBrowserContent:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="318421196"/>
-					</object>
-					<int key="connectionID">82</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">refreshBrowserContent:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="595067755"/>
-					</object>
-					<int key="connectionID">83</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">refreshBrowserContent:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="294406144"/>
-					</object>
-					<int key="connectionID">84</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">refreshBrowserContent:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="973993269"/>
-					</object>
-					<int key="connectionID">85</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">refreshBrowserContent:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="1042279529"/>
-					</object>
-					<int key="connectionID">91</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
 						<string key="label">value: values.DisplayFileIconsInBrowser</string>
 						<reference key="source" ref="1042279529"/>
@@ -1143,22 +1055,6 @@
 						<reference key="destination" ref="1040381362"/>
 					</object>
 					<int key="connectionID">133</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">nodeIconWell</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="1062305637"/>
-					</object>
-					<int key="connectionID">137</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">nodeInspector</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="700907203"/>
-					</object>
-					<int key="connectionID">142</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
@@ -1314,11 +1210,131 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
-						<string key="label">parentController</string>
-						<reference key="source" ref="636001236"/>
+						<string key="label">nodeIconWell</string>
+						<reference key="source" ref="453712496"/>
+						<reference key="destination" ref="1062305637"/>
+					</object>
+					<int key="connectionID">162</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">nodeInspector</string>
+						<reference key="source" ref="453712496"/>
+						<reference key="destination" ref="700907203"/>
+					</object>
+					<int key="connectionID">163</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">parentContoller</string>
+						<reference key="source" ref="453712496"/>
 						<reference key="destination" ref="1001"/>
 					</object>
-					<int key="connectionID">161</int>
+					<int key="connectionID">164</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">theBrowser</string>
+						<reference key="source" ref="453712496"/>
+						<reference key="destination" ref="636001236"/>
+					</object>
+					<int key="connectionID">165</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">refreshBrowserContent:</string>
+						<reference key="source" ref="453712496"/>
+						<reference key="destination" ref="826835531"/>
+					</object>
+					<int key="connectionID">166</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">refreshBrowserContent:</string>
+						<reference key="source" ref="453712496"/>
+						<reference key="destination" ref="973993269"/>
+					</object>
+					<int key="connectionID">167</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">refreshBrowserContent:</string>
+						<reference key="source" ref="453712496"/>
+						<reference key="destination" ref="294406144"/>
+					</object>
+					<int key="connectionID">168</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">refreshBrowserContent:</string>
+						<reference key="source" ref="453712496"/>
+						<reference key="destination" ref="595067755"/>
+					</object>
+					<int key="connectionID">169</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">refreshBrowserContent:</string>
+						<reference key="source" ref="453712496"/>
+						<reference key="destination" ref="318421196"/>
+					</object>
+					<int key="connectionID">170</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">refreshBrowserContent:</string>
+						<reference key="source" ref="453712496"/>
+						<reference key="destination" ref="314563221"/>
+					</object>
+					<int key="connectionID">171</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">refreshBrowserContent:</string>
+						<reference key="source" ref="453712496"/>
+						<reference key="destination" ref="662930869"/>
+					</object>
+					<int key="connectionID">172</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">refreshBrowserContent:</string>
+						<reference key="source" ref="453712496"/>
+						<reference key="destination" ref="676200941"/>
+					</object>
+					<int key="connectionID">173</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">refreshBrowserContent:</string>
+						<reference key="source" ref="453712496"/>
+						<reference key="destination" ref="395479853"/>
+					</object>
+					<int key="connectionID">174</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">refreshBrowserContent:</string>
+						<reference key="source" ref="453712496"/>
+						<reference key="destination" ref="1042279529"/>
+					</object>
+					<int key="connectionID">175</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">parentController</string>
+						<reference key="source" ref="636001236"/>
+						<reference key="destination" ref="453712496"/>
+					</object>
+					<int key="connectionID">176</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">theBrowserView</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="453712496"/>
+					</object>
+					<int key="connectionID">177</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -2007,14 +2023,14 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">161</int>
+			<int key="maxID">177</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<object class="IBPartialClassDescription">
-					<string key="className">BrowserPaneController</string>
-					<string key="superclassName">NSViewController</string>
+					<string key="className">BrowserView</string>
+					<string key="superclassName">NSView</string>
 					<object class="NSMutableDictionary" key="actions">
 						<string key="NS.key.0">refreshBrowserContent:</string>
 						<string key="NS.object.0">id</string>
@@ -2025,12 +2041,14 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>nodeIconWell</string>
 							<string>nodeInspector</string>
+							<string>parentContoller</string>
 							<string>theBrowser</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>NSImageView</string>
 							<string>NSTextField</string>
+							<string>BrowserViewController</string>
 							<string>FSBrowser</string>
 						</object>
 					</object>
@@ -2040,12 +2058,109 @@
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<string key="className">BrowserPaneController</string>
+					<string key="className">BrowserViewController</string>
 					<string key="superclassName">NSViewController</string>
+					<object class="NSMutableDictionary" key="outlets">
+						<string key="NS.key.0">theBrowserView</string>
+						<string key="NS.object.0">BrowserView</string>
+					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBUserSource</string>
 						<string key="minorKey"/>
 					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">DifferencesView</string>
+					<string key="superclassName">NSView</string>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>browserDoubleClick:</string>
+							<string>browserSingleClick:</string>
+							<string>differencesMenuAnnotateSelectedFiles:</string>
+							<string>differencesMenuDiffAllFiles:</string>
+							<string>differencesMenuDiffSelectedFiles:</string>
+							<string>differencesMenuNoAction:</string>
+							<string>differencesMenuOpenSelectedFilesInFinder:</string>
+							<string>differencesMenuOpenTerminalHere:</string>
+							<string>differencesMenuRevealSelectedFilesInFinder:</string>
+							<string>mainMenuDiffSelectedFiles:</string>
+							<string>openDifferencesView:</string>
+							<string>redisplayBrowser:</string>
+							<string>refreshDifferencesView:</string>
+							<string>validateButtons:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>baseBottom</string>
+							<string>baseHeaderMessage</string>
+							<string>baseLogTableView</string>
+							<string>baseSV</string>
+							<string>baseTop</string>
+							<string>compareBottom</string>
+							<string>compareHeaderMessage</string>
+							<string>compareLogTableView</string>
+							<string>compareSV</string>
+							<string>compareTop</string>
+							<string>detailedBaseEntryTextView</string>
+							<string>detailedCompareEntryTextView</string>
+							<string>mainSplitView</string>
+							<string>parentController</string>
+							<string>theBrowser</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>NSView</string>
+							<string>NSTextField</string>
+							<string>LogTableView</string>
+							<string>NSSplitView</string>
+							<string>NSView</string>
+							<string>NSView</string>
+							<string>NSTextField</string>
+							<string>LogTableView</string>
+							<string>NSSplitView</string>
+							<string>NSView</string>
+							<string>NSTextView</string>
+							<string>NSTextView</string>
+							<string>BWSplitView</string>
+							<string>DifferencesViewController</string>
+							<string>FSBrowser</string>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="475641261">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">Classes/DifferencesPane/DifferencesViewController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">DifferencesViewController</string>
+					<string key="superclassName">NSViewController</string>
+					<object class="NSMutableDictionary" key="outlets">
+						<string key="NS.key.0">theDifferencesView</string>
+						<string key="NS.object.0">DifferencesView</string>
+					</object>
+					<reference key="sourceIdentifier" ref="475641261"/>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">FSBrowser</string>
@@ -2077,6 +2192,48 @@
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
+					<string key="className">LogTableView</string>
+					<string key="superclassName">NSTableView</string>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>refreshTable:</string>
+							<string>resetTable:</string>
+							<string>scrollToBeginning:</string>
+							<string>scrollToCurrentRevision:</string>
+							<string>scrollToEnd:</string>
+							<string>scrollToSelected:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>detailedEntryTextView</string>
+							<string>parentController</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>NSTextView</string>
+							<string>id</string>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">Classes/LogEntryModel/LogTableView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
 					<string key="className">MacHgDocument</string>
 					<string key="superclassName">NSDocument</string>
 					<object class="NSMutableDictionary" key="actions">
@@ -2084,7 +2241,7 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>actionSwitchViewToBackingView:</string>
-							<string>actionSwitchViewToBrowserPane:</string>
+							<string>actionSwitchViewToBrowserView:</string>
 							<string>actionSwitchViewToDifferencesView:</string>
 							<string>actionSwitchViewToHistoryView:</string>
 							<string>actionTestListingItem:</string>
@@ -2141,9 +2298,17 @@
 							<string>sidebarMenuRemoveSidebarItem:</string>
 							<string>sidebarMenuRevealRepositoryInFinder:</string>
 							<string>testBrowserLoad:</string>
+							<string>toolbarAddRenameRemoveFiles:</string>
+							<string>toolbarCommitFiles:</string>
+							<string>toolbarDiffFiles:</string>
+							<string>toolbarUpdate:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>

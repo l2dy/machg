@@ -15,7 +15,7 @@
 #import "LogEntry.h"
 #import "RepositoryData.h"
 
-#import "BrowserPaneController.h"
+#import "BrowserViewController.h"
 #import "HistoryViewController.h"
 #import "DifferencesViewController.h"
 #import "BackingViewController.h"
@@ -244,16 +244,16 @@
 // MARK: Initialize Controllers
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BrowserPaneController*) theBrowserPaneController
+- (BrowserViewController*) theBrowserViewController
 {
-	if (theBrowserPaneController_)
-		return theBrowserPaneController_;
+	if (theBrowserViewController_)
+		return theBrowserViewController_;
 	@synchronized(self)
 	{
-		if (!theBrowserPaneController_)
-			theBrowserPaneController_ = [[BrowserPaneController alloc] initBrowserPaneControllerWithDocument:self];
+		if (!theBrowserViewController_)
+			theBrowserViewController_ = [[BrowserViewController alloc] initBrowserViewControllerWithDocument:self];
 	}
-	return theBrowserPaneController_;
+	return theBrowserViewController_;
 }
 
 - (HistoryViewController*) theHistoryViewController
@@ -534,10 +534,10 @@
 }
 
 
-- (void) unloadBrowserPaneView
+- (void) unloadBrowserView
 {
-	[theBrowserPaneController_ unload];
-	theBrowserPaneController_ = nil;
+	[theBrowserViewController_ unload];
+	theBrowserViewController_ = nil;
 }
 
 - (void) unloadHistoryView
@@ -561,8 +561,9 @@
 // MARK:  The Views
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (DifferencesView*)	theDifferencesView	{ return [[self theDifferencesViewController] theDifferencesView]; }
+- (BrowserView*)		theBrowserView		{ return [[self theBrowserViewController] theBrowserView]; }
 - (HistoryView*)		theHistoryView		{ return [[self theHistoryViewController] theHistoryView]; }
+- (DifferencesView*)	theDifferencesView	{ return [[self theDifferencesViewController] theDifferencesView]; }
 
 
 
@@ -632,7 +633,7 @@
 {
 	switch (paneNum)
 	{
-		case eBrowserPaneView:	return [[self theBrowserPaneController] view];
+		case eBrowserView:	return [[self theBrowserViewController] view];
 		case eHistoryView:		return [self theHistoryView];
 		case eDifferencesView:	return [self theDifferencesView];
 		case eBackingView:		return [[self theBackingViewController] view];
@@ -733,17 +734,17 @@
 // MARK: Actions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BOOL)	showingBrowserPane								{ return currentPane_ == eBrowserPaneView; }
+- (BOOL)	showingBrowserView								{ return currentPane_ == eBrowserView; }
 - (BOOL)	showingHistoryView								{ return currentPane_ == eHistoryView; }
 - (BOOL)	showingDifferencesView							{ return currentPane_ == eDifferencesView; }
 - (BOOL)	showingBackingView								{ return currentPane_ == eBackingView; }
-- (BOOL)	showingBrowserOrHistoryView						{ return currentPane_ == eBrowserPaneView || currentPane_ == eHistoryView; }
-- (BOOL)	showingBrowserOrDifferencesView					{ return currentPane_ == eBrowserPaneView || currentPane_ == eDifferencesView; }
-- (BOOL)	showingBrowserOrHistoryOrDifferencesView		{ return currentPane_ == eBrowserPaneView || currentPane_ == eHistoryView || currentPane_ == eDifferencesView; }
+- (BOOL)	showingBrowserOrHistoryView						{ return currentPane_ == eBrowserView || currentPane_ == eHistoryView; }
+- (BOOL)	showingBrowserOrDifferencesView					{ return currentPane_ == eBrowserView || currentPane_ == eDifferencesView; }
+- (BOOL)	showingBrowserOrHistoryOrDifferencesView		{ return currentPane_ == eBrowserView || currentPane_ == eHistoryView || currentPane_ == eDifferencesView; }
 - (BOOL)	showingASheet									{ return showingSheet_; }
 
 
-- (IBAction) actionSwitchViewToBrowserPane:(id)sender		{ [self setCurrentPane:eBrowserPaneView]; }
+- (IBAction) actionSwitchViewToBrowserView:(id)sender		{ [self setCurrentPane:eBrowserView]; }
 - (IBAction) actionSwitchViewToBackingView:(id)sender		{ [self setCurrentPane:eBackingView]; }
 - (IBAction) actionSwitchViewToDifferencesView:(id)sender	{ [self setCurrentPane:eDifferencesView]; }
 - (IBAction) actionSwitchViewToHistoryView:(id)sender		{ [self setCurrentPane:eHistoryView]; }
@@ -822,7 +823,7 @@
 		return NO;
 	BOOL inMergeState = [[self repositoryData] inMergeState];
 	[menuItem setTitle: inMergeState ? @"Commit Merged Files..." : @"Commit Selected Files..."];
-	return inMergeState ? [self repositoryHasFilesWhichContainStatus:eHGStatusCommittable] : ([self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusCommittable] && [self showingBrowserPane]);
+	return inMergeState ? [self repositoryHasFilesWhichContainStatus:eHGStatusCommittable] : ([self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusCommittable] && [self showingBrowserView]);
 }
 
 
@@ -830,7 +831,7 @@
 {
 	SEL theAction = [anItem action];
 	
-	if (theAction == @selector(actionSwitchViewToBrowserPane:))			return [self repositoryIsSelectedAndReady];
+	if (theAction == @selector(actionSwitchViewToBrowserView:))			return [self repositoryIsSelectedAndReady];
 	if (theAction == @selector(actionSwitchViewToHistoryView:))			return [self repositoryIsSelectedAndReady];
 	if (theAction == @selector(actionSwitchViewToDifferencesView:))		return [self repositoryIsSelectedAndReady];
 
@@ -839,29 +840,29 @@
 	if (theAction == @selector(mainMenuCommitAllFiles:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [self validateAndSwitchMenuForCommitAllFiles:DynamicCast(NSMenuItem, anItem)];
 	if (theAction == @selector(toolbarCommitFiles:))					return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [self toolbarActionAppliesToFilesWith:eHGStatusCommittable];
 	
-	if (theAction == @selector(mainMenuDiffSelectedFiles:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusModified];
+	if (theAction == @selector(mainMenuDiffSelectedFiles:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusModified];
 	if (theAction == @selector(mainMenuDiffAllFiles:))					return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [self repositoryHasFilesWhichContainStatus:eHGStatusModified];
 	if (theAction == @selector(toolbarDiffFiles:))						return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryOrDifferencesView] && [self toolbarActionAppliesToFilesWith:eHGStatusModified];
 
-	if (theAction == @selector(mainMenuAddRenameRemoveSelectedFiles:))	return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusAddableOrRemovable];
-	if (theAction == @selector(mainMenuAddRenameRemoveAllFiles:))		return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self repositoryHasFilesWhichContainStatus:eHGStatusAddableOrRemovable];
-	if (theAction == @selector(toolbarAddRenameRemoveFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self toolbarActionAppliesToFilesWith:eHGStatusAddableOrRemovable];
+	if (theAction == @selector(mainMenuAddRenameRemoveSelectedFiles:))	return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusAddableOrRemovable];
+	if (theAction == @selector(mainMenuAddRenameRemoveAllFiles:))		return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self repositoryHasFilesWhichContainStatus:eHGStatusAddableOrRemovable];
+	if (theAction == @selector(toolbarAddRenameRemoveFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self toolbarActionAppliesToFilesWith:eHGStatusAddableOrRemovable];
 	// ------
-	if (theAction == @selector(mainMenuRevertSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusChangedInSomeWay];
+	if (theAction == @selector(mainMenuRevertSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusChangedInSomeWay];
 	if (theAction == @selector(mainMenuRevertAllFiles:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [self repositoryHasFilesWhichContainStatus:eHGStatusChangedInSomeWay];
-	if (theAction == @selector(mainMenuRevertSelectedFilesToVersion:))	return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self nodesAreChosenInBrowser];
+	if (theAction == @selector(mainMenuRevertSelectedFilesToVersion:))	return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self nodesAreChosenInBrowser];
 	if (theAction == @selector(mainMenuRevertAllFilesToVersion:))		return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView];
-	if (theAction == @selector(mainMenuDeleteSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self nodesAreChosenInBrowser];
-	if (theAction == @selector(mainMenuUntrackSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusInRepository];
-	if (theAction == @selector(mainMenuAddSelectedFiles:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusAddable];
-	if (theAction == @selector(mainMenuRenameSelectedFile:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusInRepository] && [self singleItemIsChosenInBrower];
+	if (theAction == @selector(mainMenuDeleteSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self nodesAreChosenInBrowser];
+	if (theAction == @selector(mainMenuUntrackSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusInRepository];
+	if (theAction == @selector(mainMenuAddSelectedFiles:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusAddable];
+	if (theAction == @selector(mainMenuRenameSelectedFile:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusInRepository] && [self singleItemIsChosenInBrower];
 	// ------
-	if (theAction == @selector(mainMenuRemergeSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusSecondary];
-	if (theAction == @selector(mainMenuMarkResolvedSelectedFiles:))		return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusUnresolved];
+	if (theAction == @selector(mainMenuRemergeSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusSecondary];
+	if (theAction == @selector(mainMenuMarkResolvedSelectedFiles:))		return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusUnresolved];
 	// ------
-	if (theAction == @selector(mainMenuIgnoreSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusNotIgnored];
-	if (theAction == @selector(mainMenuUnignoreSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusIgnored];
-	if (theAction == @selector(mainMenuAnnotateSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusInRepository];
+	if (theAction == @selector(mainMenuIgnoreSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusNotIgnored];
+	if (theAction == @selector(mainMenuUnignoreSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusIgnored];
+	if (theAction == @selector(mainMenuAnnotateSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusInRepository];
 	// ------
 	if (theAction == @selector(mainMenuRollbackCommit:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView];
 	
@@ -1228,7 +1229,7 @@
 - (SidebarNode*)	selectedRepositoryRepositoryRef			{ SidebarNode* repo = [sidebar_ selectedNode]; return [repo isRepositoryRef] ? repo : nil; }
 - (NSArray*)		absolutePathOfRepositoryRootAsArray		{ return [NSArray arrayWithObject:[self absolutePathOfRepositoryRoot]]; }
 
-- (FSBrowser*)		theBrowser								{ return [[self theBrowserPaneController] theBrowser]; }
+- (FSBrowser*)		theBrowser								{ return [[self theBrowserView] theBrowser]; }
 - (FSNodeInfo*)		rootNodeInfo							{ return [[self theBrowser] rootNodeInfo]; }
 - (FSNodeInfo*)		nodeForPath:(NSString*)absolutePath		{ return [[self rootNodeInfo] nodeForPathFromRoot:absolutePath]; }
 - (BOOL)			singleFileIsChosenInBrower				{ return [[self theBrowser] singleFileIsChosenInBrower]; }
@@ -1300,7 +1301,7 @@
 	}
 
 	if ([node isLocalRepositoryRef] && [self showingBackingView])
-		[self actionSwitchViewToBrowserPane:self];
+		[self actionSwitchViewToBrowserView:self];
 	
 	[self initializeRepositoryData];
 
@@ -1418,7 +1419,7 @@
 - (IBAction) mainMenuCommitAllFiles:(id)sender					{ [[self theCommitSheetController] openCommitSheetWithAllFiles:sender]; }
 - (IBAction) toolbarCommitFiles:(id)sender
 {
-	if ([self showingBrowserPane] && [self nodesAreChosenInBrowser])
+	if ([self showingBrowserView] && [self nodesAreChosenInBrowser])
 		[self mainMenuCommitSelectedFiles:sender];
 	else
 		[self mainMenuCommitAllFiles:sender];
@@ -1428,7 +1429,7 @@
 - (IBAction) mainMenuAddRenameRemoveAllFiles:(id)sender			{ [self primaryActionAddRenameRemoveFiles:[self absolutePathOfRepositoryRootAsArray]]; }
 - (IBAction) toolbarAddRenameRemoveFiles:(id)sender
 {
-	if (![self showingBrowserPane])
+	if (![self showingBrowserView])
 		return;
 	if ([self nodesAreChosenInBrowser])
 		[self mainMenuAddRenameRemoveSelectedFiles:sender];
@@ -1440,9 +1441,9 @@
 - (IBAction) mainMenuDiffAllFiles:(id)sender					{ [self viewDifferencesInCurrentRevisionFor:[self absolutePathOfRepositoryRootAsArray] toRevision:nil]; }	// nil indicates the current revision
 - (IBAction) toolbarDiffFiles:(id)sender
 {
-	if ([self showingBrowserPane] && [self nodesAreChosenInBrowser])
+	if ([self showingBrowserView] && [self nodesAreChosenInBrowser])
 		[self mainMenuDiffSelectedFiles:sender];
-	else if ([self showingBrowserPane])
+	else if ([self showingBrowserView])
 		[self mainMenuDiffAllFiles:sender];
 	else if ([self showingDifferencesView])
 		[self mainMenuDiffAllFiles:sender];	
@@ -1583,7 +1584,7 @@
 - (IBAction) sidebarMenuOpenTerminalHere:(id)sender				{ return [sidebar_ sidebarMenuOpenTerminalHere:sender]; }
 - (IBAction) mainMenuOpenTerminalHere:(id)sender
 {
-	if ([self showingBrowserPane] && [self nodesAreChosenInBrowser])
+	if ([self showingBrowserView] && [self nodesAreChosenInBrowser])
 		[self browserMenuOpenTerminalHere:sender];
 	else if ([self showingDifferencesView])
 		[[self theDifferencesView] differencesMenuOpenTerminalHere:sender];
@@ -1956,7 +1957,7 @@
 
 	switch (AfterMergeSwitchToFromDefaults())
 	{
-		case eAfterMergeSwitchToBrowser:	[self actionSwitchViewToBrowserPane:self]; break;
+		case eAfterMergeSwitchToBrowser:	[self actionSwitchViewToBrowserView:self]; break;
 		case eAfterMergeSwitchToHistory:	[self actionSwitchViewToHistoryView:self]; break;
 	}
 
