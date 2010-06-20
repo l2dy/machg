@@ -104,7 +104,11 @@
 }
 
 - (IBAction) browserSingleClick:(id)browser	{ [self updateCurrentPreviewImage]; }
-- (IBAction) browserDoubleClick:(id)browser	{ SEL theAction = [self actionForDoubleClickEnum:[theBrowser actionEnumForBrowserDoubleClick]]; [myDocument performSelector:theAction withObject:browser]; }
+- (IBAction) browserDoubleClick:(id)browser
+{
+	SEL theAction = [self actionForDoubleClickEnum:[theBrowser actionEnumForBrowserDoubleClick]];
+	[[NSApplication sharedApplication] sendAction:theAction to:nil from:browser];
+}
 
 
 

@@ -362,7 +362,11 @@
 }
 
 - (IBAction) browserSingleClick:(id)browser	{ }
-- (IBAction) browserDoubleClick:(id)browser	{ SEL theAction = [self actionForDoubleClickEnum:[theBrowser actionEnumForBrowserDoubleClick]]; [self performSelector:theAction withObject:browser]; }
+- (IBAction) browserDoubleClick:(id)browser
+{
+	SEL theAction = [self actionForDoubleClickEnum:[theBrowser actionEnumForBrowserDoubleClick]];
+	[[NSApplication sharedApplication] sendAction:theAction to:nil from:browser];
+}
 
 
 
