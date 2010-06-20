@@ -332,10 +332,9 @@ void setupGlobalsForPartsAndTemplate()
 	return [dateFormatter stringFromDate:date_];
 }
 
-- (void) setDate:(NSString*)dateString
-{
-	date_ = [NSDate dateWithUTCdatePlusOffset:dateString];
-}
+- (NSString*) isoDate { return [date_ isodateDescription]; }
+
+- (void) setDate:(NSString*)dateString { date_ = [NSDate dateWithUTCdatePlusOffset:dateString]; }
 
 
 

@@ -79,6 +79,7 @@ extern void setupGlobalsForPartsAndTemplate();
 // Date handling
 - (NSString*) shortDate;
 - (NSString*) fullDate;
+- (NSString*) isoDate;
 - (void)	  setDate:(NSString*)dateString;
 
 
