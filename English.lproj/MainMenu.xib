@@ -12,6 +12,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
+			<integer value="331"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -2244,14 +2245,6 @@
 					<int key="connectionID">413</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">actionSwitchViewToBrowserPane:</string>
-						<reference key="source" ref="569835777"/>
-						<reference key="destination" ref="327031887"/>
-					</object>
-					<int key="connectionID">803</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">delegate</string>
 						<reference key="source" ref="962236092"/>
@@ -2682,6 +2675,14 @@
 						<reference key="destination" ref="692130002"/>
 					</object>
 					<int key="connectionID">1056</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">actionSwitchViewToBrowserView:</string>
+						<reference key="source" ref="569835777"/>
+						<reference key="destination" ref="327031887"/>
+					</object>
+					<int key="connectionID">1057</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -4571,7 +4572,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">1056</int>
+			<int key="maxID">1057</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -5075,14 +5076,12 @@
 							<string>mainMenuAddSelectedFiles:</string>
 							<string>mainMenuAnnotateSelectedFiles:</string>
 							<string>mainMenuCloneRepository:</string>
-							<string>mainMenuCollapseChangesets:</string>
 							<string>mainMenuCommitAllFiles:</string>
 							<string>mainMenuCommitSelectedFiles:</string>
 							<string>mainMenuDeleteSelectedFiles:</string>
 							<string>mainMenuDiffAllFiles:</string>
 							<string>mainMenuDiffSelectedFiles:</string>
 							<string>mainMenuExportPatches:</string>
-							<string>mainMenuHistoryEditChangesets:</string>
 							<string>mainMenuIgnoreSelectedFiles:</string>
 							<string>mainMenuImportPatches:</string>
 							<string>mainMenuIncomingFromRepository:</string>
@@ -5094,7 +5093,6 @@
 							<string>mainMenuOutgoingToRepository:</string>
 							<string>mainMenuPullFromRepository:</string>
 							<string>mainMenuPushToRepository:</string>
-							<string>mainMenuRebaseChangesets:</string>
 							<string>mainMenuRemergeSelectedFiles:</string>
 							<string>mainMenuRenameSelectedFile:</string>
 							<string>mainMenuRevertAllFiles:</string>
@@ -5102,7 +5100,6 @@
 							<string>mainMenuRevertSelectedFiles:</string>
 							<string>mainMenuRevertSelectedFilesToVersion:</string>
 							<string>mainMenuRollbackCommit:</string>
-							<string>mainMenuStripChangesets:</string>
 							<string>mainMenuUnignoreSelectedFiles:</string>
 							<string>mainMenuUntrackSelectedFiles:</string>
 							<string>mainMenuUpdateRepository:</string>
@@ -5125,10 +5122,6 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
