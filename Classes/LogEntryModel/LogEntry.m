@@ -53,8 +53,8 @@ void setupGlobalsForPartsAndTemplate()
 	namesOfPartsShort   = [NSArray arrayWithObjects:@"revision", @"author",          @"date",   @"parents",   @"changeset",    @"shortComment",     nil];
 	templateStringShort = [[templateParts componentsJoinedByString:entryPartSeparator] stringByAppendingString:entrySeparator];
 
-	templateParts       = [NSArray arrayWithObjects:@"{rev}",    @"{author|person}", @"{date}", @"{parents}", @"{node|short}",  @"{desc|firstline}", @"{desc}",      nil];
-	namesOfPartsFull    = [NSArray arrayWithObjects:@"revision", @"author",          @"date",   @"parents",   @"changeset",     @"shortComment",     @"fullComment", nil];
+	templateParts       = [NSArray arrayWithObjects:@"{rev}",    @"{author|person}", @"{author}",     @"{date}", @"{parents}", @"{node|short}", @"{node}",        @"{desc|firstline}", @"{desc}",      nil];
+	namesOfPartsFull    = [NSArray arrayWithObjects:@"revision", @"author",          @"fullAuthor"  , @"date",   @"parents",   @"changeset",    @"fullChangeset", @"shortComment",     @"fullComment", nil];
 	templateStringFull  = [[templateParts componentsJoinedByString:entryPartSeparator] stringByAppendingString:entrySeparator];
 }
 
@@ -73,10 +73,12 @@ void setupGlobalsForPartsAndTemplate()
 @synthesize		loadStatus = loadStatus_;
 @synthesize		revision = revision_;
 @synthesize 	author = author_;
+@synthesize 	fullAuthor = fullAuthor_;
 @synthesize 	shortComment = shortComment_;
 @synthesize 	fullComment = fullComment_;
 @synthesize 	parents = parents_;
 @synthesize		changeset = changeset_;
+@synthesize		fullChangeset = fullChangeset_;
 @synthesize		filesAdded = filesAdded_;
 @synthesize		filesModified = filesModified_;
 @synthesize		filesRemoved = filesRemoved_;
@@ -99,6 +101,7 @@ void setupGlobalsForPartsAndTemplate()
 		collection_ = collection;
 		revision_ = nil;
 		author_ = nil;
+		fullAuthor_ = nil;
 		date_ = nil;
 		shortComment_ = nil;
 		fullComment_ = nil;
@@ -108,6 +111,7 @@ void setupGlobalsForPartsAndTemplate()
 		branch_ = nil;
 		labels_ = nil;
 		changeset_ = nil;
+		fullChangeset_ = nil;
 		filesAdded_ = nil;
 		filesModified_ = nil;
 		filesRemoved_ = nil;
@@ -118,6 +122,12 @@ void setupGlobalsForPartsAndTemplate()
 
 
 
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Derived information
+// -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (NSArray*) tags
 {
@@ -212,6 +222,7 @@ void setupGlobalsForPartsAndTemplate()
 	entry->date_ = [NSDate dateWithTimeIntervalSinceNow:0];
 	[entry setLoadStatus:eLogEntryLoadedFully];
 	[entry setAuthor:@""];
+	[entry setFullAuthor:@""];
 	entry->branch_ = @"";
 	entry->tags_ = [[NSArray alloc]init];
 	[entry setChangeset:@""];
@@ -373,11 +384,18 @@ void setupGlobalsForPartsAndTemplate()
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Parents:\t")];
 		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", parents_))];
 	}
-	if (YES)
+
+	if (stringIsNonWhiteSpace(fullAuthor_))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Author:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", author_))];
+		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", fullAuthor_))];
 	}
+	else
+	{
+		[verboseEntry appendAttributedString: categoryAttributedString(@"Author:\t")];
+		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", nonNil(author_)))];
+	}
+	
 	if (YES)
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Date:\t")];
