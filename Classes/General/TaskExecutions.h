@@ -95,6 +95,7 @@ typedef enum
 + (BOOL)			taskWasKilled:(ExecutionResult*)results;
 
 + (NSMutableArray*) preProcessMercurialCommandArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath;
++ (NSDictionary*)	environmentForHg;
 
 + (ExecutionResult*) executeMercurialWithArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath;
 + (ExecutionResult*) executeMercurialWithArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath  logging:(LoggingEnum)log;

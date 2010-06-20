@@ -121,7 +121,7 @@
 // MARK: Core Execution
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-+ (ExecutionResult*) synchronouslyExecute:(NSString*)cmd withArgs:(NSArray*)args onTask:(NSTask*)theTask
++ (NSDictionary*) environmentForHg
 {
 	static NSDictionary* env = nil;
 	static BOOL includeMacHgHgrc = YES;
@@ -131,9 +131,9 @@
 		includeMacHgHgrc = IncludeMacHgHgrcInHGRCPATHFromDefaults();
 		includeHomeHgrc  = IncludeHomeHgrcInHGRCPATHFromDefaults();
 		NSString* hgrc_Path = hgrcPath();
-
+		
 		NSDictionary* processEnv    = [[NSProcessInfo processInfo] environment];
-		NSMutableDictionary* newEnv = [NSMutableDictionary dictionaryWithDictionary:processEnv];
+		NSMutableDictionary* newEnv = [[NSMutableDictionary alloc] init];
 		[newEnv copyValueOfKey:@"SSH_ASKPASS"	from:processEnv];
 		[newEnv copyValueOfKey:@"SSH_AUTH_SOCK"	from:processEnv];
 		[newEnv copyValueOfKey:@"HOME"			from:processEnv];
@@ -145,9 +145,15 @@
 		[newEnv setObject:hgrc_Path	forKey:@"HGRCPATH"];		
 		env = [NSDictionary dictionaryWithDictionary:newEnv];
 	}
+	return env;
+}
+
+
++ (ExecutionResult*) synchronouslyExecute:(NSString*)cmd withArgs:(NSArray*)args onTask:(NSTask*)theTask
+{
 
 	NSTask* task = theTask ? theTask : [[NSTask alloc] init];
-	[task setEnvironment:env];
+	[task setEnvironment:[self environmentForHg]];
 	[task startExecution:cmd withArgs:args];
 	return [ExecutionResult extractResults:task];
 }
