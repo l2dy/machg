@@ -2088,6 +2088,7 @@
 				NSTask* task     = [[NSTask alloc] init];
 				NSString* hgPath = executableLocationHG();
 				[task setLaunchPath: hgPath];
+				[task setEnvironment:[TaskExecutions environmentForHg]];
 				[task setArguments:diffArgs];
 				[task launch];			// Start the process
 			});
