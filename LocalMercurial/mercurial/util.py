@@ -666,7 +666,7 @@ def checkexec(path):
 
     try:
         EXECFLAGS = stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH
-        fh, fn = tempfile.mkstemp(dir=None, prefix='hg-checkexec-')
+        fh, fn = tempfile.mkstemp(dir=path, prefix='hg-checkexec-')
         try:
             os.close(fh)
             m = os.stat(fn).st_mode & 0777
@@ -684,7 +684,7 @@ def checklink(path):
     """check whether the given path is on a symlink-capable filesystem"""
     # mktemp is not racy because symlink creation will fail if the
     # file already exists
-    name = tempfile.mktemp(dir=None, prefix='hg-checklink-')
+    name = tempfile.mktemp(dir=path, prefix='hg-checklink-')
     try:
         os.symlink(".", name)
         os.unlink(name)
