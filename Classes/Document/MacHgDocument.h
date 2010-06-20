@@ -65,7 +65,7 @@
 	BrowserPaneController*				theBrowserPaneController_;
 	HistoryViewController*				theHistoryViewController_;
 	DifferencesViewController*			theDifferencesViewController_;
-	BackingPaneController*				theBackingPaneController_;
+	BackingViewController*				theBackingViewController_;
 
 	// Sheet Controllers
 	AddLabelSheetController*			theAddLabelSheetController_;
@@ -136,7 +136,7 @@
 - (BrowserPaneController*)			theBrowserPaneController;
 - (HistoryViewController*)			theHistoryViewController;
 - (DifferencesViewController*)		theDifferencesViewController;
-- (BackingPaneController*)			theBackingPaneController;
+- (BackingViewController*)			theBackingViewController;
 
 - (AddLabelSheetController*)		theAddLabelSheetController;
 - (CloneSheetController*)			theCloneSheetController;
@@ -168,7 +168,7 @@
 - (BOOL)		showingBrowserPane;
 - (BOOL)		showingHistoryView;
 - (BOOL)		showingDifferencesView;
-- (BOOL)		showingBackingPane;
+- (BOOL)		showingBackingView;
 - (BOOL)		showingBrowserOrHistoryView;
 - (BOOL)		showingBrowserOrDifferencesView;
 - (BOOL)		showingBrowserOrHistoryOrDifferencesView;
@@ -178,7 +178,7 @@
 - (IBAction)	actionSwitchViewToBrowserPane:(id)sender;
 - (IBAction)	actionSwitchViewToHistoryView:(id)sender;
 - (IBAction)	actionSwitchViewToDifferencesView:(id)sender;
-- (IBAction)	actionSwitchViewToBackingPane:(id)sender;
+- (IBAction)	actionSwitchViewToBackingView:(id)sender;
 
 
 // Document Information

@@ -1,5 +1,5 @@
 //
-//  BackingPaneController.m
+//  BackingViewController.m
 //  MacHg
 //
 //  Created by Jason Harris on 12/4/09.
@@ -7,11 +7,11 @@
 //  This software is licensed under the "New BSD License". The full license text is given in the file License.txt
 //
 
-#import "BackingPaneController.h"
+#import "BackingViewController.h"
 #import <QuartzCore/CIFilter.h>
 
 
-@implementation BackingPaneController
+@implementation BackingViewController
 
 @synthesize buttonBox;
 @synthesize backingBox;
@@ -26,10 +26,10 @@
 // MARK: Initialization
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BackingPaneController*) initBackingPaneControllerWithDocument:(MacHgDocument*)doc
+- (BackingViewController*) initBackingViewControllerWithDocument:(MacHgDocument*)doc
 {
 	myDocument = doc;
-	[NSBundle loadNibNamed:@"BackingPane" owner:self];
+	[NSBundle loadNibNamed:@"BackingView" owner:self];
 	return self;
 }
 

@@ -18,7 +18,7 @@
 #import "BrowserPaneController.h"
 #import "HistoryViewController.h"
 #import "DifferencesViewController.h"
-#import "BackingPaneController.h"
+#import "BackingViewController.h"
 
 #import "FSBrowser.h"
 #import "FSBrowserCell.h"	// Do we need this here?
@@ -186,7 +186,7 @@
 		[self populateOutlineContents];
 		connections_ = [[NSMutableDictionary alloc]init];
 	}
-	[self actionSwitchViewToBackingPane:self];
+	[self actionSwitchViewToBackingView:self];
 }
 
 - (void) LogNotification:(NSNotification*)aNotification
@@ -280,16 +280,16 @@
 	return theDifferencesViewController_;
 }
 
-- (BackingPaneController*) theBackingPaneController
+- (BackingViewController*) theBackingViewController
 {
-	if (theBackingPaneController_)
-		return theBackingPaneController_;
+	if (theBackingViewController_)
+		return theBackingViewController_;
 	@synchronized(self)
 	{
-		if (!theBackingPaneController_)
-			theBackingPaneController_ = [[BackingPaneController alloc] initBackingPaneControllerWithDocument:self];
+		if (!theBackingViewController_)
+			theBackingViewController_ = [[BackingViewController alloc] initBackingViewControllerWithDocument:self];
 	}
-	return theBackingPaneController_;
+	return theBackingViewController_;
 }
 
 
@@ -632,11 +632,11 @@
 {
 	switch (paneNum)
 	{
-		case eBrowserPaneView:		return [[self theBrowserPaneController] view];
+		case eBrowserPaneView:	return [[self theBrowserPaneController] view];
 		case eHistoryView:		return [self theHistoryView];
 		case eDifferencesView:	return [self theDifferencesView];
-		case eBackingPaneView:		return [[self theBackingPaneController] view];
-		default:					return nil;
+		case eBackingView:		return [[self theBackingViewController] view];
+		default:				return nil;
 	}
 }
 
@@ -736,7 +736,7 @@
 - (BOOL)	showingBrowserPane								{ return currentPane_ == eBrowserPaneView; }
 - (BOOL)	showingHistoryView								{ return currentPane_ == eHistoryView; }
 - (BOOL)	showingDifferencesView							{ return currentPane_ == eDifferencesView; }
-- (BOOL)	showingBackingPane								{ return currentPane_ == eBackingPaneView; }
+- (BOOL)	showingBackingView								{ return currentPane_ == eBackingView; }
 - (BOOL)	showingBrowserOrHistoryView						{ return currentPane_ == eBrowserPaneView || currentPane_ == eHistoryView; }
 - (BOOL)	showingBrowserOrDifferencesView					{ return currentPane_ == eBrowserPaneView || currentPane_ == eDifferencesView; }
 - (BOOL)	showingBrowserOrHistoryOrDifferencesView		{ return currentPane_ == eBrowserPaneView || currentPane_ == eHistoryView || currentPane_ == eDifferencesView; }
@@ -744,7 +744,7 @@
 
 
 - (IBAction) actionSwitchViewToBrowserPane:(id)sender		{ [self setCurrentPane:eBrowserPaneView]; }
-- (IBAction) actionSwitchViewToBackingPane:(id)sender		{ [self setCurrentPane:eBackingPaneView]; }
+- (IBAction) actionSwitchViewToBackingView:(id)sender		{ [self setCurrentPane:eBackingView]; }
 - (IBAction) actionSwitchViewToDifferencesView:(id)sender	{ [self setCurrentPane:eDifferencesView]; }
 - (IBAction) actionSwitchViewToHistoryView:(id)sender		{ [self setCurrentPane:eHistoryView]; }
 
@@ -1295,11 +1295,11 @@
 	if (![node isExistentLocalRepositoryRef])
 	{
 		repositoryData_ = nil;
-		[self actionSwitchViewToBackingPane:self];
+		[self actionSwitchViewToBackingView:self];
 		return;
 	}
 
-	if ([node isLocalRepositoryRef] && [self showingBackingPane])
+	if ([node isLocalRepositoryRef] && [self showingBackingView])
 		[self actionSwitchViewToBrowserPane:self];
 	
 	[self initializeRepositoryData];

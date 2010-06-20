@@ -1,5 +1,5 @@
 //
-//  BackingPaneController.h
+//  BackingViewController.h
 //  MacHg
 //
 //  Created by Jason Harris on 12/4/09.
@@ -10,7 +10,7 @@
 #import <Cocoa/Cocoa.h>
 #import "Common.h"
 
-@interface BackingPaneController : NSViewController <AccessesDocument>
+@interface BackingViewController : NSViewController <AccessesDocument>
 {
 	MacHgDocument*	myDocument;
 	IBOutlet NSBox*	backingBox;
@@ -21,7 +21,7 @@
 @property (nonatomic, assign) NSBox* backingBox;
 @property (readwrite,assign) MacHgDocument*  myDocument;
 
-- (BackingPaneController*) initBackingPaneControllerWithDocument:(MacHgDocument*)doc;
+- (BackingViewController*) initBackingViewControllerWithDocument:(MacHgDocument*)doc;
 
 @end
 

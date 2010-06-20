@@ -227,7 +227,7 @@
 
 	if (selectedNode == nil || [selectedNode nodeKind] == kSidebarNodeKindSection)
 	{
-		[myDocument actionSwitchViewToBackingPane:self];
+		[myDocument actionSwitchViewToBackingView:self];
 		[repositoryPathControl_ setURL:[NSURL URLWithString:@""]];
 		[[informationTextView_ textStorage] setAttributedString:[NSAttributedString string:@"" withAttributes:systemFontAttributes]];
 		[self reloadData];
@@ -239,7 +239,7 @@
 		NSString* dotHgPath = [[selectedNode path] stringByAppendingString:@"/.hg"];
 		if (![[NSFileManager defaultManager] fileExistsAtPath:dotHgPath])
 		{
-			[myDocument actionSwitchViewToBackingPane:self];
+			[myDocument actionSwitchViewToBackingView:self];
 			[[informationTextView_ textStorage] setAttributedString:[NSAttributedString string:@"" withAttributes:systemFontAttributes]];
 			[repositoryPathControl_ setURL:[NSURL URLWithString:@""]];
 			[self reloadData];
@@ -254,7 +254,7 @@
 	{
 		[repositoryPathControl_ setURL:[NSURL URLWithString:[selectedNode path]]];
 		[self updateInformationTextView];
-		[myDocument actionSwitchViewToBackingPane:self];
+		[myDocument actionSwitchViewToBackingView:self];
 		[self computeIncomingOutgoingToCompatibleRepositories];
 	}
 	[self reloadData];
@@ -751,7 +751,7 @@
 		[[node parent] removeChild:node];
 		[self deselectAll:self];
 		[self reloadData];
-		[myDocument actionSwitchViewToBackingPane:self];
+		[myDocument actionSwitchViewToBackingView:self];
 		[myDocument saveDocumentIfNamed];
 		return;
 	};
@@ -769,7 +769,7 @@
 	[self deselectAll:self];
 	[self reloadData];
 	[myDocument saveDocumentIfNamed];
-	[myDocument actionSwitchViewToBackingPane:self];
+	[myDocument actionSwitchViewToBackingView:self];
 }
 
 

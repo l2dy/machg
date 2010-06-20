@@ -113,8 +113,8 @@
 		96680DA510CDD789001D178B /* FSBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 96680DA010CDD789001D178B /* FSBrowser.m */; };
 		96680DA610CDD789001D178B /* FSBrowserCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96680DA210CDD789001D178B /* FSBrowserCell.m */; };
 		96680DA710CDD789001D178B /* FSNodeInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 96680DA410CDD789001D178B /* FSNodeInfo.m */; };
-		966810C510CE7425001D178B /* BackingPaneController.m in Sources */ = {isa = PBXBuildFile; fileRef = 966810C410CE7425001D178B /* BackingPaneController.m */; };
-		966810D710CE7546001D178B /* BackingPane.xib in Resources */ = {isa = PBXBuildFile; fileRef = 966810D510CE7546001D178B /* BackingPane.xib */; };
+		966810C510CE7425001D178B /* BackingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 966810C410CE7425001D178B /* BackingViewController.m */; };
+		966810D710CE7546001D178B /* BackingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 966810D510CE7546001D178B /* BackingView.xib */; };
 		9672AC4F114B78F400312CE2 /* BaseSheetWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9672AC4E114B78F400312CE2 /* BaseSheetWindowController.m */; };
 		9672AC63114B796A00312CE2 /* ConnectionValidationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9672AC53114B796A00312CE2 /* ConnectionValidationController.m */; };
 		9672AC64114B796A00312CE2 /* DisclosureBoxController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9672AC56114B796A00312CE2 /* DisclosureBoxController.m */; };
@@ -360,9 +360,9 @@
 		96680DA210CDD789001D178B /* FSBrowserCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FSBrowserCell.m; path = Classes/BrowserPane/FSBrowserCell.m; sourceTree = "<group>"; };
 		96680DA310CDD789001D178B /* FSNodeInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FSNodeInfo.h; path = Classes/BrowserPane/FSNodeInfo.h; sourceTree = "<group>"; };
 		96680DA410CDD789001D178B /* FSNodeInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FSNodeInfo.m; path = Classes/BrowserPane/FSNodeInfo.m; sourceTree = "<group>"; };
-		966810C310CE7425001D178B /* BackingPaneController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackingPaneController.h; sourceTree = "<group>"; };
-		966810C410CE7425001D178B /* BackingPaneController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackingPaneController.m; sourceTree = "<group>"; };
-		966810D610CE7546001D178B /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/BackingPane.xib; sourceTree = SOURCE_ROOT; };
+		966810C310CE7425001D178B /* BackingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackingViewController.h; sourceTree = "<group>"; };
+		966810C410CE7425001D178B /* BackingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackingViewController.m; sourceTree = "<group>"; };
+		966810D610CE7546001D178B /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/BackingView.xib; sourceTree = SOURCE_ROOT; };
 		9672AC4D114B78F400312CE2 /* BaseSheetWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseSheetWindowController.h; sourceTree = "<group>"; };
 		9672AC4E114B78F400312CE2 /* BaseSheetWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseSheetWindowController.m; sourceTree = "<group>"; };
 		9672AC52114B796A00312CE2 /* ConnectionValidationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectionValidationController.h; sourceTree = "<group>"; };
@@ -1040,9 +1040,9 @@
 		966810C210CE7425001D178B /* Backing Pane */ = {
 			isa = PBXGroup;
 			children = (
-				966810C310CE7425001D178B /* BackingPaneController.h */,
-				966810C410CE7425001D178B /* BackingPaneController.m */,
-				966810D510CE7546001D178B /* BackingPane.xib */,
+				966810C310CE7425001D178B /* BackingViewController.h */,
+				966810C410CE7425001D178B /* BackingViewController.m */,
+				966810D510CE7546001D178B /* BackingView.xib */,
 			);
 			name = "Backing Pane";
 			path = Classes/BackingPane;
@@ -1436,7 +1436,7 @@
 				96DCCC1F10CD41B100C843C9 /* localhg in Resources */,
 				9606F3451157F1F100968DE8 /* opendiff-w.sh in Resources */,
 				96DCCC2010CD41B100C843C9 /* spawnshellatpath in Resources */,
-				966810D710CE7546001D178B /* BackingPane.xib in Resources */,
+				966810D710CE7546001D178B /* BackingView.xib in Resources */,
 				96DB336510D43BCB00BB5B08 /* DifferencesView.xib in Resources */,
 				969754B910DE28CD00F02ACF /* pull_32h.png in Resources */,
 				969754C310DE296A00F02ACF /* push_32h.png in Resources */,
@@ -1509,7 +1509,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				96A377D310C8EC2800FA190A /* AppController.m in Sources */,
-				966810C510CE7425001D178B /* BackingPaneController.m in Sources */,
+				966810C510CE7425001D178B /* BackingViewController.m in Sources */,
 				9695006510CBE37200548D1C /* BrowserPaneController.m in Sources */,
 				963DBDBB10C7D34A00189853 /* Common.m in Sources */,
 				96DB336A10D43BE100BB5B08 /* DifferencesViewController.m in Sources */,
@@ -1721,12 +1721,12 @@
 			name = HistoryView.xib;
 			sourceTree = "<group>";
 		};
-		966810D510CE7546001D178B /* BackingPane.xib */ = {
+		966810D510CE7546001D178B /* BackingView.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				966810D610CE7546001D178B /* English */,
 			);
-			name = BackingPane.xib;
+			name = BackingView.xib;
 			path = Classes/BackingPane;
 			sourceTree = SOURCE_ROOT;
 		};
