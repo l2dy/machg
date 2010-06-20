@@ -253,20 +253,12 @@
 - (IBAction)	browserMenuOpenTerminalHere:(id)sender;
 
 
-// Primary Menu Actions
-- (IBAction)	mainMenuDiffSelectedFiles:(id)sender;
-
-
-
-
 // All Files Menu Actions
-- (IBAction)	mainMenuDiffAllFiles:(id)sender;
 - (IBAction)	mainMenuUpdateRepository:(id)sender;
 - (IBAction)	mainMenuUpdateRepositoryToVersion:(id)sender;
 
 
 // Switching actions
-- (IBAction)	toolbarDiffFiles:(id)sender;
 - (IBAction)	toolbarUpdate:(id)sender;
 
 

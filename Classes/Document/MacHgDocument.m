@@ -835,10 +835,6 @@
 	if (theAction == @selector(actionSwitchViewToHistoryView:))			return [self repositoryIsSelectedAndReady];
 	if (theAction == @selector(actionSwitchViewToDifferencesView:))		return [self repositoryIsSelectedAndReady];
 
-	// Files	
-	if (theAction == @selector(mainMenuDiffSelectedFiles:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusModified];
-	if (theAction == @selector(mainMenuDiffAllFiles:))					return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [self repositoryHasFilesWhichContainStatus:eHGStatusModified];
-	if (theAction == @selector(toolbarDiffFiles:))						return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryOrDifferencesView] && [self toolbarActionAppliesToFilesWith:eHGStatusModified];
 
 	if (theAction == @selector(mainMenuRevertSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusChangedInSomeWay];
 	if (theAction == @selector(mainMenuRevertAllFiles:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [self repositoryHasFilesWhichContainStatus:eHGStatusChangedInSomeWay];
@@ -1381,27 +1377,6 @@
 - (IBAction) browserMenuOpenSelectedFilesInFinder:(id)sender	{ [[self theBrowser] browserMenuOpenSelectedFilesInFinder:sender]; }
 - (IBAction) browserMenuRevealSelectedFilesInFinder:(id)sender	{ [[self theBrowser] browserMenuRevealSelectedFilesInFinder:sender]; }
 - (IBAction) browserMenuOpenTerminalHere:(id)sender				{ [[self theBrowser] browserMenuOpenTerminalHere:sender]; }
-
-
-
-
-
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
-// MARK: Standard  Menu Actions
-// -----------------------------------------------------------------------------------------------------------------------------------------
-
-- (IBAction) mainMenuDiffSelectedFiles:(id)sender				{ [self viewDifferencesInCurrentRevisionFor:[self absolutePathsOfBrowserChosenFiles] toRevision:nil]; }		// nil indicates the current revision
-- (IBAction) mainMenuDiffAllFiles:(id)sender					{ [self viewDifferencesInCurrentRevisionFor:[self absolutePathOfRepositoryRootAsArray] toRevision:nil]; }	// nil indicates the current revision
-- (IBAction) toolbarDiffFiles:(id)sender
-{
-	if ([self showingBrowserView] && [self nodesAreChosenInBrowser])
-		[self mainMenuDiffSelectedFiles:sender];
-	else if ([self showingBrowserView])
-		[self mainMenuDiffAllFiles:sender];
-	else if ([self showingDifferencesView])
-		[self mainMenuDiffAllFiles:sender];	
-}
 
 
 
