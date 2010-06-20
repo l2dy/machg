@@ -265,7 +265,7 @@
 {
 	SEL theAction = [anItem action];
 
-	if (theAction == @selector(mainMenuCommitSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && ![[myDocument repositoryData] inMergeState] && [theBrowser statusOfChosenPathsInBrowserContain:eHGStatusCommittable];
+	if (theAction == @selector(mainMenuCommitSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && [myDocument validateAndSwitchMenuForCommitSelectedFiles:DynamicCast(NSMenuItem, anItem)];
 	if (theAction == @selector(mainMenuCommitAllFiles:))				return [myDocument repositoryIsSelectedAndReady] && [myDocument validateAndSwitchMenuForCommitAllFiles:DynamicCast(NSMenuItem, anItem)];
 	if (theAction == @selector(toolbarCommitFiles:))					return [myDocument repositoryIsSelectedAndReady] && ([[myDocument repositoryData] inMergeState] || [self toolbarActionAppliesToFilesWith:eHGStatusCommittable]);
 	
