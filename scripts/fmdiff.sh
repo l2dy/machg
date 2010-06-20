@@ -48,4 +48,19 @@ echo Starting FileMerge... 1>&2
 [ -n "$leftlabel"  ] && echo  Left: $leftlabel 1>&2
 [ -n "$rightlabel" ] && echo Right: $rightlabel 1>&2
 #exec "$FM" -left "$leftfile" -right "$rightfile" -merge $rightfile
+
+# Find the com.apple.TextEncoding extended attributes of the files
+leftattributes=`xattr -p com.apple.TextEncoding "$leftfile" 2>/dev/null`
+rightattributes=`xattr -p com.apple.TextEncoding "$rightfile" 2>/dev/null`
+
+# if the encodings are not UTF-8, then make them UTF-8
+shopt -s nocasematch
+if [ -z "$leftattributes" ] || [ "$leftattributes" != "UTF-8;134217984" ]; then
+	xattr -w com.apple.TextEncoding "UTF-8;134217984" "$leftfile"
+fi
+if [ -z "$rightattributes" ] || [ "$rightattributes" != "UTF-8;134217984" ]; then
+	xattr -w com.apple.TextEncoding "UTF-8;134217984" "$rightfile"
+fi
+shopt -u nocasematch
+
 exec /usr/bin/opendiff "$leftfile" "$rightfile" -merge "$rightfile"
