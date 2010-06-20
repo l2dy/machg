@@ -90,9 +90,6 @@
 		9637C89C118E9AB60000C14B /* LogGraphCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9637C895118E9AB60000C14B /* LogGraphCell.m */; };
 		9637C89D118E9AB60000C14B /* LogTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9637C897118E9AB60000C14B /* LogTableView.m */; };
 		9637C89E118E9AB60000C14B /* RepositoryData.m in Sources */ = {isa = PBXBuildFile; fileRef = 9637C899118E9AB60000C14B /* RepositoryData.m */; };
-		9637C8A4118E9AC00000C14B /* HistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9637C8A1118E9AC00000C14B /* HistoryViewController.m */; };
-		9637C8A5118E9AC00000C14B /* JHAccordionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9637C8A3118E9AC00000C14B /* JHAccordionView.m */; };
-		9637C8A8118E9ACB0000C14B /* HistoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9637C8A6118E9ACB0000C14B /* HistoryView.xib */; };
 		9637C8B3118E9BB40000C14B /* ScrollToForLogTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 9637C8B2118E9BB40000C14B /* ScrollToForLogTable.m */; };
 		9637C8BE118E9C030000C14B /* DividerBackground18.png in Resources */ = {isa = PBXBuildFile; fileRef = 9637C8BA118E9C030000C14B /* DividerBackground18.png */; };
 		9637C8BF118E9C030000C14B /* DividerBackground24.png in Resources */ = {isa = PBXBuildFile; fileRef = 9637C8BB118E9C030000C14B /* DividerBackground24.png */; };
@@ -110,12 +107,18 @@
 		963DBE1410C7D54800189853 /* SidebarNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 963DBE0F10C7D54800189853 /* SidebarNode.m */; };
 		9657059A113B1455009FE4C5 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96570599113B1455009FE4C5 /* WebKit.framework */; };
 		965FA57D116424A40074E4AA /* FinderIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 965FA57C116424A40074E4AA /* FinderIcon.png */; };
-		96680DA510CDD789001D178B /* FSBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 96680DA010CDD789001D178B /* FSBrowser.m */; };
-		96680DA610CDD789001D178B /* FSBrowserCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96680DA210CDD789001D178B /* FSBrowserCell.m */; };
-		96680DA710CDD789001D178B /* FSNodeInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 96680DA410CDD789001D178B /* FSNodeInfo.m */; };
-		966810C510CE7425001D178B /* BackingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 966810C410CE7425001D178B /* BackingViewController.m */; };
-		966810D710CE7546001D178B /* BackingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 966810D510CE7546001D178B /* BackingView.xib */; };
 		966E8E1811CB732E0052FF42 /* identity.png in Resources */ = {isa = PBXBuildFile; fileRef = 966E8E1711CB732E0052FF42 /* identity.png */; };
+		966E8E5011CB86160052FF42 /* HistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E8E4D11CB86160052FF42 /* HistoryViewController.m */; };
+		966E8E5111CB86160052FF42 /* JHAccordionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E8E4F11CB86160052FF42 /* JHAccordionView.m */; };
+		966E8E5B11CB86250052FF42 /* BrowserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E8E5411CB86250052FF42 /* BrowserViewController.m */; };
+		966E8E5C11CB86250052FF42 /* FSBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E8E5611CB86250052FF42 /* FSBrowser.m */; };
+		966E8E5D11CB86250052FF42 /* FSBrowserCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E8E5811CB86250052FF42 /* FSBrowserCell.m */; };
+		966E8E5E11CB86250052FF42 /* FSNodeInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E8E5A11CB86250052FF42 /* FSNodeInfo.m */; };
+		966E8E6A11CB863C0052FF42 /* DifferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E8E6711CB863C0052FF42 /* DifferencesViewController.m */; };
+		966E8E6B11CB863C0052FF42 /* JointSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E8E6911CB863C0052FF42 /* JointSplitView.m */; };
+		966E8E6F11CB864C0052FF42 /* BackingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E8E6E11CB864C0052FF42 /* BackingViewController.m */; };
+		966E8E7211CB866E0052FF42 /* HistoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 966E8E7011CB866E0052FF42 /* HistoryView.xib */; };
+		966E8E7511CB868F0052FF42 /* BackingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 966E8E7311CB868F0052FF42 /* BackingView.xib */; };
 		9672AC4F114B78F400312CE2 /* BaseSheetWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9672AC4E114B78F400312CE2 /* BaseSheetWindowController.m */; };
 		9672AC63114B796A00312CE2 /* ConnectionValidationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9672AC53114B796A00312CE2 /* ConnectionValidationController.m */; };
 		9672AC64114B796A00312CE2 /* DisclosureBoxController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9672AC56114B796A00312CE2 /* DisclosureBoxController.m */; };
@@ -125,7 +128,6 @@
 		9672AC68114B796A00312CE2 /* TitledButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 9672AC62114B796A00312CE2 /* TitledButton.m */; };
 		9672AC6B114B799500312CE2 /* ResultsWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9672AC69114B799500312CE2 /* ResultsWindow.xib */; };
 		969064EC11601E2400F30915 /* MonitorFSEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 969064EB11601E2400F30915 /* MonitorFSEvents.m */; };
-		9695006510CBE37200548D1C /* BrowserViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9695006410CBE37200548D1C /* BrowserViewController.m */; };
 		9695007410CBE3E100548D1C /* BrowserView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9695007210CBE3E100548D1C /* BrowserView.xib */; };
 		9695C0AD1108E1C5004CE684 /* PullSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9695C0A91108E1C5004CE684 /* PullSheetController.m */; };
 		9695C0AE1108E1C5004CE684 /* PushSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9695C0AC1108E1C5004CE684 /* PushSheetController.m */; };
@@ -163,8 +165,6 @@
 		96D2477D117BC1810030815B /* ThickSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D2477C117BC1810030815B /* ThickSplitView.m */; };
 		96D5FFF81114E83900EE672E /* MyWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D5FFF71114E83900EE672E /* MyWindowController.m */; };
 		96DB336510D43BCB00BB5B08 /* DifferencesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96DB336310D43BCB00BB5B08 /* DifferencesView.xib */; };
-		96DB336A10D43BE100BB5B08 /* DifferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96DB336710D43BE100BB5B08 /* DifferencesViewController.m */; };
-		96DB336B10D43BE100BB5B08 /* JointSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96DB336910D43BE100BB5B08 /* JointSplitView.m */; };
 		96DCCC1E10CD41B100C843C9 /* fmdiff.sh in Resources */ = {isa = PBXBuildFile; fileRef = 96DCCC1B10CD41B100C843C9 /* fmdiff.sh */; };
 		96DCCC1F10CD41B100C843C9 /* localhg in Resources */ = {isa = PBXBuildFile; fileRef = 96DCCC1C10CD41B100C843C9 /* localhg */; };
 		96DCCC2010CD41B100C843C9 /* spawnshellatpath in Resources */ = {isa = PBXBuildFile; fileRef = 96DCCC1D10CD41B100C843C9 /* spawnshellatpath */; };
@@ -327,11 +327,6 @@
 		9637C897118E9AB60000C14B /* LogTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogTableView.m; sourceTree = "<group>"; };
 		9637C898118E9AB60000C14B /* RepositoryData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepositoryData.h; sourceTree = "<group>"; };
 		9637C899118E9AB60000C14B /* RepositoryData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RepositoryData.m; sourceTree = "<group>"; };
-		9637C8A0118E9AC00000C14B /* HistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HistoryViewController.h; sourceTree = "<group>"; };
-		9637C8A1118E9AC00000C14B /* HistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HistoryViewController.m; sourceTree = "<group>"; };
-		9637C8A2118E9AC00000C14B /* JHAccordionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JHAccordionView.h; sourceTree = "<group>"; };
-		9637C8A3118E9AC00000C14B /* JHAccordionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JHAccordionView.m; sourceTree = "<group>"; };
-		9637C8A7118E9ACB0000C14B /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/HistoryView.xib; sourceTree = SOURCE_ROOT; };
 		9637C8B1118E9BB40000C14B /* ScrollToForLogTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollToForLogTable.h; sourceTree = "<group>"; };
 		9637C8B2118E9BB40000C14B /* ScrollToForLogTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScrollToForLogTable.m; sourceTree = "<group>"; };
 		9637C8BA118E9C030000C14B /* DividerBackground18.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DividerBackground18.png; sourceTree = "<group>"; };
@@ -355,16 +350,27 @@
 		963DBE3810C7D6CA00189853 /* Sidebar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sidebar.h; sourceTree = "<group>"; };
 		96570599113B1455009FE4C5 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
 		965FA57C116424A40074E4AA /* FinderIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FinderIcon.png; sourceTree = "<group>"; };
-		96680D9F10CDD789001D178B /* FSBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FSBrowser.h; path = Classes/BrowserPane/FSBrowser.h; sourceTree = "<group>"; };
-		96680DA010CDD789001D178B /* FSBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FSBrowser.m; path = Classes/BrowserPane/FSBrowser.m; sourceTree = "<group>"; };
-		96680DA110CDD789001D178B /* FSBrowserCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FSBrowserCell.h; path = Classes/BrowserPane/FSBrowserCell.h; sourceTree = "<group>"; };
-		96680DA210CDD789001D178B /* FSBrowserCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FSBrowserCell.m; path = Classes/BrowserPane/FSBrowserCell.m; sourceTree = "<group>"; };
-		96680DA310CDD789001D178B /* FSNodeInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = FSNodeInfo.h; path = Classes/BrowserPane/FSNodeInfo.h; sourceTree = "<group>"; };
-		96680DA410CDD789001D178B /* FSNodeInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = FSNodeInfo.m; path = Classes/BrowserPane/FSNodeInfo.m; sourceTree = "<group>"; };
-		966810C310CE7425001D178B /* BackingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackingViewController.h; sourceTree = "<group>"; };
-		966810C410CE7425001D178B /* BackingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackingViewController.m; sourceTree = "<group>"; };
-		966810D610CE7546001D178B /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/BackingView.xib; sourceTree = SOURCE_ROOT; };
 		966E8E1711CB732E0052FF42 /* identity.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = identity.png; sourceTree = "<group>"; };
+		966E8E4C11CB86160052FF42 /* HistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HistoryViewController.h; sourceTree = "<group>"; };
+		966E8E4D11CB86160052FF42 /* HistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HistoryViewController.m; sourceTree = "<group>"; };
+		966E8E4E11CB86160052FF42 /* JHAccordionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JHAccordionView.h; sourceTree = "<group>"; };
+		966E8E4F11CB86160052FF42 /* JHAccordionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JHAccordionView.m; sourceTree = "<group>"; };
+		966E8E5311CB86250052FF42 /* BrowserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BrowserViewController.h; sourceTree = "<group>"; };
+		966E8E5411CB86250052FF42 /* BrowserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BrowserViewController.m; sourceTree = "<group>"; };
+		966E8E5511CB86250052FF42 /* FSBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSBrowser.h; sourceTree = "<group>"; };
+		966E8E5611CB86250052FF42 /* FSBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSBrowser.m; sourceTree = "<group>"; };
+		966E8E5711CB86250052FF42 /* FSBrowserCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSBrowserCell.h; sourceTree = "<group>"; };
+		966E8E5811CB86250052FF42 /* FSBrowserCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSBrowserCell.m; sourceTree = "<group>"; };
+		966E8E5911CB86250052FF42 /* FSNodeInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSNodeInfo.h; sourceTree = "<group>"; };
+		966E8E5A11CB86250052FF42 /* FSNodeInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSNodeInfo.m; sourceTree = "<group>"; };
+		966E8E6611CB863C0052FF42 /* DifferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DifferencesViewController.h; sourceTree = "<group>"; };
+		966E8E6711CB863C0052FF42 /* DifferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DifferencesViewController.m; sourceTree = "<group>"; };
+		966E8E6811CB863C0052FF42 /* JointSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JointSplitView.h; sourceTree = "<group>"; };
+		966E8E6911CB863C0052FF42 /* JointSplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JointSplitView.m; sourceTree = "<group>"; };
+		966E8E6D11CB864C0052FF42 /* BackingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackingViewController.h; sourceTree = "<group>"; };
+		966E8E6E11CB864C0052FF42 /* BackingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackingViewController.m; sourceTree = "<group>"; };
+		966E8E7111CB866E0052FF42 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/HistoryView.xib; sourceTree = SOURCE_ROOT; };
+		966E8E7411CB868F0052FF42 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/BackingView.xib; sourceTree = SOURCE_ROOT; };
 		9672AC4D114B78F400312CE2 /* BaseSheetWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseSheetWindowController.h; sourceTree = "<group>"; };
 		9672AC4E114B78F400312CE2 /* BaseSheetWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseSheetWindowController.m; sourceTree = "<group>"; };
 		9672AC52114B796A00312CE2 /* ConnectionValidationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectionValidationController.h; sourceTree = "<group>"; };
@@ -382,8 +388,6 @@
 		9672AC6A114B799500312CE2 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/ResultsWindow.xib; sourceTree = SOURCE_ROOT; };
 		969064EA11601E2400F30915 /* MonitorFSEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MonitorFSEvents.h; sourceTree = "<group>"; };
 		969064EB11601E2400F30915 /* MonitorFSEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MonitorFSEvents.m; sourceTree = "<group>"; };
-		9695006310CBE37200548D1C /* BrowserViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = BrowserViewController.h; path = Classes/BrowserPane/BrowserViewController.h; sourceTree = "<group>"; };
-		9695006410CBE37200548D1C /* BrowserViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = BrowserViewController.m; path = Classes/BrowserPane/BrowserViewController.m; sourceTree = "<group>"; };
 		9695007310CBE3E100548D1C /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/BrowserView.xib; sourceTree = "<group>"; };
 		9695C0A81108E1C5004CE684 /* PullSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PullSheetController.h; sourceTree = "<group>"; };
 		9695C0A91108E1C5004CE684 /* PullSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PullSheetController.m; sourceTree = "<group>"; };
@@ -439,10 +443,6 @@
 		96D5FFF61114E83900EE672E /* MyWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyWindowController.h; path = Classes/Document/MyWindowController.h; sourceTree = "<group>"; };
 		96D5FFF71114E83900EE672E /* MyWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MyWindowController.m; path = Classes/Document/MyWindowController.m; sourceTree = "<group>"; };
 		96DB336410D43BCB00BB5B08 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/DifferencesView.xib; sourceTree = "<group>"; };
-		96DB336610D43BE100BB5B08 /* DifferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DifferencesViewController.h; path = Classes/DifferencesPane/DifferencesViewController.h; sourceTree = "<group>"; };
-		96DB336710D43BE100BB5B08 /* DifferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DifferencesViewController.m; path = Classes/DifferencesPane/DifferencesViewController.m; sourceTree = "<group>"; };
-		96DB336810D43BE100BB5B08 /* JointSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JointSplitView.h; path = Classes/DifferencesPane/JointSplitView.h; sourceTree = SOURCE_ROOT; };
-		96DB336910D43BE100BB5B08 /* JointSplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JointSplitView.m; path = Classes/DifferencesPane/JointSplitView.m; sourceTree = SOURCE_ROOT; };
 		96DCCC1B10CD41B100C843C9 /* fmdiff.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = fmdiff.sh; path = scripts/fmdiff.sh; sourceTree = SOURCE_ROOT; };
 		96DCCC1C10CD41B100C843C9 /* localhg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = localhg; path = scripts/localhg; sourceTree = SOURCE_ROOT; };
 		96DCCC1D10CD41B100C843C9 /* spawnshellatpath */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = spawnshellatpath; path = scripts/spawnshellatpath; sourceTree = SOURCE_ROOT; };
@@ -524,10 +524,10 @@
 			children = (
 				963DBCA110C7CF8D00189853 /* MyDocument */,
 				963DBE0610C7D54800189853 /* Sidebar */,
-				967BA50010CBDEC100F73A58 /* Browser Pane */,
-				9637C89F118E9AC00000C14B /* HistoryPane */,
-				967B95F710C919E400F73A58 /* Differences Pane */,
-				966810C210CE7425001D178B /* Backing Pane */,
+				966E8E5211CB86250052FF42 /* BrowserView */,
+				966E8E4B11CB86160052FF42 /* HistoryView */,
+				966E8E6511CB863C0052FF42 /* DifferencesView */,
+				966E8E6C11CB864C0052FF42 /* BackingView */,
 				9637C88F118E9AB60000C14B /* LogEntryModel */,
 				962ED03611875ABC0072211F /* LabelsModel */,
 				962ED04E11875AED0072211F /* PatchesModel */,
@@ -954,19 +954,6 @@
 			path = Classes/LogEntryModel;
 			sourceTree = "<group>";
 		};
-		9637C89F118E9AC00000C14B /* HistoryPane */ = {
-			isa = PBXGroup;
-			children = (
-				9637C8A0118E9AC00000C14B /* HistoryViewController.h */,
-				9637C8A1118E9AC00000C14B /* HistoryViewController.m */,
-				9637C8A2118E9AC00000C14B /* JHAccordionView.h */,
-				9637C8A3118E9AC00000C14B /* JHAccordionView.m */,
-				9637C8A6118E9ACB0000C14B /* HistoryView.xib */,
-			);
-			name = HistoryPane;
-			path = Classes/HistoryPane;
-			sourceTree = "<group>";
-		};
 		9637C8B0118E9BB40000C14B /* ScrollToForLogTable */ = {
 			isa = PBXGroup;
 			children = (
@@ -1040,23 +1027,67 @@
 			path = Classes/Sidebar;
 			sourceTree = "<group>";
 		};
-		966810C210CE7425001D178B /* Backing Pane */ = {
-			isa = PBXGroup;
-			children = (
-				966810C310CE7425001D178B /* BackingViewController.h */,
-				966810C410CE7425001D178B /* BackingViewController.m */,
-				966810D510CE7546001D178B /* BackingView.xib */,
-			);
-			name = "Backing Pane";
-			path = Classes/BackingPane;
-			sourceTree = SOURCE_ROOT;
-		};
 		966E8E1611CB732E0052FF42 /* WizardIcons */ = {
 			isa = PBXGroup;
 			children = (
 				966E8E1711CB732E0052FF42 /* identity.png */,
 			);
 			path = WizardIcons;
+			sourceTree = "<group>";
+		};
+		966E8E4B11CB86160052FF42 /* HistoryView */ = {
+			isa = PBXGroup;
+			children = (
+				966E8E4C11CB86160052FF42 /* HistoryViewController.h */,
+				966E8E4D11CB86160052FF42 /* HistoryViewController.m */,
+				966E8E4E11CB86160052FF42 /* JHAccordionView.h */,
+				966E8E4F11CB86160052FF42 /* JHAccordionView.m */,
+				966E8E7011CB866E0052FF42 /* HistoryView.xib */,
+			);
+			name = HistoryView;
+			path = Classes/HistoryView;
+			sourceTree = "<group>";
+		};
+		966E8E5211CB86250052FF42 /* BrowserView */ = {
+			isa = PBXGroup;
+			children = (
+				966E8E5311CB86250052FF42 /* BrowserViewController.h */,
+				966E8E5411CB86250052FF42 /* BrowserViewController.m */,
+				966E8E5511CB86250052FF42 /* FSBrowser.h */,
+				966E8E5611CB86250052FF42 /* FSBrowser.m */,
+				966E8E5711CB86250052FF42 /* FSBrowserCell.h */,
+				966E8E5811CB86250052FF42 /* FSBrowserCell.m */,
+				966E8E5911CB86250052FF42 /* FSNodeInfo.h */,
+				966E8E5A11CB86250052FF42 /* FSNodeInfo.m */,
+				961CB6A91139BC730071F9F6 /* BrowserPreviewView.xib */,
+				9695007210CBE3E100548D1C /* BrowserView.xib */,
+			);
+			name = BrowserView;
+			path = Classes/BrowserView;
+			sourceTree = "<group>";
+		};
+		966E8E6511CB863C0052FF42 /* DifferencesView */ = {
+			isa = PBXGroup;
+			children = (
+				966E8E6611CB863C0052FF42 /* DifferencesViewController.h */,
+				966E8E6711CB863C0052FF42 /* DifferencesViewController.m */,
+				966E8E6811CB863C0052FF42 /* JointSplitView.h */,
+				966E8E6911CB863C0052FF42 /* JointSplitView.m */,
+				96DB336310D43BCB00BB5B08 /* DifferencesView.xib */,
+			);
+			name = DifferencesView;
+			path = Classes/DifferencesView;
+			sourceTree = "<group>";
+		};
+		966E8E6C11CB864C0052FF42 /* BackingView */ = {
+			isa = PBXGroup;
+			children = (
+				966E8E6D11CB864C0052FF42 /* BackingViewController.h */,
+				966E8E6E11CB864C0052FF42 /* BackingViewController.m */,
+				966E8E7311CB868F0052FF42 /* BackingView.xib */,
+			);
+			name = BackingView;
+			path = Classes/BackingView;
 			sourceTree = "<group>";
 		};
 		9672AC50114B796A00312CE2 /* UtilityClasses */ = {
@@ -1141,35 +1172,6 @@
 				961D5A08115DBD9E0064A4DA /* CommandKeyTextField.m */,
 			);
 			name = CommandKeyTextField;
-			sourceTree = "<group>";
-		};
-		967B95F710C919E400F73A58 /* Differences Pane */ = {
-			isa = PBXGroup;
-			children = (
-				96DB336610D43BE100BB5B08 /* DifferencesViewController.h */,
-				96DB336710D43BE100BB5B08 /* DifferencesViewController.m */,
-				96DB336810D43BE100BB5B08 /* JointSplitView.h */,
-				96DB336910D43BE100BB5B08 /* JointSplitView.m */,
-				96DB336310D43BCB00BB5B08 /* DifferencesView.xib */,
-			);
-			name = "Differences Pane";
-			sourceTree = "<group>";
-		};
-		967BA50010CBDEC100F73A58 /* Browser Pane */ = {
-			isa = PBXGroup;
-			children = (
-				9695006310CBE37200548D1C /* BrowserViewController.h */,
-				9695006410CBE37200548D1C /* BrowserViewController.m */,
-				96680D9F10CDD789001D178B /* FSBrowser.h */,
-				96680DA010CDD789001D178B /* FSBrowser.m */,
-				96680DA110CDD789001D178B /* FSBrowserCell.h */,
-				96680DA210CDD789001D178B /* FSBrowserCell.m */,
-				96680DA310CDD789001D178B /* FSNodeInfo.h */,
-				96680DA410CDD789001D178B /* FSNodeInfo.m */,
-				961CB6A91139BC730071F9F6 /* BrowserPreviewView.xib */,
-				9695007210CBE3E100548D1C /* BrowserView.xib */,
-			);
-			name = "Browser Pane";
 			sourceTree = "<group>";
 		};
 		969064E811601E2400F30915 /* MonitorFSEvents */ = {
@@ -1447,7 +1449,6 @@
 				96DCCC1F10CD41B100C843C9 /* localhg in Resources */,
 				9606F3451157F1F100968DE8 /* opendiff-w.sh in Resources */,
 				96DCCC2010CD41B100C843C9 /* spawnshellatpath in Resources */,
-				966810D710CE7546001D178B /* BackingView.xib in Resources */,
 				96DB336510D43BCB00BB5B08 /* DifferencesView.xib in Resources */,
 				969754B910DE28CD00F02ACF /* pull_32h.png in Resources */,
 				969754C310DE296A00F02ACF /* push_32h.png in Resources */,
@@ -1480,7 +1481,6 @@
 				962ED0BC11878A120072211F /* macHgPublicKey_dsa.pem in Resources */,
 				9637C872118E9A4D0000C14B /* InitializationWizard.xib in Resources */,
 				9637C879118E9A730000C14B /* ExportPatchesSheet.xib in Resources */,
-				9637C8A8118E9ACB0000C14B /* HistoryView.xib in Resources */,
 				9637C8BE118E9C030000C14B /* DividerBackground18.png in Resources */,
 				9637C8BF118E9C030000C14B /* DividerBackground24.png in Resources */,
 				9637C8C0118E9C030000C14B /* DividerThumb.png in Resources */,
@@ -1493,6 +1493,8 @@
 				96C613A911B40B0D00B54B09 /* MacHgSplash.png in Resources */,
 				96AD9C3C11C468CF00F5C82E /* MacHgHelp in Resources */,
 				966E8E1811CB732E0052FF42 /* identity.png in Resources */,
+				966E8E7211CB866E0052FF42 /* HistoryView.xib in Resources */,
+				966E8E7511CB868F0052FF42 /* BackingView.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1521,14 +1523,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				96A377D310C8EC2800FA190A /* AppController.m in Sources */,
-				966810C510CE7425001D178B /* BackingViewController.m in Sources */,
-				9695006510CBE37200548D1C /* BrowserViewController.m in Sources */,
 				963DBDBB10C7D34A00189853 /* Common.m in Sources */,
-				96DB336A10D43BE100BB5B08 /* DifferencesViewController.m in Sources */,
-				96680DA510CDD789001D178B /* FSBrowser.m in Sources */,
-				96680DA610CDD789001D178B /* FSBrowserCell.m in Sources */,
-				96680DA710CDD789001D178B /* FSNodeInfo.m in Sources */,
-				96DB336B10D43BE100BB5B08 /* JointSplitView.m in Sources */,
 				963DBC8510C7CEF600189853 /* main.m in Sources */,
 				96A377BF10C8EB9F00FA190A /* MacHgDocument.m in Sources */,
 				96024ED610CD30A4000E1790 /* PreferenceController.m in Sources */,
@@ -1584,8 +1579,6 @@
 				9637C89C118E9AB60000C14B /* LogGraphCell.m in Sources */,
 				9637C89D118E9AB60000C14B /* LogTableView.m in Sources */,
 				9637C89E118E9AB60000C14B /* RepositoryData.m in Sources */,
-				9637C8A4118E9AC00000C14B /* HistoryViewController.m in Sources */,
-				9637C8A5118E9AC00000C14B /* JHAccordionView.m in Sources */,
 				9637C8B3118E9BB40000C14B /* ScrollToForLogTable.m in Sources */,
 				9637C8C9118E9C5A0000C14B /* NSString+SymlinksAndAliases.m in Sources */,
 				969BD94511953E43007AA6D9 /* AddLabelSheetController.m in Sources */,
@@ -1599,6 +1592,15 @@
 				96DF426511B48DC700D986FF /* RadialGradiantBox.m in Sources */,
 				96DF437111B5209C00D986FF /* RelativePositionedBox.m in Sources */,
 				96DF581611BFC71A00D986FF /* MacHgDocumentController.m in Sources */,
+				966E8E5011CB86160052FF42 /* HistoryViewController.m in Sources */,
+				966E8E5111CB86160052FF42 /* JHAccordionView.m in Sources */,
+				966E8E5B11CB86250052FF42 /* BrowserViewController.m in Sources */,
+				966E8E5C11CB86250052FF42 /* FSBrowser.m in Sources */,
+				966E8E5D11CB86250052FF42 /* FSBrowserCell.m in Sources */,
+				966E8E5E11CB86250052FF42 /* FSNodeInfo.m in Sources */,
+				966E8E6A11CB863C0052FF42 /* DifferencesViewController.m in Sources */,
+				966E8E6B11CB863C0052FF42 /* JointSplitView.m in Sources */,
+				966E8E6F11CB864C0052FF42 /* BackingViewController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1635,6 +1637,7 @@
 				961CB6AA1139BC730071F9F6 /* English */,
 			);
 			name = BrowserPreviewView.xib;
+			path = ../..;
 			sourceTree = "<group>";
 		};
 		9630898F1182071B006E45A8 /* ImportPatchesSheet.xib */ = {
@@ -1725,22 +1728,21 @@
 			name = ExportPatchesSheet.xib;
 			sourceTree = "<group>";
 		};
-		9637C8A6118E9ACB0000C14B /* HistoryView.xib */ = {
+		966E8E7011CB866E0052FF42 /* HistoryView.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				9637C8A7118E9ACB0000C14B /* English */,
+				966E8E7111CB866E0052FF42 /* English */,
 			);
 			name = HistoryView.xib;
 			sourceTree = "<group>";
 		};
-		966810D510CE7546001D178B /* BackingView.xib */ = {
+		966E8E7311CB868F0052FF42 /* BackingView.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
-				966810D610CE7546001D178B /* English */,
+				966E8E7411CB868F0052FF42 /* English */,
 			);
 			name = BackingView.xib;
-			path = Classes/BackingPane;
-			sourceTree = SOURCE_ROOT;
+			sourceTree = "<group>";
 		};
 		9672AC69114B799500312CE2 /* ResultsWindow.xib */ = {
 			isa = PBXVariantGroup;
@@ -1756,6 +1758,7 @@
 				9695007310CBE3E100548D1C /* English */,
 			);
 			name = BrowserView.xib;
+			path = ../..;
 			sourceTree = "<group>";
 		};
 		9695C0AF1108E1DB004CE684 /* PullSheet.xib */ = {
