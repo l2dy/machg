@@ -72,12 +72,12 @@
 - (IBAction) mainMenuDiffAllFiles:(id)sender;
 - (IBAction) toolbarDiffFiles:(id)sender;
 
-- (IBAction) mainMenuAddSelectedFiles:(id)sender;
 - (IBAction) mainMenuAddRenameRemoveSelectedFiles:(id)sender;
 - (IBAction) mainMenuAddRenameRemoveAllFiles:(id)sender;
 - (IBAction) toolbarAddRenameRemoveFiles:(id)sender;
 
 - (IBAction) mainMenuDeleteSelectedFiles:(id)sender;
+- (IBAction) mainMenuAddSelectedFiles:(id)sender;
 - (IBAction) mainMenuUntrackSelectedFiles:(id)sender;
 - (IBAction) mainMenuRenameSelectedFile:(id)sender;
 
