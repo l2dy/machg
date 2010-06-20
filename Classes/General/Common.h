@@ -372,6 +372,8 @@ extern NSString* const MHGHandleGeneratedOrigFiles;
 extern NSString* const MHGIncludeHomeHgrcInHGRCPATH;
 extern NSString* const MHGIncludeMacHgHgrcInHGRCPATH;
 extern NSString* const MHGLaunchCount;
+extern NSString* const MHGLocalHGShellAliasName;
+extern NSString* const MHGLocalWhitelistedHGShellAliasName;
 extern NSString* const MHGLogEntryTableBookmarkHighlightColor;
 extern NSString* const MHGLogEntryTableBranchHighlightColor;
 extern NSString* const MHGLogEntryTableDisplayChangesetColumn;
@@ -457,6 +459,8 @@ NSString*	AddRemoveSimilarityFactorFromDefaults();
 NSString*	DefaultHGIgnoreContentsFromDefaults();
 NSString*	DefaultWorkspacePathFromDefaults();
 NSString*	ExecutableLocationHGFromDefaults();
+NSString*	LocalHGShellAliasNameFromDefaults();
+NSString*	LocalWhitelistedHGShellAliasNameFromDefaults();
 NSString*	MacHgLogFileLocation();
 NSString*	ToolNameForDiffingFromDefaults();
 NSColor*	LogEntryTableTagHighlightColor();
@@ -640,6 +644,7 @@ NSString*	executableLocationHG();								// The resolved executable location
 NSString*	applicationSupportFolder();							// the resolved app support dir eg				~/Library/Application Support/MacHg
 NSString*	applicationSupportVersionedFolder();				// the resolved versioned app support dir eg	~/Library/Application Support/MacHg/0.9.5
 NSString*	hgrcPath();											// the search path MacHg will pass to Mercurial to look for hgrc files (Mercurial configuration files.)
+NSArray*	aliasesForShell();									// the aliases for the local hg commands
 
 
 

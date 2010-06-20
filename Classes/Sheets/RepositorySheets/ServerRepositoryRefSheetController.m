@@ -240,15 +240,15 @@
 {
 	if (needsPassword_ && ![self authorizeForShowingPassword])
 		return;
-	NSString* mhgAlias  = [NSString stringWithFormat: @"alias %@='%@'", @"mhg", executableLocationHG()];
-	NSString* ehgAlias  = [NSString stringWithFormat: @"alias %@='HGPLAIN=1 HGENCODING=UTF-8 HGRCPATH=\"%@\" %@'", @"ehg", hgrcPath(), executableLocationHG()];
-	NSString* setLocalHgCommand = fstr(@"LOCALHG='%@'",executableLocationHG());
+
 	NSString* fullServerURL = FullServerURLWithPassword(serverFieldValue_, needsPassword_, password_);
 	NSMutableArray* argsIdentify = [NSMutableArray arrayWithObjects:@"identify", @"--rev", @"0", fullServerURL, nil];
 	NSMutableArray* newArgs = [TaskExecutions preProcessMercurialCommandArgs:argsIdentify fromRoot:@"/tmp"];
-	[newArgs insertObject:@"$LOCALHG" atIndex:0];
+	[newArgs insertObject:LocalWhitelistedHGShellAliasNameFromDefaults() atIndex:0];
 	NSString* identityCommand = [newArgs componentsJoinedByString:@" "];
-	NSArray* commands = [NSArray arrayWithObjects:setLocalHgCommand, identityCommand, nil]; 
+	
+	NSMutableArray* commands = [NSMutableArray arrayWithArray:aliasesForShell()];
+	[commands addObject:identityCommand];
 	DoCommandsInTerminalAt(commands, @"/tmp");
 }
 

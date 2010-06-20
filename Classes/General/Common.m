@@ -108,6 +108,8 @@ NSString* const MHGHandleGeneratedOrigFiles				= @"HandleGeneratedOrigFiles";
 NSString* const MHGIncludeHomeHgrcInHGRCPATH			= @"IncludeHomeHgrcInHGRCPATH";
 NSString* const MHGIncludeMacHgHgrcInHGRCPATH			= @"IncludeMacHgHgrcInHGRCPATH";
 NSString* const MHGLaunchCount							= @"LaunchCount";
+NSString* const MHGLocalHGShellAliasName				= @"LocalHGShellAliasName";
+NSString* const MHGLocalWhitelistedHGShellAliasName		= @"LocalWhitelistedHGShellAliasName";
 NSString* const MHGLogEntryTableBookmarkHighlightColor	= @"LogEntryTableBookmarkHighlightColor";
 NSString* const MHGLogEntryTableBranchHighlightColor	= @"LogEntryTableBranchHighlightColor";
 NSString* const MHGLogEntryTableDisplayChangesetColumn	= @"LogEntryTableDisplayChangesetColumn";
@@ -205,6 +207,8 @@ NSString*	AddRemoveSimilarityFactorFromDefaults()					{ return intAsString((int)
 NSString*	DefaultHGIgnoreContentsFromDefaults()					{ return stringFromDefaultsForKey(MHGDefaultHGIgnoreContents); }
 NSString*	DefaultWorkspacePathFromDefaults()						{ return [stringFromDefaultsForKey(MHGDefaultWorkspacePath) stringByStandardizingPath]; }
 NSString*	ExecutableLocationHGFromDefaults()						{ return stringFromDefaultsForKey(MHGExecutableLocationHG); }
+NSString*	LocalHGShellAliasNameFromDefaults()						{ return stringFromDefaultsForKey(MHGLocalHGShellAliasName); }
+NSString*	LocalWhitelistedHGShellAliasNameFromDefaults()			{ return stringFromDefaultsForKey(MHGLocalWhitelistedHGShellAliasName); }
 NSString*	MacHgLogFileLocation()									{ return stringFromDefaultsForKey(MHGMacHgLogFileLocation); }
 NSString*	ToolNameForDiffingFromDefaults()						{ return stringFromDefaultsForKey(MHGToolNameForDiffing); }
 float		fontSizeOfBrowserItemsFromDefaults()					{ return floatFromDefaultsForKey(MHGFontSizeOfBrowserItems); }
@@ -603,6 +607,13 @@ NSString* hgrcPath()
 	return fstr(@"%@", !includeHomeHgrc ? macHgHGRCpath : homeHGRCpath);	
 }
 
+NSArray* aliasesForShell()
+{
+	NSString* mhgAlias  = fstr(@"alias %@='%@'", LocalHGShellAliasNameFromDefaults(), executableLocationHG());
+	NSString* ehgAlias  = fstr(@"alias %@='HGPLAIN=1 HGENCODING=UTF-8 HGRCPATH=\"%@\" %@'", LocalWhitelistedHGShellAliasNameFromDefaults(), hgrcPath(), executableLocationHG());
+	NSArray* cmds = [NSArray arrayWithObjects:mhgAlias, ehgAlias, nil];
+	return cmds;
+}
 
 
 
