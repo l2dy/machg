@@ -879,10 +879,6 @@
 	if (theAction == @selector(toolbarUpdate:))							return [self repositoryIsSelectedAndReady];
 	if (theAction == @selector(mainMenuMergeWith:))						return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [[self repositoryData]hasMultipleOpenHeads] && ![self repositoryHasFilesWhichContainStatus:eHGStatusSecondary];
 	// ------
-	if (theAction == @selector(mainMenuCollapseChangesets:))			return [self repositoryIsSelectedAndReady] && [self showingHistoryView] && AllowHistoryEditingOfRepositoryFromDefaults();
-	if (theAction == @selector(mainMenuHistoryEditChangesets:))			return [self repositoryIsSelectedAndReady] && [self showingHistoryView] && AllowHistoryEditingOfRepositoryFromDefaults();
-	if (theAction == @selector(mainMenuStripChangesets:))				return [self repositoryIsSelectedAndReady] && [self showingHistoryView] && AllowHistoryEditingOfRepositoryFromDefaults();
-	if (theAction == @selector(mainMenuRebaseChangesets:))				return [self repositoryIsSelectedAndReady] && [self showingHistoryView] && AllowHistoryEditingOfRepositoryFromDefaults();
 	// ------
 	if (theAction == @selector(mainMenuManifestOfCurrentVersion:))		return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView];
 	if (theAction == @selector(mainMenuAddLabelToCurrentRevision:))		return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView];
@@ -1596,15 +1592,6 @@
 
 
 
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
-// MARK: History Altering Actions
-// -----------------------------------------------------------------------------------------------------------------------------------------
-
-- (IBAction) mainMenuCollapseChangesets:(id)sender				{ [[self theCollapseSheetController] openCollapseSheetWithSelectedRevisions:sender]; }
-- (IBAction) mainMenuHistoryEditChangesets:(id)sender			{ [[self theHistoryEditSheetController] openHistoryEditSheetWithSelectedRevisions:sender]; }
-- (IBAction) mainMenuStripChangesets:(id)sender					{ [[self theStripSheetController] openStripSheetWithSelectedRevisions:sender]; }
-- (IBAction) mainMenuRebaseChangesets:(id)sender				{ [[self theRebaseSheetController] openRebaseSheetWithSelectedRevisions:sender]; }
 
 
 

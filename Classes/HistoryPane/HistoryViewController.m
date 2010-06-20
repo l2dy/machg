@@ -14,6 +14,11 @@
 #import "RepositoryData.h"
 #import "LabelsTableView.h"
 #import "LabelData.h"
+#import "CloneSheetController.h"
+#import "CollapseSheetController.h"
+#import "StripSheetController.h"
+#import "HistoryEditSheetController.h"
+#import "RebaseSheetController.h"
 #import "RevertSheetController.h"
 #import "UpdateSheetController.h"
 #import "DifferencesViewController.h"
@@ -137,6 +142,20 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
+// MARK: History Altering Actions
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (IBAction) mainMenuCollapseChangesets:(id)sender				{ [[myDocument theCollapseSheetController]		openCollapseSheetWithSelectedRevisions:sender]; }
+- (IBAction) mainMenuHistoryEditChangesets:(id)sender			{ [[myDocument theHistoryEditSheetController]	openHistoryEditSheetWithSelectedRevisions:sender]; }
+- (IBAction) mainMenuStripChangesets:(id)sender					{ [[myDocument theStripSheetController]			openStripSheetWithSelectedRevisions:sender]; }
+- (IBAction) mainMenuRebaseChangesets:(id)sender				{ [[myDocument theRebaseSheetController]		openRebaseSheetWithSelectedRevisions:sender]; }
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
 // MARK: Actions Contextual Menus
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -193,12 +212,6 @@
 	NSTimeInterval t = [[NSAnimationContext currentContext] duration];
 	[[myDocument theDifferencesView] performSelector:@selector(compareLowHighValue:) withObject:pairAsValue afterDelay:t];	
 }
-
-
-- (IBAction) mainMenuCollapseChangesets:(id)sender	{ [myDocument mainMenuCollapseChangesets:sender]; }
-- (IBAction) mainMenuStripChangesets:(id)sender		{ [myDocument mainMenuStripChangesets:sender]; }
-- (IBAction) mainMenuRebaseChangesets:(id)sender		{ [myDocument mainMenuRebaseChangesets:sender]; }
-- (IBAction) mainMenuHistoryEditChangesets:(id)sender	{ [myDocument mainMenuHistoryEditChangesets:sender]; }
 
 
 
@@ -351,23 +364,30 @@
 - (BOOL) validateUserInterfaceItem:(id < NSValidatedUserInterfaceItem >)anItem
 {
 	SEL theAction = [anItem action];
+
+	// History only methods
+	if (theAction == @selector(mainMenuCollapseChangesets:))					return [myDocument repositoryIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();
+	if (theAction == @selector(mainMenuHistoryEditChangesets:))					return [myDocument repositoryIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();
+	if (theAction == @selector(mainMenuStripChangesets:))						return [myDocument repositoryIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();
+	if (theAction == @selector(mainMenuRebaseChangesets:))						return [myDocument repositoryIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();
+	
 	
 	// HistoryView contextual items
-	if (theAction == @selector(historyMenuAddLabelToChosenRevision:))			return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryView] && ![self chosenRevisionsContainsIncompleteRevision];
-	if (theAction == @selector(historyMenuDiffAllToChosenRevision:))			return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryView] && ![self chosenRevisionsContainsIncompleteRevision];
-	if (theAction == @selector(historyMenuRevertAllToChosenRevision:))			return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryView] && ![self chosenRevisionsContainsIncompleteRevision];
-	if (theAction == @selector(historyMenuUpdateRepositoryToChosenRevision:))	return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryView] && ![self chosenRevisionsContainsIncompleteRevision];
-	if (theAction == @selector(historyMenuMergeRevision:))						return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryView] && ![self chosenRevisionsContainsIncompleteRevision];
-	if (theAction == @selector(historyMenuManifestOfChosenRevision:))			return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryView] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuAddLabelToChosenRevision:))			return [myDocument repositoryIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuDiffAllToChosenRevision:))			return [myDocument repositoryIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuRevertAllToChosenRevision:))			return [myDocument repositoryIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuUpdateRepositoryToChosenRevision:))	return [myDocument repositoryIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuMergeRevision:))						return [myDocument repositoryIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuManifestOfChosenRevision:))			return [myDocument repositoryIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
 	// -------
-	if (theAction == @selector(historyMenuViewRevisionDifferences:))			return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryView] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuViewRevisionDifferences:))			return [myDocument repositoryIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
 
 	// Labels contextual items
-	if (theAction == @selector(labelsMenuAddLabelToCurrentRevision:))			return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryView];
-	if (theAction == @selector(labelsMenuMoveChosenLabel:))						return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryView] && [theLabelsTableView_ chosenLabel] && ![[theLabelsTableView_ chosenLabel] isOpenHead];
-	if (theAction == @selector(labelsMenuRemoveChosenLabel:))					return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryView] && [theLabelsTableView_ chosenLabel] && ![[theLabelsTableView_ chosenLabel] isOpenHead];
+	if (theAction == @selector(labelsMenuAddLabelToCurrentRevision:))			return [myDocument repositoryIsSelectedAndReady];
+	if (theAction == @selector(labelsMenuMoveChosenLabel:))						return [myDocument repositoryIsSelectedAndReady] && [theLabelsTableView_ chosenLabel] && ![[theLabelsTableView_ chosenLabel] isOpenHead];
+	if (theAction == @selector(labelsMenuRemoveChosenLabel:))					return [myDocument repositoryIsSelectedAndReady] && [theLabelsTableView_ chosenLabel] && ![[theLabelsTableView_ chosenLabel] isOpenHead];
 	// -------
-	if (theAction == @selector(labelsMenuUpdateRepositoryToChosenRevision:))	return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryView] && [theLabelsTableView_ chosenLabel];
+	if (theAction == @selector(labelsMenuUpdateRepositoryToChosenRevision:))	return [myDocument repositoryIsSelectedAndReady] && [theLabelsTableView_ chosenLabel];
 	
 	return [myDocument validateUserInterfaceItem:anItem];
 }

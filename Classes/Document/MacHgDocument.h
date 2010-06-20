@@ -322,13 +322,6 @@
 - (IBAction)	mainMenuAddAndCloneServerRepositoryRef:(id)sender;
 
 
-// History Editing Actions
-- (IBAction)	mainMenuCollapseChangesets:(id)sender;
-- (IBAction)	mainMenuStripChangesets:(id)sender;
-- (IBAction)	mainMenuRebaseChangesets:(id)sender;
-- (IBAction)	mainMenuHistoryEditChangesets:(id)sender;
-
-
 // Do some primary actions
 - (BOOL)		primaryActionRevertFiles:(NSArray*)absolutePaths toVersion:(NSString*)version;
 - (BOOL)		primaryActionAddRenameRemoveFiles:(NSArray*)absolutePaths;
