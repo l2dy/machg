@@ -90,9 +90,9 @@
 		9637C89C118E9AB60000C14B /* LogGraphCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9637C895118E9AB60000C14B /* LogGraphCell.m */; };
 		9637C89D118E9AB60000C14B /* LogTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9637C897118E9AB60000C14B /* LogTableView.m */; };
 		9637C89E118E9AB60000C14B /* RepositoryData.m in Sources */ = {isa = PBXBuildFile; fileRef = 9637C899118E9AB60000C14B /* RepositoryData.m */; };
-		9637C8A4118E9AC00000C14B /* HistoryPaneController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9637C8A1118E9AC00000C14B /* HistoryPaneController.m */; };
+		9637C8A4118E9AC00000C14B /* HistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9637C8A1118E9AC00000C14B /* HistoryViewController.m */; };
 		9637C8A5118E9AC00000C14B /* JHAccordionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9637C8A3118E9AC00000C14B /* JHAccordionView.m */; };
-		9637C8A8118E9ACB0000C14B /* HistoryPane.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9637C8A6118E9ACB0000C14B /* HistoryPane.xib */; };
+		9637C8A8118E9ACB0000C14B /* HistoryView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9637C8A6118E9ACB0000C14B /* HistoryView.xib */; };
 		9637C8B3118E9BB40000C14B /* ScrollToForLogTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 9637C8B2118E9BB40000C14B /* ScrollToForLogTable.m */; };
 		9637C8BE118E9C030000C14B /* DividerBackground18.png in Resources */ = {isa = PBXBuildFile; fileRef = 9637C8BA118E9C030000C14B /* DividerBackground18.png */; };
 		9637C8BF118E9C030000C14B /* DividerBackground24.png in Resources */ = {isa = PBXBuildFile; fileRef = 9637C8BB118E9C030000C14B /* DividerBackground24.png */; };
@@ -326,11 +326,11 @@
 		9637C897118E9AB60000C14B /* LogTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogTableView.m; sourceTree = "<group>"; };
 		9637C898118E9AB60000C14B /* RepositoryData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RepositoryData.h; sourceTree = "<group>"; };
 		9637C899118E9AB60000C14B /* RepositoryData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RepositoryData.m; sourceTree = "<group>"; };
-		9637C8A0118E9AC00000C14B /* HistoryPaneController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HistoryPaneController.h; sourceTree = "<group>"; };
-		9637C8A1118E9AC00000C14B /* HistoryPaneController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HistoryPaneController.m; sourceTree = "<group>"; };
+		9637C8A0118E9AC00000C14B /* HistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HistoryViewController.h; sourceTree = "<group>"; };
+		9637C8A1118E9AC00000C14B /* HistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HistoryViewController.m; sourceTree = "<group>"; };
 		9637C8A2118E9AC00000C14B /* JHAccordionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JHAccordionView.h; sourceTree = "<group>"; };
 		9637C8A3118E9AC00000C14B /* JHAccordionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JHAccordionView.m; sourceTree = "<group>"; };
-		9637C8A7118E9ACB0000C14B /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/HistoryPane.xib; sourceTree = SOURCE_ROOT; };
+		9637C8A7118E9ACB0000C14B /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/HistoryView.xib; sourceTree = SOURCE_ROOT; };
 		9637C8B1118E9BB40000C14B /* ScrollToForLogTable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollToForLogTable.h; sourceTree = "<group>"; };
 		9637C8B2118E9BB40000C14B /* ScrollToForLogTable.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScrollToForLogTable.m; sourceTree = "<group>"; };
 		9637C8BA118E9C030000C14B /* DividerBackground18.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = DividerBackground18.png; sourceTree = "<group>"; };
@@ -954,11 +954,11 @@
 		9637C89F118E9AC00000C14B /* HistoryPane */ = {
 			isa = PBXGroup;
 			children = (
-				9637C8A0118E9AC00000C14B /* HistoryPaneController.h */,
-				9637C8A1118E9AC00000C14B /* HistoryPaneController.m */,
+				9637C8A0118E9AC00000C14B /* HistoryViewController.h */,
+				9637C8A1118E9AC00000C14B /* HistoryViewController.m */,
 				9637C8A2118E9AC00000C14B /* JHAccordionView.h */,
 				9637C8A3118E9AC00000C14B /* JHAccordionView.m */,
-				9637C8A6118E9ACB0000C14B /* HistoryPane.xib */,
+				9637C8A6118E9ACB0000C14B /* HistoryView.xib */,
 			);
 			name = HistoryPane;
 			path = Classes/HistoryPane;
@@ -1469,7 +1469,7 @@
 				962ED0BC11878A120072211F /* macHgPublicKey_dsa.pem in Resources */,
 				9637C872118E9A4D0000C14B /* InitializationWizard.xib in Resources */,
 				9637C879118E9A730000C14B /* ExportPatchesSheet.xib in Resources */,
-				9637C8A8118E9ACB0000C14B /* HistoryPane.xib in Resources */,
+				9637C8A8118E9ACB0000C14B /* HistoryView.xib in Resources */,
 				9637C8BE118E9C030000C14B /* DividerBackground18.png in Resources */,
 				9637C8BF118E9C030000C14B /* DividerBackground24.png in Resources */,
 				9637C8C0118E9C030000C14B /* DividerThumb.png in Resources */,
@@ -1572,7 +1572,7 @@
 				9637C89C118E9AB60000C14B /* LogGraphCell.m in Sources */,
 				9637C89D118E9AB60000C14B /* LogTableView.m in Sources */,
 				9637C89E118E9AB60000C14B /* RepositoryData.m in Sources */,
-				9637C8A4118E9AC00000C14B /* HistoryPaneController.m in Sources */,
+				9637C8A4118E9AC00000C14B /* HistoryViewController.m in Sources */,
 				9637C8A5118E9AC00000C14B /* JHAccordionView.m in Sources */,
 				9637C8B3118E9BB40000C14B /* ScrollToForLogTable.m in Sources */,
 				9637C8C9118E9C5A0000C14B /* NSString+SymlinksAndAliases.m in Sources */,
@@ -1713,12 +1713,12 @@
 			name = ExportPatchesSheet.xib;
 			sourceTree = "<group>";
 		};
-		9637C8A6118E9ACB0000C14B /* HistoryPane.xib */ = {
+		9637C8A6118E9ACB0000C14B /* HistoryView.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				9637C8A7118E9ACB0000C14B /* English */,
 			);
-			name = HistoryPane.xib;
+			name = HistoryView.xib;
 			sourceTree = "<group>";
 		};
 		966810D510CE7546001D178B /* BackingPane.xib */ = {

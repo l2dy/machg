@@ -13,7 +13,7 @@
 #import "LogEntry.h"
 #import "RepositoryData.h"
 #import "LogTableView.h"
-#import "HistoryPaneController.h"
+#import "HistoryViewController.h"
 
 @interface ExportPatchesSheetController (PrivateAPI)
 - (NSAttributedString*) formattedSheetMessage;
@@ -87,7 +87,7 @@
 	
 	[logTableView resetTable:self];
 	
-	NSArray* revs = [[[myDocument theHistoryPaneView] logTableView] chosenRevisions];
+	NSArray* revs = [[[myDocument theHistoryView] logTableView] chosenRevisions];
 	if ([revs count] > 0)
 	{
 		NSInteger minRev = stringAsInt([revs objectAtIndex:0]);

@@ -10,9 +10,7 @@
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
 			<string key="NS.object.0">740</string>
 		</object>
-		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-			<integer value="38"/>
-		</array>
+		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs"/>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 		</array>
@@ -28,7 +26,7 @@
 				<string key="NSClassName">NSApplication</string>
 			</object>
 			<object class="NSCustomView" id="93727628">
-				<reference key="NSNextResponder"/>
+				<nil key="NSNextResponder"/>
 				<int key="NSvFlags">4370</int>
 				<array class="NSMutableArray" key="NSSubviews">
 					<object class="NSBox" id="545855797">
@@ -292,7 +290,6 @@
 					</object>
 				</array>
 				<string key="NSFrameSize">{817, 465}</string>
-				<reference key="NSSuperview"/>
 				<bool key="NSViewIsLayerTreeHost">YES</bool>
 				<int key="NSViewLayerContentsRedrawPolicy">2</int>
 				<string key="NSClassName">NSView</string>
@@ -605,7 +602,7 @@
 						<string key="actionSwitchViewToBackingPane:">id</string>
 						<string key="actionSwitchViewToBrowserPane:">id</string>
 						<string key="actionSwitchViewToDifferencesPane:">id</string>
-						<string key="actionSwitchViewToHistoryPane:">id</string>
+						<string key="actionSwitchViewToHistoryView:">id</string>
 						<string key="actionTestListingItem:">id</string>
 						<string key="browserMenuOpenSelectedFilesInFinder:">id</string>
 						<string key="browserMenuOpenTerminalHere:">id</string>

@@ -1,5 +1,5 @@
 //
-//  HistoryPaneController.m
+//  HistoryViewController.m
 //  MacHg
 //
 //  Created by Jason Harris on 3/05/09.
@@ -7,7 +7,7 @@
 //  This software is licensed under the "New BSD License". The full license text is given in the file License.txt
 //
 
-#import "HistoryPaneController.h"
+#import "HistoryViewController.h"
 #import "MacHgDocument.h"
 #import "TaskExecutions.h"
 #import "LogEntry.h"
@@ -29,24 +29,24 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK:  HistoryPaneController
+// MARK:  HistoryViewController
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 
-@implementation HistoryPaneController
+@implementation HistoryViewController
 @synthesize myDocument;
-@synthesize theHistoryPaneView;
+@synthesize theHistoryView;
 
-- (HistoryPaneController*) initHistoryPaneControllerWithDocument:(MacHgDocument*)doc
+- (HistoryViewController*) initHistoryViewControllerWithDocument:(MacHgDocument*)doc
 {
 	myDocument = doc;
-	[NSBundle loadNibNamed:@"HistoryPane" owner:self];
+	[NSBundle loadNibNamed:@"HistoryView" owner:self];
 	return self;
 }
 
 - (void) unload
 {
-	[theHistoryPaneView unload];
+	[theHistoryView unload];
 }
 
 @end
@@ -57,11 +57,11 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK:  HistoryPaneView
+// MARK:  HistoryView
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 
-@implementation HistoryPaneView
+@implementation HistoryView
 
 @synthesize myDocument;
 @synthesize logTableView;
@@ -82,13 +82,13 @@
 - (void) awakeFromNib
 {
 	myDocument = [parentController myDocument];
-	[self observe:kRepositoryDataDidChange	from:[self myDocument]  byCalling:@selector(refreshHistoryPane:)];
-	[self observe:kRepositoryDataIsNew		from:[self myDocument]  byCalling:@selector(refreshHistoryPane:)];
-	[self observe:kLogEntriesDidChange		from:[self myDocument]  byCalling:@selector(refreshHistoryPane:)];
+	[self observe:kRepositoryDataDidChange	from:[self myDocument]  byCalling:@selector(refreshHistoryView:)];
+	[self observe:kRepositoryDataIsNew		from:[self myDocument]  byCalling:@selector(refreshHistoryView:)];
+	[self observe:kLogEntriesDidChange		from:[self myDocument]  byCalling:@selector(refreshHistoryView:)];
 
 	[self openSplitViewPaneToDefaultHeight: self];
 	NSString* fileName = [myDocument documentNameForAutosave];
-	[accordionView setAutosaveName:fstr(@"File:%@:HistoryPaneSplitPositions", fileName)];
+	[accordionView setAutosaveName:fstr(@"File:%@:HistoryViewSplitPositions", fileName)];
 	[logTableView setAutosaveTableColumns:YES];
 	[logTableView setAutosaveName:fstr(@"File:%@:HistoryTableViewColumnPositions", fileName)];
 	[logTableView resetTable:self];
@@ -119,7 +119,7 @@
 
 - (NSString*) searchCaption		{ return fstr(@"%d entries shown", [logTableView numberOfTableRows]); }
 
-- (IBAction) refreshHistoryPane:(id)sender
+- (IBAction) refreshHistoryView:(id)sender
 {
 	NSString* newSearchMessage = IsEmpty([[myDocument toolbarSearchField] stringValue]) ? @"Search" : [self searchCaption];
 	[[myDocument toolbarSearchItem] setLabel:newSearchMessage];
@@ -327,7 +327,7 @@
 - (IBAction) labelsMenuUpdateRepositoryToChosenRevision:(id)sender
 {
 	LabelData* label = [theLabelsTableView_ chosenLabel];
-	[[[myDocument theHistoryPaneView] logTableView] scrollToRevision:[label revision]];
+	[[[myDocument theHistoryView] logTableView] scrollToRevision:[label revision]];
 	[myDocument primaryActionUpdateFilesToVersion:[label revision] withCleanOption:NO];
 }
 
@@ -352,22 +352,22 @@
 {
 	SEL theAction = [anItem action];
 	
-	// HistoryPane contextual items
-	if (theAction == @selector(historyMenuAddLabelToChosenRevision:))			return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryPane] && ![self chosenRevisionsContainsIncompleteRevision];
-	if (theAction == @selector(historyMenuDiffAllToChosenRevision:))			return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryPane] && ![self chosenRevisionsContainsIncompleteRevision];
-	if (theAction == @selector(historyMenuRevertAllToChosenRevision:))			return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryPane] && ![self chosenRevisionsContainsIncompleteRevision];
-	if (theAction == @selector(historyMenuUpdateRepositoryToChosenRevision:))	return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryPane] && ![self chosenRevisionsContainsIncompleteRevision];
-	if (theAction == @selector(historyMenuMergeRevision:))						return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryPane] && ![self chosenRevisionsContainsIncompleteRevision];
-	if (theAction == @selector(historyMenuManifestOfChosenRevision:))			return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryPane] && ![self chosenRevisionsContainsIncompleteRevision];
+	// HistoryView contextual items
+	if (theAction == @selector(historyMenuAddLabelToChosenRevision:))			return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryView] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuDiffAllToChosenRevision:))			return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryView] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuRevertAllToChosenRevision:))			return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryView] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuUpdateRepositoryToChosenRevision:))	return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryView] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuMergeRevision:))						return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryView] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuManifestOfChosenRevision:))			return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryView] && ![self chosenRevisionsContainsIncompleteRevision];
 	// -------
-	if (theAction == @selector(historyMenuViewRevisionDifferences:))			return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryPane] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuViewRevisionDifferences:))			return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryView] && ![self chosenRevisionsContainsIncompleteRevision];
 
-	// HistoryPane contextual items
-	if (theAction == @selector(labelsMenuAddLabelToCurrentRevision:))			return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryPane];
-	if (theAction == @selector(labelsMenuMoveChosenLabel:))						return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryPane] && [theLabelsTableView_ chosenLabel] && ![[theLabelsTableView_ chosenLabel] isOpenHead];
-	if (theAction == @selector(labelsMenuRemoveChosenLabel:))					return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryPane] && [theLabelsTableView_ chosenLabel] && ![[theLabelsTableView_ chosenLabel] isOpenHead];
+	// Labels contextual items
+	if (theAction == @selector(labelsMenuAddLabelToCurrentRevision:))			return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryView];
+	if (theAction == @selector(labelsMenuMoveChosenLabel:))						return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryView] && [theLabelsTableView_ chosenLabel] && ![[theLabelsTableView_ chosenLabel] isOpenHead];
+	if (theAction == @selector(labelsMenuRemoveChosenLabel:))					return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryView] && [theLabelsTableView_ chosenLabel] && ![[theLabelsTableView_ chosenLabel] isOpenHead];
 	// -------
-	if (theAction == @selector(labelsMenuUpdateRepositoryToChosenRevision:))	return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryPane] && [theLabelsTableView_ chosenLabel];
+	if (theAction == @selector(labelsMenuUpdateRepositoryToChosenRevision:))	return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryView] && [theLabelsTableView_ chosenLabel];
 	
 	return [myDocument validateUserInterfaceItem:anItem];
 }

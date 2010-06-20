@@ -16,7 +16,7 @@
 #import "RepositoryData.h"
 
 #import "BrowserPaneController.h"
-#import "HistoryPaneController.h"
+#import "HistoryViewController.h"
 #import "DifferencesPaneController.h"
 #import "BackingPaneController.h"
 
@@ -256,16 +256,16 @@
 	return theBrowserPaneController_;
 }
 
-- (HistoryPaneController*) theHistoryPaneController
+- (HistoryViewController*) theHistoryViewController
 {
-	if (theHistoryPaneController_)
-		return theHistoryPaneController_;
+	if (theHistoryViewController_)
+		return theHistoryViewController_;
 	@synchronized(self)
 	{
-		if (!theHistoryPaneController_)
-			theHistoryPaneController_ = [[HistoryPaneController alloc] initHistoryPaneControllerWithDocument:self];
+		if (!theHistoryViewController_)
+			theHistoryViewController_ = [[HistoryViewController alloc] initHistoryViewControllerWithDocument:self];
 	}
-	return theHistoryPaneController_;
+	return theHistoryViewController_;
 }
 
 - (DifferencesPaneController*) theDifferencesPaneController
@@ -540,10 +540,10 @@
 	theBrowserPaneController_ = nil;
 }
 
-- (void) unloadHistoryPaneView
+- (void) unloadHistoryView
 {
-	[theHistoryPaneController_ unload];
-	theHistoryPaneController_ = nil;
+	[theHistoryViewController_ unload];
+	theHistoryViewController_ = nil;
 }
 
 - (void) unloadDifferencesPaneView
@@ -562,7 +562,7 @@
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (DifferencesPaneView*)	theDifferencesPaneView	{ return [[self theDifferencesPaneController] theDifferencesPaneView]; }
-- (HistoryPaneView*)		theHistoryPaneView		{ return [[self theHistoryPaneController] theHistoryPaneView]; }
+- (HistoryView*)		theHistoryView		{ return [[self theHistoryViewController] theHistoryView]; }
 
 
 
@@ -633,7 +633,7 @@
 	switch (paneNum)
 	{
 		case eBrowserPaneView:		return [[self theBrowserPaneController] view];
-		case eHistoryPaneView:		return [self theHistoryPaneView];
+		case eHistoryView:		return [self theHistoryView];
 		case eDifferencesPaneView:	return [self theDifferencesPaneView];
 		case eBackingPaneView:		return [[self theBackingPaneController] view];
 		default:					return nil;
@@ -688,12 +688,12 @@
 	switch (newPaneNum)
 	{
 		case eDifferencesPaneView:		[[self theDifferencesPaneView] openDifferencesPane:self];		break;
-		case eHistoryPaneView:			[[self theHistoryPaneView] refreshHistoryPane:self];			break;
+		case eHistoryView:			[[self theHistoryView] refreshHistoryView:self];			break;
 	}
 	
-	NSString* searchTerm    = theHistoryPaneController_ ? [[[self theHistoryPaneView] logTableView] theSearchFilter] : @"";
-	NSString* searchCaption = theHistoryPaneController_ ? [[self theHistoryPaneView] searchCaption] : @"Search";
-	[self setSearchFieldEnabled:(newPaneNum == eHistoryPaneView) value:searchTerm caption:searchCaption];
+	NSString* searchTerm    = theHistoryViewController_ ? [[[self theHistoryView] logTableView] theSearchFilter] : @"";
+	NSString* searchCaption = theHistoryViewController_ ? [[self theHistoryView] searchCaption] : @"Search";
+	[self setSearchFieldEnabled:(newPaneNum == eHistoryView) value:searchTerm caption:searchCaption];
 	
 	
 	currentPane_ = newPaneNum;
@@ -717,7 +717,7 @@
 	switch (newPaneNum)
 	{
 		case eDifferencesPaneView:	[NSTimer scheduledTimerWithTimeInterval:[[NSAnimationContext currentContext] duration] target:[self theDifferencesPaneView]	selector:@selector(scrollToSelected) userInfo:nil repeats:NO]; break;
-		case eHistoryPaneView:		[NSTimer scheduledTimerWithTimeInterval:[[NSAnimationContext currentContext] duration] target:[self theHistoryPaneView]		selector:@selector(scrollToSelected) userInfo:nil repeats:NO]; break;
+		case eHistoryView:		[NSTimer scheduledTimerWithTimeInterval:[[NSAnimationContext currentContext] duration] target:[self theHistoryView]		selector:@selector(scrollToSelected) userInfo:nil repeats:NO]; break;
 	}
 		
 	[NSAnimationContext endGrouping];
@@ -734,19 +734,19 @@
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (BOOL)	showingBrowserPane								{ return currentPane_ == eBrowserPaneView; }
-- (BOOL)	showingHistoryPane								{ return currentPane_ == eHistoryPaneView; }
+- (BOOL)	showingHistoryView								{ return currentPane_ == eHistoryView; }
 - (BOOL)	showingDifferencesPane							{ return currentPane_ == eDifferencesPaneView; }
 - (BOOL)	showingBackingPane								{ return currentPane_ == eBackingPaneView; }
-- (BOOL)	showingBrowserOrHistoryPane						{ return currentPane_ == eBrowserPaneView || currentPane_ == eHistoryPaneView; }
+- (BOOL)	showingBrowserOrHistoryView						{ return currentPane_ == eBrowserPaneView || currentPane_ == eHistoryView; }
 - (BOOL)	showingBrowserOrDifferencesPane					{ return currentPane_ == eBrowserPaneView || currentPane_ == eDifferencesPaneView; }
-- (BOOL)	showingBrowserOrHistoryOrDifferencesPane		{ return currentPane_ == eBrowserPaneView || currentPane_ == eHistoryPaneView || currentPane_ == eDifferencesPaneView; }
+- (BOOL)	showingBrowserOrHistoryOrDifferencesPane		{ return currentPane_ == eBrowserPaneView || currentPane_ == eHistoryView || currentPane_ == eDifferencesPaneView; }
 - (BOOL)	showingASheet									{ return showingSheet_; }
 
 
 - (IBAction) actionSwitchViewToBrowserPane:(id)sender		{ [self setCurrentPane:eBrowserPaneView]; }
 - (IBAction) actionSwitchViewToBackingPane:(id)sender		{ [self setCurrentPane:eBackingPaneView]; }
 - (IBAction) actionSwitchViewToDifferencesPane:(id)sender	{ [self setCurrentPane:eDifferencesPaneView]; }
-- (IBAction) actionSwitchViewToHistoryPane:(id)sender		{ [self setCurrentPane:eHistoryPaneView]; }
+- (IBAction) actionSwitchViewToHistoryView:(id)sender		{ [self setCurrentPane:eHistoryView]; }
 
 
 
@@ -831,18 +831,18 @@
 	SEL theAction = [anItem action];
 	
 	if (theAction == @selector(actionSwitchViewToBrowserPane:))			return [self repositoryIsSelectedAndReady];
-	if (theAction == @selector(actionSwitchViewToHistoryPane:))			return [self repositoryIsSelectedAndReady];
+	if (theAction == @selector(actionSwitchViewToHistoryView:))			return [self repositoryIsSelectedAndReady];
 	if (theAction == @selector(actionSwitchViewToDifferencesPane:))		return [self repositoryIsSelectedAndReady];
 
 	// Files
-	if (theAction == @selector(mainMenuCommitSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryPane] && [self validateAndSwitchMenuForCommitSelectedFiles:DynamicCast(NSMenuItem, anItem)];
-	if (theAction == @selector(mainMenuCommitAllFiles:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryPane] && [self validateAndSwitchMenuForCommitAllFiles:DynamicCast(NSMenuItem, anItem)];
-	if (theAction == @selector(toolbarCommitFiles:))					return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryPane] && [self toolbarActionAppliesToFilesWith:eHGStatusCommittable];
+	if (theAction == @selector(mainMenuCommitSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [self validateAndSwitchMenuForCommitSelectedFiles:DynamicCast(NSMenuItem, anItem)];
+	if (theAction == @selector(mainMenuCommitAllFiles:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [self validateAndSwitchMenuForCommitAllFiles:DynamicCast(NSMenuItem, anItem)];
+	if (theAction == @selector(toolbarCommitFiles:))					return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [self toolbarActionAppliesToFilesWith:eHGStatusCommittable];
 	
 	if (theAction == @selector(mainMenuDiffSelectedFiles:))
 			return [super validateUserInterfaceItem:anItem];
 	//		return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusModified];
-	if (theAction == @selector(mainMenuDiffAllFiles:))					return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryPane] && [self repositoryHasFilesWhichContainStatus:eHGStatusModified];
+	if (theAction == @selector(mainMenuDiffAllFiles:))					return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [self repositoryHasFilesWhichContainStatus:eHGStatusModified];
 	if (theAction == @selector(toolbarDiffFiles:))						return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryOrDifferencesPane] && [self toolbarActionAppliesToFilesWith:eHGStatusModified];
 
 	if (theAction == @selector(mainMenuAddRenameRemoveSelectedFiles:))	return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusAddableOrRemovable];
@@ -850,9 +850,9 @@
 	if (theAction == @selector(toolbarAddRenameRemoveFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self toolbarActionAppliesToFilesWith:eHGStatusAddableOrRemovable];
 	// ------
 	if (theAction == @selector(mainMenuRevertSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusChangedInSomeWay];
-	if (theAction == @selector(mainMenuRevertAllFiles:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryPane] && [self repositoryHasFilesWhichContainStatus:eHGStatusChangedInSomeWay];
+	if (theAction == @selector(mainMenuRevertAllFiles:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [self repositoryHasFilesWhichContainStatus:eHGStatusChangedInSomeWay];
 	if (theAction == @selector(mainMenuRevertSelectedFilesToVersion:))	return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self nodesAreChosenInBrowser];
-	if (theAction == @selector(mainMenuRevertAllFilesToVersion:))		return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryPane];
+	if (theAction == @selector(mainMenuRevertAllFilesToVersion:))		return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView];
 	if (theAction == @selector(mainMenuDeleteSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self nodesAreChosenInBrowser];
 	if (theAction == @selector(mainMenuUntrackSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusInRepository];
 	if (theAction == @selector(mainMenuAddSelectedFiles:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusAddable];
@@ -865,7 +865,7 @@
 	if (theAction == @selector(mainMenuUnignoreSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusIgnored];
 	if (theAction == @selector(mainMenuAnnotateSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusInRepository];
 	// ------
-	if (theAction == @selector(mainMenuRollbackCommit:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryPane];
+	if (theAction == @selector(mainMenuRollbackCommit:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView];
 	
 	
 	// Repository actions
@@ -875,18 +875,18 @@
 	if (theAction == @selector(mainMenuIncomingFromRepository:))		return [self repositoryIsSelectedAndReady];
 	if (theAction == @selector(mainMenuOutgoingToRepository:))			return [self repositoryIsSelectedAndReady];
 	// ------
-	if (theAction == @selector(mainMenuUpdateRepository:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryPane];
+	if (theAction == @selector(mainMenuUpdateRepository:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView];
 	if (theAction == @selector(mainMenuUpdateRepositoryToVersion:))		return [self repositoryIsSelectedAndReady];
 	if (theAction == @selector(toolbarUpdate:))							return [self repositoryIsSelectedAndReady];
-	if (theAction == @selector(mainMenuMergeWith:))						return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryPane] && [[self repositoryData]hasMultipleOpenHeads] && ![self repositoryHasFilesWhichContainStatus:eHGStatusSecondary];
+	if (theAction == @selector(mainMenuMergeWith:))						return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [[self repositoryData]hasMultipleOpenHeads] && ![self repositoryHasFilesWhichContainStatus:eHGStatusSecondary];
 	// ------
-	if (theAction == @selector(mainMenuCollapseChangesets:))			return [self repositoryIsSelectedAndReady] && [self showingHistoryPane] && AllowHistoryEditingOfRepositoryFromDefaults();
-	if (theAction == @selector(mainMenuHistoryEditChangesets:))			return [self repositoryIsSelectedAndReady] && [self showingHistoryPane] && AllowHistoryEditingOfRepositoryFromDefaults();
-	if (theAction == @selector(mainMenuStripChangesets:))				return [self repositoryIsSelectedAndReady] && [self showingHistoryPane] && AllowHistoryEditingOfRepositoryFromDefaults();
-	if (theAction == @selector(mainMenuRebaseChangesets:))				return [self repositoryIsSelectedAndReady] && [self showingHistoryPane] && AllowHistoryEditingOfRepositoryFromDefaults();
+	if (theAction == @selector(mainMenuCollapseChangesets:))			return [self repositoryIsSelectedAndReady] && [self showingHistoryView] && AllowHistoryEditingOfRepositoryFromDefaults();
+	if (theAction == @selector(mainMenuHistoryEditChangesets:))			return [self repositoryIsSelectedAndReady] && [self showingHistoryView] && AllowHistoryEditingOfRepositoryFromDefaults();
+	if (theAction == @selector(mainMenuStripChangesets:))				return [self repositoryIsSelectedAndReady] && [self showingHistoryView] && AllowHistoryEditingOfRepositoryFromDefaults();
+	if (theAction == @selector(mainMenuRebaseChangesets:))				return [self repositoryIsSelectedAndReady] && [self showingHistoryView] && AllowHistoryEditingOfRepositoryFromDefaults();
 	// ------
-	if (theAction == @selector(mainMenuManifestOfCurrentVersion:))		return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryPane];
-	if (theAction == @selector(mainMenuAddLabelToCurrentRevision:))		return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryPane];
+	if (theAction == @selector(mainMenuManifestOfCurrentVersion:))		return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView];
+	if (theAction == @selector(mainMenuAddLabelToCurrentRevision:))		return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView];
 	// ------
 	if (theAction == @selector(sidebarMenuAddLocalRepositoryRef:))		return !showingSheet_;
 	if (theAction == @selector(sidebarMenuAddServerRepositoryRef:))		return !showingSheet_;
@@ -906,8 +906,8 @@
 
 	
 	// File Menu
-	if (theAction == @selector(mainMenuImportPatches:))					return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryPane];
-	if (theAction == @selector(mainMenuExportPatches:))					return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryPane];
+	if (theAction == @selector(mainMenuImportPatches:))					return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView];
+	if (theAction == @selector(mainMenuExportPatches:))					return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView];
 	
 	if (theAction == @selector(mainMenuNoAction:))						return !showingSheet_ && ([sidebar_ selectedNode] ? YES : NO);
 	
@@ -1319,13 +1319,13 @@
 
 - (IBAction) searchFieldChanged:(id)sender
 {
-	if ([self showingHistoryPane])
+	if ([self showingHistoryView])
 	{
-		HistoryPaneView* hpv = [self theHistoryPaneView];
+		HistoryView* hpv = [self theHistoryView];
 		LogTableView* logTableView = [hpv logTableView];
 		[logTableView setTheSearchFilter:[[self toolbarSearchField] stringValue]];
 		[logTableView resetTable:hpv];
-		[hpv refreshHistoryPane:sender];
+		[hpv refreshHistoryView:sender];
 	}
 }
 
@@ -1959,7 +1959,7 @@
 	switch (AfterMergeSwitchToFromDefaults())
 	{
 		case eAfterMergeSwitchToBrowser:	[self actionSwitchViewToBrowserPane:self]; break;
-		case eAfterMergeSwitchToHistory:	[self actionSwitchViewToHistoryPane:self]; break;
+		case eAfterMergeSwitchToHistory:	[self actionSwitchViewToHistoryView:self]; break;
 	}
 
 	if (DisplayResultsOfMergingFromDefaults())

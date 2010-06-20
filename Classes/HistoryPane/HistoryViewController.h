@@ -1,5 +1,5 @@
 //
-//  HistoryPaneController.h
+//  HistoryViewController.h
 //  MacHg
 //
 //  Created by Jason Harris on 3/05/09.
@@ -13,27 +13,42 @@
 #import "LabelsTableView.h"
 #import "LogGraph.h"
 
-@interface HistoryPaneController : NSViewController
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  HistoryViewController
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+
+@interface HistoryViewController : NSViewController
 {
-	MacHgDocument*				myDocument;
-	IBOutlet HistoryPaneView*	theHistoryPaneView;
+	MacHgDocument*			myDocument;
+	IBOutlet HistoryView*	theHistoryView;
 }
-@property (readwrite,assign) MacHgDocument*		myDocument;
-@property (readwrite,assign) HistoryPaneView*	theHistoryPaneView;
+@property (readwrite,assign) MacHgDocument*	myDocument;
+@property (readwrite,assign) HistoryView*	theHistoryView;
 
-// Initialization
-- (HistoryPaneController*) initHistoryPaneControllerWithDocument:(MacHgDocument*)doc;
+- (HistoryViewController*) initHistoryViewControllerWithDocument:(MacHgDocument*)doc;
 - (void) unload;
-
 @end
 
 
 
 
-@interface HistoryPaneView : NSView < ControllerForLogTableView, ControllerForLabelsTableView, NSUserInterfaceValidations >
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  HistoryView
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+
+@interface HistoryView : NSView < ControllerForLogTableView, ControllerForLabelsTableView, NSUserInterfaceValidations >
 {
 	MacHgDocument*			myDocument;
-	IBOutlet HistoryPaneController*  parentController;
+	IBOutlet HistoryViewController*  parentController;
 
 	// Main accordion view containing the sub panes.
 	IBOutlet JHAccordionView* accordionView;
@@ -61,7 +76,7 @@
 
 // Notifications & Updating
 - (NSString*) searchCaption;
-- (IBAction) refreshHistoryPane:(id)sender;
+- (IBAction) refreshHistoryView:(id)sender;
 - (void)	 scrollToSelected;
 
 

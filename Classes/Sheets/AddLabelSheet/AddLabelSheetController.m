@@ -10,7 +10,7 @@
 #import "AddLabelSheetController.h"
 #import "MacHgDocument.h"
 #import "TaskExecutions.h"
-#import "HistoryPaneController.h"
+#import "HistoryViewController.h"
 #import "LabelData.h"
 
 NSString* kTheNewNameFieldValue	 = @"theNewNameFieldValue";
@@ -187,14 +187,14 @@ NSString* kTheRevisionFieldValue = @"theRevisionFieldValue";
 
 - (IBAction) openAddLabelSheet:(id)sender
 {
-	HistoryPaneView* theHistoryPane = [myDocument theHistoryPaneView];
-	BOOL wasShowingHistoryPane = [myDocument showingHistoryPane];
-	[myDocument actionSwitchViewToHistoryPane:sender];				// Open the log inspector
+	HistoryView* theHistoryView = [myDocument theHistoryView];
+	BOOL wasShowingHistoryView  = [myDocument showingHistoryView];
+	[myDocument actionSwitchViewToHistoryView:sender];				// Open the log inspector
 	[[myDocument toolbarSearchField] setStringValue:@""];			// reset the search term
-	if (!wasShowingHistoryPane)
-		[[theHistoryPane logTableView] scrollToCurrentRevision:sender];			// Scroll to the current revision
+	if (!wasShowingHistoryView)
+		[[theHistoryView logTableView] scrollToCurrentRevision:sender];			// Scroll to the current revision
 	[self setTheNewNameFieldValue:@""];
-	[self setTheRevisionFieldValue:[[theHistoryPane logTableView] chosenRevision]];
+	[self setTheRevisionFieldValue:[[theHistoryView logTableView] chosenRevision]];
 	[commitMessageTextView setString:@""];
 	[self setForceValue:NO];
 	[self updateButtonsAndMessages];

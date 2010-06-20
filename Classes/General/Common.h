@@ -21,13 +21,13 @@
 
 // Pane Contollers
 @class BrowserPaneController;
-@class HistoryPaneController;
+@class HistoryViewController;
 @class DifferencesPaneController;
 @class BackingPaneController;
 
 // Pane Views
 //@class BrowserPaneView;
-@class HistoryPaneView;
+@class HistoryView;
 @class DifferencesPaneView;
 //@class BackingPaneView;
 
@@ -222,7 +222,7 @@ typedef enum
 typedef enum
 {
 	eBrowserPaneView = 0x0,
-	eHistoryPaneView = 0x01,
+	eHistoryView = 0x01,
 	eDifferencesPaneView = 0x02,
 	eBackingPaneView = 0x03
 } PaneViewNum;

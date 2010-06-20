@@ -92,7 +92,7 @@
 {
 	// I am not sure what action clicking on the label should have for now.
 	//	MacHgDocument* document = [[entry_ repositoryData] myDocument];
-	//	if (![document showingASheet] && [document showingHistoryPane])		
+	//	if (![document showingASheet] && [document showingHistoryView])		
 }
 
 

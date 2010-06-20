@@ -181,7 +181,7 @@
 - (IBAction) openDifferencesPane:(id)sender
 {
 	[self refreshDifferencesPane:sender];
-	LowHighPair pair  = [[[myDocument theHistoryPaneView] logTableView] parentToHighestSelectedRevisions];
+	LowHighPair pair  = [[[myDocument theHistoryView] logTableView] parentToHighestSelectedRevisions];
 	NSString* lowRev  = (pair.lowRevision != NSNotFound)  ? intAsString(pair.lowRevision)  : [myDocument getHGParent1Revision];
 	NSString* highRev = (pair.highRevision != NSNotFound) ? intAsString(pair.highRevision) : [myDocument getHGParent1Revision];
 	NSInteger lowRow  = [baseLogTableView closestTableRowForRevision:lowRev];

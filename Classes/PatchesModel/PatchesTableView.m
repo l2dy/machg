@@ -8,7 +8,7 @@
 //
 
 #import "Common.h"
-#import "HistoryPaneController.h"
+#import "HistoryViewController.h"
 #import "TaskExecutions.h"
 #import "RepositoryData.h"
 #import "LogTableView.h"

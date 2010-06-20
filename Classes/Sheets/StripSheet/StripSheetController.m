@@ -13,7 +13,7 @@
 #import "LogEntry.h"
 #import "RepositoryData.h"
 #import "LogTableView.h"
-#import "HistoryPaneController.h"
+#import "HistoryViewController.h"
 #import "Sidebar.h"
 #import "SidebarNode.h"
 
@@ -121,7 +121,7 @@
 
 	[logTableView resetTable:self];
 	
-	NSArray* revs = [[[myDocument theHistoryPaneView] logTableView] chosenRevisions];
+	NSArray* revs = [[[myDocument theHistoryView] logTableView] chosenRevisions];
 	if ([revs count] <= 0)
 		[logTableView scrollToRevision:[myDocument getHGTipRevision]];
 	else

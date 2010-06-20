@@ -63,7 +63,7 @@
 	
 	// Pane Controllers
 	BrowserPaneController*				theBrowserPaneController_;
-	HistoryPaneController*				theHistoryPaneController_;
+	HistoryViewController*				theHistoryViewController_;
 	DifferencesPaneController*			theDifferencesPaneController_;
 	BackingPaneController*				theBackingPaneController_;
 
@@ -129,12 +129,12 @@
 
 
 - (DifferencesPaneView*)			theDifferencesPaneView;
-- (HistoryPaneView*)				theHistoryPaneView;
+- (HistoryView*)					theHistoryView;
 
 
 // Access the controllers
 - (BrowserPaneController*)			theBrowserPaneController;
-- (HistoryPaneController*)			theHistoryPaneController;
+- (HistoryViewController*)			theHistoryViewController;
 - (DifferencesPaneController*)		theDifferencesPaneController;
 - (BackingPaneController*)			theBackingPaneController;
 
@@ -166,17 +166,17 @@
 
 // Pane switching
 - (BOOL)		showingBrowserPane;
-- (BOOL)		showingHistoryPane;
+- (BOOL)		showingHistoryView;
 - (BOOL)		showingDifferencesPane;
 - (BOOL)		showingBackingPane;
-- (BOOL)		showingBrowserOrHistoryPane;
+- (BOOL)		showingBrowserOrHistoryView;
 - (BOOL)		showingBrowserOrDifferencesPane;
 - (BOOL)		showingBrowserOrHistoryOrDifferencesPane;
 - (BOOL)		showingASheet;
 - (PaneViewNum)	currentPane;
 - (void)		setCurrentPane:(PaneViewNum)paneNum;
 - (IBAction)	actionSwitchViewToBrowserPane:(id)sender;
-- (IBAction)	actionSwitchViewToHistoryPane:(id)sender;
+- (IBAction)	actionSwitchViewToHistoryView:(id)sender;
 - (IBAction)	actionSwitchViewToDifferencesPane:(id)sender;
 - (IBAction)	actionSwitchViewToBackingPane:(id)sender;
 

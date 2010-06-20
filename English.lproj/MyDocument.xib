@@ -21,13 +21,11 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="100302"/>
-			<integer value="5"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<string>com.brandonwalkin.BWToolkit</string>
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+			<string>com.brandonwalkin.BWToolkit</string>
 		</object>
 		<object class="NSMutableDictionary" key="IBDocument.Metadata">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -647,10 +645,10 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 					</object>
 				</object>
-				<string key="NSWindowContentMaxSize">{3.40282e+38, 3.40282e+38}</string>
+				<string key="NSWindowContentMaxSize">{1.79769e+308, 1.79769e+308}</string>
 				<string key="NSWindowContentMinSize">{300, 200}</string>
 				<object class="NSView" key="NSWindowView" id="568628114">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<object class="NSMutableArray" key="NSSubviews">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -724,7 +722,7 @@
 																					<string key="NSColorName">controlBackgroundColor</string>
 																					<object class="NSColor" key="NSColor" id="457325069">
 																						<int key="NSColorSpace">3</int>
-																						<bytes key="NSWhite">MC42NjY2NjY2ODY1AA</bytes>
+																						<bytes key="NSWhite">MC42NjY2NjY2NjY3AA</bytes>
 																					</object>
 																				</object>
 																				<reference key="NSTextColor" ref="1039357372"/>
@@ -1099,11 +1097,10 @@
 						</object>
 					</object>
 					<string key="NSFrameSize">{893, 491}</string>
-					<reference key="NSSuperview"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
 				<string key="NSMinSize">{300, 278}</string>
-				<string key="NSMaxSize">{3.40282e+38, 3.40282e+38}</string>
+				<string key="NSMaxSize">{1.79769e+308, 1.79769e+308}</string>
 			</object>
 			<object class="NSCustomObject" id="796877042">
 				<string key="NSClassName">NSApplication</string>
@@ -1160,7 +1157,7 @@
 				</object>
 			</object>
 			<object class="NSCustomView" id="681348116">
-				<reference key="NSNextResponder"/>
+				<nil key="NSNextResponder"/>
 				<int key="NSvFlags">268</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1215,7 +1212,6 @@
 					</object>
 				</object>
 				<string key="NSFrameSize">{236, 38}</string>
-				<reference key="NSSuperview"/>
 				<string key="NSClassName">NSView</string>
 			</object>
 			<object class="NSCustomView" id="100433385">
@@ -3041,7 +3037,7 @@
 							<string>actionSwitchViewToBackingPane:</string>
 							<string>actionSwitchViewToBrowserPane:</string>
 							<string>actionSwitchViewToDifferencesPane:</string>
-							<string>actionSwitchViewToHistoryPane:</string>
+							<string>actionSwitchViewToHistoryView:</string>
 							<string>actionTestListingItem:</string>
 							<string>browserMenuOpenSelectedFilesInFinder:</string>
 							<string>browserMenuOpenTerminalHere:</string>

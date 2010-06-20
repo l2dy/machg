@@ -10,7 +10,7 @@
 #import "ImportPatchesSheetController.h"
 #import "MacHgDocument.h"
 #import "TaskExecutions.h"
-#import "HistoryPaneController.h"
+#import "HistoryViewController.h"
 #import "PatchData.h"
 
 

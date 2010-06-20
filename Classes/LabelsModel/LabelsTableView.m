@@ -8,7 +8,7 @@
 //
 
 #import "Common.h"
-#import "HistoryPaneController.h"
+#import "HistoryViewController.h"
 #import "TaskExecutions.h"
 #import "RepositoryData.h"
 #import "LogTableView.h"
@@ -154,7 +154,7 @@
 - (IBAction) labelTableSingleClick:(id) sender
 {
 	LabelData* label = [self chosenLabel];
-	LogTableView* logTable = [[[self myDocument] theHistoryPaneView] logTableView];
+	LogTableView* logTable = [[[self myDocument] theHistoryView] logTableView];
 	[logTable scrollToRevision:[label revision]];
 }
 
@@ -288,7 +288,7 @@
 	LabelData* label = [self chosenLabel];
 	if (label)
 	{
-		LogTableView* logTable = [[[self myDocument] theHistoryPaneView] logTableView];
+		LogTableView* logTable = [[[self myDocument] theHistoryView] logTableView];
 		[logTable scrollToRevision:[label revision]];
 	}
 	[parentController labelsChanged];
