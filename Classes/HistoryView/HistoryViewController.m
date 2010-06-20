@@ -358,8 +358,6 @@
 - (IBAction) mainMenuDiffAllFiles:(id)sender					{ [myDocument viewDifferencesInCurrentRevisionFor:[myDocument absolutePathOfRepositoryRootAsArray] toRevision:nil]; }	// nil indicates the current revision
 - (IBAction) toolbarDiffFiles:(id)sender						{ [self mainMenuDiffAllFiles:sender]; }
 
-- (IBAction) mainMenuRevertAllFiles:(id)sender					{ [myDocument primaryActionRevertFiles:[myDocument absolutePathOfRepositoryRootAsArray] toVersion:nil]; }
-- (IBAction) toolbarRevertFiles:(id)sender						{ [self mainMenuRevertAllFiles:sender];	}
 
 
 
@@ -387,7 +385,6 @@
 	if (theAction == @selector(mainMenuDiffAllFiles:))							return [myDocument repositoryIsSelectedAndReady] && [myDocument repositoryHasFilesWhichContainStatus:eHGStatusModified];
 	if (theAction == @selector(toolbarDiffFiles:))								return [myDocument repositoryIsSelectedAndReady] && [myDocument toolbarActionAppliesToFilesWith:eHGStatusModified];
 	
-	if (theAction == @selector(mainMenuRevertAllFiles:))						return [myDocument repositoryIsSelectedAndReady] && [myDocument showingBrowserOrHistoryView] && [myDocument repositoryHasFilesWhichContainStatus:eHGStatusChangedInSomeWay];
 	// ------
 	if (theAction == @selector(mainMenuRollbackCommit:))						return [myDocument repositoryIsSelectedAndReady] && [myDocument showingBrowserOrHistoryView];
 	

@@ -80,6 +80,13 @@
 - (void)	 scrollToSelected;
 
 
+- (IBAction) mainMenuCommitAllFiles:(id)sender;
+- (IBAction) toolbarCommitFiles:(id)sender;
+- (IBAction) mainMenuDiffAllFiles:(id)sender;
+- (IBAction) toolbarDiffFiles:(id)sender;
+
+
+
 // LogTableView Contextual Menu
 - (IBAction) historyMenuAddLabelToChosenRevision:(id)sender;
 - (IBAction) historyMenuDiffAllToChosenRevision:(id)sender;

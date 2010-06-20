@@ -254,21 +254,18 @@
 
 
 // Primary Menu Actions
-- (IBAction)	mainMenuCommitSelectedFiles:(id)sender;
 - (IBAction)	mainMenuDiffSelectedFiles:(id)sender;
 
 
 
 
 // All Files Menu Actions
-- (IBAction)	mainMenuCommitAllFiles:(id)sender;
 - (IBAction)	mainMenuDiffAllFiles:(id)sender;
 - (IBAction)	mainMenuUpdateRepository:(id)sender;
 - (IBAction)	mainMenuUpdateRepositoryToVersion:(id)sender;
 
 
 // Switching actions
-- (IBAction)	toolbarCommitFiles:(id)sender;
 - (IBAction)	toolbarDiffFiles:(id)sender;
 - (IBAction)	toolbarUpdate:(id)sender;
 

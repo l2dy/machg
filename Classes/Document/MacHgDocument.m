@@ -835,11 +835,7 @@
 	if (theAction == @selector(actionSwitchViewToHistoryView:))			return [self repositoryIsSelectedAndReady];
 	if (theAction == @selector(actionSwitchViewToDifferencesView:))		return [self repositoryIsSelectedAndReady];
 
-	// Files
-	if (theAction == @selector(mainMenuCommitSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [self validateAndSwitchMenuForCommitSelectedFiles:DynamicCast(NSMenuItem, anItem)];
-	if (theAction == @selector(mainMenuCommitAllFiles:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [self validateAndSwitchMenuForCommitAllFiles:DynamicCast(NSMenuItem, anItem)];
-	if (theAction == @selector(toolbarCommitFiles:))					return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [self toolbarActionAppliesToFilesWith:eHGStatusCommittable];
-	
+	// Files	
 	if (theAction == @selector(mainMenuDiffSelectedFiles:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusModified];
 	if (theAction == @selector(mainMenuDiffAllFiles:))					return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [self repositoryHasFilesWhichContainStatus:eHGStatusModified];
 	if (theAction == @selector(toolbarDiffFiles:))						return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryOrDifferencesView] && [self toolbarActionAppliesToFilesWith:eHGStatusModified];
@@ -1395,17 +1391,6 @@
 // MARK: Standard  Menu Actions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (IBAction) mainMenuCommitSelectedFiles:(id)sender				{ [[self theCommitSheetController] openCommitSheetWithSelectedFiles:sender]; }
-- (IBAction) mainMenuCommitAllFiles:(id)sender					{ [[self theCommitSheetController] openCommitSheetWithAllFiles:sender]; }
-- (IBAction) toolbarCommitFiles:(id)sender
-{
-	if ([self showingBrowserView] && [self nodesAreChosenInBrowser])
-		[self mainMenuCommitSelectedFiles:sender];
-	else
-		[self mainMenuCommitAllFiles:sender];
-}
-
-
 - (IBAction) mainMenuDiffSelectedFiles:(id)sender				{ [self viewDifferencesInCurrentRevisionFor:[self absolutePathsOfBrowserChosenFiles] toRevision:nil]; }		// nil indicates the current revision
 - (IBAction) mainMenuDiffAllFiles:(id)sender					{ [self viewDifferencesInCurrentRevisionFor:[self absolutePathOfRepositoryRootAsArray] toRevision:nil]; }	// nil indicates the current revision
 - (IBAction) toolbarDiffFiles:(id)sender
@@ -1927,7 +1912,7 @@
 	switch (AfterMergeDoFromDefaults())
 	{
 		case eAfterMergeDoNothing:			break;
-		case eAfterMergeOpenCommit:			[self mainMenuCommitAllFiles:self];
+		case eAfterMergeOpenCommit:			[[self theCommitSheetController] openCommitSheetWithAllFiles:self];
 	}
 
 

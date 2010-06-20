@@ -192,7 +192,7 @@
 - (IBAction) mainMenuCommitAllFiles:(id)sender					{ [[myDocument theCommitSheetController] openCommitSheetWithAllFiles:sender]; }
 - (IBAction) toolbarCommitFiles:(id)sender
 {
-	if ([theBrowser nodesAreChosen])
+	if ([theBrowser nodesAreChosen] && ![[myDocument repositoryData] inMergeState])
 		[self mainMenuCommitSelectedFiles:sender];
 	else
 		[self mainMenuCommitAllFiles:sender];
@@ -261,9 +261,9 @@
 {
 	SEL theAction = [anItem action];
 
-	if (theAction == @selector(mainMenuCommitSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && [myDocument validateAndSwitchMenuForCommitSelectedFiles:DynamicCast(NSMenuItem, anItem)];
+	if (theAction == @selector(mainMenuCommitSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && ![[myDocument repositoryData] inMergeState] && [theBrowser statusOfChosenPathsInBrowserContain:eHGStatusCommittable];
 	if (theAction == @selector(mainMenuCommitAllFiles:))				return [myDocument repositoryIsSelectedAndReady] && [myDocument validateAndSwitchMenuForCommitAllFiles:DynamicCast(NSMenuItem, anItem)];
-	if (theAction == @selector(toolbarCommitFiles:))					return [myDocument repositoryIsSelectedAndReady] && [self toolbarActionAppliesToFilesWith:eHGStatusCommittable];
+	if (theAction == @selector(toolbarCommitFiles:))					return [myDocument repositoryIsSelectedAndReady] && ([[myDocument repositoryData] inMergeState] || [self toolbarActionAppliesToFilesWith:eHGStatusCommittable]);
 	
 	if (theAction == @selector(mainMenuDiffSelectedFiles:))				return [myDocument repositoryIsSelectedAndReady] && [theBrowser statusOfChosenPathsInBrowserContain:eHGStatusModified];
 	if (theAction == @selector(mainMenuDiffAllFiles:))					return [myDocument repositoryIsSelectedAndReady] && [theBrowser statusOfChosenPathsInBrowserContain:eHGStatusModified];
