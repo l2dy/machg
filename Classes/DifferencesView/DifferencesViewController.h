@@ -120,6 +120,8 @@
 - (IBAction)	differencesMenuNoAction:(id)sender;
 
 - (IBAction)	mainMenuDiffSelectedFiles:(id)sender;
+- (IBAction)	mainMenuDiffAllFiles:(id)sender;
+- (IBAction)	toolbarDiffFiles:(id)sender;
 
 
 // Validation

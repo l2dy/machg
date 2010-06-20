@@ -276,9 +276,14 @@
 	[myDocument viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:[self revisionNumbers]];
 }
 
-- (IBAction)	mainMenuDiffSelectedFiles:(id)sender
+- (IBAction) mainMenuDiffSelectedFiles:(id)sender	{ [self differencesMenuDiffSelectedFiles:sender]; }
+- (IBAction) mainMenuDiffAllFiles:(id)sender		{ [self differencesMenuDiffAllFiles:sender]; }
+- (IBAction) toolbarDiffFiles:(id)sender
 {
-	[self differencesMenuDiffSelectedFiles:sender];
+	if ([theBrowser nodesAreChosen])
+		[self mainMenuDiffSelectedFiles:sender];
+	else
+		[self mainMenuDiffAllFiles:sender];	
 }
 
 
@@ -318,6 +323,10 @@
 - (BOOL) validateUserInterfaceItem:(id < NSValidatedUserInterfaceItem >)anItem
 {
 	SEL theAction = [anItem action];
+
+	if (theAction == @selector(mainMenuDiffSelectedFiles:))						return [myDocument repositoryIsSelectedAndReady] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusModified];
+	if (theAction == @selector(mainMenuDiffAllFiles:))							return [myDocument repositoryIsSelectedAndReady] && [self repositoryHasFilesWhichContainStatus:eHGStatusModified];
+	if (theAction == @selector(toolbarDiffFiles:))								return [myDocument repositoryIsSelectedAndReady] && [self toolbarActionAppliesToFilesWith:eHGStatusModified];
 	
 	if (theAction == @selector(differencesMenuOpenSelectedFilesInFinder:))		return [myDocument repositoryIsSelectedAndReady] && [self nodesAreChosenInBrowser];
 	if (theAction == @selector(differencesMenuRevealSelectedFilesInFinder:))	return [myDocument repositoryIsSelectedAndReady];
