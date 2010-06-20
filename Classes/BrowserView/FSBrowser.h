@@ -68,17 +68,19 @@
 - (BOOL)		singleFileIsChosenInBrower;
 - (BOOL)		singleItemIsChosenInBrower;
 - (HGStatus)	statusOfChosenPathsInBrowser;
+- (BOOL)		statusOfChosenPathsInBrowserContain:(HGStatus)status;
+- (BOOL)		repositoryHasFilesWhichContainStatus:(HGStatus)status;
 - (NSArray*)	absolutePathsOfBrowserSelectedFiles;
 - (NSArray*)	absolutePathsOfBrowserChosenFiles;
 - (NSString*)	enclosingDirectoryOfBrowserChosenFiles;
 - (FSNodeInfo*)	parentNodeInfoForColumn:(NSInteger)column;
 
 
-
 // Menu Item Actions
 - (IBAction)	browserMenuOpenSelectedFilesInFinder:(id)sender;
 - (IBAction)	browserMenuOpenTerminalHere:(id)sender;
 - (IBAction)	browserMenuRevealSelectedFilesInFinder:(id)sender;
+
 
 // Action Utilities
 - (BrowserDoubleClickAction) actionEnumForBrowserDoubleClick;	// Get the keyboard modifier state and return the corresponding action enum for a double click

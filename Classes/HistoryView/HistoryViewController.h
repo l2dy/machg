@@ -45,7 +45,7 @@
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 
-@interface HistoryView : NSView < ControllerForLogTableView, ControllerForLabelsTableView, NSUserInterfaceValidations >
+@interface HistoryView : NSView <AccessesDocument, ControllerForLogTableView, ControllerForLabelsTableView, NSUserInterfaceValidations >
 {
 	MacHgDocument*			myDocument;
 	IBOutlet HistoryViewController*  parentController;

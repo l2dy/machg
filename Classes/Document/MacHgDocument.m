@@ -847,7 +847,6 @@
 	if (theAction == @selector(mainMenuRevertSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusChangedInSomeWay];
 	if (theAction == @selector(mainMenuRevertAllFiles:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [self repositoryHasFilesWhichContainStatus:eHGStatusChangedInSomeWay];
 	if (theAction == @selector(mainMenuRevertSelectedFilesToVersion:))	return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self nodesAreChosenInBrowser];
-	if (theAction == @selector(mainMenuRevertAllFilesToVersion:))		return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView];
 	// ------
 	if (theAction == @selector(mainMenuRollbackCommit:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView];
 	
@@ -1428,24 +1427,16 @@
 // MARK: Selected Files Menu Actions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (IBAction) mainMenuRevertSelectedFiles:(id)sender				{ [self primaryActionRevertFiles:[self absolutePathsOfBrowserChosenFiles] toVersion:nil]; }
-- (IBAction) mainMenuRevertAllFiles:(id)sender					{ [self primaryActionRevertFiles:[self absolutePathOfRepositoryRootAsArray] toVersion:nil]; }
-- (IBAction) mainMenuRevertSelectedFilesToVersion:(id)sender	{ [[self theRevertSheetController] openRevertSheetWithSelectedFiles:sender]; }
-- (IBAction) mainMenuRevertAllFilesToVersion:(id)sender			{ [[self theRevertSheetController] openRevertSheetWithAllFiles:sender]; }
-- (IBAction) mainMenuRenameSelectedFile:(id)sender				{ [[self theRenameFileSheetController] openRenameFileSheet:sender]; }
-
-
-- (IBAction) mainMenuDeleteSelectedFiles:(id)sender
+- (BOOL) primaryActionDeleteSelectedFiles:(NSArray*)theSelectedFiles
 {
-	if (![self nodesAreChosenInBrowser])
-		{ PlayBeep(); DebugLog(@"No files selected to remove"); return; }
+	if (IsEmpty(theSelectedFiles))
+		{ PlayBeep(); DebugLog(@"No files selected to remove"); return NO; }
 	
-	NSArray* theSelectedFiles = [self absolutePathsOfBrowserChosenFiles];
 	if (DisplayWarningForFileDeletionFromDefaults())
 	{
 		int result = RunCriticalAlertPanelWithSuppression( @"Delete Selected Files", @"Are you sure you want to move t	he selected files to the trash?", @"Delete Files", @"Cancel", MHGDisplayWarningForFileDeletion);
 		if (result != NSAlertFirstButtonReturn)
-			return;
+			return NO;
 	}
 	
 	[self removeAllUndoActionsForDocument];
@@ -1455,42 +1446,42 @@
 		moveFilesToTheTrash(theSelectedFiles);
 		[self refreshBrowserPaths:parentPaths(theSelectedFiles,rootPath) resumeEventsWhenFinished:NO];
 	}];
+	return YES;
 }
 
 
-- (IBAction) mainMenuAddSelectedFiles:(id)sender
+- (BOOL) primaryActionAddSelectedFiles:(NSArray*)theSelectedFiles
 {
-	NSArray* paths = [self absolutePathsOfBrowserChosenFiles];
-	if ([paths count] <= 0)
-		{ PlayBeep(); DebugLog(@"No files selected to add"); return; }
+	if (IsEmpty(theSelectedFiles))
+		{ PlayBeep(); DebugLog(@"No files selected to add"); return NO; }
 
 	NSString* rootPath = [self absolutePathOfRepositoryRoot];
 	
 	[self removeAllUndoActionsForDocument];
 	[self dispatchToMercurialQueuedWithDescription:@"Add Selected Files" process:^{
-		[self registerPendingRefresh:paths];
+		[self registerPendingRefresh:theSelectedFiles];
 		NSMutableArray* argsAdd = [NSMutableArray arrayWithObjects:@"add", nil];
-		[argsAdd addObjectsFromArray:paths];
+		[argsAdd addObjectsFromArray:theSelectedFiles];
 		[self delayEventsUntilFinishBlock:^{
 			[TaskExecutions executeMercurialWithArgs:argsAdd  fromRoot:rootPath];
-			[self addToChangedPathsDuringSuspension:paths];
+			[self addToChangedPathsDuringSuspension:theSelectedFiles];
 		}];
 	}];
+	return YES;
 }
 
 
-- (IBAction) mainMenuUntrackSelectedFiles:(id)sender
+- (BOOL) primaryActionUntrackSelectedFiles:(NSArray*)theSelectedFiles
 {
-	if (![self nodesAreChosenInBrowser])
-		{ PlayBeep(); DebugLog(@"No files selected to untrack"); return; }
+	if (IsEmpty(theSelectedFiles))
+		{ PlayBeep(); DebugLog(@"No files selected to untrack"); return NO; }
 	
-	NSArray* theSelectedFiles = [self absolutePathsOfBrowserChosenFiles];
 	if (DisplayWarningForUntrackingFilesFromDefaults())
 	{
 		NSString* subMessage = @"Are you sure you want to stop tracking the selected files?";
 		int result = RunCriticalAlertPanelWithSuppression(@"Untrack Selected Files", subMessage, @"Stop Tracking Files", @"Cancel", MHGDisplayWarningForUntrackingFiles);
 		if (result != NSAlertFirstButtonReturn)
-			return;
+			return NO;
 	}
 	
 	[self removeAllUndoActionsForDocument];
@@ -1506,6 +1497,7 @@
 				[self addToChangedPathsDuringSuspension:pathsForHGToUntrack];
 			}];
 		}];
+	return YES;
 }
 
 
@@ -1576,13 +1568,12 @@
 // MARK: Ignore / Unignore Menu Actions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (IBAction) mainMenuIgnoreSelectedFiles:(id)sender
+- (BOOL) primaryActionIgnoreSelectedFiles:(NSArray*)theSelectedFiles
 {
 	NSString* root = [self absolutePathOfRepositoryRoot];
 	NSString* hgignorePath = [root stringByAppendingPathComponent:@".hgignore"];
-	NSArray* theSelectedFiles = [self absolutePathsOfBrowserChosenFiles];
-	if ([theSelectedFiles count] < 1)
-		return;
+	if (IsEmpty(theSelectedFiles))
+		return NO;
 
 	[self removeAllUndoActionsForDocument];
 	[self dispatchToMercurialQueuedWithDescription:@"Ignoring Files" process:^{
@@ -1603,16 +1594,16 @@
 		[hgignoreContents writeToFile:hgignorePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
 		[self refreshBrowserPaths:pathsToRefresh resumeEventsWhenFinished:NO];
 	}];
+	return YES;
 }
 
 
-- (IBAction) mainMenuUnignoreSelectedFiles:(id)sender;
+- (BOOL) primaryActionUnignoreSelectedFiles:(NSArray*)theSelectedFiles
 {
 	NSString* root = [self absolutePathOfRepositoryRoot];
 	NSString* hgignorePath = [root stringByAppendingPathComponent:@".hgignore"];
-	NSArray* theSelectedFiles = [self absolutePathsOfBrowserChosenFiles];
-	if ([theSelectedFiles count] < 1)
-		return;
+	if (IsEmpty(theSelectedFiles))
+		return NO;
 
 	[self removeAllUndoActionsForDocument];
 	[self dispatchToMercurialQueuedWithDescription:@"Unignoring Files" process:^{
@@ -1634,12 +1625,12 @@
 			[self refreshBrowserPaths:pathsToRefresh resumeEventsWhenFinished:NO];
 		}
 	}];
+	return YES;
 }
 
 
-- (IBAction) mainMenuAnnotateSelectedFiles:(id)sender
+- (BOOL) primaryActionAnnotateSelectedFiles:(NSArray*)theSelectedFiles
 {
-	NSArray* selectedFiles = [self absolutePathsOfBrowserChosenFiles];
 	NSMutableArray* options = [[NSMutableArray alloc] init];
 	
 	if (DefaultAnnotationOptionChangesetFromDefaults())		[options addObject:@"--changeset"];
@@ -1650,7 +1641,8 @@
 	if (DefaultAnnotationOptionTextFromDefaults())			[options addObject:@"--text"];
 	if (DefaultAnnotationOptionUserFromDefaults())			[options addObject:@"--user"];
 	
-	[self primaryActionAnnotateSelectedFiles:selectedFiles withRevision:[self getHGParent1Revision] andOptions:options];
+	[self primaryActionAnnotateSelectedFiles:theSelectedFiles withRevision:[self getHGParent1Revision] andOptions:options];
+	return YES;
 }
 
 

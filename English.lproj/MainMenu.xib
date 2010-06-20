@@ -12,7 +12,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="331"/>
+			<integer value="424"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -757,16 +757,6 @@
 									<string key="NSTitle">Revert Selected Files to Version…</string>
 									<string key="NSKeyEquiv">R</string>
 									<int key="NSKeyEquivModMask">1048576</int>
-									<int key="NSMnemonicLoc">2147483647</int>
-									<reference key="NSOnImage" ref="385016679"/>
-									<reference key="NSMixedImage" ref="150129030"/>
-								</object>
-								<object class="NSMenuItem" id="186577769">
-									<reference key="NSMenu" ref="387742784"/>
-									<bool key="NSIsAlternate">YES</bool>
-									<string key="NSTitle">Revert All Files to Version…</string>
-									<string key="NSKeyEquiv">R</string>
-									<int key="NSKeyEquivModMask">1572864</int>
 									<int key="NSMnemonicLoc">2147483647</int>
 									<reference key="NSOnImage" ref="385016679"/>
 									<reference key="NSMixedImage" ref="150129030"/>
@@ -2326,22 +2316,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
-						<string key="label">mainMenuAddRenameRemoveSelectedFiles:</string>
-						<reference key="source" ref="569835777"/>
-						<reference key="destination" ref="635536049"/>
-					</object>
-					<int key="connectionID">985</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">mainMenuAddRenameRemoveAllFiles:</string>
-						<reference key="source" ref="569835777"/>
-						<reference key="destination" ref="61977928"/>
-					</object>
-					<int key="connectionID">986</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
 						<string key="label">mainMenuRevertSelectedFiles:</string>
 						<reference key="source" ref="569835777"/>
 						<reference key="destination" ref="19379943"/>
@@ -2363,14 +2337,6 @@
 						<reference key="destination" ref="331362214"/>
 					</object>
 					<int key="connectionID">989</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">mainMenuRevertAllFilesToVersion:</string>
-						<reference key="source" ref="569835777"/>
-						<reference key="destination" ref="186577769"/>
-					</object>
-					<int key="connectionID">990</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
@@ -2683,6 +2649,22 @@
 						<reference key="destination" ref="327031887"/>
 					</object>
 					<int key="connectionID">1057</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">mainMenuAddRenameRemoveAllFiles:</string>
+						<reference key="source" ref="569835777"/>
+						<reference key="destination" ref="61977928"/>
+					</object>
+					<int key="connectionID">1058</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">mainMenuAddRenameRemoveSelectedFiles:</string>
+						<reference key="source" ref="569835777"/>
+						<reference key="destination" ref="635536049"/>
+					</object>
+					<int key="connectionID">1059</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -3307,7 +3289,6 @@
 							<reference ref="182971243"/>
 							<reference ref="353991124"/>
 							<reference ref="427369237"/>
-							<reference ref="186577769"/>
 							<reference ref="635536049"/>
 							<reference ref="887764408"/>
 							<reference ref="61977928"/>
@@ -3384,11 +3365,6 @@
 					<object class="IBObjectRecord">
 						<int key="objectID">523</int>
 						<reference key="object" ref="756214630"/>
-						<reference key="parent" ref="387742784"/>
-					</object>
-					<object class="IBObjectRecord">
-						<int key="objectID">526</int>
-						<reference key="object" ref="186577769"/>
 						<reference key="parent" ref="387742784"/>
 					</object>
 					<object class="IBObjectRecord">
@@ -4193,7 +4169,6 @@
 					<string>518.IBPluginDependency</string>
 					<string>522.IBPluginDependency</string>
 					<string>523.IBPluginDependency</string>
-					<string>526.IBPluginDependency</string>
 					<string>535.IBPluginDependency</string>
 					<string>536.IBPluginDependency</string>
 					<string>539.IBPluginDependency</string>
@@ -4460,8 +4435,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{252, 204}, {336, 443}}</string>
-					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>{{252, 224}, {336, 423}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -4572,7 +4546,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">1057</int>
+			<int key="maxID">1059</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -4620,6 +4594,83 @@
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/Application/AppController.h</string>
 					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">BrowserView</string>
+					<string key="superclassName">NSView</string>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>mainMenuAddRenameRemoveAllFiles:</string>
+							<string>mainMenuAddRenameRemoveSelectedFiles:</string>
+							<string>mainMenuAnnotateSelectedFiles:</string>
+							<string>mainMenuCommitAllFiles:</string>
+							<string>mainMenuCommitSelectedFiles:</string>
+							<string>mainMenuDiffAllFiles:</string>
+							<string>mainMenuDiffSelectedFiles:</string>
+							<string>mainMenuIgnoreSelectedFiles:</string>
+							<string>mainMenuRevertAllFiles:</string>
+							<string>mainMenuRevertSelectedFiles:</string>
+							<string>mainMenuRevertSelectedFilesToVersion:</string>
+							<string>mainMenuUnignoreSelectedFiles:</string>
+							<string>refreshBrowserContent:</string>
+							<string>toolbarAddRenameRemoveFiles:</string>
+							<string>toolbarCommitFiles:</string>
+							<string>toolbarDiffFiles:</string>
+							<string>toolbarRevertFiles:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>nodeIconWell</string>
+							<string>nodeInspector</string>
+							<string>parentContoller</string>
+							<string>theBrowser</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>NSImageView</string>
+							<string>NSTextField</string>
+							<string>BrowserViewController</string>
+							<string>FSBrowser</string>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="1026332219">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">Classes/BrowserView/BrowserViewController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">BrowserViewController</string>
+					<string key="superclassName">NSViewController</string>
+					<object class="NSMutableDictionary" key="outlets">
+						<string key="NS.key.0">theBrowserView</string>
+						<string key="NS.object.0">BrowserView</string>
+					</object>
+					<reference key="sourceIdentifier" ref="1026332219"/>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">DifferencesView</string>
@@ -4700,9 +4751,9 @@
 							<string>FSBrowser</string>
 						</object>
 					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="799838046">
+					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="149579029">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/DifferencesPane/DifferencesViewController.h</string>
+						<string key="minorKey">Classes/DifferencesView/DifferencesViewController.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -4720,7 +4771,7 @@
 						<string key="NS.key.0">theDifferencesView</string>
 						<string key="NS.object.0">DifferencesView</string>
 					</object>
-					<reference key="sourceIdentifier" ref="799838046"/>
+					<reference key="sourceIdentifier" ref="149579029"/>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">DifferencesViewController</string>
@@ -4756,7 +4807,7 @@
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/BrowserPane/FSBrowser.h</string>
+						<string key="minorKey">Classes/BrowserView/FSBrowser.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -4847,9 +4898,9 @@
 							<string>LabelsTableView</string>
 						</object>
 					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="326473382">
+					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="711859149">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/HistoryPane/HistoryViewController.h</string>
+						<string key="minorKey">Classes/HistoryView/HistoryViewController.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -4859,7 +4910,7 @@
 						<string key="NS.key.0">theHistoryView</string>
 						<string key="NS.object.0">HistoryView</string>
 					</object>
-					<reference key="sourceIdentifier" ref="326473382"/>
+					<reference key="sourceIdentifier" ref="711859149"/>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">HistoryViewController</string>
@@ -4945,9 +4996,9 @@
 							<string>NSView</string>
 						</object>
 					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="849142935">
+					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="1031407740">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/HistoryPane/JHAccordionView.h</string>
+						<string key="minorKey">Classes/HistoryView/JHAccordionView.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -4968,7 +5019,7 @@
 							<string>JHAccordionSubView</string>
 						</object>
 					</object>
-					<reference key="sourceIdentifier" ref="849142935"/>
+					<reference key="sourceIdentifier" ref="1031407740"/>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">LabelsTableView</string>
@@ -5071,10 +5122,7 @@
 							<string>browserMenuRevealSelectedFilesInFinder:</string>
 							<string>mainMenuAddAndCloneServerRepositoryRef:</string>
 							<string>mainMenuAddLabelToCurrentRevision:</string>
-							<string>mainMenuAddRenameRemoveAllFiles:</string>
-							<string>mainMenuAddRenameRemoveSelectedFiles:</string>
 							<string>mainMenuAddSelectedFiles:</string>
-							<string>mainMenuAnnotateSelectedFiles:</string>
 							<string>mainMenuCloneRepository:</string>
 							<string>mainMenuCommitAllFiles:</string>
 							<string>mainMenuCommitSelectedFiles:</string>
@@ -5082,7 +5130,6 @@
 							<string>mainMenuDiffAllFiles:</string>
 							<string>mainMenuDiffSelectedFiles:</string>
 							<string>mainMenuExportPatches:</string>
-							<string>mainMenuIgnoreSelectedFiles:</string>
 							<string>mainMenuImportPatches:</string>
 							<string>mainMenuIncomingFromRepository:</string>
 							<string>mainMenuManifestOfCurrentVersion:</string>
@@ -5096,11 +5143,9 @@
 							<string>mainMenuRemergeSelectedFiles:</string>
 							<string>mainMenuRenameSelectedFile:</string>
 							<string>mainMenuRevertAllFiles:</string>
-							<string>mainMenuRevertAllFilesToVersion:</string>
 							<string>mainMenuRevertSelectedFiles:</string>
 							<string>mainMenuRevertSelectedFilesToVersion:</string>
 							<string>mainMenuRollbackCommit:</string>
-							<string>mainMenuUnignoreSelectedFiles:</string>
 							<string>mainMenuUntrackSelectedFiles:</string>
 							<string>mainMenuUpdateRepository:</string>
 							<string>mainMenuUpdateRepositoryToVersion:</string>
@@ -5115,20 +5160,12 @@
 							<string>sidebarMenuRemoveSidebarItem:</string>
 							<string>sidebarMenuRevealRepositoryInFinder:</string>
 							<string>testBrowserLoad:</string>
-							<string>toolbarAddRenameRemoveFiles:</string>
 							<string>toolbarCommitFiles:</string>
 							<string>toolbarDiffFiles:</string>
 							<string>toolbarUpdate:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -5562,6 +5599,14 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">Foundation.framework/Headers/NSFormatter.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSImageView</string>
+					<string key="superclassName">NSControl</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">AppKit.framework/Headers/NSImageView.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">

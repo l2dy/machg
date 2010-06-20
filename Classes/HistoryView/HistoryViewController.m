@@ -16,6 +16,7 @@
 #import "LabelData.h"
 #import "CloneSheetController.h"
 #import "CollapseSheetController.h"
+#import "CommitSheetController.h"
 #import "StripSheetController.h"
 #import "HistoryEditSheetController.h"
 #import "RebaseSheetController.h"
@@ -346,6 +347,21 @@
 
 
 
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Standard  Menu Actions
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (IBAction) mainMenuCommitAllFiles:(id)sender					{ [[myDocument theCommitSheetController] openCommitSheetWithAllFiles:sender]; }
+- (IBAction) toolbarCommitFiles:(id)sender						{ [self mainMenuCommitAllFiles:sender]; }
+
+- (IBAction) mainMenuDiffAllFiles:(id)sender					{ [myDocument viewDifferencesInCurrentRevisionFor:[myDocument absolutePathOfRepositoryRootAsArray] toRevision:nil]; }	// nil indicates the current revision
+- (IBAction) toolbarDiffFiles:(id)sender						{ [self mainMenuDiffAllFiles:sender]; }
+
+- (IBAction) mainMenuRevertAllFiles:(id)sender					{ [myDocument primaryActionRevertFiles:[myDocument absolutePathOfRepositoryRootAsArray] toVersion:nil]; }
+- (IBAction) toolbarRevertFiles:(id)sender						{ [self mainMenuRevertAllFiles:sender];	}
+
+
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -361,10 +377,21 @@
 	return [[[self logTableView] chosenRevisions] containsObject:incompleteRevisionString];
 }
 
-- (BOOL) validateUserInterfaceItem:(id < NSValidatedUserInterfaceItem >)anItem
+- (BOOL) validateUserInterfaceItem:(id < NSValidatedUserInterfaceItem, NSObject >)anItem
 {
 	SEL theAction = [anItem action];
+	
+	if (theAction == @selector(mainMenuCommitAllFiles:))						return [myDocument repositoryIsSelectedAndReady] && [myDocument validateAndSwitchMenuForCommitAllFiles:DynamicCast(NSMenuItem, anItem)];
+	if (theAction == @selector(toolbarCommitFiles:))							return [myDocument repositoryIsSelectedAndReady] && [myDocument toolbarActionAppliesToFilesWith:eHGStatusCommittable];
 
+	if (theAction == @selector(mainMenuDiffAllFiles:))							return [myDocument repositoryIsSelectedAndReady] && [myDocument repositoryHasFilesWhichContainStatus:eHGStatusModified];
+	if (theAction == @selector(toolbarDiffFiles:))								return [myDocument repositoryIsSelectedAndReady] && [myDocument toolbarActionAppliesToFilesWith:eHGStatusModified];
+	
+	if (theAction == @selector(mainMenuRevertAllFiles:))						return [myDocument repositoryIsSelectedAndReady] && [myDocument showingBrowserOrHistoryView] && [myDocument repositoryHasFilesWhichContainStatus:eHGStatusChangedInSomeWay];
+	// ------
+	if (theAction == @selector(mainMenuRollbackCommit:))						return [myDocument repositoryIsSelectedAndReady] && [myDocument showingBrowserOrHistoryView];
+	
+	
 	// History only methods
 	if (theAction == @selector(mainMenuCollapseChangesets:))					return [myDocument repositoryIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();
 	if (theAction == @selector(mainMenuHistoryEditChangesets:))					return [myDocument repositoryIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();

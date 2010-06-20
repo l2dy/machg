@@ -183,6 +183,10 @@
 - (BOOL) clickedNodeCoincidesWithTerminalSelections	{ return ([self nodeIsClicked] && ([self clickedColumn] == [self selectedColumn]) && [self clickedNodeInSelectedNodes]); }
 
 
+- (BOOL) statusOfChosenPathsInBrowserContain:(HGStatus)status	{ return bitsInCommon(status, [self statusOfChosenPathsInBrowser]); }
+- (BOOL) repositoryHasFilesWhichContainStatus:(HGStatus)status	{ return bitsInCommon(status, [[self rootNodeInfo] hgStatus]); }
+
+
 - (HGStatus) statusOfChosenPathsInBrowser
 {
 	if ([self nodeIsClicked] && ![self clickedNodeInSelectedNodes])

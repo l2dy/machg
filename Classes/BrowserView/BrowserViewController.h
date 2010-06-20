@@ -61,4 +61,35 @@
 - (NSArray*) statusLinesForPaths:(NSArray*)absolutePaths withRootPath:(NSString*)rootPath;
 - (void)	 updateCurrentPreviewImage;
 
+
+// Actions
+
+- (IBAction) mainMenuCommitSelectedFiles:(id)sender;
+- (IBAction) mainMenuCommitAllFiles:(id)sender;
+- (IBAction) toolbarCommitFiles:(id)sender;
+
+- (IBAction) mainMenuDiffSelectedFiles:(id)sender;
+- (IBAction) mainMenuDiffAllFiles:(id)sender;
+- (IBAction) toolbarDiffFiles:(id)sender;
+
+- (IBAction) mainMenuAddSelectedFiles:(id)sender;
+- (IBAction) mainMenuAddRenameRemoveSelectedFiles:(id)sender;
+- (IBAction) mainMenuAddRenameRemoveAllFiles:(id)sender;
+- (IBAction) toolbarAddRenameRemoveFiles:(id)sender;
+
+- (IBAction) mainMenuDeleteSelectedFiles:(id)sender;
+- (IBAction) mainMenuUntrackSelectedFiles:(id)sender;
+- (IBAction) mainMenuRenameSelectedFile:(id)sender;
+
+- (IBAction) mainMenuRevertSelectedFiles:(id)sender;
+- (IBAction) mainMenuRevertAllFiles:(id)sender;
+- (IBAction) mainMenuRevertSelectedFilesToVersion:(id)sender;
+- (IBAction) toolbarRevertFiles:(id)sender;
+
+
+- (IBAction) mainMenuIgnoreSelectedFiles:(id)sender;
+- (IBAction) mainMenuUnignoreSelectedFiles:(id)sender;
+- (IBAction) mainMenuAnnotateSelectedFiles:(id)sender;
+
+
 @end

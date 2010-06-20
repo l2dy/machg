@@ -255,23 +255,14 @@
 
 // Primary Menu Actions
 - (IBAction)	mainMenuCommitSelectedFiles:(id)sender;
-- (IBAction)	mainMenuAddSelectedFiles:(id)sender;
 - (IBAction)	mainMenuDiffSelectedFiles:(id)sender;
 
 
-// Selected Files Menu Actions
-- (IBAction)	mainMenuRevertSelectedFiles:(id)sender;
-- (IBAction)	mainMenuRevertSelectedFilesToVersion:(id)sender;
-- (IBAction)	mainMenuDeleteSelectedFiles:(id)sender;
-- (IBAction)	mainMenuUntrackSelectedFiles:(id)sender;
-- (IBAction)	mainMenuRenameSelectedFile:(id)sender;
 
 
 // All Files Menu Actions
 - (IBAction)	mainMenuCommitAllFiles:(id)sender;
 - (IBAction)	mainMenuDiffAllFiles:(id)sender;
-- (IBAction)	mainMenuRevertAllFiles:(id)sender;
-- (IBAction)	mainMenuRevertAllFilesToVersion:(id)sender;
 - (IBAction)	mainMenuUpdateRepository:(id)sender;
 - (IBAction)	mainMenuUpdateRepositoryToVersion:(id)sender;
 
@@ -289,10 +280,6 @@
 
 
 // Viewing Menu Actions
-- (IBAction)	mainMenuIgnoreSelectedFiles:(id)sender;
-- (IBAction)	mainMenuUnignoreSelectedFiles:(id)sender;
-- (IBAction)	mainMenuAnnotateSelectedFiles:(id)sender;
-
 - (IBAction)	mainMenuRollbackCommit:(id)sender;
 - (IBAction)	mainMenuNoAction:(id)sender;
 
@@ -320,12 +307,18 @@
 
 
 // Do some primary actions
-- (BOOL)		primaryActionRevertFiles:(NSArray*)absolutePaths toVersion:(NSString*)version;
 - (BOOL)		primaryActionAddRenameRemoveFiles:(NSArray*)absolutePaths;
-- (BOOL)		primaryActionUpdateFilesToVersion:(NSString*)version withCleanOption:(BOOL)clean;
-- (BOOL)		primaryActionMergeWithVersion:(NSString*)mergeVersion andOptions:(NSArray*)options withConfirmation:(BOOL)confirm;
+- (BOOL)		primaryActionRevertFiles:(NSArray*)absolutePaths toVersion:(NSString*)version;
+- (BOOL)		primaryActionDeleteSelectedFiles:(NSArray*)theSelectedFiles;
+- (BOOL)		primaryActionAddSelectedFiles:(NSArray*)theSelectedFiles;
+- (BOOL)		primaryActionUntrackSelectedFiles:(NSArray*)theSelectedFiles;
 - (BOOL)		primaryActionRemerge:(NSArray*)absolutePaths withConfirmation:(BOOL)confirm;
 - (BOOL)		primaryActionMarkResolved:(NSArray*)absolutePaths withConfirmation:(BOOL)confirm;
+- (BOOL)		primaryActionIgnoreSelectedFiles:(NSArray*)theSelectedFiles;
+- (BOOL)		primaryActionUnignoreSelectedFiles:(NSArray*)theSelectedFiles;
+- (BOOL)		primaryActionAnnotateSelectedFiles:(NSArray*)theSelectedFiles;
+- (BOOL)		primaryActionUpdateFilesToVersion:(NSString*)version withCleanOption:(BOOL)clean;
+- (BOOL)		primaryActionMergeWithVersion:(NSString*)mergeVersion andOptions:(NSArray*)options withConfirmation:(BOOL)confirm;
 - (void)		primaryActionDisplayManifestForVersion:(NSString*)version;
 - (void)		primaryActionAnnotateSelectedFiles:(NSArray*)absolutePaths withRevision:(NSString*)version andOptions:(NSArray*)options;
 - (void)		viewDifferencesInCurrentRevisionFor:(NSArray*)absolutePaths toRevision:(NSString*)versionToCompareTo;
@@ -339,6 +332,8 @@
 - (BOOL)		repositoryIsSelectedAndReady;
 - (BOOL)		repositoryOrServerIsSelectedAndReady;
 - (BOOL)		toolbarActionAppliesToFilesWith:(HGStatus)status;
+- (BOOL)		validateAndSwitchMenuForCommitAllFiles:(NSMenuItem*)menuItem;
+- (BOOL)		validateAndSwitchMenuForCommitSelectedFiles:(NSMenuItem*)menuItem;
 
 
 // Saving
