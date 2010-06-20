@@ -844,25 +844,10 @@
 	if (theAction == @selector(mainMenuDiffAllFiles:))					return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [self repositoryHasFilesWhichContainStatus:eHGStatusModified];
 	if (theAction == @selector(toolbarDiffFiles:))						return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryOrDifferencesView] && [self toolbarActionAppliesToFilesWith:eHGStatusModified];
 
-	if (theAction == @selector(mainMenuAddRenameRemoveSelectedFiles:))	return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusAddableOrRemovable];
-	if (theAction == @selector(mainMenuAddRenameRemoveAllFiles:))		return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self repositoryHasFilesWhichContainStatus:eHGStatusAddableOrRemovable];
-	if (theAction == @selector(toolbarAddRenameRemoveFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self toolbarActionAppliesToFilesWith:eHGStatusAddableOrRemovable];
-	// ------
 	if (theAction == @selector(mainMenuRevertSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusChangedInSomeWay];
 	if (theAction == @selector(mainMenuRevertAllFiles:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [self repositoryHasFilesWhichContainStatus:eHGStatusChangedInSomeWay];
 	if (theAction == @selector(mainMenuRevertSelectedFilesToVersion:))	return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self nodesAreChosenInBrowser];
 	if (theAction == @selector(mainMenuRevertAllFilesToVersion:))		return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView];
-	if (theAction == @selector(mainMenuDeleteSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self nodesAreChosenInBrowser];
-	if (theAction == @selector(mainMenuUntrackSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusInRepository];
-	if (theAction == @selector(mainMenuAddSelectedFiles:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusAddable];
-	if (theAction == @selector(mainMenuRenameSelectedFile:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusInRepository] && [self singleItemIsChosenInBrower];
-	// ------
-	if (theAction == @selector(mainMenuRemergeSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusSecondary];
-	if (theAction == @selector(mainMenuMarkResolvedSelectedFiles:))		return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusUnresolved];
-	// ------
-	if (theAction == @selector(mainMenuIgnoreSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusNotIgnored];
-	if (theAction == @selector(mainMenuUnignoreSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusIgnored];
-	if (theAction == @selector(mainMenuAnnotateSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusInRepository];
 	// ------
 	if (theAction == @selector(mainMenuRollbackCommit:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView];
 	
@@ -1421,17 +1406,6 @@
 		[self mainMenuCommitAllFiles:sender];
 }
 
-- (IBAction) mainMenuAddRenameRemoveSelectedFiles:(id)sender	{ [self primaryActionAddRenameRemoveFiles:[self absolutePathsOfBrowserChosenFiles]]; }
-- (IBAction) mainMenuAddRenameRemoveAllFiles:(id)sender			{ [self primaryActionAddRenameRemoveFiles:[self absolutePathOfRepositoryRootAsArray]]; }
-- (IBAction) toolbarAddRenameRemoveFiles:(id)sender
-{
-	if (![self showingBrowserView])
-		return;
-	if ([self nodesAreChosenInBrowser])
-		[self mainMenuAddRenameRemoveSelectedFiles:sender];
-	else
-		[self mainMenuAddRenameRemoveAllFiles:sender];
-}
 
 - (IBAction) mainMenuDiffSelectedFiles:(id)sender				{ [self viewDifferencesInCurrentRevisionFor:[self absolutePathsOfBrowserChosenFiles] toRevision:nil]; }		// nil indicates the current revision
 - (IBAction) mainMenuDiffAllFiles:(id)sender					{ [self viewDifferencesInCurrentRevisionFor:[self absolutePathOfRepositoryRootAsArray] toRevision:nil]; }	// nil indicates the current revision
@@ -1599,7 +1573,7 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK: Viewing Menu Actions
+// MARK: Ignore / Unignore Menu Actions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (IBAction) mainMenuIgnoreSelectedFiles:(id)sender

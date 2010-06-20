@@ -43,7 +43,7 @@
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 
-@interface BrowserView : NSView <AccessesDocument, ControllerForFSBrowser>
+@interface BrowserView : NSView <AccessesDocument, ControllerForFSBrowser, NSUserInterfaceValidations>
 {
 	IBOutlet BrowserViewController* parentContoller;
 	IBOutlet FSBrowser*		theBrowser;

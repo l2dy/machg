@@ -264,13 +264,11 @@
 - (IBAction)	mainMenuRevertSelectedFilesToVersion:(id)sender;
 - (IBAction)	mainMenuDeleteSelectedFiles:(id)sender;
 - (IBAction)	mainMenuUntrackSelectedFiles:(id)sender;
-- (IBAction)	mainMenuAddRenameRemoveSelectedFiles:(id)sender;
 - (IBAction)	mainMenuRenameSelectedFile:(id)sender;
 
 
 // All Files Menu Actions
 - (IBAction)	mainMenuCommitAllFiles:(id)sender;
-- (IBAction)	mainMenuAddRenameRemoveAllFiles:(id)sender;
 - (IBAction)	mainMenuDiffAllFiles:(id)sender;
 - (IBAction)	mainMenuRevertAllFiles:(id)sender;
 - (IBAction)	mainMenuRevertAllFilesToVersion:(id)sender;
@@ -281,7 +279,6 @@
 // Switching actions
 - (IBAction)	toolbarCommitFiles:(id)sender;
 - (IBAction)	toolbarDiffFiles:(id)sender;
-- (IBAction)	toolbarAddRenameRemoveFiles:(id)sender;
 - (IBAction)	toolbarUpdate:(id)sender;
 
 
@@ -340,6 +337,8 @@
 // Validation
 - (BOOL)		validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem;
 - (BOOL)		repositoryIsSelectedAndReady;
+- (BOOL)		repositoryOrServerIsSelectedAndReady;
+- (BOOL)		toolbarActionAppliesToFilesWith:(HGStatus)status;
 
 
 // Saving

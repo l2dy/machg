@@ -10,6 +10,7 @@
 #import "BrowserViewController.h"
 #import "FSBrowserCell.h"
 #import "FSNodeInfo.h"
+#import "MacHgDocument.h"
 
 
 
@@ -178,6 +179,57 @@
 	[nodeInspector setAttributedStringValue:attributedString];
 	[nodeIconWell setImage:inspectorImage];
 }
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Standard  Menu Actions
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (IBAction) mainMenuAddRenameRemoveSelectedFiles:(id)sender	{ [myDocument primaryActionAddRenameRemoveFiles:[myDocument absolutePathsOfBrowserChosenFiles]]; }
+- (IBAction) mainMenuAddRenameRemoveAllFiles:(id)sender			{ [myDocument primaryActionAddRenameRemoveFiles:[myDocument absolutePathOfRepositoryRootAsArray]]; }
+- (IBAction) toolbarAddRenameRemoveFiles:(id)sender
+{
+	if ([theBrowser nodesAreChosen])
+		[self mainMenuAddRenameRemoveSelectedFiles:sender];
+	else
+		[self mainMenuAddRenameRemoveAllFiles:sender];
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Action Validation
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (BOOL) validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem, NSObject>)anItem
+{
+	SEL theAction = [anItem action];
+
+	if (theAction == @selector(mainMenuAddRenameRemoveSelectedFiles:))	return [myDocument repositoryIsSelectedAndReady] && [myDocument pathsAreSelectedInBrowserWhichContainStatus:eHGStatusAddableOrRemovable];
+	if (theAction == @selector(mainMenuAddRenameRemoveAllFiles:))		return [myDocument repositoryIsSelectedAndReady] && [myDocument repositoryHasFilesWhichContainStatus:eHGStatusAddableOrRemovable];
+	if (theAction == @selector(toolbarAddRenameRemoveFiles:))			return [myDocument repositoryIsSelectedAndReady] && [myDocument toolbarActionAppliesToFilesWith:eHGStatusAddableOrRemovable];
+	// ------
+	if (theAction == @selector(mainMenuDeleteSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && [theBrowser nodesAreChosen];
+	if (theAction == @selector(mainMenuUntrackSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && [myDocument pathsAreSelectedInBrowserWhichContainStatus:eHGStatusInRepository];
+	if (theAction == @selector(mainMenuAddSelectedFiles:))				return [myDocument repositoryIsSelectedAndReady] && [myDocument pathsAreSelectedInBrowserWhichContainStatus:eHGStatusAddable];
+	if (theAction == @selector(mainMenuRenameSelectedFile:))			return [myDocument repositoryIsSelectedAndReady] && [myDocument pathsAreSelectedInBrowserWhichContainStatus:eHGStatusInRepository] && [theBrowser singleItemIsChosenInBrower];
+	// ------
+	if (theAction == @selector(mainMenuRemergeSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && [myDocument pathsAreSelectedInBrowserWhichContainStatus:eHGStatusSecondary];
+	if (theAction == @selector(mainMenuMarkResolvedSelectedFiles:))		return [myDocument repositoryIsSelectedAndReady] && [myDocument pathsAreSelectedInBrowserWhichContainStatus:eHGStatusUnresolved];
+	// ------
+	if (theAction == @selector(mainMenuIgnoreSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && [myDocument pathsAreSelectedInBrowserWhichContainStatus:eHGStatusNotIgnored];
+	if (theAction == @selector(mainMenuUnignoreSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && [myDocument pathsAreSelectedInBrowserWhichContainStatus:eHGStatusIgnored];
+	if (theAction == @selector(mainMenuAnnotateSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && [myDocument pathsAreSelectedInBrowserWhichContainStatus:eHGStatusInRepository];
+	// ------
+
+	return [myDocument validateUserInterfaceItem:anItem];
+}
+
+
 
 
 @end
