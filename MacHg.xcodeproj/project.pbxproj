@@ -115,6 +115,7 @@
 		96680DA710CDD789001D178B /* FSNodeInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 96680DA410CDD789001D178B /* FSNodeInfo.m */; };
 		966810C510CE7425001D178B /* BackingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 966810C410CE7425001D178B /* BackingViewController.m */; };
 		966810D710CE7546001D178B /* BackingView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 966810D510CE7546001D178B /* BackingView.xib */; };
+		966E8E1811CB732E0052FF42 /* identity.png in Resources */ = {isa = PBXBuildFile; fileRef = 966E8E1711CB732E0052FF42 /* identity.png */; };
 		9672AC4F114B78F400312CE2 /* BaseSheetWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9672AC4E114B78F400312CE2 /* BaseSheetWindowController.m */; };
 		9672AC63114B796A00312CE2 /* ConnectionValidationController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9672AC53114B796A00312CE2 /* ConnectionValidationController.m */; };
 		9672AC64114B796A00312CE2 /* DisclosureBoxController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9672AC56114B796A00312CE2 /* DisclosureBoxController.m */; };
@@ -363,6 +364,7 @@
 		966810C310CE7425001D178B /* BackingViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackingViewController.h; sourceTree = "<group>"; };
 		966810C410CE7425001D178B /* BackingViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackingViewController.m; sourceTree = "<group>"; };
 		966810D610CE7546001D178B /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/BackingView.xib; sourceTree = SOURCE_ROOT; };
+		966E8E1711CB732E0052FF42 /* identity.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = identity.png; sourceTree = "<group>"; };
 		9672AC4D114B78F400312CE2 /* BaseSheetWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BaseSheetWindowController.h; sourceTree = "<group>"; };
 		9672AC4E114B78F400312CE2 /* BaseSheetWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BaseSheetWindowController.m; sourceTree = "<group>"; };
 		9672AC52114B796A00312CE2 /* ConnectionValidationController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ConnectionValidationController.h; sourceTree = "<group>"; };
@@ -588,6 +590,7 @@
 				9600C2A210CD3D9F00CD8D28 /* Preferences */,
 				9600C2A610CD3D9F00CD8D28 /* StatusItems */,
 				9600C2B010CD3D9F00CD8D28 /* ToolbarItems */,
+				966E8E1611CB732E0052FF42 /* WizardIcons */,
 			);
 			path = Images;
 			sourceTree = "<group>";
@@ -1048,6 +1051,14 @@
 			path = Classes/BackingPane;
 			sourceTree = SOURCE_ROOT;
 		};
+		966E8E1611CB732E0052FF42 /* WizardIcons */ = {
+			isa = PBXGroup;
+			children = (
+				966E8E1711CB732E0052FF42 /* identity.png */,
+			);
+			path = WizardIcons;
+			sourceTree = "<group>";
+		};
 		9672AC50114B796A00312CE2 /* UtilityClasses */ = {
 			isa = PBXGroup;
 			children = (
@@ -1481,6 +1492,7 @@
 				96FF03A81199200E006EC616 /* UpdatePreferences.tiff in Resources */,
 				96C613A911B40B0D00B54B09 /* MacHgSplash.png in Resources */,
 				96AD9C3C11C468CF00F5C82E /* MacHgHelp in Resources */,
+				966E8E1811CB732E0052FF42 /* identity.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
