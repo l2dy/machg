@@ -24,8 +24,8 @@
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<string>com.brandonwalkin.BWToolkit</string>
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+			<string>com.brandonwalkin.BWToolkit</string>
 		</object>
 		<object class="NSMutableDictionary" key="IBDocument.Metadata">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -39,7 +39,7 @@
 		<object class="NSMutableArray" key="IBDocument.RootObjects" id="1000">
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<object class="NSCustomObject" id="1001">
-				<string key="NSClassName">DifferencesPaneController</string>
+				<string key="NSClassName">DifferencesViewController</string>
 			</object>
 			<object class="NSCustomObject" id="1003">
 				<string key="NSClassName">FirstResponder</string>
@@ -164,7 +164,7 @@
 																				<string key="NSColorName">controlColor</string>
 																				<object class="NSColor" key="NSColor" id="378433714">
 																					<int key="NSColorSpace">3</int>
-																					<bytes key="NSWhite">MC42NjY2NjY2ODY1AA</bytes>
+																					<bytes key="NSWhite">MC42NjY2NjY2NjY3AA</bytes>
 																				</object>
 																			</object>
 																			<object class="NSColor" key="NSTextColor" id="291829360">
@@ -440,6 +440,7 @@
 																				</object>
 																				<string key="NSFrame">{{1, 17}, {576, 227}}</string>
 																				<reference key="NSSuperview" ref="419162342"/>
+																				<reference key="NSNextKeyView" ref="881988333"/>
 																				<reference key="NSDocView" ref="881988333"/>
 																				<reference key="NSBGColor" ref="556110869"/>
 																				<int key="NScvFlags">4</int>
@@ -472,6 +473,7 @@
 																				</object>
 																				<string key="NSFrame">{{1, 0}, {576, 17}}</string>
 																				<reference key="NSSuperview" ref="419162342"/>
+																				<reference key="NSNextKeyView" ref="806650689"/>
 																				<reference key="NSDocView" ref="806650689"/>
 																				<reference key="NSBGColor" ref="556110869"/>
 																				<int key="NScvFlags">4</int>
@@ -480,6 +482,7 @@
 																		</object>
 																		<string key="NSFrameSize">{578, 245}</string>
 																		<reference key="NSSuperview" ref="916368163"/>
+																		<reference key="NSNextKeyView" ref="808912985"/>
 																		<int key="NSsFlags">562</int>
 																		<reference key="NSVScroller" ref="710322696"/>
 																		<reference key="NSHScroller" ref="121468575"/>
@@ -586,6 +589,7 @@
 																				</object>
 																				<string key="NSFrame">{{1, 1}, {576, 98}}</string>
 																				<reference key="NSSuperview" ref="600317501"/>
+																				<reference key="NSNextKeyView" ref="840140607"/>
 																				<reference key="NSDocView" ref="840140607"/>
 																				<reference key="NSBGColor" ref="362265160"/>
 																				<object class="NSCursor" key="NSCursor" id="118410487">
@@ -617,6 +621,7 @@
 																		</object>
 																		<string key="NSFrameSize">{578, 100}</string>
 																		<reference key="NSSuperview" ref="408340467"/>
+																		<reference key="NSNextKeyView" ref="627348136"/>
 																		<int key="NSsFlags">530</int>
 																		<reference key="NSVScroller" ref="166966951"/>
 																		<reference key="NSHScroller" ref="810354078"/>
@@ -949,6 +954,7 @@
 																				</object>
 																				<string key="NSFrame">{{1, 17}, {561, 227}}</string>
 																				<reference key="NSSuperview" ref="1021669154"/>
+																				<reference key="NSNextKeyView" ref="939755695"/>
 																				<reference key="NSDocView" ref="939755695"/>
 																				<reference key="NSBGColor" ref="556110869"/>
 																				<int key="NScvFlags">4</int>
@@ -981,6 +987,7 @@
 																				</object>
 																				<string key="NSFrame">{{1, 0}, {561, 17}}</string>
 																				<reference key="NSSuperview" ref="1021669154"/>
+																				<reference key="NSNextKeyView" ref="791455395"/>
 																				<reference key="NSDocView" ref="791455395"/>
 																				<reference key="NSBGColor" ref="556110869"/>
 																				<int key="NScvFlags">4</int>
@@ -989,6 +996,7 @@
 																		</object>
 																		<string key="NSFrameSize">{563, 245}</string>
 																		<reference key="NSSuperview" ref="450333883"/>
+																		<reference key="NSNextKeyView" ref="651340939"/>
 																		<int key="NSsFlags">562</int>
 																		<reference key="NSVScroller" ref="69265425"/>
 																		<reference key="NSHScroller" ref="924188148"/>
@@ -1082,6 +1090,7 @@
 																				</object>
 																				<string key="NSFrame">{{1, 1}, {561, 98}}</string>
 																				<reference key="NSSuperview" ref="423754578"/>
+																				<reference key="NSNextKeyView" ref="1034117941"/>
 																				<reference key="NSDocView" ref="1034117941"/>
 																				<reference key="NSBGColor" ref="362265160"/>
 																				<reference key="NSCursor" ref="118410487"/>
@@ -1110,6 +1119,7 @@
 																		</object>
 																		<string key="NSFrameSize">{563, 100}</string>
 																		<reference key="NSSuperview" ref="267726690"/>
+																		<reference key="NSNextKeyView" ref="818658241"/>
 																		<int key="NSsFlags">530</int>
 																		<reference key="NSVScroller" ref="234140757"/>
 																		<reference key="NSHScroller" ref="322229599"/>
@@ -1355,7 +1365,7 @@
 										</object>
 										<string key="NSFirstColumnTitle">Browser</string>
 										<int key="NSMinColumnWidth">50</int>
-										<int key="NSNumberOfVisibleColumns">4</int>
+										<int key="NSNumberOfVisibleColumns">1</int>
 										<int key="NSColumnResizingType">2</int>
 										<double key="NSPreferedColumnWidth">267</double>
 										<bool key="NSAllowsTypeSelect">YES</bool>
@@ -1792,7 +1802,7 @@
 					</object>
 				</object>
 				<string key="NSFrameSize">{1142, 732}</string>
-				<string key="NSClassName">DifferencesPaneView</string>
+				<string key="NSClassName">DifferencesView</string>
 			</object>
 			<object class="NSUserDefaultsController" id="692698573">
 				<bool key="NSSharedInstance">YES</bool>
@@ -2139,24 +2149,16 @@
 					<int key="connectionID">582</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">theDifferencesPaneView</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="554596880"/>
-					</object>
-					<int key="connectionID">583</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: theDifferencesPaneView.showUnresolvedFilesInBrowser</string>
+						<string key="label">value: theDifferencesView.showUnresolvedFilesInBrowser</string>
 						<reference key="source" ref="578542084"/>
 						<reference key="destination" ref="1001"/>
 						<object class="NSNibBindingConnector" key="connector">
 							<reference key="NSSource" ref="578542084"/>
 							<reference key="NSDestination" ref="1001"/>
-							<string key="NSLabel">value: theDifferencesPaneView.showUnresolvedFilesInBrowser</string>
+							<string key="NSLabel">value: theDifferencesView.showUnresolvedFilesInBrowser</string>
 							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">theDifferencesPaneView.showUnresolvedFilesInBrowser</string>
+							<string key="NSKeyPath">theDifferencesView.showUnresolvedFilesInBrowser</string>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
@@ -2164,15 +2166,15 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: theDifferencesPaneView.showCleanFilesInBrowser</string>
+						<string key="label">value: theDifferencesView.showCleanFilesInBrowser</string>
 						<reference key="source" ref="262045081"/>
 						<reference key="destination" ref="1001"/>
 						<object class="NSNibBindingConnector" key="connector">
 							<reference key="NSSource" ref="262045081"/>
 							<reference key="NSDestination" ref="1001"/>
-							<string key="NSLabel">value: theDifferencesPaneView.showCleanFilesInBrowser</string>
+							<string key="NSLabel">value: theDifferencesView.showCleanFilesInBrowser</string>
 							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">theDifferencesPaneView.showCleanFilesInBrowser</string>
+							<string key="NSKeyPath">theDifferencesView.showCleanFilesInBrowser</string>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
@@ -2180,15 +2182,15 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: theDifferencesPaneView.showModifiedFilesInBrowser</string>
+						<string key="label">value: theDifferencesView.showModifiedFilesInBrowser</string>
 						<reference key="source" ref="197647178"/>
 						<reference key="destination" ref="1001"/>
 						<object class="NSNibBindingConnector" key="connector">
 							<reference key="NSSource" ref="197647178"/>
 							<reference key="NSDestination" ref="1001"/>
-							<string key="NSLabel">value: theDifferencesPaneView.showModifiedFilesInBrowser</string>
+							<string key="NSLabel">value: theDifferencesView.showModifiedFilesInBrowser</string>
 							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">theDifferencesPaneView.showModifiedFilesInBrowser</string>
+							<string key="NSKeyPath">theDifferencesView.showModifiedFilesInBrowser</string>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
@@ -2196,15 +2198,15 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: theDifferencesPaneView.showAddedFilesInBrowser</string>
+						<string key="label">value: theDifferencesView.showAddedFilesInBrowser</string>
 						<reference key="source" ref="943385559"/>
 						<reference key="destination" ref="1001"/>
 						<object class="NSNibBindingConnector" key="connector">
 							<reference key="NSSource" ref="943385559"/>
 							<reference key="NSDestination" ref="1001"/>
-							<string key="NSLabel">value: theDifferencesPaneView.showAddedFilesInBrowser</string>
+							<string key="NSLabel">value: theDifferencesView.showAddedFilesInBrowser</string>
 							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">theDifferencesPaneView.showAddedFilesInBrowser</string>
+							<string key="NSKeyPath">theDifferencesView.showAddedFilesInBrowser</string>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
@@ -2212,15 +2214,15 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: theDifferencesPaneView.showRemovedFilesInBrowser</string>
+						<string key="label">value: theDifferencesView.showRemovedFilesInBrowser</string>
 						<reference key="source" ref="391176378"/>
 						<reference key="destination" ref="1001"/>
 						<object class="NSNibBindingConnector" key="connector">
 							<reference key="NSSource" ref="391176378"/>
 							<reference key="NSDestination" ref="1001"/>
-							<string key="NSLabel">value: theDifferencesPaneView.showRemovedFilesInBrowser</string>
+							<string key="NSLabel">value: theDifferencesView.showRemovedFilesInBrowser</string>
 							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">theDifferencesPaneView.showRemovedFilesInBrowser</string>
+							<string key="NSKeyPath">theDifferencesView.showRemovedFilesInBrowser</string>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
@@ -2228,15 +2230,15 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: theDifferencesPaneView.showMissingFilesInBrowser</string>
+						<string key="label">value: theDifferencesView.showMissingFilesInBrowser</string>
 						<reference key="source" ref="90447308"/>
 						<reference key="destination" ref="1001"/>
 						<object class="NSNibBindingConnector" key="connector">
 							<reference key="NSSource" ref="90447308"/>
 							<reference key="NSDestination" ref="1001"/>
-							<string key="NSLabel">value: theDifferencesPaneView.showMissingFilesInBrowser</string>
+							<string key="NSLabel">value: theDifferencesView.showMissingFilesInBrowser</string>
 							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">theDifferencesPaneView.showMissingFilesInBrowser</string>
+							<string key="NSKeyPath">theDifferencesView.showMissingFilesInBrowser</string>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
@@ -2244,15 +2246,15 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: theDifferencesPaneView.showUnknownFilesInBrowser</string>
+						<string key="label">value: theDifferencesView.showUnknownFilesInBrowser</string>
 						<reference key="source" ref="481174143"/>
 						<reference key="destination" ref="1001"/>
 						<object class="NSNibBindingConnector" key="connector">
 							<reference key="NSSource" ref="481174143"/>
 							<reference key="NSDestination" ref="1001"/>
-							<string key="NSLabel">value: theDifferencesPaneView.showUnknownFilesInBrowser</string>
+							<string key="NSLabel">value: theDifferencesView.showUnknownFilesInBrowser</string>
 							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">theDifferencesPaneView.showUnknownFilesInBrowser</string>
+							<string key="NSKeyPath">theDifferencesView.showUnknownFilesInBrowser</string>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
@@ -2260,15 +2262,15 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: theDifferencesPaneView.showIgnoredFilesInBrowser</string>
+						<string key="label">value: theDifferencesView.showIgnoredFilesInBrowser</string>
 						<reference key="source" ref="573236560"/>
 						<reference key="destination" ref="1001"/>
 						<object class="NSNibBindingConnector" key="connector">
 							<reference key="NSSource" ref="573236560"/>
 							<reference key="NSDestination" ref="1001"/>
-							<string key="NSLabel">value: theDifferencesPaneView.showIgnoredFilesInBrowser</string>
+							<string key="NSLabel">value: theDifferencesView.showIgnoredFilesInBrowser</string>
 							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">theDifferencesPaneView.showIgnoredFilesInBrowser</string>
+							<string key="NSKeyPath">theDifferencesView.showIgnoredFilesInBrowser</string>
 							<int key="NSNibBindingConnectorVersion">2</int>
 						</object>
 					</object>
@@ -2329,6 +2331,14 @@
 						<reference key="destination" ref="554596880"/>
 					</object>
 					<int key="connectionID">598</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">theDifferencesView</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="554596880"/>
+					</object>
+					<int key="connectionID">599</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -3539,33 +3549,13 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">598</int>
+			<int key="maxID">599</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<object class="IBPartialClassDescription">
-					<string key="className">DifferencesPaneController</string>
-					<string key="superclassName">NSViewController</string>
-					<object class="NSMutableDictionary" key="outlets">
-						<string key="NS.key.0">theDifferencesPaneView</string>
-						<string key="NS.object.0">DifferencesPaneView</string>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="1027022689">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/DifferencesPane/DifferencesPaneController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">DifferencesPaneController</string>
-					<string key="superclassName">NSViewController</string>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier">
-						<string key="majorKey">IBUserSource</string>
-						<string key="minorKey"/>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">DifferencesPaneView</string>
+					<string key="className">DifferencesView</string>
 					<string key="superclassName">NSView</string>
 					<object class="NSMutableDictionary" key="actions">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -3581,9 +3571,9 @@
 							<string>differencesMenuOpenTerminalHere:</string>
 							<string>differencesMenuRevealSelectedFilesInFinder:</string>
 							<string>mainMenuDiffSelectedFiles:</string>
-							<string>openDifferencesPane:</string>
+							<string>openDifferencesView:</string>
 							<string>redisplayBrowser:</string>
-							<string>refreshDifferencesPane:</string>
+							<string>refreshDifferencesView:</string>
 							<string>validateButtons:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -3639,11 +3629,26 @@
 							<string>NSTextView</string>
 							<string>NSTextView</string>
 							<string>BWSplitView</string>
-							<string>DifferencesPaneController</string>
+							<string>DifferencesViewController</string>
 							<string>FSBrowser</string>
 						</object>
 					</object>
-					<reference key="sourceIdentifier" ref="1027022689"/>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBUserSource</string>
+						<string key="minorKey"/>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">DifferencesViewController</string>
+					<string key="superclassName">NSViewController</string>
+					<object class="NSMutableDictionary" key="outlets">
+						<string key="NS.key.0">theDifferencesView</string>
+						<string key="NS.object.0">DifferencesView</string>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBUserSource</string>
+						<string key="minorKey"/>
+					</object>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">FSBrowser</string>

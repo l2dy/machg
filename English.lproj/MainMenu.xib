@@ -12,7 +12,6 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="331"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -4622,19 +4621,7 @@
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<string key="className">DifferencesPaneController</string>
-					<string key="superclassName">NSViewController</string>
-					<object class="NSMutableDictionary" key="outlets">
-						<string key="NS.key.0">theDifferencesPaneView</string>
-						<string key="NS.object.0">DifferencesPaneView</string>
-					</object>
-					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="334641016">
-						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/DifferencesPane/DifferencesPaneController.h</string>
-					</object>
-				</object>
-				<object class="IBPartialClassDescription">
-					<string key="className">DifferencesPaneView</string>
+					<string key="className">DifferencesView</string>
 					<string key="superclassName">NSView</string>
 					<object class="NSMutableDictionary" key="actions">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -4650,9 +4637,9 @@
 							<string>differencesMenuOpenTerminalHere:</string>
 							<string>differencesMenuRevealSelectedFilesInFinder:</string>
 							<string>mainMenuDiffSelectedFiles:</string>
-							<string>openDifferencesPane:</string>
+							<string>openDifferencesView:</string>
 							<string>redisplayBrowser:</string>
-							<string>refreshDifferencesPane:</string>
+							<string>refreshDifferencesView:</string>
 							<string>validateButtons:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -4708,11 +4695,26 @@
 							<string>NSTextView</string>
 							<string>NSTextView</string>
 							<string>BWSplitView</string>
-							<string>DifferencesPaneController</string>
+							<string>DifferencesViewController</string>
 							<string>FSBrowser</string>
 						</object>
 					</object>
-					<reference key="sourceIdentifier" ref="334641016"/>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBUserSource</string>
+						<string key="minorKey"/>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">DifferencesViewController</string>
+					<string key="superclassName">NSViewController</string>
+					<object class="NSMutableDictionary" key="outlets">
+						<string key="NS.key.0">theDifferencesView</string>
+						<string key="NS.object.0">DifferencesView</string>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBUserSource</string>
+						<string key="minorKey"/>
+					</object>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">FSBrowser</string>
@@ -5047,7 +5049,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>actionSwitchViewToBackingPane:</string>
 							<string>actionSwitchViewToBrowserPane:</string>
-							<string>actionSwitchViewToDifferencesPane:</string>
+							<string>actionSwitchViewToDifferencesView:</string>
 							<string>actionSwitchViewToHistoryView:</string>
 							<string>actionTestListingItem:</string>
 							<string>browserMenuOpenSelectedFilesInFinder:</string>

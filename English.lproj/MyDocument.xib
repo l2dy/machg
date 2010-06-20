@@ -3036,7 +3036,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>actionSwitchViewToBackingPane:</string>
 							<string>actionSwitchViewToBrowserPane:</string>
-							<string>actionSwitchViewToDifferencesPane:</string>
+							<string>actionSwitchViewToDifferencesView:</string>
 							<string>actionSwitchViewToHistoryView:</string>
 							<string>actionTestListingItem:</string>
 							<string>browserMenuOpenSelectedFilesInFinder:</string>

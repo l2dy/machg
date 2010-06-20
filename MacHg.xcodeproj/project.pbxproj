@@ -161,8 +161,8 @@
 		96C98EA5113B70C2006816C0 /* MacHgsmaller.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C98EA4113B70C2006816C0 /* MacHgsmaller.png */; };
 		96D2477D117BC1810030815B /* ThickSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D2477C117BC1810030815B /* ThickSplitView.m */; };
 		96D5FFF81114E83900EE672E /* MyWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D5FFF71114E83900EE672E /* MyWindowController.m */; };
-		96DB336510D43BCB00BB5B08 /* DifferencesPane.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96DB336310D43BCB00BB5B08 /* DifferencesPane.xib */; };
-		96DB336A10D43BE100BB5B08 /* DifferencesPaneController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96DB336710D43BE100BB5B08 /* DifferencesPaneController.m */; };
+		96DB336510D43BCB00BB5B08 /* DifferencesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96DB336310D43BCB00BB5B08 /* DifferencesView.xib */; };
+		96DB336A10D43BE100BB5B08 /* DifferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96DB336710D43BE100BB5B08 /* DifferencesViewController.m */; };
 		96DB336B10D43BE100BB5B08 /* JointSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96DB336910D43BE100BB5B08 /* JointSplitView.m */; };
 		96DCCC1E10CD41B100C843C9 /* fmdiff.sh in Resources */ = {isa = PBXBuildFile; fileRef = 96DCCC1B10CD41B100C843C9 /* fmdiff.sh */; };
 		96DCCC1F10CD41B100C843C9 /* localhg in Resources */ = {isa = PBXBuildFile; fileRef = 96DCCC1C10CD41B100C843C9 /* localhg */; };
@@ -436,9 +436,9 @@
 		96D2477C117BC1810030815B /* ThickSplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThickSplitView.m; sourceTree = "<group>"; };
 		96D5FFF61114E83900EE672E /* MyWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyWindowController.h; path = Classes/Document/MyWindowController.h; sourceTree = "<group>"; };
 		96D5FFF71114E83900EE672E /* MyWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MyWindowController.m; path = Classes/Document/MyWindowController.m; sourceTree = "<group>"; };
-		96DB336410D43BCB00BB5B08 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/DifferencesPane.xib; sourceTree = "<group>"; };
-		96DB336610D43BE100BB5B08 /* DifferencesPaneController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DifferencesPaneController.h; path = Classes/DifferencesPane/DifferencesPaneController.h; sourceTree = "<group>"; };
-		96DB336710D43BE100BB5B08 /* DifferencesPaneController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DifferencesPaneController.m; path = Classes/DifferencesPane/DifferencesPaneController.m; sourceTree = "<group>"; };
+		96DB336410D43BCB00BB5B08 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/DifferencesView.xib; sourceTree = "<group>"; };
+		96DB336610D43BE100BB5B08 /* DifferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = DifferencesViewController.h; path = Classes/DifferencesPane/DifferencesViewController.h; sourceTree = "<group>"; };
+		96DB336710D43BE100BB5B08 /* DifferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = DifferencesViewController.m; path = Classes/DifferencesPane/DifferencesViewController.m; sourceTree = "<group>"; };
 		96DB336810D43BE100BB5B08 /* JointSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = JointSplitView.h; path = Classes/DifferencesPane/JointSplitView.h; sourceTree = SOURCE_ROOT; };
 		96DB336910D43BE100BB5B08 /* JointSplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = JointSplitView.m; path = Classes/DifferencesPane/JointSplitView.m; sourceTree = SOURCE_ROOT; };
 		96DCCC1B10CD41B100C843C9 /* fmdiff.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = fmdiff.sh; path = scripts/fmdiff.sh; sourceTree = SOURCE_ROOT; };
@@ -1135,11 +1135,11 @@
 		967B95F710C919E400F73A58 /* Differences Pane */ = {
 			isa = PBXGroup;
 			children = (
-				96DB336610D43BE100BB5B08 /* DifferencesPaneController.h */,
-				96DB336710D43BE100BB5B08 /* DifferencesPaneController.m */,
+				96DB336610D43BE100BB5B08 /* DifferencesViewController.h */,
+				96DB336710D43BE100BB5B08 /* DifferencesViewController.m */,
 				96DB336810D43BE100BB5B08 /* JointSplitView.h */,
 				96DB336910D43BE100BB5B08 /* JointSplitView.m */,
-				96DB336310D43BCB00BB5B08 /* DifferencesPane.xib */,
+				96DB336310D43BCB00BB5B08 /* DifferencesView.xib */,
 			);
 			name = "Differences Pane";
 			sourceTree = "<group>";
@@ -1437,7 +1437,7 @@
 				9606F3451157F1F100968DE8 /* opendiff-w.sh in Resources */,
 				96DCCC2010CD41B100C843C9 /* spawnshellatpath in Resources */,
 				966810D710CE7546001D178B /* BackingPane.xib in Resources */,
-				96DB336510D43BCB00BB5B08 /* DifferencesPane.xib in Resources */,
+				96DB336510D43BCB00BB5B08 /* DifferencesView.xib in Resources */,
 				969754B910DE28CD00F02ACF /* pull_32h.png in Resources */,
 				969754C310DE296A00F02ACF /* push_32h.png in Resources */,
 				9631D2E01107A8380007FDF2 /* CloneSheet.xib in Resources */,
@@ -1512,7 +1512,7 @@
 				966810C510CE7425001D178B /* BackingPaneController.m in Sources */,
 				9695006510CBE37200548D1C /* BrowserPaneController.m in Sources */,
 				963DBDBB10C7D34A00189853 /* Common.m in Sources */,
-				96DB336A10D43BE100BB5B08 /* DifferencesPaneController.m in Sources */,
+				96DB336A10D43BE100BB5B08 /* DifferencesViewController.m in Sources */,
 				96680DA510CDD789001D178B /* FSBrowser.m in Sources */,
 				96680DA610CDD789001D178B /* FSBrowserCell.m in Sources */,
 				96680DA710CDD789001D178B /* FSNodeInfo.m in Sources */,
@@ -1834,12 +1834,12 @@
 			name = MainMenu.xib;
 			sourceTree = "<group>";
 		};
-		96DB336310D43BCB00BB5B08 /* DifferencesPane.xib */ = {
+		96DB336310D43BCB00BB5B08 /* DifferencesView.xib */ = {
 			isa = PBXVariantGroup;
 			children = (
 				96DB336410D43BCB00BB5B08 /* English */,
 			);
-			name = DifferencesPane.xib;
+			name = DifferencesView.xib;
 			sourceTree = SOURCE_ROOT;
 		};
 		96DD29CB112AE56D00A57BD3 /* CollapseSheet.xib */ = {

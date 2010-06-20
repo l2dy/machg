@@ -1,4 +1,4 @@
-//  DifferencesPaneController.m
+//  DifferencesViewController.m
 //  MacHg
 //
 //  Created by Jason Harris on 29/04/09.
@@ -7,7 +7,7 @@
 //
 
 #include <Carbon/Carbon.h>
-#import "DifferencesPaneController.h"
+#import "DifferencesViewController.h"
 #import "TaskExecutions.h"
 #import "MacHgDocument.h"
 #import "ResultsWindowController.h"
@@ -22,24 +22,22 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK:  DifferencesPaneController
+// MARK:  DifferencesViewController
 // -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
 
-@implementation DifferencesPaneController
+@implementation DifferencesViewController
 @synthesize myDocument;
-@synthesize theDifferencesPaneView;
+@synthesize theDifferencesView;
 
-- (DifferencesPaneController*) initDifferencesPaneControllerWithDocument:(MacHgDocument*)doc
+- (DifferencesViewController*) initDifferencesViewControllerWithDocument:(MacHgDocument*)doc
 {
 	myDocument = doc;
-	[NSBundle loadNibNamed:@"DifferencesPane" owner:self];
+	[NSBundle loadNibNamed:@"DifferencesView" owner:self];
 	return self;
 }
 
-- (void) unload
-{
-	[theDifferencesPaneView unload];
-}
+- (void) unload { [theDifferencesView unload]; }
 
 @end
 
@@ -49,10 +47,11 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK:  DifferencesPaneView
+// MARK:  DifferencesView
 // -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
 
-@implementation DifferencesPaneView
+@implementation DifferencesView
 
 @synthesize showAddedFilesInBrowser      = showAddedFilesInBrowser_;
 @synthesize showIgnoredFilesInBrowser    = showIgnoredFilesInBrowser_;
@@ -178,9 +177,9 @@
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 // We should open the differences pane to show the differences of the rows selected in the history pane.
-- (IBAction) openDifferencesPane:(id)sender
+- (IBAction) openDifferencesView:(id)sender
 {
-	[self refreshDifferencesPane:sender];
+	[self refreshDifferencesView:sender];
 	LowHighPair pair  = [[[myDocument theHistoryView] logTableView] parentToHighestSelectedRevisions];
 	NSString* lowRev  = (pair.lowRevision != NSNotFound)  ? intAsString(pair.lowRevision)  : [myDocument getHGParent1Revision];
 	NSString* highRev = (pair.highRevision != NSNotFound) ? intAsString(pair.highRevision) : [myDocument getHGParent1Revision];
@@ -206,7 +205,7 @@
 }
 
 
-- (IBAction) refreshDifferencesPane:(id)sender
+- (IBAction) refreshDifferencesView:(id)sender
 {
 	[baseLogTableView resetTable:self];
 	[compareLogTableView resetTable:self];
@@ -323,8 +322,8 @@
 	if (theAction == @selector(differencesMenuOpenSelectedFilesInFinder:))		return [myDocument repositoryIsSelectedAndReady] && [self nodesAreChosenInBrowser];
 	if (theAction == @selector(differencesMenuRevealSelectedFilesInFinder:))	return [myDocument repositoryIsSelectedAndReady];
 	if (theAction == @selector(differencesMenuOpenTerminalHere:))				return [myDocument repositoryIsSelectedAndReady];
-	if (theAction == @selector(differencesMenuDiffSelectedFiles:))				return [myDocument repositoryIsSelectedAndReady] && [myDocument showingDifferencesPane] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusModified];
-	if (theAction == @selector(differencesMenuDiffAllFiles:))					return [myDocument repositoryIsSelectedAndReady] && [myDocument showingDifferencesPane] && [self repositoryHasFilesWhichContainStatus:eHGStatusModified];
+	if (theAction == @selector(differencesMenuDiffSelectedFiles:))				return [myDocument repositoryIsSelectedAndReady] && [myDocument showingDifferencesView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusModified];
+	if (theAction == @selector(differencesMenuDiffAllFiles:))					return [myDocument repositoryIsSelectedAndReady] && [myDocument showingDifferencesView] && [self repositoryHasFilesWhichContainStatus:eHGStatusModified];
 	if (theAction == @selector(mainMenuDiffSelectedFiles:))
 		return YES;
 	

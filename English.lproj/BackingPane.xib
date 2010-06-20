@@ -601,7 +601,7 @@
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="actionSwitchViewToBackingPane:">id</string>
 						<string key="actionSwitchViewToBrowserPane:">id</string>
-						<string key="actionSwitchViewToDifferencesPane:">id</string>
+						<string key="actionSwitchViewToDifferencesView:">id</string>
 						<string key="actionSwitchViewToHistoryView:">id</string>
 						<string key="actionTestListingItem:">id</string>
 						<string key="browserMenuOpenSelectedFilesInFinder:">id</string>

@@ -17,7 +17,7 @@
 
 #import "BrowserPaneController.h"
 #import "HistoryViewController.h"
-#import "DifferencesPaneController.h"
+#import "DifferencesViewController.h"
 #import "BackingPaneController.h"
 
 #import "FSBrowser.h"
@@ -268,16 +268,16 @@
 	return theHistoryViewController_;
 }
 
-- (DifferencesPaneController*) theDifferencesPaneController
+- (DifferencesViewController*) theDifferencesViewController
 {
-	if (theDifferencesPaneController_)
-		return theDifferencesPaneController_;
+	if (theDifferencesViewController_)
+		return theDifferencesViewController_;
 	@synchronized(self)
 	{
-		if (!theDifferencesPaneController_)
-			theDifferencesPaneController_ = [[DifferencesPaneController alloc] initDifferencesPaneControllerWithDocument:self];
+		if (!theDifferencesViewController_)
+			theDifferencesViewController_ = [[DifferencesViewController alloc] initDifferencesViewControllerWithDocument:self];
 	}
-	return theDifferencesPaneController_;
+	return theDifferencesViewController_;
 }
 
 - (BackingPaneController*) theBackingPaneController
@@ -546,10 +546,10 @@
 	theHistoryViewController_ = nil;
 }
 
-- (void) unloadDifferencesPaneView
+- (void) unloadDifferencesView
 {
-	[theDifferencesPaneController_ unload];
-	theDifferencesPaneController_ = nil;
+	[theDifferencesViewController_ unload];
+	theDifferencesViewController_ = nil;
 }
 
 
@@ -561,7 +561,7 @@
 // MARK:  The Views
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (DifferencesPaneView*)	theDifferencesPaneView	{ return [[self theDifferencesPaneController] theDifferencesPaneView]; }
+- (DifferencesView*)	theDifferencesView	{ return [[self theDifferencesViewController] theDifferencesView]; }
 - (HistoryView*)		theHistoryView		{ return [[self theHistoryViewController] theHistoryView]; }
 
 
@@ -634,7 +634,7 @@
 	{
 		case eBrowserPaneView:		return [[self theBrowserPaneController] view];
 		case eHistoryView:		return [self theHistoryView];
-		case eDifferencesPaneView:	return [self theDifferencesPaneView];
+		case eDifferencesView:	return [self theDifferencesView];
 		case eBackingPaneView:		return [[self theBackingPaneController] view];
 		default:					return nil;
 	}
@@ -687,7 +687,7 @@
 	// Specific handling for some panes
 	switch (newPaneNum)
 	{
-		case eDifferencesPaneView:		[[self theDifferencesPaneView] openDifferencesPane:self];		break;
+		case eDifferencesView:		[[self theDifferencesView] openDifferencesView:self];		break;
 		case eHistoryView:			[[self theHistoryView] refreshHistoryView:self];			break;
 	}
 	
@@ -716,7 +716,7 @@
 	// resizing of the frame. Thus at the end of the animation make sure you can see the current selection.
 	switch (newPaneNum)
 	{
-		case eDifferencesPaneView:	[NSTimer scheduledTimerWithTimeInterval:[[NSAnimationContext currentContext] duration] target:[self theDifferencesPaneView]	selector:@selector(scrollToSelected) userInfo:nil repeats:NO]; break;
+		case eDifferencesView:	[NSTimer scheduledTimerWithTimeInterval:[[NSAnimationContext currentContext] duration] target:[self theDifferencesView]	selector:@selector(scrollToSelected) userInfo:nil repeats:NO]; break;
 		case eHistoryView:		[NSTimer scheduledTimerWithTimeInterval:[[NSAnimationContext currentContext] duration] target:[self theHistoryView]		selector:@selector(scrollToSelected) userInfo:nil repeats:NO]; break;
 	}
 		
@@ -735,17 +735,17 @@
 
 - (BOOL)	showingBrowserPane								{ return currentPane_ == eBrowserPaneView; }
 - (BOOL)	showingHistoryView								{ return currentPane_ == eHistoryView; }
-- (BOOL)	showingDifferencesPane							{ return currentPane_ == eDifferencesPaneView; }
+- (BOOL)	showingDifferencesView							{ return currentPane_ == eDifferencesView; }
 - (BOOL)	showingBackingPane								{ return currentPane_ == eBackingPaneView; }
 - (BOOL)	showingBrowserOrHistoryView						{ return currentPane_ == eBrowserPaneView || currentPane_ == eHistoryView; }
-- (BOOL)	showingBrowserOrDifferencesPane					{ return currentPane_ == eBrowserPaneView || currentPane_ == eDifferencesPaneView; }
-- (BOOL)	showingBrowserOrHistoryOrDifferencesPane		{ return currentPane_ == eBrowserPaneView || currentPane_ == eHistoryView || currentPane_ == eDifferencesPaneView; }
+- (BOOL)	showingBrowserOrDifferencesView					{ return currentPane_ == eBrowserPaneView || currentPane_ == eDifferencesView; }
+- (BOOL)	showingBrowserOrHistoryOrDifferencesView		{ return currentPane_ == eBrowserPaneView || currentPane_ == eHistoryView || currentPane_ == eDifferencesView; }
 - (BOOL)	showingASheet									{ return showingSheet_; }
 
 
 - (IBAction) actionSwitchViewToBrowserPane:(id)sender		{ [self setCurrentPane:eBrowserPaneView]; }
 - (IBAction) actionSwitchViewToBackingPane:(id)sender		{ [self setCurrentPane:eBackingPaneView]; }
-- (IBAction) actionSwitchViewToDifferencesPane:(id)sender	{ [self setCurrentPane:eDifferencesPaneView]; }
+- (IBAction) actionSwitchViewToDifferencesView:(id)sender	{ [self setCurrentPane:eDifferencesView]; }
 - (IBAction) actionSwitchViewToHistoryView:(id)sender		{ [self setCurrentPane:eHistoryView]; }
 
 
@@ -832,18 +832,16 @@
 	
 	if (theAction == @selector(actionSwitchViewToBrowserPane:))			return [self repositoryIsSelectedAndReady];
 	if (theAction == @selector(actionSwitchViewToHistoryView:))			return [self repositoryIsSelectedAndReady];
-	if (theAction == @selector(actionSwitchViewToDifferencesPane:))		return [self repositoryIsSelectedAndReady];
+	if (theAction == @selector(actionSwitchViewToDifferencesView:))		return [self repositoryIsSelectedAndReady];
 
 	// Files
 	if (theAction == @selector(mainMenuCommitSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [self validateAndSwitchMenuForCommitSelectedFiles:DynamicCast(NSMenuItem, anItem)];
 	if (theAction == @selector(mainMenuCommitAllFiles:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [self validateAndSwitchMenuForCommitAllFiles:DynamicCast(NSMenuItem, anItem)];
 	if (theAction == @selector(toolbarCommitFiles:))					return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [self toolbarActionAppliesToFilesWith:eHGStatusCommittable];
 	
-	if (theAction == @selector(mainMenuDiffSelectedFiles:))
-			return [super validateUserInterfaceItem:anItem];
-	//		return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusModified];
+	if (theAction == @selector(mainMenuDiffSelectedFiles:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusModified];
 	if (theAction == @selector(mainMenuDiffAllFiles:))					return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [self repositoryHasFilesWhichContainStatus:eHGStatusModified];
-	if (theAction == @selector(toolbarDiffFiles:))						return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryOrDifferencesPane] && [self toolbarActionAppliesToFilesWith:eHGStatusModified];
+	if (theAction == @selector(toolbarDiffFiles:))						return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryOrDifferencesView] && [self toolbarActionAppliesToFilesWith:eHGStatusModified];
 
 	if (theAction == @selector(mainMenuAddRenameRemoveSelectedFiles:))	return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusAddableOrRemovable];
 	if (theAction == @selector(mainMenuAddRenameRemoveAllFiles:))		return [self repositoryIsSelectedAndReady] && [self showingBrowserPane] && [self repositoryHasFilesWhichContainStatus:eHGStatusAddableOrRemovable];
@@ -1446,7 +1444,7 @@
 		[self mainMenuDiffSelectedFiles:sender];
 	else if ([self showingBrowserPane])
 		[self mainMenuDiffAllFiles:sender];
-	else if ([self showingDifferencesPane])
+	else if ([self showingDifferencesView])
 		[self mainMenuDiffAllFiles:sender];	
 }
 
@@ -1587,8 +1585,8 @@
 {
 	if ([self showingBrowserPane] && [self nodesAreChosenInBrowser])
 		[self browserMenuOpenTerminalHere:sender];
-	else if ([self showingDifferencesPane])
-		[[self theDifferencesPaneView] differencesMenuOpenTerminalHere:sender];
+	else if ([self showingDifferencesView])
+		[[self theDifferencesView] differencesMenuOpenTerminalHere:sender];
 	else
 		[self sidebarMenuOpenTerminalHere:sender];
 }

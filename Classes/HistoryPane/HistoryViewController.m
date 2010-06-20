@@ -16,7 +16,7 @@
 #import "LabelData.h"
 #import "RevertSheetController.h"
 #import "UpdateSheetController.h"
-#import "DifferencesPaneController.h"
+#import "DifferencesViewController.h"
 #import "ResultsWindowController.h"
 #import "LogTableView.h"
 #import "AddLabelSheetController.h"
@@ -189,9 +189,9 @@
 		pair.lowRevision = numberAsInt([parents objectAtIndex:0]);
 	NSValue* pairAsValue = MakeNSValue(LowHighPair, pair);
 
-	[myDocument actionSwitchViewToDifferencesPane:sender];
+	[myDocument actionSwitchViewToDifferencesView:sender];
 	NSTimeInterval t = [[NSAnimationContext currentContext] duration];
-	[[myDocument theDifferencesPaneView] performSelector:@selector(compareLowHighValue:) withObject:pairAsValue afterDelay:t];	
+	[[myDocument theDifferencesView] performSelector:@selector(compareLowHighValue:) withObject:pairAsValue afterDelay:t];	
 }
 
 

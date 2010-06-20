@@ -1,5 +1,5 @@
 //
-//  DifferencesPaneController.h
+//  DifferencesViewController.h
 //  MacHg
 //
 //  Created by Jason Harris on 15/05/09.
@@ -14,24 +14,36 @@
 
 
 
-@interface DifferencesPaneController : NSViewController
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  DifferencesViewController
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+
+@interface DifferencesViewController : NSViewController
 {
-	MacHgDocument*					myDocument;
-	IBOutlet DifferencesPaneView*	theDifferencesPaneView;
+	MacHgDocument*				myDocument;
+	IBOutlet DifferencesView*	theDifferencesView;
 }
-@property (readwrite,assign) MacHgDocument*			myDocument;
-@property (readwrite,assign) DifferencesPaneView*	theDifferencesPaneView;
+@property (readwrite,assign) MacHgDocument*		myDocument;
+@property (readwrite,assign) DifferencesView*	theDifferencesView;
 
-// Initialization
-- (DifferencesPaneController*) initDifferencesPaneControllerWithDocument:(MacHgDocument*)doc;
+- (DifferencesViewController*) initDifferencesViewControllerWithDocument:(MacHgDocument*)doc;
 - (void) unload;
-
 @end
 
 
-@interface DifferencesPaneView : NSView < ControllerForLogTableView, ControllerForFSBrowser, NSUserInterfaceValidations >
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  DifferencesView
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+
+@interface DifferencesView : NSView < ControllerForLogTableView, ControllerForFSBrowser, NSUserInterfaceValidations >
 {
-	IBOutlet DifferencesPaneController*  parentController;
+	IBOutlet DifferencesViewController*  parentController;
 	MacHgDocument*				myDocument;
 
 	IBOutlet BWSplitView*		mainSplitView;
@@ -87,8 +99,8 @@
 
 
 - (IBAction)	validateButtons:(id)sender;
-- (IBAction)	openDifferencesPane:(id)sender;
-- (IBAction)	refreshDifferencesPane:(id)sender;
+- (IBAction)	openDifferencesView:(id)sender;
+- (IBAction)	refreshDifferencesView:(id)sender;
 - (void)		scrollToSelected;
 - (IBAction)	redisplayBrowser:(id)sender;
 - (void)		updateCurrentPreviewImage;
