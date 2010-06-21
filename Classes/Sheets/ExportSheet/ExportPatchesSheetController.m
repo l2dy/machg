@@ -279,12 +279,6 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 	[self validate:self];
 }
 
-- (NSIndexSet*) tableView:(NSTableView*)tableView selectionIndexesForProposedSelection:(NSIndexSet*)proposedSelectionIndexes
-{
-	NSRange range = MakeRangeFirstLast([proposedSelectionIndexes firstIndex], [proposedSelectionIndexes lastIndex]);
-	return [NSIndexSet indexSetWithIndexesInRange:range];
-}
-
 
 
 
