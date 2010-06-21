@@ -199,7 +199,7 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 					 # Parent  58e3679ba81330385744e98ccd5de9fb9e18e84b
 					 */
 					NSString* content = result.outStr;
-					if (rev != incompleteRev)
+					if (rev != incompleteRev && !reversePatchOption_)
 					{
 						[entry fullyLoadEntry];
 						LogEntry* parent = [[myDocument repositoryData] entryForRevisionString:[entry firstParent]];
@@ -213,6 +213,18 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 						NSString* header5 = fstr(@"# Parent  %@", [parent fullChangeset]);
 						NSString* header6 = fstr(@"%@\n", [entry fullComment]);
 						content = [[NSArray arrayWithObjects:header1, header2, header3, header4, header5, header6, content, nil] componentsJoinedByString:@"\n"];
+					}
+					else if (rev != incompleteRev && reversePatchOption_)
+					{
+						[entry fullyLoadEntry];
+						LogEntry* parent = [[myDocument repositoryData] entryForRevisionString:[entry firstParent]];
+						[parent fullyLoadEntry];
+						
+						LogEntry* entry = [[myDocument repositoryData] entryForRevisionString:intAsString(rev)];
+						NSString* header1 = @"# HG changeset patch";
+						NSString* header2 = fstr(@"# User %@", [entry fullAuthor]);
+						NSString* header3 = fstr(@"Backout: %@\n", [entry fullComment]);
+						content = [[NSArray arrayWithObjects:header1, header2, header3, content, nil] componentsJoinedByString:@"\n"];						
 					}
 					NSString* patchFileName = fileNameTemplate;
 					patchFileName = [patchFileName stringByReplacingOccurrencesOfRegex:@"\\%R" withString:intAsString(rev)];
@@ -285,20 +297,81 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 - (NSAttributedString*) formattedSheetMessage
 {
 	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
-	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
-	if (pair.lowRevision == pair.highRevision)
+
+	NSArray* entries = [logTableView selectedEntries];
+	NSInteger incompleteRev = stringAsInt([logTableView incompleteRevision]);
+	BOOL singleEntrySelected = [entries count] == 1;
+	
+	// Sort the entries into the correct order.
+	if (reversePatchOption_)
+		entries = [entries sortedArrayUsingFunction:entryReverseSort context:NULL];
+	else
+		entries = [entries sortedArrayUsingFunction:entrySort context:NULL];
+	
+	NSInteger start = stringAsInt([[entries firstObject] revision]);
+	NSInteger end   = stringAsInt([[entries lastObject] revision]);
+
+	NSString* fileNameTemplate = [self patchNameOption];
+	BOOL changingFileName = [fileNameTemplate isMatchedByRegex:@"\\%[nrRhH]" options:RKLNoOptions];
+	BOOL incompleteRevSelected = (incompleteRev == start || incompleteRev == end);
+	
+	
+	
+	if (singleEntrySelected && incompleteRevSelected && !reversePatchOption_)
 	{
-		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"A patch corresponding to revision ")];
-		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(intAsString(pair.lowRevision))];
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"A patch corresponding to the ")];
+		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(@"uncommitted changes")];
 		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" will be written to the given filename.")];
 	}
-	else
+	else if (singleEntrySelected && incompleteRevSelected && reversePatchOption_)
 	{
-		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"Patches corresponding to revisions ")];
-		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(intAsString(pair.lowRevision))];
-		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" through ")];		
-		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(intAsString(pair.highRevision))];
-		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" will be written to the given filename.")];		
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"A patch corresponding to the ")];
+		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(@"opposite")];
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" of the ")];
+		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(@"uncommitted changes")];
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" will be written to the given filename.")];
+	}
+	else if (singleEntrySelected && !incompleteRevSelected && !reversePatchOption_)
+	{
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"A patch corresponding to revision ")];
+		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString([[entries firstObject] revision])];
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" will be written to the given filename.")];
+	}
+	else if (singleEntrySelected && !incompleteRevSelected && reversePatchOption_)
+	{
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"A patch corresponding to the ")];
+		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(@"opposite")];
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" of revision ")];
+		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString([[entries firstObject] revision])];
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" will be written to the given filename.")];
+	}
+	else if (reversePatchOption_ && changingFileName)
+	{
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"Patches corresponding to the ")];
+		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(@"opposite")];
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" of the ")];
+		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(@"selected revisions")];
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" will be written to files specified by the filename template.")];
+	}
+	else if (reversePatchOption_ && !changingFileName)
+	{
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"Patches corresponding to the ")];
+		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(@"opposite")];
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" of the ")];
+		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(@"selected revisions")];
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" will be written to the given filename.")];
+	}
+	else if (!reversePatchOption_ && changingFileName)
+	{
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"Patches corresponding to the ")];
+		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(@"selected revisions")];
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" will be written to files specified by the filename template.")];
+	}
+	else /*if (!reversePatchOption_ && !changingFileName)*/
+	{
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"Patches corresponding to the ")];
+		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(@"selected revisions")];
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" will be written to the given filename.")];
 	}
 	return newSheetMessage;
 }
