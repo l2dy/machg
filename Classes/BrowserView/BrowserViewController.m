@@ -32,7 +32,7 @@
 {
 	myDocument = doc;
 	[NSBundle loadNibNamed:@"BrowserView" owner:self];
-	[[theBrowserView theBrowser] reloadData:nil]; 	// Prime the browser with an initial load of data.
+	//[[theBrowserView theBrowser] reloadData:nil]; 	// Prime the browser with an initial load of data.
 
 	return self;
 }
@@ -64,8 +64,21 @@
 // MARK: Initialization
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+- (id) initWithFrame:(NSRect)frameRect
+{
+	awake_ = NO;
+	return [super initWithFrame:frameRect];
+}
+
 - (void) awakeFromNib
 {
+	@synchronized(self)
+	{
+		if (awake_)
+			return;
+		awake_ = YES;
+	}
+
 	myDocument = [parentContoller myDocument];
 	[self observe:kRepositoryRootChanged		from:[self myDocument]  byCalling:@selector(repositoryRootDidChange)];
 

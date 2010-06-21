@@ -75,9 +75,21 @@
 {
 }
 
+- (id) initWithFrame:(NSRect)frameRect
+{
+	awake_ = NO;
+	return [super initWithFrame:frameRect];
+}
 
 - (void) awakeFromNib
 {
+	@synchronized(self)
+	{
+		if (awake_)
+			return;
+		awake_ = YES;
+	}
+
 	myDocument = [parentController myDocument];
 	[self openSplitViewPanesToDefaultHeights: self];
 

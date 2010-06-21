@@ -64,6 +64,7 @@
 	// Configure the number of visible columns (default max visible columns is 0 and set in IB, which means an unlimited number of
 	// columns. (like the finder)).
 	[self setDefaultColumnWidth:sizeOfBrowserColumnsFromDefaults()];
+	[parentController awakeFromNib];	// The parents must ensure that the internals of awakeFromNib only ever happen once.
 	[self repositoryRootDidChange];
 }
 

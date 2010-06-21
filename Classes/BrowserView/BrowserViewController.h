@@ -47,9 +47,10 @@
 {
 	IBOutlet BrowserViewController* parentContoller;
 	IBOutlet FSBrowser*		theBrowser;
-	IBOutlet NSImageView*	nodeIconWell;  // Image well showing the selected items icon.
-	IBOutlet NSTextField*	nodeInspector; // Text field showing the selected items attributes.
+	IBOutlet NSImageView*	nodeIconWell;	// Image well showing the selected items icon.
+	IBOutlet NSTextField*	nodeInspector;	// Text field showing the selected items attributes.
 	MacHgDocument*			myDocument;
+	BOOL					awake_;			// Ensure awakeFromNib fires only once
 }
 
 @property (readwrite,assign) MacHgDocument*	myDocument;
