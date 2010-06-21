@@ -51,7 +51,9 @@
 - (IBAction) sheetButtonViewDifferencesForExportPatchesSheet:(id)sender;
 
 
-- (void)	logTableViewSelectionDidChange:(LogTableView*)theLogTable;
+// Validation and updating
+- (IBAction) validate:(id)sender;
+- (void)	 logTableViewSelectionDidChange:(LogTableView*)theLogTable;
 
 @end
 
