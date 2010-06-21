@@ -911,7 +911,7 @@
 							<reference key="NSSuperview" ref="803546326"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="485629217">
-								<int key="NSCellFlags">-1804468671</int>
+								<int key="NSCellFlags">-1803944383</int>
 								<int key="NSCellFlags2">272630784</int>
 								<string key="NSContents">feature%n.patch</string>
 								<reference key="NSSupport" ref="912308949"/>
@@ -1166,26 +1166,6 @@ dmlzaW9uIG51bWJlcgolaCAgIHNob3J0LWZvcm0gY2hhbmdlc2V0IGhhc2g</string>
 					<int key="connectionID">153</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: patchNameOption</string>
-						<reference key="source" ref="1046914283"/>
-						<reference key="destination" ref="1001"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="1046914283"/>
-							<reference key="NSDestination" ref="1001"/>
-							<string key="NSLabel">value: patchNameOption</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">patchNameOption</string>
-							<object class="NSDictionary" key="NSOptions">
-								<string key="NS.key.0">NSNullPlaceholder</string>
-								<string key="NS.object.0">file name</string>
-							</object>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">155</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
 						<string key="label">okButton</string>
 						<reference key="source" ref="1001"/>
@@ -1272,6 +1252,51 @@ dmlzaW9uIG51bWJlcgolaCAgIHNob3J0LWZvcm0gY2hhbmdlc2V0IGhhc2g</string>
 						</object>
 					</object>
 					<int key="connectionID">175</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">validate:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="480348684"/>
+					</object>
+					<int key="connectionID">176</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">validate:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="1046914283"/>
+					</object>
+					<int key="connectionID">177</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: patchNameOption</string>
+						<reference key="source" ref="1046914283"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="1046914283"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">value: patchNameOption</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">patchNameOption</string>
+							<object class="NSDictionary" key="NSOptions">
+								<bool key="EncodedWithXMLCoder">YES</bool>
+								<object class="NSArray" key="dict.sortedKeys">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<string>NSContinuouslyUpdatesValue</string>
+									<string>NSNullPlaceholder</string>
+								</object>
+								<object class="NSMutableArray" key="dict.values">
+									<bool key="EncodedWithXMLCoder">YES</bool>
+									<boolean value="YES"/>
+									<string>file name</string>
+								</object>
+							</object>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">178</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -2029,7 +2054,7 @@ dmlzaW9uIG51bWJlcgolaCAgIHNob3J0LWZvcm0gY2hhbmdlc2V0IGhhc2g</string>
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">175</int>
+			<int key="maxID">178</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2061,9 +2086,11 @@ dmlzaW9uIG51bWJlcgolaCAgIHNob3J0LWZvcm0gY2hhbmdlc2V0IGhhc2g</string>
 							<string>sheetButtonCancel:</string>
 							<string>sheetButtonOk:</string>
 							<string>sheetButtonViewDifferencesForExportPatchesSheet:</string>
+							<string>validate:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
