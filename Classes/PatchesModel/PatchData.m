@@ -141,7 +141,7 @@
 	commitMessage_ = @"";
 	parent_ = @"";
 	forceOption_ = NO;
-	exactOption_ = YES;
+	exactOption_ = NO;
 	dontCommitOption_ = NO;
 	importBranchOption_ = YES;
 	guessRenames_ = YES;
