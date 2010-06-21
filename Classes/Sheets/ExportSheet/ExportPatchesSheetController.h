@@ -30,7 +30,6 @@
 	BOOL					textOption_;
 	BOOL					gitOption_;
 	BOOL					noDatesOption_;
-	BOOL					switchParentOption_;
 	BOOL					reversePatchOption_;
 	NSString*				patchNameOption_;
 }
@@ -40,7 +39,6 @@
 @property BOOL textOption;
 @property BOOL gitOption;
 @property BOOL noDatesOption;
-@property BOOL switchParentOption;
 @property BOOL reversePatchOption;
 
 - (ExportPatchesSheetController*) initExportPatchesSheetControllerWithDocument:(MacHgDocument*)doc;

@@ -25,7 +25,6 @@
 @synthesize textOption = textOption_;
 @synthesize gitOption = gitOption_;
 @synthesize noDatesOption = noDatesOption_;
-@synthesize switchParentOption = switchParentOption_;
 @synthesize reversePatchOption = reversePatchOption_;
 @synthesize patchNameOption = patchNameOption_;
 @synthesize myDocument;
@@ -178,9 +177,6 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 		NSInteger count = 1;
 		for (LogEntry* entry in entries)
 		{
-			[entry fullyLoadEntry];
-			LogEntry* parent = [[myDocument repositoryData] entryForRevisionString:[entry firstParent]];
-			[parent fullyLoadEntry];
 			NSInteger rev = stringAsInt([entry revision]);
 			NSMutableArray* argsDiff = [NSMutableArray arrayWithObjects:@"diff", nil];
 			if ([self textOption])			[argsDiff addObject:@"--text"];
@@ -203,6 +199,10 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 				NSString* content = result.outStr;
 				if (rev != incompleteRev)
 				{
+					[entry fullyLoadEntry];
+					LogEntry* parent = [[myDocument repositoryData] entryForRevisionString:[entry firstParent]];
+					[parent fullyLoadEntry];
+					
 					LogEntry* entry = [[myDocument repositoryData] entryForRevisionString:intAsString(rev)];
 					NSString* header1 = @"# HG changeset patch";
 					NSString* header2 = fstr(@"# User %@", [entry fullAuthor]);
