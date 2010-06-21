@@ -182,7 +182,15 @@
 
 	parts = [header captureComponentsMatchedByRegex:dateRegEx options:RKLMultiline range:NSMaxiumRange error:NULL];
 	if ([parts count] >= 1)
-		date_ = trimString([parts objectAtIndex:1]);		
+	{
+		date_ = trimString([parts objectAtIndex:1]);
+		if (date_)
+		{
+			NSDate* parsedDate = [NSDate dateWithUTCdatePlusOffset:date_];
+			if (parsedDate)
+				date_ = [parsedDate isodateDescription];
+		}
+	}
 
 	parts = [header captureComponentsMatchedByRegex:parentRegEx options:RKLMultiline range:NSMaxiumRange error:NULL];
 	if ([parts count] >= 1)
