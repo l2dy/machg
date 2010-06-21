@@ -1121,7 +1121,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	NSString* rest;
 	BOOL matched = [utcDatePlusOffset getCapturesWithRegexAndTrimedComponents:@"(\\d+)\\s*(.*)" firstComponent:&base secondComponent:&rest];
 	if (!matched)
-		return [NSDate dateWithTimeIntervalSinceNow:0.0];
+		return nil;
 	
 	double offset = [rest floatValue];
 	double date   = [base floatValue];
@@ -1130,7 +1130,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	if (date != NAN)
 		return [NSDate dateWithTimeIntervalSince1970: date];
 	
-	return [NSDate dateWithTimeIntervalSinceNow:0.0];
+	return nil;
 }
 @end
 

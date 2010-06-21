@@ -345,7 +345,12 @@ void setupGlobalsForPartsAndTemplate()
 
 - (NSString*) isoDate { return [date_ isodateDescription]; }
 
-- (void) setDate:(NSString*)dateString { date_ = [NSDate dateWithUTCdatePlusOffset:dateString]; }
+- (void) setDate:(NSString*)dateString
+{
+	date_ = [NSDate dateWithUTCdatePlusOffset:dateString];
+	if (!date_)
+		date_ = [NSDate dateWithTimeIntervalSinceNow:0.0];
+}
 
 
 
