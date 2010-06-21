@@ -41,6 +41,7 @@
 - (ExportPatchesSheetController*) initExportPatchesSheetControllerWithDocument:(MacHgDocument*)doc
 {
 	myDocument = doc;
+	gitOption_ = YES;
 	[NSBundle loadNibNamed:@"ExportPatchesSheet" owner:self];
 	return self;
 }
