@@ -175,58 +175,60 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 	NSString* revisionFormat = [[NSArray arrayWithObjects:@"%0", intAsString([intAsString(MAX(start, end)) length]), @"d", nil] componentsJoinedByString:@""];
 	
 	[myDocument dispatchToMercurialQueuedWithDescription:exportDescription  process:^{
-		NSInteger count = 1;
-		for (LogEntry* entry in entries)
-		{
-			NSInteger rev = stringAsInt([entry revision]);
-			NSMutableArray* argsDiff = [NSMutableArray arrayWithObjects:@"diff", nil];
-			if ([self textOption])			[argsDiff addObject:@"--text"];
-			if ([self gitOption])			[argsDiff addObject:@"--git"];
-			if ([self noDatesOption])		[argsDiff addObject:@"--nodates"];
-			if ([self reversePatchOption])	[argsDiff addObject:@"--reverse"];
-			if (rev != incompleteRev)
-				[argsDiff addObject:@"--change" followedBy:intAsString(rev)];
-	
-			ExecutionResult* result = [myDocument  executeMercurialWithArgs:argsDiff  fromRoot:rootPath  whileDelayingEvents:YES];
-			if (result.outStr)
+		[myDocument delayEventsUntilFinishBlock:^{
+			NSInteger count = 1;
+			for (LogEntry* entry in entries)
 			{
-				/*
-				 # HG changeset patch
-				 # User jfh <jason@jasonfharris.com>
-				 # Date 1276975872 -7200
-				 # Node ID bdd9a9abe32337b87506fb1f1265bd9448636e2e
-				 # Parent  58e3679ba81330385744e98ccd5de9fb9e18e84b
-				 */
-				NSString* content = result.outStr;
+				NSInteger rev = stringAsInt([entry revision]);
+				NSMutableArray* argsDiff = [NSMutableArray arrayWithObjects:@"diff", nil];
+				if ([self textOption])			[argsDiff addObject:@"--text"];
+				if ([self gitOption])			[argsDiff addObject:@"--git"];
+				if ([self noDatesOption])		[argsDiff addObject:@"--nodates"];
+				if ([self reversePatchOption])	[argsDiff addObject:@"--reverse"];
 				if (rev != incompleteRev)
+					[argsDiff addObject:@"--change" followedBy:intAsString(rev)];
+				
+				ExecutionResult* result = [myDocument  executeMercurialWithArgs:argsDiff  fromRoot:rootPath  whileDelayingEvents:YES];
+				if (result.outStr)
 				{
-					[entry fullyLoadEntry];
-					LogEntry* parent = [[myDocument repositoryData] entryForRevisionString:[entry firstParent]];
-					[parent fullyLoadEntry];
-					
-					LogEntry* entry = [[myDocument repositoryData] entryForRevisionString:intAsString(rev)];
-					NSString* header1 = @"# HG changeset patch";
-					NSString* header2 = fstr(@"# User %@", [entry fullAuthor]);
-					NSString* header3 = fstr(@"# Date %@", [entry isoDate]);
-					NSString* header4 = fstr(@"# Node ID %@", [entry fullChangeset]);
-					NSString* header5 = fstr(@"# Parent  %@", [parent fullChangeset]);
-					NSString* header6 = fstr(@"%@\n", [entry fullComment]);
-					content = [[NSArray arrayWithObjects:header1, header2, header3, header4, header5, header6, content, nil] componentsJoinedByString:@"\n"];
+					/*
+					 # HG changeset patch
+					 # User jfh <jason@jasonfharris.com>
+					 # Date 1276975872 -7200
+					 # Node ID bdd9a9abe32337b87506fb1f1265bd9448636e2e
+					 # Parent  58e3679ba81330385744e98ccd5de9fb9e18e84b
+					 */
+					NSString* content = result.outStr;
+					if (rev != incompleteRev)
+					{
+						[entry fullyLoadEntry];
+						LogEntry* parent = [[myDocument repositoryData] entryForRevisionString:[entry firstParent]];
+						[parent fullyLoadEntry];
+						
+						LogEntry* entry = [[myDocument repositoryData] entryForRevisionString:intAsString(rev)];
+						NSString* header1 = @"# HG changeset patch";
+						NSString* header2 = fstr(@"# User %@", [entry fullAuthor]);
+						NSString* header3 = fstr(@"# Date %@", [entry isoDate]);
+						NSString* header4 = fstr(@"# Node ID %@", [entry fullChangeset]);
+						NSString* header5 = fstr(@"# Parent  %@", [parent fullChangeset]);
+						NSString* header6 = fstr(@"%@\n", [entry fullComment]);
+						content = [[NSArray arrayWithObjects:header1, header2, header3, header4, header5, header6, content, nil] componentsJoinedByString:@"\n"];
+					}
+					NSString* patchFileName = fileNameTemplate;
+					patchFileName = [patchFileName stringByReplacingOccurrencesOfRegex:@"\\%R" withString:intAsString(rev)];
+					patchFileName = [patchFileName stringByReplacingOccurrencesOfRegex:@"\\%b" withString:[rootPath lastPathComponent]];
+					patchFileName = [patchFileName stringByReplacingOccurrencesOfRegex:@"\\%n" withString:fstr(countFormat,  count)];
+					patchFileName = [patchFileName stringByReplacingOccurrencesOfRegex:@"\\%r" withString:fstr(revisionFormat, rev)];
+					if (![patchFileName isAbsolutePath])
+						patchFileName = [rootPath stringByAppendingPathComponent:patchFileName];
+					if (changingFileName)
+						[content writeToFile:patchFileName atomically:YES encoding:NSUTF8StringEncoding error:nil];
+					else
+						[[NSFileManager defaultManager] appendString:fstr(@"\n\n%@", content) toFilePath:patchFileName];
 				}
-				NSString* patchFileName = fileNameTemplate;
-				patchFileName = [patchFileName stringByReplacingOccurrencesOfRegex:@"\\%R" withString:intAsString(rev)];
-				patchFileName = [patchFileName stringByReplacingOccurrencesOfRegex:@"\\%b" withString:[rootPath lastPathComponent]];
-				patchFileName = [patchFileName stringByReplacingOccurrencesOfRegex:@"\\%n" withString:fstr(countFormat,  count)];
-				patchFileName = [patchFileName stringByReplacingOccurrencesOfRegex:@"\\%r" withString:fstr(revisionFormat, rev)];
-				if (![patchFileName isAbsolutePath])
-					patchFileName = [rootPath stringByAppendingPathComponent:patchFileName];
-				if (changingFileName)
-					[content writeToFile:patchFileName atomically:YES encoding:NSUTF8StringEncoding error:nil];
-				else
-					[[NSFileManager defaultManager] appendString:fstr(@"\n\n%@", content) toFilePath:patchFileName];
+				count++;
 			}
-			count++;
-		}
+		}];
 	}];	
 }
 
