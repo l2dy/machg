@@ -21,6 +21,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
+			<integer value="545"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -48,7 +49,7 @@
 				<string key="NSClassName">NSApplication</string>
 			</object>
 			<object class="NSCustomView" id="554596880">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">268</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -117,7 +118,7 @@
 																	<object class="NSButton" id="72495217">
 																		<reference key="NSNextResponder" ref="798624884"/>
 																		<int key="NSvFlags">265</int>
-																		<string key="NSFrame">{{526, 0}, {32, 26}}</string>
+																		<string key="NSFrame">{{529, 0}, {32, 26}}</string>
 																		<reference key="NSSuperview" ref="798624884"/>
 																		<bool key="NSEnabled">YES</bool>
 																		<object class="NSButtonCell" key="NSCell" id="665029265">
@@ -689,7 +690,7 @@
 																	<object class="NSButton" id="671726421">
 																		<reference key="NSNextResponder" ref="266459853"/>
 																		<int key="NSvFlags">265</int>
-																		<string key="NSFrame">{{509, 0}, {32, 26}}</string>
+																		<string key="NSFrame">{{514, 0}, {32, 26}}</string>
 																		<reference key="NSSuperview" ref="266459853"/>
 																		<bool key="NSEnabled">YES</bool>
 																		<object class="NSButtonCell" key="NSCell" id="34981531">
@@ -1365,7 +1366,7 @@
 										</object>
 										<string key="NSFirstColumnTitle">Browser</string>
 										<int key="NSMinColumnWidth">50</int>
-										<int key="NSNumberOfVisibleColumns">1</int>
+										<int key="NSNumberOfVisibleColumns">4</int>
 										<int key="NSColumnResizingType">2</int>
 										<double key="NSPreferedColumnWidth">267</double>
 										<bool key="NSAllowsTypeSelect">YES</bool>
@@ -1802,6 +1803,7 @@
 					</object>
 				</object>
 				<string key="NSFrameSize">{1142, 732}</string>
+				<reference key="NSSuperview"/>
 				<string key="NSClassName">DifferencesView</string>
 			</object>
 			<object class="NSUserDefaultsController" id="692698573">
