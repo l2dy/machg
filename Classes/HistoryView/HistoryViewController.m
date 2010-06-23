@@ -102,7 +102,7 @@
 	[theLabelsTableView_ setAutosaveName:fstr(@"File:%@:HistoryLabelsTableViewColumnPositions", fileName)];
 	
 	[logTableView setTarget:self];
-	[logTableView setDoubleAction:@selector(handleLogTableViewDoubleClick:)];	
+	[logTableView setDoubleAction:@selector(diffSelectedRevisions:)];	
 	
 	[[myDocument mainWindow] makeFirstResponder:logTableView];
 }
@@ -230,7 +230,7 @@
 // MARK:  LogTableView Actions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (IBAction) handleLogTableViewDoubleClick:(id)sender
+- (IBAction) diffSelectedRevisions:(id)sender
 {
 	NSArray* rootPathAsArray = [myDocument absolutePathOfRepositoryRootAsArray];
 	LowHighPair pair = [logTableView parentToHighestSelectedRevisions];
@@ -363,7 +363,7 @@
 - (IBAction) toolbarCommitFiles:(id)sender						{ [self mainMenuCommitAllFiles:sender]; }
 
 - (IBAction) mainMenuDiffAllFiles:(id)sender					{ [myDocument viewDifferencesInCurrentRevisionFor:[myDocument absolutePathOfRepositoryRootAsArray] toRevision:nil]; }	// nil indicates the current revision
-- (IBAction) toolbarDiffFiles:(id)sender						{ [self mainMenuDiffAllFiles:sender]; }
+- (IBAction) toolbarDiffFiles:(id)sender						{ [self diffSelectedRevisions:sender]; }
 
 
 
@@ -390,7 +390,7 @@
 	if (theAction == @selector(toolbarCommitFiles:))							return [myDocument repositoryIsSelectedAndReady] && [myDocument toolbarActionAppliesToFilesWith:eHGStatusCommittable];
 
 	if (theAction == @selector(mainMenuDiffAllFiles:))							return [myDocument repositoryIsSelectedAndReady] && [myDocument repositoryHasFilesWhichContainStatus:eHGStatusModified];
-	if (theAction == @selector(toolbarDiffFiles:))								return [myDocument repositoryIsSelectedAndReady] && [myDocument toolbarActionAppliesToFilesWith:eHGStatusModified];
+	if (theAction == @selector(toolbarDiffFiles:))								return [myDocument repositoryIsSelectedAndReady] && ![logTableView noRevisionSelected];
 	
 	// ------
 	if (theAction == @selector(mainMenuRollbackCommit:))						return [myDocument repositoryIsSelectedAndReady] && [myDocument showingBrowserOrHistoryView];
