@@ -268,6 +268,19 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
+// MARK:  Contextual Menu actions
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (IBAction) mainMenuOpenSelectedFilesInFinder:(id)sender		{ [theBrowser browserMenuOpenSelectedFilesInFinder:sender]; }
+- (IBAction) mainMenuRevealSelectedFilesInFinder:(id)sender		{ [theBrowser browserMenuRevealSelectedFilesInFinder:sender]; }
+- (IBAction) mainMenuOpenTerminalHere:(id)sender				{ [theBrowser browserMenuOpenTerminalHere:sender]; }
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
 // MARK: Action Validation
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -307,6 +320,10 @@
 	if (theAction == @selector(mainMenuUnignoreSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && [theBrowser statusOfChosenPathsInBrowserContain:eHGStatusIgnored];
 	if (theAction == @selector(mainMenuAnnotateSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && [theBrowser statusOfChosenPathsInBrowserContain:eHGStatusInRepository];
 	// ------
+
+	if (theAction == @selector(mainMenuOpenSelectedFilesInFinder:))		return [myDocument repositoryIsSelectedAndReady] && [theBrowser nodesAreChosen];
+	if (theAction == @selector(mainMenuRevealSelectedFilesInFinder:))	return [myDocument repositoryIsSelectedAndReady];
+	if (theAction == @selector(mainMenuOpenTerminalHere:))				return [myDocument repositoryIsSelectedAndReady];
 
 	return NO;
 }

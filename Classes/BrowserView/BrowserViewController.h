@@ -93,4 +93,9 @@
 - (IBAction) mainMenuAnnotateSelectedFiles:(id)sender;
 
 
+// Contextual Menu Actions
+- (IBAction) mainMenuOpenSelectedFilesInFinder:(id)sender;
+- (IBAction) mainMenuRevealSelectedFilesInFinder:(id)sender;
+- (IBAction) mainMenuOpenTerminalHere:(id)sender;
+
 @end

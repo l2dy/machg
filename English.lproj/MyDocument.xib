@@ -21,11 +21,12 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
+			<integer value="5"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 			<string>com.brandonwalkin.BWToolkit</string>
+			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 		</object>
 		<object class="NSMutableDictionary" key="IBDocument.Metadata">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -245,8 +246,8 @@
 								<object class="NSMutableString" key="NSToolbarItemIdentifier">
 									<characters key="NS.bytes">534CA8E6-3715-41B1-A144-0D7388852F54</characters>
 								</object>
-								<string key="NSToolbarItemLabel">clone</string>
-								<string key="NSToolbarItemPaletteLabel">clone</string>
+								<string key="NSToolbarItemLabel">Clone</string>
+								<string key="NSToolbarItemPaletteLabel">Clone</string>
 								<nil key="NSToolbarItemToolTip"/>
 								<nil key="NSToolbarItemView"/>
 								<object class="NSCustomResource" key="NSToolbarItemImage">
@@ -440,8 +441,8 @@
 								<object class="NSMutableString" key="NSToolbarItemIdentifier">
 									<characters key="NS.bytes">EC0D2EAE-2FA2-497C-8C9B-05717E518390</characters>
 								</object>
-								<string key="NSToolbarItemLabel">merge</string>
-								<string key="NSToolbarItemPaletteLabel">merge</string>
+								<string key="NSToolbarItemLabel">Merge</string>
+								<string key="NSToolbarItemPaletteLabel">Merge</string>
 								<nil key="NSToolbarItemToolTip"/>
 								<nil key="NSToolbarItemView"/>
 								<object class="NSCustomResource" key="NSToolbarItemImage">
@@ -645,10 +646,10 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 					</object>
 				</object>
-				<string key="NSWindowContentMaxSize">{1.79769e+308, 1.79769e+308}</string>
+				<string key="NSWindowContentMaxSize">{3.40282e+38, 3.40282e+38}</string>
 				<string key="NSWindowContentMinSize">{300, 200}</string>
 				<object class="NSView" key="NSWindowView" id="568628114">
-					<nil key="NSNextResponder"/>
+					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<object class="NSMutableArray" key="NSSubviews">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -722,7 +723,7 @@
 																					<string key="NSColorName">controlBackgroundColor</string>
 																					<object class="NSColor" key="NSColor" id="457325069">
 																						<int key="NSColorSpace">3</int>
-																						<bytes key="NSWhite">MC42NjY2NjY2NjY3AA</bytes>
+																						<bytes key="NSWhite">MC42NjY2NjY2ODY1AA</bytes>
 																					</object>
 																				</object>
 																				<reference key="NSTextColor" ref="1039357372"/>
@@ -1097,10 +1098,11 @@
 						</object>
 					</object>
 					<string key="NSFrameSize">{893, 491}</string>
+					<reference key="NSSuperview"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
 				<string key="NSMinSize">{300, 278}</string>
-				<string key="NSMaxSize">{1.79769e+308, 1.79769e+308}</string>
+				<string key="NSMaxSize">{3.40282e+38, 3.40282e+38}</string>
 			</object>
 			<object class="NSCustomObject" id="796877042">
 				<string key="NSClassName">NSApplication</string>
@@ -2097,7 +2099,7 @@
 						<reference key="source" ref="613418571"/>
 						<reference key="destination" ref="1039606225"/>
 					</object>
-					<int key="connectionID">100439</int>
+					<int key="connectionID">100441</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -2898,7 +2900,7 @@
 				<object class="NSMutableArray" key="dict.values">
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{299, 562}, {617, 0}}</string>
+					<string>{{204, 562}, {617, 0}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3022,76 +3024,43 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">100439</int>
+			<int key="maxID">100441</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<object class="IBPartialClassDescription">
-					<string key="className">MacHgDocument</string>
-					<string key="superclassName">NSDocument</string>
+					<string key="className">BrowserView</string>
+					<string key="superclassName">NSView</string>
 					<object class="NSMutableDictionary" key="actions">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>actionSwitchViewToBackingView:</string>
-							<string>actionSwitchViewToBrowserView:</string>
-							<string>actionSwitchViewToDifferencesView:</string>
-							<string>actionSwitchViewToHistoryView:</string>
-							<string>actionTestListingItem:</string>
-							<string>browserMenuOpenSelectedFilesInFinder:</string>
-							<string>browserMenuOpenTerminalHere:</string>
-							<string>browserMenuRevealSelectedFilesInFinder:</string>
-							<string>mainMenuAddAndCloneServerRepositoryRef:</string>
-							<string>mainMenuAddLabelToCurrentRevision:</string>
 							<string>mainMenuAddRenameRemoveAllFiles:</string>
 							<string>mainMenuAddRenameRemoveSelectedFiles:</string>
 							<string>mainMenuAddSelectedFiles:</string>
 							<string>mainMenuAnnotateSelectedFiles:</string>
-							<string>mainMenuCloneRepository:</string>
-							<string>mainMenuCollapseChangesets:</string>
 							<string>mainMenuCommitAllFiles:</string>
 							<string>mainMenuCommitSelectedFiles:</string>
 							<string>mainMenuDeleteSelectedFiles:</string>
 							<string>mainMenuDiffAllFiles:</string>
 							<string>mainMenuDiffSelectedFiles:</string>
-							<string>mainMenuExportPatches:</string>
-							<string>mainMenuHistoryEditChangesets:</string>
 							<string>mainMenuIgnoreSelectedFiles:</string>
-							<string>mainMenuImportPatches:</string>
-							<string>mainMenuIncomingFromRepository:</string>
-							<string>mainMenuManifestOfCurrentVersion:</string>
-							<string>mainMenuMarkResolvedSelectedFiles:</string>
-							<string>mainMenuMergeWith:</string>
-							<string>mainMenuNoAction:</string>
+							<string>mainMenuOpenSelectedFilesInFinder:</string>
 							<string>mainMenuOpenTerminalHere:</string>
-							<string>mainMenuOutgoingToRepository:</string>
-							<string>mainMenuPullFromRepository:</string>
-							<string>mainMenuPushToRepository:</string>
-							<string>mainMenuRebaseChangesets:</string>
-							<string>mainMenuRemergeSelectedFiles:</string>
 							<string>mainMenuRenameSelectedFile:</string>
+							<string>mainMenuRevealSelectedFilesInFinder:</string>
 							<string>mainMenuRevertAllFiles:</string>
-							<string>mainMenuRevertAllFilesToVersion:</string>
 							<string>mainMenuRevertSelectedFiles:</string>
 							<string>mainMenuRevertSelectedFilesToVersion:</string>
-							<string>mainMenuRollbackCommit:</string>
-							<string>mainMenuStripChangesets:</string>
 							<string>mainMenuUnignoreSelectedFiles:</string>
 							<string>mainMenuUntrackSelectedFiles:</string>
-							<string>mainMenuUpdateRepository:</string>
-							<string>mainMenuUpdateRepositoryToVersion:</string>
 							<string>refreshBrowserContent:</string>
-							<string>searchFieldChanged:</string>
-							<string>sidebarMenuAddLocalRepositoryRef:</string>
-							<string>sidebarMenuAddNewSidebarGroupItem:</string>
-							<string>sidebarMenuAddServerRepositoryRef:</string>
-							<string>sidebarMenuConfigureLocalRepositoryRef:</string>
-							<string>sidebarMenuConfigureServerRepositoryRef:</string>
-							<string>sidebarMenuOpenTerminalHere:</string>
-							<string>sidebarMenuRemoveSidebarItem:</string>
-							<string>sidebarMenuRevealRepositoryInFinder:</string>
-							<string>testBrowserLoad:</string>
+							<string>toolbarAddRenameRemoveFiles:</string>
+							<string>toolbarCommitFiles:</string>
+							<string>toolbarDiffFiles:</string>
+							<string>toolbarOpenTerminalHere:</string>
+							<string>toolbarRevertFiles:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -3118,6 +3087,250 @@
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>nodeIconWell</string>
+							<string>nodeInspector</string>
+							<string>parentContoller</string>
+							<string>theBrowser</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>NSImageView</string>
+							<string>NSTextField</string>
+							<string>BrowserViewController</string>
+							<string>FSBrowser</string>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="542547147">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">Classes/BrowserView/BrowserViewController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">BrowserViewController</string>
+					<string key="superclassName">NSViewController</string>
+					<object class="NSMutableDictionary" key="outlets">
+						<string key="NS.key.0">theBrowserView</string>
+						<string key="NS.object.0">BrowserView</string>
+					</object>
+					<reference key="sourceIdentifier" ref="542547147"/>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">DifferencesView</string>
+					<string key="superclassName">NSView</string>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>browserDoubleClick:</string>
+							<string>browserSingleClick:</string>
+							<string>differencesMenuAnnotateSelectedFiles:</string>
+							<string>differencesMenuNoAction:</string>
+							<string>mainMenuDiffAllFiles:</string>
+							<string>mainMenuDiffSelectedFiles:</string>
+							<string>mainMenuOpenSelectedFilesInFinder:</string>
+							<string>mainMenuOpenTerminalHere:</string>
+							<string>mainMenuRevealSelectedFilesInFinder:</string>
+							<string>openDifferencesView:</string>
+							<string>redisplayBrowser:</string>
+							<string>refreshDifferencesView:</string>
+							<string>toolbarDiffFiles:</string>
+							<string>validateButtons:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>baseBottom</string>
+							<string>baseHeaderMessage</string>
+							<string>baseLogTableView</string>
+							<string>baseSV</string>
+							<string>baseTop</string>
+							<string>compareBottom</string>
+							<string>compareHeaderMessage</string>
+							<string>compareLogTableView</string>
+							<string>compareSV</string>
+							<string>compareTop</string>
+							<string>detailedBaseEntryTextView</string>
+							<string>detailedCompareEntryTextView</string>
+							<string>mainSplitView</string>
+							<string>parentController</string>
+							<string>theBrowser</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>NSView</string>
+							<string>NSTextField</string>
+							<string>LogTableView</string>
+							<string>NSSplitView</string>
+							<string>NSView</string>
+							<string>NSView</string>
+							<string>NSTextField</string>
+							<string>LogTableView</string>
+							<string>NSSplitView</string>
+							<string>NSView</string>
+							<string>NSTextView</string>
+							<string>NSTextView</string>
+							<string>BWSplitView</string>
+							<string>DifferencesViewController</string>
+							<string>FSBrowser</string>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="299839474">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">Classes/DifferencesView/DifferencesViewController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">DifferencesViewController</string>
+					<string key="superclassName">NSViewController</string>
+					<object class="NSMutableDictionary" key="outlets">
+						<string key="NS.key.0">theDifferencesView</string>
+						<string key="NS.object.0">DifferencesView</string>
+					</object>
+					<reference key="sourceIdentifier" ref="299839474"/>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">FSBrowser</string>
+					<string key="superclassName">NSBrowser</string>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>browserMenuOpenSelectedFilesInFinder:</string>
+							<string>browserMenuOpenTerminalHere:</string>
+							<string>browserMenuRevealSelectedFilesInFinder:</string>
+							<string>reloadData:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<string key="NS.key.0">parentController</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">Classes/BrowserView/FSBrowser.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">LogTableView</string>
+					<string key="superclassName">NSTableView</string>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>refreshTable:</string>
+							<string>resetTable:</string>
+							<string>scrollToBeginning:</string>
+							<string>scrollToCurrentRevision:</string>
+							<string>scrollToEnd:</string>
+							<string>scrollToSelected:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="outlets">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>detailedEntryTextView</string>
+							<string>parentController</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>NSTextView</string>
+							<string>id</string>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">Classes/LogEntryModel/LogTableView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">MacHgDocument</string>
+					<string key="superclassName">NSDocument</string>
+					<object class="NSMutableDictionary" key="actions">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>actionSwitchViewToBackingView:</string>
+							<string>actionSwitchViewToBrowserView:</string>
+							<string>actionSwitchViewToDifferencesView:</string>
+							<string>actionSwitchViewToHistoryView:</string>
+							<string>actionTestListingItem:</string>
+							<string>mainMenuAddAndCloneServerRepositoryRef:</string>
+							<string>mainMenuAddLabelToCurrentRevision:</string>
+							<string>mainMenuCloneRepository:</string>
+							<string>mainMenuExportPatches:</string>
+							<string>mainMenuImportPatches:</string>
+							<string>mainMenuIncomingFromRepository:</string>
+							<string>mainMenuManifestOfCurrentVersion:</string>
+							<string>mainMenuMarkResolvedSelectedFiles:</string>
+							<string>mainMenuMergeWith:</string>
+							<string>mainMenuNoAction:</string>
+							<string>mainMenuOutgoingToRepository:</string>
+							<string>mainMenuPullFromRepository:</string>
+							<string>mainMenuPushToRepository:</string>
+							<string>mainMenuRemergeSelectedFiles:</string>
+							<string>mainMenuRollbackCommit:</string>
+							<string>mainMenuUpdateRepository:</string>
+							<string>mainMenuUpdateRepositoryToVersion:</string>
+							<string>refreshBrowserContent:</string>
+							<string>searchFieldChanged:</string>
+							<string>sidebarMenuAddLocalRepositoryRef:</string>
+							<string>sidebarMenuAddNewSidebarGroupItem:</string>
+							<string>sidebarMenuAddServerRepositoryRef:</string>
+							<string>sidebarMenuConfigureLocalRepositoryRef:</string>
+							<string>sidebarMenuConfigureServerRepositoryRef:</string>
+							<string>sidebarMenuOpenTerminalHere:</string>
+							<string>sidebarMenuRemoveSidebarItem:</string>
+							<string>sidebarMenuRevealRepositoryInFinder:</string>
+							<string>testBrowserLoad:</string>
+							<string>toolbarOpenTerminalHere:</string>
+							<string>toolbarUpdate:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -3421,6 +3634,14 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">AppKit.framework/Headers/NSBox.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSBrowser</string>
+					<string key="superclassName">NSControl</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">AppKit.framework/Headers/NSBrowser.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -4090,6 +4311,18 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">BWToolkitFramework.framework/Headers/NSView+BWAdditions.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSViewController</string>
+					<string key="superclassName">NSResponder</string>
+					<object class="NSMutableDictionary" key="outlets">
+						<string key="NS.key.0">view</string>
+						<string key="NS.object.0">NSView</string>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">AppKit.framework/Headers/NSViewController.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">

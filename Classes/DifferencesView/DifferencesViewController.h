@@ -110,10 +110,11 @@
 - (void)		compareLow:(NSString*)low toHigh:(NSString*)high;
 
 
-// Overridden Menu Actions
-- (IBAction)	differencesMenuOpenSelectedFilesInFinder:(id)sender;
-- (IBAction)	differencesMenuRevealSelectedFilesInFinder:(id)sender;
-- (IBAction)	differencesMenuOpenTerminalHere:(id)sender;
+// Contextual Menu Actions
+- (IBAction)	mainMenuOpenSelectedFilesInFinder:(id)sender;
+- (IBAction)	mainMenuRevealSelectedFilesInFinder:(id)sender;
+- (IBAction)	mainMenuOpenTerminalHere:(id)sender;
+
 - (IBAction)	differencesMenuAnnotateSelectedFiles:(id)sender;
 - (IBAction)	differencesMenuNoAction:(id)sender;
 

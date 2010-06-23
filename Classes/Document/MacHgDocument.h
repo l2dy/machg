@@ -247,12 +247,6 @@
 - (IBAction)	mainMenuExportPatches:(id)sender;
 
 
-// Contextual Menu Actions
-- (IBAction)	browserMenuOpenSelectedFilesInFinder:(id)sender;
-- (IBAction)	browserMenuRevealSelectedFilesInFinder:(id)sender;
-- (IBAction)	browserMenuOpenTerminalHere:(id)sender;
-
-
 // All Files Menu Actions
 - (IBAction)	mainMenuUpdateRepository:(id)sender;
 - (IBAction)	mainMenuUpdateRepositoryToVersion:(id)sender;

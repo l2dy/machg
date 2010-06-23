@@ -271,12 +271,13 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK: Override Menu Item Actions
+// MARK:  Contextual Menu actions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (IBAction) differencesMenuOpenSelectedFilesInFinder:(id)sender	{ [theBrowser browserMenuOpenSelectedFilesInFinder:sender]; }
-- (IBAction) differencesMenuRevealSelectedFilesInFinder:(id)sender	{ [theBrowser browserMenuRevealSelectedFilesInFinder:sender]; }
-- (IBAction) differencesMenuOpenTerminalHere:(id)sender				{ [theBrowser browserMenuOpenTerminalHere:sender]; }
+- (IBAction) mainMenuOpenSelectedFilesInFinder:(id)sender		{ [theBrowser browserMenuOpenSelectedFilesInFinder:sender]; }
+- (IBAction) mainMenuRevealSelectedFilesInFinder:(id)sender		{ [theBrowser browserMenuRevealSelectedFilesInFinder:sender]; }
+- (IBAction) mainMenuOpenTerminalHere:(id)sender				{ [theBrowser browserMenuOpenTerminalHere:sender]; }
+
 
 - (IBAction) mainMenuDiffSelectedFiles:(id)sender
 {
@@ -334,15 +335,15 @@
 {
 	SEL theAction = [anItem action];
 
-	if (theAction == @selector(mainMenuDiffSelectedFiles:))						return [myDocument repositoryIsSelectedAndReady] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusModified];
-	if (theAction == @selector(mainMenuDiffAllFiles:))							return [myDocument repositoryIsSelectedAndReady] && [self repositoryHasFilesWhichContainStatus:eHGStatusModified];
-	if (theAction == @selector(toolbarDiffFiles:))								return [myDocument repositoryIsSelectedAndReady] && [self toolbarActionAppliesToFilesWith:eHGStatusModified];
+	if (theAction == @selector(mainMenuDiffSelectedFiles:))				return [myDocument repositoryIsSelectedAndReady] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusModified];
+	if (theAction == @selector(mainMenuDiffAllFiles:))					return [myDocument repositoryIsSelectedAndReady] && [self repositoryHasFilesWhichContainStatus:eHGStatusModified];
+	if (theAction == @selector(toolbarDiffFiles:))						return [myDocument repositoryIsSelectedAndReady] && [self toolbarActionAppliesToFilesWith:eHGStatusModified];
 	
-	if (theAction == @selector(differencesMenuOpenSelectedFilesInFinder:))		return [myDocument repositoryIsSelectedAndReady] && [self nodesAreChosenInBrowser];
-	if (theAction == @selector(differencesMenuRevealSelectedFilesInFinder:))	return [myDocument repositoryIsSelectedAndReady];
-	if (theAction == @selector(differencesMenuOpenTerminalHere:))				return [myDocument repositoryIsSelectedAndReady];
-	if (theAction == @selector(mainMenuDiffSelectedFiles:))						return [myDocument repositoryIsSelectedAndReady] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusModified];
-	if (theAction == @selector(mainMenuDiffAllFiles:))							return [myDocument repositoryIsSelectedAndReady] && [self repositoryHasFilesWhichContainStatus:eHGStatusModified];
+	if (theAction == @selector(mainMenuOpenSelectedFilesInFinder:))		return [myDocument repositoryIsSelectedAndReady] && [self nodesAreChosenInBrowser];
+	if (theAction == @selector(mainMenuRevealSelectedFilesInFinder:))	return [myDocument repositoryIsSelectedAndReady];
+	if (theAction == @selector(mainMenuOpenTerminalHere:))				return [myDocument repositoryIsSelectedAndReady];
+	if (theAction == @selector(mainMenuDiffSelectedFiles:))				return [myDocument repositoryIsSelectedAndReady] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusModified];
+	if (theAction == @selector(mainMenuDiffAllFiles:))					return [myDocument repositoryIsSelectedAndReady] && [self repositoryHasFilesWhichContainStatus:eHGStatusModified];
 	
 	return [myDocument validateUserInterfaceItem:anItem];
 }

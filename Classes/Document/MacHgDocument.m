@@ -1376,19 +1376,6 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK: Menu Actions
-// -----------------------------------------------------------------------------------------------------------------------------------------
-
-- (IBAction) browserMenuOpenSelectedFilesInFinder:(id)sender	{ [[self theBrowser] browserMenuOpenSelectedFilesInFinder:sender]; }
-- (IBAction) browserMenuRevealSelectedFilesInFinder:(id)sender	{ [[self theBrowser] browserMenuRevealSelectedFilesInFinder:sender]; }
-- (IBAction) browserMenuOpenTerminalHere:(id)sender				{ [[self theBrowser] browserMenuOpenTerminalHere:sender]; }
-
-
-
-
-
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
 // MARK: Selected Files Menu Actions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -1509,15 +1496,7 @@
 - (IBAction) sidebarMenuRemoveSidebarItem:(id)sender			{ return [sidebar_ sidebarMenuRemoveSidebarItem:sender]; }
 - (IBAction) sidebarMenuRevealRepositoryInFinder:(id)sender		{ return [sidebar_ sidebarMenuRevealRepositoryInFinder:sender]; }
 - (IBAction) sidebarMenuOpenTerminalHere:(id)sender				{ return [sidebar_ sidebarMenuOpenTerminalHere:sender]; }
-- (IBAction) mainMenuOpenTerminalHere:(id)sender
-{
-	if ([self showingBrowserView] && [self nodesAreChosenInBrowser])
-		[self browserMenuOpenTerminalHere:sender];
-	else if ([self showingDifferencesView])
-		[[self theDifferencesView] differencesMenuOpenTerminalHere:sender];
-	else
-		[self sidebarMenuOpenTerminalHere:sender];
-}
+- (IBAction) mainMenuOpenTerminalHere:(id)sender				{ return [sidebar_ sidebarMenuOpenTerminalHere:sender]; }
 - (IBAction) mainMenuAddAndCloneServerRepositoryRef:(id)sender	{ [[self theServerRepositoryRefSheetController] openSheetForAddAndClone]; }
 
 
