@@ -93,7 +93,7 @@
 
 - (void) unload									{ }
 
-- (IBAction) openBrowserView:(id)sender			{ [[myDocument mainWindow] makeFirstResponder:self]; }
+- (IBAction) openBrowserView:(id)sender	{ [[myDocument mainWindow] makeFirstResponder:self]; }
 
 
 
@@ -298,7 +298,7 @@
 	if (theAction == @selector(toolbarCommitFiles:))					return [myDocument repositoryIsSelectedAndReady] && ([[myDocument repositoryData] inMergeState] || [self toolbarActionAppliesToFilesWith:eHGStatusCommittable]);
 	
 	if (theAction == @selector(mainMenuDiffSelectedFiles:))				return [myDocument repositoryIsSelectedAndReady] && [theBrowser statusOfChosenPathsInBrowserContain:eHGStatusModified];
-	if (theAction == @selector(mainMenuDiffAllFiles:))					return [myDocument repositoryIsSelectedAndReady] && [theBrowser statusOfChosenPathsInBrowserContain:eHGStatusModified];
+	if (theAction == @selector(mainMenuDiffAllFiles:))					return [myDocument repositoryIsSelectedAndReady] && [theBrowser repositoryHasFilesWhichContainStatus:eHGStatusModified];
 	if (theAction == @selector(toolbarDiffFiles:))						return [myDocument repositoryIsSelectedAndReady] && [self toolbarActionAppliesToFilesWith:eHGStatusModified];
 
 	if (theAction == @selector(mainMenuAddRenameRemoveSelectedFiles:))	return [myDocument repositoryIsSelectedAndReady] && [theBrowser statusOfChosenPathsInBrowserContain:eHGStatusAddableOrRemovable];
