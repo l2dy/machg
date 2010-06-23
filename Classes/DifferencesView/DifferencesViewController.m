@@ -213,7 +213,7 @@
 	else if (highRow != NSNotFound)
 		[compareLogTableView scrollToRevision:highRev];
 	
-	[[myDocument mainWindow] makeFirstResponder:theBrowser];
+	[[myDocument mainWindow] makeFirstResponder:self];
 	[self setButtonStatesToTheirPreferenceValues];
 }
 
