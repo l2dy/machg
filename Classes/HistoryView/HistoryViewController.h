@@ -72,6 +72,7 @@
 
 // Initializations
 - (void)	 unload;
+- (IBAction) openHistoryView:(id)sender;
 
 
 // Notifications & Updating

@@ -57,6 +57,8 @@
 @property (readonly,assign)  FSBrowser*		theBrowser;
 
 - (void)	 unload;
+- (IBAction) openBrowserView:(id)sender;
+
 
 - (IBAction) refreshBrowserContent:(id)sender;
 - (NSArray*) statusLinesForPaths:(NSArray*)absolutePaths withRootPath:(NSString*)rootPath;

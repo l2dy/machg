@@ -93,6 +93,8 @@
 
 - (void) unload									{ }
 
+- (IBAction) openBrowserView:(id)sender			{ [[myDocument mainWindow] makeFirstResponder:self]; }
+
 
 
 

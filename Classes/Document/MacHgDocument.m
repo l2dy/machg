@@ -685,12 +685,13 @@
 	if (!ended)
 		{ PlayBeep(); return; }
 	
-	// Specific handling for some panes
+	// Specific opening handling for some panes
 	switch (newPaneNum)
 	{
+		case eBrowserView:			[[self theBrowserView] openBrowserView:self];				break;
+		case eHistoryView:			[[self theHistoryView] openHistoryView:self];				break;
 		case eDifferencesView:		[[self theDifferencesView] openDifferencesView:self];		break;
-		case eHistoryView:			[[self theHistoryView] refreshHistoryView:self];			break;
-	}
+	}	
 	
 	NSString* searchTerm    = theHistoryViewController_ ? [[[self theHistoryView] logTableView] theSearchFilter] : @"";
 	NSString* searchCaption = theHistoryViewController_ ? [[self theHistoryView] searchCaption] : @"Search";
@@ -720,7 +721,7 @@
 		case eDifferencesView:	[NSTimer scheduledTimerWithTimeInterval:[[NSAnimationContext currentContext] duration] target:[self theDifferencesView]	selector:@selector(scrollToSelected) userInfo:nil repeats:NO]; break;
 		case eHistoryView:		[NSTimer scheduledTimerWithTimeInterval:[[NSAnimationContext currentContext] duration] target:[self theHistoryView]		selector:@selector(scrollToSelected) userInfo:nil repeats:NO]; break;
 	}
-		
+
 	[NSAnimationContext endGrouping];
 	[self recordWindowFrameToDefaults];
 }

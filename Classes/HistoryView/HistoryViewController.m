@@ -114,6 +114,11 @@
 	logTableView = nil;
 }
 
+- (IBAction) openHistoryView:(id)sender
+{
+	[self refreshHistoryView:sender];
+	[[myDocument mainWindow] makeFirstResponder:logTableView];
+}
 
 
 
