@@ -277,19 +277,17 @@
 - (IBAction) differencesMenuOpenSelectedFilesInFinder:(id)sender	{ [theBrowser browserMenuOpenSelectedFilesInFinder:sender]; }
 - (IBAction) differencesMenuRevealSelectedFilesInFinder:(id)sender	{ [theBrowser browserMenuRevealSelectedFilesInFinder:sender]; }
 - (IBAction) differencesMenuOpenTerminalHere:(id)sender				{ [theBrowser browserMenuOpenTerminalHere:sender]; }
-- (IBAction) differencesMenuDiffSelectedFiles:(id)sender
+
+- (IBAction) mainMenuDiffSelectedFiles:(id)sender
 {
 	NSArray* selectedPaths = [theBrowser absolutePathsOfBrowserChosenFiles];
 	[myDocument viewDifferencesInCurrentRevisionFor:selectedPaths toRevision:[self revisionNumbers]];
 }
-- (IBAction) differencesMenuDiffAllFiles:(id)sender
+- (IBAction) mainMenuDiffAllFiles:(id)sender
 {
 	NSArray* rootPathAsArray = [myDocument absolutePathOfRepositoryRootAsArray];
 	[myDocument viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:[self revisionNumbers]];
 }
-
-- (IBAction) mainMenuDiffSelectedFiles:(id)sender	{ [self differencesMenuDiffSelectedFiles:sender]; }
-- (IBAction) mainMenuDiffAllFiles:(id)sender		{ [self differencesMenuDiffAllFiles:sender]; }
 - (IBAction) toolbarDiffFiles:(id)sender
 {
 	if ([theBrowser nodesAreChosen])
@@ -343,10 +341,8 @@
 	if (theAction == @selector(differencesMenuOpenSelectedFilesInFinder:))		return [myDocument repositoryIsSelectedAndReady] && [self nodesAreChosenInBrowser];
 	if (theAction == @selector(differencesMenuRevealSelectedFilesInFinder:))	return [myDocument repositoryIsSelectedAndReady];
 	if (theAction == @selector(differencesMenuOpenTerminalHere:))				return [myDocument repositoryIsSelectedAndReady];
-	if (theAction == @selector(differencesMenuDiffSelectedFiles:))				return [myDocument repositoryIsSelectedAndReady] && [myDocument showingDifferencesView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusModified];
-	if (theAction == @selector(differencesMenuDiffAllFiles:))					return [myDocument repositoryIsSelectedAndReady] && [myDocument showingDifferencesView] && [self repositoryHasFilesWhichContainStatus:eHGStatusModified];
-	if (theAction == @selector(mainMenuDiffSelectedFiles:))
-		return YES;
+	if (theAction == @selector(mainMenuDiffSelectedFiles:))						return [myDocument repositoryIsSelectedAndReady] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusModified];
+	if (theAction == @selector(mainMenuDiffAllFiles:))							return [myDocument repositoryIsSelectedAndReady] && [self repositoryHasFilesWhichContainStatus:eHGStatusModified];
 	
 	return [myDocument validateUserInterfaceItem:anItem];
 }
@@ -366,7 +362,7 @@
 	{
 		case eBrowserClickActionOpen:				return @selector(differencesMenuOpenSelectedFilesInFinder:);
 		case eBrowserClickActionRevealInFinder:		return @selector(differencesMenuRevealSelectedFilesInFinder:);
-		case eBrowserClickActionDiff:				return @selector(differencesMenuDiffSelectedFiles:);
+		case eBrowserClickActionDiff:				return @selector(mainMenuDiffSelectedFiles:);
 		case eBrowserClickActionAnnotate:			return @selector(differencesMenuAnnotateSelectedFiles:);
 		case eBrowserClickActionOpenTerminalHere:	return @selector(differencesMenuOpenTerminalHere:);
 		default:									return @selector(differencesMenuNoAction:);

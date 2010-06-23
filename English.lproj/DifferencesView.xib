@@ -2344,14 +2344,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
-						<string key="label">differencesMenuDiffSelectedFiles:</string>
-						<reference key="source" ref="1003"/>
-						<reference key="destination" ref="303258090"/>
-					</object>
-					<int key="connectionID">600</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
 						<string key="label">mainMenuDiffAllFiles:</string>
 						<reference key="source" ref="1003"/>
 						<reference key="destination" ref="922347648"/>
@@ -2381,6 +2373,14 @@
 						<reference key="destination" ref="192635466"/>
 					</object>
 					<int key="connectionID">605</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">mainMenuDiffSelectedFiles:</string>
+						<reference key="source" ref="1003"/>
+						<reference key="destination" ref="303258090"/>
+					</object>
+					<int key="connectionID">606</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -3591,7 +3591,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">605</int>
+			<int key="maxID">606</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3691,8 +3691,6 @@
 							<string>browserDoubleClick:</string>
 							<string>browserSingleClick:</string>
 							<string>differencesMenuAnnotateSelectedFiles:</string>
-							<string>differencesMenuDiffAllFiles:</string>
-							<string>differencesMenuDiffSelectedFiles:</string>
 							<string>differencesMenuNoAction:</string>
 							<string>differencesMenuOpenSelectedFilesInFinder:</string>
 							<string>differencesMenuOpenTerminalHere:</string>
@@ -3707,8 +3705,6 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>

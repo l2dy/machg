@@ -114,8 +114,6 @@
 - (IBAction)	differencesMenuOpenSelectedFilesInFinder:(id)sender;
 - (IBAction)	differencesMenuRevealSelectedFilesInFinder:(id)sender;
 - (IBAction)	differencesMenuOpenTerminalHere:(id)sender;
-- (IBAction)	differencesMenuDiffSelectedFiles:(id)sender;
-- (IBAction)	differencesMenuDiffAllFiles:(id)sender;
 - (IBAction)	differencesMenuAnnotateSelectedFiles:(id)sender;
 - (IBAction)	differencesMenuNoAction:(id)sender;
 
