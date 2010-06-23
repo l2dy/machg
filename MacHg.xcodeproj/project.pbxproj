@@ -105,6 +105,11 @@
 		963DBE1210C7D54800189853 /* Sidebar.m in Sources */ = {isa = PBXBuildFile; fileRef = 963DBE0B10C7D54800189853 /* Sidebar.m */; };
 		963DBE1310C7D54800189853 /* SidebarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 963DBE0D10C7D54800189853 /* SidebarCell.m */; };
 		963DBE1410C7D54800189853 /* SidebarNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 963DBE0F10C7D54800189853 /* SidebarNode.m */; };
+		9654F5E811D237F200826FD6 /* AddRemove.png in Resources */ = {isa = PBXBuildFile; fileRef = 9654F5E311D237F200826FD6 /* AddRemove.png */; };
+		9654F5E911D237F200826FD6 /* Commit.png in Resources */ = {isa = PBXBuildFile; fileRef = 9654F5E411D237F200826FD6 /* Commit.png */; };
+		9654F5EA11D237F200826FD6 /* Diff.png in Resources */ = {isa = PBXBuildFile; fileRef = 9654F5E511D237F200826FD6 /* Diff.png */; };
+		9654F5EB11D237F200826FD6 /* Revert.png in Resources */ = {isa = PBXBuildFile; fileRef = 9654F5E611D237F200826FD6 /* Revert.png */; };
+		9654F5EC11D237F200826FD6 /* Update.png in Resources */ = {isa = PBXBuildFile; fileRef = 9654F5E711D237F200826FD6 /* Update.png */; };
 		9657059A113B1455009FE4C5 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96570599113B1455009FE4C5 /* WebKit.framework */; };
 		965FA57D116424A40074E4AA /* FinderIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 965FA57C116424A40074E4AA /* FinderIcon.png */; };
 		966E8E1811CB732E0052FF42 /* identity.png in Resources */ = {isa = PBXBuildFile; fileRef = 966E8E1711CB732E0052FF42 /* identity.png */; };
@@ -348,6 +353,11 @@
 		963DBE0E10C7D54800189853 /* SidebarNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SidebarNode.h; path = Classes/Sidebar/SidebarNode.h; sourceTree = SOURCE_ROOT; };
 		963DBE0F10C7D54800189853 /* SidebarNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SidebarNode.m; path = Classes/Sidebar/SidebarNode.m; sourceTree = SOURCE_ROOT; };
 		963DBE3810C7D6CA00189853 /* Sidebar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sidebar.h; sourceTree = "<group>"; };
+		9654F5E311D237F200826FD6 /* AddRemove.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AddRemove.png; sourceTree = "<group>"; };
+		9654F5E411D237F200826FD6 /* Commit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Commit.png; sourceTree = "<group>"; };
+		9654F5E511D237F200826FD6 /* Diff.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Diff.png; sourceTree = "<group>"; };
+		9654F5E611D237F200826FD6 /* Revert.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Revert.png; sourceTree = "<group>"; };
+		9654F5E711D237F200826FD6 /* Update.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Update.png; sourceTree = "<group>"; };
 		96570599113B1455009FE4C5 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
 		965FA57C116424A40074E4AA /* FinderIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FinderIcon.png; sourceTree = "<group>"; };
 		966E8E1711CB732E0052FF42 /* identity.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = identity.png; sourceTree = "<group>"; };
@@ -638,6 +648,11 @@
 				9609EF4511391D3C0077E178 /* tb-DiffInspectorPane.png */,
 				9609EF4611391D3C0077E178 /* tb-LogListPane.png */,
 				969BDCC0119659FC007AA6D9 /* tb-terminal.png */,
+				9654F5E311D237F200826FD6 /* AddRemove.png */,
+				9654F5E411D237F200826FD6 /* Commit.png */,
+				9654F5E511D237F200826FD6 /* Diff.png */,
+				9654F5E611D237F200826FD6 /* Revert.png */,
+				9654F5E711D237F200826FD6 /* Update.png */,
 				9600C2C310CD3D9F00CD8D28 /* toolbar_resolved.png */,
 			);
 			name = ToolbarItems;
@@ -1495,6 +1510,11 @@
 				966E8E1811CB732E0052FF42 /* identity.png in Resources */,
 				966E8E7211CB866E0052FF42 /* HistoryView.xib in Resources */,
 				966E8E7511CB868F0052FF42 /* BackingView.xib in Resources */,
+				9654F5E811D237F200826FD6 /* AddRemove.png in Resources */,
+				9654F5E911D237F200826FD6 /* Commit.png in Resources */,
+				9654F5EA11D237F200826FD6 /* Diff.png in Resources */,
+				9654F5EB11D237F200826FD6 /* Revert.png in Resources */,
+				9654F5EC11D237F200826FD6 /* Update.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

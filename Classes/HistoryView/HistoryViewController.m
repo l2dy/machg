@@ -143,13 +143,25 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
+// MARK:  General Menu Items
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (IBAction) mainMenuRevertAllFiles:(id)sender			{ [myDocument primaryActionRevertFiles:[myDocument absolutePathOfRepositoryRootAsArray] toVersion:nil]; }
+- (IBAction) toolbarRevertFiles:(id)sender				{ [self mainMenuRevertAllFiles:sender]; }
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
 // MARK: History Altering Actions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (IBAction) mainMenuCollapseChangesets:(id)sender				{ [[myDocument theCollapseSheetController]		openCollapseSheetWithSelectedRevisions:sender]; }
-- (IBAction) mainMenuHistoryEditChangesets:(id)sender			{ [[myDocument theHistoryEditSheetController]	openHistoryEditSheetWithSelectedRevisions:sender]; }
-- (IBAction) mainMenuStripChangesets:(id)sender					{ [[myDocument theStripSheetController]			openStripSheetWithSelectedRevisions:sender]; }
-- (IBAction) mainMenuRebaseChangesets:(id)sender				{ [[myDocument theRebaseSheetController]		openRebaseSheetWithSelectedRevisions:sender]; }
+- (IBAction) mainMenuCollapseChangesets:(id)sender		{ [[myDocument theCollapseSheetController]		openCollapseSheetWithSelectedRevisions:sender]; }
+- (IBAction) mainMenuHistoryEditChangesets:(id)sender	{ [[myDocument theHistoryEditSheetController]	openHistoryEditSheetWithSelectedRevisions:sender]; }
+- (IBAction) mainMenuStripChangesets:(id)sender			{ [[myDocument theStripSheetController]			openStripSheetWithSelectedRevisions:sender]; }
+- (IBAction) mainMenuRebaseChangesets:(id)sender		{ [[myDocument theRebaseSheetController]		openRebaseSheetWithSelectedRevisions:sender]; }
 
 
 
@@ -173,12 +185,6 @@
 	[myDocument viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:theSelectedRevision];
 }
 
-- (IBAction) historyMenuRevertAllToChosenRevision:(id)sender
-{
-	NSArray* rootPathAsArray = [NSArray arrayWithObject:[myDocument absolutePathOfRepositoryRoot]];
-	NSString* theSelectedRevision = [[logTableView chosenEntry] revision];
-	[myDocument primaryActionRevertFiles:rootPathAsArray toVersion:theSelectedRevision];
-}
 
 - (IBAction) historyMenuUpdateRepositoryToChosenRevision:(id)sender
 {
@@ -213,6 +219,7 @@
 	NSTimeInterval t = [[NSAnimationContext currentContext] duration];
 	[[myDocument theDifferencesView] performSelector:@selector(compareLowHighValue:) withObject:pairAsValue afterDelay:t];	
 }
+
 
 
 
@@ -399,7 +406,6 @@
 	// HistoryView contextual items
 	if (theAction == @selector(historyMenuAddLabelToChosenRevision:))			return [myDocument repositoryIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
 	if (theAction == @selector(historyMenuDiffAllToChosenRevision:))			return [myDocument repositoryIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
-	if (theAction == @selector(historyMenuRevertAllToChosenRevision:))			return [myDocument repositoryIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
 	if (theAction == @selector(historyMenuUpdateRepositoryToChosenRevision:))	return [myDocument repositoryIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
 	if (theAction == @selector(historyMenuMergeRevision:))						return [myDocument repositoryIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
 	if (theAction == @selector(historyMenuManifestOfChosenRevision:))			return [myDocument repositoryIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];

@@ -85,12 +85,13 @@
 - (IBAction) mainMenuDiffAllFiles:(id)sender;
 - (IBAction) toolbarDiffFiles:(id)sender;
 
+- (IBAction) mainMenuRevertAllFiles:(id)sender;
+- (IBAction) toolbarRevertFiles:(id)sender;
 
 
 // LogTableView Contextual Menu
 - (IBAction) historyMenuAddLabelToChosenRevision:(id)sender;
 - (IBAction) historyMenuDiffAllToChosenRevision:(id)sender;
-- (IBAction) historyMenuRevertAllToChosenRevision:(id)sender;
 - (IBAction) historyMenuUpdateRepositoryToChosenRevision:(id)sender;
 - (IBAction) historyMenuMergeRevision:(id)sender;
 - (IBAction) historyMenuManifestOfChosenRevision:(id)sender;
