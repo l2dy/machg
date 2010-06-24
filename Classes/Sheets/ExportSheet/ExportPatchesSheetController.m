@@ -202,7 +202,8 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 					if (rev != incompleteRev && !reversePatchOption_)
 					{
 						[entry fullyLoadEntry];
-						LogEntry* parent = [[myDocument repositoryData] entryForRevisionString:[entry firstParent]];
+						NSString* firstParentRev = [entry firstParent];
+						LogEntry* parent = [[myDocument repositoryData] entryForRevisionString:firstParentRev];
 						[parent fullyLoadEntry];
 						
 						LogEntry* entry = [[myDocument repositoryData] entryForRevisionString:intAsString(rev)];

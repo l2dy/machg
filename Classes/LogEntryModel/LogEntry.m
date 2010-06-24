@@ -284,7 +284,7 @@ void setupGlobalsForPartsAndTemplate()
 - (NSString*)	firstParent
 {
 	if (IsNotEmpty(parents_))
-		return [[self parentsOfEntry] objectAtIndex:0];	
+		return numberAsString([[self parentsOfEntry] objectAtIndex:0]);
 	return intAsString(MAX(0, stringAsInt(revision_) - 1));	
 }
 
