@@ -111,8 +111,11 @@
 	NSMutableArray* savedColumnScrollPositions;
 	NSPoint			savedHorizontalScrollPosition;
 	NSArray*		savedSelectedPaths;
+	NSResponder*	savedFirstResponder;
 	FSBrowser*		theBrowser;
 }
+
+@property (nonatomic, assign) NSResponder*		savedFirstResponder;
 @property (readwrite,assign) NSMutableArray*	savedColumnScrollPositions;
 @property (readwrite,assign) NSPoint			savedHorizontalScrollPosition;
 @property (readwrite,assign) NSArray*			savedSelectedPaths;
