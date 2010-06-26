@@ -1264,6 +1264,40 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
+// MARK:  Undo / Redo
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (void) pushRepositoryCopyForUndo()
+{
+	NSString* root    = [self absolutePathOfRepositoryRoot];
+	NSString* undoDir = fstr(@"%@/.hg/macHgUndo");
+	
+	NSFileManager* localFileManager =[[NSFileManager alloc] init];
+	NSDirectoryEnumerator* dirEnum = [localFileManager enumeratorAtPath:root];
+	
+	NSString* file;
+	while (file = [dirEnum nextObject])
+	{
+		if (pathContainedIn(undoDir, file))
+		{
+			[dirEnum skipDescendants];
+			continue;
+		}
+		if ([[file pathExtension] isEqualToString: @"doc"])
+		{
+			// process the document
+			[self scanDocument: [docsDir stringByAppendingPathComponent:file]];
+		}
+	}
+	[localFileManager release];
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
 // MARK: Notifications
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
