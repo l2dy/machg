@@ -1122,13 +1122,16 @@
 {
 	NSMutableArray* filteredPaths = [[NSMutableArray alloc]init];
 	NSString* rootDotHGDirPath = [[self absolutePathOfRepositoryRoot] stringByAppendingPathComponent:@".hg"];
-	NSString* rootDotHGFSChecksDirPath = fstr(@"%@/fschecks", rootDotHGDirPath);
+	NSString* rootDotHGFSChecksDirPath  = fstr(@"%@/fschecks",  rootDotHGDirPath);
+	NSString* rootDotHGMacHgUndoDirPath = fstr(@"%@/macHgUndo", rootDotHGDirPath);
 	BOOL postNotification = NO;
 	for (NSString* path in eventPaths)
 		if (pathContainedIn(rootDotHGDirPath, path))
 		{
 			if (pathContainedIn(rootDotHGFSChecksDirPath, path))
 				continue;	// If the path is further contained in just the fschecks dir then we ignore it since Mercurial uses this internally.
+			if (pathContainedIn(rootDotHGMacHgUndoDirPath, path))
+				continue;	// If the path is further contained in the undo directory then we also ignore it since we are doing a backup for undo.
 			postNotification = YES;
 		}
 		else
@@ -1267,49 +1270,43 @@
 // MARK:  Undo / Redo
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BOOL)fileManager:(NSFileManager *)fileManager shouldLinkItemAtPath:(NSString *)srcPath toPath:(NSString *)dstPath
-{
-	return YES;
-}
-
 - (void) pushRepositoryCopyForUndo
 {
-	NSString* root    = [self absolutePathOfRepositoryRoot];
-	NSString* undoDir = fstr(@"%@/.hg/macHgUndo", root);
-	NSString* copyDir = fstr(@"%@/copy", undoDir);
-	
-	NSFileManager* localFileManager =[[NSFileManager alloc] init];
-	[localFileManager setDelegate:self];
-	NSDirectoryEnumerator* dirEnum = [localFileManager enumeratorAtPath:root];
-	
-	NSString* path;
-	NSError* err;
-	BOOL sourceIsDir = NO;
-	while (path = [dirEnum nextObject])
-	{
-		DebugLog(@"%@", path);
-		NSString* srcPath = [root stringByAppendingPathComponent:path];
-		NSString* dstPath = [copyDir stringByAppendingPathComponent:path];
-
-		[localFileManager fileExistsAtPath:srcPath isDirectory:&sourceIsDir];
-		if ([localFileManager fileExistsAtPath:dstPath isDirectory:nil])
-			continue;
+	[self delayEventsUntilFinishBlock:^{
+		NSString* root    = [self absolutePathOfRepositoryRoot];
+		NSString* undoDir = fstr(@"%@/.hg/macHgUndo", root);
+		NSString* copyDir = fstr(@"%@/copy", undoDir);
 		
-		if (sourceIsDir)
+		NSFileManager* localFileManager =[[NSFileManager alloc] init];
+		[localFileManager setDelegate:self];
+		NSDirectoryEnumerator* dirEnum = [localFileManager enumeratorAtPath:root];
+		
+		NSString* path;
+		NSError* err;
+		BOOL sourceIsDir = NO;
+		while ( (path = [dirEnum nextObject]) )
 		{
-			[localFileManager createDirectoryAtPath:dstPath withIntermediateDirectories:YES attributes:nil error:err];
-		}
-		else
-		{		
+			NSString* srcPath = [root stringByAppendingPathComponent:path];
+			NSString* dstPath = [copyDir stringByAppendingPathComponent:path];
+			
+			[localFileManager fileExistsAtPath:srcPath isDirectory:&sourceIsDir];
+			if ([localFileManager fileExistsAtPath:dstPath isDirectory:nil])
+				continue;
+			
+			if (sourceIsDir)
+			{
+				[localFileManager createDirectoryAtPath:dstPath withIntermediateDirectories:YES attributes:nil error:&err];
+				continue;
+			}
+			
 			if (pathContainedIn(@".hg/macHgUndo",path))
 			{
 				[dirEnum skipDescendants];
 				continue;
 			}
-			BOOL createdALink = [localFileManager linkItemAtPath:srcPath toPath:dstPath error:&err];
-			int bob = 0;
+			[localFileManager linkItemAtPath:srcPath toPath:dstPath error:&err];
 		}
-	}
+	}];
 }
 
 - (IBAction) doLinkUp:(id)sender
