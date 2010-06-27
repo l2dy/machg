@@ -12,7 +12,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="424"/>
+			<integer value="106"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1668,6 +1668,14 @@
 									<reference key="NSOnImage" ref="385016679"/>
 									<reference key="NSMixedImage" ref="150129030"/>
 								</object>
+								<object class="NSMenuItem" id="441716438">
+									<reference key="NSMenu" ref="555861590"/>
+									<string key="NSTitle">Link</string>
+									<string key="NSKeyEquiv"/>
+									<int key="NSMnemonicLoc">2147483647</int>
+									<reference key="NSOnImage" ref="385016679"/>
+									<reference key="NSMixedImage" ref="150129030"/>
+								</object>
 								<object class="NSMenuItem" id="14126598">
 									<reference key="NSMenu" ref="555861590"/>
 									<string key="NSTitle">Visit Website</string>
@@ -2645,6 +2653,14 @@
 					</object>
 					<int key="connectionID">1059</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">doLinkUp:</string>
+						<reference key="source" ref="569835777"/>
+						<reference key="destination" ref="441716438"/>
+					</object>
+					<int key="connectionID">1061</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -2902,6 +2918,7 @@
 							<reference ref="840567837"/>
 							<reference ref="987456689"/>
 							<reference ref="14126598"/>
+							<reference ref="441716438"/>
 						</object>
 						<reference key="parent" ref="281597450"/>
 					</object>
@@ -3934,6 +3951,11 @@
 						<reference key="object" ref="515836304"/>
 						<reference key="parent" ref="0"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">1060</int>
+						<reference key="object" ref="441716438"/>
+						<reference key="parent" ref="555861590"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -3952,6 +3974,7 @@
 					<string>106.IBEditorWindowLastContentRect</string>
 					<string>106.IBPluginDependency</string>
 					<string>106.ImportedFromIB2</string>
+					<string>1060.IBPluginDependency</string>
 					<string>111.IBPluginDependency</string>
 					<string>111.ImportedFromIB2</string>
 					<string>112.IBPluginDependency</string>
@@ -4230,9 +4253,10 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{592, 534}, {166, 113}}</string>
+					<string>{{592, 514}, {166, 133}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<integer value="1"/>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -4517,7 +4541,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">1059</int>
+			<int key="maxID">1061</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -4583,12 +4607,16 @@
 							<string>mainMenuDiffAllFiles:</string>
 							<string>mainMenuDiffSelectedFiles:</string>
 							<string>mainMenuIgnoreSelectedFiles:</string>
+							<string>mainMenuOpenSelectedFilesInFinder:</string>
+							<string>mainMenuOpenTerminalHere:</string>
 							<string>mainMenuRenameSelectedFile:</string>
+							<string>mainMenuRevealSelectedFilesInFinder:</string>
 							<string>mainMenuRevertAllFiles:</string>
 							<string>mainMenuRevertSelectedFiles:</string>
 							<string>mainMenuRevertSelectedFilesToVersion:</string>
 							<string>mainMenuUnignoreSelectedFiles:</string>
 							<string>mainMenuUntrackSelectedFiles:</string>
+							<string>openBrowserView:</string>
 							<string>refreshBrowserContent:</string>
 							<string>toolbarAddRenameRemoveFiles:</string>
 							<string>toolbarCommitFiles:</string>
@@ -4597,6 +4625,10 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -4661,16 +4693,16 @@
 							<string>browserDoubleClick:</string>
 							<string>browserSingleClick:</string>
 							<string>differencesMenuAnnotateSelectedFiles:</string>
-							<string>differencesMenuDiffAllFiles:</string>
-							<string>differencesMenuDiffSelectedFiles:</string>
 							<string>differencesMenuNoAction:</string>
-							<string>differencesMenuOpenSelectedFilesInFinder:</string>
-							<string>differencesMenuOpenTerminalHere:</string>
-							<string>differencesMenuRevealSelectedFilesInFinder:</string>
+							<string>mainMenuDiffAllFiles:</string>
 							<string>mainMenuDiffSelectedFiles:</string>
+							<string>mainMenuOpenSelectedFilesInFinder:</string>
+							<string>mainMenuOpenTerminalHere:</string>
+							<string>mainMenuRevealSelectedFilesInFinder:</string>
 							<string>openDifferencesView:</string>
 							<string>redisplayBrowser:</string>
 							<string>refreshDifferencesView:</string>
+							<string>toolbarDiffFiles:</string>
 							<string>validateButtons:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -4823,20 +4855,32 @@
 							<string>historyMenuDiffAllToChosenRevision:</string>
 							<string>historyMenuManifestOfChosenRevision:</string>
 							<string>historyMenuMergeRevision:</string>
-							<string>historyMenuRevertAllToChosenRevision:</string>
 							<string>historyMenuUpdateRepositoryToChosenRevision:</string>
 							<string>historyMenuViewRevisionDifferences:</string>
 							<string>labelsMenuMoveChosenLabel:</string>
 							<string>labelsMenuRemoveChosenLabel:</string>
 							<string>labelsMenuUpdateRepositoryToChosenRevision:</string>
 							<string>mainMenuCollapseChangesets:</string>
+							<string>mainMenuCommitAllFiles:</string>
+							<string>mainMenuDiffAllFiles:</string>
 							<string>mainMenuHistoryEditChangesets:</string>
 							<string>mainMenuRebaseChangesets:</string>
+							<string>mainMenuRevertAllFiles:</string>
 							<string>mainMenuStripChangesets:</string>
+							<string>openHistoryView:</string>
 							<string>refreshHistoryView:</string>
+							<string>toolbarCommitFiles:</string>
+							<string>toolbarDiffFiles:</string>
+							<string>toolbarRevertFiles:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -5096,16 +5140,10 @@
 							<string>actionSwitchViewToDifferencesView:</string>
 							<string>actionSwitchViewToHistoryView:</string>
 							<string>actionTestListingItem:</string>
-							<string>browserMenuOpenSelectedFilesInFinder:</string>
-							<string>browserMenuOpenTerminalHere:</string>
-							<string>browserMenuRevealSelectedFilesInFinder:</string>
+							<string>doLinkUp:</string>
 							<string>mainMenuAddAndCloneServerRepositoryRef:</string>
 							<string>mainMenuAddLabelToCurrentRevision:</string>
 							<string>mainMenuCloneRepository:</string>
-							<string>mainMenuCommitAllFiles:</string>
-							<string>mainMenuCommitSelectedFiles:</string>
-							<string>mainMenuDiffAllFiles:</string>
-							<string>mainMenuDiffSelectedFiles:</string>
 							<string>mainMenuExportPatches:</string>
 							<string>mainMenuImportPatches:</string>
 							<string>mainMenuIncomingFromRepository:</string>
@@ -5132,20 +5170,10 @@
 							<string>sidebarMenuRemoveSidebarItem:</string>
 							<string>sidebarMenuRevealRepositoryInFinder:</string>
 							<string>testBrowserLoad:</string>
-							<string>toolbarCommitFiles:</string>
-							<string>toolbarDiffFiles:</string>
 							<string>toolbarUpdate:</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>

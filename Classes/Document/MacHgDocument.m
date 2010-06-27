@@ -1267,29 +1267,54 @@
 // MARK:  Undo / Redo
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) pushRepositoryCopyForUndo()
+- (BOOL)fileManager:(NSFileManager *)fileManager shouldLinkItemAtPath:(NSString *)srcPath toPath:(NSString *)dstPath
+{
+	return YES;
+}
+
+- (void) pushRepositoryCopyForUndo
 {
 	NSString* root    = [self absolutePathOfRepositoryRoot];
-	NSString* undoDir = fstr(@"%@/.hg/macHgUndo");
+	NSString* undoDir = fstr(@"%@/.hg/macHgUndo", root);
+	NSString* copyDir = fstr(@"%@/copy", undoDir);
 	
 	NSFileManager* localFileManager =[[NSFileManager alloc] init];
+	[localFileManager setDelegate:self];
 	NSDirectoryEnumerator* dirEnum = [localFileManager enumeratorAtPath:root];
 	
-	NSString* file;
-	while (file = [dirEnum nextObject])
+	NSString* path;
+	NSError* err;
+	BOOL sourceIsDir = NO;
+	while (path = [dirEnum nextObject])
 	{
-		if (pathContainedIn(undoDir, file))
-		{
-			[dirEnum skipDescendants];
+		DebugLog(@"%@", path);
+		NSString* srcPath = [root stringByAppendingPathComponent:path];
+		NSString* dstPath = [copyDir stringByAppendingPathComponent:path];
+
+		[localFileManager fileExistsAtPath:srcPath isDirectory:&sourceIsDir];
+		if ([localFileManager fileExistsAtPath:dstPath isDirectory:nil])
 			continue;
-		}
-		if ([[file pathExtension] isEqualToString: @"doc"])
+		
+		if (sourceIsDir)
 		{
-			// process the document
-			[self scanDocument: [docsDir stringByAppendingPathComponent:file]];
+			[localFileManager createDirectoryAtPath:dstPath withIntermediateDirectories:YES attributes:nil error:err];
+		}
+		else
+		{		
+			if (pathContainedIn(@".hg/macHgUndo",path))
+			{
+				[dirEnum skipDescendants];
+				continue;
+			}
+			BOOL createdALink = [localFileManager linkItemAtPath:srcPath toPath:dstPath error:&err];
+			int bob = 0;
 		}
 	}
-	[localFileManager release];
+}
+
+- (IBAction) doLinkUp:(id)sender
+{
+	[self pushRepositoryCopyForUndo];
 }
 
 

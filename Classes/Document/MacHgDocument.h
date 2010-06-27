@@ -308,6 +308,7 @@
 
 
 - (IBAction)	actionTestListingItem:(id)sender;
+- (IBAction)	doLinkUp:(id)sender;
 
 
 // Validation
