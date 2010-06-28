@@ -735,7 +735,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 						</object>
 						<object class="NSTextField" id="574401094">
 							<reference key="NSNextResponder" ref="462650440"/>
-							<int key="NSvFlags">268</int>
+							<int key="NSvFlags">269</int>
 							<string key="NSFrame">{{344, 323}, {44, 14}}</string>
 							<reference key="NSSuperview" ref="462650440"/>
 							<bool key="NSEnabled">YES</bool>
