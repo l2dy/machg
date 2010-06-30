@@ -1119,7 +1119,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 {
 	NSString* base;
 	NSString* rest;
-	BOOL matched = [utcDatePlusOffset getCapturesWithRegexAndTrimedComponents:@"(\\d+)\\s*(.*)" firstComponent:&base secondComponent:&rest];
+	BOOL matched = [utcDatePlusOffset getCapturesWithRegexAndTrimedComponents:@"^(\\d+\\.?\\d*)\\s*(\\+|-\\d+)$" firstComponent:&base secondComponent:&rest];
 	if (!matched)
 		return nil;
 	
