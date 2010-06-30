@@ -222,7 +222,7 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 		[myDocument  executeMercurialWithArgs:argsCollapse  fromRoot:rootPath  whileDelayingEvents:YES];
 	}];
 
-	NSString *collapsedRevision = [NSString stringWithFormat:@"%d", pair.lowRevision];
+	NSString* collapsedRevision = intAsString(pair.lowRevision);
 	[[[myDocument theHistoryView] logTableView] selectAndScrollToRevision:collapsedRevision];
 }
 - (IBAction) sheetButtonCancelForCollapseConfirmationSheet:(id)sender
