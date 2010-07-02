@@ -1119,16 +1119,28 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 {
 	NSString* base;
 	NSString* rest;
-	BOOL matched = [utcDatePlusOffset getCapturesWithRegexAndTrimedComponents:@"^(\\d+\\.?\\d*)\\s*(\\+|-\\d+)$" firstComponent:&base secondComponent:&rest];
-	if (!matched)
-		return nil;
+	BOOL matched;
 	
-	double offset = [rest floatValue];
-	double date   = [base floatValue];
-	if (date != NAN && offset != NAN)
-		return [NSDate dateWithTimeIntervalSince1970: date + offset];
-	if (date != NAN)
-		return [NSDate dateWithTimeIntervalSince1970: date];
+	// Try to match a date of the form 'digits.digits +|-digits'
+	matched = [utcDatePlusOffset getCapturesWithRegexAndTrimedComponents:@"^(\\d+\\.?\\d*)\\s*(\\+|-\\d+)$" firstComponent:&base secondComponent:&rest];
+	if (matched)
+	{
+		double offset = [rest floatValue];
+		double date   = [base floatValue];
+		if (date != NAN && offset != NAN)
+			return [NSDate dateWithTimeIntervalSince1970: date + offset];
+		if (date != NAN)
+			return [NSDate dateWithTimeIntervalSince1970: date];
+	}
+	
+	// Try to match a date of the form 'digits.digits'
+	matched = [utcDatePlusOffset getCapturesWithRegexAndTrimedComponents:@"^(\\d+\\.?\\d*)\\s*$" firstComponent:&base];
+	if (matched)
+	{
+		double date   = [base floatValue];
+		if (date != NAN)
+			return [NSDate dateWithTimeIntervalSince1970: date];		
+	}
 	
 	return nil;
 }
