@@ -53,6 +53,7 @@
 															// entries we put the request on this queue. This means when eg drag
 															// selecting when the selection is constantly changing we are not
 															// firing off lots and lots of requests.
+	BOOL					awake_;							// Has this nib been awakened yet?
 }
 
 @property (readwrite,assign) LogGraph*	theLogGraph;
@@ -75,7 +76,7 @@
 
 
 // Query The Table
-- (MacHgDocument*)		myDocument;
+- (MacHgDocument*)	myDocument;
 - (RepositoryData*)	repositoryData;
 - (LogEntry*)	entryForTableRow:(NSInteger)rowNum;
 - (NSString*)	revisionForTableRow:(NSInteger)rowNum;

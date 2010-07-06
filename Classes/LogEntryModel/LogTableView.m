@@ -66,6 +66,7 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 		numberOfTableRows_ = 0;
 		canSelectIncompleteRevision_ = NO;
 		rootPath_ = nil;
+		awake_ = NO;
 	}
     
 	return self;
@@ -95,6 +96,7 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 
 	[self setDataSource:self];
 	[self setDelegate:self];		// This table handles its own delegate methods
+	awake_ = YES;
 	[self resetTable:self];
 }
 
@@ -669,6 +671,8 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 
 - (void) refreshLogGraph
 {
+	if (!awake_)
+		return;
 	if (IsNotEmpty(theSearchFilter_))
 		return;
 	
@@ -695,6 +699,8 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 
 - (IBAction) refreshTable:(id)sender
 {
+	if (!awake_)
+		return;
 	[self refreshLogGraph];
 	[self reloadData];
 }
@@ -702,6 +708,8 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 
 - (IBAction) resetTable:(id)sender
 {
+	if (!awake_)
+		return;
 	@synchronized(self)
 	{
 		RepositoryData* repositoryData = [self repositoryData];
