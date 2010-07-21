@@ -1150,18 +1150,21 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 // MARK: -
 @implementation NSMutableArray ( NSMutableArrayPlusAccessors )
-- (void)	addObject:(id)object1 followedBy:(id)object2
+- (void) addObject:(id)object1 followedBy:(id)object2
 {
 	[self addObject:object1];
 	[self addObject:object2];
 }
 
-- (void)	addObject:(id)object1 followedBy:(id)object2 followedBy:(id)object3
+- (void) addObject:(id)object1 followedBy:(id)object2 followedBy:(id)object3
 {
 	[self addObject:object1];
 	[self addObject:object2];
 	[self addObject:object3];
 }
+
+- (void) addObjectIfNonNil:(id)object1	{ if (object1) [self addObject:object1]; }
+
 
 - (id) popLast
 {

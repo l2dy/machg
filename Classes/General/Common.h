@@ -844,6 +844,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 @interface NSMutableArray ( NSMutableArrayPlusAccessors )
 - (void)	addObject:(id)object1 followedBy:(id)object2;
 - (void)	addObject:(id)object1 followedBy:(id)object2 followedBy:(id)object3;
+- (void)	addObjectIfNonNil:(id)object1;
 - (id)		popLast;
 @end
 
