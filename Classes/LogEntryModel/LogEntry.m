@@ -16,6 +16,7 @@
 #import "TextButtonCell.h"
 #import "DiffTextButtonCell.h"
 #import "LabelTextButtonCell.h"
+#import "ParentTextButtonCell.h"
 #import "FSNodeInfo.h"
 
 
@@ -387,7 +388,17 @@ void setupGlobalsForPartsAndTemplate()
 	if (stringIsNonWhiteSpace(parents_))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Parents:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", parents_))];
+		for(NSString* parent in [parents_ componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]])
+		{
+			if(stringIsNonWhiteSpace(parent))
+			{
+				NSTextAttachment* attachment = [ParentTextButtonCell parentButtonAttachmentWithText:parent andLogEntry:self];
+				[verboseEntry appendAttributedString: normalAttributedString(@" ")];
+				[verboseEntry appendAttributedString: [NSAttributedString attributedStringWithAttachment:attachment]];
+				
+			}
+		}
+		[verboseEntry appendAttributedString: normalAttributedString(@"\n")];
 	}
 
 	if (stringIsNonWhiteSpace(fullAuthor_))

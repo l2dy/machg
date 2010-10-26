@@ -8,6 +8,7 @@
 
 /* Begin PBXBuildFile section */
 		1DDD582C0DA1D0D100B32029 /* MyDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58280DA1D0D100B32029 /* MyDocument.xib */; };
+		44D3658012770D10007D631D /* ParentTextButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 44D3657F12770D10007D631D /* ParentTextButtonCell.m */; };
 		8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165FFE840EACC02AAC07 /* InfoPlist.strings */; };
 		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
 		9600C2C410CD3D9F00CD8D28 /* APPL.icns in Resources */ = {isa = PBXBuildFile; fileRef = 9600C28510CD3D9F00CD8D28 /* APPL.icns */; };
@@ -221,6 +222,8 @@
 		2564AD2C0F5327BB00F57823 /* MacHg_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MacHg_Prefix.pch; sourceTree = "<group>"; };
 		2A37F4C4FDCFA73011CA2CEA /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = /System/Library/Frameworks/AppKit.framework; sourceTree = "<absolute>"; };
 		2A37F4C5FDCFA73011CA2CEA /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = /System/Library/Frameworks/Foundation.framework; sourceTree = "<absolute>"; };
+		44D3657E12770D10007D631D /* ParentTextButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ParentTextButtonCell.h; sourceTree = "<group>"; };
+		44D3657F12770D10007D631D /* ParentTextButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParentTextButtonCell.m; sourceTree = "<group>"; };
 		8D15AC360486D014006FF6A4 /* MacHg-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "MacHg-Info.plist"; sourceTree = "<group>"; };
 		8D15AC370486D014006FF6A4 /* MacHg.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacHg.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		9600C28510CD3D9F00CD8D28 /* APPL.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = APPL.icns; path = ApplicationIcons/APPL.icns; sourceTree = "<group>"; };
@@ -964,6 +967,8 @@
 				96F5A4F911A81B5B00707404 /* DiffTextButtonCell.m */,
 				96F5A70B11A879F100707404 /* LabelTextButtonCell.h */,
 				96F5A70C11A879F100707404 /* LabelTextButtonCell.m */,
+				44D3657E12770D10007D631D /* ParentTextButtonCell.h */,
+				44D3657F12770D10007D631D /* ParentTextButtonCell.m */,
 			);
 			name = LogEntryModel;
 			path = Classes/LogEntryModel;
@@ -1413,7 +1418,14 @@
 			isa = PBXProject;
 			buildConfigurationList = C05733CB08A9546B00998B17 /* Build configuration list for PBXProject "MacHg" */;
 			compatibilityVersion = "Xcode 3.2";
+			developmentRegion = English;
 			hasScannedForEncodings = 1;
+			knownRegions = (
+				English,
+				Japanese,
+				French,
+				German,
+			);
 			mainGroup = 2A37F4AAFDCFA73011CA2CEA /* MacHGR */;
 			projectDirPath = "";
 			projectRoot = "";
@@ -1621,6 +1633,7 @@
 				966E8E6A11CB863C0052FF42 /* DifferencesViewController.m in Sources */,
 				966E8E6B11CB863C0052FF42 /* JointSplitView.m in Sources */,
 				966E8E6F11CB864C0052FF42 /* BackingViewController.m in Sources */,
+				44D3658012770D10007D631D /* ParentTextButtonCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
