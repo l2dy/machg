@@ -25,7 +25,7 @@
 	IBOutlet NSButton*		okButton;
 	
 	// Lower TabView Panes
-	IBOutlet NSTextView*	detailedEntryTextView;
+	IBOutlet LogTableTextView*	detailedEntryTextView;
 	
 	BOOL					textOption_;
 	BOOL					gitOption_;

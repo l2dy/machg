@@ -58,7 +58,7 @@
 
 	// Details SubPane
 	IBOutlet NSView*		detailsView;
-	IBOutlet NSTextView*	detailedEntryTextView;
+	IBOutlet LogTableTextView*	detailedEntryTextView;
 	
 	// Labels SubPane
 	IBOutlet LabelsTableView* theLabelsTableView_;

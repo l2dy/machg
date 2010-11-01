@@ -10,6 +10,8 @@
 #import <Cocoa/Cocoa.h>
 #import "Common.h"
 
+@class LogTableTextView;
+
 @protocol ControllerForLogTableView <NSObject>
 - (MacHgDocument*)	myDocument;
 @optional
@@ -23,7 +25,7 @@
 {
 	IBOutlet id	<ControllerForLogTableView> parentController; // Controlling class should be an object which is controlling a sheet or a
 															// window controller.
-	IBOutlet NSTextView*	detailedEntryTextView;			// This is the field where the details of the log entry are displayed.
+	IBOutlet LogTableTextView*	detailedEntryTextView;			// This is the field where the details of the log entry are displayed.
 
 	RepositoryData*			repositoryData_;				// The current log entry collection which backs this LogTableView.
 	RepositoryData*			oldRepositoryData_;				// The second oldest log entry collection (which we sometimes fall
@@ -129,3 +131,15 @@
 
 - (NSColor*) highlightColorWithFrame:(NSRect)cellFrame inView:(NSView*)controlView;
 @end
+
+
+
+
+@interface LogTableTextView : NSTextView
+
+- (NSArray *)writablePasteboardTypes;
+- (BOOL)writeSelectionToPasteboard:(NSPasteboard *)pboard type:(NSString *)type;
+
+@end
+
+
