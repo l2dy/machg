@@ -2,10 +2,10 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.10">
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
-		<string key="IBDocument.SystemVersion">10C540</string>
-		<string key="IBDocument.InterfaceBuilderVersion">740</string>
-		<string key="IBDocument.AppKitVersion">1038.25</string>
-		<string key="IBDocument.HIToolboxVersion">458.00</string>
+		<string key="IBDocument.SystemVersion">10F569</string>
+		<string key="IBDocument.InterfaceBuilderVersion">804</string>
+		<string key="IBDocument.AppKitVersion">1038.29</string>
+		<string key="IBDocument.HIToolboxVersion">461.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<object class="NSArray" key="dict.sortedKeys">
@@ -15,13 +15,13 @@
 			</object>
 			<object class="NSMutableArray" key="dict.values">
 				<bool key="EncodedWithXMLCoder">YES</bool>
-				<string>740</string>
+				<string>804</string>
 				<string>1.2.2</string>
 			</object>
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="35"/>
+			<integer value="53"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1889,6 +1889,7 @@ dmlzaW9uIG51bWJlcgolaCAgIHNob3J0LWZvcm0gY2hhbmdlc2V0IGhhc2g</string>
 					<string>51.IBPluginDependency</string>
 					<string>52.IBPluginDependency</string>
 					<string>53.IBPluginDependency</string>
+					<string>54.CustomClassName</string>
 					<string>54.IBPluginDependency</string>
 					<string>55.IBPluginDependency</string>
 					<string>56.IBPluginDependency</string>
@@ -2014,6 +2015,7 @@ dmlzaW9uIG51bWJlcgolaCAgIHNob3J0LWZvcm0gY2hhbmdlc2V0IGhhc2g</string>
 					<string>com.brandonwalkin.BWToolkit</string>
 					<string>com.brandonwalkin.BWToolkit</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>LogTableTextView</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2105,6 +2107,40 @@ dmlzaW9uIG51bWJlcgolaCAgIHNob3J0LWZvcm0gY2hhbmdlc2V0IGhhc2g</string>
 							<string>id</string>
 						</object>
 					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>openExportPatchesSheetWithSelectedRevisions:</string>
+							<string>sheetButtonCancel:</string>
+							<string>sheetButtonOk:</string>
+							<string>sheetButtonViewDifferencesForExportPatchesSheet:</string>
+							<string>validate:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<object class="IBActionInfo">
+								<string key="name">openExportPatchesSheetWithSelectedRevisions:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">sheetButtonCancel:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">sheetButtonOk:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">sheetButtonViewDifferencesForExportPatchesSheet:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">validate:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+						</object>
+					</object>
 					<object class="NSMutableDictionary" key="outlets">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
@@ -2119,13 +2155,57 @@ dmlzaW9uIG51bWJlcgolaCAgIHNob3J0LWZvcm0gY2hhbmdlc2V0IGhhc2g</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>NSTextView</string>
+							<string>LogTableTextView</string>
 							<string>NSTextField</string>
 							<string>NSSplitView</string>
 							<string>LogTableView</string>
 							<string>NSButton</string>
 							<string>NSTextField</string>
 							<string>NSWindow</string>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>detailedEntryTextView</string>
+							<string>exportSheetTitle</string>
+							<string>inspectorSplitView</string>
+							<string>logTableView</string>
+							<string>okButton</string>
+							<string>sheetInformativeMessageTextField</string>
+							<string>theExportPatchesSheet</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<object class="IBToOneOutletInfo">
+								<string key="name">detailedEntryTextView</string>
+								<string key="candidateClassName">LogTableTextView</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">exportSheetTitle</string>
+								<string key="candidateClassName">NSTextField</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">inspectorSplitView</string>
+								<string key="candidateClassName">NSSplitView</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">logTableView</string>
+								<string key="candidateClassName">LogTableView</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">okButton</string>
+								<string key="candidateClassName">NSButton</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">sheetInformativeMessageTextField</string>
+								<string key="candidateClassName">NSTextField</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">theExportPatchesSheet</string>
+								<string key="candidateClassName">NSWindow</string>
+							</object>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
@@ -2148,6 +2228,11 @@ dmlzaW9uIG51bWJlcgolaCAgIHNob3J0LWZvcm0gY2hhbmdlc2V0IGhhc2g</string>
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/LogEntryModel/LogTableView.h</string>
 					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">LogTableTextView</string>
+					<string key="superclassName">NSTextView</string>
+					<reference key="sourceIdentifier" ref="1022173783"/>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">LogTableView</string>
@@ -2173,6 +2258,45 @@ dmlzaW9uIG51bWJlcgolaCAgIHNob3J0LWZvcm0gY2hhbmdlc2V0IGhhc2g</string>
 							<string>id</string>
 						</object>
 					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>refreshTable:</string>
+							<string>resetTable:</string>
+							<string>scrollToBeginning:</string>
+							<string>scrollToCurrentRevision:</string>
+							<string>scrollToEnd:</string>
+							<string>scrollToSelected:</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<object class="IBActionInfo">
+								<string key="name">refreshTable:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">resetTable:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">scrollToBeginning:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">scrollToCurrentRevision:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">scrollToEnd:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">scrollToSelected:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+						</object>
+					</object>
 					<object class="NSMutableDictionary" key="outlets">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
@@ -2182,8 +2306,27 @@ dmlzaW9uIG51bWJlcgolaCAgIHNob3J0LWZvcm0gY2hhbmdlc2V0IGhhc2g</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>NSTextView</string>
+							<string>LogTableTextView</string>
 							<string>id</string>
+						</object>
+					</object>
+					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<bool key="EncodedWithXMLCoder">YES</bool>
+						<object class="NSArray" key="dict.sortedKeys">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>detailedEntryTextView</string>
+							<string>parentController</string>
+						</object>
+						<object class="NSMutableArray" key="dict.values">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<object class="IBToOneOutletInfo">
+								<string key="name">detailedEntryTextView</string>
+								<string key="candidateClassName">LogTableTextView</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">parentController</string>
+								<string key="candidateClassName">id</string>
+							</object>
 						</object>
 					</object>
 					<reference key="sourceIdentifier" ref="1022173783"/>
@@ -2210,9 +2353,23 @@ dmlzaW9uIG51bWJlcgolaCAgIHNob3J0LWZvcm0gY2hhbmdlc2V0IGhhc2g</string>
 						<string key="NS.key.0">scrollToLabel:</string>
 						<string key="NS.object.0">id</string>
 					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">scrollToLabel:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">scrollToLabel:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</object>
 					<object class="NSMutableDictionary" key="outlets">
 						<string key="NS.key.0">logTable</string>
 						<string key="NS.object.0">LogTableView</string>
+					</object>
+					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<string key="NS.key.0">logTable</string>
+						<object class="IBToOneOutletInfo" key="NS.object.0">
+							<string key="name">logTable</string>
+							<string key="candidateClassName">LogTableView</string>
+						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
@@ -2236,6 +2393,13 @@ dmlzaW9uIG51bWJlcgolaCAgIHNob3J0LWZvcm0gY2hhbmdlc2V0IGhhc2g</string>
 					<object class="NSMutableDictionary" key="actions">
 						<string key="NS.key.0">toggleCollapse:</string>
 						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">toggleCollapse:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">toggleCollapse:</string>
+							<string key="candidateClassName">id</string>
+						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
@@ -2866,6 +3030,13 @@ dmlzaW9uIG51bWJlcgolaCAgIHNob3J0LWZvcm0gY2hhbmdlc2V0IGhhc2g</string>
 						<string key="NS.key.0">showWindow:</string>
 						<string key="NS.object.0">id</string>
 					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">showWindow:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">showWindow:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">AppKit.framework/Headers/NSWindowController.h</string>
@@ -2874,6 +3045,7 @@ dmlzaW9uIG51bWJlcgolaCAgIHNob3J0LWZvcm0gY2hhbmdlc2V0IGhhc2g</string>
 			</object>
 		</object>
 		<int key="IBDocument.localizationMode">0</int>
+		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaFramework</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencies">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.macosx</string>
 			<integer value="1050" key="NS.object.0"/>
@@ -2889,5 +3061,18 @@ dmlzaW9uIG51bWJlcgolaCAgIHNob3J0LWZvcm0gY2hhbmdlc2V0IGhhc2g</string>
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<string key="IBDocument.LastKnownRelativeProjectPath">../MacHg.xcodeproj</string>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
+		<object class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
+			<bool key="EncodedWithXMLCoder">YES</bool>
+			<object class="NSArray" key="dict.sortedKeys">
+				<bool key="EncodedWithXMLCoder">YES</bool>
+				<string>ActionDrop</string>
+				<string>NSSwitch</string>
+			</object>
+			<object class="NSMutableArray" key="dict.values">
+				<bool key="EncodedWithXMLCoder">YES</bool>
+				<string>{18, 10}</string>
+				<string>{15, 15}</string>
+			</object>
+		</object>
 	</data>
 </archive>
