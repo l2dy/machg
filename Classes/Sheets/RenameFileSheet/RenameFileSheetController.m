@@ -81,11 +81,13 @@
 	}
 	
 	
-	NSString* newName = [[filePath stringByDeletingLastPathComponent] stringByAppendingPathComponent:@"NewName"];
+	NSString* newPath = [filePath stringByDeletingLastPathComponent];
+	NSString* newName = fstr(@"Renamed%@", [filePath lastPathComponent]);
+	NSString* newPathName = [newPath stringByAppendingPathComponent:newName];
 	NSNumber* newButtonState =[NSNumber numberWithBool:bitsInCommon([theNode hgStatus],eHGStatusMissing)];
 
 	[self setTheCurrentNameFieldValue:filePath];
-	[self setTheNewNameFieldValue:newName];
+	[self setTheNewNameFieldValue:newPathName];
 	[self setTheAlreadyMovedButtonValue:newButtonState];
 	[NSApp beginSheet:theRenameFileSheet modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
 }
