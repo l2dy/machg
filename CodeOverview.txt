@@ -344,3 +344,9 @@ diff --git a/LocalMercurial/mercurial/util.py b/LocalMercurial/mercurial/util.py
 // ------------------------------------------------------------------------------------------------------------------------------
 // Handled by RegexKitLite. Why on earth doesn't apple have something like this?!?
 
+
+// Help Generation
+// ------------------------------------------------------------------------------------------------------------------------------
+// The help is generated using the tool /Developer/Applications/Utilities/Help\ Indexer.app. Run it and select the directory
+// MacHg/MacHgHelp and select "Show Details" and the options you should select are "Index Anchor Information in All Pages".
+// Also select "Generate Missing Summaries".
