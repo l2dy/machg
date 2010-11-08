@@ -1587,10 +1587,11 @@
 		
 		for (NSString* file in theSelectedFiles)
 		{
-			NSString* rootRelativeFIle = pathDifference(root, file);
-			NSRange range = [hgignoreContents rangeOfString:rootRelativeFIle];
+			NSString* rootRelativeFile  = pathDifference(root, file);
+			NSString* sanitizedFileName = [rootRelativeFile stringByReplacingOccurrencesOfString:@"#" withString:@"\\#"];
+			NSRange range = [hgignoreContents rangeOfString:sanitizedFileName];
 			if (range.location == NSNotFound)
-				[hgignoreContents appendFormat:@"%@\n",rootRelativeFIle];
+				[hgignoreContents appendFormat:@"%@\n",sanitizedFileName];
 		}
 		[hgignoreContents writeToFile:hgignorePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
 		[self refreshBrowserPaths:pathsToRefresh resumeEventsWhenFinished:NO];
@@ -1616,8 +1617,9 @@
 		{
 			for (NSString* file in theSelectedFiles)
 			{
-				NSString* rootRelativeFIle = pathDifference(root, file);
-				hgignoreContents = [hgignoreContents stringByReplacingOccurrencesOfString:rootRelativeFIle withString:@""];
+				NSString* rootRelativeFile  = pathDifference(root, file);
+				NSString* sanitizedFileName = [rootRelativeFile stringByReplacingOccurrencesOfString:@"#" withString:@"\\#"];
+				hgignoreContents = [hgignoreContents stringByReplacingOccurrencesOfString:sanitizedFileName withString:@""];
 			}
 			
 			hgignoreContents = [hgignoreContents stringByReplacingOccurrencesOfString:@"\n\n" withString:@"\n"];
