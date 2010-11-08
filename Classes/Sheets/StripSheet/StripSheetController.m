@@ -155,9 +155,8 @@
 	NSString* stripDescription = fstr(@"Stripping %d in “%@”", pair.lowRevision, repositoryName);
 	NSMutableArray* argsStrip = [NSMutableArray arrayWithObjects:@"strip", nil];
 	
-	// If we are using MacHgs strip command we need to specify that it is in the extensions folder of the included Mercurial
-	if (UseWhichMercurialBinaryFromDefaults() == eUseMercurialBinaryIncludedInMacHg)
-		[argsStrip addObject:@"--config" followedBy:@"hgext.mq="];
+	[argsStrip addObject:@"--config" followedBy:@"hgext.mq="];		// We are using MacHgs strip so command we need to specify that it is
+																	// in the extensions folder of the included Mercurial
 	[argsStrip addObject:@"--backup"];	
 	NSString* revisionNumber = fstr(@"%d", pair.lowRevision);
 	[argsStrip addObject:revisionNumber];

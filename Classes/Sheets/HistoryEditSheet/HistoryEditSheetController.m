@@ -122,12 +122,10 @@
 	
 	NSMutableArray* argsHistoryEdit = [NSMutableArray arrayWithObjects:@"histedit", nil];
 	
-	// If we are using MacHgs historyEdit command we need to specify that it is in the extensions folder of the included Mercurial
-	if (UseWhichMercurialBinaryFromDefaults() == eUseMercurialBinaryIncludedInMacHg)
-	{
-		NSString* absPathToHistEdit = fstr(@"hgext.histedit=%@/%@",[[NSBundle mainBundle] builtInPlugInsPath], @"LocalMercurial/hgext/histedit");
-		[argsHistoryEdit addObject:@"--config" followedBy:absPathToHistEdit];
-	}
+	// We are using MacHgs historyEdit command so we need to specify that it is in the extensions folder of the included Mercurial
+	NSString* absPathToHistEdit = fstr(@"hgext.histedit=%@/%@",[[NSBundle mainBundle] builtInPlugInsPath], @"LocalMercurial/hgext/histedit");
+	[argsHistoryEdit addObject:@"--config" followedBy:absPathToHistEdit];
+
 	[argsHistoryEdit addObject: (result == NSAlertDefaultReturn ? @"--continue" : @"--abort")];
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	
@@ -224,12 +222,10 @@
 	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
 	NSMutableArray* argsHistoryEdit = [NSMutableArray arrayWithObjects:@"histedit", nil];
 	
-	// If we are using MacHgs historyEdit command we need to specify that it is in the extensions folder of the included Mercurial
-	if (UseWhichMercurialBinaryFromDefaults() == eUseMercurialBinaryIncludedInMacHg)
-	{
-		NSString* absPathToHistEdit = fstr(@"hgext.histedit=%@/%@",[[NSBundle mainBundle] builtInPlugInsPath], @"LocalMercurial/hgext/histedit");
-		[argsHistoryEdit addObject:@"--config" followedBy:absPathToHistEdit];
-	}
+	// We are using MacHgs historyEdit command so we need to specify that it is in the extensions folder of the included Mercurial
+	NSString* absPathToHistEdit = fstr(@"hgext.histedit=%@/%@",[[NSBundle mainBundle] builtInPlugInsPath], @"LocalMercurial/hgext/histedit");
+	[argsHistoryEdit addObject:@"--config" followedBy:absPathToHistEdit];
+
 	[argsHistoryEdit addObject:@"--startingrules"];
 	[argsHistoryEdit addObject:intAsString(pair.lowRevision)];
 		
@@ -256,12 +252,10 @@
 	NSString* historyEditDescription = fstr(@"Editing descendants of %d in “%@”", pair.lowRevision, repositoryName);
 	NSMutableArray* argsHistoryEdit = [NSMutableArray arrayWithObjects:@"histedit", nil];
 	
-	// If we are using MacHgs historyEdit command we need to specify that it is in the extensions folder of the included Mercurial
-	if (UseWhichMercurialBinaryFromDefaults() == eUseMercurialBinaryIncludedInMacHg)
-	{
-		NSString* absPathToHistEdit = fstr(@"hgext.histedit=%@/%@",[[NSBundle mainBundle] builtInPlugInsPath], @"LocalMercurial/hgext/histedit");
-		[argsHistoryEdit addObject:@"--config" followedBy:absPathToHistEdit];
-	}
+	// We are using MacHgs historyEdit command so we need to specify that it is in the extensions folder of the included Mercurial
+	NSString* absPathToHistEdit = fstr(@"hgext.histedit=%@/%@",[[NSBundle mainBundle] builtInPlugInsPath], @"LocalMercurial/hgext/histedit");
+	[argsHistoryEdit addObject:@"--config" followedBy:absPathToHistEdit];
+	
 	[argsHistoryEdit addObject:@"--rules" followedBy:[confirmationSheetMessage string]];
 	[argsHistoryEdit addObject:intAsString(pair.lowRevision)];
 

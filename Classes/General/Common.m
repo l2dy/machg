@@ -102,7 +102,6 @@ NSString* const MHGDisplayWarningForRollbackFiles		= @"DisplayWarningForRollback
 NSString* const MHGDisplayWarningForTagRemoval			= @"DisplayWarningForTagRemoval";
 NSString* const MHGDisplayWarningForUntrackingFiles		= @"DisplayWarningForUntrackingFiles";
 NSString* const MHGDisplayWarningForUpdating			= @"DisplayWarningForUpdating";
-NSString* const MHGExecutableLocationHG					= @"ExecutableLocationHG";
 NSString* const MHGFontSizeOfBrowserItems				= @"FontSizeOfBrowserItems";
 NSString* const MHGHandleGeneratedOrigFiles				= @"HandleGeneratedOrigFiles";
 NSString* const MHGIncludeHomeHgrcInHGRCPATH			= @"IncludeHomeHgrcInHGRCPATH";
@@ -133,7 +132,6 @@ NSString* const MHGSizeOfBrowserColumns					= @"SizeOfBrowserColumns";
 NSString* const MHGToolNameForDiffing					= @"ToolNameForDiffing";
 NSString* const MHGUseFileMergeForDiff					= @"UseFileMergeForDiff";
 NSString* const MHGUseFileMergeForMerge					= @"UseFileMergeForMerge";
-NSString* const MHGUseWhichMercurialBinary				= @"UseWhichMercurialBinary";
 NSString* const MHGUseWhichToolForDiffing				= @"UseWhichToolForDiffing";
 NSString* const MHGViewsHaveIndependentSizes			= @"ViewsHaveIndependentSizes";
 NSString* const MHGWarnAboutBadMercurialConfiguration   = @"WarnAboutBadMercurialConfiguration";
@@ -208,7 +206,6 @@ NSColor*	LogEntryTableBookmarkHighlightColor()					{ return colorFromDefaultsFor
 NSString*	AddRemoveSimilarityFactorFromDefaults()					{ return intAsString((int)(round(100 * floatFromDefaultsForKey(MHGAddRemoveSimilarityFactor)))); }
 NSString*	DefaultHGIgnoreContentsFromDefaults()					{ return stringFromDefaultsForKey(MHGDefaultHGIgnoreContents); }
 NSString*	DefaultWorkspacePathFromDefaults()						{ return [stringFromDefaultsForKey(MHGDefaultWorkspacePath) stringByStandardizingPath]; }
-NSString*	ExecutableLocationHGFromDefaults()						{ return stringFromDefaultsForKey(MHGExecutableLocationHG); }
 NSString*	LocalHGShellAliasNameFromDefaults()						{ return stringFromDefaultsForKey(MHGLocalHGShellAliasName); }
 NSString*	LocalWhitelistedHGShellAliasNameFromDefaults()			{ return stringFromDefaultsForKey(MHGLocalWhitelistedHGShellAliasName); }
 NSString*	MacHgLogFileLocation()									{ return stringFromDefaultsForKey(MHGMacHgLogFileLocation); }
@@ -228,7 +225,6 @@ RevisionSortOrderOption		RevisionSortOrderFromDefaults()			{ return enumFromDefa
 HandleOrigFilesOption		HandleGeneratedOrigFilesFromDefaults()	{ return enumFromDefaultsForKey(MHGHandleGeneratedOrigFiles); }
 OnStartupOpenWhatOption		OnStartupOpenFromDefaults()				{ return enumFromDefaultsForKey(MHGOnStartupOpen); }
 ToolForDiffing				UseWhichToolForDiffingFromDefaults()	{ return enumFromDefaultsForKey(MHGUseWhichToolForDiffing); }
-UseWhichMercurialOption		UseWhichMercurialBinaryFromDefaults()	{ return enumFromDefaultsForKey(MHGUseWhichMercurialBinary); }
 
 
 
@@ -563,12 +559,7 @@ void PlayBeep()
 
 NSString* executableLocationHG()
 {
-	switch (UseWhichMercurialBinaryFromDefaults())
-	{
-		case eUseMercurialBinarySpecifiedByUser:	return ExecutableLocationHGFromDefaults();
-		default :
-		case eUseMercurialBinaryIncludedInMacHg:	return fstr(@"%@/%@",[[NSBundle mainBundle] resourcePath], @"localhg");
-	}
+	return fstr(@"%@/%@",[[NSBundle mainBundle] resourcePath], @"localhg");
 }
 
 

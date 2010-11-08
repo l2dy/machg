@@ -209,9 +209,8 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 	NSString* collapseDescription = fstr(@"Collapsing %d-%d in “%@”", pair.lowRevision, pair.highRevision, repositoryName);
 	NSMutableArray* argsCollapse  = [NSMutableArray arrayWithObjects:@"collapse", nil];
 
-	// If we are using MacHgs collapse command we need to specify that it is in the extensions folder of the included Mercurial
-	if (UseWhichMercurialBinaryFromDefaults() == eUseMercurialBinaryIncludedInMacHg)
-		[argsCollapse addObject:@"--config" followedBy:@"hgext.collapse="];
+	[argsCollapse addObject:@"--config" followedBy:@"hgext.collapse="];		// We are using MacHgs collapse command so we need to specify that it
+																			// is in the extensions folder of the included Mercurial
 
 	NSString* revisionNumbers = fstr(@"%d%:%d", pair.lowRevision, pair.highRevision);
 	[argsCollapse addObject:@"--rev" followedBy:revisionNumbers];

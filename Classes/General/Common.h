@@ -128,12 +128,6 @@ typedef enum
 
 typedef enum
 {
-	eUseMercurialBinaryIncludedInMacHg	= 0,
-	eUseMercurialBinarySpecifiedByUser	= 1
-} UseWhichMercurialOption;
-
-typedef enum
-{
 	eOpenLastDocument	= 0,
 	eOpenNewDocument	= 1,
 	eDontOpenAnything	= 2
@@ -365,7 +359,6 @@ extern NSString* const MHGDisplayWarningForRollbackFiles;
 extern NSString* const MHGDisplayWarningForTagRemoval;
 extern NSString* const MHGDisplayWarningForUntrackingFiles;
 extern NSString* const MHGDisplayWarningForUpdating;
-extern NSString* const MHGExecutableLocationHG;
 extern NSString* const MHGFontSizeOfBrowserItems;
 extern NSString* const MHGHandleCommandDefaults;
 extern NSString* const MHGHandleGeneratedOrigFiles;
@@ -396,7 +389,6 @@ extern NSString* const MHGShowUnresolvedFilesInBrowser;
 extern NSString* const MHGSizeOfBrowserColumns;
 extern NSString* const MHGToolNameForDiffing;
 extern NSString* const MHGUseFileMergeForMerge;
-extern NSString* const MHGUseWhichMercurialBinary;
 extern NSString* const MHGUseWhichToolForDiffing;
 extern NSString* const MHGViewsHaveIndependentSizes;
 extern NSString* const MHGWarnAboutBadMercurialConfiguration;
@@ -460,7 +452,6 @@ int			LaunchCountFromDefaults();
 NSString*	AddRemoveSimilarityFactorFromDefaults();
 NSString*	DefaultHGIgnoreContentsFromDefaults();
 NSString*	DefaultWorkspacePathFromDefaults();
-NSString*	ExecutableLocationHGFromDefaults();
 NSString*	LocalHGShellAliasNameFromDefaults();
 NSString*	LocalWhitelistedHGShellAliasNameFromDefaults();
 NSString*	MacHgLogFileLocation();
@@ -477,7 +468,6 @@ RevisionSortOrderOption			RevisionSortOrderFromDefaults();
 HandleOrigFilesOption			HandleGeneratedOrigFilesFromDefaults();
 OnStartupOpenWhatOption			OnStartupOpenFromDefaults();
 ToolForDiffing					UseWhichToolForDiffingFromDefaults();
-UseWhichMercurialOption			UseWhichMercurialBinaryFromDefaults();
 
 BrowserDoubleClickAction		browserBehaviourDoubleClick();
 BrowserDoubleClickAction		browserBehaviourCommandDoubleClick();

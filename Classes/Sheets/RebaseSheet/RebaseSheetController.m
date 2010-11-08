@@ -129,10 +129,8 @@
 	
 	NSMutableArray* argsRebase = [NSMutableArray arrayWithObjects:@"rebase", nil];
 	
-	// If we are using MacHgs rebase command we need to specify that it is in the extensions folder of the included Mercurial
-	if (UseWhichMercurialBinaryFromDefaults() == eUseMercurialBinaryIncludedInMacHg)
-		[argsRebase addObject:@"--config" followedBy:@"hgext.rebase="];
-
+	[argsRebase addObject:@"--config" followedBy:@"hgext.rebase="];		// We are using MacHgs rebase command so we need to specify that it is
+																		// in the extensions folder of the included Mercurial
 	[argsRebase addObject: (result == NSAlertDefaultReturn ? @"--continue" : @"--abort")];
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	ExecutionResult* results = [myDocument  executeMercurialWithArgs:argsRebase  fromRoot:rootPath  whileDelayingEvents:YES];
@@ -224,10 +222,8 @@
 	NSString* rebaseDescription = fstr(@"rebasing %d-%d in “%@”", pair.lowRevision, pair.highRevision, repositoryName);
 	NSMutableArray* argsRebase = [NSMutableArray arrayWithObjects:@"rebase", nil];
 	
-	// If we are using MacHgs rebase command we need to specify that it is in the extensions folder of the included Mercurial
-	if (UseWhichMercurialBinaryFromDefaults() == eUseMercurialBinaryIncludedInMacHg)
-		[argsRebase addObject:@"--config" followedBy:@"hgext.rebase="];
-	
+	[argsRebase addObject:@"--config" followedBy:@"hgext.rebase="];		// We are using MacHgs rebase command so we need to specify that it is
+																		// in the extensions folder of the included Mercurial
 	[argsRebase addObject:@"--detach"];
 	[argsRebase addObject:@"--source" followedBy:intAsString(pair.lowRevision)];
 	[argsRebase addObject:@"--dest" followedBy:destinationRev];
