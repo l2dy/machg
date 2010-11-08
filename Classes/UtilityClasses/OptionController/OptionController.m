@@ -68,7 +68,7 @@
 		NSRect fullFrame = [optionValueField frame];
 		NSRect squishedFrame = fullFrame;
 		squishedFrame.size.width = 0;
-		[optionValueField   setHidden:NO];
+		[optionValueField setHidden:NO];
 		[optionValueField setFrame:squishedFrame];
 		[[optionValueField animator] setFrame:fullFrame];
 	}

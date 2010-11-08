@@ -17,6 +17,7 @@
 	IBOutlet NSButton*			sheetButtonCancelForPullSheet;
 
 	// Advanced options
+	IBOutlet OptionController*	rebaseOption;
 	IBOutlet OptionController*	revOption;
 	IBOutlet OptionController*	sshOption;
 	IBOutlet OptionController*	remotecmdOption;
