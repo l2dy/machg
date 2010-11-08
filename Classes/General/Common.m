@@ -135,6 +135,7 @@ NSString* const MHGUseFileMergeForDiff					= @"UseFileMergeForDiff";
 NSString* const MHGUseFileMergeForMerge					= @"UseFileMergeForMerge";
 NSString* const MHGUseWhichMercurialBinary				= @"UseWhichMercurialBinary";
 NSString* const MHGUseWhichToolForDiffing				= @"UseWhichToolForDiffing";
+NSString* const MHGViewsHaveIndependentSizes			= @"ViewsHaveIndependentSizes";
 NSString* const MHGWarnAboutBadMercurialConfiguration   = @"WarnAboutBadMercurialConfiguration";
 
 
@@ -194,6 +195,7 @@ BOOL		ShowUnknownFilesInBrowserFromDefaults()					{ return boolFromDefaultsForKe
 BOOL		ShowUnresolvedFilesInBrowserFromDefaults()				{ return boolFromDefaultsForKey(MHGShowUnresolvedFilesInBrowser); }
 BOOL		UseFileMergeForDiffFromDefaults()						{ return boolFromDefaultsForKey(MHGUseFileMergeForDiff); }
 BOOL		UseFileMergeForMergeFromDefaults()						{ return boolFromDefaultsForKey(MHGUseFileMergeForMerge); }
+BOOL		ViewsHaveIndependentSizesFromDefaults()					{ return boolFromDefaultsForKey(MHGViewsHaveIndependentSizes); }
 BOOL		WarnAboutBadMercurialConfigurationFromDefaults()		{ return boolFromDefaultsForKey(MHGWarnAboutBadMercurialConfiguration); }
 
 

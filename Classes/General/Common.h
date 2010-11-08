@@ -398,6 +398,7 @@ extern NSString* const MHGToolNameForDiffing;
 extern NSString* const MHGUseFileMergeForMerge;
 extern NSString* const MHGUseWhichMercurialBinary;
 extern NSString* const MHGUseWhichToolForDiffing;
+extern NSString* const MHGViewsHaveIndependentSizes;
 extern NSString* const MHGWarnAboutBadMercurialConfiguration;
 
 
@@ -446,6 +447,7 @@ BOOL		ShowUnknownFilesInBrowserFromDefaults();
 BOOL		ShowUnresolvedFilesInBrowserFromDefaults();
 BOOL		UseFileMergeForDiffFromDefaults();
 BOOL		UseFileMergeForMergeFromDefaults();
+BOOL		ViewsHaveIndependentSizesFromDefaults();
 BOOL		WarnAboutBadMercurialConfigurationFromDefaults();
 
 

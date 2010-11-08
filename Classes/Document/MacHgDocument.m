@@ -701,6 +701,13 @@
 	currentPane_ = newPaneNum;
 	NSView* newView = [self paneView:newPaneNum];
 	
+	if (!ViewsHaveIndependentSizesFromDefaults())
+	{
+		[[mainContentBox animator] setContentView:newView];
+		[self recordWindowFrameToDefaults];
+		return;
+	}
+	
 	NSRect newFrame = [self newWindowFrameWhenSwitchingContentTo:[newView frame]];	// Figure out new frame size	
 	[NSAnimationContext beginGrouping];												// Using an animation grouping because we may be changing the duration
 
