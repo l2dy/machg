@@ -50,7 +50,11 @@
 	[attachment setAttachmentCell:parentCell];
 	return attachment;
 }
-	
+
+
+
+
+
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 // MARK:  Set members
@@ -70,6 +74,10 @@
 	[self setAttributedTitle:[NSAttributedString string:title withAttributes:theDictionary]];
 }
 
+
+
+
+
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 // MARK:  Actions
@@ -83,9 +91,7 @@
 		NSString* title = [self title];
 		NSString* revision = nil;
 		if ([title getCapturesWithRegexAndComponents:@"(\\d+):[\\d\\w]+" firstComponent:&revision])
-		{
 			[[[document theHistoryView] logTableView] scrollToRevision:revision];
-		}
 	}
 }
 

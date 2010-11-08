@@ -19,13 +19,22 @@
 - (NSIndexSet*)		tableView:(NSTableView*)tableView selectionIndexesForProposedSelection:(NSIndexSet*)proposedSelectionIndexes;	// We forward the delegate method of implemented
 @end
 
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: LogTableView
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
 // This class is a subclass of NSTableView which is its own data source and own delegate. It turned out its easier this way. And
 // thus in the one class we wrap up all the behavior of managing a list of revisions. It only needs the two outlets below connected up.
 @interface LogTableView : NSTableView <NSTableViewDelegate, NSTableViewDataSource>
 {
 	IBOutlet id	<ControllerForLogTableView> parentController; // Controlling class should be an object which is controlling a sheet or a
 															// window controller.
-	IBOutlet LogTableTextView*	detailedEntryTextView;			// This is the field where the details of the log entry are displayed.
+	IBOutlet LogTableTextView* detailedEntryTextView;		// This is the field where the details of the log entry are displayed.
 
 	RepositoryData*			repositoryData_;				// The current log entry collection which backs this LogTableView.
 	RepositoryData*			oldRepositoryData_;				// The second oldest log entry collection (which we sometimes fall
@@ -129,17 +138,15 @@
 @property (assign,readwrite) LogTableView*	logTableView;
 @property (assign,readwrite) NSTableColumn*	logTableColumn;
 
-- (NSColor*) highlightColorWithFrame:(NSRect)cellFrame inView:(NSView*)controlView;
+- (NSColor*)	highlightColorWithFrame:(NSRect)cellFrame inView:(NSView*)controlView;
 @end
 
 
 
 
 @interface LogTableTextView : NSTextView
-
-- (NSArray *)writablePasteboardTypes;
-- (BOOL)writeSelectionToPasteboard:(NSPasteboard *)pboard type:(NSString *)type;
-
+- (NSArray*)	writablePasteboardTypes;
+- (BOOL)		writeSelectionToPasteboard:(NSPasteboard*)pboard type:(NSString*)type;
 @end
 
 

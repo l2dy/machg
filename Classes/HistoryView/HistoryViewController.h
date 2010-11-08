@@ -47,22 +47,22 @@
 
 @interface HistoryView : NSView <AccessesDocument, ControllerForLogTableView, ControllerForLabelsTableView, NSUserInterfaceValidations >
 {
-	MacHgDocument*			myDocument;
+	MacHgDocument*				myDocument;
 	IBOutlet HistoryViewController*  parentController;
 
 	// Main accordion view containing the sub panes.
-	IBOutlet JHAccordionView* accordionView;
+	IBOutlet JHAccordionView*	accordionView;
 	
 	// History SubPane
-	IBOutlet LogTableView*	logTableView;
+	IBOutlet LogTableView*		logTableView;
 
 	// Details SubPane
-	IBOutlet NSView*		detailsView;
+	IBOutlet NSView*			detailsView;
 	IBOutlet LogTableTextView*	detailedEntryTextView;
 	
 	// Labels SubPane
-	IBOutlet LabelsTableView* theLabelsTableView_;
-	IBOutlet NSButton*		  removeLabelButton;
+	IBOutlet LabelsTableView*	theLabelsTableView_;
+	IBOutlet NSButton*			removeLabelButton;
 
 }
 

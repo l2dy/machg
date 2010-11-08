@@ -797,7 +797,11 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 
 
 
-#pragma mark -
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: LogTableTextFieldCell
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
 @implementation LogTableTextFieldCell
 
 @synthesize entry		   = entry_;
@@ -870,29 +874,32 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 
 
 
-#pragma mark -
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: LogTableTextView
+// -----------------------------------------------------------------------------------------------------------------------------------------
 
 @implementation LogTableTextView
 
 - (NSString*) getTextWithStringizedAttachments
 {
 	NSAttributedString* selectedText = [[self textStorage] attributedSubstringFromRange:[self selectedRange]];
-	if(![selectedText containsAttachments])
+	if (![selectedText containsAttachments])
 		return [selectedText string];
 	
 	// embedd known attachments
 	NSMutableAttributedString* stringToEncode = [selectedText mutableCopy];
 
-	for(NSRange strRange = NSMakeRange(0, [stringToEncode length]); strRange.length > 0; )
+	for (NSRange strRange = NSMakeRange(0, [stringToEncode length]); strRange.length > 0; )
 	{
 		NSRange effectiveRange;
 		id attr = [stringToEncode attribute:NSAttachmentAttributeName atIndex:strRange.length - 1 effectiveRange:&effectiveRange];
 		
 		//if we find a text attachment, check to see if it's one of ours
-		if(attr)
+		if (attr)
 		{
 			id attachmentCell = [(NSTextAttachment *)attr attachmentCell];
-			if([attachmentCell isKindOfClass:[NSButtonCell class]])
+			if ([attachmentCell isKindOfClass:[NSButtonCell class]])
 			{
 				[stringToEncode removeAttribute:NSAttachmentAttributeName range:effectiveRange];
 				[stringToEncode replaceCharactersInRange:effectiveRange withString:[attachmentCell title]];
@@ -905,21 +912,18 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	return [stringToEncode string];
 }
 
-- (NSArray *)writablePasteboardTypes
+- (NSArray*) writablePasteboardTypes
 {
 	return [NSArray arrayWithObject:NSStringPboardType];
 }
 
-- (BOOL)writeSelectionToPasteboard:(NSPasteboard *)pboard type:(NSString *)type
+- (BOOL) writeSelectionToPasteboard:(NSPasteboard*)pboard type:(NSString*)type
 {
-	if(![type isEqualToString:NSStringPboardType])
+	if (![type isEqualToString:NSStringPboardType])
 		return NO;
 
     return [pboard setString:[self getTextWithStringizedAttachments] forType:NSStringPboardType];
 }
 
 @end
-
-
-
 
