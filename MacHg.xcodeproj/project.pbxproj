@@ -164,8 +164,9 @@
 		96A377DB10C8EC5400FA190A /* About.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96A377D710C8EC5400FA190A /* About.xib */; };
 		96A377DC10C8EC5400FA190A /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96A377D910C8EC5400FA190A /* MainMenu.xib */; };
 		96A377EA10C8ECDD00FA190A /* TaskExecutions.m in Sources */ = {isa = PBXBuildFile; fileRef = 96A377E910C8ECDD00FA190A /* TaskExecutions.m */; };
-		96AD9B5911C42EDC00F5C82E /* hgrc in Resources */ = {isa = PBXBuildFile; fileRef = 96AD9B5811C42EDC00F5C82E /* hgrc */; };
 		96AD9C3C11C468CF00F5C82E /* MacHgHelp in Resources */ = {isa = PBXBuildFile; fileRef = 96AD9C0811C468CF00F5C82E /* MacHgHelp */; };
+		96BEAA8F12891CF0005198B5 /* hgrc in Resources */ = {isa = PBXBuildFile; fileRef = 96BEAA8E12891CF0005198B5 /* hgrc */; };
+		96BEAAB812891EF4005198B5 /* hgignore in Resources */ = {isa = PBXBuildFile; fileRef = 96BEAAB712891EF4005198B5 /* hgignore */; };
 		96C613A911B40B0D00B54B09 /* MacHgSplash.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C613A811B40B0D00B54B09 /* MacHgSplash.png */; };
 		96C98EA5113B70C2006816C0 /* MacHgsmaller.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C98EA4113B70C2006816C0 /* MacHgsmaller.png */; };
 		96D2477D117BC1810030815B /* ThickSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D2477C117BC1810030815B /* ThickSplitView.m */; };
@@ -447,8 +448,9 @@
 		96A377DA10C8EC5400FA190A /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = SOURCE_ROOT; };
 		96A377E810C8ECDD00FA190A /* TaskExecutions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskExecutions.h; sourceTree = "<group>"; };
 		96A377E910C8ECDD00FA190A /* TaskExecutions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskExecutions.m; sourceTree = "<group>"; };
-		96AD9B5811C42EDC00F5C82E /* hgrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = hgrc; sourceTree = "<group>"; };
 		96AD9C0811C468CF00F5C82E /* MacHgHelp */ = {isa = PBXFileReference; lastKnownFileType = folder; path = MacHgHelp; sourceTree = "<group>"; };
+		96BEAA8E12891CF0005198B5 /* hgrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = hgrc; sourceTree = "<group>"; };
+		96BEAAB712891EF4005198B5 /* hgignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = hgignore; sourceTree = "<group>"; };
 		96C613A811B40B0D00B54B09 /* MacHgSplash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MacHgSplash.png; path = SplashTitles/MacHgSplash.png; sourceTree = "<group>"; };
 		96C98EA4113B70C2006816C0 /* MacHgsmaller.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MacHgsmaller.png; path = SplashTitles/MacHgsmaller.png; sourceTree = "<group>"; };
 		96D2477B117BC1810030815B /* ThickSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThickSplitView.h; sourceTree = "<group>"; };
@@ -572,6 +574,7 @@
 			children = (
 				962ED0BB11878A120072211F /* macHgPublicKey_dsa.pem */,
 				96AD9C0811C468CF00F5C82E /* MacHgHelp */,
+				96BEAA8D12891CF0005198B5 /* DefaultFiles */,
 				96DCCC1A10CD41B100C843C9 /* scripts */,
 				9600C28410CD3D9F00CD8D28 /* Images */,
 				9600C31F10CD3F9300CD8D28 /* UserDefaults.plist */,
@@ -1329,10 +1332,18 @@
 			path = Classes/Application;
 			sourceTree = "<group>";
 		};
+		96BEAA8D12891CF0005198B5 /* DefaultFiles */ = {
+			isa = PBXGroup;
+			children = (
+				96BEAA8E12891CF0005198B5 /* hgrc */,
+				96BEAAB712891EF4005198B5 /* hgignore */,
+			);
+			path = DefaultFiles;
+			sourceTree = SOURCE_ROOT;
+		};
 		96DCCC1A10CD41B100C843C9 /* scripts */ = {
 			isa = PBXGroup;
 			children = (
-				96AD9B5811C42EDC00F5C82E /* hgrc */,
 				96DCCC1B10CD41B100C843C9 /* fmdiff.sh */,
 				9606F3441157F1F100968DE8 /* opendiff-w.sh */,
 				96DCCC1C10CD41B100C843C9 /* localhg */,
@@ -1470,7 +1481,6 @@
 				9600C2F210CD3D9F00CD8D28 /* Push.png in Resources */,
 				9600C2FF10CD3D9F00CD8D28 /* toolbar_resolved.png in Resources */,
 				9600C32010CD3F9300CD8D28 /* UserDefaults.plist in Resources */,
-				96AD9B5911C42EDC00F5C82E /* hgrc in Resources */,
 				96DCCC1E10CD41B100C843C9 /* fmdiff.sh in Resources */,
 				96DCCC1F10CD41B100C843C9 /* localhg in Resources */,
 				9606F3451157F1F100968DE8 /* opendiff-w.sh in Resources */,
@@ -1526,6 +1536,8 @@
 				9654F5EA11D237F200826FD6 /* Diff.png in Resources */,
 				9654F5EB11D237F200826FD6 /* Revert.png in Resources */,
 				9654F5EC11D237F200826FD6 /* Update.png in Resources */,
+				96BEAA8F12891CF0005198B5 /* hgrc in Resources */,
+				96BEAAB812891EF4005198B5 /* hgignore in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

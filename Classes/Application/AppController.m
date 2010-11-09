@@ -203,6 +203,19 @@
 }
 
 
+- (void) checkForIgnoreFile
+{
+	NSString* userHgignorePath = [NSHomeDirectory() stringByAppendingPathComponent:@".hgignore"];
+	if (pathIsExistent(userHgignorePath))
+		return;
+
+	NSString* sourceMacHgHignorePath = fstr(@"%@/%@",[[NSBundle mainBundle] resourcePath], @"hgignore");
+	NSString* hgignoreContents = [NSString stringWithContentsOfFile:sourceMacHgHignorePath encoding:NSUTF8StringEncoding error:nil];
+	[hgignoreContents writeToFile:userHgignorePath atomically:YES encoding:NSUTF8StringEncoding error:nil];	
+}
+
+
+
 - (void) checkConfigFileForUserName
 {
 	BOOL includeHomeHgrc  = IncludeHomeHgrcInHGRCPATHFromDefaults();
@@ -276,6 +289,8 @@
 }
 
 
+
+
 - (void) checkForFileMerge
 {
 	if (![[NSWorkspace sharedWorkspace] fullPathForApplication:@"FileMerge"])
@@ -304,6 +319,9 @@
 }
 
 
+
+
+
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 // MARK: Starting up
@@ -326,6 +344,7 @@
 
 	[self checkForSupportDirectory];
 	[self checkForConfigFile];
+	[self checkForIgnoreFile];
 	[self checkConfigFileForUserName];
 	[self checkConfigFileForEditingExtensions:YES];
 	[self checkForFileMerge];
