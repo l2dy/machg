@@ -1569,6 +1569,16 @@
 // MARK: Ignore / Unignore Menu Actions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+static inline NSString* QuoteRegExCharacters(NSString* theName)
+{
+	NSString* sanitizedFileName = theName;
+	sanitizedFileName = [sanitizedFileName stringByReplacingOccurrencesOfString:@"#" withString:@"\\#"];
+	sanitizedFileName = [sanitizedFileName stringByReplacingOccurrencesOfString:@"*" withString:@"\\*"];
+	sanitizedFileName = [sanitizedFileName stringByReplacingOccurrencesOfString:@"+" withString:@"\\+"];
+	return sanitizedFileName;
+}
+
+
 - (BOOL) primaryActionIgnoreSelectedFiles:(NSArray*)theSelectedFiles
 {
 	NSString* root = [self absolutePathOfRepositoryRoot];
@@ -1587,11 +1597,10 @@
 		
 		for (NSString* file in theSelectedFiles)
 		{
-			NSString* rootRelativeFile  = pathDifference(root, file);
-			NSString* sanitizedFileName = [rootRelativeFile stringByReplacingOccurrencesOfString:@"#" withString:@"\\#"];
-			NSRange range = [hgignoreContents rangeOfString:sanitizedFileName];
+			NSString* rootRelativeFile = QuoteRegExCharacters(pathDifference(root, file));
+			NSRange range = [hgignoreContents rangeOfString:rootRelativeFile];
 			if (range.location == NSNotFound)
-				[hgignoreContents appendFormat:@"%@\n",sanitizedFileName];
+				[hgignoreContents appendFormat:@"%@\n",rootRelativeFile];
 		}
 		[hgignoreContents writeToFile:hgignorePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
 		[self refreshBrowserPaths:pathsToRefresh resumeEventsWhenFinished:NO];
@@ -1617,9 +1626,8 @@
 		{
 			for (NSString* file in theSelectedFiles)
 			{
-				NSString* rootRelativeFile  = pathDifference(root, file);
-				NSString* sanitizedFileName = [rootRelativeFile stringByReplacingOccurrencesOfString:@"#" withString:@"\\#"];
-				hgignoreContents = [hgignoreContents stringByReplacingOccurrencesOfString:sanitizedFileName withString:@""];
+				NSString* rootRelativeFile = QuoteRegExCharacters(pathDifference(root, file));
+				hgignoreContents = [hgignoreContents stringByReplacingOccurrencesOfString:rootRelativeFile withString:@""];
 			}
 			
 			hgignoreContents = [hgignoreContents stringByReplacingOccurrencesOfString:@"\n\n" withString:@"\n"];
