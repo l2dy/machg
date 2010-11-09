@@ -169,7 +169,7 @@
 				
 			NSMutableArray* argsCommit = [NSMutableArray arrayWithObjects:@"commit", @"--addremove", @".hgignore", @"--message", @"initialize repository", nil];
 			ExecutionResult* commitResults = [myDocument  executeMercurialWithArgs:argsCommit  fromRoot:newPath  whileDelayingEvents:YES];
-			if ([commitResults hasErrors] || [commitResults hasWarnings])
+			if ([commitResults hasErrors])
 				[NSException raise:@"Initialize Repository" format:@"Mercurial could not commit %@ while initializing the repository.", hgignorePath, nil];
 		}
 		
