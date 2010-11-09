@@ -205,7 +205,7 @@
 
 - (void) checkConfigFileForUserName
 {
-	BOOL includeHomeHgrc  = IncludeHomeHgrcInHGRCPATHFromDefaults();	
+	BOOL includeHomeHgrc  = IncludeHomeHgrcInHGRCPATHFromDefaults();
 
 	// If we can find the user name in only our ~/Application Support/MacHg/hgrc file we are done.
 	[[NSUserDefaults standardUserDefaults] setBool:NO forKey:MHGIncludeHomeHgrcInHGRCPATH];
@@ -240,7 +240,11 @@
 
 - (void) checkConfigFileForEditingExtensions:(BOOL)onStartup;
 {
-	// Find out which extensions are enabled
+	// We temporarily switch out ~/.hgrc from our HGRCPath
+	BOOL includeHomeHgrc  = IncludeHomeHgrcInHGRCPATHFromDefaults();
+	[[NSUserDefaults standardUserDefaults] setBool:NO forKey:MHGIncludeHomeHgrcInHGRCPATH];
+
+	// Find out which extensions are enabled within our ~/Application Support/MacHg/hgrc file
 	NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"extensions", nil];
 	ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
 
@@ -264,6 +268,8 @@
 		if (addExtHistEdit)		[fileManager appendString:@"hgext.histedit=\n"	toFilePath:macHgHGRCPath];
 		if (addExtCollapse)		[fileManager appendString:@"hgext.collapse=\n"	toFilePath:macHgHGRCPath];
 	}
+
+	[[NSUserDefaults standardUserDefaults] setBool:includeHomeHgrc  forKey:MHGIncludeHomeHgrcInHGRCPATH];
 
 	if (!onStartup)
 		NSRunAlertPanel(@"Editing Extensions Enabled", @"The history editing extensions are enabled.", @"OK", nil, nil);
