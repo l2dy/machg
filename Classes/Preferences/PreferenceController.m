@@ -42,19 +42,5 @@
 - (IBAction) repositoryEditingPreferencesChanged:(id)sender	{ [[AppController sharedAppController] checkConfigFileForEditingExtensions:NO]; }
 - (IBAction) openMacHgHGRCFileInExternalEditor:(id)sender	{ [[NSWorkspace sharedWorkspace] openFile:fstr(@"%@/hgrc", applicationSupportFolder())]; }
 - (IBAction) openHomeHGRCFileInExternalEditor:(id)sender	{ [[NSWorkspace sharedWorkspace] openFile:[NSHomeDirectory() stringByAppendingPathComponent:@".hgrc"]]; }
-- (IBAction) switchMacHgHgrc:(id)sender
-{
-	BOOL home = IncludeHomeHgrcInHGRCPATHFromDefaults();
-	BOOL mchg = IncludeMacHgHgrcInHGRCPATHFromDefaults();
-	if (!home && !mchg)
-		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:MHGIncludeHomeHgrcInHGRCPATH];
-}
-- (IBAction) switchHomeHgrc:(id)sender
-{
-	BOOL home = IncludeHomeHgrcInHGRCPATHFromDefaults();
-	BOOL mchg = IncludeMacHgHgrcInHGRCPATHFromDefaults();
-	if (!home && !mchg)
-		[[NSUserDefaults standardUserDefaults] setBool:YES forKey:MHGIncludeMacHgHgrcInHGRCPATH];	
-}
 
 @end

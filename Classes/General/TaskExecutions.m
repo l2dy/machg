@@ -124,11 +124,9 @@
 + (NSDictionary*) environmentForHg
 {
 	static NSDictionary* env = nil;
-	static BOOL includeMacHgHgrc = YES;
 	static BOOL includeHomeHgrc  = NO;
-	if (!env || includeHomeHgrc != IncludeHomeHgrcInHGRCPATHFromDefaults() || includeMacHgHgrc != IncludeMacHgHgrcInHGRCPATHFromDefaults())
+	if (!env || includeHomeHgrc != IncludeHomeHgrcInHGRCPATHFromDefaults())
 	{
-		includeMacHgHgrc = IncludeMacHgHgrcInHGRCPATHFromDefaults();
 		includeHomeHgrc  = IncludeHomeHgrcInHGRCPATHFromDefaults();
 		NSString* hgrc_Path = hgrcPath();
 		

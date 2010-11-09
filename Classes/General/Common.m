@@ -105,7 +105,6 @@ NSString* const MHGDisplayWarningForUpdating			= @"DisplayWarningForUpdating";
 NSString* const MHGFontSizeOfBrowserItems				= @"FontSizeOfBrowserItems";
 NSString* const MHGHandleGeneratedOrigFiles				= @"HandleGeneratedOrigFiles";
 NSString* const MHGIncludeHomeHgrcInHGRCPATH			= @"IncludeHomeHgrcInHGRCPATH";
-NSString* const MHGIncludeMacHgHgrcInHGRCPATH			= @"IncludeMacHgHgrcInHGRCPATH";
 NSString* const MHGLaunchCount							= @"LaunchCount";
 NSString* const MHGLocalHGShellAliasName				= @"LocalHGShellAliasName";
 NSString* const MHGLocalWhitelistedHGShellAliasName		= @"LocalWhitelistedHGShellAliasName";
@@ -179,7 +178,6 @@ BOOL		DisplayWarningForTagRemovalFromDefaults()				{ return boolFromDefaultsForK
 BOOL		DisplayWarningForUntrackingFilesFromDefaults()			{ return boolFromDefaultsForKey(MHGDisplayWarningForUntrackingFiles); }
 BOOL		DisplayWarningForUpdatingFromDefaults()					{ return boolFromDefaultsForKey(MHGDisplayWarningForUpdating); }
 BOOL		IncludeHomeHgrcInHGRCPATHFromDefaults()					{ return boolFromDefaultsForKey(MHGIncludeHomeHgrcInHGRCPATH); }
-BOOL		IncludeMacHgHgrcInHGRCPATHFromDefaults()				{ return boolFromDefaultsForKey(MHGIncludeMacHgHgrcInHGRCPATH); }
 BOOL		LogEntryTableDisplayChangesetColumnFromDefaults()		{ return boolFromDefaultsForKey(MHGLogEntryTableDisplayChangesetColumn); }
 BOOL		ShowAddedFilesInBrowserFromDefaults()					{ return boolFromDefaultsForKey(MHGShowAddedFilesInBrowser); }
 BOOL		ShowCleanFilesInBrowserFromDefaults()					{ return boolFromDefaultsForKey(MHGShowCleanFilesInBrowser); }
@@ -590,14 +588,12 @@ NSString* applicationSupportFolder()
 
 NSString* hgrcPath()
 {
-	BOOL includeMacHgHgrc = IncludeMacHgHgrcInHGRCPATHFromDefaults();
-	BOOL includeHomeHgrc  = IncludeHomeHgrcInHGRCPATHFromDefaults();
 	NSString* macHgHGRCpath = fstr(@"%@/hgrc", applicationSupportFolder());
-	NSString* homeHGRCpath  = [NSHomeDirectory() stringByAppendingPathComponent:@".hgrc"];
-	
-	if (includeMacHgHgrc && includeHomeHgrc)
-		return fstr(@"%@:%@", macHgHGRCpath, homeHGRCpath);
-	return fstr(@"%@", !includeHomeHgrc ? macHgHGRCpath : homeHGRCpath);	
+	if (!IncludeHomeHgrcInHGRCPATHFromDefaults())
+		return macHgHGRCpath;
+
+	NSString* homeHGRCpath  = [NSHomeDirectory() stringByAppendingPathComponent:@".hgrc"];	
+	return fstr(@"%@:%@", macHgHGRCpath, homeHGRCpath);
 }
 
 NSArray* aliasesForShell()

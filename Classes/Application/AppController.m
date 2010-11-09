@@ -205,38 +205,35 @@
 
 - (void) checkConfigFileForUserName
 {
-	// If we can find the user name in our HGRCPATH we are done.
+	BOOL includeHomeHgrc  = IncludeHomeHgrcInHGRCPATHFromDefaults();	
+
+	// If we can find the user name in only our ~/Application Support/MacHg/hgrc file we are done.
+	[[NSUserDefaults standardUserDefaults] setBool:NO forKey:MHGIncludeHomeHgrcInHGRCPATH];
 	NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"ui.username", nil];
 	ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
+	[[NSUserDefaults standardUserDefaults] setBool:includeHomeHgrc  forKey:MHGIncludeHomeHgrcInHGRCPATH];
 	if (!IsEmpty(result.outStr))
 		return;
-
-	// Cache the current HGRCPATH, and which hgrc file is dominant.
-	BOOL includeMacHgHgrc = IncludeMacHgHgrcInHGRCPATHFromDefaults();
-	BOOL includeHomeHgrc  = IncludeHomeHgrcInHGRCPATHFromDefaults();
-	NSString* macHgHGRCpath = fstr(@"%@/hgrc", applicationSupportFolder());
-	NSString* homeHGRCpath  = [NSHomeDirectory() stringByAppendingPathComponent:@".hgrc"];
-	NSString* hgrcPath = IncludeMacHgHgrcInHGRCPATHFromDefaults() ? macHgHGRCpath : homeHGRCpath;
 
 	// Switch the hgrc path to include both ~/Application Support/MacHg/hgrc and ~/.hgrc and look for the user name, and then
 	// restore the defaults
-	[[NSUserDefaults standardUserDefaults] setBool:YES forKey:MHGIncludeMacHgHgrcInHGRCPATH];
 	[[NSUserDefaults standardUserDefaults] setBool:YES forKey:MHGIncludeHomeHgrcInHGRCPATH];
 	argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"ui.username", nil];
 	result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
-	[[NSUserDefaults standardUserDefaults] setBool:includeMacHgHgrc forKey:MHGIncludeMacHgHgrcInHGRCPATH];
 	[[NSUserDefaults standardUserDefaults] setBool:includeHomeHgrc  forKey:MHGIncludeHomeHgrcInHGRCPATH];
 
-	// If we find a user name, then copy the user name to the opposite hgrc file.
+	// If we found a user name in the user ~/.hgrc file but not the application support then copy the user name to the application
+	// support file.
 	if (!IsEmpty(result.outStr))
 	{
 		NSFileManager* fileManager = [NSFileManager defaultManager];
-		[fileManager appendString:@"\n[ui]\n" toFilePath:hgrcPath];
-		[fileManager appendString:fstr(@"username = %@\n",	result.outStr) toFilePath:hgrcPath];
+		NSString* macHgHGRCpath = fstr(@"%@/hgrc", applicationSupportFolder());
+		[fileManager appendString:@"\n[ui]\n" toFilePath:macHgHGRCpath];
+		[fileManager appendString:fstr(@"username = %@\n",	result.outStr) toFilePath:macHgHGRCpath];
 		return;
 	}
 	
-	// We can't find a user name we have to ask the user for it
+	// Since we could not find a user name we have to ask the user for it
 	[[self theInitilizationWizardController] showWizard];	
 }
 
@@ -257,17 +254,15 @@
 	if (addExtDiff || addExtBookmarks || addExtMq || addExtRebase || addExtHistEdit || addExtCollapse)
 	{
 		NSFileManager* fileManager = [NSFileManager defaultManager];
-		NSString* macHgHGRCFilePath = fstr(@"%@/hgrc",applicationSupportFolder());
-		NSString* homeHGRCpath  = [NSHomeDirectory() stringByAppendingPathComponent:@".hgrc"];
-		NSString* hgrcPath = IncludeMacHgHgrcInHGRCPATHFromDefaults() ? macHgHGRCFilePath : homeHGRCpath;
+		NSString* macHgHGRCPath = fstr(@"%@/hgrc",applicationSupportFolder());
 		
-		[fileManager appendString:@"\n[extensions]\n" toFilePath:hgrcPath];
-		if (addExtDiff)			[fileManager appendString:@"hgext.extdiff=\n"	toFilePath:hgrcPath];
-		if (addExtBookmarks)	[fileManager appendString:@"hgext.bookmarks=\n" toFilePath:hgrcPath];
-		if (addExtMq)			[fileManager appendString:@"hgext.mq=\n"		toFilePath:hgrcPath];
-		if (addExtRebase)		[fileManager appendString:@"hgext.rebase=\n"	toFilePath:hgrcPath];
-		if (addExtHistEdit)		[fileManager appendString:@"hgext.histedit=\n"	toFilePath:hgrcPath];
-		if (addExtCollapse)		[fileManager appendString:@"hgext.collapse=\n"	toFilePath:hgrcPath];
+		[fileManager appendString:@"\n[extensions]\n" toFilePath:macHgHGRCPath];
+		if (addExtDiff)			[fileManager appendString:@"hgext.extdiff=\n"	toFilePath:macHgHGRCPath];
+		if (addExtBookmarks)	[fileManager appendString:@"hgext.bookmarks=\n" toFilePath:macHgHGRCPath];
+		if (addExtMq)			[fileManager appendString:@"hgext.mq=\n"		toFilePath:macHgHGRCPath];
+		if (addExtRebase)		[fileManager appendString:@"hgext.rebase=\n"	toFilePath:macHgHGRCPath];
+		if (addExtHistEdit)		[fileManager appendString:@"hgext.histedit=\n"	toFilePath:macHgHGRCPath];
+		if (addExtCollapse)		[fileManager appendString:@"hgext.collapse=\n"	toFilePath:macHgHGRCPath];
 	}
 
 	if (!onStartup)
