@@ -4,6 +4,9 @@
 //
 // Jason F Harris, (c) 2010.
 //
+//
+// To build MacHg rom sources see: http://www.bitbucket.org/jfh/machg/wiki/Compiling.wiki
+//
 // Some of these conventions will be totally non-controversial, but others will be controversial. In any case these conventions
 // have worked well for me and if you are committing code to MacHG, please try and follow them. But in any case thank you for your
 // contribution to the project!
@@ -243,9 +246,8 @@
 //		different revisions/changesets in the repository. LabelsTableView is a direct subclass of NSTableView, and has a few of its own
 //		cell classes for cells in the table.
 // 3. PatchesTableView
-//		This is a table of the patches 
-//		different revisions/changesets in the repository. LabelsTableView is a direct subclass of NSTableView, and has a few of its own
-//		cell classes for cells in the table.
+//		This is a table of the patches we are in the process of importing. PatchesTableView is a direct subclass of NSTableView, and
+//		has a few of its own cell classes for cells in the table.
 
 
 
