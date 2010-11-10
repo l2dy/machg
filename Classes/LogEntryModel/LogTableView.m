@@ -176,9 +176,13 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 
 - (NSString*) revisionForTableRow:(NSInteger)rowNum
 {
-	if (rowNum < 0 || rowNum >= [theTableRows_ count])
-		return nil;
-	return [theTableRows_ objectAtIndex:rowNum];
+	@synchronized(self)
+	{
+		if (rowNum < 0 || rowNum >= [theTableRows_ count])
+			return nil;
+		return [theTableRows_ objectAtIndex:rowNum];
+	}
+	return nil;
 }
 
 
