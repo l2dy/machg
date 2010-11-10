@@ -22,7 +22,8 @@
 // MARK: -
 
 @interface CommitSheetController (PrivateAPI)
-- (IBAction) validateButtons:(id)sender;
+- (IBAction)	validateButtons:(id)sender;
+- (NSIndexSet*) chosenIndexesOfFilesToCommit;
 @end
 
 @implementation CommitSheetController
@@ -101,7 +102,7 @@
 {
 	changedFilesTableSourceData = nil;
 	logCommentsTableSourceData = nil;
-	exculdedPaths = nil;
+	excludedItems = nil;
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 
 	// Report the branch we are about to commit on in the dialog
@@ -115,9 +116,10 @@
 	[NSApp beginSheet:theCommitSheet modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
 	[theCommitSheet makeFirstResponder:commitMessageTextView];
 
-	NSArray* absolutePathsOfFilesToCommit = [myDocument filterPaths:paths byBitfield:eHGStatusChangedInSomeWay];
+	// Store the paths of the files to be committed
+	absolutePathsOfFilesToCommit = [myDocument filterPaths:paths byBitfield:eHGStatusChangedInSomeWay];
 	
-	// Show the files which are about to be changed in the commit sheet.
+	// Initialize the table source data and show the files which are about to be changed in the commit sheet.
 	NSMutableArray* argsStatus = [NSMutableArray arrayWithObjects:@"status", @"--modified", @"--added", @"--removed", nil];
 	[argsStatus addObjectsFromArray: absolutePathsOfFilesToCommit];
 	ExecutionResult* hgStatusResults = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:rootPath  logging:eLoggingNone];
@@ -177,20 +179,28 @@
 {
 	SEL theAction = [anItem action];	
 	// CommitSheet contextual items
+	NSIndexSet* selectedIndexes = [self chosenIndexesOfFilesToCommit];
 	if (theAction == @selector(commitSheetDiffAction:))			return [self filesToCommitAreSelected];
-	if (theAction == @selector(exculdePathsAction:))			return [self filesToCommitAreSelected];
+	if (theAction == @selector(exculdePathsAction:))			return [selectedIndexes count] > 0 && ![excludedItems containsIndexes:selectedIndexes];
+	if (theAction == @selector(includePathsAction:))			return [selectedIndexes count] > 0 && [excludedItems intersectsIndexes:selectedIndexes];
 	return [myDocument validateUserInterfaceItem:anItem];
 }
 
 
 - (IBAction) validateButtons:(id)sender
 {
-	BOOL pathsAreSelected = [changedFilesTableView numberOfSelectedRows] > 0;
+	NSIndexSet* selectedIndexes = [changedFilesTableView selectedRowIndexes];
+	BOOL pathsAreSelected = [selectedIndexes count] > 0;
+	BOOL pathsCanBeExcluded = pathsAreSelected && ![excludedItems containsIndexes:selectedIndexes];
+	BOOL pathsCanBeIncluded = pathsAreSelected && [excludedItems intersectsIndexes:selectedIndexes];
 	NSString* diffButtonMessage = pathsAreSelected ? @"Diff Selected" : @"Diff All";
+	BOOL okToCommit = ([changedFilesTableSourceData count] > 0) && ([excludedItems count] < [changedFilesTableSourceData count]);
 	
 	dispatch_async(mainQueue(), ^{
 		[diffButton setTitle:diffButtonMessage];
-		[removePathsButton setEnabled:pathsAreSelected];
+		[excludePathsButton setEnabled:pathsCanBeExcluded];
+		[includePathsButton setEnabled:pathsCanBeIncluded];
+		[okButton setEnabled:okToCommit];
 	});
 }
 
@@ -226,6 +236,19 @@
 		[self validateButtons:self];
 }
 
+- (void) tableView:(NSTableView*)aTableView  willDisplayCell:(id)aCell forTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
+{
+	if (aTableView == changedFilesTableView)
+		if ([excludedItems containsIndex:rowIndex])
+		{
+			NSColor* grayColor = [NSColor grayColor];
+			NSDictionary* newColorAttribute = [NSDictionary dictionaryWithObject:grayColor forKey:NSForegroundColorAttributeName];
+			NSMutableAttributedString* str = [[NSMutableAttributedString alloc]init];
+			[str initWithAttributedString:[aCell attributedStringValue]];
+			[str addAttributes:newColorAttribute range:NSMakeRange(0, [str length])];
+			[aCell setAttributedStringValue:str];			
+		}
+}
 
 
 
@@ -239,34 +262,53 @@
 
 - (NSArray*) filesToCommit
 {
+	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	NSMutableArray* toCommit = [[NSMutableArray alloc]init];
 	for (NSString* file in changedFilesTableSourceData)
 	{
 		NSString* relativePath = [file substringFromIndex:2];
-		NSString* absolutePath = [[myDocument absolutePathOfRepositoryRoot] stringByAppendingPathComponent:relativePath];
+		NSString* absolutePath = [rootPath stringByAppendingPathComponent:relativePath];
 		[toCommit addObject:absolutePath];
 	};
 	return toCommit;
 }
 
+
 - (NSArray*) selectedFilesToCommit
 {
+	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	NSMutableArray* selectedCommitFiles = [[NSMutableArray alloc]init];
 	NSIndexSet* rows = [changedFilesTableView selectedRowIndexes];
 	[rows enumerateIndexesUsingBlock:^(NSUInteger row, BOOL* stop) {
 		NSString* item = [changedFilesTableSourceData objectAtIndex:row];
 		NSString* relativePath = [item substringFromIndex:2];
-		NSString* absolutePath = [[myDocument absolutePathOfRepositoryRoot] stringByAppendingPathComponent:relativePath];
+		NSString* absolutePath = [rootPath stringByAppendingPathComponent:relativePath];
 		[selectedCommitFiles addObject:absolutePath];
 	}];
 	return selectedCommitFiles;
 }
 
+
+- (NSArray*) excludedPaths
+{
+	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+	NSMutableArray* exludedPaths = [[NSMutableArray alloc]init];
+	[excludedItems enumerateIndexesUsingBlock:^(NSUInteger row, BOOL* stop) {
+		NSString* item = [changedFilesTableSourceData objectAtIndex:row];
+		NSString* relativePath = [item substringFromIndex:2];
+		NSString* absolutePath = [rootPath stringByAppendingPathComponent:relativePath];
+		[exludedPaths addObject:absolutePath];
+	}];
+	return exludedPaths;
+}
+
+
 - (NSString*) chosenFileToCommit
 {
+	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	NSString* file = [changedFilesTableSourceData objectAtIndex:[changedFilesTableView chosenRow]];
 	NSString* relativePath = [file substringFromIndex:2];
-	NSString* absolutePath = [[myDocument absolutePathOfRepositoryRoot] stringByAppendingPathComponent:relativePath];	
+	NSString* absolutePath = [rootPath stringByAppendingPathComponent:relativePath];	
 	return absolutePath;
 }
 
@@ -287,7 +329,6 @@
 
 
 
-
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 // MARK:  Actions
@@ -295,19 +336,34 @@
 
 - (IBAction) exculdePathsAction:(id)sender
 {
-	if (!exculdedPaths)
-		exculdedPaths = [[NSMutableArray alloc]init];
-	[exculdedPaths addObjectsFromArray:[self chosenFilesToCommit]];
-	[changedFilesTableSourceData removeObjectsAtIndexes:[self chosenIndexesOfFilesToCommit]];
+	if (!excludedItems)
+		excludedItems = [[NSMutableIndexSet alloc]init];
+	[excludedItems addIndexes:[self chosenIndexesOfFilesToCommit]];
 	[changedFilesTableView reloadData];
-	[changedFilesTableView deselectAll:self];
+	[self validateButtons:self];
+}
+
+
+- (IBAction) includePathsAction:(id)sender
+{
+	if (!excludedItems)
+		return;	
+	[excludedItems removeIndexes:[self chosenIndexesOfFilesToCommit]];
+	[changedFilesTableView reloadData];
+	[self validateButtons:self];
 }
 
 
 - (IBAction) sheetButtonOk:(id)sender
 {
+	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+	NSArray* excludedPaths = [self excludedPaths];
+	NSArray* paths = committingAllFiles ? [myDocument absolutePathOfRepositoryRootAsArray] : absolutePathsOfFilesToCommit; 		// absolutePathsOfFilesToCommit is set when the sheet is opened.
+	NSMutableArray* filteredAbsolutePathsOfFilesToCommit = [NSMutableArray arrayWithArray:paths];
+	[filteredAbsolutePathsOfFilesToCommit removeObjectsInArray:excludedPaths];
+	
 	// This is more a check here, error handling should have caught this before now if the files were empty.
-	if (!changedFilesTableSourceData || [changedFilesTableSourceData count] <= 0)
+	if (IsEmpty(changedFilesTableSourceData) || [excludedPaths count] >= [changedFilesTableSourceData count] || IsEmpty(filteredAbsolutePathsOfFilesToCommit))
 	{
 		PlayBeep();
 		DebugLog(@"Nothing to commit");
@@ -316,23 +372,20 @@
 		return;
 	}
 
-	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	[myDocument removeAllUndoActionsForDocument];
 	[myDocument dispatchToMercurialQueuedWithDescription:@"Committing Files" process:^{
 		NSString* theMessage = [commitMessageTextView string];
 		NSMutableArray* args = [NSMutableArray arrayWithObjects:@"commit", @"--message", theMessage, nil];
-		NSArray* dirtifyPaths = committingAllFiles ? [myDocument absolutePathOfRepositoryRootAsArray] : [self filesToCommit];
-		if (committingAllFiles)
-			[myDocument registerPendingRefresh:dirtifyPaths];
-		else
-		{
-			// absolutePathsOfFilesToCommit is set when the sheet is opened.
-			[myDocument registerPendingRefresh:dirtifyPaths];
-			[args addObjectsFromArray:[self filesToCommit]];
-		}
+
+		[myDocument registerPendingRefresh:filteredAbsolutePathsOfFilesToCommit];
+		if (IsNotEmpty(excludedPaths))
+			for (NSString* exludedPath in excludedPaths)
+				[args addObject:@"--exclude" followedBy:exludedPath];
+		[args addObjectsFromArray:filteredAbsolutePathsOfFilesToCommit];
+
 		[myDocument delayEventsUntilFinishBlock:^{
 			[TaskExecutions executeMercurialWithArgs:args  fromRoot:rootPath];
-			[myDocument addToChangedPathsDuringSuspension:dirtifyPaths];
+			[myDocument addToChangedPathsDuringSuspension:filteredAbsolutePathsOfFilesToCommit];
 		}];
 	}];
 	[NSApp endSheet:theCommitSheet];

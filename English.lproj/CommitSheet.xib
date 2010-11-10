@@ -22,7 +22,6 @@
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<integer value="43"/>
-			<integer value="123"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -963,7 +962,7 @@
 						<object class="BWUnanchoredButton" id="602005739">
 							<reference key="NSNextResponder" ref="538557104"/>
 							<int key="NSvFlags">292</int>
-							<string key="NSFrame">{{20, 31}, {23, 22}}</string>
+							<string key="NSFrame">{{42, 31}, {23, 22}}</string>
 							<reference key="NSSuperview" ref="538557104"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="BWUnanchoredButtonCell" key="NSCell" id="494163643">
@@ -977,6 +976,30 @@
 								<object class="NSCustomResource" key="NSNormalImage">
 									<string key="NSClassName">NSImage</string>
 									<string key="NSResourceName">NSRemoveTemplate</string>
+								</object>
+								<string key="NSAlternateContents"/>
+								<string key="NSKeyEquivalent"/>
+								<int key="NSPeriodicDelay">200</int>
+								<int key="NSPeriodicInterval">25</int>
+							</object>
+						</object>
+						<object class="BWUnanchoredButton" id="426437904">
+							<reference key="NSNextResponder" ref="538557104"/>
+							<int key="NSvFlags">292</int>
+							<string key="NSFrame">{{20, 31}, {23, 22}}</string>
+							<reference key="NSSuperview" ref="538557104"/>
+							<bool key="NSEnabled">YES</bool>
+							<object class="BWUnanchoredButtonCell" key="NSCell" id="266083890">
+								<int key="NSCellFlags">67239424</int>
+								<int key="NSCellFlags2">134348800</int>
+								<string key="NSContents"/>
+								<reference key="NSSupport" ref="26"/>
+								<reference key="NSControlView" ref="426437904"/>
+								<int key="NSButtonFlags">-2033958657</int>
+								<int key="NSButtonFlags2">163</int>
+								<object class="NSCustomResource" key="NSNormalImage">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">NSAddTemplate</string>
 								</object>
 								<string key="NSAlternateContents"/>
 								<string key="NSKeyEquivalent"/>
@@ -1010,6 +1033,14 @@
 							<string key="NSClassName">NSImage</string>
 							<string key="NSResourceName">NSMenuMixedState</string>
 						</object>
+					</object>
+					<object class="NSMenuItem" id="1024651304">
+						<reference key="NSMenu" ref="417703705"/>
+						<string key="NSTitle">Include Selected Files</string>
+						<string key="NSKeyEquiv"/>
+						<int key="NSMnemonicLoc">2147483647</int>
+						<reference key="NSOnImage" ref="689809863"/>
+						<reference key="NSMixedImage" ref="744746758"/>
 					</object>
 					<object class="NSMenuItem" id="172537192">
 						<reference key="NSMenu" ref="417703705"/>
@@ -1163,14 +1194,6 @@
 					<int key="connectionID">134</int>
 				</object>
 				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">removePathsButton</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="602005739"/>
-					</object>
-					<int key="connectionID">135</int>
-				</object>
-				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
 						<string key="label">commitSheetDiffAction:</string>
 						<reference key="source" ref="1001"/>
@@ -1201,6 +1224,46 @@
 						<reference key="destination" ref="602005739"/>
 					</object>
 					<int key="connectionID">139</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">includePathsAction:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="426437904"/>
+					</object>
+					<int key="connectionID">143</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">includePathsAction:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="1024651304"/>
+					</object>
+					<int key="connectionID">150</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">excludePathsButton</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="602005739"/>
+					</object>
+					<int key="connectionID">151</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">okButton</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="64017787"/>
+					</object>
+					<int key="connectionID">152</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">includePathsButton</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="426437904"/>
+					</object>
+					<int key="connectionID">153</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1255,6 +1318,7 @@
 							<reference ref="477043679"/>
 							<reference ref="843705293"/>
 							<reference ref="602005739"/>
+							<reference ref="426437904"/>
 						</object>
 						<reference key="parent" ref="983124931"/>
 					</object>
@@ -1583,6 +1647,7 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<reference ref="172537192"/>
 							<reference ref="960384345"/>
+							<reference ref="1024651304"/>
 						</object>
 						<reference key="parent" ref="0"/>
 						<string key="objectName">Menu (LabelsContextualMenu)</string>
@@ -1611,6 +1676,25 @@
 						<reference key="object" ref="494163643"/>
 						<reference key="parent" ref="602005739"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">140</int>
+						<reference key="object" ref="426437904"/>
+						<object class="NSMutableArray" key="children">
+							<bool key="EncodedWithXMLCoder">YES</bool>
+							<reference ref="266083890"/>
+						</object>
+						<reference key="parent" ref="538557104"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">141</int>
+						<reference key="object" ref="266083890"/>
+						<reference key="parent" ref="426437904"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">148</int>
+						<reference key="object" ref="1024651304"/>
+						<reference key="parent" ref="417703705"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -1636,6 +1720,9 @@
 					<string>125.IBPluginDependency</string>
 					<string>131.IBPluginDependency</string>
 					<string>132.IBPluginDependency</string>
+					<string>140.IBPluginDependency</string>
+					<string>141.IBPluginDependency</string>
+					<string>148.IBPluginDependency</string>
 					<string>41.IBEditorWindowLastContentRect</string>
 					<string>41.IBPluginDependency</string>
 					<string>41.IBWindowTemplateEditedContentRect</string>
@@ -1703,6 +1790,9 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.brandonwalkin.BWToolkit</string>
 					<string>com.brandonwalkin.BWToolkit</string>
+					<string>com.brandonwalkin.BWToolkit</string>
+					<string>com.brandonwalkin.BWToolkit</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{131, 672}, {667, 484}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>{{131, 672}, {667, 484}}</string>
@@ -1780,7 +1870,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">139</int>
+			<int key="maxID">153</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1820,6 +1910,7 @@
 							<string>exculdePathsAction:</string>
 							<string>handleChangedFilesTableClick:</string>
 							<string>handleChangedFilesTableDoubleClick:</string>
+							<string>includePathsAction:</string>
 							<string>openCommitSheetWithAllFiles:</string>
 							<string>openCommitSheetWithSelectedFiles:</string>
 							<string>sheetButtonCancel:</string>
@@ -1827,6 +1918,7 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -1846,8 +1938,10 @@
 							<string>commitSheetBranchString</string>
 							<string>commitSheetTitle</string>
 							<string>diffButton</string>
+							<string>excludePathsButton</string>
+							<string>includePathsButton</string>
+							<string>okButton</string>
 							<string>previousCommitMessagesTableView</string>
-							<string>removePathsButton</string>
 							<string>theCommitSheet</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
@@ -1857,8 +1951,10 @@
 							<string>NSTextField</string>
 							<string>NSTextField</string>
 							<string>NSButton</string>
-							<string>NSTableView</string>
 							<string>NSButton</string>
+							<string>NSButton</string>
+							<string>NSButton</string>
+							<string>NSTableView</string>
 							<string>NSWindow</string>
 						</object>
 					</object>

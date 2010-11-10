@@ -1137,6 +1137,18 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 
 // MARK: -
+@implementation NSIndexSet ( NSIndexSetPlusAccessors )
+- (BOOL)	intersectsIndexes:(NSIndexSet*)indexSet
+{
+	NSMutableIndexSet* set = [[NSMutableIndexSet alloc]init];
+	[set addIndexes:self];
+	[set addIndexes:indexSet];
+	return [set count] < ([self count] + [indexSet count]);
+}
+@end
+
+
+// MARK: -
 @implementation NSMutableArray ( NSMutableArrayPlusAccessors )
 - (void)	addObject:(id)object1 followedBy:(id)object2
 {

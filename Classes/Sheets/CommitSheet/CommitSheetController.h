@@ -20,14 +20,18 @@
 	IBOutlet NSTextField* commitSheetBranchString;
 	IBOutlet NSWindow*	  theCommitSheet;
 	IBOutlet NSButton*	  diffButton;
-	IBOutlet NSButton*	  removePathsButton;
+	IBOutlet NSButton*	  okButton;
+	IBOutlet NSButton*	  excludePathsButton;
+	IBOutlet NSButton*	  includePathsButton;
 
 	MacHgDocument* myDocument;
 
 	BOOL			committingAllFiles;				// We need to set this up since some commands like merging need to "commit" all
 													// files.
-	NSMutableArray*	exculdedPaths;					// This array is stored here so we can exclude certain files from being
-													// committed
+	NSArray*		absolutePathsOfFilesToCommit;	// This array is stored here when the sheet is set up. Later when
+													// the user hits the commit button it does this commit.
+	NSMutableIndexSet* excludedItems;				// This index set stores the rows in the list we will exclude from the final commit.
+
 	NSMutableArray*	changedFilesTableSourceData;	// This array is computed whenever we put up the
 													// sheet, but the tableview in the sheet uses this class as a data
 													// source so we have to have this as a class member.
@@ -50,6 +54,7 @@
 - (IBAction) sheetButtonCancel:(id)sender;
 
 - (IBAction) exculdePathsAction:(id)sender;
+- (IBAction) includePathsAction:(id)sender;
 - (IBAction) commitSheetDiffAction:(id)sender;
 - (IBAction) handleChangedFilesTableClick:(id)sender;
 - (IBAction) handleChangedFilesTableDoubleClick:(id)sender;
