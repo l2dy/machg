@@ -307,14 +307,14 @@
 - (NSArray*) excludedPaths
 {
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
-	NSMutableArray* exludedPaths = [[NSMutableArray alloc]init];
+	NSMutableArray* excludedPaths = [[NSMutableArray alloc]init];
 	[excludedItems enumerateIndexesUsingBlock:^(NSUInteger row, BOOL* stop) {
 		NSString* item = [filesToCommitTableSourceData objectAtIndex:row];
 		NSString* relativePath = [item substringFromIndex:2];
 		NSString* absolutePath = [rootPath stringByAppendingPathComponent:relativePath];
-		[exludedPaths addObject:absolutePath];
+		[excludedPaths addObject:absolutePath];
 	}];
-	return exludedPaths;
+	return excludedPaths;
 }
 
 
@@ -395,8 +395,8 @@
 
 		[myDocument registerPendingRefresh:filteredAbsolutePathsOfFilesToCommit];
 		if (IsNotEmpty(excludedPaths))
-			for (NSString* exludedPath in excludedPaths)
-				[args addObject:@"--exclude" followedBy:exludedPath];
+			for (NSString* excludedPath in excludedPaths)
+				[qrefreshArgs addObject:@"--exclude" followedBy:excludedPath];
 		if ([self committerOption] && IsNotEmpty([self committer]))
 			[args addObject:@"--user" followedBy:[self committer]];
 		if ([self dateOption] && IsNotEmpty([self date]))
