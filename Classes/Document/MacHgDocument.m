@@ -595,8 +595,9 @@
 - (void) recordWindowFrameToDefaults
 {
 	NSString* fileName = [self documentNameForAutosave];
-	NSString* originKeyForAutoSave = fstr(@"File:%@:originPos", fileName);
-	NSString* rectKeyForAutoSave   = fstr(@"File:%@:windowPosForView%d", fileName, currentPane_);
+	BOOL independent = ViewsHaveIndependentSizesFromDefaults();
+	NSString* originKeyForAutoSave = independent ? fstr(@"File:%@:originPos", fileName) : @"General:OriginPos";
+	NSString* rectKeyForAutoSave   = independent ? fstr(@"File:%@:windowPosForView%d", fileName, currentPane_) : @"General:windowPosForView";
 	NSRect frm = [mainWindow_ frame];
 	NSString* topLeftOriginString = NSStringFromPoint(NSMakePoint(NSMinX(frm), NSMaxY(frm)));	// Record window origin top left
 	NSString* rectString = NSStringFromRect(frm);
@@ -607,8 +608,9 @@
 - (NSRect) getWindowFrameFromDefaults
 {
 	NSString* fileName = [self documentNameForAutosave];
-	NSString* originKeyForAutoSave = fstr(@"File:%@:originPos", fileName);
-	NSString* rectKeyForAutoSave   = fstr(@"File:%@:windowPosForView%d", fileName, currentPane_);
+	BOOL independent = ViewsHaveIndependentSizesFromDefaults();
+	NSString* originKeyForAutoSave = independent ? fstr(@"File:%@:originPos", fileName) : @"General:OriginPos";
+	NSString* rectKeyForAutoSave   = independent ? fstr(@"File:%@:windowPosForView%d", fileName, currentPane_) : @"General:windowPosForView";
 	NSString* topLeftOriginString  = [[NSUserDefaults standardUserDefaults] objectForKey:originKeyForAutoSave];
 	NSString* rectString           = [[NSUserDefaults standardUserDefaults] objectForKey:rectKeyForAutoSave];
 	if (!topLeftOriginString || !rectString)
@@ -699,15 +701,7 @@
 	
 	
 	currentPane_ = newPaneNum;
-	NSView* newView = [self paneView:newPaneNum];
-	
-	if (!ViewsHaveIndependentSizesFromDefaults())
-	{
-		[[mainContentBox animator] setContentView:newView];
-		[self recordWindowFrameToDefaults];
-		return;
-	}
-	
+	NSView* newView = [self paneView:newPaneNum];	
 	NSRect newFrame = [self newWindowFrameWhenSwitchingContentTo:[newView frame]];	// Figure out new frame size	
 	[NSAnimationContext beginGrouping];												// Using an animation grouping because we may be changing the duration
 
