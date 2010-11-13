@@ -25,6 +25,7 @@
 	IBOutlet NSButton*	  excludePathsButton;
 	IBOutlet NSButton*	  includePathsButton;
 	IBOutlet DisclosureBoxController*	disclosureController;	// The disclosure box for the advanced options
+	IBOutlet NSButton*	  amendButton;
 
 	
 	MacHgDocument*	myDocument;

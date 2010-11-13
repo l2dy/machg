@@ -117,13 +117,16 @@
 
 	NSMutableArray* argsGetUserName = [NSMutableArray arrayWithObjects:@"showconfig", @"ui.username", nil];
 	ExecutionResult* userNameResult = [TaskExecutions executeMercurialWithArgs:argsGetUserName  fromRoot:rootPath];
+	BOOL amendIsPotentiallyPossible = AllowHistoryEditingOfRepositoryFromDefaults() && ![myDocument inMergeState] && [myDocument isCurrentRevisionTip];
 
 	[disclosureController setToOpenState:NO];
 	[self setCommitter:nonNil(userNameResult.outStr)];
 	[self setCommitterOption:NO];
 	[self setDate:[NSDate date]];
 	[self setDateOption:NO];
-
+	[amendButton setState:NO];
+	[amendButton setEnabled:amendIsPotentiallyPossible];
+	
 	NSString* currentMessage = [commitMessageTextView string];
 	[commitMessageTextView setSelectedRange:NSMakeRange(0, [currentMessage length])];
 	[NSApp beginSheet:theCommitSheet modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
@@ -388,26 +391,66 @@
 		return;
 	}
 
+	
 	[myDocument removeAllUndoActionsForDocument];
-	[myDocument dispatchToMercurialQueuedWithDescription:@"Committing Files" process:^{
-		NSString* theMessage = [commitMessageTextView string];
-		NSMutableArray* args = [NSMutableArray arrayWithObjects:@"commit", @"--message", theMessage, nil];
+	
+	if ([amendButton state] == NSOffState)
+	{
+		[myDocument dispatchToMercurialQueuedWithDescription:@"Committing Files" process:^{
+			NSString* theMessage = [commitMessageTextView string];
+			NSMutableArray* args = [NSMutableArray arrayWithObjects:@"commit", @"--message", theMessage, nil];
+			
+			[myDocument registerPendingRefresh:filteredAbsolutePathsOfFilesToCommit];
+			if (IsNotEmpty(excludedPaths))
+				for (NSString* excludedPath in excludedPaths)
+					[args addObject:@"--exclude" followedBy:excludedPath];
+			if ([self committerOption] && IsNotEmpty([self committer]))
+				[args addObject:@"--user" followedBy:[self committer]];
+			if ([self dateOption] && IsNotEmpty([self date]))
+				[args addObject:@"--date" followedBy:[[self date] isodateDescription]];
+			[args addObjectsFromArray:filteredAbsolutePathsOfFilesToCommit];
+			
+			[myDocument delayEventsUntilFinishBlock:^{
+				[TaskExecutions executeMercurialWithArgs:args  fromRoot:rootPath];
+				[myDocument addToChangedPathsDuringSuspension:filteredAbsolutePathsOfFilesToCommit];
+			}];			
+		}];
+		[NSApp endSheet:theCommitSheet];
+		[theCommitSheet orderOut:sender];
+		return;
+	}
 
+	NSMutableArray*  qimportArgs   = [NSMutableArray arrayWithObjects:@"qimport", @"--rev", [myDocument getHGParent1Revision], @"--name", @"macHgAmendPatch", nil];
+	ExecutionResult* qimportResult = [myDocument executeMercurialWithArgs:qimportArgs  fromRoot:rootPath  whileDelayingEvents:YES];
+	if ([qimportResult hasErrors])
+	{
+		PlayBeep();
+		[amendButton setState:NSOffState];
+		DebugLog(fstr(@"Could not amend to rev %@", [myDocument getHGParent1Revision]));
+		return;
+	}
+	
+	[myDocument dispatchToMercurialQueuedWithDescription:@"Committing Files" process:^{
+		NSMutableArray* qrefreshArgs = [NSMutableArray arrayWithObjects:@"qrefresh", @"--short", nil];
+		
 		[myDocument registerPendingRefresh:filteredAbsolutePathsOfFilesToCommit];
 		if (IsNotEmpty(excludedPaths))
 			for (NSString* excludedPath in excludedPaths)
 				[qrefreshArgs addObject:@"--exclude" followedBy:excludedPath];
 		if ([self committerOption] && IsNotEmpty([self committer]))
-			[args addObject:@"--user" followedBy:[self committer]];
+			[qrefreshArgs addObject:@"--user" followedBy:[self committer]];
 		if ([self dateOption] && IsNotEmpty([self date]))
-			[args addObject:@"--date" followedBy:[[self date] isodateDescription]];
-		[args addObjectsFromArray:filteredAbsolutePathsOfFilesToCommit];
-
-		[myDocument delayEventsUntilFinishBlock:^{
-			[TaskExecutions executeMercurialWithArgs:args  fromRoot:rootPath];
-			[myDocument addToChangedPathsDuringSuspension:filteredAbsolutePathsOfFilesToCommit];
-		}];
+			[qrefreshArgs addObject:@"--date" followedBy:[[self date] isodateDescription]];
+		[qrefreshArgs addObjectsFromArray:filteredAbsolutePathsOfFilesToCommit];
+		ExecutionResult* qrefreshResult = [myDocument executeMercurialWithArgs:qrefreshArgs  fromRoot:rootPath  whileDelayingEvents:YES];
+		
+		NSMutableArray*  qfinishArgs   = [NSMutableArray arrayWithObjects:@"qfinish", @"macHgAmendPatch", nil];
+		ExecutionResult* qfinishResult = [myDocument executeMercurialWithArgs:qfinishArgs  fromRoot:rootPath  whileDelayingEvents:YES];
+			
+		[myDocument addToChangedPathsDuringSuspension:filteredAbsolutePathsOfFilesToCommit];
 	}];
+	
+	
 	[NSApp endSheet:theCommitSheet];
 	[theCommitSheet orderOut:sender];
 }
