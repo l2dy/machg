@@ -158,6 +158,57 @@
 
 
 
+// ------------------------------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------------------------------------
+// Mercurial Version   ----------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------------------------------------------------
+
+Replacing the Mercurial version is fairly trivial. Just replace the version of Mercurial in MacHg/LocalMercurial. Ie replace
+
+MacHg/LocalMercurial/mercurial
+MacHg/LocalMercurial/hgext
+MacHg/LocalMercurial/mercurial-<version>-py2.6.egg-info
+
+With the new version. Be careful to maintain the extensions in hgext which are not in the new version hgext. Eg histedit, collapse,
+etc. Moreover you will need to re-apply the one patch given in changeset 323 : 23cef03f3f85
+
+diff --git a/LocalMercurial/mercurial/dirstate.py b/LocalMercurial/mercurial/dirstate.py
+--- a/LocalMercurial/mercurial/dirstate.py
++++ b/LocalMercurial/mercurial/dirstate.py
+@@ -113,11 +113,27 @@
+ 
+     @propertycache
+     def _checklink(self):
+-        return util.checklink(self._root)
++         d = os.path.join(self._root, '.hg', 'fschecks')
++         try:
++             if not os.path.isdir(d):
++                 os.mkdir(d)
++             return util.checklink(d)
++         except (IOError, OSError):
++             # we don't care, the user probably won't be able to commit
++             # anyway
++             return False
+ 
+     @propertycache
+     def _checkexec(self):
+-        return util.checkexec(self._root)
++         d = os.path.join(self._root, '.hg', 'fschecks')
++         try:
++             if not os.path.isdir(d):
++                 os.mkdir(d)
++             return util.checkexec(d)
++         except (IOError, OSError):
++             # we don't care, the user probably won't be able to commit
++             # anyway
++             return False
+ 
+     @propertycache
+     def _checkcase(self):
+
+
+
 
 // ------------------------------------------------------------------------------------------------------------------------------
 // ------------------------------------------------------------------------------------------------------------------------------
@@ -299,33 +350,10 @@
 // ------------------------------------------------------------------------------------------------------------------------------
 // These are used to detect underlying file changes. Unfortunately we have to turn these off when doing underlying mercurial
 // commands since mercurial creates temp files while executing many of its commands. Actually the version of Mercurial shipping
-// with MacHg is slightly modified to turn off this behavior which I might consider buggy in any case. The changes are in util.py.
-// You can simply diff the file from the original source files if you want but basically the diff is here.
+// with MacHg is slightly modified to turn off this behavior which I might consider buggy in any case. The changes are in
+// LocalMercurial/mercurial/dirstate.py  You can simply diff the file from the original source files if you want but basically
+// the diff is given above on the section on Mercurial.
 
-- Use the standard temp directory rather than the given directory since it stops racing on
-  OSX.
-
-diff --git a/LocalMercurial/mercurial/util.py b/LocalMercurial/mercurial/util.py
---- a/LocalMercurial/mercurial/util.py
-+++ b/LocalMercurial/mercurial/util.py
-@@ -641,7 +641,7 @@
- 
-     try:
-         EXECFLAGS = stat.S_IXUSR | stat.S_IXGRP | stat.S_IXOTH
--        fh, fn = tempfile.mkstemp("", "", path)
-+        fh, fn = tempfile.mkstemp(dir=None,prefix='hg-check-exec-')
-         try:
-             os.close(fh)
-             m = os.stat(fn).st_mode & 0777
-@@ -659,7 +659,7 @@
-     """check whether the given path is on a symlink-capable filesystem"""
-     # mktemp is not racy because symlink creation will fail if the
-     # file already exists
--    name = tempfile.mktemp(dir=path)
-+    name = tempfile.mktemp(dir=None)
-     try:
-         os.symlink(".", name)
-         os.unlink(name)
 
 
 // General Category Extensions
