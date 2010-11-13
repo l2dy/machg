@@ -15,7 +15,7 @@
 {
 	IBOutlet NSTextField* commitSheetTitle;
 	IBOutlet NSTextView*  commitMessageTextView;
-	IBOutlet NSTableView* changedFilesTableView;
+	IBOutlet NSTableView* filesToCommitTableView;
 	IBOutlet NSTableView* previousCommitMessagesTableView;
 	IBOutlet NSTextField* commitSheetBranchString;
 	
@@ -26,7 +26,7 @@
 	IBOutlet NSButton*	  includePathsButton;
 	IBOutlet DisclosureBoxController*	disclosureController;	// The disclosure box for the advanced options
 
-	MacHgDocument* myDocument;
+	MacHgDocument*	myDocument;
 
 	BOOL			committingAllFiles;				// We need to set this up since some commands like merging need to "commit" all
 													// files.
@@ -34,7 +34,7 @@
 													// the user hits the commit button it does this commit.
 	NSMutableIndexSet* excludedItems;				// This index set stores the rows in the list we will exclude from the final commit.
 
-	NSMutableArray*	changedFilesTableSourceData;	// This array is computed whenever we put up the
+	NSMutableArray*	filesToCommitTableSourceData;	// This array is computed whenever we put up the
 													// sheet, but the tableview in the sheet uses this class as a data
 													// source so we have to have this as a class member.
 	NSArray*		logCommentsTableSourceData;		// This array is computed whenever we put up the
@@ -55,10 +55,10 @@
 - (IBAction) sheetButtonOk:(id)sender;
 - (IBAction) sheetButtonCancel:(id)sender;
 
-- (IBAction) exculdePathsAction:(id)sender;
+- (IBAction) excludePathsAction:(id)sender;
 - (IBAction) includePathsAction:(id)sender;
 - (IBAction) commitSheetDiffAction:(id)sender;
-- (IBAction) handleChangedFilesTableClick:(id)sender;
-- (IBAction) handleChangedFilesTableDoubleClick:(id)sender;
+- (IBAction) handleFilesToCommitTableClick:(id)sender;
+- (IBAction) handleFilesToCommitTableDoubleClick:(id)sender;
 
 @end

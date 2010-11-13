@@ -57,20 +57,20 @@
 // We should be able to do this just on the awake from nib but it doesn't seem to be working.
 - (void) hookUpClickActions
 {
-	[changedFilesTableView setTarget:self];
-	[changedFilesTableView setDoubleAction:@selector(handleChangedFilesTableDoubleClick:)];
-	[changedFilesTableView setAction:@selector(handleChangedFilesTableClick:)];
+	[filesToCommitTableView setTarget:self];
+	[filesToCommitTableView setDoubleAction:@selector(handleFilesToCommitTableDoubleClick:)];
+	[filesToCommitTableView setAction:@selector(handleFilesToCommitTableClick:)];
 	[previousCommitMessagesTableView setTarget:self];
 	[previousCommitMessagesTableView setDoubleAction:@selector(handlePreviousCommitMessagesTableDoubleClick:)];
 	[previousCommitMessagesTableView setAction:@selector(handlePreviousCommitMessagesTableClick:)];
 }
 
-- (IBAction) handleChangedFilesTableClick:(id)sender
+- (IBAction) handleFilesToCommitTableClick:(id)sender
 {
 	
 }
 
-- (IBAction) handleChangedFilesTableDoubleClick:(id)sender
+- (IBAction) handleFilesToCommitTableDoubleClick:(id)sender
 {
 	NSArray* chosenFiles = [self chosenFilesToCommit];
 	[myDocument viewDifferencesInCurrentRevisionFor:chosenFiles toRevision:nil];	// no revision means don't include the --rev option
@@ -100,7 +100,7 @@
 
 - (void) openCommitSheetWithPaths:(NSArray*)paths
 {
-	changedFilesTableSourceData = nil;
+	filesToCommitTableSourceData = nil;
 	logCommentsTableSourceData = nil;
 	excludedItems = nil;
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
@@ -124,10 +124,10 @@
 	NSMutableArray* argsStatus = [NSMutableArray arrayWithObjects:@"status", @"--modified", @"--added", @"--removed", nil];
 	[argsStatus addObjectsFromArray: absolutePathsOfFilesToCommit];
 	ExecutionResult* hgStatusResults = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:rootPath  logging:eLoggingNone];
-	changedFilesTableSourceData = [NSMutableArray arrayWithArray:[hgStatusResults.outStr componentsSeparatedByString:@"\n"]];
-	if (IsEmpty([changedFilesTableSourceData lastObject]))
-		[changedFilesTableSourceData removeLastObject];
-	[changedFilesTableView reloadData];
+	filesToCommitTableSourceData = [NSMutableArray arrayWithArray:[hgStatusResults.outStr componentsSeparatedByString:@"\n"]];
+	if (IsEmpty([filesToCommitTableSourceData lastObject]))
+		[filesToCommitTableSourceData removeLastObject];
+	[filesToCommitTableView reloadData];
 	
 	// Fetch the last 10 log comments and set the sources so that the table view of these in the commit sheet shows them correctly.
 	NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log", @"--limit", @"10", @"--template", @"{desc}\n#^&^#\n", nil];
@@ -184,7 +184,7 @@
 	// CommitSheet contextual items
 	NSIndexSet* selectedIndexes = [self chosenIndexesOfFilesToCommit];
 	if (theAction == @selector(commitSheetDiffAction:))			return [self filesToCommitAreSelected];
-	if (theAction == @selector(exculdePathsAction:))			return [selectedIndexes count] > 0 && ![excludedItems containsIndexes:selectedIndexes];
+	if (theAction == @selector(excludePathsAction:))			return [selectedIndexes count] > 0 && ![excludedItems containsIndexes:selectedIndexes];
 	if (theAction == @selector(includePathsAction:))			return [selectedIndexes count] > 0 && [excludedItems intersectsIndexes:selectedIndexes];
 	return [myDocument validateUserInterfaceItem:anItem];
 }
@@ -192,12 +192,12 @@
 
 - (IBAction) validateButtons:(id)sender
 {
-	NSIndexSet* selectedIndexes = [changedFilesTableView selectedRowIndexes];
+	NSIndexSet* selectedIndexes = [filesToCommitTableView selectedRowIndexes];
 	BOOL pathsAreSelected = [selectedIndexes count] > 0;
 	BOOL pathsCanBeExcluded = pathsAreSelected && ![excludedItems containsIndexes:selectedIndexes];
 	BOOL pathsCanBeIncluded = pathsAreSelected && [excludedItems intersectsIndexes:selectedIndexes];
 	NSString* diffButtonMessage = pathsAreSelected ? @"Diff Selected" : @"Diff All";
-	BOOL okToCommit = ([changedFilesTableSourceData count] > 0) && ([excludedItems count] < [changedFilesTableSourceData count]);
+	BOOL okToCommit = ([filesToCommitTableSourceData count] > 0) && ([excludedItems count] < [filesToCommitTableSourceData count]);
 	
 	dispatch_async(mainQueue(), ^{
 		[diffButton setTitle:diffButtonMessage];
@@ -217,8 +217,8 @@
 
 - (NSInteger) numberOfRowsInTableView:(NSTableView*)aTableView
 {
-	if (aTableView == changedFilesTableView)
-		return [changedFilesTableSourceData count];
+	if (aTableView == filesToCommitTableView)
+		return [filesToCommitTableSourceData count];
 	if (aTableView == previousCommitMessagesTableView)
 		return [logCommentsTableSourceData count];
 	return 0;
@@ -226,8 +226,8 @@
 
 - (id) tableView:(NSTableView*)aTableView objectValueForTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
 {
-	if (aTableView == changedFilesTableView)
-		return [changedFilesTableSourceData objectAtIndex:rowIndex];
+	if (aTableView == filesToCommitTableView)
+		return [filesToCommitTableSourceData objectAtIndex:rowIndex];
 	if (aTableView == previousCommitMessagesTableView)
 		return [logCommentsTableSourceData objectAtIndex:rowIndex];
 	return @" ";
@@ -235,13 +235,13 @@
 
 - (void)tableViewSelectionDidChange:(NSNotification*)aNotification
 {
-	if ([aNotification object] == changedFilesTableView)
+	if ([aNotification object] == filesToCommitTableView)
 		[self validateButtons:self];
 }
 
 - (void) tableView:(NSTableView*)aTableView  willDisplayCell:(id)aCell forTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
 {
-	if (aTableView == changedFilesTableView)
+	if (aTableView == filesToCommitTableView)
 		if ([excludedItems containsIndex:rowIndex])
 		{
 			NSColor* grayColor = [NSColor grayColor];
@@ -261,13 +261,13 @@
 // MARK:  ChangedFiles TableView
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BOOL) filesToCommitAreSelected	{ return [changedFilesTableView numberOfSelectedRows] > 0; }
+- (BOOL) filesToCommitAreSelected	{ return [filesToCommitTableView numberOfSelectedRows] > 0; }
 
 - (NSArray*) filesToCommit
 {
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	NSMutableArray* toCommit = [[NSMutableArray alloc]init];
-	for (NSString* file in changedFilesTableSourceData)
+	for (NSString* file in filesToCommitTableSourceData)
 	{
 		NSString* relativePath = [file substringFromIndex:2];
 		NSString* absolutePath = [rootPath stringByAppendingPathComponent:relativePath];
@@ -281,9 +281,9 @@
 {
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	NSMutableArray* selectedCommitFiles = [[NSMutableArray alloc]init];
-	NSIndexSet* rows = [changedFilesTableView selectedRowIndexes];
+	NSIndexSet* rows = [filesToCommitTableView selectedRowIndexes];
 	[rows enumerateIndexesUsingBlock:^(NSUInteger row, BOOL* stop) {
-		NSString* item = [changedFilesTableSourceData objectAtIndex:row];
+		NSString* item = [filesToCommitTableSourceData objectAtIndex:row];
 		NSString* relativePath = [item substringFromIndex:2];
 		NSString* absolutePath = [rootPath stringByAppendingPathComponent:relativePath];
 		[selectedCommitFiles addObject:absolutePath];
@@ -297,7 +297,7 @@
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	NSMutableArray* exludedPaths = [[NSMutableArray alloc]init];
 	[excludedItems enumerateIndexesUsingBlock:^(NSUInteger row, BOOL* stop) {
-		NSString* item = [changedFilesTableSourceData objectAtIndex:row];
+		NSString* item = [filesToCommitTableSourceData objectAtIndex:row];
 		NSString* relativePath = [item substringFromIndex:2];
 		NSString* absolutePath = [rootPath stringByAppendingPathComponent:relativePath];
 		[exludedPaths addObject:absolutePath];
@@ -309,7 +309,7 @@
 - (NSString*) chosenFileToCommit
 {
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
-	NSString* file = [changedFilesTableSourceData objectAtIndex:[changedFilesTableView chosenRow]];
+	NSString* file = [filesToCommitTableSourceData objectAtIndex:[filesToCommitTableView chosenRow]];
 	NSString* relativePath = [file substringFromIndex:2];
 	NSString* absolutePath = [rootPath stringByAppendingPathComponent:relativePath];	
 	return absolutePath;
@@ -317,16 +317,16 @@
 
 - (NSArray*) chosenFilesToCommit
 {
-	if (![changedFilesTableView rowWasClicked] || [[changedFilesTableView selectedRowIndexes] containsIndex:[changedFilesTableView clickedRow]])
+	if (![filesToCommitTableView rowWasClicked] || [[filesToCommitTableView selectedRowIndexes] containsIndex:[filesToCommitTableView clickedRow]])
 		return [self selectedFilesToCommit];
 	return [NSArray arrayWithObject:[self chosenFileToCommit]];
 }
 
 - (NSIndexSet*) chosenIndexesOfFilesToCommit
 {
-	if (![changedFilesTableView rowWasClicked] || [[changedFilesTableView selectedRowIndexes] containsIndex:[changedFilesTableView clickedRow]])
-		return [changedFilesTableView selectedRowIndexes];
-	return [NSIndexSet indexSetWithIndex:[changedFilesTableView chosenRow]];
+	if (![filesToCommitTableView rowWasClicked] || [[filesToCommitTableView selectedRowIndexes] containsIndex:[filesToCommitTableView clickedRow]])
+		return [filesToCommitTableView selectedRowIndexes];
+	return [NSIndexSet indexSetWithIndex:[filesToCommitTableView chosenRow]];
 }
 
 
@@ -338,12 +338,12 @@
 // MARK:  Actions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (IBAction) exculdePathsAction:(id)sender
+- (IBAction) excludePathsAction:(id)sender
 {
 	if (!excludedItems)
 		excludedItems = [[NSMutableIndexSet alloc]init];
 	[excludedItems addIndexes:[self chosenIndexesOfFilesToCommit]];
-	[changedFilesTableView reloadData];
+	[filesToCommitTableView reloadData];
 	[self validateButtons:self];
 }
 
@@ -353,7 +353,7 @@
 	if (!excludedItems)
 		return;	
 	[excludedItems removeIndexes:[self chosenIndexesOfFilesToCommit]];
-	[changedFilesTableView reloadData];
+	[filesToCommitTableView reloadData];
 	[self validateButtons:self];
 }
 
@@ -367,7 +367,7 @@
 	[filteredAbsolutePathsOfFilesToCommit removeObjectsInArray:excludedPaths];
 	
 	// This is more a check here, error handling should have caught this before now if the files were empty.
-	if (IsEmpty(changedFilesTableSourceData) || [excludedPaths count] >= [changedFilesTableSourceData count] || IsEmpty(filteredAbsolutePathsOfFilesToCommit))
+	if (IsEmpty(filesToCommitTableSourceData) || [excludedPaths count] >= [filesToCommitTableSourceData count] || IsEmpty(filteredAbsolutePathsOfFilesToCommit))
 	{
 		PlayBeep();
 		DebugLog(@"Nothing to commit");

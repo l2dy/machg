@@ -10,12 +10,10 @@
 			<string key="com.apple.InterfaceBuilder.CocoaPlugin">740</string>
 			<string key="com.brandonwalkin.BWToolkit">1.2.2</string>
 		</dictionary>
-		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-			<integer value="178"/>
-		</array>
+		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs"/>
 		<array key="IBDocument.PluginDependencies">
-			<string>com.brandonwalkin.BWToolkit</string>
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+			<string>com.brandonwalkin.BWToolkit</string>
 		</array>
 		<dictionary class="NSMutableDictionary" key="IBDocument.Metadata"/>
 		<array class="NSMutableArray" key="IBDocument.RootObjects" id="1000">
@@ -31,15 +29,15 @@
 			<object class="NSWindowTemplate" id="983124931">
 				<int key="NSWindowStyleMask">15</int>
 				<int key="NSWindowBacking">2</int>
-				<string key="NSWindowRect">{{196, -71}, {667, 581}}</string>
+				<string key="NSWindowRect">{{196, 88}, {667, 581}}</string>
 				<int key="NSWTFlags">603979776</int>
 				<string key="NSWindowTitle">Window</string>
 				<string key="NSWindowClass">NSWindow</string>
 				<nil key="NSViewClass"/>
-				<string key="NSWindowContentMaxSize">{3.40282e+38, 3.40282e+38}</string>
+				<string key="NSWindowContentMaxSize">{1.79769e+308, 1.79769e+308}</string>
 				<string key="NSWindowContentMinSize">{500, 400}</string>
 				<object class="NSView" key="NSWindowView" id="538557104">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<array class="NSMutableArray" key="NSSubviews">
 						<object class="NSButton" id="64017787">
@@ -88,7 +86,7 @@
 									<string key="NSColorName">controlColor</string>
 									<object class="NSColor" key="NSColor" id="27766402">
 										<int key="NSColorSpace">3</int>
-										<bytes key="NSWhite">MC42NjY2NjY2ODY1AA</bytes>
+										<bytes key="NSWhite">MC42NjY2NjY2NjY3AA</bytes>
 									</object>
 								</object>
 								<object class="NSColor" key="NSTextColor" id="977823351">
@@ -1152,11 +1150,10 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 						</object>
 					</array>
 					<string key="NSFrameSize">{667, 581}</string>
-					<reference key="NSSuperview"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
 				<string key="NSMinSize">{500, 422}</string>
-				<string key="NSMaxSize">{3.40282e+38, 3.40282e+38}</string>
+				<string key="NSMaxSize">{1.79769e+308, 1.79769e+308}</string>
 				<string key="NSFrameAutosaveName">CommitSheetWindowFrame</string>
 			</object>
 			<object class="NSMenu" id="417703705">
@@ -1216,14 +1213,6 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 						<reference key="destination" ref="955361526"/>
 					</object>
 					<int key="connectionID">89</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">changedFilesTableView</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="9472516"/>
-					</object>
-					<int key="connectionID">90</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -1355,22 +1344,6 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
-						<string key="label">exculdePathsAction:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="960384345"/>
-					</object>
-					<int key="connectionID">138</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
-						<string key="label">exculdePathsAction:</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="602005739"/>
-					</object>
-					<int key="connectionID">139</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
 						<string key="label">includePathsAction:</string>
 						<reference key="source" ref="1001"/>
 						<reference key="destination" ref="426437904"/>
@@ -1456,6 +1429,30 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 						<reference key="destination" ref="743591091"/>
 					</object>
 					<int key="connectionID">211</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">filesToCommitTableView</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="9472516"/>
+					</object>
+					<int key="connectionID">225</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">excludePathsAction:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="602005739"/>
+					</object>
+					<int key="connectionID">226</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">excludePathsAction:</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="960384345"/>
+					</object>
+					<int key="connectionID">227</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -2082,7 +2079,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">224</int>
+			<int key="maxID">227</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2115,9 +2112,9 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 					<string key="superclassName">BaseSheetWindowController</string>
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="commitSheetDiffAction:">id</string>
-						<string key="exculdePathsAction:">id</string>
-						<string key="handleChangedFilesTableClick:">id</string>
-						<string key="handleChangedFilesTableDoubleClick:">id</string>
+						<string key="excludePathsAction:">id</string>
+						<string key="handleFilesToCommitTableClick:">id</string>
+						<string key="handleFilesToCommitTableDoubleClick:">id</string>
 						<string key="includePathsAction:">id</string>
 						<string key="openCommitSheetWithAllFiles:">id</string>
 						<string key="openCommitSheetWithSelectedFiles:">id</string>
@@ -2125,13 +2122,13 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 						<string key="sheetButtonOk:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
-						<string key="changedFilesTableView">NSTableView</string>
 						<string key="commitMessageTextView">NSTextView</string>
 						<string key="commitSheetBranchString">NSTextField</string>
 						<string key="commitSheetTitle">NSTextField</string>
 						<string key="diffButton">NSButton</string>
 						<string key="disclosureController">DisclosureBoxController</string>
 						<string key="excludePathsButton">NSButton</string>
+						<string key="filesToCommitTableView">NSTableView</string>
 						<string key="includePathsButton">NSButton</string>
 						<string key="okButton">NSButton</string>
 						<string key="previousCommitMessagesTableView">NSTableView</string>
