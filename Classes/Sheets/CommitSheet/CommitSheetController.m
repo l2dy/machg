@@ -28,6 +28,10 @@
 
 @implementation CommitSheetController
 @synthesize myDocument;
+@synthesize	committerOption = committerOption_;
+@synthesize	committer = committer_;
+@synthesize	dateOption = dateOption_;
+@synthesize	date = date_;
 
 
 
@@ -111,7 +115,15 @@
 	NSString* newBranchSheetString = fstr(@"to branch: %@", hgBranchResults.outStr);
 	[commitSheetBranchString setStringValue: newBranchSheetString];
 
+	NSMutableArray* argsGetUserName = [NSMutableArray arrayWithObjects:@"showconfig", @"ui.username", nil];
+	ExecutionResult* userNameResult = [TaskExecutions executeMercurialWithArgs:argsGetUserName  fromRoot:rootPath];
+
 	[disclosureController setToOpenState:NO];
+	[self setCommitter:nonNil(userNameResult.outStr)];
+	[self setCommitterOption:NO];
+	[self setDate:[NSDate date]];
+	[self setDateOption:NO];
+
 	NSString* currentMessage = [commitMessageTextView string];
 	[commitMessageTextView setSelectedRange:NSMakeRange(0, [currentMessage length])];
 	[NSApp beginSheet:theCommitSheet modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
@@ -385,6 +397,10 @@
 		if (IsNotEmpty(excludedPaths))
 			for (NSString* exludedPath in excludedPaths)
 				[args addObject:@"--exclude" followedBy:exludedPath];
+		if ([self committerOption] && IsNotEmpty([self committer]))
+			[args addObject:@"--user" followedBy:[self committer]];
+		if ([self dateOption] && IsNotEmpty([self date]))
+			[args addObject:@"--date" followedBy:[[self date] isodateDescription]];
 		[args addObjectsFromArray:filteredAbsolutePathsOfFilesToCommit];
 
 		[myDocument delayEventsUntilFinishBlock:^{

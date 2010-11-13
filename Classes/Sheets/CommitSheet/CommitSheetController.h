@@ -26,8 +26,9 @@
 	IBOutlet NSButton*	  includePathsButton;
 	IBOutlet DisclosureBoxController*	disclosureController;	// The disclosure box for the advanced options
 
+	
 	MacHgDocument*	myDocument;
-
+	
 	BOOL			committingAllFiles;				// We need to set this up since some commands like merging need to "commit" all
 													// files.
 	NSArray*		absolutePathsOfFilesToCommit;	// This array is stored here when the sheet is set up. Later when
@@ -40,8 +41,18 @@
 	NSArray*		logCommentsTableSourceData;		// This array is computed whenever we put up the
 													// sheet, but the tableview in the sheet uses this class as a data
 													// source so we have to have this as a class member.
+	
+	// Advanaced commit options
+	NSString*		committer_;						// The value of the committer option
+	BOOL			committerOption_;				// Has the committer option been specified
+	NSDate*			date_;							// The value of the date option
+	BOOL			dateOption_;					// Has the committer option been specified
 }
-@property (readwrite,assign) MacHgDocument*  myDocument;
+@property (readwrite,assign) MacHgDocument* myDocument;
+@property (readwrite,assign) BOOL			committerOption;
+@property (readwrite,assign) NSString*		committer;
+@property (readwrite,assign) BOOL			dateOption;
+@property (readwrite,assign) NSDate*		date;
 
 - (CommitSheetController*) initCommitSheetControllerWithDocument:(MacHgDocument*)doc;
 
