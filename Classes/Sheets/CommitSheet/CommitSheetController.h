@@ -18,11 +18,13 @@
 	IBOutlet NSTableView* changedFilesTableView;
 	IBOutlet NSTableView* previousCommitMessagesTableView;
 	IBOutlet NSTextField* commitSheetBranchString;
+	
 	IBOutlet NSWindow*	  theCommitSheet;
 	IBOutlet NSButton*	  diffButton;
 	IBOutlet NSButton*	  okButton;
 	IBOutlet NSButton*	  excludePathsButton;
 	IBOutlet NSButton*	  includePathsButton;
+	IBOutlet DisclosureBoxController*	disclosureController;	// The disclosure box for the advanced options
 
 	MacHgDocument* myDocument;
 

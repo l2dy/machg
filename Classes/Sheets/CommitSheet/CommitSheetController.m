@@ -10,7 +10,7 @@
 #import "CommitSheetController.h"
 #import "MacHgDocument.h"
 #import "TaskExecutions.h"
-
+#import "DisclosureBoxController.h"
 
 
 
@@ -111,6 +111,7 @@
 	NSString* newBranchSheetString = fstr(@"to branch: %@", hgBranchResults.outStr);
 	[commitSheetBranchString setStringValue: newBranchSheetString];
 
+	[disclosureController setToOpenState:NO];
 	NSString* currentMessage = [commitMessageTextView string];
 	[commitMessageTextView setSelectedRange:NSMakeRange(0, [currentMessage length])];
 	[NSApp beginSheet:theCommitSheet modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
@@ -170,10 +171,12 @@
 
 
 
-// -----------------------------------------------------------------------------------------------------------------------------------------
-//  Validation   ---------------------------------------------------------------------------------------------------------------------------
-// -----------------------------------------------------------------------------------------------------------------------------------------
 
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Validation
+// -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (BOOL) validateUserInterfaceItem:(id < NSValidatedUserInterfaceItem >)anItem
 {
@@ -325,6 +328,7 @@
 		return [changedFilesTableView selectedRowIndexes];
 	return [NSIndexSet indexSetWithIndex:[changedFilesTableView chosenRow]];
 }
+
 
 
 
