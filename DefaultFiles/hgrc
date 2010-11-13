@@ -15,8 +15,8 @@ hgext.extdiff =
 hgext.bookmarks =
 hgext.mq =
 hgext.rebase =
-hgext.histedit=
-hgext.collapse=
+hgext.histedit =
+hgext.collapse =
 
 
 
