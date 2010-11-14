@@ -117,7 +117,24 @@
 
 	NSMutableArray* argsGetUserName = [NSMutableArray arrayWithObjects:@"showconfig", @"ui.username", nil];
 	ExecutionResult* userNameResult = [TaskExecutions executeMercurialWithArgs:argsGetUserName  fromRoot:rootPath];
-	BOOL amendIsPotentiallyPossible = AllowHistoryEditingOfRepositoryFromDefaults() && ![myDocument inMergeState] && [myDocument isCurrentRevisionTip];
+
+	BOOL amendIsPotentiallyPossible = YES;
+	NSString* amendTooltipMessage = @"Amend will incorporate the files to be committed into the last changeset.";
+	if (!AllowHistoryEditingOfRepositoryFromDefaults())
+	{
+		amendIsPotentiallyPossible = NO;
+		amendTooltipMessage = @"History editing in the preferences needs to be enabled in order to use the amend option.";
+	}
+	else if ([myDocument inMergeState])
+	{
+		amendIsPotentiallyPossible = NO;
+		amendTooltipMessage = @"The changeset to be amended to cannot be a merge changeset.";
+	}
+	else if (![myDocument isCurrentRevisionTip])
+	{
+		amendIsPotentiallyPossible = NO;
+		amendTooltipMessage = @"The changeset to be amended to must be the tip revision.";
+	}
 
 	[disclosureController setToOpenState:NO];
 	[self setCommitter:nonNil(userNameResult.outStr)];
@@ -126,6 +143,7 @@
 	[self setDateOption:NO];
 	[amendButton setState:NO];
 	[amendButton setEnabled:amendIsPotentiallyPossible];
+	[amendButton setToolTip:amendTooltipMessage];
 	
 	NSString* currentMessage = [commitMessageTextView string];
 	[commitMessageTextView setSelectedRange:NSMakeRange(0, [currentMessage length])];
