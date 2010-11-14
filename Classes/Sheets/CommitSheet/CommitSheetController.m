@@ -399,6 +399,8 @@
 	NSMutableArray* filteredAbsolutePathsOfFilesToCommit = [NSMutableArray arrayWithArray:paths];
 	[filteredAbsolutePathsOfFilesToCommit removeObjectsInArray:excludedPaths];
 	
+	[theCommitSheet makeFirstResponder:theCommitSheet];	// Make the fields of the sheet commit any changes they currently have
+
 	// This is more a check here, error handling should have caught this before now if the files were empty.
 	if (IsEmpty(filesToCommitTableSourceData) || [excludedPaths count] >= [filesToCommitTableSourceData count] || IsEmpty(filteredAbsolutePathsOfFilesToCommit))
 	{
