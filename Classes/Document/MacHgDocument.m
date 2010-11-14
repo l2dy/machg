@@ -1264,48 +1264,73 @@
 
 
 
-- (void) pushRepositoryCopyForUndo
+- (void) pushRepositoryCopyForUndo:(NSError**)error
 {
 	[self delayEventsUntilFinishBlock:^{
 		NSString* root    = [self absolutePathOfRepositoryRoot];
 		NSString* undoDir = fstr(@"%@/.hg/macHgUndo", root);
 		NSString* copyDir = fstr(@"%@/copy", undoDir);
-		
+		NSError* err = nil;
+
 		NSFileManager* localFileManager =[[NSFileManager alloc] init];
 		[localFileManager setDelegate:self];
+		
+		[localFileManager createDirectoryAtPath:copyDir withIntermediateDirectories:YES attributes:nil error:&err];
+		if (err)
+		{
+			if (!error)
+				[NSApp presentError:err];
+			else
+				*error = err;
+			return;
+		}
+		
 		NSDirectoryEnumerator* dirEnum = [localFileManager enumeratorAtPath:root];
 		
 		NSString* path;
-		NSError* err;
-		BOOL sourceIsDir = NO;
 		while ( (path = [dirEnum nextObject]) )
 		{
+			NSDictionary* pathAttribures = [dirEnum fileAttributes];
+			NSString* pathType = [pathAttribures fileType];
 			NSString* srcPath = [root stringByAppendingPathComponent:path];
 			NSString* dstPath = [copyDir stringByAppendingPathComponent:path];
 			
-			[localFileManager fileExistsAtPath:srcPath isDirectory:&sourceIsDir];
+			
 			if ([localFileManager fileExistsAtPath:dstPath isDirectory:nil])
 				continue;
-			
-			if (sourceIsDir)
-			{
-				[localFileManager createDirectoryAtPath:dstPath withIntermediateDirectories:YES attributes:nil error:&err];
-				continue;
-			}
 			
 			if (pathContainedIn(@".hg/macHgUndo",path))
 			{
 				[dirEnum skipDescendants];
 				continue;
 			}
-			[localFileManager linkItemAtPath:srcPath toPath:dstPath error:&err];
+			
+			if (pathType == NSFileTypeSymbolicLink)
+				[localFileManager copyItemAtPath:srcPath toPath:dstPath error:&err];
+			else if (pathType == NSFileTypeDirectory)
+				[localFileManager createDirectoryAtPath:dstPath withIntermediateDirectories:YES attributes:nil error:&err];
+			else if (pathType == NSFileTypeRegular)
+				[localFileManager linkItemAtPath:srcPath toPath:dstPath error:&err];
+			else
+				[localFileManager linkItemAtPath:srcPath toPath:dstPath error:&err];
+			if (err)
+			{
+				if (!error)
+					[NSApp presentError:err];
+				else
+					*error = err;
+				return;
+			}
 		}
 	}];
 }
 
 - (IBAction) doLinkUp:(id)sender
 {
-	[self pushRepositoryCopyForUndo];
+	NSError* err = nil;
+	[self pushRepositoryCopyForUndo:&err];
+	if (err)
+		[NSApp presentError:err];		
 }
 
 
