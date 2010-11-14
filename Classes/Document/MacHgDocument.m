@@ -615,8 +615,8 @@
 	NSString* rectString           = [[NSUserDefaults standardUserDefaults] objectForKey:rectKeyForAutoSave];
 	if (!topLeftOriginString || !rectString)
 		return NSZeroRect;
-	NSPoint topLeftOrigin = NSPointFromString([[NSUserDefaults standardUserDefaults] objectForKey:originKeyForAutoSave]);	// This is the window top left
-	NSRect rect = NSRectFromString( [[NSUserDefaults standardUserDefaults] objectForKey:rectKeyForAutoSave]);
+	NSPoint topLeftOrigin = NSPointFromString(topLeftOriginString);	// This is the window top left
+	NSRect rect = NSRectFromString(rectString);
 	rect.origin.x = topLeftOrigin.x;
 	rect.origin.y = topLeftOrigin.y - rect.size.height;
 	return rect;
@@ -635,7 +635,7 @@
 {
 	switch (paneNum)
 	{
-		case eBrowserView:	return [[self theBrowserViewController] view];
+		case eBrowserView:		return [[self theBrowserViewController] view];
 		case eHistoryView:		return [self theHistoryView];
 		case eDifferencesView:	return [self theDifferencesView];
 		case eBackingView:		return [[self theBackingViewController] view];
@@ -656,7 +656,7 @@
 	NSRect newWindowFrame  = oldWindowFrame;
 	newWindowFrame.size.height += (newContentFrame.size.height - oldContentFrame.size.height);
 	newWindowFrame.size.width  += (newContentFrame.size.width  - oldContentFrame.size.width);
-	newWindowFrame.origin.y -= (newContentFrame.size.height - oldContentFrame.size.height);
+	newWindowFrame.origin.y    -= (newContentFrame.size.height - oldContentFrame.size.height);
 	return newWindowFrame;
 }
 
