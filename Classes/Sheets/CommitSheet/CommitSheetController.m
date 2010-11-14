@@ -57,6 +57,12 @@ NSString* kAmendOption	 = @"amendOption";
 - (void) awakeFromNib
 {
 	[self  addObserver:self  forKeyPath:kAmendOption  options:NSKeyValueObservingOptionNew  context:NULL];
+	[filesToCommitTableView setTarget:self];
+	[filesToCommitTableView setDoubleAction:@selector(handleFilesToCommitTableDoubleClick:)];
+	[filesToCommitTableView setAction:@selector(handleFilesToCommitTableClick:)];
+	[previousCommitMessagesTableView setTarget:self];
+	[previousCommitMessagesTableView setDoubleAction:@selector(handlePreviousCommitMessagesTableDoubleClick:)];
+	[previousCommitMessagesTableView setAction:@selector(handlePreviousCommitMessagesTableClick:)];	
 }
 
 
@@ -75,20 +81,8 @@ NSString* kAmendOption	 = @"amendOption";
 // MARK: Handle Table Clicks
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-// We should be able to do this just on the awake from nib but it doesn't seem to be working.
-- (void) hookUpClickActions
-{
-	[filesToCommitTableView setTarget:self];
-	[filesToCommitTableView setDoubleAction:@selector(handleFilesToCommitTableDoubleClick:)];
-	[filesToCommitTableView setAction:@selector(handleFilesToCommitTableClick:)];
-	[previousCommitMessagesTableView setTarget:self];
-	[previousCommitMessagesTableView setDoubleAction:@selector(handlePreviousCommitMessagesTableDoubleClick:)];
-	[previousCommitMessagesTableView setAction:@selector(handlePreviousCommitMessagesTableClick:)];
-}
-
 - (IBAction) handleFilesToCommitTableClick:(id)sender
-{
-	
+{	
 }
 
 - (IBAction) handleFilesToCommitTableDoubleClick:(id)sender
@@ -190,8 +184,6 @@ NSString* kAmendOption	 = @"amendOption";
 
 - (IBAction) openCommitSheetWithAllFiles:(id)sender
 {
-	[self hookUpClickActions];
-	
 	committingAllFiles = YES;
 	BOOL mergedState = [[myDocument repositoryData] inMergeState];
 	NSString* newTitle = fstr(@"Committing %@ Files in %@", mergedState ? @"Merged" : @"All", [myDocument selectedRepositoryShortName]);
@@ -207,8 +199,6 @@ NSString* kAmendOption	 = @"amendOption";
 		return;
 	}
 	
-	[self hookUpClickActions];
-
 	committingAllFiles = NO;
 	NSString* newTitle = fstr(@"Committing Selected Files in %@", [myDocument selectedRepositoryShortName]);
 	[commitSheetTitle setStringValue:newTitle];
