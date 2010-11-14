@@ -33,6 +33,7 @@
 	
 	NSMapTable*					savedViewsInfo;		// Dictionary of NSView* view -> SavedViewInfo (We use an NSMapTable instead
 													// of an NSDictionary since our keys are pointer values.)
+	NSString*					autoSaveName_;		// The NSUserDefaults key name (if any) for the state of the disclosure box
 }
 
 - (IBAction) disclosureTrianglePressed:(id)sender;
@@ -41,6 +42,7 @@
 
 - (void)	 setToOpenState:(BOOL)state;
 - (void)	 syncronizeDisclosureBoxToButtonStateWithAnimation:(BOOL)animate;
+- (CGFloat)  sizeChange;
 
 @end
 

@@ -20,7 +20,14 @@
 
 - (void) awakeFromNib
 {
-	[self disclosureTrianglePressed:disclosureButton];
+	NSString* frameName  = [parentWindow frameAutosaveName];
+	NSRect frameRect     = [parentWindow frame];
+	autoSaveName_        = IsNotEmpty(frameName) ? fstr(@"%@:disclosed", frameName) : nil;
+	BOOL disclosed       = autoSaveName_ ? [[NSUserDefaults standardUserDefaults] boolForKey:autoSaveName_] : NO;
+
+	[self setToOpenState:disclosed];
+	if (!disclosed && autoSaveName_)
+		[parentWindow setFrame:frameRect display:NO animate:NO];
 }
 
 
@@ -29,7 +36,7 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK:  Reszing control
+// MARK:  Resizing control
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (void) saveAutosizingMasksAndRelativePositions
@@ -71,6 +78,9 @@
 }
 
 
+- (CGFloat) sizeChange	{ return [disclosureBox frame].size.height + 5; } 		// The extra +5 accounts for the space between the box and its neighboring views
+
+
 
 
 
@@ -107,9 +117,11 @@
 - (void) syncronizeDisclosureBoxToButtonStateWithAnimation:(BOOL)animate
 {
 	[self saveAutosizingMasksAndRelativePositions];
+	if (autoSaveName_)
+		[[NSUserDefaults standardUserDefaults] setBool:([disclosureButton state] == NSOnState) forKey:autoSaveName_];
 	
 	NSRect windowFrame = [parentWindow frame];
-	CGFloat sizeChange = [disclosureBox frame].size.height + 5;		// The extra +5 accounts for the space between the box and its neighboring views
+	CGFloat sizeChange = [self sizeChange];
 
 	NSTimeInterval resizeTime = [parentWindow animationResizeTime:windowFrame];
 	[self setAutosizingMasksForDisclose];
@@ -130,8 +142,10 @@
 		[parentWindow setFrame:windowFrame display:YES animate:animate];
 	}
 
-	[self performSelector:@selector(restoreAutosizingMasks) withObject:nil afterDelay:(animate ? resizeTime : 0.0)];
-	
+	if (animate)
+		[self performSelector:@selector(restoreAutosizingMasks) withObject:nil afterDelay:resizeTime];
+	else
+		[self restoreAutosizingMasks];
 }
 
 @end
