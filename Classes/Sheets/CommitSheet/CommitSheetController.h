@@ -49,6 +49,8 @@
 	NSDate*			date_;							// The value of the date option
 	BOOL			dateOption_;					// Has the committer option been specified
 	BOOL			amendOption_;					// Has the amend option been specified
+	NSString*		cachedCommitMessageForAmend_;	// When the amend option has been activated we need to swap out the current
+													// commit message for the last revision's commit message
 }
 @property (readwrite,assign) MacHgDocument* myDocument;
 @property (readwrite,assign) BOOL			committerOption;

@@ -26,7 +26,7 @@ NSString* kAmendOption	 = @"amendOption";
 @interface CommitSheetController (PrivateAPI)
 - (IBAction)	validateButtons:(id)sender;
 - (NSIndexSet*) chosenIndexesOfFilesToCommit;
-- (void)		setCommitMessageEnabled;
+- (void)		amendOptionChanged;
 @end
 
 @implementation CommitSheetController
@@ -57,6 +57,8 @@ NSString* kAmendOption	 = @"amendOption";
 - (void) awakeFromNib
 {
 	[self  addObserver:self  forKeyPath:kAmendOption  options:NSKeyValueObservingOptionNew  context:NULL];
+	cachedCommitMessageForAmend_ = nil;
+	
 	[filesToCommitTableView setTarget:self];
 	[filesToCommitTableView setDoubleAction:@selector(handleFilesToCommitTableDoubleClick:)];
 	[filesToCommitTableView setAction:@selector(handleFilesToCommitTableClick:)];
@@ -69,7 +71,7 @@ NSString* kAmendOption	 = @"amendOption";
 - (void) observeValueForKeyPath:(NSString*)keyPath  ofObject:(id)object  change:(NSDictionary*)change  context:(void*)context
 {
     if ([keyPath isEqualToString:kAmendOption])
-		[self setCommitMessageEnabled];
+		[self amendOptionChanged];
 }
 
 
@@ -152,7 +154,8 @@ NSString* kAmendOption	 = @"amendOption";
 	[self setCommitterOption:NO];
 	[self setDate:[NSDate date]];
 	[self setDateOption:NO];
-	[amendButton setState:NO];
+	if ([amendButton state] == NSOnState)
+		[self setAmendOption:NO];
 	[amendButton setEnabled:amendIsPotentiallyPossible];
 	[amendButton setToolTip:amendTooltipMessage];
 	
@@ -248,17 +251,24 @@ NSString* kAmendOption	 = @"amendOption";
 }
 
 
-// This sets the commit message field into a "disabled" appearance state when the amend option is checked.
-- (void) setCommitMessageEnabled
+// This sets the commit message field into a "disabled" appearance state when the amend option is checked, and swaps out the
+// message, forthe old message, etc.
+- (void) amendOptionChanged
 {
 	if ([self amendOption])
 	{
+		cachedCommitMessageForAmend_ = [NSString stringWithString:[commitMessageTextView string]];
+		NSString* message = [logCommentsTableSourceData objectAtIndex:0];
+		[commitMessageTextView setSelectedRange:NSMakeRange(0, [cachedCommitMessageForAmend_ length])];
+		[commitMessageTextView insertText:message];		
+		[commitMessageTextView setSelectedRange:NSMakeRange(0, 0)];
+
 		NSColor* fakeDisableColor = [NSColor colorWithDeviceRed:(227.0/255.0) green:(227.0/255.0) blue:(227.0/255.0) alpha:1.0];
 		[commitMessageTextView setEditable:NO];
 		[commitMessageTextView setSelectable:NO];
 		[commitMessageTextView setTextColor:[NSColor disabledControlTextColor]];
 		[commitMessageTextView setBackgroundColor:fakeDisableColor];
-		[commitMessageTextView setSelectedRange:NSMakeRange(0, 0)];
+
 		[theCommitSheet makeFirstResponder:theCommitSheet];	// Make the commit message field
 	}
 	else
@@ -267,6 +277,8 @@ NSString* kAmendOption	 = @"amendOption";
 		[commitMessageTextView setSelectable:YES];
 		[commitMessageTextView setTextColor:[NSColor textColor]];
 		[commitMessageTextView setBackgroundColor:[NSColor whiteColor]];
+		[commitMessageTextView setSelectedRange:NSMakeRange(0, [[commitMessageTextView string] length])];
+		[commitMessageTextView insertText:cachedCommitMessageForAmend_];
 	}
 }
 
