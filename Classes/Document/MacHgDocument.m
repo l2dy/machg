@@ -827,7 +827,7 @@
 	if (theAction == @selector(mainMenuRevertAllFiles:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [self repositoryHasFilesWhichContainStatus:eHGStatusChangedInSomeWay];
 	if (theAction == @selector(mainMenuRevertSelectedFilesToVersion:))	return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self nodesAreChosenInBrowser];
 	// ------
-	if (theAction == @selector(mainMenuRollbackCommit:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView];
+	if (theAction == @selector(mainMenuRollbackCommit:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [[self repositoryData] isRollbackInformationAvailable];
 	
 	
 	// Repository actions

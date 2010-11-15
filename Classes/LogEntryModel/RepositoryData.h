@@ -93,10 +93,12 @@
 
 - (BOOL)		isCurrentRevisionTip;
 - (BOOL)		revisionIsParent:(NSString*)rev;
-- (BOOL)		inMergeState;				// Are we in the process of merging two branches? ie does 'hg parents --template "{rev} "'
-											// return "num" or "num num" if the later then we are in a merge state.
-- (BOOL)		hasMultipleOpenHeads;		// Do we have more than one "open" head in the repository. If not then we have nothing
-											// to merge with.
+- (BOOL)		inMergeState;					// Are we in the process of merging two branches? ie does 'hg parents --template "{rev} "'
+												// return "num" or "num num" if the later then we are in a merge state.
+- (BOOL)		hasMultipleOpenHeads;			// Do we have more than one "open" head in the repository. If not then we have nothing
+												// to merge with.
+- (BOOL)		isRollbackInformationAvailable;	// Could we rollback the last operation if we wanted to?
+
 - (NSString*)	incompleteRevision;
 - (LogEntry*)	incompleteRevisionEntry;
 

@@ -520,6 +520,15 @@
 - (LogEntry*) incompleteRevisionEntry		{ return incompleteRevisionEntry_; }
 
 
+- (BOOL)      isRollbackInformationAvailable
+{
+	NSString* rollbackFile = fstr(@"%@/.hg/store/undo", rootPath_);	
+	BOOL sourceIsDir = NO;
+	return [[[NSFileManager alloc] init] fileExistsAtPath:rollbackFile isDirectory:&sourceIsDir];
+}
+
+
+
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
