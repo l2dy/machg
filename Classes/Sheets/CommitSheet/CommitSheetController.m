@@ -181,6 +181,8 @@ NSString* kAmendOption	 = @"amendOption";
 	ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:rootPath  logging:eLoggingNone];
 	logCommentsTableSourceData = [hgLogResults.outStr componentsSeparatedByString:@"\n#^&^#\n"];
 	[previousCommitMessagesTableView reloadData];
+	cachedCommitMessageForAmend_ = [NSString stringWithString:[logCommentsTableSourceData objectAtIndex:0]];
+
 	[self validateButtons:self];
 }
 
@@ -255,31 +257,10 @@ NSString* kAmendOption	 = @"amendOption";
 // message, forthe old message, etc.
 - (void) amendOptionChanged
 {
-	if ([self amendOption])
-	{
-		cachedCommitMessageForAmend_ = [NSString stringWithString:[commitMessageTextView string]];
-		NSString* message = [logCommentsTableSourceData objectAtIndex:0];
-		[commitMessageTextView setSelectedRange:NSMakeRange(0, [cachedCommitMessageForAmend_ length])];
-		[commitMessageTextView insertText:message];		
-		[commitMessageTextView setSelectedRange:NSMakeRange(0, 0)];
-
-		NSColor* fakeDisableColor = [NSColor colorWithDeviceRed:(227.0/255.0) green:(227.0/255.0) blue:(227.0/255.0) alpha:1.0];
-		[commitMessageTextView setEditable:NO];
-		[commitMessageTextView setSelectable:NO];
-		[commitMessageTextView setTextColor:[NSColor disabledControlTextColor]];
-		[commitMessageTextView setBackgroundColor:fakeDisableColor];
-
-		[theCommitSheet makeFirstResponder:theCommitSheet];	// Make the commit message field
-	}
-	else
-	{
-		[commitMessageTextView setEditable:YES];
-		[commitMessageTextView setSelectable:YES];
-		[commitMessageTextView setTextColor:[NSColor textColor]];
-		[commitMessageTextView setBackgroundColor:[NSColor whiteColor]];
-		[commitMessageTextView setSelectedRange:NSMakeRange(0, [[commitMessageTextView string] length])];
-		[commitMessageTextView insertText:cachedCommitMessageForAmend_];
-	}
+	NSString* currentMessage = [NSString stringWithString:[commitMessageTextView string]];
+	[commitMessageTextView setSelectedRange:NSMakeRange(0, [currentMessage length])];
+	[commitMessageTextView insertText:cachedCommitMessageForAmend_];
+	cachedCommitMessageForAmend_ = currentMessage;
 }
 
 
@@ -497,6 +478,7 @@ NSString* kAmendOption	 = @"amendOption";
 			[qrefreshArgs addObject:@"--user" followedBy:[self committer]];
 		if ([self dateOption] && IsNotEmpty([self date]))
 			[qrefreshArgs addObject:@"--date" followedBy:[[self date] isodateDescription]];
+		[qrefreshArgs addObject:@"--message" followedBy:[commitMessageTextView string]];
 		[qrefreshArgs addObjectsFromArray:pathsToCommit];
 		ExecutionResult* qrefreshResult = [myDocument executeMercurialWithArgs:qrefreshArgs  fromRoot:rootPath  whileDelayingEvents:YES];
 		if ([qrefreshResult hasErrors])
