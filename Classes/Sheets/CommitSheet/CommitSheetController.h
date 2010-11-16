@@ -9,7 +9,6 @@
 
 #import <Cocoa/Cocoa.h>
 #import "BaseSheetWindowController.h"
-@class MacHgDocument;
 
 @interface CommitSheetController : BaseSheetWindowController
 {
