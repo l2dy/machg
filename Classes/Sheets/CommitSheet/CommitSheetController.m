@@ -12,6 +12,8 @@
 #import "TaskExecutions.h"
 #import "DisclosureBoxController.h"
 
+NSString* kAmendOption	 = @"amendOption";
+
 
 
 
@@ -24,6 +26,7 @@
 @interface CommitSheetController (PrivateAPI)
 - (IBAction)	validateButtons:(id)sender;
 - (NSIndexSet*) chosenIndexesOfFilesToCommit;
+- (void)		setCommitMessageEnabled;
 @end
 
 @implementation CommitSheetController
@@ -32,6 +35,7 @@
 @synthesize	committer = committer_;
 @synthesize	dateOption = dateOption_;
 @synthesize	date = date_;
+@synthesize	amendOption = amendOption_;
 
 
 
@@ -47,6 +51,19 @@
 	myDocument = doc;
 	[NSBundle loadNibNamed:@"CommitSheet" owner:self];
 	return self;
+}
+
+
+- (void) awakeFromNib
+{
+	[self  addObserver:self  forKeyPath:kAmendOption  options:NSKeyValueObservingOptionNew  context:NULL];
+}
+
+
+- (void) observeValueForKeyPath:(NSString*)keyPath  ofObject:(id)object  change:(NSDictionary*)change  context:(void*)context
+{
+    if ([keyPath isEqualToString:kAmendOption])
+		[self setCommitMessageEnabled];
 }
 
 
@@ -241,6 +258,29 @@
 }
 
 
+// This sets the commit message field into a "disabled" appearance state when the amend option is checked.
+- (void) setCommitMessageEnabled
+{
+	if ([self amendOption])
+	{
+		NSColor* fakeDisableColor = [NSColor colorWithDeviceRed:(227.0/255.0) green:(227.0/255.0) blue:(227.0/255.0) alpha:1.0];
+		[commitMessageTextView setEditable:NO];
+		[commitMessageTextView setSelectable:NO];
+		[commitMessageTextView setTextColor:[NSColor disabledControlTextColor]];
+		[commitMessageTextView setBackgroundColor:fakeDisableColor];
+		[commitMessageTextView setSelectedRange:NSMakeRange(0, 0)];
+		[theCommitSheet makeFirstResponder:theCommitSheet];	// Make the commit message field
+	}
+	else
+	{
+		[commitMessageTextView setEditable:YES];
+		[commitMessageTextView setSelectable:YES];
+		[commitMessageTextView setTextColor:[NSColor textColor]];
+		[commitMessageTextView setBackgroundColor:[NSColor whiteColor]];
+	}
+}
+
+
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -291,7 +331,7 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK:  ChangedFiles TableView
+// MARK: FilesToCommit TableView
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (BOOL) filesToCommitAreSelected	{ return [filesToCommitTableView numberOfSelectedRows] > 0; }

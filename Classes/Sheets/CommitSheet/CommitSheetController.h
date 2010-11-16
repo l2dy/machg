@@ -48,12 +48,14 @@
 	BOOL			committerOption_;				// Has the committer option been specified
 	NSDate*			date_;							// The value of the date option
 	BOOL			dateOption_;					// Has the committer option been specified
+	BOOL			amendOption_;					// Has the amend option been specified
 }
 @property (readwrite,assign) MacHgDocument* myDocument;
 @property (readwrite,assign) BOOL			committerOption;
 @property (readwrite,assign) NSString*		committer;
 @property (readwrite,assign) BOOL			dateOption;
 @property (readwrite,assign) NSDate*		date;
+@property (readwrite,assign) BOOL			amendOption;
 
 - (CommitSheetController*) initCommitSheetControllerWithDocument:(MacHgDocument*)doc;
 

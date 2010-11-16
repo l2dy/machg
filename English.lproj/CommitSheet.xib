@@ -11,7 +11,7 @@
 			<string key="com.brandonwalkin.BWToolkit">1.2.2</string>
 		</dictionary>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-			<integer value="178"/>
+			<integer value="43"/>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.brandonwalkin.BWToolkit</string>
@@ -1564,6 +1564,22 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 					</object>
 					<int key="connectionID">248</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: amendOption</string>
+						<reference key="source" ref="785537154"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="785537154"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">value: amendOption</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">amendOption</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">253</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -2117,7 +2133,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 					<object class="IBToolTipAttribute" key="NS.object.0">
 						<string key="name">ToolTip</string>
 						<reference key="object" ref="1017708655"/>
-						<string key="toolTip">specify ssh command to use if any (--ssh option)</string>
+						<string key="toolTip">User who will be recorded as performing the commit.</string>
 					</object>
 				</object>
 				<string key="185.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2126,7 +2142,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 					<object class="IBToolTipAttribute" key="NS.object.0">
 						<string key="name">ToolTip</string>
 						<reference key="object" ref="683994755"/>
-						<string key="toolTip">Allows you to override the date when the files will be recorded as being committed</string>
+						<string key="toolTip">Override the date when the files will be recorded as being committed</string>
 					</object>
 				</object>
 				<string key="187.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2135,7 +2151,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 					<object class="IBToolTipAttribute" key="NS.object.0">
 						<string key="name">ToolTip</string>
 						<reference key="object" ref="104057074"/>
-						<string key="toolTip">Allows you to override the user who will be recorded as performing the commit</string>
+						<string key="toolTip">Override the user who will be recorded as performing the commit</string>
 					</object>
 				</object>
 				<string key="188.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2147,16 +2163,16 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 					<object class="IBToolTipAttribute" key="NS.object.0">
 						<string key="name">ToolTip</string>
 						<reference key="object" ref="553643916"/>
-						<string key="toolTip">Allows you to override the date when the files will be recorded as being committed</string>
+						<string key="toolTip">Date when the files will be recorded as being committed.</string>
 					</object>
 				</object>
 				<string key="204.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="205.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="223.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="224.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="41.IBEditorWindowLastContentRect">{{131, 575}, {667, 581}}</string>
+				<string key="41.IBEditorWindowLastContentRect">{{915, 485}, {667, 581}}</string>
 				<string key="41.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="41.IBWindowTemplateEditedContentRect">{{131, 575}, {667, 581}}</string>
+				<string key="41.IBWindowTemplateEditedContentRect">{{915, 485}, {667, 581}}</string>
 				<boolean value="NO" key="41.NSWindowTemplate.visibleAtLaunch"/>
 				<boolean value="NO" key="41.windowTemplate.hasMaxSize"/>
 				<boolean value="YES" key="41.windowTemplate.hasMinSize"/>
@@ -2218,7 +2234,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">248</int>
+			<int key="maxID">253</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
