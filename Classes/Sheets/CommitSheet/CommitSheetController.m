@@ -116,6 +116,8 @@ NSString* kAmendOption	 = @"amendOption";
 // MARK:  Sheet opening
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+
+
 - (void) openCommitSheetWithPaths:(NSArray*)paths
 {
 	filesToCommitTableSourceData = nil;
@@ -132,24 +134,6 @@ NSString* kAmendOption	 = @"amendOption";
 	NSMutableArray* argsGetUserName = [NSMutableArray arrayWithObjects:@"showconfig", @"ui.username", nil];
 	ExecutionResult* userNameResult = [TaskExecutions executeMercurialWithArgs:argsGetUserName  fromRoot:rootPath];
 
-	BOOL amendIsPotentiallyPossible = YES;
-	NSString* amendTooltipMessage = @"Amend will incorporate the files to be committed into the last changeset.";
-	if (!AllowHistoryEditingOfRepositoryFromDefaults())
-	{
-		amendIsPotentiallyPossible = NO;
-		amendTooltipMessage = @"History editing in the preferences needs to be enabled in order to use the amend option.";
-	}
-	else if ([myDocument inMergeState])
-	{
-		amendIsPotentiallyPossible = NO;
-		amendTooltipMessage = @"The changeset to be amended to cannot be a merge changeset.";
-	}
-	else if (![myDocument isCurrentRevisionTip])
-	{
-		amendIsPotentiallyPossible = NO;
-		amendTooltipMessage = @"The changeset to be amended to must be the tip revision.";
-	}
-
 	//[disclosureController setToOpenState:NO];
 	[self setCommitter:nonNil(userNameResult.outStr)];
 	[self setCommitterOption:NO];
@@ -157,8 +141,6 @@ NSString* kAmendOption	 = @"amendOption";
 	[self setDateOption:NO];
 	if ([amendButton state] == NSOnState)
 		[self setAmendOption:NO];
-	[amendButton setEnabled:amendIsPotentiallyPossible];
-	[amendButton setToolTip:amendTooltipMessage];
 	
 	NSString* currentMessage = [commitMessageTextView string];
 	[commitMessageTextView setSelectedRange:NSMakeRange(0, [currentMessage length])];
@@ -229,6 +211,31 @@ NSString* kAmendOption	 = @"amendOption";
 	[commitSheetTitle setStringValue:newTitle];
 }
 
+- (void) setTooltipMessgaes
+{
+	NSString* amendTooltipMessage = @"Amend will incorporate the files to be committed into the last changeset.";
+	if (!AllowHistoryEditingOfRepositoryFromDefaults())
+		amendTooltipMessage = @"History editing needs to be enabled in order to use the amend option.";
+	else if ([myDocument inMergeState])
+		amendTooltipMessage = @"The changeset to be amended cannot be a merge changeset.";
+	else if (![myDocument isCurrentRevisionTip])
+		amendTooltipMessage = @"The changeset to be amended must be the tip revision.";
+	[amendButton setToolTip:amendTooltipMessage];
+	
+	NSString* excludeTooltipMessage = @"Exclude files from the commit.";
+	if ([myDocument inMergeState])
+		excludeTooltipMessage = @"Cannot exclude files during a merge commit.";
+	else if (amendOption_)
+		excludeTooltipMessage = @"Exclude files from the amend.";	
+	[excludePathsButton setToolTip:excludeTooltipMessage];
+
+	NSString* includeTooltipMessage = @"Reinclude files for the commit.";
+	if ([myDocument inMergeState])
+		includeTooltipMessage = @"Cannot exclude files during a merge commit.";
+	else if (amendOption_)
+		includeTooltipMessage = @"Reinclude files for the amend.";	
+	[includePathsButton setToolTip:excludeTooltipMessage];	
+}
 
 
 
@@ -244,7 +251,7 @@ NSString* kAmendOption	 = @"amendOption";
 	// CommitSheet contextual items
 	NSIndexSet* selectedIndexes = [self chosenIndexesOfFilesToCommit];
 	if (theAction == @selector(commitSheetDiffAction:))			return [self filesToCommitAreSelected];
-	if (theAction == @selector(excludePathsAction:))			return [selectedIndexes count] > 0 && ![excludedItems containsIndexes:selectedIndexes];
+	if (theAction == @selector(excludePathsAction:))			return [selectedIndexes count] > 0 && ![excludedItems containsIndexes:selectedIndexes] && ![myDocument inMergeState];
 	if (theAction == @selector(includePathsAction:))			return [selectedIndexes count] > 0 && [excludedItems intersectsIndexes:selectedIndexes];
 	return [myDocument validateUserInterfaceItem:anItem];
 }
@@ -254,16 +261,20 @@ NSString* kAmendOption	 = @"amendOption";
 {
 	NSIndexSet* selectedIndexes = [filesToCommitTableView selectedRowIndexes];
 	BOOL pathsAreSelected = [selectedIndexes count] > 0;
-	BOOL pathsCanBeExcluded = pathsAreSelected && ![excludedItems containsIndexes:selectedIndexes];
+	BOOL pathsCanBeExcluded = pathsAreSelected && ![excludedItems containsIndexes:selectedIndexes] && ![myDocument inMergeState];
 	BOOL pathsCanBeIncluded = pathsAreSelected && [excludedItems intersectsIndexes:selectedIndexes];
-	NSString* diffButtonMessage = pathsAreSelected ? @"Diff Selected" : @"Diff All";
+	BOOL canAllowAmend = AllowHistoryEditingOfRepositoryFromDefaults() && [myDocument isCurrentRevisionTip] && ![myDocument inMergeState];
 	BOOL okToCommit = ([filesToCommitTableSourceData count] > 0) && ([excludedItems count] < [filesToCommitTableSourceData count]);
+	NSString* diffButtonMessage = pathsAreSelected ? @"Diff Selected" : @"Diff All";
 	
 	dispatch_async(mainQueue(), ^{
 		[diffButton setTitle:diffButtonMessage];
 		[excludePathsButton setEnabled:pathsCanBeExcluded];
 		[includePathsButton setEnabled:pathsCanBeIncluded];
 		[okButton setEnabled:okToCommit];
+		[amendButton setEnabled:canAllowAmend];
+		[self setTooltipMessgaes];
+		[self setSheetTitle];
 	});
 }
 
@@ -276,7 +287,7 @@ NSString* kAmendOption	 = @"amendOption";
 	[commitMessageTextView setSelectedRange:NSMakeRange(0, [currentMessage length])];
 	[commitMessageTextView insertText:cachedCommitMessageForAmend_];
 	cachedCommitMessageForAmend_ = currentMessage;
-	[self setSheetTitle];
+	[self validateButtons:self];
 }
 
 
