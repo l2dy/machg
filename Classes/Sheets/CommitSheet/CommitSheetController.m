@@ -27,6 +27,7 @@ NSString* kAmendOption	 = @"amendOption";
 - (IBAction)	validateButtons:(id)sender;
 - (NSIndexSet*) chosenIndexesOfFilesToCommit;
 - (void)		amendOptionChanged;
+- (void)		setSheetTitle;
 @end
 
 @implementation CommitSheetController
@@ -161,6 +162,7 @@ NSString* kAmendOption	 = @"amendOption";
 	
 	NSString* currentMessage = [commitMessageTextView string];
 	[commitMessageTextView setSelectedRange:NSMakeRange(0, [currentMessage length])];
+	[self setSheetTitle];
 	[NSApp beginSheet:theCommitSheet modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
 	[theCommitSheet makeFirstResponder:commitMessageTextView];
 
@@ -190,9 +192,6 @@ NSString* kAmendOption	 = @"amendOption";
 - (IBAction) openCommitSheetWithAllFiles:(id)sender
 {
 	committingAllFiles = YES;
-	BOOL mergedState = [[myDocument repositoryData] inMergeState];
-	NSString* newTitle = fstr(@"Committing %@ Files in %@", mergedState ? @"Merged" : @"All", [myDocument selectedRepositoryShortName]);
-	[commitSheetTitle setStringValue:newTitle];
 	[self openCommitSheetWithPaths:[myDocument absolutePathOfRepositoryRootAsArray]];
 }
 
@@ -205,13 +204,29 @@ NSString* kAmendOption	 = @"amendOption";
 	}
 	
 	committingAllFiles = NO;
-	NSString* newTitle = fstr(@"Committing Selected Files in %@", [myDocument selectedRepositoryShortName]);
-	[commitSheetTitle setStringValue:newTitle];
 	NSArray* paths = [myDocument absolutePathsOfBrowserChosenFiles];
 	if ([paths count] <= 0)
 		{ PlayBeep(); DebugLog(@"No files are selected to commit"); return; }
 
 	[self openCommitSheetWithPaths:paths];
+}
+
+
+- (void) setSheetTitle
+{
+	NSString* newTitle = nil;
+	BOOL mergedState = [[myDocument repositoryData] inMergeState];
+	BOOL allFiles = committingAllFiles && IsEmpty(excludedItems);
+	NSString* repositoryShortName = [myDocument selectedRepositoryShortName];
+	if (mergedState)
+		newTitle = fstr(@"Committing Merged Files in %@", repositoryShortName);
+	else if (allFiles && !amendOption_)
+		newTitle = fstr(@"Committing All Files in %@", repositoryShortName);
+	else if (amendOption_)
+		newTitle = fstr(@"Amending Selected Files in %@", repositoryShortName);
+	else
+		newTitle = fstr(@"Committing Selected Files in %@", repositoryShortName);
+	[commitSheetTitle setStringValue:newTitle];
 }
 
 
@@ -261,6 +276,7 @@ NSString* kAmendOption	 = @"amendOption";
 	[commitMessageTextView setSelectedRange:NSMakeRange(0, [currentMessage length])];
 	[commitMessageTextView insertText:cachedCommitMessageForAmend_];
 	cachedCommitMessageForAmend_ = currentMessage;
+	[self setSheetTitle];
 }
 
 
