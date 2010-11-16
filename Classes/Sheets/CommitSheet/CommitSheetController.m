@@ -391,9 +391,95 @@
 }
 
 
-- (IBAction) sheetButtonOk:(id)sender
+
+- (void) primaryActionCommit:(NSArray*)pathsToCommit excluding:(NSArray*)excludedPaths
 {
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+	[myDocument dispatchToMercurialQueuedWithDescription:@"Committing Files" process:^{
+		NSString* theMessage = [commitMessageTextView string];
+		NSMutableArray* args = [NSMutableArray arrayWithObjects:@"commit", @"--message", theMessage, nil];
+		
+		[myDocument registerPendingRefresh:pathsToCommit];
+		if (IsNotEmpty(excludedPaths) && ![myDocument inMergeState])
+			for (NSString* excludedPath in excludedPaths)
+				[args addObject:@"--exclude" followedBy:excludedPath];
+		if ([self committerOption] && IsNotEmpty([self committer]))
+			[args addObject:@"--user" followedBy:[self committer]];
+		if ([self dateOption] && IsNotEmpty([self date]))
+			[args addObject:@"--date" followedBy:[[self date] isodateDescription]];
+		if (![myDocument inMergeState])
+			[args addObjectsFromArray:pathsToCommit];
+		
+		[myDocument delayEventsUntilFinishBlock:^{
+			[TaskExecutions executeMercurialWithArgs:args  fromRoot:rootPath];
+			[myDocument addToChangedPathsDuringSuspension:pathsToCommit];
+		}];			
+	}];
+}
+
+
+- (void) primaryActionAmend:(NSArray*)pathsToCommit excluding:(NSArray*)excludedPaths
+{
+	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+	
+	if (DisplayWarningForAmendFromDefaults())
+	{
+		BOOL pathsAreRootPath = [[pathsToCommit lastObject] isEqual:rootPath];
+		NSString* mainMessage = fstr(@"Amending the latest revision with %@ files", pathsAreRootPath ? @"all" : @"the selected");
+		NSString* subMessage  = fstr(@"Are you sure you want to amend the latest revision in the repository “%@”. This feature is still experimental and is undergoing testing. Use backups. If you are not familiar with Mercurial queues then you may not be able to recover if errors occur.",
+									 [myDocument selectedRepositoryShortName]);
+		
+		int result = RunCriticalAlertPanelOptionsWithSuppression(mainMessage, subMessage, @"Amend", @"Cancel", nil, MHGDisplayWarningForAmend);
+		if (result != NSAlertFirstButtonReturn)
+			return;
+	}	
+	
+	NSMutableArray*  qimportArgs   = [NSMutableArray arrayWithObjects:@"qimport", @"--rev", [myDocument getHGParent1Revision], @"--name", @"macHgAmendPatch", nil];
+	ExecutionResult* qimportResult = [myDocument executeMercurialWithArgs:qimportArgs  fromRoot:rootPath  whileDelayingEvents:YES];
+	if ([qimportResult hasErrors])
+	{
+		NSRunAlertPanel(@"Aborted Import", fstr(@"The Amend operation could not proceed. The patch import process reported the error: %@.", [qimportResult errStr]), @"OK", nil, nil);
+		[amendButton setState:NSOffState];
+		return;
+	}
+	
+	[myDocument dispatchToMercurialQueuedWithDescription:@"Committing Files" process:^{		
+
+		[myDocument registerPendingRefresh:pathsToCommit];
+
+		NSMutableArray* qrefreshArgs = [NSMutableArray arrayWithObjects:@"qrefresh", @"--short", nil];
+		if (IsNotEmpty(excludedPaths))
+			for (NSString* excludedPath in excludedPaths)
+				[qrefreshArgs addObject:@"--exclude" followedBy:excludedPath];
+		if ([self committerOption] && IsNotEmpty([self committer]))
+			[qrefreshArgs addObject:@"--user" followedBy:[self committer]];
+		if ([self dateOption] && IsNotEmpty([self date]))
+			[qrefreshArgs addObject:@"--date" followedBy:[[self date] isodateDescription]];
+		[qrefreshArgs addObjectsFromArray:pathsToCommit];
+		ExecutionResult* qrefreshResult = [myDocument executeMercurialWithArgs:qrefreshArgs  fromRoot:rootPath  whileDelayingEvents:YES];
+		if ([qrefreshResult hasErrors])
+		{
+			NSRunAlertPanel(@"Aborted Import", fstr(@"The Amend operation could not proceed. The patch refresh process reported the error: %@. Please back out any patch operations.", [qrefreshResult errStr]), @"OK", nil, nil);
+			[amendButton setState:NSOffState];
+			return;
+		}
+		
+		NSMutableArray*  qfinishArgs   = [NSMutableArray arrayWithObjects:@"qfinish", @"macHgAmendPatch", nil];
+		ExecutionResult* qfinishResult = [myDocument executeMercurialWithArgs:qfinishArgs  fromRoot:rootPath  whileDelayingEvents:YES];
+		if ([qfinishResult hasErrors])
+		{
+			NSRunAlertPanel(@"Aborted Import", fstr(@"The Amend operation could not proceed. The patch finish process reported the error: %@. Please back out any patch operations.", [qfinishResult errStr]), @"OK", nil, nil);
+			[amendButton setState:NSOffState];
+			return;
+		}
+		
+		[myDocument addToChangedPathsDuringSuspension:pathsToCommit];
+	}];
+}
+
+
+- (IBAction) sheetButtonOk:(id)sender
+{
 	NSArray* excludedPaths = [self excludedPaths];
 	NSArray* paths = committingAllFiles ? [myDocument absolutePathOfRepositoryRootAsArray] : absolutePathsOfFilesToCommit; 		// absolutePathsOfFilesToCommit is set when the sheet is opened.
 	NSMutableArray* filteredAbsolutePathsOfFilesToCommit = [NSMutableArray arrayWithArray:paths];
@@ -415,62 +501,10 @@
 	[myDocument removeAllUndoActionsForDocument];
 	
 	if ([amendButton state] == NSOffState)
-	{
-		[myDocument dispatchToMercurialQueuedWithDescription:@"Committing Files" process:^{
-			NSString* theMessage = [commitMessageTextView string];
-			NSMutableArray* args = [NSMutableArray arrayWithObjects:@"commit", @"--message", theMessage, nil];
-			
-			[myDocument registerPendingRefresh:filteredAbsolutePathsOfFilesToCommit];
-			if (IsNotEmpty(excludedPaths))
-				for (NSString* excludedPath in excludedPaths)
-					[args addObject:@"--exclude" followedBy:excludedPath];
-			if ([self committerOption] && IsNotEmpty([self committer]))
-				[args addObject:@"--user" followedBy:[self committer]];
-			if ([self dateOption] && IsNotEmpty([self date]))
-				[args addObject:@"--date" followedBy:[[self date] isodateDescription]];
-			[args addObjectsFromArray:filteredAbsolutePathsOfFilesToCommit];
-			
-			[myDocument delayEventsUntilFinishBlock:^{
-				[TaskExecutions executeMercurialWithArgs:args  fromRoot:rootPath];
-				[myDocument addToChangedPathsDuringSuspension:filteredAbsolutePathsOfFilesToCommit];
-			}];			
-		}];
-		[NSApp endSheet:theCommitSheet];
-		[theCommitSheet orderOut:sender];
-		return;
-	}
+		[self primaryActionCommit:filteredAbsolutePathsOfFilesToCommit excluding:excludedPaths];
+	else if ([amendButton state] == NSOnState)
+		[self primaryActionAmend:filteredAbsolutePathsOfFilesToCommit excluding:excludedPaths];
 
-	NSMutableArray*  qimportArgs   = [NSMutableArray arrayWithObjects:@"qimport", @"--rev", [myDocument getHGParent1Revision], @"--name", @"macHgAmendPatch", nil];
-	ExecutionResult* qimportResult = [myDocument executeMercurialWithArgs:qimportArgs  fromRoot:rootPath  whileDelayingEvents:YES];
-	if ([qimportResult hasErrors])
-	{
-		PlayBeep();
-		[amendButton setState:NSOffState];
-		DebugLog(fstr(@"Could not amend to rev %@", [myDocument getHGParent1Revision]));
-		return;
-	}
-	
-	[myDocument dispatchToMercurialQueuedWithDescription:@"Committing Files" process:^{
-		NSMutableArray* qrefreshArgs = [NSMutableArray arrayWithObjects:@"qrefresh", @"--short", nil];
-		
-		[myDocument registerPendingRefresh:filteredAbsolutePathsOfFilesToCommit];
-		if (IsNotEmpty(excludedPaths))
-			for (NSString* excludedPath in excludedPaths)
-				[qrefreshArgs addObject:@"--exclude" followedBy:excludedPath];
-		if ([self committerOption] && IsNotEmpty([self committer]))
-			[qrefreshArgs addObject:@"--user" followedBy:[self committer]];
-		if ([self dateOption] && IsNotEmpty([self date]))
-			[qrefreshArgs addObject:@"--date" followedBy:[[self date] isodateDescription]];
-		[qrefreshArgs addObjectsFromArray:filteredAbsolutePathsOfFilesToCommit];
-		ExecutionResult* qrefreshResult = [myDocument executeMercurialWithArgs:qrefreshArgs  fromRoot:rootPath  whileDelayingEvents:YES];
-		
-		NSMutableArray*  qfinishArgs   = [NSMutableArray arrayWithObjects:@"qfinish", @"macHgAmendPatch", nil];
-		ExecutionResult* qfinishResult = [myDocument executeMercurialWithArgs:qfinishArgs  fromRoot:rootPath  whileDelayingEvents:YES];
-			
-		[myDocument addToChangedPathsDuringSuspension:filteredAbsolutePathsOfFilesToCommit];
-	}];
-	
-	
 	[NSApp endSheet:theCommitSheet];
 	[theCommitSheet orderOut:sender];
 }
