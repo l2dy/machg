@@ -150,7 +150,7 @@ NSString* kAmendOption	 = @"amendOption";
 		amendTooltipMessage = @"The changeset to be amended to must be the tip revision.";
 	}
 
-	[disclosureController setToOpenState:NO];
+	//[disclosureController setToOpenState:NO];
 	[self setCommitter:nonNil(userNameResult.outStr)];
 	[self setCommitterOption:NO];
 	[self setDate:[NSDate date]];
