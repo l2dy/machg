@@ -17,7 +17,14 @@ from mercurial import repair
 from mercurial import patch
 from mercurial import util
 from mercurial import url
+from mercurial import discovery
 from mercurial.i18n import _
+
+# Remove this hack and use cmdutil.updatedir when we're 1.7-only
+if getattr(cmdutil, 'updatedir', None):
+    from mercurial.cmdutil import updatedir
+else:
+    from mercurial.patch import updatedir
 
 # almost entirely stolen from the git-rebase--interactive.sh source
 editcomment = """
@@ -61,6 +68,9 @@ def pick(ui, repo, ctx, ha, opts):
     fp = os.fdopen(fd, 'w')
     diffopts = patch.diffopts(ui, opts)
     diffopts.git = True
+    diffopts.ignorews = False
+    diffopts.ignorewsamount = False
+    diffopts.ignoreblanklines = False
     gen = patch.diff(repo, oldctx.parents()[0].node(), ha, opts=diffopts)
     for chunk in gen:
         fp.write(chunk)
@@ -74,7 +84,7 @@ def pick(ui, repo, ctx, ha, opts):
                              % node.hex(ha))
                 return ctx, [], [], []
         finally:
-            files = patch.updatedir(ui, repo, files)
+            files = updatedir(ui, repo, files)
             os.unlink(patchfile)
     except Exception, inst:
         raise util.Abort(_('Fix up the change and run '
@@ -91,6 +101,9 @@ def edit(ui, repo, ctx, ha, opts):
     fp = os.fdopen(fd, 'w')
     diffopts = patch.diffopts(ui, opts)
     diffopts.git = True
+    diffopts.ignorews = False
+    diffopts.ignorewsamount = False
+    diffopts.ignoreblanklines = False
     gen = patch.diff(repo, oldctx.parents()[0].node(), ha, opts=diffopts)
     for chunk in gen:
         fp.write(chunk)
@@ -100,7 +113,7 @@ def edit(ui, repo, ctx, ha, opts):
         try:
             patch.patch(patchfile, ui, cwd=repo.root, files=files, eolmode=None)
         finally:
-            files = patch.updatedir(ui, repo, files)
+            files = updatedir(ui, repo, files)
             os.unlink(patchfile)
     except Exception, inst:
         pass
@@ -115,6 +128,9 @@ def fold(ui, repo, ctx, ha, opts):
     fp = os.fdopen(fd, 'w')
     diffopts = patch.diffopts(ui, opts)
     diffopts.git = True
+    diffopts.ignorews = False
+    diffopts.ignorewsamount = False
+    diffopts.ignoreblanklines = False
     gen = patch.diff(repo, oldctx.parents()[0].node(), ha, opts=diffopts)
     for chunk in gen:
         fp.write(chunk)
@@ -128,7 +144,7 @@ def fold(ui, repo, ctx, ha, opts):
                              % node.hex(ha))
                 return ctx, [], [], []
         finally:
-            files = patch.updatedir(ui, repo, files)
+            files = updatedir(ui, repo, files)
             os.unlink(patchfile)
     except Exception, inst:
         raise util.Abort(_('Fix up the change and run '
@@ -144,6 +160,9 @@ def finishfold(ui, repo, ctx, oldctx, newnode, opts, internalchanges):
     fp = os.fdopen(fd, 'w')
     diffopts = patch.diffopts(ui, opts)
     diffopts.git = True
+    diffopts.ignorews = False
+    diffopts.ignorewsamount = False
+    diffopts.ignoreblanklines = False
     gen = patch.diff(repo, parent, newnode, opts=diffopts)
     for chunk in gen:
         fp.write(chunk)
@@ -152,7 +171,7 @@ def finishfold(ui, repo, ctx, oldctx, newnode, opts, internalchanges):
     try:
         patch.patch(patchfile, ui, cwd=repo.root, files=files, eolmode=None)
     finally:
-        files = patch.updatedir(ui, repo, files)
+        files = updatedir(ui, repo, files)
         os.unlink(patchfile)
     newmessage = '\n***\n'.join(
         [ctx.description(), ] +
@@ -179,21 +198,36 @@ actiontable = {'p': pick,
 def histedit(ui, repo, *parent, **opts):
     """hg histedit <parent>
     """
+    # TODO only abort if we try and histedit mq patches, not just
+    # blanket if mq patches are applied somewhere
+    mq = getattr(repo, 'mq', None)
+    if mq and mq.applied:
+        raise util.Abort(_('source has mq patches applied'))
+
+    parent = list(parent) + opts.get('rev', [])
     if opts.get('outgoing'):
         if len(parent) > 1:
             raise util.Abort('only one repo argument allowed with --outgoing')
         elif parent:
             parent = parent[0]
 
-        parsed = hg.parseurl(ui.expandpath(parent or 'default-push',
-                                           parent or 'default'), ['tip'])
-        dest, revs = parsed[:2]
+        dest = ui.expandpath(parent or 'default-push', parent or 'default')
+        dest, revs = hg.parseurl(dest, None)[:2]
+        if isinstance(revs, tuple):
+            # python >= 1.6
+            revs, checkout = hg.addbranchrevs(repo, repo, revs, None)
+            other = hg.repository(hg.remoteui(repo, opts), dest)
+            findoutgoing = discovery.findoutgoing
+        else:
+            other = hg.repository(ui, dest)
+            def findoutgoing(repo, other, force=False):
+                return repo.findoutgoing(other, force=force)
+
         if revs:
             revs = [repo.lookup(rev) for rev in revs]
 
-        other = hg.repository(ui, dest)
         ui.status(_('comparing with %s\n') % url.hidepassword(dest))
-        parent = repo.findoutgoing(other, force=opts.get('force'))
+        parent = findoutgoing(repo, other, force=opts.get('force'))
     else:
         if opts.get('force'):
             raise util.Abort('--force only allowed with --outgoing')
@@ -396,7 +430,8 @@ cmdtable = {
           ('o', 'outgoing', False, 'changesets not found in destination'),
           ('f', 'force', False, 'force outgoing even for unrelated repositories'),
           ('',  'startingrules', False, 'issue the starting rules before editing. Useful for gui clients'),
-          ('',  'rules',  '', 'accept rules specified here instead of interactively edited by the user. Useful for gui clients')
+          ('',  'rules',  '', 'accept rules specified here instead of interactively edited by the user. Useful for gui clients'),
+          ('r', 'rev', [], _('first revision to be edited')),
           ],
          __doc__,
          ),
