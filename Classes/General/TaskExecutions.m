@@ -129,6 +129,7 @@
 	{
 		includeHomeHgrc  = IncludeHomeHgrcInHGRCPATHFromDefaults();
 		NSString* hgrc_Path = hgrcPath();
+		NSString* localMercurialPath = fstr(@"%@/LocalMercurial", [[NSBundle mainBundle] builtInPlugInsPath]);
 		
 		NSDictionary* processEnv    = [[NSProcessInfo processInfo] environment];
 		NSMutableDictionary* newEnv = [[NSMutableDictionary alloc] init];
@@ -138,6 +139,7 @@
 		[newEnv copyValueOfKey:@"PATH"			from:processEnv];
 		[newEnv copyValueOfKey:@"TMPDIR"		from:processEnv];
 		[newEnv copyValueOfKey:@"USER"			from:processEnv];
+		[newEnv setObject:localMercurialPath	forKey:@"PYTHONPATH"];
 		[newEnv setObject:@"UTF-8"  forKey:@"HGENCODING"];
 		[newEnv setObject:@"1"		forKey:@"HGPLAIN"];
 		[newEnv setObject:hgrc_Path	forKey:@"HGRCPATH"];		
