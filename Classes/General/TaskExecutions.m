@@ -139,7 +139,8 @@
 		[newEnv copyValueOfKey:@"PATH"			from:processEnv];
 		[newEnv copyValueOfKey:@"TMPDIR"		from:processEnv];
 		[newEnv copyValueOfKey:@"USER"			from:processEnv];
-		[newEnv setObject:localMercurialPath	forKey:@"PYTHONPATH"];
+		[newEnv setObject:localMercurialPath	 forKey:@"PYTHONPATH"];
+		[newEnv setObject:executableLocationHG() forKey:@"HG"];
 		[newEnv setObject:@"UTF-8"  forKey:@"HGENCODING"];
 		[newEnv setObject:@"1"		forKey:@"HGPLAIN"];
 		[newEnv setObject:hgrc_Path	forKey:@"HGRCPATH"];		
