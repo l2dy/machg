@@ -40,7 +40,7 @@ configure it, set the following options in your hgrc::
 """
 
 from mercurial.i18n import _
-from mercurial.node import *
+from mercurial.node import bin, short
 from mercurial import cmdutil, patch, templater, util, mail
 import email.Parser
 
@@ -113,7 +113,7 @@ class ciamsg(object):
 
         n = self.ctx.node()
         pbuf = patchbuf()
-        patch.export(self.cia.repo, [n], fp=pbuf)
+        cmdutil.export(self.cia.repo, [n], fp=pbuf)
         return patch.diffstat(pbuf.lines) or ''
 
     def logmsg(self):

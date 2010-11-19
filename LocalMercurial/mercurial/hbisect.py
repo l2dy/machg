@@ -61,7 +61,9 @@ def bisect(changelog, state):
         badrev, ancestors = buildancestors(state['good'], state['bad'])
     bad = changelog.node(badrev)
     if not ancestors: # now we're confused
-        raise util.Abort(_("Inconsistent state, %s:%s is good and bad")
+        if len(state['bad']) == 1 and len(state['good']) == 1:
+            raise util.Abort(_("starting revisions are not directly related"))
+        raise util.Abort(_("inconsistent state, %s:%s is good and bad")
                          % (badrev, short(bad)))
 
     # build children dict

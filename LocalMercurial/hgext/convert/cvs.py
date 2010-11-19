@@ -5,9 +5,9 @@
 # This software may be used and distributed according to the terms of the
 # GNU General Public License version 2 or any later version.
 
-import os, locale, re, socket, errno
+import os, re, socket, errno
 from cStringIO import StringIO
-from mercurial import util
+from mercurial import encoding, util
 from mercurial.i18n import _
 
 from common import NoRepo, commit, converter_source, checktool
@@ -30,7 +30,7 @@ class convert_cvs(converter_source):
         self.socket = None
         self.cvsroot = open(os.path.join(cvs, "Root")).read()[:-1]
         self.cvsrepo = open(os.path.join(cvs, "Repository")).read()[:-1]
-        self.encoding = locale.getpreferredencoding()
+        self.encoding = encoding.encoding
 
         self._connect()
 
@@ -53,8 +53,6 @@ class convert_cvs(converter_source):
         try:
             os.chdir(self.path)
             id = None
-            state = 0
-            filerevids = {}
 
             cache = 'update'
             if not self.ui.configbool('convert', 'cvsps.cache', True):
@@ -200,7 +198,7 @@ class convert_cvs(converter_source):
         self._parse()
         return self.heads
 
-    def _getfile(self, name, rev):
+    def getfile(self, name, rev):
 
         def chunkedread(fp, count):
             # file-objects returned by socked.makefile() do not handle
@@ -216,6 +214,7 @@ class convert_cvs(converter_source):
                 output.write(data)
             return output.getvalue()
 
+        self._parse()
         if rev.endswith("(DEAD)"):
             raise IOError
 
@@ -255,18 +254,8 @@ class convert_cvs(converter_source):
                 else:
                     raise util.Abort(_("unknown CVS response: %s") % line)
 
-    def getfile(self, file, rev):
-        self._parse()
-        data, mode = self._getfile(file, rev)
-        self.modecache[(file, rev)] = mode
-        return data
-
-    def getmode(self, file, rev):
-        return self.modecache[(file, rev)]
-
     def getchanges(self, rev):
         self._parse()
-        self.modecache = {}
         return sorted(self.files[rev].iteritems()), {}
 
     def getcommit(self, rev):

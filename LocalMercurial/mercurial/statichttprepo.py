@@ -77,6 +77,7 @@ def build_opener(ui, authinfo):
             return httprangereader(f, urlopener)
         return o
 
+    opener.options = {'nonlazy': 1}
     return opener
 
 class statichttprepository(localrepo.localrepository):
@@ -128,6 +129,7 @@ class statichttprepository(localrepo.localrepository):
         self._branchcachetip = None
         self.encodepats = None
         self.decodepats = None
+        self.capabilities.remove("pushkey")
 
     def url(self):
         return self._url

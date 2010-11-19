@@ -10,14 +10,34 @@ import util, encoding
 import os, smtplib, socket, quopri
 import email.Header, email.MIMEText, email.Utils
 
+_oldheaderinit = email.Header.Header.__init__
+def _unifiedheaderinit(self, *args, **kw):
+    """
+    Python2.7 introduces a backwards incompatible change
+    (Python issue1974, r70772) in email.Generator.Generator code:
+    pre-2.7 code passed "continuation_ws='\t'" to the Header
+    constructor, and 2.7 removed this parameter.
+
+    Default argument is continuation_ws=' ', which means that the
+    behaviour is different in <2.7 and 2.7
+
+    We consider the 2.7 behaviour to be preferable, but need
+    to have an unified behaviour for versions 2.4 to 2.7
+    """
+    # override continuation_ws
+    kw['continuation_ws'] = ' '
+    _oldheaderinit(self, *args, **kw)
+
+email.Header.Header.__dict__['__init__'] = _unifiedheaderinit
+
 def _smtp(ui):
     '''build an smtp connection and return a function to send mail'''
     local_hostname = ui.config('smtp', 'local_hostname')
     s = smtplib.SMTP(local_hostname=local_hostname)
     mailhost = ui.config('smtp', 'host')
     if not mailhost:
-        raise util.Abort(_('no [smtp]host in hgrc - cannot send mail'))
-    mailport = int(ui.config('smtp', 'port', 25))
+        raise util.Abort(_('smtp.host not configured - cannot send mail'))
+    mailport = util.getport(ui.config('smtp', 'port', 25))
     ui.note(_('sending mail: smtp host %s, port %s\n') %
             (mailhost, mailport))
     s.connect(host=mailhost, port=mailport)

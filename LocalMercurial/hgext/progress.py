@@ -45,11 +45,14 @@ num characters, or ``+<num>`` for the first num characters.
 import sys
 import time
 
-from mercurial import extensions
 from mercurial import util
 
 def spacejoin(*args):
     return ' '.join(s for s in args if s)
+
+def shouldprint(ui):
+    return (getattr(sys.stderr, 'isatty', None) and
+            (sys.stderr.isatty() or ui.configbool('progress', 'assume-tty')))
 
 class progbar(object):
     def __init__(self, ui):
@@ -69,6 +72,8 @@ class progbar(object):
             default=['topic', 'bar', 'number'])
 
     def show(self, topic, pos, item, unit, total):
+        if not shouldprint(self.ui):
+            return
         termwidth = self.width()
         self.printed = True
         head = ''
@@ -114,7 +119,7 @@ class progbar(object):
             if tail:
                 used += len(tail) + 1
             progwidth = termwidth - used - 3
-            if total:
+            if total and pos <= total:
                 amt = pos * progwidth // total
                 bar = '=' * (amt - 1)
                 if amt > 0:
@@ -137,9 +142,13 @@ class progbar(object):
         sys.stderr.flush()
 
     def clear(self):
+        if not shouldprint(self.ui):
+            return
         sys.stderr.write('\r%s\r' % (' ' * self.width()))
 
     def complete(self):
+        if not shouldprint(self.ui):
+            return
         if self.ui.configbool('progress', 'clear-complete', default=True):
             self.clear()
         else:
@@ -147,10 +156,10 @@ class progbar(object):
         sys.stderr.flush()
 
     def width(self):
-        tw = util.termwidth()
+        tw = self.ui.termwidth()
         return min(int(self.ui.config('progress', 'width', default=tw)), tw)
 
-    def progress(self, orig, topic, pos, item='', unit='', total=None):
+    def progress(self, topic, pos, item='', unit='', total=None):
         if pos is None:
             if self.topics and self.topics[-1] == topic and self.printed:
                 self.complete()
@@ -163,30 +172,35 @@ class progbar(object):
                 and topic == self.topics[-1]):
                 self.lastprint = now
                 self.show(topic, pos, item, unit, total)
-        return orig(topic, pos, item=item, unit=unit, total=total)
-
-    def write(self, orig, *args):
-        if self.printed:
-            self.clear()
-        return orig(*args)
-
-sharedprog = None
 
 def uisetup(ui):
+    class progressui(ui.__class__):
+        _progbar = None
+
+        def progress(self, *args, **opts):
+            self._progbar.progress(*args, **opts)
+            return super(progressui, self).progress(*args, **opts)
+
+        def write(self, *args, **opts):
+            if self._progbar.printed:
+                self._progbar.clear()
+            return super(progressui, self).write(*args, **opts)
+
+        def write_err(self, *args, **opts):
+            if self._progbar.printed:
+                self._progbar.clear()
+            return super(progressui, self).write_err(*args, **opts)
+
     # Apps that derive a class from ui.ui() can use
     # setconfig('progress', 'disable', 'True') to disable this extension
     if ui.configbool('progress', 'disable'):
         return
-    if ((sys.stderr.isatty() or ui.configbool('progress', 'assume-tty'))
-        and not ui.debugflag and not ui.quiet):
+    if shouldprint(ui) and not ui.debugflag and not ui.quiet:
+        ui.__class__ = progressui
         # we instantiate one globally shared progress bar to avoid
         # competing progress bars when multiple UI objects get created
-        global sharedprog
-        if not sharedprog:
-            sharedprog = progbar(ui)
-        extensions.wrapfunction(ui, 'progress', sharedprog.progress)
-        extensions.wrapfunction(ui, 'write', sharedprog.write)
-        extensions.wrapfunction(ui, 'write_err', sharedprog.write)
+        if not progressui._progbar:
+            progressui._progbar = progbar(ui)
 
 def reposetup(ui, repo):
     uisetup(repo.ui)

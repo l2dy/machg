@@ -33,9 +33,7 @@ class filelog(revlog.revlog):
 
     def add(self, text, meta, transaction, link, p1=None, p2=None):
         if meta or text.startswith('\1\n'):
-            mt = ""
-            if meta:
-                mt = ["%s: %s\n" % (k, v) for k, v in sorted(meta.iteritems())]
+            mt = ["%s: %s\n" % (k, v) for k, v in sorted(meta.iteritems())]
             text = "\1\n%s\1\n%s" % ("".join(mt), text)
         return self.addrevision(text, transaction, link, p1, p2)
 
@@ -55,14 +53,27 @@ class filelog(revlog.revlog):
         if self.renamed(node):
             return len(self.read(node))
 
+        # XXX if self.read(node).startswith("\1\n"), this returns (size+4)
         return revlog.revlog.size(self, rev)
 
     def cmp(self, node, text):
-        """compare text with a given file revision"""
+        """compare text with a given file revision
 
-        # for renames, we have to go the slow way
-        if text.startswith('\1\n') or self.renamed(node):
+        returns True if text is different than what is stored.
+        """
+
+        t = text
+        if text.startswith('\1\n'):
+            t = '\1\n\1\n' + text
+
+        samehashes = not revlog.revlog.cmp(self, node, t)
+        if samehashes:
+            return False
+
+        # renaming a file produces a different hash, even if the data
+        # remains unchanged. Check if it's the case (slow):
+        if self.renamed(node):
             t2 = self.read(node)
             return t2 != text
 
-        return revlog.revlog.cmp(self, node, text)
+        return True

@@ -7,6 +7,14 @@
 
 '''perform automatic newline conversion
 
+  Deprecation: The win32text extension requires each user to configure
+  the extension again and again for each clone since the configuration
+  is not copied when cloning.
+
+  We have therefore made the ``eol`` as an alternative. The ``eol``
+  uses a version controlled file for its configuration and each clone
+  will therefore use the right settings from the start.
+
 To perform automatic newline conversion, use::
 
   [extensions]
@@ -156,3 +164,7 @@ def reposetup(ui, repo):
     for name, fn in _filters.iteritems():
         repo.adddatafilter(name, fn)
 
+def extsetup(ui):
+    if ui.configbool('win32text', 'warn', True):
+        ui.warn(_("win32text is deprecated: "
+                  "http://mercurial.selenic.com/wiki/Win32TextExtension\n"))

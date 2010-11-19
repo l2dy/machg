@@ -46,7 +46,7 @@ def load(ui, name, path):
     else:
         shortname = name
     if shortname in _extensions:
-        return
+        return _extensions[shortname]
     _extensions[shortname] = None
     if path:
         # the module will be loaded in sys.modules
@@ -66,6 +66,7 @@ def load(ui, name, path):
             mod = importh(name)
     _extensions[shortname] = mod
     _order.append(shortname)
+    return mod
 
 def loadall(ui):
     result = ui.configitems("extensions")
@@ -104,6 +105,19 @@ def loadall(ui):
                 extsetup() # old extsetup with no ui argument
 
 def wrapcommand(table, command, wrapper):
+    '''Wrap the command named `command' in table
+
+    Replace command in the command table with wrapper. The wrapped command will
+    be inserted into the command table specified by the table argument.
+
+    The wrapper will be called like
+
+      wrapper(orig, *args, **kwargs)
+
+    where orig is the original (wrapped) function, and *args, **kwargs
+    are the arguments passed to it.
+    '''
+    assert hasattr(wrapper, '__call__')
     aliases, entry = cmdutil.findcmd(command, table)
     for alias, e in table.iteritems():
         if e is entry:
@@ -124,10 +138,44 @@ def wrapcommand(table, command, wrapper):
     return entry
 
 def wrapfunction(container, funcname, wrapper):
+    '''Wrap the function named funcname in container
+
+    Replace the funcname member in the given container with the specified
+    wrapper. The container is typically a module, class, or instance.
+
+    The wrapper will be called like
+
+      wrapper(orig, *args, **kwargs)
+
+    where orig is the original (wrapped) function, and *args, **kwargs
+    are the arguments passed to it.
+
+    Wrapping methods of the repository object is not recommended since
+    it conflicts with extensions that extend the repository by
+    subclassing. All extensions that need to extend methods of
+    localrepository should use this subclassing trick: namely,
+    reposetup() should look like
+
+      def reposetup(ui, repo):
+          class myrepo(repo.__class__):
+              def whatever(self, *args, **kwargs):
+                  [...extension stuff...]
+                  super(myrepo, self).whatever(*args, **kwargs)
+                  [...extension stuff...]
+
+          repo.__class__ = myrepo
+
+    In general, combining wrapfunction() with subclassing does not
+    work. Since you cannot control what other extensions are loaded by
+    your end users, you should play nicely with others by using the
+    subclass trick.
+    '''
+    assert hasattr(wrapper, '__call__')
     def wrap(*args, **kwargs):
         return wrapper(origfn, *args, **kwargs)
 
     origfn = getattr(container, funcname)
+    assert hasattr(origfn, '__call__')
     setattr(container, funcname, wrap)
     return origfn
 

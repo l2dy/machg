@@ -1,6 +1,6 @@
 # keyword.py - $Keyword$ expansion for Mercurial
 #
-# Copyright 2007-2009 Christian Ebert <blacktrash@gmx.net>
+# Copyright 2007-2010 Christian Ebert <blacktrash@gmx.net>
 #
 # This software may be used and distributed according to the terms of the
 # GNU General Public License version 2 or any later version.
@@ -35,8 +35,11 @@ Keywords are only expanded in local repositories and not stored in the
 change history. The mechanism can be regarded as a convenience for the
 current user or for archive distribution.
 
-Configuration is done in the [keyword] and [keywordmaps] sections of
-hgrc files.
+Keywords expand to the changeset data pertaining to the latest change
+relative to the working directory parent of each file.
+
+Configuration is done in the [keyword], [keywordset] and [keywordmaps]
+sections of hgrc files.
 
 Example::
 
@@ -45,72 +48,77 @@ Example::
     **.py =
     x*    = ignore
 
-NOTE: the more specific you are in your filename patterns the less you
-lose speed in huge repositories.
+    [keywordset]
+    # prefer svn- over cvs-like default keywordmaps
+    svn = True
+
+.. note::
+   The more specific you are in your filename patterns the less you
+   lose speed in huge repositories.
 
 For [keywordmaps] template mapping and expansion demonstration and
-control run "hg kwdemo". See "hg help templates" for a list of
+control run :hg:`kwdemo`. See :hg:`help templates` for a list of
 available templates and filters.
 
-An additional date template filter {date|utcdate} is provided. It
-returns a date like "2006/09/18 15:13:13".
+Three additional date template filters are provided::
 
-The default template mappings (view with "hg kwdemo -d") can be
-replaced with customized keywords and templates. Again, run "hg
-kwdemo" to control the results of your config changes.
+    utcdate      "2006/09/18 15:13:13"
+    svnutcdate   "2006-09-18 15:13:13Z"
+    svnisodate   "2006-09-18 08:13:13 -700 (Mon, 18 Sep 2006)"
 
-Before changing/disabling active keywords, run "hg kwshrink" to avoid
+The default template mappings (view with :hg:`kwdemo -d`) can be
+replaced with customized keywords and templates. Again, run
+:hg:`kwdemo` to control the results of your config changes.
+
+Before changing/disabling active keywords, run :hg:`kwshrink` to avoid
 the risk of inadvertently storing expanded keywords in the change
 history.
 
 To force expansion after enabling it, or a configuration change, run
-"hg kwexpand".
-
-Also, when committing with the record extension or using mq's qrecord,
-be aware that keywords cannot be updated. Again, run "hg kwexpand" on
-the files in question to update keyword expansions after all changes
-have been checked in.
+:hg:`kwexpand`.
 
 Expansions spanning more than one line and incremental expansions,
 like CVS' $Log$, are not supported. A keyword template map "Log =
 {desc}" expands to the first line of the changeset description.
 '''
 
-from mercurial import commands, cmdutil, dispatch, filelog, revlog, extensions
-from mercurial import patch, localrepo, templater, templatefilters, util, match
+from mercurial import commands, context, cmdutil, dispatch, filelog, extensions
+from mercurial import localrepo, match, patch, templatefilters, templater, util
 from mercurial.hgweb import webcommands
-from mercurial.lock import release
-from mercurial.node import nullid
 from mercurial.i18n import _
 import re, shutil, tempfile
 
 commands.optionalrepo += ' kwdemo'
 
 # hg commands that do not act on keywords
-nokwcommands = ('add addremove annotate bundle copy export grep incoming init'
-                ' log outgoing push rename rollback tip verify'
-                ' convert email glog')
+nokwcommands = ('add addremove annotate bundle export grep incoming init log'
+                ' outgoing push tip verify convert email glog')
 
 # hg commands that trigger expansion only when writing to working dir,
 # not when reading filelog, and unexpand when reading from working dir
-restricted = ('merge record resolve qfold qimport qnew qpush qrefresh qrecord'
-              ' transplant')
+restricted = 'merge kwexpand kwshrink record qrecord resolve transplant'
 
-# provide cvs-like UTC date filter
+# names of extensions using dorecord
+recordextensions = 'record'
+
+# date like in cvs' $Date
 utcdate = lambda x: util.datestr((x[0], 0), '%Y/%m/%d %H:%M:%S')
+# date like in svn's $Date
+svnisodate = lambda x: util.datestr(x, '%Y-%m-%d %H:%M:%S %1%2 (%a, %d %b %Y)')
+# date like in svn's $Id
+svnutcdate = lambda x: util.datestr((x[0], 0), '%Y-%m-%d %H:%M:%SZ')
 
 # make keyword tools accessible
-kwtools = {'templater': None, 'hgcmd': '', 'inc': [], 'exc': ['.hg*']}
+kwtools = {'templater': None, 'hgcmd': ''}
 
 
-class kwtemplater(object):
-    '''
-    Sets up keyword templates, corresponding keyword regex, and
-    provides keyword substitution functions.
-    '''
+def _defaultkwmaps(ui):
+    '''Returns default keywordmaps according to keywordset configuration.'''
     templates = {
         'Revision': '{node|short}',
         'Author': '{author|user}',
+    }
+    kwsets = ({
         'Date': '{date|utcdate}',
         'RCSfile': '{file|basename},v',
         'RCSFile': '{file|basename},v', # kept for backwards compatibility
@@ -118,34 +126,67 @@ class kwtemplater(object):
         'Source': '{root}/{file},v',
         'Id': '{file|basename},v {node|short} {date|utcdate} {author|user}',
         'Header': '{root}/{file},v {node|short} {date|utcdate} {author|user}',
-    }
+    }, {
+        'Date': '{date|svnisodate}',
+        'Id': '{file|basename},v {node|short} {date|svnutcdate} {author|user}',
+        'LastChangedRevision': '{node|short}',
+        'LastChangedBy': '{author|user}',
+        'LastChangedDate': '{date|svnisodate}',
+    })
+    templates.update(kwsets[ui.configbool('keywordset', 'svn')])
+    return templates
 
-    def __init__(self, ui, repo):
+def _shrinktext(text, subfunc):
+    '''Helper for keyword expansion removal in text.
+    Depending on subfunc also returns number of substitutions.'''
+    return subfunc(r'$\1$', text)
+
+def _preselect(wstatus, changed):
+    '''Retrieves modfied and added files from a working directory state
+    and returns the subset of each contained in given changed files
+    retrieved from a change context.'''
+    modified, added = wstatus[:2]
+    modified = [f for f in modified if f in changed]
+    added = [f for f in added if f in changed]
+    return modified, added
+
+
+class kwtemplater(object):
+    '''
+    Sets up keyword templates, corresponding keyword regex, and
+    provides keyword substitution functions.
+    '''
+
+    def __init__(self, ui, repo, inc, exc):
         self.ui = ui
         self.repo = repo
-        self.match = match.match(repo.root, '', [],
-                                 kwtools['inc'], kwtools['exc'])
+        self.match = match.match(repo.root, '', [], inc, exc)
         self.restrict = kwtools['hgcmd'] in restricted.split()
+        self.record = False
 
         kwmaps = self.ui.configitems('keywordmaps')
         if kwmaps: # override default templates
             self.templates = dict((k, templater.parsestring(v, False))
                                   for k, v in kwmaps)
-        escaped = map(re.escape, self.templates.keys())
-        kwpat = r'\$(%s)(: [^$\n\r]*? )??\$' % '|'.join(escaped)
-        self.re_kw = re.compile(kwpat)
+        else:
+            self.templates = _defaultkwmaps(self.ui)
+        escaped = '|'.join(map(re.escape, self.templates.keys()))
+        self.re_kw = re.compile(r'\$(%s)\$' % escaped)
+        self.re_kwexp = re.compile(r'\$(%s): [^$\n\r]*? \$' % escaped)
 
-        templatefilters.filters['utcdate'] = utcdate
-        self.ct = cmdutil.changeset_templater(self.ui, self.repo,
-                                              False, None, '', False)
+        templatefilters.filters.update({'utcdate': utcdate,
+                                        'svnisodate': svnisodate,
+                                        'svnutcdate': svnutcdate})
 
     def substitute(self, data, path, ctx, subfunc):
         '''Replaces keywords in data with expanded template.'''
         def kwsub(mobj):
             kw = mobj.group(1)
-            self.ct.use_template(self.templates[kw])
+            ct = cmdutil.changeset_templater(self.ui, self.repo,
+                                             False, None, '', False)
+            ct.use_template(self.templates[kw])
             self.ui.pushbuffer()
-            self.ct.show(ctx, root=self.repo.root, file=path)
+            ct.show(ctx, root=self.repo.root, file=path)
             ekw = templatefilters.firstline(self.ui.popbuffer())
             return '$%s: %s $' % (kw, ekw)
         return subfunc(kwsub, data)
@@ -157,53 +198,51 @@ class kwtemplater(object):
             return self.substitute(data, path, ctx, self.re_kw.sub)
         return data
 
-    def iskwfile(self, path, flagfunc):
-        '''Returns true if path matches [keyword] pattern
-        and is not a symbolic link.
-        Caveat: localrepository._link fails on Windows.'''
-        return self.match(path) and not 'l' in flagfunc(path)
+    def iskwfile(self, cand, ctx):
+        '''Returns subset of candidates which are configured for keyword
+        expansion are not symbolic links.'''
+        return [f for f in cand if self.match(f) and not 'l' in ctx.flags(f)]
 
-    def overwrite(self, node, expand, files):
+    def overwrite(self, ctx, candidates, lookup, expand, rekw=False):
         '''Overwrites selected files expanding/shrinking keywords.'''
-        ctx = self.repo[node]
-        mf = ctx.manifest()
-        if node is not None:     # commit
-            files = [f for f in ctx.files() if f in mf]
-            notify = self.ui.debug
-        else:                    # kwexpand/kwshrink
-            notify = self.ui.note
-        candidates = [f for f in files if self.iskwfile(f, ctx.flags)]
-        if candidates:
-            self.restrict = True # do not expand when reading
-            msg = (expand and _('overwriting %s expanding keywords\n')
-                   or _('overwriting %s shrinking keywords\n'))
-            for f in candidates:
-                fp = self.repo.file(f)
-                data = fp.read(mf[f])
-                if util.binary(data):
-                    continue
-                if expand:
-                    if node is None:
-                        ctx = self.repo.filectx(f, fileid=mf[f]).changectx()
-                    data, found = self.substitute(data, f, ctx,
-                                                  self.re_kw.subn)
-                else:
-                    found = self.re_kw.search(data)
-                if found:
-                    notify(msg % f)
-                    self.repo.wwrite(f, data, mf.flags(f))
-                    if node is None:
-                        self.repo.dirstate.normal(f)
-            self.restrict = False
-
-    def shrinktext(self, text):
-        '''Unconditionally removes all keyword substitutions from text.'''
-        return self.re_kw.sub(r'$\1$', text)
+        if self.restrict or lookup or self.record: # exclude kw_copy
+            candidates = self.iskwfile(candidates, ctx)
+        if not candidates:
+            return
+        kwcmd = self.restrict and lookup # kwexpand/kwshrink
+        if self.restrict or expand and lookup:
+            mf = ctx.manifest()
+        fctx = ctx
+        subn = (self.restrict or rekw) and self.re_kw.subn or self.re_kwexp.subn
+        msg = (expand and _('overwriting %s expanding keywords\n')
+               or _('overwriting %s shrinking keywords\n'))
+        for f in candidates:
+            if self.restrict:
+                data = self.repo.file(f).read(mf[f])
+            else:
+                data = self.repo.wread(f)
+            if util.binary(data):
+                continue
+            if expand:
+                if lookup:
+                    fctx = self.repo.filectx(f, fileid=mf[f]).changectx()
+                data, found = self.substitute(data, f, fctx, subn)
+            elif self.restrict:
+                found = self.re_kw.search(data)
+            else:
+                data, found = _shrinktext(data, subn)
+            if found:
+                self.ui.note(msg % f)
+                self.repo.wwrite(f, data, ctx.flags(f))
+                if kwcmd:
+                    self.repo.dirstate.normal(f)
+                elif self.record:
+                    self.repo.dirstate.normallookup(f)
 
     def shrink(self, fname, text):
         '''Returns text with all keyword substitutions removed.'''
         if self.match(fname) and not util.binary(text):
-            return self.shrinktext(text)
+            return _shrinktext(text, self.re_kwexp.sub)
         return text
 
     def shrinklines(self, fname, lines):
@@ -211,7 +250,7 @@ class kwtemplater(object):
         if self.match(fname):
             text = ''.join(lines)
             if not util.binary(text):
-                return self.shrinktext(text).splitlines(True)
+                return _shrinktext(text, self.re_kwexp.sub).splitlines(True)
         return lines
 
     def wread(self, fname, data):
@@ -232,6 +271,8 @@ class kwfilelog(filelog.filelog):
     def read(self, node):
         '''Expands keywords when reading filelog.'''
         data = super(kwfilelog, self).read(node)
+        if self.renamed(node):
+            return data
         return self.kwt.expand(self.path, node, data)
 
     def add(self, text, meta, tr, link, p1=None, p2=None):
@@ -242,39 +283,33 @@ class kwfilelog(filelog.filelog):
     def cmp(self, node, text):
         '''Removes keyword substitutions for comparison.'''
         text = self.kwt.shrink(self.path, text)
-        if self.renamed(node):
-            t2 = super(kwfilelog, self).read(node)
-            return t2 != text
-        return revlog.revlog.cmp(self, node, text)
+        return super(kwfilelog, self).cmp(node, text)
 
 def _status(ui, repo, kwt, *pats, **opts):
     '''Bails out if [keyword] configuration is not active.
     Returns status of working directory.'''
     if kwt:
-        unknown = (opts.get('unknown') or opts.get('all')
-                   or opts.get('untracked'))
         return repo.status(match=cmdutil.match(repo, pats, opts), clean=True,
-                           unknown=unknown)
+                           unknown=opts.get('unknown') or opts.get('all'))
     if ui.configitems('keyword'):
         raise util.Abort(_('[keyword] patterns cannot match'))
     raise util.Abort(_('no [keyword] patterns configured'))
 
 def _kwfwrite(ui, repo, expand, *pats, **opts):
     '''Selects files and passes them to kwtemplater.overwrite.'''
-    if repo.dirstate.parents()[1] != nullid:
+    wctx = repo[None]
+    if len(wctx.parents()) > 1:
         raise util.Abort(_('outstanding uncommitted merge'))
     kwt = kwtools['templater']
-    status = _status(ui, repo, kwt, *pats, **opts)
-    modified, added, removed, deleted = status[:4]
-    if modified or added or removed or deleted:
-        raise util.Abort(_('outstanding uncommitted changes'))
-    wlock = lock = None
+    wlock = repo.wlock()
     try:
-        wlock = repo.wlock()
-        lock = repo.lock()
-        kwt.overwrite(None, expand, status[6])
+        status = _status(ui, repo, kwt, *pats, **opts)
+        modified, added, removed, deleted, unknown, ignored, clean = status
+        if modified or added or removed or deleted:
+            raise util.Abort(_('outstanding uncommitted changes'))
+        kwt.overwrite(wctx, clean, True, expand)
     finally:
-        release(lock, wlock)
+        wlock.release()
 
 def demo(ui, repo, *args, **opts):
     '''print [keywordmaps] configuration and an expansion example
@@ -287,7 +322,7 @@ def demo(ui, repo, *args, **opts):
 
     Use -d/--default to disable current configuration.
 
-    See "hg help templates" for information on templates and filters.
+    See :hg:`help templates` for information on templates and filters.
     '''
     def demoitems(section, items):
         ui.write('[%s]\n' % section)
@@ -295,7 +330,6 @@ def demo(ui, repo, *args, **opts):
             ui.write('%s = %s\n' % (k, v))
 
     fn = 'demo.txt'
-    branchname = 'demobranch'
     tmpdir = tempfile.mkdtemp('', 'kwdemo.')
     ui.note(_('creating temporary repository at %s\n') % tmpdir)
     repo = localrepo.localrepository(ui, tmpdir, True)
@@ -320,46 +354,34 @@ def demo(ui, repo, *args, **opts):
         kwmaps = dict(ui.configitems('keywordmaps'))
     elif opts.get('default'):
         ui.status(_('\n\tconfiguration using default keyword template maps\n'))
-        kwmaps = kwtemplater.templates
+        kwmaps = _defaultkwmaps(ui)
         if uikwmaps:
             ui.status(_('\tdisabling current template maps\n'))
             for k, v in kwmaps.iteritems():
                 ui.setconfig('keywordmaps', k, v)
     else:
         ui.status(_('\n\tconfiguration using current keyword template maps\n'))
-        kwmaps = dict(uikwmaps) or kwtemplater.templates
+        kwmaps = dict(uikwmaps) or _defaultkwmaps(ui)
 
     uisetup(ui)
     reposetup(ui, repo)
-    for k, v in ui.configitems('extensions'):
-        if k.endswith('keyword'):
-            extension = '%s = %s' % (k, v)
-            break
-    ui.write('[extensions]\n%s\n' % extension)
+    ui.write('[extensions]\nkeyword =\n')
     demoitems('keyword', ui.configitems('keyword'))
     demoitems('keywordmaps', kwmaps.iteritems())
     keywords = '$' + '$\n$'.join(sorted(kwmaps.keys())) + '$\n'
     repo.wopener(fn, 'w').write(keywords)
-    repo.add([fn])
-    path = repo.wjoin(fn)
-    ui.note(_('\nkeywords written to %s:\n') % path)
+    repo[None].add([fn])
+    ui.note(_('\nkeywords written to %s:\n') % fn)
     ui.note(keywords)
-    ui.note('\nhg -R "%s" branch "%s"\n' % (tmpdir, branchname))
-    # silence branch command if not verbose
-    quiet = ui.quiet
-    ui.quiet = not ui.verbose
-    commands.branch(ui, repo, branchname)
-    ui.quiet = quiet
+    repo.dirstate.setbranch('demobranch')
     for name, cmd in ui.configitems('hooks'):
         if name.split('.', 1)[0].find('commit') > -1:
             repo.ui.setconfig('hooks', name, '')
-    ui.note(_('unhooked all commit hooks\n'))
     msg = _('hg keyword configuration and expansion example')
-    ui.note("hg -R '%s' ci -m '%s'\n" % (tmpdir, msg))
+    ui.note("hg ci -m '%s'\n" % msg)
     repo.commit(text=msg)
     ui.status(_('\n\tkeywords expanded\n'))
     ui.write(repo.wread(fn))
-    ui.debug('\nremoving temporary repository %s\n' % tmpdir)
     shutil.rmtree(tmpdir, ignore_errors=True)
 
 def expand(ui, repo, *pats, **opts):
@@ -382,7 +404,7 @@ def files(ui, repo, *pats, **opts):
     execution by including only files that are actual candidates for
     expansion.
 
-    See "hg help keyword" on how to construct patterns both for
+    See :hg:`help keyword` on how to construct patterns both for
     inclusion and exclusion of files.
 
     With -A/--all and -v/--verbose the codes used to show the status
@@ -398,11 +420,11 @@ def files(ui, repo, *pats, **opts):
     cwd = pats and repo.getcwd() or ''
     modified, added, removed, deleted, unknown, ignored, clean = status
     files = []
-    if not (opts.get('unknown') or opts.get('untracked')) or opts.get('all'):
+    if not opts.get('unknown') or opts.get('all'):
         files = sorted(modified + added + clean)
     wctx = repo[None]
-    kwfiles = [f for f in files if kwt.iskwfile(f, wctx.flags)]
-    kwunknown = [f for f in unknown if kwt.iskwfile(f, wctx.flags)]
+    kwfiles = kwt.iskwfile(files, wctx)
+    kwunknown = kwt.iskwfile(unknown, wctx)
     if not opts.get('ignore') or opts.get('all'):
         showfiles = kwfiles, kwunknown
     else:
@@ -419,7 +441,7 @@ def shrink(ui, repo, *pats, **opts):
     '''revert expanded keywords in the working directory
 
     Run before changing/disabling active keywords or if you experience
-    problems with "hg import" or "hg merge".
+    problems with :hg:`import` or :hg:`merge`.
 
     kwshrink refuses to run if given files contain local changes.
     '''
@@ -428,23 +450,15 @@ def shrink(ui, repo, *pats, **opts):
 
 
 def uisetup(ui):
-    '''Collects [keyword] config in kwtools.
-    Monkeypatches dispatch._parse if needed.'''
+    ''' Monkeypatches dispatch._parse to retrieve user command.'''
 
-    for pat, opt in ui.configitems('keyword'):
-        if opt != 'ignore':
-            kwtools['inc'].append(pat)
-        else:
-            kwtools['exc'].append(pat)
+    def kwdispatch_parse(orig, ui, args):
+        '''Monkeypatch dispatch._parse to obtain running hg command.'''
+        cmd, func, args, options, cmdoptions = orig(ui, args)
+        kwtools['hgcmd'] = cmd
+        return cmd, func, args, options, cmdoptions
 
-    if kwtools['inc']:
-        def kwdispatch_parse(orig, ui, args):
-            '''Monkeypatch dispatch._parse to obtain running hg command.'''
-            cmd, func, args, options, cmdoptions = orig(ui, args)
-            kwtools['hgcmd'] = cmd
-            return cmd, func, args, options, cmdoptions
-
-        extensions.wrapfunction(dispatch, '_parse', kwdispatch_parse)
+    extensions.wrapfunction(dispatch, '_parse', kwdispatch_parse)
 
 def reposetup(ui, repo):
     '''Sets up repo as kwrepo for keyword substitution.
@@ -455,15 +469,23 @@ def reposetup(ui, repo):
     Monkeypatches patch and webcommands.'''
 
     try:
-        if (not repo.local() or not kwtools['inc']
-            or kwtools['hgcmd'] in nokwcommands.split()
+        if (not repo.local() or kwtools['hgcmd'] in nokwcommands.split()
             or '.hg' in util.splitpath(repo.root)
             or repo._url.startswith('bundle:')):
             return
     except AttributeError:
         pass
 
-    kwtools['templater'] = kwt = kwtemplater(ui, repo)
+    inc, exc = [], ['.hg*']
+    for pat, opt in ui.configitems('keyword'):
+        if opt != 'ignore':
+            inc.append(pat)
+        else:
+            exc.append(pat)
+    if not inc:
+        return
+
+    kwtools['templater'] = kwt = kwtemplater(ui, repo, inc, exc)
 
     class kwrepo(repo.__class__):
         def file(self, f):
@@ -485,53 +507,119 @@ def reposetup(ui, repo):
                 del self.commitctx
 
         def kwcommitctx(self, ctx, error=False):
-            wlock = lock = None
+            n = super(kwrepo, self).commitctx(ctx, error)
+            # no lock needed, only called from repo.commit() which already locks
+            if not kwt.record:
+                restrict = kwt.restrict
+                kwt.restrict = True
+                kwt.overwrite(self[n], sorted(ctx.added() + ctx.modified()),
+                              False, True)
+                kwt.restrict = restrict
+            return n
+
+        def rollback(self, dryrun=False):
+            wlock = self.wlock()
             try:
-                wlock = self.wlock()
-                lock = self.lock()
-                n = super(kwrepo, self).commitctx(ctx, error)
-                kwt.overwrite(n, True, None)
-                return n
+                if not dryrun:
+                    changed = self['.'].files()
+                ret = super(kwrepo, self).rollback(dryrun)
+                if not dryrun:
+                    ctx = self['.']
+                    modified, added = _preselect(self[None].status(), changed)
+                    kwt.overwrite(ctx, modified, True, True)
+                    kwt.overwrite(ctx, added, True, False)
+                return ret
             finally:
-                release(lock, wlock)
+                wlock.release()
 
     # monkeypatches
     def kwpatchfile_init(orig, self, ui, fname, opener,
-                         missing=False, eol=None):
+                         missing=False, eolmode=None):
         '''Monkeypatch/wrap patch.patchfile.__init__ to avoid
         rejects or conflicts due to expanded keywords in working dir.'''
-        orig(self, ui, fname, opener, missing, eol)
+        orig(self, ui, fname, opener, missing, eolmode)
         # shrink keywords read from working dir
         self.lines = kwt.shrinklines(self.fname, self.lines)
 
     def kw_diff(orig, repo, node1=None, node2=None, match=None, changes=None,
-                opts=None):
-        '''Monkeypatch patch.diff to avoid expansion except when
-        comparing against working dir.'''
-        if node2 is not None:
-            kwt.match = util.never
-        elif node1 is not None and node1 != repo['.'].node():
-            kwt.restrict = True
-        return orig(repo, node1, node2, match, changes, opts)
+                opts=None, prefix=''):
+        '''Monkeypatch patch.diff to avoid expansion.'''
+        kwt.restrict = True
+        return orig(repo, node1, node2, match, changes, opts, prefix)
 
     def kwweb_skip(orig, web, req, tmpl):
         '''Wraps webcommands.x turning off keyword expansion.'''
         kwt.match = util.never
         return orig(web, req, tmpl)
 
+    def kw_copy(orig, ui, repo, pats, opts, rename=False):
+        '''Wraps cmdutil.copy so that copy/rename destinations do not
+        contain expanded keywords.
+        Note that the source may also be a symlink as:
+        hg cp sym x                -> x is symlink
+        cp sym x; hg cp -A sym x   -> x is file (maybe expanded keywords)
+        '''
+        orig(ui, repo, pats, opts, rename)
+        if opts.get('dry_run'):
+            return
+        wctx = repo[None]
+        candidates = [f for f in repo.dirstate.copies() if
+                      kwt.match(repo.dirstate.copied(f)) and
+                      not 'l' in wctx.flags(f)]
+        kwt.overwrite(wctx, candidates, False, False)
+
+    def kw_dorecord(orig, ui, repo, commitfunc, *pats, **opts):
+        '''Wraps record.dorecord expanding keywords after recording.'''
+        wlock = repo.wlock()
+        try:
+            # record returns 0 even when nothing has changed
+            # therefore compare nodes before and after
+            kwt.record = True
+            ctx = repo['.']
+            wstatus = repo[None].status()
+            ret = orig(ui, repo, commitfunc, *pats, **opts)
+            recctx = repo['.']
+            if ctx != recctx:
+                modified, added = _preselect(wstatus, recctx.files())
+                kwt.restrict = False
+                kwt.overwrite(recctx, modified, False, True)
+                kwt.overwrite(recctx, added, False, True, True)
+                kwt.restrict = True
+            return ret
+        finally:
+            wlock.release()
+
     repo.__class__ = kwrepo
 
+    def kwfilectx_cmp(orig, self, fctx):
+        # keyword affects data size, comparing wdir and filelog size does
+        # not make sense
+        if (fctx._filerev is None and
+            (self._repo._encodefilterpats or
+             kwt.match(fctx.path()) and not 'l' in fctx.flags()) or
+            self.size() == fctx.size()):
+            return self._filelog.cmp(self._filenode, fctx.data())
+        return True
+
+    extensions.wrapfunction(context.filectx, 'cmp', kwfilectx_cmp)
     extensions.wrapfunction(patch.patchfile, '__init__', kwpatchfile_init)
-    if not kwt.restrict:
-        extensions.wrapfunction(patch, 'diff', kw_diff)
+    extensions.wrapfunction(patch, 'diff', kw_diff)
+    extensions.wrapfunction(cmdutil, 'copy', kw_copy)
     for c in 'annotate changeset rev filediff diff'.split():
         extensions.wrapfunction(webcommands, c, kwweb_skip)
+    for name in recordextensions.split():
+        try:
+            record = extensions.find(name)
+            extensions.wrapfunction(record, 'dorecord', kw_dorecord)
+        except KeyError:
+            pass
 
 cmdtable = {
     'kwdemo':
         (demo,
          [('d', 'default', None, _('show default keyword template maps')),
-          ('f', 'rcfile', '', _('read maps from rcfile'))],
+          ('f', 'rcfile', '',
+           _('read maps from rcfile'), _('FILE'))],
          _('hg kwdemo [-d] [-f RCFILE] [TEMPLATEMAP]...')),
     'kwexpand': (expand, commands.walkopts,
                  _('hg kwexpand [OPTION]... [FILE]...')),
@@ -540,9 +628,6 @@ cmdtable = {
          [('A', 'all', None, _('show keyword status flags of all files')),
           ('i', 'ignore', None, _('show files excluded from expansion')),
           ('u', 'unknown', None, _('only show unknown (not tracked) files')),
-          ('a', 'all', None,
-           _('show keyword status flags of all files (DEPRECATED)')),
-          ('u', 'untracked', None, _('only show untracked files (DEPRECATED)')),
          ] + commands.walkopts,
          _('hg kwfiles [OPTION]... [FILE]...')),
     'kwshrink': (shrink, commands.walkopts,

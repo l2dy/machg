@@ -32,7 +32,7 @@ def findrepos(paths):
         except KeyError:
             repos.append((prefix, root))
             continue
-        roothead = os.path.normpath(roothead)
+        roothead = os.path.normpath(os.path.abspath(roothead))
         for path in util.walkrepos(roothead, followsym=True, recurse=recurse):
             path = os.path.normpath(path)
             name = util.pconvert(path[len(roothead):]).strip('/')
@@ -86,6 +86,7 @@ class hgwebdir(object):
         encoding.encoding = self.ui.config('web', 'encoding',
                                            encoding.encoding)
         self.style = self.ui.config('web', 'style', 'paper')
+        self.templatepath = self.ui.config('web', 'templates', None)
         self.stripecount = self.ui.config('web', 'stripes', 1)
         if self.stripecount:
             self.stripecount = int(self.stripecount)
@@ -196,11 +197,8 @@ class hgwebdir(object):
                     yield {"type" : i[0], "extension": i[1],
                            "node": nodeid, "url": url}
 
-        sortdefault = None, False
-        def entries(sortcolumn="", descending=False, subdir="", **map):
+        def rawentries(subdir="", **map):
 
-            rows = []
-            parity = paritygen(self.stripecount)
             descend = self.ui.configbool('web', 'descend', True)
             for name, path in self.repos:
 
@@ -235,6 +233,10 @@ class hgwebdir(object):
                 # update time with local timezone
                 try:
                     r = hg.repository(self.ui, path)
+                except error.RepoError:
+                    u.warn(_('error accessing repository at %s\n') % path)
+                    continue
+                try:
                     d = (get_mtime(r.spath), util.makedate()[1])
                 except OSError:
                     continue
@@ -252,19 +254,19 @@ class hgwebdir(object):
                            lastchange=d,
                            lastchange_sort=d[1]-d[0],
                            archives=archivelist(u, "tip", url))
-                if (not sortcolumn or (sortcolumn, descending) == sortdefault):
-                    # fast path for unsorted output
-                    row['parity'] = parity.next()
-                    yield row
-                else:
-                    rows.append((row["%s_sort" % sortcolumn], row))
-            if rows:
-                rows.sort()
-                if descending:
-                    rows.reverse()
-                for key, row in rows:
-                    row['parity'] = parity.next()
-                    yield row
+                yield row
+
+        sortdefault = None, False
+        def entries(sortcolumn="", descending=False, subdir="", **map):
+            rows = rawentries(subdir=subdir, **map)
+
+            if sortcolumn and sortdefault != (sortcolumn, descending):
+                sortkey = '%s_sort' % sortcolumn
+                rows = sorted(rows, key=lambda x: x[sortkey],
+                              reverse=descending)
+            for row, parity in zip(rows, paritygen(self.stripecount)):
+                row['parity'] = parity
+                yield row
 
         self.refresh()
         sortable = ["name", "description", "contact", "lastchange"]
@@ -318,7 +320,7 @@ class hgwebdir(object):
             config('web', 'style'),
             'paper'
         )
-        style, mapfile = templater.stylemap(styles)
+        style, mapfile = templater.stylemap(styles, self.templatepath)
         if style == styles[0]:
             vars['style'] = style
 

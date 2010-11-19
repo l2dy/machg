@@ -8,29 +8,34 @@
 
 import os
 from mercurial import ui, hg, hook, error, encoding, templater
-from common import get_mtime, ErrorResponse, permhooks
-from common import HTTP_OK, HTTP_BAD_REQUEST, HTTP_NOT_FOUND, HTTP_SERVER_ERROR
-from common import HTTP_UNAUTHORIZED, HTTP_METHOD_NOT_ALLOWED
+from common import get_mtime, ErrorResponse, permhooks, caching
+from common import HTTP_OK, HTTP_NOT_MODIFIED, HTTP_BAD_REQUEST
+from common import HTTP_NOT_FOUND, HTTP_SERVER_ERROR
 from request import wsgirequest
 import webcommands, protocol, webutil
 
 perms = {
     'changegroup': 'pull',
     'changegroupsubset': 'pull',
-    'unbundle': 'push',
     'stream_out': 'pull',
+    'listkeys': 'pull',
+    'unbundle': 'push',
+    'pushkey': 'push',
 }
 
 class hgweb(object):
-    def __init__(self, repo, name=None):
+    def __init__(self, repo, name=None, baseui=None):
         if isinstance(repo, str):
-            u = ui.ui()
-            u.setconfig('ui', 'report_untrusted', 'off')
-            u.setconfig('ui', 'interactive', 'off')
+            if baseui:
+                u = baseui.copy()
+            else:
+                u = ui.ui()
             self.repo = hg.repository(u, repo)
         else:
             self.repo = repo
 
+        self.repo.ui.setconfig('ui', 'report_untrusted', 'off')
+        self.repo.ui.setconfig('ui', 'interactive', 'off')
         hook.redirect(True)
         self.mtime = -1
         self.reponame = name
@@ -108,24 +113,18 @@ class hgweb(object):
         # and the clients always use the old URL structure
 
         cmd = req.form.get('cmd', [''])[0]
-        if cmd and cmd in protocol.__all__:
+        if protocol.iscmd(cmd):
             if query:
                 raise ErrorResponse(HTTP_NOT_FOUND)
-            try:
-                if cmd in perms:
-                    try:
-                        self.check_perm(req, perms[cmd])
-                    except ErrorResponse, inst:
-                        if cmd == 'unbundle':
-                            req.drain()
-                        raise
-                method = getattr(protocol, cmd)
-                return method(self.repo, req)
-            except ErrorResponse, inst:
-                req.respond(inst, protocol.HGTYPE)
-                if not inst.message:
-                    return []
-                return '0\n%s\n' % inst.message,
+            if cmd in perms:
+                try:
+                    self.check_perm(req, perms[cmd])
+                except ErrorResponse, inst:
+                    if cmd == 'unbundle':
+                        req.drain()
+                    req.respond(inst, protocol.HGTYPE)
+                    return '0\n%s\n' % inst.message
+            return protocol.call(self.repo, req, cmd)
 
         # translate user-visible url structure to internal structure
 
@@ -180,6 +179,7 @@ class hgweb(object):
                 req.form['cmd'] = [tmpl.cache['default']]
                 cmd = req.form['cmd'][0]
 
+            caching(self, req) # sets ETag header or raises NOT_MODIFIED
             if cmd not in webcommands.__all__:
                 msg = 'no such method: %s' % cmd
                 raise ErrorResponse(HTTP_BAD_REQUEST, msg)
@@ -203,6 +203,9 @@ class hgweb(object):
             return tmpl('error', error=str(inst))
         except ErrorResponse, inst:
             req.respond(inst, ctype)
+            if inst.code == HTTP_NOT_MODIFIED:
+                # Not allowed to return a body on a 304
+                return ['']
             return tmpl('error', error=inst.message)
 
     def templater(self, req):
@@ -277,8 +280,8 @@ class hgweb(object):
                 yield {"type" : i, "extension" : spec[2], "node" : nodeid}
 
     archive_specs = {
-        'bz2': ('application/x-tar', 'tbz2', '.tar.bz2', None),
-        'gz': ('application/x-tar', 'tgz', '.tar.gz', None),
+        'bz2': ('application/x-bzip2', 'tbz2', '.tar.bz2', None),
+        'gz': ('application/x-gzip', 'tgz', '.tar.gz', None),
         'zip': ('application/zip', 'zip', '.zip', None),
         }
 

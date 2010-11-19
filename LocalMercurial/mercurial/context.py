@@ -7,8 +7,8 @@
 
 from node import nullid, nullrev, short, hex
 from i18n import _
-import ancestor, bdiff, error, util, subrepo
-import os, errno
+import ancestor, bdiff, error, util, subrepo, patch
+import os, errno, stat
 
 propertycache = util.propertycache
 
@@ -75,7 +75,7 @@ class changectx(object):
 
     @propertycache
     def substate(self):
-        return subrepo.state(self)
+        return subrepo.state(self, self._repo.ui)
 
     def __contains__(self, key):
         return key in self._manifest
@@ -198,11 +198,21 @@ class changectx(object):
             if match(fn):
                 yield fn
         for fn in sorted(fset):
-            if match.bad(fn, 'No such file in rev ' + str(self)) and match(fn):
+            if match.bad(fn, _('no such file in rev %s') % self) and match(fn):
                 yield fn
 
     def sub(self, path):
         return subrepo.subrepo(self, path)
+
+    def diff(self, ctx2=None, match=None, **opts):
+        """Returns a diff generator for the given contexts and matcher"""
+        if ctx2 is None:
+            ctx2 = self.p1()
+        if ctx2 is not None and not isinstance(ctx2, changectx):
+            ctx2 = self._repo[ctx2]
+        diffopts = patch.diffopts(self._repo.ui, opts)
+        return patch.diff(self._repo, ctx2.node(), self.node(),
+                          match=match, opts=diffopts)
 
 class filectx(object):
     """A filecontext object makes access to data related to a particular
@@ -342,8 +352,16 @@ class filectx(object):
     def size(self):
         return self._filelog.size(self._filerev)
 
-    def cmp(self, text):
-        return self._filelog.cmp(self._filenode, text)
+    def cmp(self, fctx):
+        """compare with other file context
+
+        returns True if different than fctx.
+        """
+        if (fctx._filerev is None and self._repo._encodefilterpats
+            or self.size() == fctx.size()):
+            return self._filelog.cmp(self._filenode, fctx.data())
+
+        return True
 
     def renamed(self):
         """check if file was actually renamed in this changeset revision
@@ -480,12 +498,16 @@ class filectx(object):
 
         return zip(hist[f][0], hist[f][1].splitlines(True))
 
-    def ancestor(self, fc2):
+    def ancestor(self, fc2, actx=None):
         """
         find the common ancestor file context, if any, of self, and fc2
+
+        If actx is given, it must be the changectx of the common ancestor
+        of self's and fc2's respective changesets.
         """
 
-        actx = self.changectx().ancestor(fc2.changectx())
+        if actx is None:
+            actx = self.changectx().ancestor(fc2.changectx())
 
         # the trivial case: changesets are unrelated, files must be too
         if not actx:
@@ -539,15 +561,14 @@ class filectx(object):
 class workingctx(changectx):
     """A workingctx object makes access to data related to
     the current working directory convenient.
-    parents - a pair of parent nodeids, or None to use the dirstate.
     date - any valid date string or (unixtime, offset), or None.
     user - username string, or None.
     extra - a dictionary of extra values, or None.
     changes - a list of file lists as returned by localrepo.status()
                or None to use the repository status.
     """
-    def __init__(self, repo, parents=None, text="", user=None, date=None,
-                 extra=None, changes=None):
+    def __init__(self, repo, text="", user=None, date=None, extra=None,
+                 changes=None):
         self._repo = repo
         self._rev = None
         self._node = None
@@ -556,10 +577,15 @@ class workingctx(changectx):
             self._date = util.parsedate(date)
         if user:
             self._user = user
-        if parents:
-            self._parents = [changectx(self._repo, p) for p in parents]
         if changes:
-            self._status = list(changes)
+            self._status = list(changes[:4])
+            self._unknown = changes[4]
+            self._ignored = changes[5]
+            self._clean = changes[6]
+        else:
+            self._unknown = None
+            self._ignored = None
+            self._clean = None
 
         self._extra = {}
         if extra:
@@ -587,6 +613,9 @@ class workingctx(changectx):
     def _manifest(self):
         """generate a manifest corresponding to the working directory"""
 
+        if self._unknown is None:
+            self.status(unknown=True)
+
         man = self._parents[0].manifest().copy()
         copied = self._repo.dirstate.copies()
         if len(self._parents) > 1:
@@ -601,7 +630,8 @@ class workingctx(changectx):
             f = copied.get(f, f)
             return getman(f).flags(f)
         ff = self._repo.dirstate.flagfunc(cf)
-        modified, added, removed, deleted, unknown = self._status[:5]
+        modified, added, removed, deleted = self._status
+        unknown = self._unknown
         for i, l in (("a", added), ("m", modified), ("u", unknown)):
             for f in l:
                 orig = copied.get(f, f)
@@ -619,7 +649,7 @@ class workingctx(changectx):
 
     @propertycache
     def _status(self):
-        return self._repo.status(unknown=True)
+        return self._repo.status()[:4]
 
     @propertycache
     def _user(self):
@@ -636,6 +666,22 @@ class workingctx(changectx):
             p = p[:-1]
         self._parents = [changectx(self._repo, x) for x in p]
         return self._parents
+
+    def status(self, ignored=False, clean=False, unknown=False):
+        """Explicit status query
+        Unless this method is used to query the working copy status, the
+        _status property will implicitly read the status using its default
+        arguments."""
+        stat = self._repo.status(ignored=ignored, clean=clean, unknown=unknown)
+        self._unknown = self._ignored = self._clean = None
+        if unknown:
+            self._unknown = stat[4]
+        if ignored:
+            self._ignored = stat[5]
+        if clean:
+            self._clean = stat[6]
+        self._status = stat[:4]
+        return stat
 
     def manifest(self):
         return self._manifest
@@ -657,9 +703,14 @@ class workingctx(changectx):
     def deleted(self):
         return self._status[3]
     def unknown(self):
-        return self._status[4]
+        assert self._unknown is not None  # must call status first
+        return self._unknown
+    def ignored(self):
+        assert self._ignored is not None  # must call status first
+        return self._ignored
     def clean(self):
-        return self._status[5]
+        assert self._clean is not None  # must call status first
+        return self._clean
     def branch(self):
         return self._extra['branch']
     def extra(self):
@@ -713,10 +764,112 @@ class workingctx(changectx):
 
     def dirty(self, missing=False):
         "check whether a working directory is modified"
-
+        # check subrepos first
+        for s in self.substate:
+            if self.sub(s).dirty():
+                return True
+        # check current working dir
         return (self.p2() or self.branch() != self.p1().branch() or
                 self.modified() or self.added() or self.removed() or
                 (missing and self.deleted()))
+
+    def add(self, list, prefix=""):
+        join = lambda f: os.path.join(prefix, f)
+        wlock = self._repo.wlock()
+        ui, ds = self._repo.ui, self._repo.dirstate
+        try:
+            rejected = []
+            for f in list:
+                p = self._repo.wjoin(f)
+                try:
+                    st = os.lstat(p)
+                except:
+                    ui.warn(_("%s does not exist!\n") % join(f))
+                    rejected.append(f)
+                    continue
+                if st.st_size > 10000000:
+                    ui.warn(_("%s: up to %d MB of RAM may be required "
+                              "to manage this file\n"
+                              "(use 'hg revert %s' to cancel the "
+                              "pending addition)\n")
+                              % (f, 3 * st.st_size // 1000000, join(f)))
+                if not (stat.S_ISREG(st.st_mode) or stat.S_ISLNK(st.st_mode)):
+                    ui.warn(_("%s not added: only files and symlinks "
+                              "supported currently\n") % join(f))
+                    rejected.append(p)
+                elif ds[f] in 'amn':
+                    ui.warn(_("%s already tracked!\n") % join(f))
+                elif ds[f] == 'r':
+                    ds.normallookup(f)
+                else:
+                    ds.add(f)
+            return rejected
+        finally:
+            wlock.release()
+
+    def forget(self, list):
+        wlock = self._repo.wlock()
+        try:
+            for f in list:
+                if self._repo.dirstate[f] != 'a':
+                    self._repo.ui.warn(_("%s not added!\n") % f)
+                else:
+                    self._repo.dirstate.forget(f)
+        finally:
+            wlock.release()
+
+    def remove(self, list, unlink=False):
+        if unlink:
+            for f in list:
+                try:
+                    util.unlink(self._repo.wjoin(f))
+                except OSError, inst:
+                    if inst.errno != errno.ENOENT:
+                        raise
+        wlock = self._repo.wlock()
+        try:
+            for f in list:
+                if unlink and os.path.lexists(self._repo.wjoin(f)):
+                    self._repo.ui.warn(_("%s still exists!\n") % f)
+                elif self._repo.dirstate[f] == 'a':
+                    self._repo.dirstate.forget(f)
+                elif f not in self._repo.dirstate:
+                    self._repo.ui.warn(_("%s not tracked!\n") % f)
+                else:
+                    self._repo.dirstate.remove(f)
+        finally:
+            wlock.release()
+
+    def undelete(self, list):
+        pctxs = self.parents()
+        wlock = self._repo.wlock()
+        try:
+            for f in list:
+                if self._repo.dirstate[f] != 'r':
+                    self._repo.ui.warn(_("%s not removed!\n") % f)
+                else:
+                    fctx = f in pctxs[0] and pctxs[0][f] or pctxs[1][f]
+                    t = fctx.data()
+                    self._repo.wwrite(f, t, fctx.flags())
+                    self._repo.dirstate.normal(f)
+        finally:
+            wlock.release()
+
+    def copy(self, source, dest):
+        p = self._repo.wjoin(dest)
+        if not os.path.lexists(p):
+            self._repo.ui.warn(_("%s does not exist!\n") % dest)
+        elif not (os.path.isfile(p) or os.path.islink(p)):
+            self._repo.ui.warn(_("copy failed: %s is not a file or a "
+                                 "symbolic link\n") % dest)
+        else:
+            wlock = self._repo.wlock()
+            try:
+                if self._repo.dirstate[dest] in '?r':
+                    self._repo.dirstate.add(dest)
+                self._repo.dirstate.copy(source, dest)
+            finally:
+                wlock.release()
 
 class workingfilectx(filectx):
     """A workingfilectx object makes access to data related to a particular
@@ -777,7 +930,7 @@ class workingfilectx(filectx):
         return []
 
     def size(self):
-        return os.stat(self._repo.wjoin(self._path)).st_size
+        return os.lstat(self._repo.wjoin(self._path)).st_size
     def date(self):
         t, tz = self._changectx.date()
         try:
@@ -787,8 +940,14 @@ class workingfilectx(filectx):
                 raise
             return (t, tz)
 
-    def cmp(self, text):
-        return self._repo.wread(self._path) == text
+    def cmp(self, fctx):
+        """compare with other file context
+
+        returns True if different than fctx.
+        """
+        # fctx should be a filectx (not a wfctx)
+        # invert comparison to reuse the same code path
+        return fctx.cmp(self)
 
 class memctx(object):
     """Use memctx to perform in-memory commits via localrepo.commitctx().
@@ -873,8 +1032,10 @@ class memctx(object):
         return self._status[3]
     def unknown(self):
         return self._status[4]
-    def clean(self):
+    def ignored(self):
         return self._status[5]
+    def clean(self):
+        return self._status[6]
     def branch(self):
         return self._extra['branch']
     def extra(self):
@@ -890,12 +1051,16 @@ class memctx(object):
         """get a file context from the working directory"""
         return self._filectxfn(self._repo, self, path)
 
+    def commit(self):
+        """commit context to the repo"""
+        return self._repo.commitctx(self)
+
 class memfilectx(object):
     """memfilectx represents an in-memory file to commit.
 
     See memctx for more details.
     """
-    def __init__(self, path, data, islink, isexec, copied):
+    def __init__(self, path, data, islink=False, isexec=False, copied=None):
         """
         path is the normalized file path relative to repository root.
         data is the file content as a string.

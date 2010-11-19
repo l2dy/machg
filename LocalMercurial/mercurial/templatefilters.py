@@ -5,8 +5,8 @@
 # This software may be used and distributed according to the terms of the
 # GNU General Public License version 2 or any later version.
 
-import cgi, re, os, time, urllib, textwrap
-import util, encoding
+import cgi, re, os, time, urllib
+import encoding, node, util
 
 def stringify(thing):
     '''turn nested template iterator into string.'''
@@ -14,15 +14,13 @@ def stringify(thing):
         return "".join([stringify(t) for t in thing if t is not None])
     return str(thing)
 
-agescales = [("second", 1),
-             ("minute", 60),
-             ("hour", 3600),
-             ("day", 3600 * 24),
-             ("week", 3600 * 24 * 7),
+agescales = [("year", 3600 * 24 * 365),
              ("month", 3600 * 24 * 30),
-             ("year", 3600 * 24 * 365)]
-
-agescales.reverse()
+             ("week", 3600 * 24 * 7),
+             ("day", 3600 * 24),
+             ("hour", 3600),
+             ("minute", 60),
+             ("second", 1)]
 
 def age(date):
     '''turn a (timestamp, tzoff) tuple into an age string.'''
@@ -63,15 +61,17 @@ def fill(text, width):
         while True:
             m = para_re.search(text, start)
             if not m:
-                w = len(text)
-                while w > start and text[w - 1].isspace():
+                uctext = unicode(text[start:], encoding.encoding)
+                w = len(uctext)
+                while 0 < w and uctext[w - 1].isspace():
                     w -= 1
-                yield text[start:w], text[w:]
+                yield (uctext[:w].encode(encoding.encoding),
+                       uctext[w:].encode(encoding.encoding))
                 break
             yield text[start:m.start(0)], m.group(1)
             start = m.end(1)
 
-    return "".join([space_re.sub(' ', textwrap.fill(para, width)) + rest
+    return "".join([space_re.sub(' ', util.wrap(para, width=width)) + rest
                     for para, rest in findparas()])
 
 def firstline(text):
@@ -140,6 +140,12 @@ def xmlescape(text):
             .replace("'", '&#39;')) # &apos; invalid in HTML
     return re.sub('[\x00-\x08\x0B\x0C\x0E-\x1F]', ' ', text)
 
+def uescape(c):
+    if ord(c) < 0x80:
+        return c
+    else:
+        return '\\u%04x' % ord(c)
+
 _escapes = [
     ('\\', '\\\\'), ('"', '\\"'), ('\t', '\\t'), ('\n', '\\n'),
     ('\r', '\\r'), ('\f', '\\f'), ('\b', '\\b'),
@@ -148,7 +154,7 @@ _escapes = [
 def jsonescape(s):
     for k, v in _escapes:
         s = s.replace(k, v)
-    return s
+    return ''.join(uescape(c) for c in s)
 
 def json(obj):
     if obj is None or obj is False or obj is True:
@@ -156,9 +162,10 @@ def json(obj):
     elif isinstance(obj, int) or isinstance(obj, float):
         return str(obj)
     elif isinstance(obj, str):
-        return '"%s"' % jsonescape(obj)
+        u = unicode(obj, encoding.encoding, 'replace')
+        return '"%s"' % jsonescape(u)
     elif isinstance(obj, unicode):
-        return json(obj.encode('utf-8'))
+        return '"%s"' % jsonescape(obj)
     elif hasattr(obj, 'keys'):
         out = []
         for k, v in obj.iteritems():
@@ -209,6 +216,7 @@ filters = {
     "person": person,
     "rfc822date": lambda x: util.datestr(x, "%a, %d %b %Y %H:%M:%S %1%2"),
     "rfc3339date": lambda x: util.datestr(x, "%Y-%m-%dT%H:%M:%S%1:%2"),
+    "hex": node.hex,
     "short": lambda x: x[:12],
     "shortdate": util.shortdate,
     "stringify": stringify,

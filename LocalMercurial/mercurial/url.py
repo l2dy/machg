@@ -8,6 +8,7 @@
 # GNU General Public License version 2 or any later version.
 
 import urllib, urllib2, urlparse, httplib, os, re, socket, cStringIO
+import __builtin__
 from i18n import _
 import keepalive, util
 
@@ -130,9 +131,9 @@ class passwordmgr(urllib2.HTTPPasswordMgrWithDefaultRealm):
                 raise util.Abort(_('http authorization required'))
 
             self.ui.write(_("http authorization required\n"))
-            self.ui.status(_("realm: %s\n") % realm)
+            self.ui.write(_("realm: %s\n") % realm)
             if user:
-                self.ui.status(_("user: %s\n") % user)
+                self.ui.write(_("user: %s\n") % user)
             else:
                 user = self.ui.prompt(_("user:"), default=None)
 
@@ -156,7 +157,7 @@ class passwordmgr(urllib2.HTTPPasswordMgrWithDefaultRealm):
                 continue
             group, setting = key.split('.', 1)
             gdict = config.setdefault(group, dict())
-            if setting in ('cert', 'key'):
+            if setting in ('username', 'cert', 'key'):
                 val = util.expandpath(val)
             gdict[setting] = val
 
@@ -250,9 +251,25 @@ class proxyhandler(urllib2.ProxyHandler):
 
         return urllib2.ProxyHandler.proxy_open(self, req, proxy, type_)
 
-class httpsendfile(file):
+class httpsendfile(object):
+    """This is a wrapper around the objects returned by python's "open".
+
+    Its purpose is to send file-like objects via HTTP and, to do so, it
+    defines a __len__ attribute to feed the Content-Length header.
+    """
+
+    def __init__(self, *args, **kwargs):
+        # We can't just "self._data = open(*args, **kwargs)" here because there
+        # is an "open" function defined in this module that shadows the global
+        # one
+        self._data = __builtin__.open(*args, **kwargs)
+        self.read = self._data.read
+        self.seek = self._data.seek
+        self.close = self._data.close
+        self.write = self._data.write
+
     def __len__(self):
-        return os.fstat(self.fileno()).st_size
+        return os.fstat(self._data.fileno()).st_size
 
 def _gen_sendfile(connection):
     def _sendfile(self, data):
@@ -469,8 +486,24 @@ class httphandler(keepalive.HTTPHandler):
         _generic_start_transaction(self, h, req)
         return keepalive.HTTPHandler._start_transaction(self, h, req)
 
-    def __del__(self):
-        self.close_all()
+def _verifycert(cert, hostname):
+    '''Verify that cert (in socket.getpeercert() format) matches hostname.
+    CRLs and subjectAltName are not handled.
+
+    Returns error message if any problems are found and None on success.
+    '''
+    if not cert:
+        return _('no certificate received')
+    dnsname = hostname.lower()
+    for s in cert.get('subject', []):
+        key, value = s[0]
+        if key == 'commonName':
+            certname = value.lower()
+            if (certname == dnsname or
+                '.' in dnsname and certname == '*.' + dnsname.split('.', 1)[1]):
+                return None
+            return _('certificate is for %s') % certname
+    return _('no commonName found in certificate')
 
 if has_https:
     class BetterHTTPS(httplib.HTTPSConnection):
@@ -487,7 +520,12 @@ if has_https:
                 self.sock = _ssl_wrap_socket(sock, self.key_file,
                         self.cert_file, cert_reqs=CERT_REQUIRED,
                         ca_certs=cacerts)
-                self.ui.debug(_('server identity verification succeeded\n'))
+                msg = _verifycert(self.sock.getpeercert(), self.host)
+                if msg:
+                    raise util.Abort(_('%s certificate error: %s') %
+                                     (self.host, msg))
+                self.ui.debug('%s certificate successfully verified\n' %
+                              self.host)
             else:
                 httplib.HTTPSConnection.connect(self)
 
@@ -502,8 +540,8 @@ if has_https:
                 self.sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
                 self.sock.connect((self.host, self.port))
                 if _generic_proxytunnel(self):
-                    self.sock = _ssl_wrap_socket(self.sock, self.cert_file,
-                                                 self.key_file)
+                    self.sock = _ssl_wrap_socket(self.sock, self.key_file,
+                            self.cert_file)
             else:
                 BetterHTTPS.connect(self)
 
@@ -542,11 +580,25 @@ if has_https:
             conn.ui = self.ui
             return conn
 
-# In python < 2.5 AbstractDigestAuthHandler raises a ValueError if
-# it doesn't know about the auth type requested.  This can happen if
-# somebody is using BasicAuth and types a bad password.
 class httpdigestauthhandler(urllib2.HTTPDigestAuthHandler):
+    def __init__(self, *args, **kwargs):
+        urllib2.HTTPDigestAuthHandler.__init__(self, *args, **kwargs)
+        self.retried_req = None
+
+    def reset_retry_count(self):
+        # Python 2.6.5 will call this on 401 or 407 errors and thus loop
+        # forever. We disable reset_retry_count completely and reset in
+        # http_error_auth_reqed instead.
+        pass
+
     def http_error_auth_reqed(self, auth_header, host, req, headers):
+        # Reset the retry counter once for each request.
+        if req is not self.retried_req:
+            self.retried_req = req
+            self.retried = 0
+        # In python < 2.5 AbstractDigestAuthHandler raises a ValueError if
+        # it doesn't know about the auth type requested. This can happen if
+        # somebody is using BasicAuth and types a bad password.
         try:
             return urllib2.HTTPDigestAuthHandler.http_error_auth_reqed(
                         self, auth_header, host, req, headers)
@@ -555,6 +607,25 @@ class httpdigestauthhandler(urllib2.HTTPDigestAuthHandler):
             if arg.startswith("AbstractDigestAuthHandler doesn't know "):
                 return
             raise
+
+class httpbasicauthhandler(urllib2.HTTPBasicAuthHandler):
+    def __init__(self, *args, **kwargs):
+        urllib2.HTTPBasicAuthHandler.__init__(self, *args, **kwargs)
+        self.retried_req = None
+
+    def reset_retry_count(self):
+        # Python 2.6.5 will call this on 401 or 407 errors and thus loop
+        # forever. We disable reset_retry_count completely and reset in
+        # http_error_auth_reqed instead.
+        pass
+
+    def http_error_auth_reqed(self, auth_header, host, req, headers):
+        # Reset the retry counter once for each request.
+        if req is not self.retried_req:
+            self.retried_req = req
+            self.retried = 0
+        return urllib2.HTTPBasicAuthHandler.http_error_auth_reqed(
+                        self, auth_header, host, req, headers)
 
 def getauthinfo(path):
     scheme, netloc, urlpath, query, frag = urlparse.urlsplit(path)
@@ -601,7 +672,7 @@ def opener(ui, authinfo=None):
         ui.debug('http auth: user %s, password %s\n' %
                  (user, passwd and '*' * len(passwd) or 'not set'))
 
-    handlers.extend((urllib2.HTTPBasicAuthHandler(passmgr),
+    handlers.extend((httpbasicauthhandler(passmgr),
                      httpdigestauthhandler(passmgr)))
     handlers.extend([h(ui, passmgr) for h in handlerfuncs])
     opener = urllib2.build_opener(*handlers)

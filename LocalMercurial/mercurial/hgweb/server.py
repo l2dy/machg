@@ -7,9 +7,7 @@
 # GNU General Public License version 2 or any later version.
 
 import os, sys, errno, urllib, BaseHTTPServer, socket, SocketServer, traceback
-from mercurial import hg, util, error
-from hgweb_mod import hgweb
-from hgwebdir_mod import hgwebdir
+from mercurial import util, error
 from mercurial.i18n import _
 
 def _splitURI(uri):
@@ -35,9 +33,14 @@ class _error_logger(object):
         for msg in seq:
             self.handler.log_error("HG error:  %s", msg)
 
-class _hgwebhandler(BaseHTTPServer.BaseHTTPRequestHandler):
+class _httprequesthandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
     url_scheme = 'http'
+
+    @staticmethod
+    def preparehttpserver(httpserver, ssl_cert):
+        """Prepare .socket of new HTTPServer instance"""
+        pass
 
     def __init__(self, *args, **kargs):
         self.protocol_version = 'HTTP/1.1'
@@ -170,9 +173,25 @@ class _hgwebhandler(BaseHTTPServer.BaseHTTPRequestHandler):
         self.wfile.write(data)
         self.wfile.flush()
 
-class _shgwebhandler(_hgwebhandler):
+class _httprequesthandleropenssl(_httprequesthandler):
+    """HTTPS handler based on pyOpenSSL"""
 
     url_scheme = 'https'
+
+    @staticmethod
+    def preparehttpserver(httpserver, ssl_cert):
+        try:
+            import OpenSSL
+            OpenSSL.SSL.Context
+        except ImportError:
+            raise util.Abort(_("SSL support is unavailable"))
+        ctx = OpenSSL.SSL.Context(OpenSSL.SSL.SSLv23_METHOD)
+        ctx.use_privatekey_file(ssl_cert)
+        ctx.use_certificate_file(ssl_cert)
+        sock = socket.socket(httpserver.address_family, httpserver.socket_type)
+        httpserver.socket = OpenSSL.SSL.Connection(ctx, sock)
+        httpserver.server_bind()
+        httpserver.server_activate()
 
     def setup(self):
         self.connection = self.request
@@ -180,119 +199,111 @@ class _shgwebhandler(_hgwebhandler):
         self.wfile = socket._fileobject(self.request, "wb", self.wbufsize)
 
     def do_write(self):
-        from OpenSSL.SSL import SysCallError
+        import OpenSSL
         try:
-            super(_shgwebhandler, self).do_write()
-        except SysCallError, inst:
+            _httprequesthandler.do_write(self)
+        except OpenSSL.SSL.SysCallError, inst:
             if inst.args[0] != errno.EPIPE:
                 raise
 
     def handle_one_request(self):
-        from OpenSSL.SSL import SysCallError, ZeroReturnError
+        import OpenSSL
         try:
-            super(_shgwebhandler, self).handle_one_request()
-        except (SysCallError, ZeroReturnError):
+            _httprequesthandler.handle_one_request(self)
+        except (OpenSSL.SSL.SysCallError, OpenSSL.SSL.ZeroReturnError):
             self.close_connection = True
             pass
 
-def create_server(ui, repo):
-    use_threads = True
+class _httprequesthandlerssl(_httprequesthandler):
+    """HTTPS handler based on Pythons ssl module (introduced in 2.6)"""
 
-    def openlog(opt, default):
-        if opt and opt != '-':
-            return open(opt, 'a')
-        return default
+    url_scheme = 'https'
 
-    if repo is None:
-        myui = ui
-    else:
-        myui = repo.ui
-    address = myui.config("web", "address", "")
-    port = int(myui.config("web", "port", 8000))
-    prefix = myui.config("web", "prefix", "")
-    if prefix:
-        prefix = "/" + prefix.strip("/")
-    use_ipv6 = myui.configbool("web", "ipv6")
-    webdir_conf = myui.config("web", "webdir_conf")
-    ssl_cert = myui.config("web", "certificate")
-    accesslog = openlog(myui.config("web", "accesslog", "-"), sys.stdout)
-    errorlog = openlog(myui.config("web", "errorlog", "-"), sys.stderr)
-
-    if use_threads:
+    @staticmethod
+    def preparehttpserver(httpserver, ssl_cert):
         try:
-            from threading import activeCount
+            import ssl
+            ssl.wrap_socket
         except ImportError:
-            use_threads = False
+            raise util.Abort(_("SSL support is unavailable"))
+        httpserver.socket = ssl.wrap_socket(httpserver.socket, server_side=True,
+            certfile=ssl_cert, ssl_version=ssl.PROTOCOL_SSLv23)
 
-    if use_threads:
-        _mixin = SocketServer.ThreadingMixIn
+    def setup(self):
+        self.connection = self.request
+        self.rfile = socket._fileobject(self.request, "rb", self.rbufsize)
+        self.wfile = socket._fileobject(self.request, "wb", self.wbufsize)
+
+try:
+    from threading import activeCount
+    _mixin = SocketServer.ThreadingMixIn
+except ImportError:
+    if hasattr(os, "fork"):
+        _mixin = SocketServer.ForkingMixIn
     else:
-        if hasattr(os, "fork"):
-            _mixin = SocketServer.ForkingMixIn
+        class _mixin:
+            pass
+
+def openlog(opt, default):
+    if opt and opt != '-':
+        return open(opt, 'a')
+    return default
+
+class MercurialHTTPServer(object, _mixin, BaseHTTPServer.HTTPServer):
+
+    # SO_REUSEADDR has broken semantics on windows
+    if os.name == 'nt':
+        allow_reuse_address = 0
+
+    def __init__(self, ui, app, addr, handler, **kwargs):
+        BaseHTTPServer.HTTPServer.__init__(self, addr, handler, **kwargs)
+        self.daemon_threads = True
+        self.application = app
+
+        handler.preparehttpserver(self, ui.config('web', 'certificate'))
+
+        prefix = ui.config('web', 'prefix', '')
+        if prefix:
+            prefix = '/' + prefix.strip('/')
+        self.prefix = prefix
+
+        alog = openlog(ui.config('web', 'accesslog', '-'), sys.stdout)
+        elog = openlog(ui.config('web', 'errorlog', '-'), sys.stderr)
+        self.accesslog = alog
+        self.errorlog = elog
+
+        self.addr, self.port = self.socket.getsockname()[0:2]
+        self.fqaddr = socket.getfqdn(addr[0])
+
+class IPv6HTTPServer(MercurialHTTPServer):
+    address_family = getattr(socket, 'AF_INET6', None)
+    def __init__(self, *args, **kwargs):
+        if self.address_family is None:
+            raise error.RepoError(_('IPv6 is not available on this system'))
+        super(IPv6HTTPServer, self).__init__(*args, **kwargs)
+
+def create_server(ui, app):
+
+    if ui.config('web', 'certificate'):
+        if sys.version_info >= (2, 6):
+            handler = _httprequesthandlerssl
         else:
-            class _mixin:
-                pass
-
-    class MercurialHTTPServer(object, _mixin, BaseHTTPServer.HTTPServer):
-
-        # SO_REUSEADDR has broken semantics on windows
-        if os.name == 'nt':
-            allow_reuse_address = 0
-
-        def __init__(self, *args, **kargs):
-            BaseHTTPServer.HTTPServer.__init__(self, *args, **kargs)
-            self.accesslog = accesslog
-            self.errorlog = errorlog
-            self.daemon_threads = True
-            def make_handler():
-                if webdir_conf:
-                    hgwebobj = hgwebdir(webdir_conf, ui)
-                elif repo is not None:
-                    hgwebobj = hgweb(hg.repository(repo.ui, repo.root))
-                else:
-                    raise error.RepoError(_("There is no Mercurial repository"
-                                            " here (.hg not found)"))
-                return hgwebobj
-            self.application = make_handler()
-
-            if ssl_cert:
-                try:
-                    from OpenSSL import SSL
-                    ctx = SSL.Context(SSL.SSLv23_METHOD)
-                except ImportError:
-                    raise util.Abort(_("SSL support is unavailable"))
-                ctx.use_privatekey_file(ssl_cert)
-                ctx.use_certificate_file(ssl_cert)
-                sock = socket.socket(self.address_family, self.socket_type)
-                self.socket = SSL.Connection(ctx, sock)
-                self.server_bind()
-                self.server_activate()
-
-            self.addr, self.port = self.socket.getsockname()[0:2]
-            self.prefix = prefix
-            self.fqaddr = socket.getfqdn(address)
-
-    class IPv6HTTPServer(MercurialHTTPServer):
-        address_family = getattr(socket, 'AF_INET6', None)
-
-        def __init__(self, *args, **kwargs):
-            if self.address_family is None:
-                raise error.RepoError(_('IPv6 is not available on this system'))
-            super(IPv6HTTPServer, self).__init__(*args, **kwargs)
-
-    if ssl_cert:
-        handler = _shgwebhandler
+            handler = _httprequesthandleropenssl
     else:
-        handler = _hgwebhandler
+        handler = _httprequesthandler
+
+    if ui.configbool('web', 'ipv6'):
+        cls = IPv6HTTPServer
+    else:
+        cls = MercurialHTTPServer
 
     # ugly hack due to python issue5853 (for threaded use)
     import mimetypes; mimetypes.init()
 
+    address = ui.config('web', 'address', '')
+    port = util.getport(ui.config('web', 'port', 8000))
     try:
-        if use_ipv6:
-            return IPv6HTTPServer((address, port), handler)
-        else:
-            return MercurialHTTPServer((address, port), handler)
+        return cls(ui, app, (address, port), handler)
     except socket.error, inst:
         raise util.Abort(_("cannot start server at '%s:%d': %s")
                          % (address, port, inst.args[1]))

@@ -48,6 +48,8 @@ def _verify(repo):
         if isinstance(inst, KeyboardInterrupt):
             ui.warn(_("interrupted"))
             raise
+        if not str(inst):
+            inst = repr(inst)
         err(linkrev, "%s: %s" % (msg, inst), filename)
 
     def warn(msg):
@@ -122,7 +124,7 @@ def _verify(repo):
     checklog(cl, "changelog", 0)
     total = len(repo)
     for i in repo:
-        ui.progress(_('checking'), i, total=total)
+        ui.progress(_('checking'), i, total=total, unit=_('changesets'))
         n = cl.node(i)
         checkentry(cl, i, n, seen, [i], "changelog")
 
@@ -140,7 +142,7 @@ def _verify(repo):
     checklog(mf, "manifest", 0)
     total = len(mf)
     for i in mf:
-        ui.progress(_('checking'), i, total=total)
+        ui.progress(_('checking'), i, total=total, unit=_('manifests'))
         n = mf.node(i)
         lr = checkentry(mf, i, n, seen, mflinkrevs.get(n, []), "manifest")
         if n in mflinkrevs:
@@ -197,7 +199,7 @@ def _verify(repo):
     for f, f2, size in repo.store.datafiles():
         if not f:
             err(None, _("cannot decode filename '%s'") % f2)
-        elif size > 0:
+        elif size > 0 or not revlogv1:
             storefiles.add(f)
 
     files = sorted(set(filenodes) | set(filelinkrevs))
@@ -229,6 +231,7 @@ def _verify(repo):
 
         checklog(fl, f, lr)
         seen = {}
+        rp = None
         for i in fl:
             revisions += 1
             n = fl.node(i)
@@ -241,12 +244,12 @@ def _verify(repo):
 
             # verify contents
             try:
-                t = fl.read(n)
+                l = len(fl.read(n))
                 rp = fl.renamed(n)
-                if len(t) != fl.size(i):
+                if l != fl.size(i):
                     if len(fl.revision(n)) != fl.size(i):
                         err(lr, _("unpacked size is %s, %s expected") %
-                            (len(t), fl.size(i)), f)
+                            (l, fl.size(i)), f)
             except Exception, inst:
                 exc(lr, _("unpacking %s") % short(n), inst, f)
 

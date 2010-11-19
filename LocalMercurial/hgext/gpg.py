@@ -197,7 +197,7 @@ def sign(ui, repo, *revs, **opts):
     If no revision is given, the parent of the working directory is used,
     or tip if no revision is checked out.
 
-    See 'hg help dates' for a list of formats valid for -d/--date.
+    See :hg:`help dates` for a list of formats valid for -d/--date.
     """
 
     mygpg = newgpg(ui, **opts)
@@ -227,7 +227,7 @@ def sign(ui, repo, *revs, **opts):
         data = node2txt(repo, n, sigver)
         sig = mygpg.sign(data)
         if not sig:
-            raise util.Abort(_("Error while signing"))
+            raise util.Abort(_("error while signing"))
         sig = binascii.b2a_base64(sig)
         sig = sig.replace("\n", "")
         sigmessage += "%s %s %s\n" % (hexnode, sigver, sig)
@@ -247,7 +247,7 @@ def sign(ui, repo, *revs, **opts):
     repo.wfile(".hgsigs", "ab").write(sigmessage)
 
     if '.hgsigs' not in repo.dirstate:
-        repo.add([".hgsigs"])
+        repo[None].add([".hgsigs"])
 
     if opts["no_commit"]:
         return
@@ -276,8 +276,10 @@ cmdtable = {
          [('l', 'local', None, _('make the signature local')),
           ('f', 'force', None, _('sign even if the sigfile is modified')),
           ('', 'no-commit', None, _('do not commit the sigfile after signing')),
-          ('k', 'key', '', _('the key id to sign with')),
-          ('m', 'message', '', _('commit message')),
+          ('k', 'key', '',
+           _('the key id to sign with'), _('ID')),
+          ('m', 'message', '',
+           _('commit message'), _('TEXT')),
          ] + commands.commitopts2,
          _('hg sign [OPTION]... [REVISION]...')),
     "sigcheck": (check, [], _('hg sigcheck REVISION')),

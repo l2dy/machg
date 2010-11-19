@@ -15,8 +15,9 @@ map from a changeset hash to its hash in the source repository.
 
 from mercurial.i18n import _
 import os, tempfile
-from mercurial import bundlerepo, changegroup, cmdutil, hg, merge, match
+from mercurial import bundlerepo, cmdutil, hg, merge, match
 from mercurial import patch, revlog, util, error
+from mercurial import revset
 
 class transplantentry(object):
     def __init__(self, lnode, rnode):
@@ -31,7 +32,7 @@ class transplants(object):
 
         if not opener:
             self.opener = util.opener(self.path)
-        self.transplants = []
+        self.transplants = {}
         self.dirty = False
         self.read()
 
@@ -40,29 +41,34 @@ class transplants(object):
         if self.transplantfile and os.path.exists(abspath):
             for line in self.opener(self.transplantfile).read().splitlines():
                 lnode, rnode = map(revlog.bin, line.split(':'))
-                self.transplants.append(transplantentry(lnode, rnode))
+                list = self.transplants.setdefault(rnode, [])
+                list.append(transplantentry(lnode, rnode))
 
     def write(self):
         if self.dirty and self.transplantfile:
             if not os.path.isdir(self.path):
                 os.mkdir(self.path)
             fp = self.opener(self.transplantfile, 'w')
-            for c in self.transplants:
-                l, r = map(revlog.hex, (c.lnode, c.rnode))
-                fp.write(l + ':' + r + '\n')
+            for list in self.transplants.itervalues():
+                for t in list:
+                    l, r = map(revlog.hex, (t.lnode, t.rnode))
+                    fp.write(l + ':' + r + '\n')
             fp.close()
         self.dirty = False
 
     def get(self, rnode):
-        return [t for t in self.transplants if t.rnode == rnode]
+        return self.transplants.get(rnode) or []
 
     def set(self, lnode, rnode):
-        self.transplants.append(transplantentry(lnode, rnode))
+        list = self.transplants.setdefault(rnode, [])
+        list.append(transplantentry(lnode, rnode))
         self.dirty = True
 
     def remove(self, transplant):
-        del self.transplants[self.transplants.index(transplant)]
-        self.dirty = True
+        list = self.transplants.get(transplant.rnode)
+        if list:
+            del list[list.index(transplant)]
+            self.dirty = True
 
 class transplanter(object):
     def __init__(self, ui, repo):
@@ -225,7 +231,7 @@ class transplanter(object):
                                      % revlog.hex(node))
                         return None
                 finally:
-                    files = patch.updatedir(self.ui, repo, files)
+                    files = cmdutil.updatedir(self.ui, repo, files)
             except Exception, inst:
                 seriespath = os.path.join(self.path, 'series')
                 if os.path.exists(seriespath):
@@ -234,7 +240,7 @@ class transplanter(object):
                 p2 = node
                 self.log(user, date, message, p1, p2, merge=merge)
                 self.ui.write(str(inst) + '\n')
-                raise util.Abort(_('Fix up the merge and run '
+                raise util.Abort(_('fix up the merge and run '
                                    'hg transplant --continue'))
         else:
             files = None
@@ -246,6 +252,15 @@ class transplanter(object):
             m = match.exact(repo.root, '', files)
 
         n = repo.commit(message, user, date, extra=extra, match=m)
+        if not n:
+            # Crash here to prevent an unclear crash later, in
+            # transplants.write().  This can happen if patch.patch()
+            # does nothing but claims success or if repo.status() fails
+            # to report changes done by patch.patch().  These both
+            # appear to be bugs in other parts of Mercurial, but dying
+            # here, as soon as we can detect the problem, is preferable
+            # to silently dropping changesets on the floor.
+            raise RuntimeError('nothing committed after transplant')
         if not merge:
             self.transplants.set(n, node)
 
@@ -341,7 +356,7 @@ class transplanter(object):
                 node = revlog.bin(line[10:])
             elif line.startswith('# Parent '):
                 parents.append(revlog.bin(line[9:]))
-            elif not line.startswith('#'):
+            elif not line.startswith('# '):
                 inmsg = True
                 message.append(line)
         return (node, user, date, '\n'.join(message), parents)
@@ -453,7 +468,7 @@ def transplant(ui, repo, *revs, **opts):
     transplanted, otherwise you will be prompted to select the
     changesets you want.
 
-    hg transplant --branch REVISION --all will rebase the selected
+    :hg:`transplant --branch REVISION --all` will rebase the selected
     branch (up to the named revision) onto your current working
     directory.
 
@@ -462,31 +477,13 @@ def transplant(ui, repo, *revs, **opts):
     of a merged transplant, and you can merge descendants of them
     normally instead of transplanting them.
 
-    If no merges or revisions are provided, hg transplant will start
-    an interactive changeset browser.
+    If no merges or revisions are provided, :hg:`transplant` will
+    start an interactive changeset browser.
 
     If a changeset application fails, you can fix the merge by hand
-    and then resume where you left off by calling hg transplant
-    --continue/-c.
+    and then resume where you left off by calling :hg:`transplant
+    --continue/-c`.
     '''
-    def getremotechanges(repo, url):
-        sourcerepo = ui.expandpath(url)
-        source = hg.repository(ui, sourcerepo)
-        common, incoming, rheads = repo.findcommonincoming(source, force=True)
-        if not incoming:
-            return (source, None, None)
-
-        bundle = None
-        if not source.local():
-            if source.capable('changegroupsubset'):
-                cg = source.changegroupsubset(incoming, rheads, 'incoming')
-            else:
-                cg = source.changegroup(incoming, 'incoming')
-            bundle = changegroup.writebundle(cg, None, 'HG10UN')
-            source = bundlerepo.bundlerepository(ui, repo.root, bundle)
-
-        return (source, incoming, bundle)
-
     def incwalk(repo, incoming, branches, match=util.always):
         if not branches:
             branches = None
@@ -543,7 +540,10 @@ def transplant(ui, repo, *revs, **opts):
     bundle = None
     source = opts.get('source')
     if source:
-        (source, incoming, bundle) = getremotechanges(repo, source)
+        sourcerepo = ui.expandpath(source)
+        source = hg.repository(ui, sourcerepo)
+        source, incoming, bundle = bundlerepo.getremotechanges(ui, repo, source,
+                                    force=True)
     else:
         source = repo
 
@@ -588,18 +588,43 @@ def transplant(ui, repo, *revs, **opts):
             source.close()
             os.unlink(bundle)
 
+def revsettransplanted(repo, subset, x):
+    """``transplanted(set)``
+    Transplanted changesets in set.
+    """
+    if x:
+      s = revset.getset(repo, subset, x)
+    else:
+      s = subset
+    cs = set()
+    for r in xrange(0, len(repo)):
+      if repo[r].extra().get('transplant_source'):
+        cs.add(r)
+    return [r for r in s if r in cs]
+
+def extsetup(ui):
+    revset.symbols['transplanted'] = revsettransplanted
+
 cmdtable = {
     "transplant":
         (transplant,
-         [('s', 'source', '', _('pull patches from REPOSITORY')),
-          ('b', 'branch', [], _('pull patches from branch BRANCH')),
+         [('s', 'source', '',
+           _('pull patches from REPO'), _('REPO')),
+          ('b', 'branch', [],
+           _('pull patches from branch BRANCH'), _('BRANCH')),
           ('a', 'all', None, _('pull all changesets up to BRANCH')),
-          ('p', 'prune', [], _('skip over REV')),
-          ('m', 'merge', [], _('merge at REV')),
+          ('p', 'prune', [],
+           _('skip over REV'), _('REV')),
+          ('m', 'merge', [],
+           _('merge at REV'), _('REV')),
           ('', 'log', None, _('append transplant info to log message')),
           ('c', 'continue', None, _('continue last transplant session '
                                     'after repair')),
-          ('', 'filter', '', _('filter changesets through FILTER'))],
-         _('hg transplant [-s REPOSITORY] [-b BRANCH [-a]] [-p REV] '
+          ('', 'filter', '',
+           _('filter changesets through command'), _('CMD'))],
+         _('hg transplant [-s REPO] [-b BRANCH [-a]] [-p REV] '
            '[-m REV] [REV]...'))
 }
+
+# tell hggettext to extract docstrings from these functions:
+i18nfunctions = [revsettransplanted]

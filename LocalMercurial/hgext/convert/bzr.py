@@ -61,7 +61,7 @@ class bzr_source(converter_source):
             try:
                 tree = dir.open_workingtree(recommend_upgrade=False)
                 branch = tree.branch
-            except (errors.NoWorkingTree, errors.NotLocalUrl), e:
+            except (errors.NoWorkingTree, errors.NotLocalUrl):
                 tree = None
                 branch = dir.open_branch()
             if (tree is not None and tree.bzrdir.root_transport.base !=
@@ -109,18 +109,16 @@ class bzr_source(converter_source):
             # the file is not available anymore - was deleted
             raise IOError(_('%s is not available in %s anymore') %
                     (name, rev))
+        mode = self._modecache[(name, rev)]
         if kind == 'symlink':
             target = revtree.get_symlink_target(fileid)
             if target is None:
                 raise util.Abort(_('%s.%s symlink has no target')
                                  % (name, rev))
-            return target
+            return target, mode
         else:
             sio = revtree.get_file(fileid)
-            return sio.read()
-
-    def getmode(self, name, rev):
-        return self._modecache[(name, rev)]
+            return sio.read(), mode
 
     def getchanges(self, version):
         # set up caches: modecache and revtree

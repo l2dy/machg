@@ -72,6 +72,25 @@ def convertsink(ui, path, type):
             ui.note(_("convert: %s\n") % inst)
     raise util.Abort(_('%s: unknown repository type') % path)
 
+class progresssource(object):
+    def __init__(self, ui, source, filecount):
+        self.ui = ui
+        self.source = source
+        self.filecount = filecount
+        self.retrieved = 0
+
+    def getfile(self, file, rev):
+        self.retrieved += 1
+        self.ui.progress(_('getting files'), self.retrieved,
+                         item=file, total=self.filecount)
+        return self.source.getfile(file, rev)
+
+    def lookuprev(self, rev):
+        return self.source.lookuprev(rev)
+
+    def close(self):
+        self.ui.progress(_('getting files'), None)
+
 class converter(object):
     def __init__(self, ui, source, dest, revmapfile, opts):
 
@@ -93,8 +112,8 @@ class converter(object):
         if authorfile and os.path.exists(authorfile):
             self.readauthormap(authorfile)
         # Extend/Override with new author map if necessary
-        if opts.get('authors'):
-            self.readauthormap(opts.get('authors'))
+        if opts.get('authormap'):
+            self.readauthormap(opts.get('authormap'))
             self.authorfile = self.dest.authorfile()
 
         self.splicemap = mapfile(ui, opts.get('splicemap'))
@@ -111,11 +130,13 @@ class converter(object):
             if n in known or n in self.map:
                 continue
             known.add(n)
+            self.ui.progress(_('scanning'), len(known), unit=_('revisions'))
             commit = self.cachecommit(n)
             parents[n] = []
             for p in commit.parents:
                 parents[n].append(p)
                 visit.append(p)
+        self.ui.progress(_('scanning'), None)
 
         return parents
 
@@ -302,8 +323,10 @@ class converter(object):
             parents = [self.map.get(p, p) for p in parents]
         except KeyError:
             parents = [b[0] for b in pbranches]
+        source = progresssource(self.ui, self.source, len(files))
         newnode = self.dest.putcommit(files, copies, parents, commit,
-                                      self.source, self.map)
+                                      source, self.map)
+        source.close()
         self.source.converted(rev, newnode)
         self.map[rev] = newnode
 
@@ -321,17 +344,20 @@ class converter(object):
             c = None
 
             self.ui.status(_("converting...\n"))
-            for c in t:
+            for i, c in enumerate(t):
                 num -= 1
                 desc = self.commitcache[c].desc
                 if "\n" in desc:
                     desc = desc.splitlines()[0]
                 # convert log message to local encoding without using
-                # tolocal() because encoding.encoding conver() use it as
-                # 'utf-8'
+                # tolocal() because the encoding.encoding convert()
+                # uses is 'utf-8'
                 self.ui.status("%d %s\n" % (num, recode(desc)))
                 self.ui.note(_("source: %s\n") % recode(c))
+                self.ui.progress(_('converting'), i, unit=_('revisions'),
+                                 total=len(t))
                 self.copy(c)
+            self.ui.progress(_('converting'), None)
 
             tags = self.source.gettags()
             ctags = {}
@@ -365,6 +391,10 @@ def convert(ui, src, dest=None, revmapfile=None, **opts):
     global orig_encoding
     orig_encoding = encoding.encoding
     encoding.encoding = 'UTF-8'
+
+    # support --authors as an alias for --authormap
+    if not opts.get('authormap'):
+        opts['authormap'] = opts.get('authors')
 
     if not dest:
         dest = hg.defaultdest(src) + "-hg"

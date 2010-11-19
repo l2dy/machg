@@ -28,7 +28,9 @@ def fetch(ui, repo, source='default', **opts):
     parent, with local changes as the second. To switch the merge
     order, use --switch-parent.
 
-    See 'hg help dates' for a list of formats valid for -d/--date.
+    See :hg:`help dates` for a list of formats valid for -d/--date.
+
+    Returns 0 on success.
     '''
 
     date = opts.get('date')
@@ -61,7 +63,7 @@ def fetch(ui, repo, source='default', **opts):
             raise util.Abort(_('multiple heads in this branch '
                                '(use "hg heads ." and "hg merge" to merge)'))
 
-        other = hg.repository(cmdutil.remoteui(repo, opts),
+        other = hg.repository(hg.remoteui(repo, opts),
                               ui.expandpath(source))
         ui.status(_('pulling from %s\n') %
                   url.hidepassword(ui.expandpath(source)))
@@ -86,7 +88,7 @@ def fetch(ui, repo, source='default', **opts):
             if newchildren[0] != parent:
                 return hg.clean(repo, newchildren[0])
             else:
-                return
+                return 0
 
         # Are there more than one additional branch heads?
         newchildren = [n for n in newchildren if n != parent]
@@ -99,7 +101,7 @@ def fetch(ui, repo, source='default', **opts):
             ui.status(_('not merging with %d other new branch heads '
                         '(use "hg heads ." and "hg merge" to merge them)\n') %
                       (len(newheads) - 1))
-            return
+            return 1
 
         # Otherwise, let's merge.
         err = False
@@ -132,13 +134,16 @@ def fetch(ui, repo, source='default', **opts):
                         'with local\n') % (repo.changelog.rev(n),
                                            short(n)))
 
+        return err
+
     finally:
         release(lock, wlock)
 
 cmdtable = {
     'fetch':
         (fetch,
-        [('r', 'rev', [], _('a specific revision you would like to pull')),
+        [('r', 'rev', [],
+          _('a specific revision you would like to pull'), _('REV')),
          ('e', 'edit', None, _('edit commit message')),
          ('', 'force-editor', None, _('edit commit message (DEPRECATED)')),
          ('', 'switch-parent', None, _('switch parents when merging')),

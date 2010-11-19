@@ -11,7 +11,6 @@ import util, ignore, osutil, parsers
 import struct, os, stat, errno
 import cStringIO
 
-_unknown = ('?', 0, 0, 0)
 _format = ">cllll"
 propertycache = util.propertycache
 
@@ -113,27 +112,11 @@ class dirstate(object):
 
     @propertycache
     def _checklink(self):
-         d = os.path.join(self._root, '.hg', 'fschecks')
-         try:
-             if not os.path.isdir(d):
-                 os.mkdir(d)
-             return util.checklink(d)
-         except (IOError, OSError):
-             # we don't care, the user probably won't be able to commit
-             # anyway
-             return False
+        return util.checklink(self._root)
 
     @propertycache
     def _checkexec(self):
-         d = os.path.join(self._root, '.hg', 'fschecks')
-         try:
-             if not os.path.isdir(d):
-                 os.mkdir(d)
-             return util.checkexec(d)
-         except (IOError, OSError):
-             # we don't care, the user probably won't be able to commit
-             # anyway
-             return False
+        return util.checkexec(self._root)
 
     @propertycache
     def _checkcase(self):
@@ -302,14 +285,15 @@ class dirstate(object):
         '''Mark a file normal, but possibly dirty.'''
         if self._pl[1] != nullid and f in self._map:
             # if there is a merge going on and the file was either
-            # in state 'm' or dirty before being removed, restore that state.
+            # in state 'm' (-1) or coming from other parent (-2) before
+            # being removed, restore that state.
             entry = self._map[f]
             if entry[0] == 'r' and entry[2] in (-1, -2):
                 source = self._copymap.get(f)
                 if entry[2] == -1:
                     self.merge(f)
                 elif entry[2] == -2:
-                    self.normaldirty(f)
+                    self.otherparent(f)
                 if source:
                     self.copy(source, f)
                 return
@@ -321,8 +305,11 @@ class dirstate(object):
         if f in self._copymap:
             del self._copymap[f]
 
-    def normaldirty(self, f):
-        '''Mark a file normal, but dirty.'''
+    def otherparent(self, f):
+        '''Mark as coming from the other parent, always dirty.'''
+        if self._pl[1] == nullid:
+            raise util.Abort(_("setting %r to other parent "
+                               "only allowed in merges") % f)
         self._dirty = True
         self._addpath(f)
         self._map[f] = ('n', 0, -2, -1)
@@ -343,10 +330,11 @@ class dirstate(object):
         self._droppath(f)
         size = 0
         if self._pl[1] != nullid and f in self._map:
+            # backup the previous state
             entry = self._map[f]
-            if entry[0] == 'm':
+            if entry[0] == 'm': # merge
                 size = -1
-            elif entry[0] == 'n' and entry[2] == -2:
+            elif entry[0] == 'n' and entry[2] == -2: # other parent
                 size = -2
         self._map[f] = ('r', 0, size, 0)
         if size == 0 and f in self._copymap:
@@ -374,7 +362,7 @@ class dirstate(object):
         norm_path = os.path.normcase(path)
         fold_path = self._foldmap.get(norm_path, None)
         if fold_path is None:
-            if knownpath or not os.path.exists(os.path.join(self._root, path)):
+            if knownpath or not os.path.lexists(os.path.join(self._root, path)):
                 fold_path = path
             else:
                 fold_path = self._foldmap.setdefault(norm_path,
@@ -497,11 +485,6 @@ class dirstate(object):
         work = []
         wadd = work.append
 
-        if self._checkcase:
-            normalize = self._normalize
-        else:
-            normalize = lambda x, y: x
-
         exact = skipstep3 = False
         if matchfn == match.exact: # match.exact
             exact = True
@@ -509,14 +492,31 @@ class dirstate(object):
         elif match.files() and not match.anypats(): # match.match, no patterns
             skipstep3 = True
 
-        files = set(match.files())
+        if self._checkcase:
+            normalize = self._normalize
+            skipstep3 = False
+        else:
+            normalize = lambda x, y: x
+
+        files = sorted(match.files())
+        subrepos.sort()
+        i, j = 0, 0
+        while i < len(files) and j < len(subrepos):
+            subpath = subrepos[j] + "/"
+            if not files[i].startswith(subpath):
+                i += 1
+                continue
+            while files and files[i].startswith(subpath):
+                del files[i]
+            j += 1
+
         if not files or '.' in files:
             files = ['']
         results = dict.fromkeys(subrepos)
         results['.hg'] = None
 
         # step 1: find all explicit files
-        for ff in sorted(files):
+        for ff in files:
             nf = normalize(normpath(ff), False)
             if nf in results:
                 continue
@@ -637,6 +637,8 @@ class dirstate(object):
         dadd = deleted.append
         cadd = clean.append
 
+        lnkkind = stat.S_IFLNK
+
         for fn, st in self.walk(match, subrepos, listunknown,
                                 listignored).iteritems():
             if fn not in dmap:
@@ -652,13 +654,19 @@ class dirstate(object):
             if not st and state in "nma":
                 dadd(fn)
             elif state == 'n':
+                # The "mode & lnkkind != lnkkind or self._checklink"
+                # lines are an expansion of "islink => checklink"
+                # where islink means "is this a link?" and checklink
+                # means "can we check links?".
                 if (size >= 0 and
                     (size != st.st_size
                      or ((mode ^ st.st_mode) & 0100 and self._checkexec))
-                    or size == -2
+                    and (mode & lnkkind != lnkkind or self._checklink)
+                    or size == -2 # other parent
                     or fn in self._copymap):
                     madd(fn)
-                elif time != int(st.st_mtime):
+                elif (time != int(st.st_mtime)
+                      and (mode & lnkkind != lnkkind or self._checklink)):
                     ladd(fn)
                 elif listclean:
                     cadd(fn)

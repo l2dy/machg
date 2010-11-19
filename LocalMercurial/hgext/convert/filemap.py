@@ -33,9 +33,19 @@ class filemapper(object):
     def parse(self, path):
         errs = 0
         def check(name, mapping, listname):
+            if not name:
+                self.ui.warn(_('%s:%d: path to %s is missing\n') %
+                             (lex.infile, lex.lineno, listname))
+                return 1
             if name in mapping:
                 self.ui.warn(_('%s:%d: %r already in %s list\n') %
                              (lex.infile, lex.lineno, name, listname))
+                return 1
+            if (name.startswith('/') or
+                name.endswith('/') or
+                '//' in name):
+                self.ui.warn(_('%s:%d: superfluous / in %s %r\n') %
+                             (lex.infile, lex.lineno, listname, name))
                 return 1
             return 0
         lex = shlex.shlex(open(path), path, True)
@@ -100,8 +110,7 @@ class filemapper(object):
 #
 # - Filter and rename files.  This is mostly wrapped by the filemapper
 #   class above. We hide the original filename in the revision that is
-#   returned by getchanges to be able to find things later in getfile
-#   and getmode.
+#   returned by getchanges to be able to find things later in getfile.
 #
 # - Return only revisions that matter for the files we're interested in.
 #   This involves rewriting the parents of the original revision to
@@ -299,7 +308,9 @@ class filemap_source(converter_source):
 
         self.origparents[rev] = parents
 
-        if len(mparents) < 2 and not self.wanted(rev, wp):
+        closed = 'close' in self.commits[rev].extra
+
+        if len(mparents) < 2 and not closed and not self.wanted(rev, wp):
             # We don't want this revision.
             # Update our state and tell the convert process to map this
             # revision to the same revision its parent as mapped to.
@@ -318,10 +329,9 @@ class filemap_source(converter_source):
         self.convertedorder.append((rev, True, None))
         self._discard(*parents)
 
-        # Get the real changes and do the filtering/mapping.
-        # To be able to get the files later on in getfile and getmode,
-        # we hide the original filename in the rev part of the return
-        # value.
+        # Get the real changes and do the filtering/mapping. To be
+        # able to get the files later on in getfile, we hide the
+        # original filename in the rev part of the return value.
         changes, copies = self.base.getchanges(rev)
         newnames = {}
         files = []
@@ -344,10 +354,6 @@ class filemap_source(converter_source):
     def getfile(self, name, rev):
         realname, realrev = rev
         return self.base.getfile(realname, realrev)
-
-    def getmode(self, name, rev):
-        realname, realrev = rev
-        return self.base.getmode(realname, realrev)
 
     def gettags(self):
         return self.base.gettags()
