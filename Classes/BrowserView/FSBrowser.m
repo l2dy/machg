@@ -565,7 +565,7 @@
 @synthesize savedColumnScrollPositions;
 @synthesize savedHorizontalScrollPosition;
 @synthesize savedSelectedPaths;
-@synthesize savedFirstResponder;
+@synthesize restoreFirstResponderToBrowser;
 
 
 
@@ -596,9 +596,18 @@
 	NSScrollView* horizontalSV = [[[browser matrixInColumn:0] enclosingScrollView] enclosingScrollView];
 	newSavedState.savedHorizontalScrollPosition = [[horizontalSV contentView] bounds].origin;
 
+	BOOL restoreFirstResponderToBrowser = NO;
+	for (NSResponder* theResponder = [[browser parentWindow] firstResponder]; theResponder; theResponder = [theResponder nextResponder])
+		if (theResponder == browser)
+		{
+			restoreFirstResponderToBrowser = YES;
+			break;
+		}
+	
 	// Save the selectedPaths
 	newSavedState.savedSelectedPaths = selectedPaths;
-	newSavedState.savedFirstResponder = [[browser parentWindow] firstResponder];
+	newSavedState.restoreFirstResponderToBrowser = restoreFirstResponderToBrowser;	
+	
 	return newSavedState;
 }
 
@@ -613,7 +622,8 @@
 	NSString* relativeSelectedPath = pathDifference(rootPath, [savedSelectedPaths lastObject]);
 
 	// Loop through and select the correct row in each column until we get to the last column
-	[[theBrowser parentWindow] makeFirstResponder:savedFirstResponder];
+	if (restoreFirstResponderToBrowser)
+		[[theBrowser parentWindow] makeFirstResponder:theBrowser];
 	NSArray* components = [relativeSelectedPath pathComponents];
 	FSNodeInfo* childNode = [theBrowser rootNodeInfo];
 	FSNodeInfo* node = childNode;
@@ -648,7 +658,8 @@
 		if (IsNotEmpty(rowIndexes))
 			[theBrowser selectRowIndexes:rowIndexes inColumn:(col-1)];
 	}
-	[[theBrowser window] makeFirstResponder:savedFirstResponder];
+	if (restoreFirstResponderToBrowser)
+		[[theBrowser window] makeFirstResponder:theBrowser];
 
 
 	// restore column scroll positions
