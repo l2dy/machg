@@ -317,13 +317,13 @@ void setupGlobalsForPartsAndTemplate()
 	NSString* description;
 	BOOL inPast = [date_ isBefore:now];
 	NSString* relation = inPast ? @"ago" : @"in the future"; 
-	if      (delta >= 2 * kYear)	description = fstr(@"%d years %@",   llround(floor(delta / kYear)),   relation);
-	else if (delta >= 2 * kMonth)	description = fstr(@"%d months %@",  llround(floor(delta / kMonth)),  relation);
-	else if (delta >= 2 * kWeek)	description = fstr(@"%d weeks %@",   llround(floor(delta / kWeek)),   relation);
-	else if (delta >= 2 * kDay)		description = fstr(@"%d days %@",    llround(floor(delta / kDay)),    relation);
-	else if (delta >= 2 * kHour)	description = fstr(@"%d hours %@",   llround(floor(delta / kHour)),   relation);
-	else if (delta >= 2 * kMinute)	description = fstr(@"%d minutes %@", llround(floor(delta / kMinute)), relation);
-	else							description = fstr(@"%d seconds %@", llround(floor(delta / kSecond)), relation);
+	if      (delta >= 2 * kYear)	description = fstr(@"%d years %@",   lround(floor(delta / kYear)),   relation);
+	else if (delta >= 2 * kMonth)	description = fstr(@"%d months %@",  lround(floor(delta / kMonth)),  relation);
+	else if (delta >= 2 * kWeek)	description = fstr(@"%d weeks %@",   lround(floor(delta / kWeek)),   relation);
+	else if (delta >= 2 * kDay)		description = fstr(@"%d days %@",    lround(floor(delta / kDay)),    relation);
+	else if (delta >= 2 * kHour)	description = fstr(@"%d hours %@",   lround(floor(delta / kHour)),   relation);
+	else if (delta >= 2 * kMinute)	description = fstr(@"%d minutes %@", lround(floor(delta / kMinute)), relation);
+	else							description = fstr(@"%d seconds %@", lround(floor(delta / kSecond)), relation);
 	return description;
 }
 
