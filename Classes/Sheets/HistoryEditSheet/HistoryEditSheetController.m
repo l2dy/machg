@@ -121,10 +121,6 @@
 		return;
 	
 	NSMutableArray* argsHistoryEdit = [NSMutableArray arrayWithObjects:@"histedit", nil];
-	
-	// We are using MacHgs historyEdit command so we need to specify that it is in the extensions folder of the included Mercurial
-	NSString* absPathToHistEdit = fstr(@"hgext.histedit=%@/%@",[[NSBundle mainBundle] builtInPlugInsPath], @"LocalMercurial/hgext/histedit");
-	[argsHistoryEdit addObject:@"--config" followedBy:absPathToHistEdit];
 
 	[argsHistoryEdit addObject: (result == NSAlertDefaultReturn ? @"--continue" : @"--abort")];
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
@@ -222,10 +218,6 @@
 	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
 	NSMutableArray* argsHistoryEdit = [NSMutableArray arrayWithObjects:@"histedit", nil];
 	
-	// We are using MacHgs historyEdit command so we need to specify that it is in the extensions folder of the included Mercurial
-	NSString* absPathToHistEdit = fstr(@"hgext.histedit=%@/%@",[[NSBundle mainBundle] builtInPlugInsPath], @"LocalMercurial/hgext/histedit");
-	[argsHistoryEdit addObject:@"--config" followedBy:absPathToHistEdit];
-
 	[argsHistoryEdit addObject:@"--startingrules"];
 	[argsHistoryEdit addObject:intAsString(pair.lowRevision)];
 		
@@ -250,11 +242,7 @@
 	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
 	NSString* repositoryName = [[[myDocument sidebar] selectedNode] shortName];
 	NSString* historyEditDescription = fstr(@"Editing descendants of %d in “%@”", pair.lowRevision, repositoryName);
-	NSMutableArray* argsHistoryEdit = [NSMutableArray arrayWithObjects:@"histedit", nil];
-	
-	// We are using MacHgs historyEdit command so we need to specify that it is in the extensions folder of the included Mercurial
-	NSString* absPathToHistEdit = fstr(@"hgext.histedit=%@/%@",[[NSBundle mainBundle] builtInPlugInsPath], @"LocalMercurial/hgext/histedit");
-	[argsHistoryEdit addObject:@"--config" followedBy:absPathToHistEdit];
+	NSMutableArray* argsHistoryEdit = [NSMutableArray arrayWithObjects:@"histedit", nil];	
 	
 	[argsHistoryEdit addObject:@"--rules" followedBy:[confirmationSheetMessage string]];
 	[argsHistoryEdit addObject:intAsString(pair.lowRevision)];

@@ -129,8 +129,6 @@
 	
 	NSMutableArray* argsRebase = [NSMutableArray arrayWithObjects:@"rebase", nil];
 	
-	[argsRebase addObject:@"--config" followedBy:@"hgext.rebase="];		// We are using MacHgs rebase command so we need to specify that it is
-																		// in the extensions folder of the included Mercurial
 	[argsRebase addObject: (result == NSAlertDefaultReturn ? @"--continue" : @"--abort")];
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	ExecutionResult* results = [myDocument  executeMercurialWithArgs:argsRebase  fromRoot:rootPath  whileDelayingEvents:YES];
