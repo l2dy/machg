@@ -16,7 +16,7 @@
 	NSNumber* lowCol;		// This is the column where the line begins.
 	NSNumber* highRev;		// This is the revision where the line terminates.
 	NSNumber* highCol;		// This is the column where the line terminates.
-	NSNumber* drawCol;		// This is the column where the bulk of the line is drawn. Its usually the same as the highCol but not always.
+	NSNumber* drawCol;		// This is the column where the bulk of the line is drawn. It's usually the same as the highCol but not always.
 }
 
 @property (readwrite,assign) NSNumber*			lowRev;

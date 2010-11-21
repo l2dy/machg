@@ -203,7 +203,7 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 			LogEntry* oldEntry = [oldRepositoryData_ rawEntryForRevisionString:[entry revision]];
 			if ([oldEntry loadStatus] >= eLogEntryLoadedPartially)
 			{
-				[[self repositoryData] revisionToLabels];	// This starts the loading of all the labels data if its not already loaded.
+				[[self repositoryData] revisionToLabels];	// This starts the loading of all the labels data if it's not already loaded.
 				return oldEntry;
 			}
 		}
@@ -786,7 +786,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	if (![[self selectedRowIndexes] containsIndex:rowIndex])
 		return backColor;
 	
-	// Finally if we have a selected row and its tagged or the current revision then blend the colors to indicate this.
+	// Finally if we have a selected row and it's tagged or the current revision then blend the colors to indicate this.
 	NSColor* theHighlightColor = [NSColor selectedTextColor];
 	return backColor ? [backColor blendedColorWithFraction:0.3 ofColor:theHighlightColor] : theHighlightColor;
 }

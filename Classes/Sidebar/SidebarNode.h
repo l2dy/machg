@@ -33,7 +33,7 @@ typedef enum
 
 	// If this node is a repository reference then the following are relevant
 	NSString*		path;				// The local file path or server path; ie something like  http://www.codebase.org/code/main/myproject
-										// if its a server or /Users/jason/Projects/MyProject if its a local file path.
+										// if it's a server or /Users/jason/Projects/MyProject if it's a local file path.
 	NSMutableArray* recentConnections;	// Internal list of a number of other repository references from which this server has
 										// pushed / pulled data.
 	

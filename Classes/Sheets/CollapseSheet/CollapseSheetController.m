@@ -65,7 +65,7 @@
 
 static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return num < low || high < num; }
 
-// Look for a reason to disallow the given collapse before sending it off to 'hg collapse' its better that we can detect these
+// Look for a reason to disallow the given collapse before sending it off to 'hg collapse' it's better that we can detect these
 // cases rather than having the collapse tool bail.
 - (NSString*) reasonForInvalidityOfSelectedEntries
 {

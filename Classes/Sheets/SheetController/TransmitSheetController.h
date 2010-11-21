@@ -10,7 +10,7 @@
 #import "Common.h"
 
 // This sheet controller is the basis for the push / pull / incoming / outgoing sheets. There is a lot of common code in those
-// sheets like the layout of the source and destination and syncing of options with connections, etc. Its collected into this
+// sheets like the layout of the source and destination and syncing of options with connections, etc. It's collected into this
 // parent class.
 @interface TransmitSheetController : BaseSheetWindowController<NSMenuDelegate>
 {

@@ -85,7 +85,7 @@
 		[self selectRow:[self rowForItem:node]];
 }
 
-// This method is used when we are undoing / redoing things. Its cheating a bit since I could introduce more targeted lightweight
+// This method is used when we are undoing / redoing things. It's cheating a bit since I could introduce more targeted lightweight
 // changes to the sidebar tree. However the whole size of the sidebar tree should be small. Something like:90 bytes per node, and
 // then the NSMutableArray in there and so on. Maybe 1K or 2K bytes for a whole tree so I am not going to sweat this.
 - (void) setRootAndUpdate:(SidebarNode*)root

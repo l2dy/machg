@@ -365,7 +365,7 @@
 		FSNodeInfo* parent = newRoot;
 
 		// If we don't use dictionaries here we can get n^2 behavior, as we search the arrays for each element we just added.
-		// This way its a bit slower but for larger numbers of files in a directory it works much better using a dictionary.
+		// This way it's a bit slower but for larger numbers of files in a directory it works much better using a dictionary.
 		for (NSString* partName in pathComponents)
 		{
 			NSMutableDictionary* theChildNodes = [parent childNodes];

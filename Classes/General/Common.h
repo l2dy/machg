@@ -258,7 +258,7 @@ extern NSString* const kMacHgApp;
 
 // It is sometimes quite important to use notifications. Eg if MacHg just calls underlying refresh methods directly after sending
 // out a mercurial command, often mercurial isn't finished doing its thing before the refresh happens and so the refresh is
-// incomplete. Its better to detect that Mercurial is finished and then refresh, where possible.
+// incomplete. It's better to detect that Mercurial is finished and then refresh, where possible.
 
 extern NSString* const kRepositoryRootChanged;				// The sidebar bookmark now points to a different repository
 
@@ -797,8 +797,8 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 // MARK: -
 @interface NSString ( NSStringPlusMatches )
-// Get the first capture group. Or first and second capture group. Like the RegExKit getCapturesWithRegexAndReferences, but its
-// simpler since its just the captures in order.
+// Get the first capture group. Or first and second capture group. Like the RegExKit getCapturesWithRegexAndReferences, but it's
+// simpler since it's just the captures in order.
 - (BOOL)	getCapturesWithRegexAndComponents:(NSString*)regEx  firstComponent:(NSString**)first;
 - (BOOL)	getCapturesWithRegexAndComponents:(NSString*)regEx  firstComponent:(NSString**)first  secondComponent:(NSString**)second;
 - (BOOL)	getCapturesWithRegexAndComponents:(NSString*)regEx  firstComponent:(NSString**)first  secondComponent:(NSString**)second  thirdComponent:(NSString**)third;

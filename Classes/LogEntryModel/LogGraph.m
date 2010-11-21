@@ -300,7 +300,7 @@ inline static NSString* revPair(NSNumber* low, NSNumber* high) { return fstr(@"%
 }
 
 
-// This is now somewhat outdated but its where I played with the first versions of the algorithm to layout the various nodes and their connections.
+// This is now somewhat outdated but it's where I played with the first versions of the algorithm to layout the various nodes and their connections.
 /*
 
 In[766]:= ReplaceToParents[node_, parents_, connections_] :=

@@ -319,7 +319,7 @@
 // From http://lists.apple.com/archives/Cocoa-dev/2008/Jan/msg00848.html
 OSStatus DoTerminalScript(NSString* script)
 {
-	// Launch the terminal if its not already active...
+	// Launch the terminal if it's not already active...
 	[[NSWorkspace sharedWorkspace] launchAppWithBundleIdentifier:@"com.apple.Terminal" options:0 additionalEventParamDescriptor:nil launchIdentifier:nil];
 	const char* utf8Script = [script UTF8String];
     /*
