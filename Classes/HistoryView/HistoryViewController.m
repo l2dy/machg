@@ -14,6 +14,7 @@
 #import "RepositoryData.h"
 #import "LabelsTableView.h"
 #import "LabelData.h"
+#import "BackoutSheetController.h"
 #import "CloneSheetController.h"
 #import "CollapseSheetController.h"
 #import "CommitSheetController.h"
@@ -167,6 +168,7 @@
 - (IBAction) mainMenuHistoryEditChangesets:(id)sender	{ [[myDocument theHistoryEditSheetController]	openHistoryEditSheetWithSelectedRevisions:sender]; }
 - (IBAction) mainMenuStripChangesets:(id)sender			{ [[myDocument theStripSheetController]			openStripSheetWithSelectedRevisions:sender]; }
 - (IBAction) mainMenuRebaseChangesets:(id)sender		{ [[myDocument theRebaseSheetController]		openRebaseSheetWithSelectedRevisions:sender]; }
+- (IBAction) mainMenuBackoutChangeset:(id)sender		{ [[myDocument theBackoutSheetController]		openBackoutSheetWithSelectedRevision:sender]; }
 
 
 
@@ -406,7 +408,7 @@
 	if (theAction == @selector(mainMenuHistoryEditChangesets:))					return [myDocument repositoryIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();
 	if (theAction == @selector(mainMenuStripChangesets:))						return [myDocument repositoryIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();
 	if (theAction == @selector(mainMenuRebaseChangesets:))						return [myDocument repositoryIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();
-	
+	if (theAction == @selector(mainMenuBackoutChangeset:))						return [myDocument repositoryIsSelectedAndReady] && ![myDocument repositoryHasFilesWhichContainStatus:eHGStatusChangedInSomeWay];
 	
 	// HistoryView contextual items
 	if (theAction == @selector(historyMenuAddLabelToChosenRevision:))			return [myDocument repositoryIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];

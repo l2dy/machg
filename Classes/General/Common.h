@@ -61,6 +61,7 @@
 
 // Sheets
 @class AddLabelSheetController;
+@class BackoutSheetController;
 @class CloneSheetController;
 @class CollapseSheetController;
 @class CommitSheetController;
@@ -346,6 +347,7 @@ extern NSString* const MHGDisplayResultsOfPushing;
 extern NSString* const MHGDisplayResultsOfUpdating;
 extern NSString* const MHGDisplayWarningForAddRemoveRenameFiles;
 extern NSString* const MHGDisplayWarningForAmend;
+extern NSString* const MHGDisplayWarningForBackout;
 extern NSString* const MHGDisplayWarningForBranchNameRemoval;
 extern NSString* const MHGDisplayWarningForFileDeletion;
 extern NSString* const MHGDisplayWarningForMarkingFilesResolved;
@@ -412,6 +414,7 @@ BOOL		DisplayResultsOfPushingFromDefaults();
 BOOL		DisplayResultsOfUpdatingFromDefaults();
 BOOL		DisplayWarningForAddRemoveRenameFilesFromDefaults();
 BOOL		DisplayWarningForAmendFromDefaults();
+BOOL		DisplayWarningForBackoutFromDefaults();
 BOOL		DisplayWarningForBranchNameRemovalFromDefaults();
 BOOL		DisplayWarningForFileDeletionFromDefaults();
 BOOL		DisplayWarningForMarkingFilesResolvedFromDefaults();

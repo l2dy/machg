@@ -103,6 +103,7 @@
 - (IBAction) mainMenuStripChangesets:(id)sender;
 - (IBAction) mainMenuRebaseChangesets:(id)sender;
 - (IBAction) mainMenuHistoryEditChangesets:(id)sender;
+- (IBAction) mainMenuBackoutChangeset:(id)sender;
 
 // LabelsTableView Contextual Menu
 - (IBAction) labelsMenuMoveChosenLabel:(id) sender;

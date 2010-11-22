@@ -69,6 +69,7 @@
 
 	// Sheet Controllers
 	AddLabelSheetController*			theAddLabelSheetController_;
+	BackoutSheetController*				theBackoutSheetController_;
 	CloneSheetController*				theCloneSheetController_;
 	CollapseSheetController*			theCollapseSheetController_;
 	CommitSheetController*				theCommitSheetController_;
@@ -139,6 +140,7 @@
 - (BackingViewController*)			theBackingViewController;
 
 - (AddLabelSheetController*)		theAddLabelSheetController;
+- (BackoutSheetController*)			theBackoutSheetController;
 - (CloneSheetController*)			theCloneSheetController;
 - (CollapseSheetController*)		theCollapseSheetController;
 - (CommitSheetController*)			theCommitSheetController;
@@ -301,6 +303,7 @@
 - (BOOL)		primaryActionUnignoreSelectedFiles:(NSArray*)theSelectedFiles;
 - (BOOL)		primaryActionAnnotateSelectedFiles:(NSArray*)theSelectedFiles;
 - (BOOL)		primaryActionUpdateFilesToVersion:(NSString*)version withCleanOption:(BOOL)clean;
+- (BOOL)		primaryActionBackoutFilesToVersion:(NSString*)version;
 - (BOOL)		primaryActionMergeWithVersion:(NSString*)mergeVersion andOptions:(NSArray*)options withConfirmation:(BOOL)confirm;
 - (void)		primaryActionDisplayManifestForVersion:(NSString*)version;
 - (void)		primaryActionAnnotateSelectedFiles:(NSArray*)absolutePaths withRevision:(NSString*)version andOptions:(NSArray*)options;

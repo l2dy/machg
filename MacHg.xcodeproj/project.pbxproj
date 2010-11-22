@@ -58,6 +58,8 @@
 		962ED0AC1187885A0072211F /* Sparkle.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 962ED0AB1187885A0072211F /* Sparkle.framework */; };
 		962ED0B61187887C0072211F /* Sparkle.framework in Copy Files (Frameworks) */ = {isa = PBXBuildFile; fileRef = 962ED0AB1187885A0072211F /* Sparkle.framework */; };
 		962ED0BC11878A120072211F /* macHgPublicKey_dsa.pem in Resources */ = {isa = PBXBuildFile; fileRef = 962ED0BB11878A120072211F /* macHgPublicKey_dsa.pem */; };
+		963001A612988A6000C1782B /* BackoutSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 963001A512988A6000C1782B /* BackoutSheetController.m */; };
+		963001AC12988A9100C1782B /* BackoutSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 963001AA12988A9100C1782B /* BackoutSheet.xib */; };
 		9630898E11820711006E45A8 /* ImportPatchesSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9630898D11820711006E45A8 /* ImportPatchesSheetController.m */; };
 		963089911182071B006E45A8 /* ImportPatchesSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9630898F1182071B006E45A8 /* ImportPatchesSheet.xib */; };
 		9631D0501107A7E20007FDF2 /* CloneSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9631D0351107A7E20007FDF2 /* CloneSheetController.m */; };
@@ -281,6 +283,9 @@
 		962ED05211875AED0072211F /* PatchesTableView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PatchesTableView.m; sourceTree = "<group>"; };
 		962ED0AB1187885A0072211F /* Sparkle.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Sparkle.framework; path = LinkedLibraries/Sparkle.framework; sourceTree = "<group>"; };
 		962ED0BB11878A120072211F /* macHgPublicKey_dsa.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = macHgPublicKey_dsa.pem; path = Plists/macHgPublicKey_dsa.pem; sourceTree = "<group>"; };
+		963001A412988A6000C1782B /* BackoutSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BackoutSheetController.h; sourceTree = "<group>"; };
+		963001A512988A6000C1782B /* BackoutSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BackoutSheetController.m; sourceTree = "<group>"; };
+		963001AB12988A9100C1782B /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/BackoutSheet.xib; sourceTree = SOURCE_ROOT; };
 		9630898C11820711006E45A8 /* ImportPatchesSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ImportPatchesSheetController.h; sourceTree = "<group>"; };
 		9630898D11820711006E45A8 /* ImportPatchesSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ImportPatchesSheetController.m; sourceTree = "<group>"; };
 		963089901182071B006E45A8 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/ImportPatchesSheet.xib; sourceTree = SOURCE_ROOT; };
@@ -764,6 +769,16 @@
 			path = Classes/PatchesModel;
 			sourceTree = "<group>";
 		};
+		963001A312988A6000C1782B /* BackoutSheet */ = {
+			isa = PBXGroup;
+			children = (
+				963001A412988A6000C1782B /* BackoutSheetController.h */,
+				963001A512988A6000C1782B /* BackoutSheetController.m */,
+				963001AA12988A9100C1782B /* BackoutSheet.xib */,
+			);
+			path = BackoutSheet;
+			sourceTree = "<group>";
+		};
 		9630898B11820711006E45A8 /* ImportSheet */ = {
 			isa = PBXGroup;
 			children = (
@@ -778,6 +793,7 @@
 			isa = PBXGroup;
 			children = (
 				969BD94211953E43007AA6D9 /* AddLabelSheet */,
+				963001A312988A6000C1782B /* BackoutSheet */,
 				9631D0331107A7E20007FDF2 /* CloneSheet */,
 				9631D0361107A7E20007FDF2 /* CommitSheet */,
 				96DD29C7112AE56200A57BD3 /* CollapseSheet */,
@@ -1538,6 +1554,7 @@
 				9654F5EC11D237F200826FD6 /* Update.png in Resources */,
 				96BEAA8F12891CF0005198B5 /* hgrc in Resources */,
 				96BEAAB812891EF4005198B5 /* hgignore in Resources */,
+				963001AC12988A9100C1782B /* BackoutSheet.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1645,6 +1662,7 @@
 				966E8E6B11CB863C0052FF42 /* JointSplitView.m in Sources */,
 				966E8E6F11CB864C0052FF42 /* BackingViewController.m in Sources */,
 				44D3658012770D10007D631D /* ParentTextButtonCell.m in Sources */,
+				963001A612988A6000C1782B /* BackoutSheetController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1682,6 +1700,14 @@
 			);
 			name = BrowserPreviewView.xib;
 			path = ../..;
+			sourceTree = "<group>";
+		};
+		963001AA12988A9100C1782B /* BackoutSheet.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				963001AB12988A9100C1782B /* English */,
+			);
+			name = BackoutSheet.xib;
 			sourceTree = "<group>";
 		};
 		9630898F1182071B006E45A8 /* ImportPatchesSheet.xib */ = {

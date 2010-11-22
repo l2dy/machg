@@ -28,6 +28,7 @@
 #import "ProcessListController.h"
 
 #import "AddLabelSheetController.h"
+#import "BackoutSheetController.h"
 #import "CloneSheetController.h"
 #import "CollapseSheetController.h"
 #import "CommitSheetController.h"
@@ -303,6 +304,18 @@
 			theAddLabelSheetController_ = [[AddLabelSheetController alloc] initAddLabelSheetControllerWithDocument:self];
 	}
 	return theAddLabelSheetController_;
+}
+
+- (BackoutSheetController*) theBackoutSheetController
+{
+	if (theBackoutSheetController_)
+		return theBackoutSheetController_;
+	@synchronized(self)
+	{
+		if (!theBackoutSheetController_)
+			theBackoutSheetController_ = [[BackoutSheetController alloc] initBackoutSheetControllerWithDocument:self];
+	}
+	return theBackoutSheetController_;
 }
 
 - (CloneSheetController*) theCloneSheetController
@@ -1889,6 +1902,60 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 			NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
 			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"Update Results - %@", [self selectedRepositoryShortName])];
 		}
+	}];
+	return YES;
+}
+
+- (BOOL) primaryActionBackoutFilesToVersion:(NSString*)version
+{
+	BOOL containsChangedFiles = [self repositoryHasFilesWhichContainStatus:eHGStatusCommittable];
+	if (containsChangedFiles)
+	{
+		NSRunAlertPanel(@"Backout Aborted", @"There are uncommitted changes in the repository. Backing out (Reversing) a changeset can only be performed on “clean” repositories.", @"OK", nil, nil);
+		return NO;
+	}
+	
+	if (DisplayWarningForUpdatingFromDefaults())
+	{
+		NSString* mainMessage = fstr(@"Backout Changeset “%@”?", version);
+		NSString* subMessage  = fstr(@"Are you sure you want to backout (reverse) the changeset “%@” in the repository “%@”?",
+									 version, [self selectedRepositoryShortName]);
+
+		int result = RunCriticalAlertPanelOptionsWithSuppression(mainMessage, subMessage, @"Backout", @"Cancel", @"Options...", MHGDisplayWarningForBackout);
+		if (result == NSAlertThirdButtonReturn) // Options
+		{
+			[[self theBackoutSheetController] openBackoutSheetWithRevision:version];
+			return NO;
+		}
+		if (result != NSAlertFirstButtonReturn)
+			return NO;
+	}
+
+	
+	[self removeAllUndoActionsForDocument];
+	NSString* rootPath = [self absolutePathOfRepositoryRoot];
+	[self dispatchToMercurialQueuedWithDescription:@"Backout" process:^{
+		NSMutableArray* argsBackout = [NSMutableArray arrayWithObjects:@"backout", @"--rev", version, nil];
+
+		if (UseFileMergeForMergeFromDefaults())
+		{
+			[argsBackout addObject:@"--config" followedBy:@"merge-tools.filemerge.args= $local $other -ancestor $base -merge $output"];
+			[argsBackout addObject:@"--config" followedBy: fstr(@"merge-tools.filemerge.executable=%@/opendiff-w.sh",[[NSBundle mainBundle] resourcePath]) ];
+			[argsBackout addObject:@"--config" followedBy: @"merge-tools.priority=100"];	// Use FileMerge with a priority of 100. This should be more than the other tools.
+		}
+		
+		ExecutionResult* results = [self executeMercurialWithArgs:argsBackout  fromRoot:rootPath whileDelayingEvents:YES];
+
+		if (YES) // There is no DisplayResultsOfBackoutFromDefaults() since it's not that common...
+		{
+			NSString* messageString = fstr(@"Results of Backing out “%@” in “%@”",  version, [self selectedRepositoryShortName]);
+			NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
+			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"Backout Results - %@", [self selectedRepositoryShortName])];
+		}
+		
+		NSRunAlertPanel(@"Backed out Changeset",
+						fstr(@"The changeset “%@” has been backed out. You now need to examine the modified files, resolve any conflicts, and finally commit all the changes to complete the backout.", version), @"OK", nil, nil);
+		
 	}];
 	return YES;
 }
