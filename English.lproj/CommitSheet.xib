@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
-		<int key="IBDocument.SystemTarget">1050</int>
+		<int key="IBDocument.SystemTarget">1060</int>
 		<string key="IBDocument.SystemVersion">10C540</string>
 		<string key="IBDocument.InterfaceBuilderVersion">740</string>
 		<string key="IBDocument.AppKitVersion">1038.25</string>
@@ -31,7 +31,7 @@
 			<object class="NSWindowTemplate" id="983124931">
 				<int key="NSWindowStyleMask">15</int>
 				<int key="NSWindowBacking">2</int>
-				<string key="NSWindowRect">{{196, 88}, {667, 581}}</string>
+				<string key="NSWindowRect">{{196, 76}, {668, 593}}</string>
 				<int key="NSWTFlags">603979776</int>
 				<string key="NSWindowTitle">Window</string>
 				<string key="NSWindowClass">NSWindow</string>
@@ -69,7 +69,7 @@
 						<object class="NSTextField" id="456438832">
 							<reference key="NSNextResponder" ref="538557104"/>
 							<int key="NSvFlags">266</int>
-							<string key="NSFrame">{{17, 480}, {633, 14}}</string>
+							<string key="NSFrame">{{17, 492}, {633, 14}}</string>
 							<reference key="NSSuperview" ref="538557104"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSTextFieldCell" key="NSCell" id="700731072">
@@ -183,7 +183,7 @@
 									</object>
 								</object>
 							</array>
-							<string key="NSFrame">{{-1, 509}, {669, 73}}</string>
+							<string key="NSFrame">{{-1, 521}, {669, 73}}</string>
 							<reference key="NSSuperview" ref="538557104"/>
 							<object class="NSColor" key="BWGBFillStartingColor">
 								<int key="NSColorSpace">1</int>
@@ -430,7 +430,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 									<reference key="NSSuperview" ref="812115754"/>
 								</object>
 							</array>
-							<string key="NSFrame">{{17, 44}, {633, 79}}</string>
+							<string key="NSFrame">{{17, 56}, {633, 79}}</string>
 							<reference key="NSSuperview" ref="538557104"/>
 							<string key="NSOffsets">{0, 0}</string>
 							<object class="NSTextFieldCell" key="NSTitleCell">
@@ -453,7 +453,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<object class="NSButton" id="619938693">
 							<reference key="NSNextResponder" ref="538557104"/>
 							<int key="NSvFlags">292</int>
-							<string key="NSFrame">{{96, 128}, {105, 22}}</string>
+							<string key="NSFrame">{{96, 140}, {105, 22}}</string>
 							<reference key="NSSuperview" ref="538557104"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="473924445">
@@ -478,7 +478,7 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
 						<object class="NSButton" id="940943856">
 							<reference key="NSNextResponder" ref="538557104"/>
 							<int key="NSvFlags">292</int>
-							<string key="NSFrame">{{200, 132}, {13, 13}}</string>
+							<string key="NSFrame">{{200, 144}, {13, 13}}</string>
 							<reference key="NSSuperview" ref="538557104"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="NSButtonCell" key="NSCell" id="704958705">
@@ -518,7 +518,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 						<object class="BWUnanchoredButton" id="426437904">
 							<reference key="NSNextResponder" ref="538557104"/>
 							<int key="NSvFlags">292</int>
-							<string key="NSFrame">{{20, 128}, {23, 22}}</string>
+							<string key="NSFrame">{{20, 140}, {23, 22}}</string>
 							<reference key="NSSuperview" ref="538557104"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="BWUnanchoredButtonCell" key="NSCell" id="266083890">
@@ -1109,7 +1109,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 									<string key="NSClassName">NSView</string>
 								</object>
 							</array>
-							<string key="NSFrame">{{20, 157}, {627, 315}}</string>
+							<string key="NSFrame">{{20, 169}, {627, 315}}</string>
 							<reference key="NSSuperview" ref="538557104"/>
 							<reference key="BWSVColor" ref="153387129"/>
 							<bool key="BWSVColorIsEnabled">NO</bool>
@@ -1129,7 +1129,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 						<object class="BWUnanchoredButton" id="602005739">
 							<reference key="NSNextResponder" ref="538557104"/>
 							<int key="NSvFlags">292</int>
-							<string key="NSFrame">{{42, 128}, {23, 22}}</string>
+							<string key="NSFrame">{{42, 140}, {23, 22}}</string>
 							<reference key="NSSuperview" ref="538557104"/>
 							<bool key="NSEnabled">YES</bool>
 							<object class="BWUnanchoredButtonCell" key="NSCell" id="494163643">
@@ -1150,8 +1150,28 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 								<int key="NSPeriodicInterval">25</int>
 							</object>
 						</object>
+						<object class="NSButton" id="716921287">
+							<reference key="NSNextResponder" ref="538557104"/>
+							<int key="NSvFlags">292</int>
+							<string key="NSFrame">{{17, 16}, {25, 25}}</string>
+							<reference key="NSSuperview" ref="538557104"/>
+							<bool key="NSEnabled">YES</bool>
+							<object class="NSButtonCell" key="NSCell" id="712995367">
+								<int key="NSCellFlags">67239424</int>
+								<int key="NSCellFlags2">134217728</int>
+								<string key="NSContents"/>
+								<reference key="NSSupport" ref="612085715"/>
+								<reference key="NSControlView" ref="716921287"/>
+								<int key="NSButtonFlags">-2038415105</int>
+								<int key="NSButtonFlags2">161</int>
+								<string key="NSAlternateContents"/>
+								<string key="NSKeyEquivalent"/>
+								<int key="NSPeriodicDelay">200</int>
+								<int key="NSPeriodicInterval">25</int>
+							</object>
+						</object>
 					</array>
-					<string key="NSFrameSize">{667, 581}</string>
+					<string key="NSFrameSize">{668, 593}</string>
 					<reference key="NSSuperview"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
@@ -1634,6 +1654,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 							<reference ref="602005739"/>
 							<reference ref="619938693"/>
 							<reference ref="940943856"/>
+							<reference ref="716921287"/>
 						</array>
 						<reference key="parent" ref="983124931"/>
 					</object>
@@ -2098,6 +2119,19 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 						<reference key="object" ref="102905480"/>
 						<reference key="parent" ref="0"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">254</int>
+						<reference key="object" ref="716921287"/>
+						<array class="NSMutableArray" key="children">
+							<reference ref="712995367"/>
+						</array>
+						<reference key="parent" ref="538557104"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">255</int>
+						<reference key="object" ref="712995367"/>
+						<reference key="parent" ref="716921287"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -2170,9 +2204,26 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 				<string key="205.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="223.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="224.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="41.IBEditorWindowLastContentRect">{{915, 485}, {667, 581}}</string>
+				<string key="254.CustomClassName">HelpButton</string>
+				<object class="NSMutableDictionary" key="254.IBAttributePlaceholdersKey">
+					<string key="NS.key.0">IBUserDefinedRuntimeAttributesPlaceholderName</string>
+					<object class="IBUserDefinedRuntimeAttributesPlaceholder" key="NS.object.0">
+						<string key="name">IBUserDefinedRuntimeAttributesPlaceholderName</string>
+						<reference key="object" ref="716921287"/>
+						<array key="userDefinedRuntimeAttributes">
+							<object class="IBUserDefinedRuntimeAttribute">
+								<string key="typeIdentifier">com.apple.InterfaceBuilder.userDefinedRuntimeAttributeType.string</string>
+								<string key="keyPath">helpAnchorName</string>
+								<string key="value">ActionMenu_CommitSelectedFiles</string>
+							</object>
+						</array>
+					</object>
+				</object>
+				<string key="254.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="255.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="41.IBEditorWindowLastContentRect">{{728, 437}, {668, 593}}</string>
 				<string key="41.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="41.IBWindowTemplateEditedContentRect">{{915, 485}, {667, 581}}</string>
+				<string key="41.IBWindowTemplateEditedContentRect">{{728, 437}, {668, 593}}</string>
 				<boolean value="NO" key="41.NSWindowTemplate.visibleAtLaunch"/>
 				<boolean value="NO" key="41.windowTemplate.hasMaxSize"/>
 				<boolean value="YES" key="41.windowTemplate.hasMinSize"/>
@@ -2234,7 +2285,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">253</int>
+			<int key="maxID">255</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2311,6 +2362,14 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/UtilityClasses/DsiclosureBoxController/DisclosureBoxController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">HelpButton</string>
+					<string key="superclassName">NSButton</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">Classes/UtilityClasses/Help Button/HelpButton.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -3043,10 +3102,6 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 			</array>
 		</object>
 		<int key="IBDocument.localizationMode">0</int>
-		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencies">
-			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.macosx</string>
-			<integer value="1050" key="NS.object.0"/>
-		</object>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.macosx</string>
 			<integer value="1060" key="NS.object.0"/>
