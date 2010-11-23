@@ -205,13 +205,27 @@
 
 - (void) checkForIgnoreFile
 {
+	NSString* macHgHGRCFilePath = fstr(@"%@/hgrc",applicationSupportFolder());
 	NSString* userHgignorePath = [NSHomeDirectory() stringByAppendingPathComponent:@".hgignore"];
-	if (pathIsExistent(userHgignorePath))
-		return;
 
-	NSString* sourceMacHgHignorePath = fstr(@"%@/%@",[[NSBundle mainBundle] resourcePath], @"hgignore");
-	NSString* hgignoreContents = [NSString stringWithContentsOfFile:sourceMacHgHignorePath encoding:NSUTF8StringEncoding error:nil];
-	[hgignoreContents writeToFile:userHgignorePath atomically:YES encoding:NSUTF8StringEncoding error:nil];	
+	// If the ~/.hgignore exists then make sure ~/Application Support/MacHg/hgrc points to it
+	if (pathIsExistent(userHgignorePath))
+	{
+		NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"hgext.cedit=", @"--add", fstr(@"ui.ignore = %@", userHgignorePath), @"--file", macHgHGRCFilePath, nil];
+		[TaskExecutions executeMercurialWithArgs:argsCedit  fromRoot:@"/tmp"];
+		return;
+	}
+
+	NSString* macHgIgnoreFilePath = fstr(@"%@/hgignore",applicationSupportFolder());
+	if (!pathIsExistent(macHgIgnoreFilePath))
+	{
+		NSString* sourceMacHgHignorePath = fstr(@"%@/%@",[[NSBundle mainBundle] resourcePath], @"hgignore");
+		NSString* hgignoreContents = [NSString stringWithContentsOfFile:sourceMacHgHignorePath encoding:NSUTF8StringEncoding error:nil];
+		[hgignoreContents writeToFile:macHgIgnoreFilePath atomically:YES encoding:NSUTF8StringEncoding error:nil];	
+	}
+
+	NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"hgext.cedit=", @"--add", fstr(@"ui.ignore = %@", macHgIgnoreFilePath), @"--file", macHgHGRCFilePath, nil];
+	[TaskExecutions executeMercurialWithArgs:argsCedit  fromRoot:@"/tmp"];
 }
 
 
