@@ -7,7 +7,7 @@
 <meta name="hatver" content="v2 R6"/>
 <meta name="builddefid" content="4151"/>
 <meta name="topicid" content="26821"/>
-<meta name="Keywords" content="repository menu, clone, pull, push,outgoing, update,merge, collapse changesets, collapse, edit changesets, edit,strip changesets, strip, rebase changesets,rebase, changesets, manifest, add tag, tag, add branch,branch, add local repository, local repository, add server repository, server repository, repository group, remove repository, configure, reveal, open terminal"/>
+<meta name="Keywords" content="repository menu, clone, pull, push,outgoing, update,merge, collapse changesets, collapse, edit changesets, edit,strip changesets, strip, rebase changesets,rebase, backout, changesets, manifest, add tag, tag, add branch,branch, add local repository, local repository, add server repository, server repository, repository group, remove repository, configure, reveal, open terminal"/>
 <!-- do not translate -->
 <meta name="Keywords" content="MacHg, Mercurial, .hg"/>
 <!-- end do not translate -->
@@ -55,8 +55,8 @@
       <div class="two-col-description-header-left"> Menu Item </div>
       <div class="two-col-description-header-right"> Operation </div>
    </div>
-   <a name="clone" id="clone"></a>
-
+   
+   <a name="RepositoryMenu_clone"></a>
    <div class="two-col-description-item">
       <div class="two-col-description-item-left">
          <p>Clone...</p>
@@ -65,11 +65,12 @@
          <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#clone">clone</a></p>
          <p><strong>Available:</strong> in all views when a local or server repository is selected in the <a href="help:anchor=AboutRepositoryLists bookID=MacHg Help">sidebar.</a> (Also available from the toolbar.)</p>
          <p><strong>Operation:</strong> Performing this operation opens a clone sheet where you must specify a source repository to clone and a destination for the clone (duplicate) on your local file system. After filling out the fields on this sheet, the clone operation will make an exact duplicate of the selected repository and all its history at the location specified. In the advanced options section of the sheet you can specify further options which the Mercurial clone command can take. </p>
+         <p><strong>Help:</strong> <a href="help:anchor=CloningARepository bookID=MacHg Help">Cloning a Repository</a></p>         
          <p><strong>External Help:</strong> <a href="http://mercurial.selenic.com/wiki/Clone">clone wiki</a>, <a href="http://hgbook.red-bean.com/read/a-tour-of-mercurial-the-basics.html#id347526">MDG: Making a local copy of a repository</a></p>
       </div>
    </div>
-   <a name="pull" id="pull"></a>
-
+   
+   <a name="RepositoryMenu_pull"></a>
    <div class="two-col-description-item">
       <div class="two-col-description-item-left">
          <p>Pull from...</p>
@@ -78,11 +79,12 @@
          <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#pull">pull</a></p>
          <p><strong>Available:</strong> in all views when a local or server repository is selected in the <a href="help:anchor=AboutRepositoryLists bookID=MacHg Help">sidebar</a>. (Also available from the toolbar.)</p>
          <p><strong>Operation:</strong> Performing this operation opens a pull sheet. On the pull sheet the destination of the pull is the currently selected repository and you must select the source repository. The source repository is another compatible repository (or you can specify that you want to pull from incompatible repositories). Completing the pull operation will copy all the changesets that are in the source which are not in your local destination to your local destination repository. In the advanced options section of the sheet you can specify further options which the Mercurial pull command can take. </p>
+         <p><strong>Help:</strong> <a href="help:anchor=PullingChanges bookID=MacHg Help">Pulling Changes</a></p>
          <p><strong>External Help:</strong> <a href="http://mercurial.selenic.com/wiki/Pull">pull wiki</a>, <a href="http://hgbook.red-bean.com/read/a-tour-of-mercurial-the-basics.html#sec:tour:pull">MDG: Pulling changes from another repository</a></p>
       </div>
    </div>
-   <a name="push" id="push"></a>
-
+   
+   <a name="RepositoryMenu_push"></a>
    <div class="two-col-description-item">
       <div class="two-col-description-item-left">
          <p>Push to...</p>
@@ -91,11 +93,13 @@
          <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#push">push</a></p>
          <p><strong>Available:</strong> in all views when a local repository is selected in the <a href="help:anchor=AboutRepositoryLists bookID=MacHg Help">sidebar</a>. (Also available from the toolbar.) </p>
          <p><strong>Operation:</strong> Performing this operation opens a push sheet. On the push sheet the source of the push is the currently selected repository and you must select the destination repository. The destination is another compatible repository (or you can specify that you want to push to incompatible repositories). Completing the push operation will send all the changesets you have in your source which are not in the destination to the destination. In the advanced options section of the sheet you can specify further options which the Mercurial push command can take. </p>
-         <p><strong>External Help: <a href="http://mercurial.selenic.com/wiki/Push">push wiki</a>,</strong> <a href="http://hgbook.red-bean.com/read/a-tour-of-mercurial-the-basics.html#id348825">MDG: Pushing changes to another repository</a></p>
+         <p><strong>Help:</strong> <a href="help:anchor=PushingChanges bookID=MacHg Help">Pushing Changes</a></p>         
+         <p><strong>External Help:</strong> <a href="http://mercurial.selenic.com/wiki/Push">push wiki</a>, <a href="http://hgbook.red-bean.com/read/a-tour-of-mercurial-the-basics.html#id348825">MDG: Pushing changes to another repository</a></p>
       </div>
    </div>
-   <a name="incoming" id="incoming"></a>
-
+   
+   
+   <a name="RepositoryMenu_incoming"></a>
    <div class="two-col-description-item">
       <div class="two-col-description-item-left">
          <p>Incoming...</p>
@@ -107,8 +111,10 @@
          <p><strong>External Help:</strong> <a href="http://hgbook.red-bean.com/read/a-tour-of-mercurial-the-basics.html#sec:tour:pull">MDG: Pulling changes from another repository</a></p>
       </div>
    </div>
-   <a name="outgoing" id="outgoing"></a>
-
+ 
+ 
+ 
+   <a name="RepositoryMenu_outgoing"></a>
    <div class="two-col-description-item">
       <div class="two-col-description-item-left">
          <p>Outgoing...</p>
@@ -133,6 +139,8 @@
       <div class=" two-col-description-header-right"> Operation </div>
    </div>
 
+
+   <a name="RepositoryMenu_update"></a>
    <div class="two-col-description-item">
       <div class="two-col-description-item-left">
          <p>Update Repository</p>
@@ -140,7 +148,7 @@
       <div class="two-col-description-item-right">
          <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#update">update</a></p>
          <p><strong>Available: </strong>in the Browser and History views when a local repository is selected in the <a href="help:anchor=AboutRepositoryLists bookID=MacHg Help">sidebar</a>.</p>
-         <p><strong>Operation:</strong> Updates the working revision of the repository to the head of the current branch. The Repository menu item &quot;Update Repository &quot; acts differently from the Action menu item  &quot;Revert All Files&quot;. The latter only changes the contents of all the repository files whereas the former will change the contents of the repository files <strong>and</strong> change the working revision of the repository to the head of the current branch.</p>
+         <p><strong>Operation:</strong> Updates the working revision of the repository to the head of the current branch. The Repository menu item &quot;Update Repository&quot; acts differently from the Action menu item  &quot;Revert All Files&quot;. The latter only changes the contents of all the repository files whereas the former will change the contents of the repository files <strong>and</strong> change the working revision of the repository to the head of the current branch.</p>
          <p><strong>External Help:</strong> <a href="http://mercurial.selenic.com/wiki/Update">update wiki</a>, <a href="http://hgbook.red-bean.com/read/a-tour-of-mercurial-the-basics.html#id348343">MDG: Updating the working directory</a></p>
       </div>
    </div>
@@ -157,6 +165,8 @@
       </div>
    </div>
 
+
+   <a name="RepositoryMenu_merge"></a>
    <div class="two-col-description-item">
       <div class="two-col-description-item-left">
          <p>Merge</p>
@@ -165,6 +175,7 @@
          <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#merge">merge</a></p>
          <p><strong>Available: </strong>in the Browser and History views when a local repository with more than one branch is selected in the <a href="help:anchor=AboutRepositoryLists bookID=MacHg Help">sidebar</a>.</p>
          <p><strong>Operation:</strong> Performing this operation opens a merge sheet. After choosing a version to merge with, you can then merge the working revision of the repository with the specified revision.</p>
+         <p><strong>Help:</strong> <a href="help:anchor=MergingBranches bookID=MacHg Help">Merging Branches</a></p>
          <p><strong>External Help:</strong> <a href="http://mercurial.selenic.com/wiki/Merge">merge wiki</a>, <a href="http://hgbook.red-bean.com/read/a-tour-of-mercurial-merging-work.html">MDG: Merging work</a></p>
       </div>
    </div>
@@ -180,8 +191,8 @@
       <div class="two-col-description-header-left"> Menu Item </div>
       <div class=" two-col-description-header-right"> Operation </div>
    </div>
+ 
    <a name="RepositoryMenu_collapse"></a>
-
    <div class="two-col-description-item">
       <div class="two-col-description-item-left">
          <p>Collapse Changesets...</p>
@@ -193,8 +204,9 @@
          <p><strong>External Help:</strong> <a href="http://mercurial.selenic.com/wiki/EditingHistory">Editing Repository History</a></p>
       </div>
    </div>
-   <a name="RepositoryMenu_histedit"></a>
 
+
+   <a name="RepositoryMenu_histedit"></a>
    <div class="two-col-description-item">
       <div class="two-col-description-item-left">
          <p>Edit Changesets...</p>
@@ -206,8 +218,10 @@
          <p><strong>External Help:</strong> <a href="http://mercurial.selenic.com/wiki/EditingHistory">Editing Repository History</a></p>
       </div>
    </div>
-   <a name="RepositoryMenu_strip"></a>
 
+
+
+   <a name="RepositoryMenu_strip"></a>
    <div class="two-col-description-item">
       <div class="two-col-description-item-left">
          <p>Strip Changesets...</p>
@@ -219,8 +233,10 @@
          <p><strong>External Help:</strong> <a href="http://mercurial.selenic.com/wiki/EditingHistory">Editing Repository History</a></p>
       </div>
    </div>
-   <a name="RepositoryMenu_rebase"></a>
 
+
+
+   <a name="RepositoryMenu_rebase"></a>
    <div class="two-col-description-item">
       <div class="two-col-description-item-left">
          <p>Rebase Changesets...</p>
@@ -232,6 +248,22 @@
          <p><strong>External Help:</strong> <a href="http://mercurial.selenic.com/wiki/EditingHistory">Editing Repository History</a></p>
       </div>
    </div>
+
+
+
+   <a name="RepositoryMenu_backout"></a>
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>Backout Changeset...</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#backout">backout</a></p>
+         <p><strong>Available:</strong> in the History view when a local repository is selected in the <a href="help:anchor=AboutRepositoryLists bookID=MacHg Help">sidebar</a>.</p>
+         <p><strong>Operation:</strong> Performing this operation opens a backout sheet.  After choosing a revision to backout, the backout proceeds by applying the reverse of the changeset being backed out to the current parent revision. This has the effect of undoing the early changeset in the history.</p>
+         <p><strong>External Help:</strong> <a href="http://mercurial.selenic.com/wiki/Backout">Backout wiki</a></p>
+      </div>
+   </div>
+
 </div>
 
 <div class="clear-two-col-description"></div>
@@ -245,6 +277,8 @@
       <div class=" two-col-description-header-right"> Operation </div>
    </div>
 
+
+   <a name="RepositoryMenu_manifest"></a>
    <div class="two-col-description-item">
       <div class="two-col-description-item-left">
          <p>Manifest</p>
@@ -257,6 +291,8 @@
       </div>
    </div>
 
+
+   <a name="RepositoryMenu_label"></a>
    <div class="two-col-description-item">
       <div class="two-col-description-item-left">
          <p>Add Revision Label...</p>
@@ -280,7 +316,7 @@
       <div class="two-col-description-header-left"> Menu Item </div>
       <div class=" two-col-description-header-right"> Operation </div>
    </div>
-
+   <a name="RepositoryMenu_addlocalrepository"></a>
    <div class="two-col-description-item">
       <div class="two-col-description-item-left">
          <p>Add Local Repository...</p>
@@ -293,6 +329,7 @@
       </div>
    </div>
 
+   <a name="RepositoryMenu_addserverrepository"></a>
    <div class="two-col-description-item">
       <div class="two-col-description-item-left">
          <p>Add Server Repository</p>
@@ -305,6 +342,7 @@
       </div>
    </div>
 
+   <a name="RepositoryMenu_addrepositorygroup"></a>
    <div class="two-col-description-item">
       <div class="two-col-description-item-left">
          <p>Add New Repository Group</p>
@@ -317,6 +355,7 @@
       </div>
    </div>
 
+   <a name="RepositoryMenu_removerepositoryitem"></a>
    <div class="two-col-description-item">
       <div class="two-col-description-item-left">
          <p>Remove Repository Item</p>
@@ -325,10 +364,11 @@
          <p><strong>Mercurial command:</strong> -<a href="http://www.selenic.com/mercurial/hg.1.html#rollback"></a></p>
          <p><strong>Available: </strong>when a repository or a repository group is selected.</p>
          <p><strong>Operation:</strong> Removes the reference to the selected repository or <a href="help:anchor=EditingRepositoryHistory bookID=MacHg Help"></a>repository group. If you  select a local repository in the <a href="help:anchor=AboutRepositoryLists bookID=MacHg Help">sidebar</a>, then in addition to removing the reference to this repository, performing this operation allows you to choose to delete the underlying repository on your local machine as well.</p>
-         <p><strong>External Help:</strong> <a href="help:anchor=RemovingRepositoryItem bookID=MacHg Help">Removing a Repository Item</a><a href="http://hgbook.red-bean.com/read/finding-and-fixing-mistakes.html#id391000"></a></p>
+         <p><strong>Help:</strong> <a href="help:anchor=RemovingRepositoryItem bookID=MacHg Help">Removing a Repository Item</a></p>
       </div>
    </div>
 
+   <a name="RepositoryMenu_configurerepository"></a>
    <div class="two-col-description-item">
       <div class="two-col-description-item-left">
          <p>Configure Selected Repository...</p>
