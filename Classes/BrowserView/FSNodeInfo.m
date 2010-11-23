@@ -131,7 +131,7 @@
 - (FSNodeInfo*) initNewWithParent:(FSNodeInfo*)parent atRelativePath:(NSString*)path withParentBrowser:(FSBrowser*)browser
 {
 	relativePath = path;
-	absolutePath = [[NSString alloc] initWithFormat:@"%@/%@", [parent absolutePath], relativePath]; 	// Calculate the absolute path based on our parent
+	absolutePath = [[parent absolutePath] stringByAppendingPathComponent:relativePath];
 	childNodes = nil;
 	sortedChildNodeKeys = nil;
 	hgStatus = eHGStatusNoStatus;
