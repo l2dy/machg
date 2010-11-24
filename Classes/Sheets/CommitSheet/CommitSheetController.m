@@ -389,6 +389,25 @@ NSString* kAmendOption	 = @"amendOption";
 }
 
 
+- (NSArray*) includedPaths
+{
+	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+	NSMutableArray* includedPathItems = [NSMutableArray arrayWithArray:filesToCommitTableSourceData];
+	if (excludedItems)
+		[includedPathItems removeObjectsAtIndexes:excludedItems];
+
+	NSMutableArray* includedPaths = [[NSMutableArray alloc] init];
+	for (NSString* item in includedPathItems)
+	{
+		NSString* relativePath = [item substringFromIndex:2];
+		NSString* absolutePath = [rootPath stringByAppendingPathComponent:relativePath];
+		[includedPaths addObject:absolutePath];
+	};
+	return includedPaths;
+}
+
+
+
 - (NSString*) chosenFileToCommit
 {
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
@@ -499,14 +518,12 @@ NSString* kAmendOption	 = @"amendOption";
 
 		NSMutableArray* qrefreshArgs = [NSMutableArray arrayWithObjects:@"qrefresh", @"--short", nil];
 		if (IsNotEmpty(excludedPaths))
-			for (NSString* excludedPath in excludedPaths)
-				[qrefreshArgs addObject:@"--exclude" followedBy:excludedPath];
 		if ([self committerOption] && IsNotEmpty([self committer]))
 			[qrefreshArgs addObject:@"--user" followedBy:[self committer]];
 		if ([self dateOption] && IsNotEmpty([self date]))
 			[qrefreshArgs addObject:@"--date" followedBy:[[self date] isodateDescription]];
 		[qrefreshArgs addObject:@"--message" followedBy:[commitMessageTextView string]];
-		[qrefreshArgs addObjectsFromArray:pathsToCommit];
+		[qrefreshArgs addObjectsFromArray:[self includedPaths]];
 		ExecutionResult* qrefreshResult = [myDocument executeMercurialWithArgs:qrefreshArgs  fromRoot:rootPath  whileDelayingEvents:YES];
 		if ([qrefreshResult hasErrors])
 		{
