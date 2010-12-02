@@ -47,7 +47,7 @@
 
 // Initialization
 - (void)	  applicationDidFinishLaunching:(NSNotification*)aNotification;
-- (void)	  checkConfigFileForEditingExtensions:(BOOL)onStartup;
+- (void)	  checkConfigFileForExtensions:(BOOL)onStartup;
 
 
 // Preferences

@@ -265,7 +265,7 @@
 }
 
 
-- (void) checkConfigFileForEditingExtensions:(BOOL)onStartup;
+- (void) checkConfigFileForExtensions:(BOOL)onStartup;
 {
 	// We temporarily switch out ~/.hgrc from our HGRCPath
 	BOOL includeHomeHgrc  = IncludeHomeHgrcInHGRCPATHFromDefaults();
@@ -281,8 +281,9 @@
 	BOOL addExtRebase    = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.rebase\\s*="	options:RKLMultiline];
 	BOOL addExtHistEdit	 = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.histedit\\s*="  options:RKLMultiline];
 	BOOL addExtCollapse  = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.collapse\\s*="  options:RKLMultiline];
+	BOOL addExtCedit     = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.cedit\\s*="		options:RKLMultiline];
 
-	if (addExtDiff || addExtBookmarks || addExtMq || addExtRebase || addExtHistEdit || addExtCollapse)
+	if (addExtDiff || addExtBookmarks || addExtMq || addExtRebase || addExtHistEdit || addExtCollapse || addExtCedit)
 	{
 		NSFileManager* fileManager = [NSFileManager defaultManager];
 		NSString* macHgHGRCPath = fstr(@"%@/hgrc",applicationSupportFolder());
@@ -294,6 +295,7 @@
 		if (addExtRebase)		[fileManager appendString:@"hgext.rebase=\n"	toFilePath:macHgHGRCPath];
 		if (addExtHistEdit)		[fileManager appendString:@"hgext.histedit=\n"	toFilePath:macHgHGRCPath];
 		if (addExtCollapse)		[fileManager appendString:@"hgext.collapse=\n"	toFilePath:macHgHGRCPath];
+		if (addExtCedit)		[fileManager appendString:@"hgext.cedit=\n"	    toFilePath:macHgHGRCPath];
 	}
 
 	[[NSUserDefaults standardUserDefaults] setBool:includeHomeHgrc  forKey:MHGIncludeHomeHgrcInHGRCPATH];
@@ -358,9 +360,9 @@
 
 	[self checkForSupportDirectory];
 	[self checkForConfigFile];
+	[self checkConfigFileForExtensions:YES];
 	[self checkForIgnoreFile];
 	[self checkConfigFileForUserName];
-	[self checkConfigFileForEditingExtensions:YES];
 	[self checkForFileMerge];
 	[self checkForMercurialWarningsAndErrors];
 }
