@@ -112,27 +112,11 @@ class dirstate(object):
 
     @propertycache
     def _checklink(self):
-         d = os.path.join(self._root, '.hg', 'fschecks')
-         try:
-             if not os.path.isdir(d):
-                 os.mkdir(d)
-             return util.checklink(d)
-         except (IOError, OSError):
-             # we don't care, the user probably won't be able to commit
-             # anyway
-             return False
+        return util.checklink(self._root)
 
     @propertycache
     def _checkexec(self):
-         d = os.path.join(self._root, '.hg', 'fschecks')
-         try:
-             if not os.path.isdir(d):
-                 os.mkdir(d)
-             return util.checkexec(d)
-         except (IOError, OSError):
-             # we don't care, the user probably won't be able to commit
-             # anyway
-             return False
+        return util.checkexec(self._root)
 
     @propertycache
     def _checkcase(self):

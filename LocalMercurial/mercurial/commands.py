@@ -289,7 +289,7 @@ def backout(ui, repo, node=None, rev=None, **opts):
     if not commit_opts['message'] and not commit_opts['logfile']:
         # we don't translate commit messages
         commit_opts['message'] = "Backed out changeset %s" % short(node)
-        commit_opts['force_editor'] = (ui.config('ui', 'interactive') != 'off')
+        commit_opts['force_editor'] = True
     commit(ui, repo, **commit_opts)
     def nice(node):
         return '%d:%s' % (repo.changelog.rev(node), short(node))
@@ -3322,7 +3322,7 @@ def serve(ui, repo, **opts):
     """start stand-alone webserver
 
     Start a local HTTP repository browser and pull server. You can use
-    this for ad-hoc sharing and browing of repositories. It is
+    this for ad-hoc sharing and browsing of repositories. It is
     recommended to use a real web server to serve a repository for
     longer periods of time.
 
