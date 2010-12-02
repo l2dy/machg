@@ -17,7 +17,7 @@ hgext.mq =
 hgext.rebase =
 hgext.histedit =
 hgext.collapse =
-
+hgext.cedit =
 
 
 [extdiff]
