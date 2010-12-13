@@ -113,8 +113,8 @@
 - (IBAction) displayDiff:(id)sender
 {
 	MacHgDocument* document = [[backingLogEntry_ repositoryData] myDocument];
-	NSString* rev       = [backingLogEntry_ revision];
-	NSString* parentRev = [backingLogEntry_ firstParent];
+	NSNumber* rev       = [backingLogEntry_ revision];
+	NSNumber* parentRev = [backingLogEntry_ firstParent];
 	NSString* revisionNumbers = fstr(@"%@%:%@", parentRev, rev);
 
 	[document viewDifferencesInCurrentRevisionFor:[NSArray arrayWithObject:absoluteFileName_] toRevision:revisionNumbers];

@@ -234,7 +234,7 @@ NSString* kAmendOption	 = @"amendOption";
 		includeTooltipMessage = @"Cannot exclude files during a merge commit.";
 	else if (amendOption_)
 		includeTooltipMessage = @"Reinclude files for the amend.";	
-	[includePathsButton setToolTip:excludeTooltipMessage];	
+	[includePathsButton setToolTip:includeTooltipMessage];	
 }
 
 
@@ -503,7 +503,8 @@ NSString* kAmendOption	 = @"amendOption";
 			return;
 	}	
 	
-	NSMutableArray*  qimportArgs   = [NSMutableArray arrayWithObjects:@"qimport", @"--rev", [myDocument getHGParent1Revision], @"--name", @"macHgAmendPatch", nil];
+	NSString* parent1RevisionStr = numberAsString([myDocument getHGParent1Revision]);
+	NSMutableArray*  qimportArgs   = [NSMutableArray arrayWithObjects:@"qimport", @"--rev", parent1RevisionStr, @"--name", @"macHgAmendPatch", nil];
 	ExecutionResult* qimportResult = [myDocument executeMercurialWithArgs:qimportArgs  fromRoot:rootPath  whileDelayingEvents:YES];
 	if ([qimportResult hasErrors])
 	{

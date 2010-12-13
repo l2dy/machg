@@ -27,29 +27,28 @@ NSString* const kMacHgApp								= @"MacHgApp";
 
 
 // Notifications
-NSString* const kRepositoryRootChanged					= @"RepositoryRootChanged";
-NSString* const kRepositoryIdentityChanged				= @"RepositoryIdentityChanged";
-NSString* const kSidebarSelectionDidChange				= @"SidebarSelectionDidChange";
 NSString* const kBrowserDisplayPreferencesChanged		= @"BrowserDisplayPreferencesChanged";
-NSString* const kUnderlyingRepositoryChanged			= @"UnderlyingRepositoryChanged";
+NSString* const kCommandKeyIsDown						= @"CommandKeyIsDown"; 
+NSString* const kCommandKeyIsUp							= @"CommandKeyIsUp"; 
 NSString* const kCompatibleRepositoryChanged			= @"CompatibleRepositoryChanged";
-NSString* const kReceivedCompatibleRepositoryCount		= @"ReceivedCompatibleRepositoryCount";
-NSString* const kRepositoryDataDidChange				= @"RepositoryDataDidChange";
-NSString* const kRepositoryDataIsNew					= @"RepositoryDataIsNew";
 NSString* const kLogEntriesDidChange                    = @"LogEntriesDidChange";
 NSString* const kProcessAddedToProcessList				= @"ProcessAddedToProcessList";
 NSString* const kProcessRemovedFromProcessList			= @"ProcessRemovedFromProcessList";
-NSString* const kCommandKeyIsDown						= @"CommandKeyIsDown"; 
-NSString* const kCommandKeyIsUp							= @"CommandKeyIsUp"; 
+NSString* const kReceivedCompatibleRepositoryCount		= @"ReceivedCompatibleRepositoryCount";
+NSString* const kRepositoryDataDidChange				= @"RepositoryDataDidChange";
+NSString* const kRepositoryDataIsNew					= @"RepositoryDataIsNew";
+NSString* const kRepositoryIdentityChanged				= @"RepositoryIdentityChanged";
+NSString* const kRepositoryRootChanged					= @"RepositoryRootChanged";
+NSString* const kSidebarSelectionDidChange				= @"SidebarSelectionDidChange";
+NSString* const kUnderlyingRepositoryChanged			= @"UnderlyingRepositoryChanged";
 
 
 // Dictionary Keys
-NSString* const kLogEntryChangeType						= @"LogEntryChangeType"; 
-NSString* const kLogEntryTagsChanged					= @"LogEntryTagsChanged"; 
-NSString* const kLogEntryBranchesChanged				= @"LogEntryBranchesChanged"; 
-NSString* const kLogEntryBookmarksChanged				= @"LogEntryBookmarksChanged"; 
-NSString* const kLogEntryOpenHeadsChanged				= @"LogEntryOpenHeadsChanged"; 
-NSString* const kLogEntryDetailsChanged					= @"LogEntryDetailsChanged"; 
+NSString* const kRepositoryDataChangeType				= @"RepositoryDataChangeType";
+NSString* const kRepositoryBranchNameChanged			= @"RepositoryBranchNameChanged";
+NSString* const kRepositoryLabelsInfoChanged			= @"RepositoryLabelsInfoChanged";
+NSString* const kRepositoryParentsOfCurrentRevChanged	= @"RepositoryParentsOfCurrentRevChanged";
+NSString* const kRepositoryTipChanged					= @"RepositoryTipChanged";
 
 
 /* To regenerate start with a list of names and then search and replace on (\w+) -->
@@ -953,7 +952,6 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 @implementation NSString ( NSStringPlusComparisons )
 
 - (BOOL) isNotEqualToString:(NSString*)aString	{ return ![self isEqualToString:aString]; }
-- (BOOL) numericCompare:(NSString*)aString		{ return [self compare:aString options:NSNumericSearch]; }
 
 @end
 
@@ -1140,13 +1138,15 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 // MARK: -
 @implementation NSIndexSet ( NSIndexSetPlusAccessors )
-- (BOOL)	intersectsIndexes:(NSIndexSet*)indexSet
+- (BOOL) intersectsIndexes:(NSIndexSet*)indexSet
 {
 	NSMutableIndexSet* set = [[NSMutableIndexSet alloc]init];
 	[set addIndexes:self];
 	[set addIndexes:indexSet];
 	return [set count] < ([self count] + [indexSet count]);
 }
+
+- (BOOL) freeOfIndex:(NSInteger)index	{ return ![self containsIndex:index]; }
 @end
 
 
@@ -1181,6 +1181,33 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	return nil;	// Keep compiler happy
 }
 
+- (id) popFirst
+{
+	@try
+	{
+		id ans = [self firstObject];
+		if (ans)
+			[self removeFirstObject];
+		return ans;
+	}
+	@catch (NSException* ne) { return nil; }
+	return nil;	// Keep compiler happy
+}
+
+- (void) removeFirstObject	{ [self removeObjectAtIndex:0]; }
+
+- (void) reverse
+{
+    NSUInteger i = 0;
+    NSUInteger j = [self count] - 1;
+    while (i < j)
+	{
+        [self exchangeObjectAtIndex:i withObjectAtIndex:j];
+        i++;
+        j--;
+    }
+}
+
 @end
 
 
@@ -1197,7 +1224,17 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	return nil;	// Keep compiler happy
 }
 
+- (NSArray*) reversedArray
+{
+    NSMutableArray* array = [NSMutableArray arrayWithCapacity:[self count]];
+    NSEnumerator* enumerator = [self reverseObjectEnumerator];
+    for (id element in enumerator)
+        [array addObject:element];
+    return array;
+}
+
 @end
+
 
 
 
@@ -1207,8 +1244,8 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 - (id) synchronizedObjectForKey:(id)aKey			{ @synchronized(self) { return [self objectForKey:aKey]; }; /*keep gcc happy*/ return nil; }
 - (NSArray*) synchronizedAllKeys					{ @synchronized(self) { return [self allKeys]; }; /*keep gcc happy*/ return nil; }
 - (NSInteger) synchronizedCount						{ @synchronized(self) { return [self count]; }; /*keep gcc happy*/ return 0; }
-- (id) synchronizedValueForNumberKey:(NSNumber*)key	{ @synchronized(self) { return [self valueForKey:[key stringValue]]; }; /*keep gcc happy*/ return nil; }
-- (id) valueForNumberKey:(NSNumber*)key				{ return [self valueForKey:[key stringValue]]; }
+- (id) synchronizedObjectForIntKey:(NSInteger)key	{ @synchronized(self) { return [self objectForKey:intAsNumber(key)]; }; /*keep gcc happy*/ return nil; }
+- (id) objectForIntKey:(NSInteger)key				{ return [self objectForKey:intAsNumber(key)]; }
 @end
 
 
@@ -1216,9 +1253,9 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 @implementation NSMutableDictionary ( NSMutableDictionaryPlusAccessors )
 - (void) synchronizedSetObject:(id)anObject forKey:(id)aKey			{ @synchronized(self) { [self setObject:anObject forKey:aKey]; }; }
 - (void) synchronizedRemoveObjectForKey:(id)aKey					{ @synchronized(self) { [self removeObjectForKey:aKey]; }; }
-- (void) synchronizedSetValue:(id)value forNumberKey:(NSNumber*)key	{ @synchronized(self) { [self setValue:value forKey:[key stringValue]]; }; }
-- (void) setValue:(id)value forNumberKey:(NSNumber*)key				{ [self setValue:value forKey:[key stringValue]]; }
 - (void) copyValueOfKey:(id)aKey from:(NSDictionary*)aDict			{ id val = [aDict objectForKey:aKey]; if (val) [self setObject:val forKey:aKey]; }
+- (void) synchronizedSetObject:(id)value forIntKey:(NSInteger)key	{ @synchronized(self) { [self setObject:value forKey:intAsNumber(key)]; }; }
+- (void) setObject:(id)value forIntKey:(NSInteger)key				{ [self setObject:value forKey:intAsNumber(key)]; }
 @end
 
 

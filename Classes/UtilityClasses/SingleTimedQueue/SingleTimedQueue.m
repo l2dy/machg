@@ -29,8 +29,13 @@
 - (void) executeTheBlock:(NSTimer*)theTimer
 {
 	//DebugLog(@"firing single timed queue %@", descriptiveQueueName_);
-	dispatch_async(dispatchQueue_, block_);
+	
+	// We refernce the block_ here with a local variable so there are no synchronization issues of the block_ being set to nil
+	// and then the dispatch_async firing with a nil block which causes a lock.
+	BlockProcess theBlock = block_;
 	block_ = nil;
+	if (theBlock)
+		dispatch_async(dispatchQueue_, theBlock);
 }
 
 - (NSInteger) addBlockOperation:(BlockProcess)block	{ return [self addBlockOperation:block withDelay:delay_]; }

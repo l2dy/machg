@@ -64,12 +64,12 @@
 // MARK: validateButtons
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (NSIndexSet*) indexSetForStartingRevision:(NSString*)rev
+- (NSIndexSet*) indexSetForStartingRevision:(NSNumber*)rev
 {
-	NSSet* descendants = [[myDocument repositoryData] descendantsOfRev:stringAsNumber(rev)];
+	NSSet* descendants = [[myDocument repositoryData] descendantsOfRevisionNumber:rev];
 	NSMutableIndexSet* newIndexes = [[NSMutableIndexSet alloc]init];
 	for (NSNumber* revNum in descendants)
-		[newIndexes addIndex:[logTableView tableRowForRevision:numberAsString(revNum)]];
+		[newIndexes addIndex:[logTableView tableRowForRevision:revNum]];
 	return newIndexes;
 }
 
@@ -126,13 +126,13 @@
 		[logTableView scrollToRevision:[myDocument getHGTipRevision]];
 	else
 	{
-		NSInteger minRev = stringAsInt([revs objectAtIndex:0]);
-		for (NSString* stringRev in revs)
+		NSInteger minRev = numberAsInt([revs objectAtIndex:0]);
+		for (NSNumber* revision in revs)
 		{
-			NSInteger revInt = stringAsInt(stringRev);
+			NSInteger revInt = numberAsInt(revision);
 			minRev = MIN(revInt, minRev);
 		}
-		NSIndexSet* newIndexes = [self indexSetForStartingRevision:intAsString(minRev)];
+		NSIndexSet* newIndexes = [self indexSetForStartingRevision:intAsNumber(minRev)];
 		[logTableView selectAndScrollToIndexSet:newIndexes];
 	}
 	
@@ -191,7 +191,7 @@
 {
 	return proposedSelectionIndexes;
 	if (![logTableView rowWasClicked])
-		return [self indexSetForStartingRevision:[logTableView revisionForTableRow:[proposedSelectionIndexes firstIndex]]];
+		return [self indexSetForStartingRevision:stringAsNumber([logTableView revisionForTableRow:[proposedSelectionIndexes firstIndex]])];
 	return [self indexSetForStartingRevision:[logTableView chosenRevision]];
 }
 

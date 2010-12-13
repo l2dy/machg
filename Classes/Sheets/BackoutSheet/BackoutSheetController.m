@@ -70,7 +70,7 @@
 }
 
 
-- (void) openBackoutSheetWithRevision:(NSString*)revision
+- (void) openBackoutSheetWithRevision:(NSNumber*)revision
 {
 	NSString* newTitle = fstr(@"Backout Selected Changeset in %@", [myDocument selectedRepositoryShortName]);
 	[backoutSheetTitle setStringValue:newTitle];
@@ -94,7 +94,7 @@
 
 - (IBAction) sheetButtonOk:(id)sender
 {
-	NSString* versionToBackoutTo = [logTableView selectedRevision];
+	NSNumber* versionToBackoutTo = [logTableView selectedRevision];
 	BOOL didReversion = [myDocument primaryActionBackoutFilesToVersion:versionToBackoutTo];
 	if (!didReversion)
 		return;
@@ -113,8 +113,8 @@
 - (IBAction) sheetButtonViewDifferencesForBackoutSheet:(id)sender
 {
 	NSArray* rootPathAsArray = [myDocument absolutePathOfRepositoryRootAsArray];
-	NSString* versionToBackoutTo = [logTableView selectedRevision];
-	[myDocument viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:versionToBackoutTo];
+	NSNumber* versionToBackoutTo = [logTableView selectedRevision];
+	[myDocument viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:numberAsString(versionToBackoutTo)];
 }
 
 
@@ -155,11 +155,11 @@
 	}
 		
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"The changeset ")];
-	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString([logTableView selectedRevision])];
+	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(numberAsString([logTableView selectedRevision]))];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" will be backed out (reversed).")];
 		
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" The backout will be transplanted directly on top of the current parent ")];
-	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString([myDocument getHGParent1Revision])];
+	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(numberAsString([myDocument getHGParent1Revision]))];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@".")];
 
 	return newSheetMessage;

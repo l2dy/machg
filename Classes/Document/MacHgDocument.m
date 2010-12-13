@@ -199,7 +199,6 @@
 - (void) awakeFromNib
 {
 	[self observe:kRepositoryRootChanged		from:self  byCalling:@selector(repositoryRootDidChange)];
-	[self observe:kUnderlyingRepositoryChanged	from:self  byCalling:@selector(underlyingRepositoryDidChange)];
 	[self observe:NSWindowDidMoveNotification	from:mainWindow_  byCalling:@selector(recordWindowFrameToDefaults)];
 	[self observe:NSWindowDidResizeNotification	from:mainWindow_  byCalling:@selector(recordWindowFrameToDefaults)];
 	//[self observe:nil from:self byCalling:@selector(LogNotification:)];
@@ -1186,12 +1185,12 @@
 // MARK: Version Information
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+- (NSNumber*) getHGParent1Revision		{ return [[self repositoryData] getHGParent1Revision]; }
+- (NSNumber*) getHGParent2Revision		{ return [[self repositoryData] getHGParent2Revision]; }
+- (NSString*) getHGParent1Changeset		{ return [[self repositoryData] getHGParent1Changeset]; }
+- (NSString*) getHGParent2Changeset		{ return [[self repositoryData] getHGParent2Changeset]; }
+- (NSNumber*) getHGTipRevision			{ return [[self repositoryData] getHGTipRevision]; }
 - (NSString*) getHGTipChangeset			{ return [[self repositoryData] getHGTipChangeset]; }
-- (NSString*) getHGParentsChangeset		{ return [[self repositoryData] getHGParentsChangeset]; }
-- (NSString*) getHGParentsChangesets	{ return [[self repositoryData] getHGParentsChangesets]; }
-- (NSString*) getHGTipRevision			{ return [[self repositoryData] getHGTipRevision]; }
-- (NSString*) getHGParent1Revision		{ return [[self repositoryData] getHGParent1Revision]; }
-- (NSString*) getHGParentsRevisions		{ return [[self repositoryData] getHGParentsRevisions]; }
 - (BOOL)      isCurrentRevisionTip		{ return [[self repositoryData] isCurrentRevisionTip]; }
 - (BOOL)	  inMergeState				{ return [[self repositoryData] inMergeState]; }
 - (NSInteger) computeNumberOfRevisions	{ return [[self repositoryData] computeNumberOfRevisions]; }
@@ -1379,12 +1378,6 @@
 }
 
 
-- (void) underlyingRepositoryDidChange
-{
-	[self initializeRepositoryData];
-}
-
-
 - (IBAction) searchFieldChanged:(id)sender
 {
 	if ([self showingHistoryView])
@@ -1553,7 +1546,7 @@
 // MARK: All Files Menu Actions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (IBAction) mainMenuUpdateRepository:(id)sender				{ [self primaryActionUpdateFilesToVersion:@"tip" withCleanOption:NO]; }
+- (IBAction) mainMenuUpdateRepository:(id)sender				{ [self primaryActionUpdateFilesToVersion:[self getHGTipRevision] withCleanOption:NO]; }
 - (IBAction) mainMenuUpdateRepositoryToVersion:(id)sender		{ [[self theUpdateSheetController] openUpdateSheetWithCurrentRevision:sender]; }
 - (IBAction) toolbarUpdate:(id)sender							{ [[self theUpdateSheetController] openUpdateSheetWithCurrentRevision:sender]; }
 
@@ -1735,7 +1728,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 // MARK: Primary Actions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BOOL) primaryActionRevertFiles:(NSArray*)absolutePaths toVersion:(NSString*)version
+- (BOOL) primaryActionRevertFiles:(NSArray*)absolutePaths toVersion:(NSNumber*)version
 {
 	NSArray* filteredPaths = version ? absolutePaths : [self filterPaths:absolutePaths byBitfield:eHGStatusChangedInSomeWay];
 	
@@ -1770,8 +1763,9 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 		NSMutableArray* argsRevert = [NSMutableArray arrayWithObjects:@"revert", nil];
 		if (version)
 		{
+			NSString* versionStr = numberAsString(version);
 			[argsRevert addObject:@"--rev"];
-			[argsRevert addObject:version];
+			[argsRevert addObject:versionStr];
 		}
 		[argsRevert addObjectsFromArray:filteredPaths];
 		NSArray* theParentPaths = parentPaths(filteredPaths,rootPath);
@@ -1860,7 +1854,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 }
 
 
-- (BOOL) primaryActionUpdateFilesToVersion:(NSString*)version withCleanOption:(BOOL)clean
+- (BOOL) primaryActionUpdateFilesToVersion:(NSNumber*)version withCleanOption:(BOOL)clean
 {
 	BOOL containsChangedFiles = [self repositoryHasFilesWhichContainStatus:eHGStatusCommittable];
 	if (DisplayWarningForUpdatingFromDefaults() || [self repositoryHasFilesWhichContainStatus:eHGStatusCommittable])
@@ -1892,8 +1886,9 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 	
 	[self removeAllUndoActionsForDocument];
 	NSString* rootPath = [self absolutePathOfRepositoryRoot];
+	NSString* versionStr = numberAsString(version);
 	[self dispatchToMercurialQueuedWithDescription:@"Updating Files" process:^{
-		NSMutableArray* argsUpdate = [NSMutableArray arrayWithObjects:@"update", @"--rev", version, nil];
+		NSMutableArray* argsUpdate = [NSMutableArray arrayWithObjects:@"update", @"--rev", versionStr, nil];
 		if (clean)
 			[argsUpdate addObject:@"--clean"];
 
@@ -1909,7 +1904,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 	return YES;
 }
 
-- (BOOL) primaryActionBackoutFilesToVersion:(NSString*)version
+- (BOOL) primaryActionBackoutFilesToVersion:(NSNumber*)version
 {
 	BOOL containsChangedFiles = [self repositoryHasFilesWhichContainStatus:eHGStatusCommittable];
 	if (containsChangedFiles)
@@ -1937,8 +1932,9 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 	
 	[self removeAllUndoActionsForDocument];
 	NSString* rootPath = [self absolutePathOfRepositoryRoot];
+	NSString* versionStr = numberAsString(version);
 	[self dispatchToMercurialQueuedWithDescription:@"Backout" process:^{
-		NSMutableArray* argsBackout = [NSMutableArray arrayWithObjects:@"backout", @"--rev", version, nil];
+		NSMutableArray* argsBackout = [NSMutableArray arrayWithObjects:@"backout", @"--rev", versionStr, nil];
 
 		if (UseFileMergeForMergeFromDefaults())
 		{
@@ -1964,7 +1960,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 }
 
 
-- (BOOL) primaryActionMergeWithVersion:(NSString*)mergeVersion andOptions:(NSArray*)options withConfirmation:(BOOL)confirm
+- (BOOL) primaryActionMergeWithVersion:(NSNumber*)mergeVersion andOptions:(NSArray*)options withConfirmation:(BOOL)confirm
 {
 	if (confirm && DisplayWarningForMergingFromDefaults())
 	{
@@ -1989,7 +1985,8 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 	NSArray* rootPathAsArray = [self absolutePathOfRepositoryRootAsArray];
 	[self registerPendingRefresh:rootPathAsArray];
 
-	NSMutableArray* argsMerge = [NSMutableArray arrayWithObjects:@"merge", @"--rev", mergeVersion, nil];
+	NSString* mergeVersionStr = numberAsString(mergeVersion);
+	NSMutableArray* argsMerge = [NSMutableArray arrayWithObjects:@"merge", @"--rev", mergeVersionStr, nil];
 	[argsMerge addObjectsFromArray:options];
 
 	if (UseFileMergeForMergeFromDefaults())
@@ -2041,11 +2038,12 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 	{
 		NSString* what = ([absolutePaths count] == 1) ? [[absolutePaths lastObject] lastPathComponent] : @"the selected files";
 		NSString* mainMessage = fstr(@"Remerging %@", what);
-		NSString* subMessage  = fstr( @"Are you sure you want to throw away any changes you have made to %@ and remerge versions %@ in the repository “%@”?",
-								 what,
-								 [self getHGParentsRevisions],
-								 [self selectedRepositoryShortName]);
-
+		NSString* subMessage  = fstr( @"Are you sure you want to throw away any changes you have made to %@ and remerge versions %@ and %@ in the repository “%@”?",
+									 what,
+									 [self getHGParent1Revision],
+									 [self getHGParent2Revision],
+									 [self selectedRepositoryShortName]);
+		
 		int result = RunCriticalAlertPanelWithSuppression(mainMessage, subMessage, @"Remerge", @"Cancel", MHGDisplayWarningForMerging);
 		if (result != NSAlertFirstButtonReturn)
 			return NO;
@@ -2094,12 +2092,13 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 }
 
 
-- (void) primaryActionDisplayManifestForVersion:(NSString*)version
+- (void) primaryActionDisplayManifestForVersion:(NSNumber*)version
 {
 	NSString* rootPath = [self absolutePathOfRepositoryRoot];
 	NSString* thisRepositoryName = [self selectedRepositoryShortName];
+	NSString* versionStr = numberAsString(version);
 	[self dispatchToMercurialQueuedWithDescription:@"Generating Manifest" process:^{
-		NSMutableArray* argsManifest = [NSMutableArray arrayWithObjects:@"manifest", @"--rev", version, nil];
+		NSMutableArray* argsManifest = [NSMutableArray arrayWithObjects:@"manifest", @"--rev", versionStr, nil];
 		ExecutionResult* results = [self executeMercurialWithArgs:argsManifest  fromRoot:rootPath  whileDelayingEvents:YES];
 		NSString* messageString = fstr(@"Manifest of “%@” revision “%@”", thisRepositoryName, version);
 		NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
@@ -2108,7 +2107,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 }
 
 
-- (void) primaryActionAnnotateSelectedFiles:(NSArray*)absolutePaths withRevision:(NSString*)version andOptions:(NSArray*)options
+- (void) primaryActionAnnotateSelectedFiles:(NSArray*)absolutePaths withRevision:(NSNumber*)version andOptions:(NSArray*)options
 {
 	NSString* rootPath = [self absolutePathOfRepositoryRoot];
 	NSArray* filteredPaths = [self filterPaths:absolutePaths byBitfield:eHGStatusInRepository];
@@ -2123,11 +2122,12 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 			return;
 	}
 
+	NSString* versionStr = numberAsString(version);
 	[self dispatchToMercurialQueuedWithDescription:@"Generating Annotations" process:^{
 		DispatchGroup group = dispatch_group_create();
 		for (NSString* file in filteredPaths)
 			dispatch_group_async(group, globalQueue(), ^{
-				NSMutableArray* argsAnnotate = [NSMutableArray arrayWithObjects:@"annotate", @"--rev", version, nil];
+				NSMutableArray* argsAnnotate = [NSMutableArray arrayWithObjects:@"annotate", @"--rev", versionStr, nil];
 				[argsAnnotate addObjectsFromArray:options];
 				[argsAnnotate addObject:file];
 				ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsAnnotate  fromRoot:rootPath];

@@ -47,10 +47,10 @@
 	queueForAutomaticOutgoingComputation_ = [SingleTimedQueue SingleTimedQueueExecutingOn:globalQueue() withTimeDelay:2.0 descriptiveName:@"queueForAutomaticOutgoingComputation"];	// Our auto computations start after 2.0 seconds
 
 	root_ = [SidebarNode sectionNodeWithCaption:kSidebarRootInitializationDummy];
-	[self observe:kUnderlyingRepositoryChanged		 from:myDocument  byCalling:@selector(underlyingRepositoryDidChange)];
-	[self observe:kCompatibleRepositoryChanged		 from:myDocument  byCalling:@selector(computeIncomingOutgoingToCompatibleRepositories)];
-	[self observe:kReceivedCompatibleRepositoryCount from:myDocument  byCalling:@selector(reloadData)];
-	[self observe:kLogEntriesDidChange				 from:myDocument  byCalling:@selector(logEntriesDidChange:)];
+	[self observe:kUnderlyingRepositoryChanged				from:myDocument  byCalling:@selector(underlyingRepositoryDidChange)];
+	[self observe:kCompatibleRepositoryChanged				from:myDocument  byCalling:@selector(computeIncomingOutgoingToCompatibleRepositories)];
+	[self observe:kReceivedCompatibleRepositoryCount		from:myDocument  byCalling:@selector(reloadData)];
+	[self observe:kRepositoryDataDidChange					from:myDocument  byCalling:@selector(repositoryDataDidChange:)];
 
 	// Scroll to the top in case the outline contents is very long
 	[[[self enclosingScrollView] verticalScroller] setFloatValue:0.0];
@@ -103,15 +103,12 @@
 
 - (void) underlyingRepositoryDidChange
 {
-	[self updateInformationTextView];
 	[self computeIncomingOutgoingToCompatibleRepositories];
 }
 
-- (void) logEntriesDidChange:(NSNotification*)notification
+- (void) repositoryDataDidChange:(NSNotification*)notification
 {
-	NSString* changeType = [[notification userInfo] objectForKey:kLogEntryChangeType];
-	if ([changeType isEqualTo:kLogEntryTagsChanged] || [changeType isEqualTo:kLogEntryBranchesChanged] || [changeType isEqualTo:kLogEntryBookmarksChanged] || [changeType isEqualTo:kLogEntryOpenHeadsChanged])
-		[self updateInformationTextView];
+	[self updateInformationTextView];
 }
 
 
@@ -520,11 +517,12 @@
 	if ([node isExistentLocalRepositoryRef])
 	{
 		RepositoryData* repositoryData = [myDocument repositoryData];
-		NSString* parentRevisions = [repositoryData getHGParentsRevisions];
-		NSString* parentRevision  = [repositoryData getHGParent1Revision];
-		if (!parentRevisions || !parentRevision)
+		NSNumber* parentRevision  = [repositoryData getHGParent1Revision];
+		if (!parentRevision)
 			return attrString;
-		LogEntry* parentEntry = [repositoryData entryForRevisionString: [repositoryData getHGParent1Revision]];
+		NSString* parentRevisionStr = numberAsString(parentRevision);
+		NSString* parentRevisions = [repositoryData inMergeState] ? fstr(@"%@, %@", parentRevision, [repositoryData getHGParent2Revision]) : parentRevisionStr;
+		LogEntry* parentEntry = [repositoryData entryForRevision: parentRevision];
 		NSArray*  tags        = [parentEntry tags];
 		NSArray*  bookmarks   = [parentEntry bookmarks];
 		NSString* branch      = [repositoryData getHGBranchName];

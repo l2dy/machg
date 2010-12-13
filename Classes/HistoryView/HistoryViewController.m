@@ -188,26 +188,26 @@
 - (IBAction) historyMenuDiffAllToChosenRevision:(id)sender
 {
 	NSArray* rootPathAsArray = [NSArray arrayWithObject:[myDocument absolutePathOfRepositoryRoot]];
-	NSString* theSelectedRevision = [[logTableView chosenEntry] revision];
-	[myDocument viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:theSelectedRevision];
+	NSNumber* theSelectedRevision = [[logTableView chosenEntry] revision];
+	[myDocument viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:numberAsString(theSelectedRevision)];
 }
 
 
 - (IBAction) historyMenuUpdateRepositoryToChosenRevision:(id)sender
 {
-	NSString* theSelectedRevision = [[logTableView chosenEntry] revision];
+	NSNumber* theSelectedRevision = [[logTableView chosenEntry] revision];
 	[myDocument primaryActionUpdateFilesToVersion:theSelectedRevision withCleanOption:NO];
 }
 
 - (IBAction) historyMenuMergeRevision:(id)sender
 {
-	NSString* theSelectedRevision = [[logTableView chosenEntry] revision];
+	NSNumber* theSelectedRevision = [[logTableView chosenEntry] revision];
 	[myDocument primaryActionMergeWithVersion:theSelectedRevision andOptions:nil withConfirmation:YES];
 }
 
 - (IBAction) historyMenuManifestOfChosenRevision:(id)sender
 {
-	NSString* theSelectedRevision = [[logTableView chosenEntry] revision];
+	NSNumber* theSelectedRevision = [[logTableView chosenEntry] revision];
 	[myDocument primaryActionDisplayManifestForVersion:theSelectedRevision];
 }
 
@@ -278,7 +278,7 @@
 		return;
 	}
 	
-	NSString* rev    = [label revision];
+	NSNumber* rev    = [label revision];
 	NSString* name   = [label name];
 	
 	
@@ -321,7 +321,7 @@
 		case eInactiveBranch:
 		case eClosedBranch:
 		{
-			BOOL needToUpdateToNewRevision = (![[[myDocument repositoryData] getHGParent] isEqualToString:rev]);
+			BOOL needToUpdateToNewRevision = (![[[myDocument repositoryData] getHGParent1Revision] isEqualToNumber:rev]);
 			
 			if (DisplayWarningForTagRemovalFromDefaults())
 			{
@@ -335,7 +335,7 @@
 				if (result != NSAlertFirstButtonReturn)
 					return;
 			}
-			if (![[[myDocument repositoryData] getHGParent] isEqualToString:rev])
+			if (![[[myDocument repositoryData] getHGParent1Revision] isEqualToNumber:rev])
 			{
 				BOOL didUpdateToReversion = [myDocument primaryActionUpdateFilesToVersion:rev withCleanOption:NO];
 				if (!didUpdateToReversion)

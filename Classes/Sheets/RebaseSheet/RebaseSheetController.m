@@ -67,12 +67,12 @@
 // MARK: validateButtons
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (NSIndexSet*) indexSetForStartingRevision:(NSString*)rev
+- (NSIndexSet*) indexSetForStartingRevision:(NSNumber*)rev
 {
-	NSSet* descendants = [[myDocument repositoryData] descendantsOfRev:stringAsNumber(rev)];
+	NSSet* descendants = [[myDocument repositoryData] descendantsOfRevisionNumber:rev];
 	NSMutableIndexSet* newIndexes = [[NSMutableIndexSet alloc]init];
 	for (NSNumber* revNum in descendants)
-		[newIndexes addIndex:[sourceLogTableView tableRowForRevision:numberAsString(revNum)]];
+		[newIndexes addIndex:[sourceLogTableView tableRowForRevision:revNum]];
 	return newIndexes;
 }
 
@@ -176,13 +176,13 @@
 		[sourceLogTableView scrollToRevision:[myDocument getHGTipRevision]];
 	else
 	{
-		NSInteger minRev = stringAsInt([revs objectAtIndex:0]);
-		for (NSString* stringRev in revs)
+		NSInteger minRev = numberAsInt([revs objectAtIndex:0]);
+		for (NSNumber* revision in revs)
 		{
-			NSInteger revInt = stringAsInt(stringRev);
+			NSInteger revInt = numberAsInt(revision);
 			minRev = MIN(revInt, minRev);
 		}
-		NSIndexSet* newIndexes = [self indexSetForStartingRevision:intAsString(minRev)];
+		NSIndexSet* newIndexes = [self indexSetForStartingRevision:intAsNumber(minRev)];
 		[sourceLogTableView selectAndScrollToIndexSet:newIndexes];
 	}
 
@@ -216,7 +216,7 @@
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	NSString* repositoryName = [[[myDocument sidebar] selectedNode] shortName];
 	LowHighPair pair = [sourceLogTableView lowestToHighestSelectedRevisions];
-	NSString* destinationRev = [destinationLogTableView selectedRevision];
+	NSNumber* destinationRev = [destinationLogTableView selectedRevision];
 	NSString* rebaseDescription = fstr(@"rebasing %d-%d in “%@”", pair.lowRevision, pair.highRevision, repositoryName);
 	NSMutableArray* argsRebase = [NSMutableArray arrayWithObjects:@"rebase", nil];
 	
@@ -224,7 +224,7 @@
 																		// in the extensions folder of the included Mercurial
 	[argsRebase addObject:@"--detach"];
 	[argsRebase addObject:@"--source" followedBy:intAsString(pair.lowRevision)];
-	[argsRebase addObject:@"--dest" followedBy:destinationRev];
+	[argsRebase addObject:@"--dest" followedBy:numberAsString(destinationRev)];
 	if ([self keepOriginalRevisions])
 		[argsRebase addObject:@"--keep"];
 	if ([self keepOriginalBranchNames])
@@ -305,13 +305,13 @@
 {
 	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
 	LowHighPair sourcePair = [sourceLogTableView lowestToHighestSelectedRevisions];
-	NSString* destinationRev = [destinationLogTableView selectedRevision];
+	NSNumber* destinationRev = [destinationLogTableView selectedRevision];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"The selected revisions within ")];
 	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(intAsString(sourcePair.lowRevision))];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" through to ")];
 	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(intAsString(sourcePair.highRevision))];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" will be rebased onto the revision ")];
-	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(destinationRev)];
+	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(numberAsString(destinationRev))];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@". This rebase operation is destructive; it rewrites history. Therefore you should never rebase any revisions that have already been pushed to other repositories, unless you really know what you are doing.")];
 	return newSheetMessage;
 }

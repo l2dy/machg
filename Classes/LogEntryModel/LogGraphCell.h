@@ -16,13 +16,11 @@
 	LogEntry*		entry_;				// The entry backing this cell
 	LogTableView*	logTableView;		// This is the table view containing this cell.
 	NSTableColumn*	logTableColumn_;	// This is the table column of the LogTableView containing this LogGraphCell.
-	NSInteger		theColumn;			// The column number of the node in the graph.
 }
 
 @property (readwrite,assign) LogEntry*			entry;
 @property (readwrite,assign) LogTableView*		logTableView;
 @property (readwrite,assign) NSTableColumn*		logTableColumn;
-@property (readwrite,assign) NSInteger			theColumn;
 
 - (void)	drawWithFrame:(NSRect)cellFrame inView:(NSView*)controlView;
 - (void)	drawGraphDot:(NSPoint) dotCenter;

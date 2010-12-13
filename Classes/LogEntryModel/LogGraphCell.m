@@ -21,7 +21,6 @@
 @synthesize entry = entry_;
 @synthesize logTableView;
 @synthesize logTableColumn = logTableColumn_;
-@synthesize theColumn;
 
 
 - (id) copyWithZone:(NSZone*)zone
@@ -35,7 +34,7 @@
 
 - (CGFloat) columnSpacingWithinFrame:(NSRect)bounds
 {
-	LogGraph* theLogGraph = [logTableView theLogGraph];
+	LogGraph* theLogGraph = [[logTableView repositoryData] logGraph];
 	if (!theLogGraph)
 		return 0;
 	return bounds.size.width/ ([theLogGraph maxColumn] + 2);
@@ -52,11 +51,11 @@
 	return bounds.size.height;
 }
 
-- (CGFloat) yCoordOfRevision:(NSNumber*)rev withinFrame:(NSRect)bounds
+- (CGFloat) yCoordOfRevision:(NSInteger)rev withinFrame:(NSRect)bounds
 {
 	CGFloat rowHeight = bounds.size.height;
 	int thisRow   = [logTableView tableRowForRevision:[entry_ revision]];
-	int targetRow = [logTableView tableRowForRevision:numberAsString(rev)];
+	int targetRow = [logTableView tableRowForRevision:intAsNumber(rev)];
 	return floor(NSMidY(bounds) + ([[self controlView] isFlipped] ? 1 : -1) * (targetRow - thisRow) * rowHeight);
 }
 
@@ -165,7 +164,8 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 
 - (void) drawWithFrame:(NSRect)cellFrame inView:(NSView*)controlView
 {
-	LogGraph* theLogGraph = [logTableView theLogGraph];
+	
+	LogGraph* theLogGraph = [[logTableView repositoryData] logGraph];
 	if (!theLogGraph)
 		return;
 		
@@ -179,15 +179,19 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 	NSRectClip(cellBounds);
 	[[NSColor greenColor] set];
 	
-	NSArray* lines = [[theLogGraph lineSegments] objectForKey:[entry_ revision]];
+	NSNumber* revision    = [entry_ revision];
+	NSInteger revisionInt = numberAsInt(revision);
+	NSInteger theColumnOfRev = NSNotFound;
+	NSArray* lines = [[theLogGraph revisionNumberToLineSegments] objectForKey:revision];
 	BOOL hasIncompleteRevision = [[logTableView repositoryData] includeIncompleteRevision];
 	NSInteger incompleteRevisionInt = [[logTableView repositoryData] computeNumberOfRevisions];
+
 	for (LineSegment* line in lines)
 	{
 		NSBezierPath* thePath = [NSBezierPath bezierPath];
-		int startColInt = numberAsInt([line highCol]);
-		int stopColInt  = numberAsInt([line lowCol]);
-		int drawColInt = numberAsInt([line drawCol]);
+		int startColInt = [line highCol];
+		int stopColInt  = [line lowCol];
+		int drawColInt = [line drawCol];
 		CGFloat startx = round([self xCoordOfColumn:startColInt withinFrame:cellBounds]);
 		CGFloat stopx  = round([self xCoordOfColumn:stopColInt  withinFrame:cellBounds]);
 		CGFloat drawx  = round([self xCoordOfColumn:drawColInt  withinFrame:cellBounds]);
@@ -207,7 +211,7 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 		hue = hue - floor(hue);
 		[[NSColor colorWithDeviceHue:hue saturation:1.0 brightness:0.6 alpha:1.0] set];
 		
-		if (hasIncompleteRevision && incompleteRevisionInt == numberAsInt([line highRev]))
+		if (hasIncompleteRevision && incompleteRevisionInt == [line highRev])
 		{
 			CGFloat lineDash[2];
 			lineDash[0] = 4.0;
@@ -218,12 +222,18 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 
 		[thePath setLineWidth:1.5];
 		[thePath stroke];
+		
+		if ([line highRev] == revisionInt)
+			theColumnOfRev = startColInt;
+		else if ([line lowRev] == revisionInt)
+			theColumnOfRev = stopColInt;
 	}
 	[NSGraphicsContext restoreGraphicsState];
 
 
 	// Draw dot in center of graph line
-	[self drawGraphDot:NSMakePoint([self xCoordOfColumn:theColumn withinFrame:cellBounds], NSMidY(cellBounds))];
+	if (theColumnOfRev != NSNotFound)
+		[self drawGraphDot:NSMakePoint([self xCoordOfColumn:theColumnOfRev withinFrame:cellBounds], NSMidY(cellBounds))];
 }
 
 

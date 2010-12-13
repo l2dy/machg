@@ -12,6 +12,7 @@
 #import "PreferenceController.h"
 #import "InitializationWizardController.h"
 #import "LogEntry.h"
+#import "LogRecord.h"
 #import "RadialGradiantBox.h"
 
 @implementation AppController
@@ -33,7 +34,8 @@
 	YESasNumber = [NSNumber numberWithBool:YES];
 	SlotNumber  = [NSNumber numberWithInteger:(NSNotFound -1)];
 
-	setupGlobalsForPartsAndTemplate();
+	setupGlobalsForLogEntryPartsAndTemplate();
+	setupGlobalsForLogRecordPartsAndTemplate();
 	
 	// Cache the two attribute cases for the sidebar fonts to help improve speed. This will be called a lot, and helps improve performance.
 	//NSFontManager* fontManager = [NSFontManager sharedFontManager];
@@ -85,6 +87,9 @@
 	computingRepositoryIdentityForPath_ = [[NSMutableDictionary alloc]init];
 	dirtyRepositoryIdentityForPath_     = [[NSMutableDictionary alloc]init];
 	urlUsesPassword_					= [[NSMutableSet alloc]init];
+
+	// Initlize globals
+	changesetHashToLogRecord			= [[NSMutableDictionary alloc]init];
 	return self;
 }
 
@@ -594,14 +599,14 @@
 				[self postNotificationWithName:kRepositoryIdentityChanged userInfo:info];
 			}
 			[dirtyRepositoryIdentityForPath_ synchronizedRemoveObjectForKey:path];
-			DebugLog(@"Root changeset of %@ is %@ on attempt %d", path, changesetIdentity, attempts);
+			//DebugLog(@"Root changeset of %@ is %@ on attempt %d", path, changesetIdentity, attempts);
 			return;
 		}
 
-		if ([theTask isRunning])
-			DebugLog(@"Determining root changeset for the repository at %@ timed out after %f seconds on attempt %d", path, timeOutInSeconds, attempts);
-		else
-			DebugLog(@"Unable to determine root changeset for the repository at %@ on attempt %d", path, attempts);
+		//if ([theTask isRunning])
+		//	DebugLog(@"Determining root changeset for the repository at %@ timed out after %f seconds on attempt %d", path, timeOutInSeconds, attempts);
+		//else
+		//	DebugLog(@"Unable to determine root changeset for the repository at %@ on attempt %d", path, attempts);
 		
 		[theTask cancelTask];
 	});

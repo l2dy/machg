@@ -13,6 +13,10 @@
 #import "RepositoryData.h"
 
 
+const NSInteger revNotInitilized = -2;
+const NSInteger maxRevDistance = 72;
+
+
 
 
 
@@ -29,17 +33,34 @@
 @synthesize highCol;
 @synthesize drawCol;
 
-- (LineSegment*) initWithLowRev:(NSNumber*)lowR  lowColumn:(NSNumber*)lowC	highRev:(NSNumber*)highR  highColumn:(NSNumber*)highC  drawColumn:(NSNumber*)drawC
++ (LineSegment*) withLowRev:(NSInteger)l  highRev:(NSInteger)h
 {
-	lowRev  = lowR;
-	highRev = highR;
-	lowCol  = lowC;
-	highCol = highC;
-	drawCol = drawC;
-	return self;
+	LineSegment* segment = [[LineSegment alloc] init];
+	[segment setLowRev:l];
+	[segment setHighRev:h];
+	[segment setLowCol:NSNotFound];
+	[segment setHighCol:NSNotFound];
+	[segment setDrawCol:NSNotFound];
+	return segment;
 }
 
-- (NSString*) description { return fstr(@"Line from (%@,%@) to (%@,%@)",lowRev,lowCol,highRev,highCol); }
++ (LineSegment*) withLowRev:(NSInteger)l  highRev:(NSInteger)h  lowColumn:(NSInteger)lCol  highColumn:(NSInteger)hCol  drawColumn:(NSInteger)dCol
+{
+	LineSegment* segment = [[LineSegment alloc] init];
+	[segment setLowRev:l];
+	[segment setHighRev:h];
+	[segment setLowCol:lCol];
+	[segment setHighCol:hCol];
+	[segment setDrawCol:dCol];
+	return segment;
+}
+
+- (BOOL) highColKnown	{ return highCol != NSNotFound; }
+- (BOOL) lowColKnown	{ return lowCol  != NSNotFound; }
+- (BOOL) drawColKnown	{ return drawCol != NSNotFound; }
+
+
+- (NSString*) description { return fstr(@"Line from (%d,%d) to (%d,%d) drawn in col %d", lowRev, lowCol, highRev, highCol, drawCol); }
 
 @end
 
@@ -52,323 +73,444 @@
 // MARK: LogGraph
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-inline static NSString* revPair(NSNumber* low, NSNumber* high) { return fstr(@"%@:%@",low,high); }
+@interface LogGraph (PrivateAPI)
+- (void)	  removeLineFor:(NSInteger)l andHigh:(NSInteger)h;
+- (BOOL)	  fillOutLine:(LineSegment*)line suggestedColumnPlacement:(NSInteger)suggestedCol;
+- (void)      addLineSegment:(LineSegment*)line;
+- (NSMutableIndexSet*) findDrawColumnForLow:(NSInteger)l andHigh:(NSInteger)h;
+@end
+
 
 @implementation LogGraph
 
 @synthesize maxColumn;
-@synthesize lineSegments;
+@synthesize revisionNumberToLineSegments = revisionNumberToLineSegments_;
 
 
-- (void) resetCaches
+- (LogGraph*) initWithRepositoryData:(RepositoryData*)collection;
 {
-	lowRevision  = -1;
-	highRevision = -1;
-	columnOfRevision =		[[NSMutableDictionary alloc] init];
-	drawColumnOfRevision =	[[NSMutableDictionary alloc] init];
-	lineSegments =			[[NSMutableDictionary alloc] init];
-}
-
-- (LogGraph*) initWithRepositoryData:(RepositoryData*)collection andOldCollection:(RepositoryData*)oldCollection;
-{
-	[self resetCaches];
 	repositoryData = collection;
-	oldRepositoryData = oldCollection;
-	MacHgDocument* myDocument = [repositoryData myDocument];
-	[self observe:kLogEntriesDidChange	from:myDocument  byCalling:@selector(logEntriesDidChange)];
+	revisionNumberToLineSegments_ = [[NSMutableDictionary alloc] init];
+	maxColumn = 0;
 	return self;
 }
 
-- (void) logEntriesDidChange				{ [self resetCaches]; }
 
 
-- (NSArray*) replaceNodeByParentsOfNodeInColumns:(NSNumber*)node andConnections:(NSArray*)connections
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Index Utilities
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+static NSInteger firstFreeIndex(NSIndexSet* indexes)
 {
-	// Fall back to the old log entry collection if the new log collection does not yet have parents filled out.
-	NSArray* theParents = [repositoryData parentsOfRev:node];
-	if (!theParents && ![repositoryData entryIsLoadedForRevisionNumber:node])
-		theParents = [oldRepositoryData parentsOfRev:node];
+	NSInteger i = 0;
+	while ([indexes containsIndex:i])
+		i++;
+	return i;
+}
 
-	NSMutableArray* newParents = [NSMutableArray arrayWithArray:theParents];
-	NSMutableArray* newConnections = [NSMutableArray arrayWithArray:connections];
-	int len = [newConnections count];
+static NSInteger firstFreeIndex2(NSIndexSet* indexes1, NSIndexSet* indexes2)
+{
+	NSInteger i = 0;
+	while ([indexes1 containsIndex:i] || [indexes2 containsIndex:i])
+		i++;
+	return i;
+}
 
+static NSInteger firstFreeIndex3(NSIndexSet* indexes1, NSIndexSet* indexes2, NSIndexSet* indexes3)
+{
+	NSInteger i = 0;
+	while ([indexes1 containsIndex:i] || [indexes2 containsIndex:i] || [indexes3 containsIndex:i])
+		i++;
+	return i;
+}
 
-	// First off if we are merging two columns into their destination node we replace the node which is not the column for the node
-	// with a slot. slot, ie if we have something like [connectionsForNode: 8 , {3 , 6, 8, 2, 8, 1} ] and we know the column for 8
-	// is the 3rd column, then our new configuration would become {3, 6, 8, 2, Slot, 1} since the 8 in the second to last column
-	// would be merged with the one in the third column. Then we put in the parent for 8 in the third column and other parents in
-	// other columns,
+static NSInteger closestFreeIndex(NSIndexSet* indexes, NSInteger desiredIndex)
+{
+	NSInteger i = 0;
+	while ([indexes containsIndex:ABS(desiredIndex - i)] && [indexes containsIndex:desiredIndex + i])
+		i++;
+	if (![indexes containsIndex:ABS(desiredIndex - i)])
+		return ABS(desiredIndex - i);
+	return desiredIndex + i;
+}
 
-	int i;
-	BOOL found = NO;
-	NSInteger foundColumn = NSNotFound;
-	for (i = 0; i < len; i++)
-	{
-		NSNumber* connectioni = [newConnections objectAtIndex:i];
-		if ([connectioni isEqualToNumber:node])
-		{
-			if (!found)
-			{
-				found = YES;
-				foundColumn = i;
-				[columnOfRevision setValue:intAsNumber(i) forNumberKey:node];
-			}
-			else
-			{
-				[newConnections replaceObjectAtIndex:i withObject:SlotNumber];
-			}
-		}
-	}
-
-	// If we can't find the node in the connections we have a new head. Add it to the connections and try again.
-	if (!found)
-	{
-		// If we find an empty slot stick the new head there or if not stick it at the end of the connections.
-		NSInteger index = [newConnections indexOfObject:SlotNumber];
-		if (index != NSNotFound)
-		{
-			maxColumn = MAX(maxColumn,index);
-			[newConnections replaceObjectAtIndex:index withObject:node];
-		}
-		else
-		{
-			maxColumn = MAX(maxColumn,len);
-			[newConnections addObject:node];
-		}
-		return [self replaceNodeByParentsOfNodeInColumns:node andConnections:newConnections];
-	}
-
-
-	// replace this node with its first parent
-	if (IsEmpty(newParents))
-		[newConnections replaceObjectAtIndex:foundColumn withObject:SlotNumber];
-	else
-	{
-		NSNumber* firstParent = [newParents objectAtIndex:0];
-		[newConnections replaceObjectAtIndex:foundColumn withObject:firstParent];
-		[drawColumnOfRevision setValue:intAsNumber(foundColumn) forKey:revPair(firstParent, node)];
-		[newParents removeObjectAtIndex:0];
-	}
-	
-	// eliminate any other parents that are already connected setting their drawColumns
-	NSArray* newParentsCopy = [NSArray arrayWithArray:newParents];
-	for (NSNumber* parent in newParentsCopy)
-	{
-		NSInteger index = [newConnections indexOfObject:parent];
-		if (index != NSNotFound)
-		{
-			[drawColumnOfRevision setValue:intAsNumber(index) forKey:revPair(parent, node)];
-			[newParents removeObject:parent];
-		}
-	}
-
-	// Replace other slots with any parents that remain until we run out of parents
-	for (i = 0; (i < len) && ([newParents count] > 0); i++)
-	{
-		NSNumber* connectioni = [newConnections objectAtIndex:i];
-		if ([connectioni isEqualToNumber:SlotNumber])
-		{
-			NSNumber* nextParent = [newParents objectAtIndex:0];
-			[newConnections replaceObjectAtIndex:i withObject:nextParent];
-			[newParents removeObjectAtIndex:0];
-			[drawColumnOfRevision setValue:intAsNumber(i) forKey:revPair(nextParent, node)];
-			maxColumn = MAX(maxColumn,i);
-		}
-	}
-
-	// any remaining parents go on the end of the connections
-	if (IsNotEmpty(newParents))
-	{
-		i = len;
-		for (NSNumber* p in newParents)
-		{
-			[newConnections addObject:p];
-			[drawColumnOfRevision setValue:intAsNumber(i) forKey:revPair(p, node)];
-			maxColumn = MAX(maxColumn,i);
-			i++;
-		}
-			
-	}
-	
-	// trim any slots off the end if they are there
-	while ([[newConnections lastObject] isEqualToNumber:SlotNumber])
-		[newConnections removeLastObject];
-
-	// If we have any children outside our range we need to make a line to those children in a new final column.
-	NSArray* childrenNodes = [repositoryData childrenOfRev:node];
-	for (NSNumber* childNode in childrenNodes)
-		if (numberAsInt(childNode) > highRevision)
-			[drawColumnOfRevision setValue:intAsNumber(++maxColumn) forKey:revPair(node,childNode)];
-
-	return newConnections;
+static NSInteger closestFreeIndex2(NSIndexSet* indexes1, NSIndexSet* indexes2, NSInteger desiredIndex)
+{
+	NSInteger i = 0;
+	while (
+		   ([indexes1 containsIndex:ABS(desiredIndex - i)] || [indexes2 containsIndex:ABS(desiredIndex - i)]) &&
+		   ([indexes1 containsIndex:ABS(desiredIndex + i)] || [indexes2 containsIndex:ABS(desiredIndex + i)]))
+		i++;
+	if (![indexes1 containsIndex:ABS(desiredIndex - i)] && ![indexes2 containsIndex:ABS(desiredIndex - i)])
+		return ABS(desiredIndex - i);
+	return desiredIndex + i;
 }
 
 
-- (NSArray*) computeColumnOfNodeAndColumnConnections:(NSNumber*)node andConnections:(NSArray*)connections
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  LineSegement Utilities
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (LineSegment*) findSegmentFromLow:(NSInteger)l toHigh:(NSInteger)h
 {
-	return [self replaceNodeByParentsOfNodeInColumns:node andConnections:connections];
+	NSArray* lines = [revisionNumberToLineSegments_ objectForKey:intAsNumber(l)];
+	for (LineSegment* line in lines)
+		if ([line lowRev] == l && [line highRev] == h)
+			return line;
+	return nil;
 }
 
-
-- (void) addLineSegment:(LineSegment*)line atNode:(NSNumber*)node
+- (NSInteger) columnForRevisionInt:(NSInteger)revisionInt
 {
-	NSMutableArray* lines = [lineSegments valueForNumberKey:node];
+	NSArray* lines = [revisionNumberToLineSegments_ objectForKey:intAsNumber(revisionInt)];
 	if (!lines)
+		return NSNotFound;
+	for (LineSegment* line in lines)
 	{
-		lines = [[NSMutableArray alloc] init];
-		[lineSegments setValue:lines forNumberKey:node];
+		if ([line lowRev] == revisionInt)
+			return [line lowCol];
+		if ([line highRev] == revisionInt)
+			return [line highCol];
 	}
-	[lines addObject:line];
+	return NSNotFound;
 }
 
+- (BOOL) revisionHasKnownColumn:(NSInteger)revisionInt { return [self columnForRevisionInt:revisionInt] != NSNotFound; }
 
-- (void) AddLineSegmentsToChildren:(NSNumber*)node
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Add and Remove Entries
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (void) addEntries:(NSArray*)entries
 {
-	const int nodeInt    = numberAsInt(node);
-	NSNumber* theNodeCol = [columnOfRevision valueForNumberKey:node];
 
+	//
+	// Make sure we are working with entries high to low
+	//
+	NSSortDescriptor* byRev = [NSSortDescriptor sortDescriptorWithKey:@"revision" ascending:NO  selector:@selector(compare:)];
+	NSArray* descriptors    = [NSArray arrayWithObject:byRev];
+	NSArray* sortedEntries  = [entries sortedArrayUsingDescriptors:descriptors];
 	
-	// Fall back to the old log entry collection if the new log collection does not yet have parents or children filled out.
-	NSArray* childrenNodes = [repositoryData childrenOfRev:node];
-	if (!childrenNodes && ![repositoryData entryIsLoadedForRevisionNumber:node])
-		childrenNodes = [oldRepositoryData childrenOfRev:node];
-	NSArray* parentNodes = [repositoryData parentsOfRev:node];
-	if (!parentNodes && ![repositoryData entryIsLoadedForRevisionNumber:node])
-		parentNodes = [oldRepositoryData parentsOfRev:node];
 	
-	for (NSNumber* childNode in childrenNodes)
+	//
+	// Initially compute the newLineSegments
+	//
+	NSMutableArray* newLineSegments = [[NSMutableArray alloc]init];	
+	for (LogEntry* entry in sortedEntries)
 	{
-		int childInt = numberAsInt(childNode);
-		NSString* thePair = revPair(node,childNode);
-		NSNumber* theDrawCol  = [drawColumnOfRevision objectForKey:thePair];
-		NSNumber* theChildCol = [columnOfRevision valueForNumberKey:childNode];
-		theChildCol = theChildCol ? theChildCol : theDrawCol;
-		LineSegment* line = [[LineSegment alloc]  initWithLowRev:node  lowColumn:theNodeCol  highRev:childNode  highColumn:theChildCol  drawColumn:theDrawCol];
-
-		for (int i = nodeInt; i <= childInt && i <= highRevision; i++)
-			[self addLineSegment:line atNode:intAsNumber(i)];
+		NSInteger h = [entry revisionInt];
+		for (NSNumber* parent in [entry parentsArray])
+		{
+			LineSegment* line = [LineSegment withLowRev:numberAsInt(parent) highRev:h];
+			[newLineSegments addObject:line];
+		}
 	}
 
-	// For the parents outside our range at least just include a line extending up into the past. (The lines from node <->
-	// (parents within our range) are included by the adding of line segments to the parent.
-	for (NSNumber* parentNode in parentNodes)
+	@synchronized(revisionNumberToLineSegments_)
 	{
-		if (numberAsInt(parentNode) < lowRevision)
+		while (IsNotEmpty(newLineSegments))
 		{
-			NSString* thePair = revPair(parentNode,node);
-			NSNumber* theDrawCol  = [drawColumnOfRevision objectForKey:thePair];
-			LineSegment* line = [[LineSegment alloc]  initWithLowRev:parentNode  lowColumn:theDrawCol  highRev:node  highColumn:theNodeCol  drawColumn:theDrawCol];
-			for (int i = nodeInt; i >= lowRevision; i--)
-				[self addLineSegment:line atNode:intAsNumber(i)];
+			//
+			// Loop over all the lines finding all possible descending chains
+			//
+			NSMutableArray* firstChain = [NSMutableArray arrayWithObject:[newLineSegments firstObject]];
+			NSMutableArray* chains = [NSMutableArray arrayWithObject:firstChain];
+			for (LineSegment* line in newLineSegments)
+			{
+				if (![line highColKnown])
+					[line setHighCol:[self columnForRevisionInt:[line highRev]]];	// Likely its just setting the highCol to NSNotFound if it wasn't
+																					// found before
+				for (NSMutableArray* chain in chains)
+					if ([[chain lastObject] lowRev] == [line highRev])
+						[chain addObject:line];
+				if ([line highColKnown])
+					[chains addObject:[NSMutableArray arrayWithObject:line]];
+			}
+			
+			//
+			// Find the best chain amongst all possible chains
+			//
+			NSMutableArray* bestChain = firstChain;
+			BOOL bestChainStartKnown = [[bestChain firstObject] highColKnown];
+			for (NSMutableArray* chain in chains)
+			{
+				BOOL chainStartKnown = [[chain firstObject] highColKnown];
+				if ( chainStartKnown && (!bestChainStartKnown || [chain count] <= [bestChain count]) )
+				{
+					bestChain = chain;
+					bestChainStartKnown = chainStartKnown;
+				}
+			}
+			
+			
+			//
+			// Find the draw column for the chain
+			//
+			NSMutableIndexSet* usedDrawColumns = [self findDrawColumnForLow:[[bestChain lastObject] lowRev] andHigh:[[bestChain firstObject] highRev]];			
+			NSInteger drawColumnForChain;
+			if ([[bestChain firstObject] highColKnown])
+				drawColumnForChain = closestFreeIndex(usedDrawColumns, [[bestChain firstObject] highCol]);
+			else if ([[bestChain lastObject] lowColKnown])
+				drawColumnForChain = closestFreeIndex(usedDrawColumns, [[bestChain lastObject] lowCol]);
+			else
+				drawColumnForChain = firstFreeIndex(usedDrawColumns);
+
+			
+			//
+			// add the lines in the chain
+			//
+			for (LineSegment* line in bestChain)
+			{
+				BOOL filledOut = [self fillOutLine:line suggestedColumnPlacement:drawColumnForChain];
+				if (filledOut)
+					[self addLineSegment:line];
+				[newLineSegments removeObject:line];
+			}
 		}
 	}
 
 }
 
-- (BOOL) limitsDiffer:(LowHighPair)limits		{ return (lowRevision != limits.lowRevision || highRevision != limits.highRevision); }
 
-- (void) computeColumnsOfRevisionsForLimits:(LowHighPair)limits
+- (void) removeEntries:(NSArray*)entries
 {
-	NSArray* connections = [[NSArray alloc] init];
-	columnOfRevision	 = [[NSMutableDictionary alloc] init];
-	drawColumnOfRevision = [[NSMutableDictionary alloc] init];
-	lineSegments		 = [[NSMutableDictionary alloc] init];
-	lowRevision  = limits.lowRevision;
-	highRevision = limits.highRevision;
-
-	maxColumn = 0;
-
-	for (int rev = highRevision; rev >= lowRevision; rev--)
-	{
-		connections = [self computeColumnOfNodeAndColumnConnections:intAsNumber(rev) andConnections:connections];
-		//NSMutableString* str = [NSMutableString stringWithFormat:@"connections for %@ : ", intAsNumber(rev)];
-		//for (NSNumber* c in connections)
-		//	[str appendFormat:@"%@ ", c];
-		//[str appendFormat:@"  maxc:%d ", maxColumn];
-		//DebugLog(@"%@", str);
+	@synchronized(revisionNumberToLineSegments_)
+	{		
+		for (LogEntry* entry in entries)
+			for (NSNumber* theParent in [entry parentsArray])
+				[self removeLineFor:numberAsInt(theParent) andHigh:[entry revisionInt]];
 	}
-	for (int rev = highRevision; rev >= lowRevision; rev--)
-		[self AddLineSegmentsToChildren:intAsNumber(rev)];
-	//DebugLog(@"maxColumn: %d", maxColumn);
 }
 
 
-- (int)	columnOfRevision:(NSNumber*)rev
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Add and Remove Lines
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (void) removeLineFor:(NSInteger)l andHigh:(NSInteger)h
 {
-	return numberAsInt([columnOfRevision valueForNumberKey:rev]);
+	LineSegment* theLine = [self findSegmentFromLow:l toHigh:h];
+	
+	if (!theLine)
+	{
+		//	DebugLog(@"line not found matching %d to %d", l, h);
+		return;
+	}
+	
+	DebugLog(@"removing :%@",theLine);
+	
+	for (NSInteger rev = l; rev <= h; rev++)
+	{
+		NSMutableArray* lines = [revisionNumberToLineSegments_ objectForKey:intAsNumber(rev)];
+		[lines removeObject:theLine];
+	}	
 }
 
 
-// This is now somewhat outdated but it's where I played with the first versions of the algorithm to layout the various nodes and their connections.
-/*
+- (void) addLineSegment:(LineSegment*)line
+{
+	DebugLog(@"adding :%@", line);
+	NSInteger r;
+	NSInteger maxCol = maxColumn;
+	maxCol = MAX(maxCol, [line highCol]);
+	maxCol = MAX(maxCol, [line lowCol]);
+	maxCol = MAX(maxCol, [line drawCol]);
+	maxColumn = maxCol;
+	
+	for (r = [line lowRev]; r <= [line highRev]; r++)
+	{
+		NSNumber* revision = intAsNumber(r);
+		NSMutableArray* lines = [revisionNumberToLineSegments_ objectForKey:revision];
+		if (!lines)
+			[revisionNumberToLineSegments_ setObject:[NSMutableArray arrayWithObject:line] forKey:revision];
+		else
+			[lines addObject:line];
+	}		
+}
 
-In[766]:= ReplaceToParents[node_, parents_, connections_] :=
- 
- Block[{i, alreadyFound = False, newConnections = connections,
-   newParents = parents, len = Length @ connections},
-  
-  (* Merge the nodes *)
-  For[i = 1, i <= len, i++,
-   If[newConnections[[i]] == node,
-    If[alreadyFound == True,
-     newConnections[[i]] = Slott,
-     alreadyFound = True]]];
-  
-  (* replace first node with its parent *)
-  
-  For[i = 1, newParents != {} && i <= len, i++,
-   If[newConnections[[i]] == node,
-    newConnections[[i]] = First @ newParents; newParents = Rest@newParents;
-    Break[]]];
-  
-  (* replace the next slott if available with the next parent *)
-  
-  For[i = 1, newParents != {} && i <= len, i++,
-   If[newConnections[[i]] == Slott,
-    newConnections[[i]] = First @ newParents; newParents = Rest@newParents]];
-  
-  TrimTrailing @ Join[newConnections, newParents]
-  ]
-  */
-/*
-In[767]:= connect[node_, connections : {l___, node_, r___}] :=
- (col@node = Length@{l};
-  AppendTo[lineSegments, { {col@node, node}, {col@#, #} }] & /@ child@node;
-  ReplaceToParents[node, par@node, connections])
 
-In[768]:= connect[node_, connections : {l___, Slott, r___}] :=
- (col@node = Length@{l};
-  AppendTo[lineSegments, { {col@node, node}, {col@#, #} }] & /@ child@node;
-  ReplaceToParents[node, par@node, connections])
+- (NSMutableIndexSet*) findDrawColumnForLow:(NSInteger)l  andHigh:(NSInteger)h
+{
 
-In[769]:= connect[node_, connections : {l___}] :=
- (col@node = Length@{l};
-  AppendTo[lineSegments, { {col@node, node}, {col@#, #} }] & /@ child@node;
-  ReplaceToParents[node, par@node, connections])
-*/
+	//
+	// Find every unique line which intersects our range l to h. usuallly there are degeneracies so by collecting just the
+	// unqiue lines its quicker to iterate over them.
+	//
+	NSMutableSet* setOfLines = [[NSMutableSet alloc]init];
+	for (NSInteger rev = l; rev <= h; rev++)
+	{
+		NSArray* lines = [revisionNumberToLineSegments_ objectForKey:intAsNumber(rev)];
+		if (lines)
+			[setOfLines addObjectsFromArray:lines];
+	}
+	
+	//
+	// Find the draw columns which are used and the terminating columns
+	//
+	NSMutableIndexSet* drawColUsed = [[NSMutableIndexSet alloc]init];		// These are the indexes where we cannot place the bulk of the line
+	for (LineSegment* line in setOfLines)
+	{
+		NSInteger hs    = [line highRev];
+		NSInteger ls    = [line lowRev];
 
-/*
-Loops
+		if (hs <= l || h <= ls)
+			continue;
 
-In[776]:= lineSegments = {};
-In[777]:= ClearAll /@ {cols, col};
-In[778]:= cols[55] = {};
+		[drawColUsed addIndex:[line drawCol]];
+		if (l < hs && hs < h)
+			[drawColUsed addIndex:[line highCol]];
+		if (l < ls && ls < h)
+			[drawColUsed addIndex:[line lowCol]];
+	}
+	return drawColUsed;
+}
 
-In[752]:= cols[54] = connect[55, cols[55]]
-Out[752]= {54, 48}
 
-In[753]:= cols[54]
-Out[753]= {54, 48}
 
-In[754]:= connect[54, cols[54]]
-Out[754]= {53, 48, 51}
+// In the computation of the columns used we need to take the following cases into account where l is the low revision, h is the
+// high revision, ls is the low revision of the line segment, and hs is the high revision of the line segement.
+//
+//		   l..........h
+//   ---------------------
+//	  ls...hs
+//	  ls........hs
+//		   ls...hs
+//		      ls...hs
+//			   ls.....hs
+//		   ls.........hs
+//	  ls..............hs
+//	                  ls....hs
+//			   ls...........hs
+//		   ls...............hs
+//	  ls....................hs
 
-In[779]:= For[i = 55, i >= 0, i--,
- cols[i - 1] = connect[i, cols[i]]
- ]
- 
-*/
+// Given the low l and high h, fill out drawColUsed and allDrawColUsed indexed sets as filling out the line segment if we can.
+//
+// drawColUsed    	 These are the indexes where we cannot place the bulk of the line
+// allDrawColUsed 	 These are the indexes where we would perfer or cannot place the bulk of the line
+- (BOOL) findAcceptableRangesForLine:(LineSegment*)theLine  andDrawCol:(NSMutableIndexSet*)drawColUsed  andAllDrawCol:(NSMutableIndexSet*)allDrawColUsed
+{
+	//
+	// Find every unique line which intersects our range l to h. usuallly there are degeneracies so by collecting just the
+	// unqiue lines its quicker to iterate over them.
+	//
+	NSInteger h = [theLine highRev];
+	NSInteger l = [theLine lowRev];
+	NSMutableSet* setOfLines = [[NSMutableSet alloc]init];
+	for (NSInteger rev = l; rev <= h; rev++)
+	{
+		NSArray* lines = [revisionNumberToLineSegments_ objectForKey:intAsNumber(rev)];
+		if (lines)
+			[setOfLines addObjectsFromArray:lines];
+	}
+	
+	//
+	// Find the draw columns which are used and the terminating columns
+	//
+	for (LineSegment* line in setOfLines)
+	{
+		NSInteger hs    = [line highRev];
+		NSInteger ls    = [line lowRev];
+		
+		// If the line ls..hs has a common endpoint with l..h then we can fix one of l or h
+
+		if		(l == ls)	[theLine setLowCol:[line lowCol]];
+		else if (l == hs)	[theLine setLowCol:[line highCol]];
+		
+		if		(h == ls)	[theLine setHighCol:[line lowCol]];
+		else if (h == hs)	[theLine setHighCol:[line highCol]];
+
+		if (h == hs && l == ls)
+		{
+			// Shouldn't happen should almost be an assert
+			//				DebugLog(@"found existing line %d..%d", ls, hs);
+			return NO;
+		}
+		
+
+		if (l < hs && hs < h)
+			[drawColUsed addIndex:[line highCol]];
+		if (l < ls && ls < h)
+			[drawColUsed addIndex:[line lowCol]];
+		if (ls < l && h < hs)
+			[drawColUsed addIndex:[line drawCol]];
+
+		
+		if ((ls < l && l < hs) || (ls < h && h < hs))
+		{
+			BOOL allowed = NO;
+			if (l == ls && [theLine lowCol]  == [line drawCol])
+				allowed = YES;
+			if (h == hs && [theLine highCol] == [line drawCol])
+				allowed = YES;
+			if (!allowed)
+				[drawColUsed addIndex:[line drawCol]];
+			[allDrawColUsed addIndex:[line drawCol]];
+		}
+	}
+	[allDrawColUsed addIndexes:drawColUsed];	// Make sure anything in drawColUsed is in allDrawColUsed
+	return YES;
+}
+
+
+- (BOOL) fillOutLine:(LineSegment*)line suggestedColumnPlacement:(NSInteger)suggestedCol
+{
+	NSMutableIndexSet* drawColUsed    = [[NSMutableIndexSet alloc]init];		// These are the indexes where we cannot place the bulk of the line
+	NSMutableIndexSet* allDrawColUsed = [[NSMutableIndexSet alloc]init];		// These are the indexes where we would perfer or cannot place the bulk of the line
+	@synchronized(revisionNumberToLineSegments_)
+	{
+		[self findAcceptableRangesForLine:line  andDrawCol:drawColUsed  andAllDrawCol:allDrawColUsed];
+
+		// If we haven't located the column for the high end or low end of the line segement then use the suggested col
+		if (![line highColKnown])
+			[line setHighCol:suggestedCol];
+		if (![line lowColKnown])
+			[line setLowCol:suggestedCol];
+
+		NSInteger hCol = [line highCol];
+		NSInteger lCol = [line lowCol];
+		BOOL allDrawColFreeOfLCol = [allDrawColUsed freeOfIndex:lCol];
+		BOOL allDrawColFreeOfHCol = [allDrawColUsed freeOfIndex:hCol];
+		BOOL drawColFreeOfLCol    = [drawColUsed    freeOfIndex:lCol];
+		BOOL drawColFreeOfHCol    = [drawColUsed    freeOfIndex:hCol];
+		
+		//
+		// Place the line segement according to where we can
+		//
+		
+		// Place the bulk of the line in the column which looks best. We like to have the curve of any line be like the top
+		// right quarter of the circle rather than the bottom left quarter of the circle.
+		NSInteger drawCol;
+		if		( allDrawColFreeOfLCol && !allDrawColFreeOfHCol)	drawCol = lCol;
+		else if	(!allDrawColFreeOfLCol &&  allDrawColFreeOfHCol)	drawCol = hCol;
+		else if	(lCol < hCol && drawColFreeOfHCol)					drawCol = hCol;
+		else if (lCol > hCol && drawColFreeOfLCol)					drawCol = lCol;
+		else if (drawColFreeOfHCol)									drawCol = hCol;
+		else if (drawColFreeOfLCol)									drawCol = lCol;
+		else														drawCol = closestFreeIndex(drawColUsed, hCol);
+
+		[line setDrawCol:drawCol];
+		return YES;
+	}
+	return YES;
+}
+
 
 
 @end

@@ -90,8 +90,9 @@
 	{
 		NSString* title = [self title];
 		NSString* revision = nil;
-		if ([title getCapturesWithRegexAndComponents:@"(\\d+):[\\d\\w]+" firstComponent:&revision])
-			[[[document theHistoryView] logTableView] scrollToRevision:revision];
+		//		if ([title getCapturesWithRegexAndComponents:@"(\\d+):[\\d\\w]+" firstComponent:&revision])
+		if ([title getCapturesWithRegexAndComponents:@"(\\d+)" firstComponent:&revision])
+			[[[document theHistoryView] logTableView] scrollToRevision:stringAsNumber(revision)];
 	}
 }
 

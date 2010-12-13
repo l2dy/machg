@@ -71,7 +71,7 @@
 }
 
 
-- (void) openUpdateSheetWithRevision:(NSString*)revision
+- (void) openUpdateSheetWithRevision:(NSNumber*)revision
 {
 	NSString* newTitle = fstr(@"Updating All Files in %@", [myDocument selectedRepositoryShortName]);
 	[updateSheetTitle setStringValue:newTitle];
@@ -95,7 +95,7 @@
 
 - (IBAction) sheetButtonOk:(id)sender
 {
-	NSString* versionToUpdateTo = [logTableView selectedRevision];
+	NSNumber* versionToUpdateTo = [logTableView selectedRevision];
 	BOOL didReversion = [myDocument primaryActionUpdateFilesToVersion:versionToUpdateTo withCleanOption:[self cleanUpdate]];
 	if (!didReversion)
 		return;
@@ -114,8 +114,8 @@
 - (IBAction) sheetButtonViewDifferencesForUpdateSheet:(id)sender
 {
 	NSArray* rootPathAsArray = [myDocument absolutePathOfRepositoryRootAsArray];
-	NSString* versionToUpdateTo = [logTableView selectedRevision];
-	[myDocument viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:versionToUpdateTo];
+	NSNumber* versionToUpdateTo = [logTableView selectedRevision];
+	[myDocument viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:numberAsString(versionToUpdateTo)];
 }
 
 
@@ -155,7 +155,7 @@
 	}
 		
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"The repository will be restored to the state of version ")];
-	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString([logTableView selectedRevision])];
+	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(numberAsString([logTableView selectedRevision]))];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@".")];
 	
 	if (!outstandingChanges)
@@ -170,7 +170,7 @@
 	else
 	{
 		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" The modifications to the files will be transplanted to the new version ")];
-		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString([logTableView selectedRevision])];
+		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(numberAsString([logTableView selectedRevision]))];
 		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@".")];
 	}
 	return newSheetMessage;

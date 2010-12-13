@@ -12,51 +12,52 @@
 
 @interface LineSegment : NSObject
 {
-	NSNumber* lowRev;
-	NSNumber* lowCol;		// This is the column where the line begins.
-	NSNumber* highRev;		// This is the revision where the line terminates.
-	NSNumber* highCol;		// This is the column where the line terminates.
-	NSNumber* drawCol;		// This is the column where the bulk of the line is drawn. It's usually the same as the highCol but not always.
+	NSInteger lowRev;
+	NSInteger lowCol;		// This is the column where the line begins.
+	NSInteger highRev;		// This is the revision where the line terminates.
+	NSInteger highCol;		// This is the column where the line terminates.
+	NSInteger drawCol;		// This is the column where the bulk of the line is drawn. It's usually the same as the highCol but not always.
 }
 
-@property (readwrite,assign) NSNumber*			lowRev;
-@property (readwrite,assign) NSNumber*			lowCol;
-@property (readwrite,assign) NSNumber*			highRev;
-@property (readwrite,assign) NSNumber*			highCol;
-@property (readwrite,assign) NSNumber*			drawCol;
+@property (readwrite,assign) NSInteger		lowRev;
+@property (readwrite,assign) NSInteger		lowCol;
+@property (readwrite,assign) NSInteger		highRev;
+@property (readwrite,assign) NSInteger		highCol;
+@property (readwrite,assign) NSInteger		drawCol;
 
-- (LineSegment*)	initWithLowRev:(NSNumber*)lowR  lowColumn:(NSNumber*)lowC	highRev:(NSNumber*)hightR  highColumn:(NSNumber*)highC  drawColumn:(NSNumber*)drawC;
++ (LineSegment*) withLowRev:(NSInteger)l  highRev:(NSInteger)h;
++ (LineSegment*) withLowRev:(NSInteger)l  highRev:(NSInteger)h  lowColumn:(NSInteger)lCol  highColumn:(NSInteger)hCol  drawColumn:(NSInteger)dCol;
+
+- (BOOL) highColKnown;
+- (BOOL) lowColKnown;
+- (BOOL) drawColKnown;
+
 @end
 
 
 @interface LogGraph : NSObject
 {
-	// Cached
-	RepositoryData*		repositoryData;
-	RepositoryData*		oldRepositoryData;
+	// Initilized
+	RepositoryData*			repositoryData;
 
-	// Specified
-	int						lowRevision;
-	int						highRevision;					// low < high
+	
+	NSMutableDictionary*	revisionNumberToLineSegments_;	// Map of (NSNumber*)revision -> (NSMutableArray*)LineSegment LineSegments
+															// passing or intersecting this rev.	
 
 	// Computed
-	NSMutableDictionary*	lineSegments;					// Rev NSNumber -> MutableArray per column of LineSegments passing or intersecting this rev.
-	NSMutableDictionary*	columnOfRevision;				// Rev NSNumber -> column for the revision (NSNumber)
-	NSMutableDictionary*	drawColumnOfRevision;			// LowRev NSString: HighRev NSString -> draw column for the revision (NSNumber)
-	int						maxColumn;						// The max column used to draw the connections. 0 based, so if one
+	NSInteger				maxColumn;						// The max column used to draw the connections. 0 based, so if one
 															// column used this will be 0, if two columns used this will be 1,
-															// etc.
+															// etc.		
 }
 
-@property (readonly) int maxColumn;
-@property (readonly,assign) NSMutableDictionary* lineSegments;
+@property (readonly) NSInteger maxColumn;
+@property (readonly,assign) NSMutableDictionary* revisionNumberToLineSegments;
 
 
-- (LogGraph*)	initWithRepositoryData:(RepositoryData*)collection andOldCollection:(RepositoryData*)oldCollection;
+- (LogGraph*)	initWithRepositoryData:(RepositoryData*)collection;
 
-- (BOOL)		limitsDiffer:(LowHighPair)limits;
-- (void)		computeColumnsOfRevisionsForLimits:(LowHighPair)limits;	// compute columnOfRevision
-- (int)			columnOfRevision:(NSNumber*)rev;
+- (void) removeEntries:(NSArray*)entries;
+- (void) addEntries:(NSArray*)entries;
 
 @end
 

@@ -33,12 +33,12 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 - (LowHighPair) logGraphLimits;
 - (void)		resortTable;
 - (BOOL)		sortRevisionOrder;
+- (void)		updateDetailedEntryTextView;
 @end
 
 
 @implementation LogTableView
 
-@synthesize theLogGraph			= theLogGraph_;
 @synthesize theSearchFilter		= theSearchFilter_;
 @synthesize theTableRows		= theTableRows_;
 @synthesize numberOfTableRows	= numberOfTableRows_;
@@ -58,11 +58,9 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 	self = [super init];
 	if (self)
 	{
-		theLogGraph_ = nil;
 		theSearchFilter_ = nil;
 		theTableRows_ = nil;
 		repositoryData_ = nil;
-		oldRepositoryData_ = nil;
 		numberOfTableRows_ = 0;
 		canSelectIncompleteRevision_ = NO;
 		rootPath_ = nil;
@@ -104,7 +102,6 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 {
 	[self stopObserving];
 	theTableRows_ = nil;
-	theLogGraph_ = nil;
 }
 
 
@@ -118,7 +115,6 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 
 - (void) repositoryDataIsNew
 {
-	oldRepositoryData_ = repositoryData_;
 	repositoryData_ = [[self myDocument] repositoryData];
 	[self resetTable:self];
 	NSString* newRepositoryRootPath = [repositoryData_ rootPath];
@@ -130,21 +126,7 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 - (void) logEntriesDidChange:(NSNotification*)notification
 {
 	[self refreshTable:self];
-	
-	if (IsNotEmpty(theSearchFilter_))
-		return;
-	
-	NSString* changeType = [[notification userInfo] objectForKey:kLogEntryChangeType];
-	if ([changeType isEqualTo:kLogEntryDetailsChanged])
-		dispatch_async(globalQueue(), ^{
-			LogGraph* NewLogGraph = [[LogGraph alloc] initWithRepositoryData:[self repositoryData] andOldCollection:nil];
-			LowHighPair limits = [self logGraphLimits];
-			[NewLogGraph computeColumnsOfRevisionsForLimits:limits];
-			dispatch_async(mainQueue(), ^{
-				theLogGraph_ = NewLogGraph;
-				[self reloadData];
-			});
-		});	
+	[self updateDetailedEntryTextView];
 }
 
 
@@ -193,46 +175,32 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 	NSString* revisionString = [self revisionForTableRow:rowNum];
 	if (!revisionString)
 		return nil;
-	LogEntry* entry = [[self repositoryData] entryForRevisionString:revisionString];
-
-	// If the requested log entry is in the process of loading or the labels are not loaded and we have an old log entry which is
-	// fully loaded then use that until we get the new value. This stops flicker.
-	if ([entry loadStatus] <= eLogEntryLoadedPending || ![[self repositoryData] labelsAreFullyLoaded])
-		if (oldRepositoryData_ && [oldRepositoryData_ labelsAreFullyLoaded])
-		{
-			LogEntry* oldEntry = [oldRepositoryData_ rawEntryForRevisionString:[entry revision]];
-			if ([oldEntry loadStatus] >= eLogEntryLoadedPartially)
-			{
-				[[self repositoryData] revisionToLabels];	// This starts the loading of all the labels data if it's not already loaded.
-				return oldEntry;
-			}
-		}
-	return entry;
-	
+	return [[self repositoryData] entryForRevision:stringAsNumber(revisionString)];
 }
 
-- (NSInteger) tableRowForIntegerRevision:(NSInteger)revInt  { return (revInt != NSNotFound) ? [self tableRowForRevision:intAsString(revInt)] : NSNotFound; }
-- (NSInteger) tableRowForRevision:(NSString*)revision
+- (NSInteger) tableRowForIntegerRevision:(NSInteger)revInt  { return (revInt != NSNotFound) ? [self tableRowForRevision:intAsNumber(revInt)] : NSNotFound; }
+- (NSInteger) tableRowForRevision:(NSNumber*)revision
 {
 	if (!revision)
 		return NSNotFound;
 	if (IsEmpty(theTableRows_))
 		return NSNotFound;
 
+	NSString* revisionStr = numberAsString(revision);
 	if (IsEmpty(theSearchFilter_))
 	{
 		int tableRowCount = [theTableRows_ count];
 		// We call this often and so we do an optimization where we look at the two most likely places first
-		int revInt = stringAsInt(revision);
-		if (tableRowCount <= revInt || [[theTableRows_ objectAtIndex:revInt] isEqualToString:revision])
+		int revInt = numberAsInt(revision);
+		if (tableRowCount <= revInt || [[theTableRows_ objectAtIndex:revInt] isEqualToString:revisionStr])
 			return revInt;
 
 		int oppInt = [theTableRows_ count] - revInt - 1;
-		if (oppInt < 0 || [[theTableRows_ objectAtIndex:oppInt] isEqualToString:revision])
+		if (oppInt < 0 || [[theTableRows_ objectAtIndex:oppInt] isEqualToString:revisionStr])
 			return oppInt;
 	}
 
-	return [theTableRows_ indexOfObject:revision];
+	return [theTableRows_ indexOfObject:revisionStr];
 }
 
 
@@ -240,14 +208,14 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 
 
 // Return the closest table row to the given revision. It uses a bisection algorithm O(ln n) to zero in on the correct revision.
-- (NSInteger) closestTableRowForRevision:(NSString*)revision
+- (NSInteger) closestTableRowForRevision:(NSNumber*)revision
 {
 	if (!revision)
 		return NSNotFound;
 	if (IsEmpty(theTableRows_))
 		return NSNotFound;
 
-	int rval = stringAsInt(revision);
+	int rval = numberAsInt(revision);
 	int a = 0;
 	int b = [theTableRows_ count] - 1;
 	int aval = stringAsInt([theTableRows_ objectAtIndex:a]);
@@ -282,7 +250,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 
 
 - (BOOL)	  includeIncompleteRevision	{ return [[self repositoryData] includeIncompleteRevision]; }
-- (NSString*) incompleteRevision		{ return [[self repositoryData] incompleteRevision]; }
+- (NSNumber*) incompleteRevision		{ return [[self repositoryData] incompleteRevision]; }
 
 
 
@@ -307,8 +275,8 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 
 - (LogEntry*) chosenEntry		{ return [self entryForTableRow:[self chosenRow]]; }
 - (LogEntry*) selectedEntry		{ return [self entryForTableRow:[self selectedRow]]; }
-- (NSString*) chosenRevision	{ return [[self chosenEntry] revision]; }
-- (NSString*) selectedRevision	{ return [[self selectedEntry] revision]; }
+- (NSNumber*) chosenRevision	{ return [[self chosenEntry] revision]; }
+- (NSNumber*) selectedRevision	{ return [[self selectedEntry] revision]; }
 
 - (NSArray*) chosenEntries
 {
@@ -364,7 +332,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	NSInteger highRevInt  = MAX(firstRevInt, lastRevInt);
 	NSString* lowRev      = (lowRevInt == firstRevInt) ? firstRev : lastRev;
 
-	LogEntry* lowRevEntry = [[self repositoryData] entryForRevisionString:lowRev];
+	LogEntry* lowRevEntry = [[self repositoryData] entryForRevision:stringAsNumber(lowRev)];
 	NSArray* parents = [lowRevEntry parentsOfEntry];
 	NSInteger parentRevInt;
 	if ([parents count] == 0)
@@ -383,8 +351,8 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 // MARK: Scrolling
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) scrollToRevision:(NSString*)revision	{ [self selectAndScrollToRevision:revision]; }
-- (IBAction) scrollToBeginning:(id)sender		{ [self scrollToRevision:intAsString(0)]; }
+- (void) scrollToRevision:(NSNumber*)revision	{ [self selectAndScrollToRevision:revision]; }
+- (IBAction) scrollToBeginning:(id)sender		{ [self scrollToRevision:intAsNumber(0)]; }
 - (IBAction) scrollToCurrentRevision:(id)sender	{ [self scrollToRevision:[[self repositoryData] getHGParent1Revision]]; }
 - (IBAction) scrollToEnd:(id)sender				{ [self scrollToRevision:[[self repositoryData] getHGTipRevision]]; }
 - (IBAction) scrollToSelected:(id)sender
@@ -395,7 +363,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	});
 }
 
-- (void) selectAndScrollToRevision:(NSString*)revision
+- (void) selectAndScrollToRevision:(NSNumber*)revision
 {
 	NSInteger newRowToSelect = [self closestTableRowForRevision:revision];
 	if (newRowToSelect != NSNotFound)
@@ -409,7 +377,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 {
 	NSMutableIndexSet* indexSet = [[NSMutableIndexSet alloc]init];
 
-	for (NSString* rev in revisions)
+	for (NSNumber* rev in revisions)
 	{
 		NSInteger newRowToSelect = [self closestTableRowForRevision:rev];
 		if (newRowToSelect != NSNotFound)
@@ -462,9 +430,9 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	if (requestedRowCol)
 		return requestedRowCol;
 	
-	if ([requestedLogEntry loadStatus] == eLogEntryLoadedPending)
-		return grayedAttributedString(@"Pending");
-	
+	if ([requestedLogEntry isLoading] || [[requestedLogEntry fullRecord] isLoading])
+		return grayedAttributedString(@"Loading");
+
 	return @"missing";
 }
 
@@ -472,18 +440,16 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 - (void) tableView:(NSTableView*)aTableView  willDisplayCell:(id)aCell forTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
 {
 	NSString* requestedColumn = [aTableColumn identifier];
-	NSString* theRevision = [self revisionForTableRow:rowIndex];
-	LogEntry* entry = [repositoryData_ entryForRevisionString:theRevision];
+	NSNumber* theRevision = stringAsNumber([self revisionForTableRow:rowIndex]);
+	LogEntry* entry = [repositoryData_ entryForRevision:theRevision];
 	[aCell setEntry:entry];
 	[aCell setLogTableView:DynamicCast(LogTableView,aTableView)];
 	[aCell setLogTableColumn:aTableColumn];
-	if ([requestedColumn isEqualToString:@"graph"])
+	if (numberAsInt(theRevision) == numberOfTableRows_ -1 && [[self repositoryData] includeIncompleteRevision])
 	{
-		[self refreshLogGraph];
-		[aCell setTheColumn:[theLogGraph_ columnOfRevision:stringAsNumber(theRevision)]];
-	}
-	else if (stringAsInt(theRevision) == numberOfTableRows_ -1 && [[self repositoryData] includeIncompleteRevision])
-	{
+		if ([requestedColumn isEqualToString:@"graph"])
+			return;
+
 		if ([requestedColumn isEqualToString:@"revision"])
 			[aCell setStringValue:@"-"];
 		else
@@ -499,64 +465,67 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 }
 
 
+- (void) queuedSetDetailedEntryTextView:(NSAttributedString*)fullEntry
+{
+	dispatch_async(mainQueue(), ^{
+		[[detailedEntryTextView textStorage] setAttributedString:fullEntry];
+	});
+}
+
 - (void) updateDetailedEntryTextView
 {
 	if (!detailedEntryTextView)
 		return;
 	
+	if ([self noRevisionSelected])
+	{
+		[self queuedSetDetailedEntryTextView:grayedAttributedString(@"No Selection")];
+		return;
+	}
+	
 	if ([self singleRevisionSelected])
 	{
 		LogEntry* entry = [self selectedEntry];
 		if (!entry)
-			[[detailedEntryTextView textStorage] setAttributedString:grayedAttributedString(@"No Selection")];
-		else if ([entry isFullyLoaded])
-			[entry loadAndDisplayFormattedVerboseEntryIn:detailedEntryTextView];
-		else
 		{
-			[[detailedEntryTextView textStorage] setAttributedString:[entry formattedVerboseEntry]];
-			[queueForDetailedEntryDisplay_ addBlockOperation:^{[entry loadAndDisplayFormattedVerboseEntryIn:detailedEntryTextView];}];
+			[self queuedSetDetailedEntryTextView:grayedAttributedString(@"No Selection")];
+			return;
 		}
+		if (![entry isFullyLoaded])
+			[queueForDetailedEntryDisplay_ addBlockOperation:^{[entry fullyLoadEntry];}];
+
+		[self queuedSetDetailedEntryTextView:[entry formattedVerboseEntry]];
 		return;
 	}
 	
 	if ([self multipleRevisionsSelected])
 	{
 		NSIndexSet* rows = [self selectedRowIndexes];
+
+		if ([rows count] <= MaxNumberOfDetailedEntriesToShow)
+		{
+			NSArray* entries = [self selectedEntries];
+			NSMutableAttributedString* combinedString = [[NSMutableAttributedString alloc] init];
+			for (LogEntry* entry in entries)
+			{
+				NSAttributedString* briefEntry = [entry formattedBriefEntry];
+				if (briefEntry)
+					[combinedString appendAttributedString:briefEntry];
+			}
+			if (combinedString)
+			{
+				[self queuedSetDetailedEntryTextView:combinedString];
+				return;
+			}
+		}
+
+		// If we have more than MaxNumberOfDetailedEntriesToShow things selected or something went wrong then we don't try and
+		// give the details of each entry.
 		LowHighPair lowHigh = [self lowestToHighestSelectedRevisions];
 		NSString* descriptiveString = fstr(@"Multiple Selection: %d revisions in range %d to %d", [rows count], lowHigh.lowRevision, lowHigh.highRevision);
-		[[detailedEntryTextView textStorage] setAttributedString:grayedAttributedString(descriptiveString)];
-
-		// If we have more than MaxNumberOfDetailedEntriesToShow things selected then we don't try and give the details of each entry.
-		if ([rows count] > MaxNumberOfDetailedEntriesToShow)
-			return;
-
-		NSArray* entries = [self selectedEntries];
-		NSMutableArray* entriesToLoad = [[NSMutableArray alloc]init];
-		for (LogEntry* entry in entries)
-			if (![entry isFullyLoaded])
-				[entriesToLoad addObject:[entry revision]];
-		if ([entriesToLoad count] == 0)
-		{
-			NSMutableAttributedString* combinedString = [[NSMutableAttributedString alloc] init];
-			for (LogEntry* entry in entries)
-				[combinedString appendAttributedString:[entry formattedBriefEntry]];
-			[[detailedEntryTextView textStorage] setAttributedString:combinedString];
-			return;
-		}
-		
-		[queueForDetailedEntryDisplay_ addBlockOperation:^{
-			// Note right here at the cost of making this a good bit more uglier (ie 10-15 lines of code we could be more
-			// efficient and bunch up the entries to be sent to mercurial into one packet instead of the separate packets that are
-			// being sent. However it appears to be fast enough in practice right now to not warrant the extra code complexity.
-			NSMutableAttributedString* combinedString = [[NSMutableAttributedString alloc] init];
-			for (LogEntry* entry in entries)
-				[combinedString appendAttributedString:[entry formattedBriefEntry]];
-			[[detailedEntryTextView textStorage] setAttributedString:combinedString];
-		}];
+		[self queuedSetDetailedEntryTextView:grayedAttributedString(descriptiveString)];
 		return;
 	}
-	
-	[[detailedEntryTextView textStorage] setAttributedString:grayedAttributedString(@"No Selection")];
 }	
 		
 - (void) tableViewSelectionDidChange:(NSNotification*)aNotification
@@ -669,26 +638,6 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 }
 
 
-- (void) refreshLogGraph
-{
-	if (!awake_)
-		return;
-	if (IsNotEmpty(theSearchFilter_))
-		return;
-	
-	LogGraph* currentLogGraph = theLogGraph_;
-	@synchronized(currentLogGraph)
-	{
-		LowHighPair limits = [self logGraphLimits];
-		if ([currentLogGraph limitsDiffer:limits])
-		{
-			[self setNeedsDisplay:YES];
-			[currentLogGraph computeColumnsOfRevisionsForLimits:limits];
-		}		
-	}
-}
-
-
 
 
 
@@ -701,7 +650,6 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 {
 	if (!awake_)
 		return;
-	[self refreshLogGraph];
 	[self reloadData];
 }
 
@@ -713,7 +661,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	@synchronized(self)
 	{
 		RepositoryData* repositoryData = [self repositoryData];
-		NSString* currentRevision     = [repositoryData getHGParent1Revision];
+		NSNumber* currentRevision     = [repositoryData getHGParent1Revision];
 		NSArray* theSelectedRevisions = [self selectedRevisions];
 		if (IsEmpty(theSelectedRevisions) && currentRevision)
 			theSelectedRevisions = [NSArray arrayWithObject:currentRevision];
@@ -745,7 +693,6 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 		theTableRows_ = [self sortTableRowsAccordingToSortOrder:newTableRows];
 		[self setNumberOfTableRows:[theTableRows_ count]];
 
-		theLogGraph_ = [[LogGraph alloc] initWithRepositoryData:repositoryData andOldCollection: oldRepositoryData_];
 		[self refreshTable:sender];		
 		[self selectAndScrollToRevisions:theSelectedRevisions];
 	}
@@ -839,8 +786,10 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	if ([[[self logTableColumn] identifier] isEqualToString:@"shortComment"])
 	{
 		RepositoryData* repositoryData = [[self logTableView] repositoryData];
-		LogEntry* logEntry = [repositoryData entryForRevisionString:[entry_ revision]];
-		NSString* fullMessageText = [logEntry fullCommentSynchronous];
+		LogEntry* logEntry = [repositoryData entryForRevision:[entry_ revision]];
+		NSString* fullMessageText = [logEntry fullComment];
+		if (IsEmpty(fullMessageText))
+			return NSZeroRect;
 		NSDictionary* attributes = [message attributesOfWholeString];
 		message = [NSAttributedString string:fullMessageText withAttributes:attributes];
 	}
@@ -867,8 +816,10 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	if ([[[self logTableColumn] identifier] isEqualToString:@"shortComment"])
 	{
 		RepositoryData* repositoryData = [[self logTableView] repositoryData];
-		LogEntry* logEntry = [repositoryData entryForRevisionString:[entry_ revision]];
-		NSString* fullMessageText = [logEntry fullCommentSynchronous];
+		LogEntry* logEntry = [repositoryData entryForRevision:[entry_ revision]];
+		NSString* fullMessageText = [logEntry fullComment];
+		if (IsEmpty(fullMessageText))
+			return;
 		NSDictionary* attributes = [message attributesOfWholeString];
 		message = [NSAttributedString string:fullMessageText withAttributes:attributes];
 	}

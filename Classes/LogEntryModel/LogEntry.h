@@ -10,46 +10,29 @@
 #import <Cocoa/Cocoa.h>
 #import "Common.h"
 
-extern NSString* templateStringShort;
-extern NSString* templateStringFull;
-extern NSString* const entrySeparator;
-extern NSString* const entryPartSeparator;
-extern void setupGlobalsForPartsAndTemplate();
+extern NSString* templateLogEntryString;
+extern NSString* const logEntrySeparator;
+extern NSString* const logEntryPartSeparator;
+extern NSString* const incompleteChangeset;		// This is the changeset hash we use for the "incomplete revision"
+void setupGlobalsForLogEntryPartsAndTemplate();
 
 @interface LogEntry : NSObject
 {
 	LogEntryLoadStatus  loadStatus_;
 	RepositoryData* collection_;
-	NSString* 	revision_;
-	NSString* 	author_;
-	NSString* 	fullAuthor_;
-	NSDate* 	date_;
-	NSString* 	shortComment_;
-	NSString* 	fullComment_;
-	NSString* 	parents_;
-	NSArray* 	tags_;
-	NSArray* 	bookmarks_;
-	NSString* 	branch_;
-	NSString* 	labels_;					// This is the combination of tags, branches, and bookmarks
+	NSNumber* 	revision_;
+	NSArray*	parentsArray_;				// Array of parent   revs as NSNumbers
+	NSArray*	childrenArray_;				// Array of children revs as NSNumbers
 	NSString*	changeset_;
-	NSString*	fullChangeset_;
-	NSArray*	filesAdded_;
-	NSArray*	filesModified_;
-	NSArray*	filesRemoved_;
+	LogRecord*	fullRecord_;
 }
 
 @property (readwrite,assign) LogEntryLoadStatus loadStatus;
-@property (readwrite,assign) NSString* 	revision;
-@property (readwrite,assign) NSString* 	fullAuthor;
-@property (readwrite,assign) NSString* 	author;
-@property (readwrite,assign) NSString* 	shortComment;
-@property (readwrite,assign) NSString* 	fullComment;
-@property (readwrite,assign) NSString* 	parents;
+@property (readwrite,assign) NSNumber* 	revision;
+@property (readwrite,assign) NSArray*	parentsArray;
+@property (readwrite,assign) NSArray*	childrenArray;
 @property (readwrite,assign) NSString*	changeset;
-@property (readwrite,assign) NSString*	fullChangeset;
-@property (readwrite,assign) NSArray*	filesAdded;
-@property (readwrite,assign) NSArray*	filesModified;
-@property (readwrite,assign) NSArray*	filesRemoved;
+@property (readwrite,assign) LogRecord*	fullRecord;
 
 - (NSArray*)  tags;
 - (NSArray*)  bookmarks;
@@ -59,40 +42,68 @@ extern void setupGlobalsForPartsAndTemplate();
 - (id) labelsAndShortComment;
 
 
+
 // Creation of LogEntries from results
-+ (LogEntry*) fromLogResultLineShort:(NSString*)line  forRepositoryData:(RepositoryData*)collection;
-+ (LogEntry*) fromLogResultLineFull: (NSString*)line  forRepositoryData:(RepositoryData*)collection;
-+ (LogEntry*) pendingEntryForRevision:(NSString*)revisionStr     forRepositoryData:collection;
-+ (LogEntry*) unfinishedEntryForRevision:(NSString*)revisionStr  forRepositoryData:collection;
++ (LogEntry*) fromLogEntryResultLine:(NSString*)line			 forRepositoryData:(RepositoryData*)collection;
++ (LogEntry*) pendingLogEntryForRevision:(NSNumber*)revisionStr  forRepositoryData:(RepositoryData*)collection;
++ (LogEntry*) unfinishedEntryForRevision:(NSNumber*)revisionStr  forRepositoryData:(RepositoryData*)collection;
 
 
 // Flesh out a LogEntry with results
-- (void)	  loadLogResultLineShort:(NSString*)line;
-- (void)	  loadLogResultLineFull: (NSString*)line;
+- (void)	  loadLogEntryResultLine:(NSString*)line;
 - (void)	  fullyLoadEntry;
 
 
+// Modify children of entry
+- (void)	  addChildRevisionNum:(NSNumber*)childRevNum;
+- (void)	  removeChildRevisionNum:(NSNumber*)childRevNum;
+
+
 // Query the LogEntry
-- (NSArray*)  parentsOfEntry;
-- (NSArray*)  childrenOfEntry;
-- (NSString*) changesetInShortForm;
+- (NSInteger) childCount;
+- (NSInteger) parentCount;
+- (BOOL)	  hasMultipleParents;
+- (NSArray*)  parentsOfEntry;			// Array of parent   revs as NSNumbers
+- (NSArray*)  childrenOfEntry;			// Array of children revs as NSNumbers
+- (NSString*) revisionStr;
+- (NSInteger) revisionInt;
+- (NSInteger) ithChildRev:(NSInteger)i;
+- (NSInteger) ithParentRev:(NSInteger)i;
+- (BOOL)      isEqualToEntry:(LogEntry*)entry;
+- (BOOL)	  isLoading;
+- (BOOL)	  isLoaded;
+- (BOOL)	  isStale;
+- (BOOL)	  isLoadingButAlreadyStale;
 - (BOOL)	  isFullyLoaded;
+- (void)	  makeStatusStale;
 - (RepositoryData*) repositoryData;
-- (NSString*) firstParent;
+- (BOOL)	  revIsDirectParent:(NSInteger)rev;
+- (BOOL)	  revIsDirectChild:(NSInteger)rev;
+- (NSNumber*) firstParent;
+- (NSNumber*) secondParent;
+- (NSNumber*) minimumParent;
+
+
+// Query the LogRecord
+- (NSString*) author;
+- (NSString*) fullAuthor;
+- (NSString*) shortComment;
+- (NSString*) fullComment;
+- (NSArray*)  filesAdded;
+- (NSArray*)  filesModified;
+- (NSArray*)  filesRemoved;
+
 
 
 // Date handling
 - (NSString*) shortDate;
 - (NSString*) fullDate;
 - (NSString*) isoDate;
-- (void)	  setDate:(NSString*)dateString;
 
 
 // Presentation of Entry
-- (void)	loadAndDisplayFormattedVerboseEntryIn:(id)container;
 - (NSAttributedString*)	formattedBriefEntry;
 - (NSAttributedString*) formattedVerboseEntry;
-- (NSString*) fullCommentSynchronous;
 
 @end
 

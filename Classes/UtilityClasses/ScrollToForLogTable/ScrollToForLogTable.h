@@ -13,10 +13,6 @@
 @interface ScrollToForLogTable : NSButton <NSMenuDelegate>
 {
 	IBOutlet LogTableView*	logTable;
-	NSDictionary*			tagToLabelDictionary;
-	NSDictionary*			bookmarkToLabelDictionary;
-	NSDictionary*			branchToLabelDictionary;
-	NSDictionary*			openHeadToLabelDictionary;
 	NSMenu*					thePopUpMenu;
 }
 

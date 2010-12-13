@@ -27,10 +27,6 @@
 
 - (void) awakeFromNib
 {
-	tagToLabelDictionary	  = nil;	
-	bookmarkToLabelDictionary = nil;
-	branchToLabelDictionary   = nil;
-	openHeadToLabelDictionary = nil;
 }
 
 
@@ -49,7 +45,7 @@
 	NSMenuItem* item = [[NSMenuItem alloc]init];
 	NSMutableAttributedString* menuTitle = [[NSMutableAttributedString alloc] init];
 	if (IsEmpty([label name]))
-		[menuTitle appendAttributedString:[NSAttributedString string:[label revision] withAttributes:systemFontAttributes]];
+		[menuTitle appendAttributedString:[NSAttributedString string:[label revisionStr] withAttributes:systemFontAttributes]];
 	else
 	{
 		[menuTitle appendAttributedString:[NSAttributedString string:[label name] withAttributes:systemFontAttributes]];
@@ -66,36 +62,40 @@
 {
 	NSMenuItem* menuItemScrollToTag = [[NSMenuItem alloc] initWithTitle:@"Scroll to Tag" action:NULL keyEquivalent:@""];
 	NSMenu* menuOfTags  = [[NSMenu alloc]init];
-	tagToLabelDictionary = [[self repositoryData] tagToLabelDictionary];
-	NSArray* sortedTagLabels = [[tagToLabelDictionary allValues] sortedArrayUsingDescriptors:[LabelData descriptorsForSortByRevisionAscending]];
+	NSArray* tagLabels = [LabelData filterLabelsDictionary: [[self repositoryData] revisionNumberToLabels]  byType:eTagLabel];
+	NSArray* sortedTagLabels = [tagLabels sortedArrayUsingDescriptors:[LabelData descriptorsForSortByRevisionAscending]];
 	for (LabelData* label in sortedTagLabels)
 		[menuOfTags addItem:[self menuItemForLabel:label]];
 	[menuItemScrollToTag setSubmenu:menuOfTags];
 
+	
 	NSMenuItem* menuItemScrollToBookmark = [[NSMenuItem alloc] initWithTitle:@"Scroll to Bookmark" action:NULL keyEquivalent:@""];
 	NSMenu* menuOfBookmarks  = [[NSMenu alloc]init];
-	bookmarkToLabelDictionary = [[self repositoryData] bookmarkToLabelDictionary];
-	NSArray* sortedBookmarkLabels = [[bookmarkToLabelDictionary allValues] sortedArrayUsingDescriptors:[LabelData descriptorsForSortByRevisionAscending]];
+	NSArray* bookmarkLabels = [LabelData filterLabelsDictionary: [[self repositoryData] revisionNumberToLabels]  byType:eBookmarkLabel];
+	NSArray* sortedBookmarkLabels = [bookmarkLabels sortedArrayUsingDescriptors:[LabelData descriptorsForSortByRevisionAscending]];
 	for (LabelData* label in sortedBookmarkLabels)
 		[menuOfBookmarks addItem:[self menuItemForLabel:label]];
 	[menuItemScrollToBookmark setSubmenu:menuOfBookmarks];
 
+	
 	NSMenuItem* menuItemScrollToBranch = [[NSMenuItem alloc] initWithTitle:@"Scroll to Branch" action:NULL keyEquivalent:@""];
 	NSMenu* menuOfBranches  = [[NSMenu alloc]init];
-	branchToLabelDictionary = [[self repositoryData] branchToLabelDictionary];
-	NSArray* sortedBranchLabels = [[branchToLabelDictionary allValues] sortedArrayUsingDescriptors:[LabelData descriptorsForSortByRevisionAscending]];
+	NSArray* branchLabels = [LabelData filterLabelsDictionary: [[self repositoryData] revisionNumberToLabels]  byType:eBranchLabel];
+	NSArray* sortedBranchLabels = [branchLabels sortedArrayUsingDescriptors:[LabelData descriptorsForSortByRevisionAscending]];
 	for (LabelData* label in sortedBranchLabels)
 		[menuOfBranches addItem:[self menuItemForLabel:label]];
 	[menuItemScrollToBranch setSubmenu:menuOfBranches];
 
+	
 	NSMenuItem* menuItemScrollToOpenHead = [[NSMenuItem alloc] initWithTitle:@"Scroll to OpenHead" action:NULL keyEquivalent:@""];
 	NSMenu* menuOfOpenHeads  = [[NSMenu alloc]init];
-	openHeadToLabelDictionary = [[self repositoryData] openHeadToLabelDictionary];
-	NSArray* sortedOpenHeadLabels = [[openHeadToLabelDictionary allValues] sortedArrayUsingDescriptors:[LabelData descriptorsForSortByRevisionAscending]];
+	NSArray* openHeadLabels = [LabelData filterLabelsDictionary: [[self repositoryData] revisionNumberToLabels]  byType:eOpenHead];
+	NSArray* sortedOpenHeadLabels = [openHeadLabels sortedArrayUsingDescriptors:[LabelData descriptorsForSortByRevisionAscending]];
 	for (LabelData* label in sortedOpenHeadLabels)
 		[menuOfOpenHeads addItem:[self menuItemForLabel:label]];
 	[menuItemScrollToOpenHead setSubmenu:menuOfOpenHeads];
-	
+
+
 	NSMenu* newMenu = [[NSMenu alloc]init];
 	[newMenu addItem:menuItemScrollToTag];
 	[newMenu addItem:menuItemScrollToBookmark];
@@ -108,12 +108,7 @@
 
 - (void) mouseDown:(NSEvent*)theEvent
 {
-	if (
-		tagToLabelDictionary	  != [[self repositoryData] tagToLabelDictionary] ||
-		bookmarkToLabelDictionary != [[self repositoryData] bookmarkToLabelDictionary] ||
-		branchToLabelDictionary   != [[self repositoryData] branchToLabelDictionary] ||
-		openHeadToLabelDictionary != [[self repositoryData] openHeadToLabelDictionary])
-		[self updatePopupMenu];
+	[self updatePopupMenu];
 	
 	NSRect frame = [self frame];
 	NSControlSize controlSize = [[self cell] controlSize];

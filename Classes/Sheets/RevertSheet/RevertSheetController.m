@@ -61,7 +61,7 @@
 // MARK: Actions Log Inspector
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) openRevertSheetWithPaths:(NSArray*)paths andRevision:(NSString*)revision
+- (void) openRevertSheetWithPaths:(NSArray*)paths andRevision:(NSNumber*)revision
 {
 	// Report the branch we are about to revert on in the dialog
 	NSString* newSheetMessage = fstr(@"The following files will be reverted to the versions as of the revision selected below (%@)", [logTableView selectedRevision]);
@@ -97,7 +97,7 @@
 
 - (IBAction) sheetButtonOk:(id)sender;
 {
-	NSString* versionToRevertTo = [logTableView selectedRevision];
+	NSNumber* versionToRevertTo = [logTableView selectedRevision];
 	BOOL didReversion = [myDocument primaryActionRevertFiles:absolutePathsOfFilesToRevert toVersion:versionToRevertTo];
 	if (!didReversion)
 		return;
@@ -115,8 +115,8 @@
 
 - (IBAction) sheetButtonViewDifferencesForRevertSheet:(id)sender
 {
-	NSString* versionToRevertTo = [logTableView selectedRevision];
-	[myDocument viewDifferencesInCurrentRevisionFor:absolutePathsOfFilesToRevert toRevision:versionToRevertTo];
+	NSNumber* versionToRevertTo = [logTableView selectedRevision];
+	[myDocument viewDifferencesInCurrentRevisionFor:absolutePathsOfFilesToRevert toRevision:numberAsString(versionToRevertTo)];
 }
 
 
@@ -146,8 +146,8 @@
 {
 	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"The contents of the files within the selected file paths will be replaced with their contents as of version ")];
-	NSString* rev = [logTableView selectedRevision];
-	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(rev ? rev : @"-")];
+	NSNumber* revision = [logTableView selectedRevision];
+	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(revision ? numberAsString(revision) : @"-")];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@". Any tracked files which have been modified will be moved aside. Any newly added or removed files will return to their former status.")];
 	return newSheetMessage;
 }

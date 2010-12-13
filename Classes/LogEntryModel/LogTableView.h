@@ -37,13 +37,7 @@
 	IBOutlet LogTableTextView* detailedEntryTextView;		// This is the field where the details of the log entry are displayed.
 
 	RepositoryData*			repositoryData_;				// The current log entry collection which backs this LogTableView.
-	RepositoryData*			oldRepositoryData_;				// The second oldest log entry collection (which we sometimes fall
-															// back to in order to avoid flicker while the repositoryData is
-															// being updated)
-
-	LogGraph*				theLogGraph_;					// The object representing the graph of the revisions
 	NSString*				rootPath_;						// The root of the repository
-
 
 	BOOL					canSelectIncompleteRevision_;	// Are you allowed to select the incomplete revision in this LogTableView
 	int						numberOfTableRows_;
@@ -56,7 +50,6 @@
 	BOOL					awake_;							// Has this nib been awakened yet?
 }
 
-@property (readwrite,assign) LogGraph*	theLogGraph;
 @property (readwrite,assign) NSString*	theSearchFilter;
 @property (readwrite,assign) NSArray*	theTableRows;
 @property int							numberOfTableRows;
@@ -65,7 +58,6 @@
 - (void)		unload;
 - (IBAction)	refreshTable:(id)sender;
 - (IBAction)	resetTable:(id)sender;
-- (void)		refreshLogGraph;
 
 
 // Table Delegate Methods
@@ -80,12 +72,12 @@
 - (RepositoryData*)	repositoryData;
 - (LogEntry*)	entryForTableRow:(NSInteger)rowNum;
 - (NSString*)	revisionForTableRow:(NSInteger)rowNum;
-- (NSInteger)	tableRowForRevision:(NSString*)revision;
+- (NSInteger)	tableRowForRevision:(NSNumber*)revision;
 - (NSInteger)	tableRowForIntegerRevision:(NSInteger)revisionInt;
-- (NSInteger)	closestTableRowForRevision:(NSString*)revision;
+- (NSInteger)	closestTableRowForRevision:(NSNumber*)revision;
 
 - (BOOL)		includeIncompleteRevision;
-- (NSString*)	incompleteRevision;
+- (NSNumber*)	incompleteRevision;
 
 
 // Test selection
@@ -97,12 +89,12 @@
 // Chosen / Selected item(s)
 - (LogEntry*)	chosenEntry;
 - (NSArray*)	chosenEntries;		// Array of LogEntry
-- (NSString*)	chosenRevision;
-- (NSArray*)	chosenRevisions;	// Array of NSString
+- (NSNumber*)	chosenRevision;
+- (NSArray*)	chosenRevisions;	// Array of NSNumbers
 - (LogEntry*)	selectedEntry;
 - (NSArray*)	selectedEntries;	// Array of LogEntry
-- (NSString*)	selectedRevision;
-- (NSArray*)	selectedRevisions;	// Array of NSString
+- (NSNumber*)	selectedRevision;
+- (NSArray*)	selectedRevisions;	// Array of NSNumbers
 
 - (LowHighPair) lowestToHighestSelectedRevisions;
 - (LowHighPair) parentToHighestSelectedRevisions;
@@ -110,13 +102,13 @@
 
 
 // Scrolling
-- (void)		scrollToRevision:(NSString*)revision;
+- (void)		scrollToRevision:(NSNumber*)revision;
 - (void)		scrollToRangeOfRevisions:(LowHighPair)limits;
 - (IBAction)	scrollToCurrentRevision:(id)sender;
 - (IBAction)	scrollToBeginning:(id)sender;
 - (IBAction)	scrollToEnd:(id)sender;
 - (IBAction)	scrollToSelected:(id)sender;
-- (void)		selectAndScrollToRevision:(NSString*)revision;
+- (void)		selectAndScrollToRevision:(NSNumber*)revision;
 - (void)		selectAndScrollToRevisions:(NSArray*)revisions;
 - (void)		selectAndScrollToIndexSet:(NSIndexSet*)indexSet;
 

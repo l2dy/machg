@@ -35,7 +35,7 @@
 
 // Initialization
 - (MergeSheetController*) initMergeSheetControllerWithDocument:(MacHgDocument*)doc;
-- (void)	 openMergeSheetWithRevision:(NSString*)revision;
+- (void)	 openMergeSheetWithRevision:(NSNumber*)revision;
 
 
 // Validation

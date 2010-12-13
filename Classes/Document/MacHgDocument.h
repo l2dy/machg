@@ -102,7 +102,7 @@
 	
 	NSMutableDictionary*		connections_;			// Storage for option values of connections (push, pull, incoming,
 														// outgoing, etc) between one repositories and another
-	
+		
 	PaneViewNum					currentPane_;			// The current Pane being shown by the document
 
 	RepositoryData*				repositoryData_;		// This is the current collection of log entries (the entries which make up the current repository)
@@ -216,12 +216,12 @@
 
 
 // Version Information
+- (NSNumber*)	getHGParent1Revision;
+- (NSNumber*)	getHGParent2Revision;
+- (NSString*)	getHGParent1Changeset;
+- (NSString*)	getHGParent2Changeset;
+- (NSNumber*)	getHGTipRevision;
 - (NSString*)	getHGTipChangeset;
-- (NSString*)	getHGParentsChangeset;	// Gives the parent changeset (if there are two it gives the first)
-- (NSString*)	getHGParentsChangesets;
-- (NSString*)	getHGTipRevision;
-- (NSString*)	getHGParent1Revision;
-- (NSString*)	getHGParentsRevisions;	// Gives the parent revision (if there are two it gives the first)
 - (BOOL)		isCurrentRevisionTip;
 - (BOOL)		inMergeState;
 - (NSInteger)	computeNumberOfRevisions;
@@ -293,7 +293,7 @@
 
 // Do some primary actions
 - (BOOL)		primaryActionAddRenameRemoveFiles:(NSArray*)absolutePaths;
-- (BOOL)		primaryActionRevertFiles:(NSArray*)absolutePaths toVersion:(NSString*)version;
+- (BOOL)		primaryActionRevertFiles:(NSArray*)absolutePaths toVersion:(NSNumber*)version;
 - (BOOL)		primaryActionDeleteSelectedFiles:(NSArray*)theSelectedFiles;
 - (BOOL)		primaryActionAddSelectedFiles:(NSArray*)theSelectedFiles;
 - (BOOL)		primaryActionUntrackSelectedFiles:(NSArray*)theSelectedFiles;
@@ -302,11 +302,11 @@
 - (BOOL)		primaryActionIgnoreSelectedFiles:(NSArray*)theSelectedFiles;
 - (BOOL)		primaryActionUnignoreSelectedFiles:(NSArray*)theSelectedFiles;
 - (BOOL)		primaryActionAnnotateSelectedFiles:(NSArray*)theSelectedFiles;
-- (BOOL)		primaryActionUpdateFilesToVersion:(NSString*)version withCleanOption:(BOOL)clean;
-- (BOOL)		primaryActionBackoutFilesToVersion:(NSString*)version;
-- (BOOL)		primaryActionMergeWithVersion:(NSString*)mergeVersion andOptions:(NSArray*)options withConfirmation:(BOOL)confirm;
-- (void)		primaryActionDisplayManifestForVersion:(NSString*)version;
-- (void)		primaryActionAnnotateSelectedFiles:(NSArray*)absolutePaths withRevision:(NSString*)version andOptions:(NSArray*)options;
+- (BOOL)		primaryActionUpdateFilesToVersion:(NSNumber*)version withCleanOption:(BOOL)clean;
+- (BOOL)		primaryActionBackoutFilesToVersion:(NSNumber*)version;
+- (BOOL)		primaryActionMergeWithVersion:(NSNumber*)mergeVersion andOptions:(NSArray*)options withConfirmation:(BOOL)confirm;
+- (void)		primaryActionDisplayManifestForVersion:(NSNumber*)version;
+- (void)		primaryActionAnnotateSelectedFiles:(NSArray*)absolutePaths withRevision:(NSNumber*)version andOptions:(NSArray*)options;
 - (void)		viewDifferencesInCurrentRevisionFor:(NSArray*)absolutePaths toRevision:(NSString*)versionToCompareTo;
 
 

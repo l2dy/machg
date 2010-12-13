@@ -57,13 +57,8 @@
 	self = [super init];
 	if (self)
 	{
-		cachedTagToLabelDictionary_ = nil;
-		cachedBranchToLabelDictionary_ = nil;
-		cachedBookmarkToLabelDictionary_ = nil;
-		cachedOpenHeadToLabelDictionary_ = nil;
 		labelsTableData_ = nil;
-		repositoryData_ = nil;
-		oldRepositoryData_ = nil;
+		labelsTableFilterType_ = eNoLabelType;
 	}
     
 	return self;
@@ -73,7 +68,7 @@
 - (void) awakeFromNib
 {
 	[self observe:kRepositoryDataIsNew		from:[self myDocument]  byCalling:@selector(repositoryDataIsNew)];
-	[self observe:kRepositoryDataDidChange	from:[self myDocument]  byCalling:@selector(logEntriesDidChange:)];
+	[self observe:kRepositoryDataDidChange	from:[self myDocument]  byCalling:@selector(repositoryDataDidChange:)];
 	[self observe:kLogEntriesDidChange		from:[self myDocument]  byCalling:@selector(logEntriesDidChange:)];
 	
 	// Tell the browser to send us messages when it is clicked.
@@ -88,14 +83,6 @@
 
 - (void) unload					{ }
 
-
-- (RepositoryData*)	repositoryData
-{
-	if (repositoryData_)
-		return repositoryData_;
-	repositoryData_ = [[parentController myDocument] repositoryData];
-	return repositoryData_;
-}
 
 
 
@@ -123,23 +110,22 @@
 
 - (void) repositoryDataIsNew
 {
-	oldRepositoryData_ = repositoryData_;
-	repositoryData_ = [[parentController myDocument] repositoryData];
 	[self recomputeLabelsTableData];
-	dispatch_async(mainQueue(), ^{
-		[self reloadData];});
+	[parentController labelsChanged];
+}
+
+
+- (void) repositoryDataDidChange:(NSNotification*)notification
+{
+	[self recomputeLabelsTableData];
 	[parentController labelsChanged];
 }
 
 
 - (void) logEntriesDidChange:(NSNotification*)notification
 {
-	NSString* changeType = [[notification userInfo] objectForKey:kLogEntryChangeType];
-	if ([changeType isEqualTo:kLogEntryTagsChanged] || [changeType isEqualTo:kLogEntryBranchesChanged] || [changeType isEqualTo:kLogEntryBookmarksChanged] || [changeType isEqualTo:kLogEntryOpenHeadsChanged])
-		[self recomputeLabelsTableData];
 	dispatch_async(mainQueue(), ^{
 		[self reloadData];});
-	[parentController labelsChanged];
 }
 
 
@@ -172,26 +158,18 @@
 // MARK:  Labels Table Data
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+- (LabelType) labelTypeFilterOfButtons
+{
+	return ([showTags state] ? eTagLabel : eNoLabelType) | ([showBookmarks state] ? eBookmarkLabel : eNoLabelType) | ([showBranches state] ? eBranchLabel : eNoLabelType) | ([showOpenHeads state] ? eOpenHead : eNoLabelType);
+}
+
 - (void) recomputeLabelsTableData
 {
 	@synchronized(self)
 	{
-		RepositoryData* collection = (![[self repositoryData] labelsAreFullyLoaded] && [oldRepositoryData_ labelsAreFullyLoaded]) ? oldRepositoryData_ : [self repositoryData];
-		
-		NSDictionary* liveTagToLabelDictionary		 = [showTags state]		 ? [collection tagToLabelDictionary] : nil;
-		NSDictionary* liveBookmarksToLabelDictionary = [showBookmarks state] ? [collection bookmarkToLabelDictionary] : nil;
-		NSDictionary* liveBranchToLabelDictionary	 = [showBranches state]	 ? [collection branchToLabelDictionary] : nil;
-		NSDictionary* liveOpenHeadToLabelDictionary	 = [showOpenHeads state] ? [collection openHeadToLabelDictionary] : nil;
-		cachedTagToLabelDictionary_      = liveTagToLabelDictionary;
-		cachedBookmarkToLabelDictionary_ = liveBookmarksToLabelDictionary;
-		cachedBranchToLabelDictionary_   = liveBranchToLabelDictionary;
-		cachedOpenHeadToLabelDictionary_ = liveOpenHeadToLabelDictionary;
-		NSMutableArray* newTableData     = [[NSMutableArray alloc] init];
-		if (liveTagToLabelDictionary)		[newTableData addObjectsFromArray:[liveTagToLabelDictionary allValues]];
-		if (liveBookmarksToLabelDictionary)	[newTableData addObjectsFromArray:[liveBookmarksToLabelDictionary allValues]];
-		if (liveBranchToLabelDictionary)	[newTableData addObjectsFromArray:[liveBranchToLabelDictionary allValues]];
-		if (liveOpenHeadToLabelDictionary)	[newTableData addObjectsFromArray:[liveOpenHeadToLabelDictionary allValues]];
-
+		labelsTableFilterType_ = [self labelTypeFilterOfButtons];
+		RepositoryData* collection = [[parentController myDocument] repositoryData];
+		NSArray* newTableData = [LabelData filterLabelsDictionary:[collection revisionNumberToLabels] byType:labelsTableFilterType_];
 		NSArray* descriptors = [self sortDescriptors];
 		labelsTableData_ = [LabelData removeDuplicateLabels:newTableData];
 		labelsTableData_ = [labelsTableData_ sortedArrayUsingDescriptors:descriptors];
@@ -202,18 +180,8 @@
 }
 
 - (NSArray*) labelsTableData
-{
-	RepositoryData* collection = (![[self repositoryData] labelsAreFullyLoaded] && [oldRepositoryData_ labelsAreFullyLoaded]) ? oldRepositoryData_ : [self repositoryData];
-
-	NSDictionary* liveTagToLabelDictionary		 = [showTags state]		 ? [collection tagToLabelDictionary] : nil;
-	NSDictionary* liveBookmarksToLabelDictionary = [showBookmarks state] ? [collection bookmarkToLabelDictionary] : nil;
-	NSDictionary* liveBranchToLabelDictionary	 = [showBranches state]  ? [collection branchToLabelDictionary] : nil;
-	NSDictionary* liveOpenHeadToLabelDictionary	 = [showOpenHeads state] ? [collection openHeadToLabelDictionary] : nil;
-	if (liveTagToLabelDictionary       != cachedTagToLabelDictionary_ ||
-		liveBookmarksToLabelDictionary != cachedBookmarkToLabelDictionary_ ||
-		liveBranchToLabelDictionary    != cachedBranchToLabelDictionary_ ||
-		liveOpenHeadToLabelDictionary  != cachedOpenHeadToLabelDictionary_ ||
-		labelsTableData_ == nil)
+{	
+	if ([self labelTypeFilterOfButtons] != labelsTableFilterType_)
 		[self recomputeLabelsTableData];
 	return labelsTableData_;
 }
@@ -231,8 +199,6 @@
 - (IBAction) resetTable:(id)sender
 {
 	[self recomputeLabelsTableData];
-	dispatch_async(mainQueue(), ^{
-		[self reloadData]; });
 }
 
 

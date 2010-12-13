@@ -37,6 +37,7 @@
 
 // History / Log
 @class LogEntry;
+@class LogRecord;
 @class RepositoryData;
 @class LogGraph;
 @class LogTableView;
@@ -194,6 +195,25 @@ typedef enum
 } HGStatus;
 
 
+typedef enum
+{
+	eNoLabelType	 = 0,
+	eLocalTag		 = 1<<1,
+	eGlobalTag		 = 1<<2,
+	eBookmark		 = 1<<3,
+	eActiveBranch	 = 1<<4,
+	eInactiveBranch  = 1<<5,
+	eClosedBranch	 = 1<<6,
+	eOpenHead		 = 1<<7,
+	eTagLabel		 = eGlobalTag | eLocalTag,
+	eBranchLabel	 = eActiveBranch | eInactiveBranch | eClosedBranch,
+	eBookmarkLabel   = eBookmark,
+	eLocalLabel		 = eLocalTag | eBookmark,
+	eStationaryLabel = eLocalTag | eGlobalTag,
+	eNotOpenHead     = eTagLabel | eBranchLabel | eBookmarkLabel
+} LabelType;
+
+
 // Represents the type of a node in the sidebar
 typedef enum
 {
@@ -204,14 +224,41 @@ typedef enum
 } SidebarNodeKind;
 
 
-// Represents the stag of loading of a LogEntry. (We lazily load log entries for speed.)
+// Represents the stage of loading of a LogEntry. (We lazily load log entries for speed.)
 typedef enum
 {
-	eLogEntryLoadedNone	     = 0,	// Nothing is loaded
-	eLogEntryLoadedPending	 = 1,	// We have started on a thread loading this log entry
-	eLogEntryLoadedPartially = 2,	// We have loaded enough to display a line in a table view listing of log entries
-	eLogEntryLoadedFully	 = 3	// We have loaded all the information about a log entry
+	eLogEntryLoadedNone				= 0,	// Nothing is loaded
+	eLogEntryLoading				= 1,	// We have started on a thread loading this log entry
+	eLogEntryLoadingButAlreadyStale = 2,	// This log entry is out of date and we are reloading it.
+	eLogEntryIsStale				= 3,	// This log entry is out of date. We can use its information, but once we do, it will automatically tigger reloading
+	eLogEntryLoaded					= 4		// We have loaded all the information about a log entry
 } LogEntryLoadStatus;
+
+
+// Represents the stage of loading of a LogRecord. (We lazily load log records for speed.)
+typedef enum
+{
+	eLogRecordLoadingPending = 0,		// We have started on a thread loading this log record for this changeset
+	eLogRecordDetailsLoading = 1<<1,	// We are loading all the normal details: eg user, date, comments
+	eLogRecordDetailsLoaded  = 1<<2,	// We have loaded all the normal details: eg user, date, comments
+	eLogRecordFilesLoading   = 1<<3,	// We are loading all the file adds, mods, and removes
+	eLogRecordFilesLoaded    = 1<<4,	// We have loaded all the file adds, mods, and removes
+	
+	eLogRecordDetailsAndFilesLoaded  = eLogRecordDetailsLoaded  | eLogRecordFilesLoaded
+} LogRecordLoadStatus;
+
+
+// Represents the stage of loading of the information about the repository.
+typedef enum
+{
+	eInformationStatusNotLoaded					= 0,
+	eInformationStatusLoading					= 1<<1,
+	eInformationStatusStale						= 1<<2,
+	eInformationStatusLoadingButAlreadyStale	= 1<<3,
+	eInformationStatusLoaded					= 1<<4,
+	
+	eInformationStatusLoadedOrLoading			= eInformationStatusLoading | eInformationStatusLoadingButAlreadyStale | eInformationStatusLoaded
+} InformationLoadStatus;
 
 
 typedef enum
@@ -265,19 +312,21 @@ extern NSString* const kRepositoryRootChanged;				// The sidebar bookmark now po
 
 extern NSString* const kSidebarSelectionDidChange;			// The selection in the sidebar bookmark changed
 extern NSString* const kUnderlyingRepositoryChanged;		// The underlying mercurial repository changed. (A commit or update
-															// happened, etc.) tables need to reflect the underlying change. This
-															// is mostly LogTableViews, etc.
+															// happened, etc.) Upon recite of this notifcaiton the RepositoryData
+															// marks its stored data as stale. Subsequently the repository data is
+															// reloaded when it is accessed.
 
 extern NSString* const kRepositoryDataIsNew;				// The collection of log entries for the current repository was
 															// changed to a new collection. Clients need to observe this and
 															// refresh accordingly.
-extern NSString* const kRepositoryDataDidChange;			// The collection of log entries for the current repository did
-															// change. Clients need to observe this and refresh accordingly.
+extern NSString* const kRepositoryDataDidChange;			// The underlying, tip, parents, tags, and branches, of the repository
+															// just got changed / refreshed. Clients need to observe this and
+															// refresh accordingly.
 extern NSString* const kLogEntriesDidChange;				// Some LogEntires which are part of the RepositoryData got
 															// fleshed out.
 
 // Non-critical notifications
-extern NSString* const kBrowserDisplayPreferencesChanged;		// The user selected some preference or something so tables etc should
+extern NSString* const kBrowserDisplayPreferencesChanged;	// The user selected some preference or something so tables etc should
 															// update their visual appearance.
 extern NSString* const kCompatibleRepositoryChanged;		// A repository compatible to the current repository changed. (A push
 															// happened, etc.)
@@ -304,13 +353,17 @@ extern NSString* const kProcessRemovedFromProcessList;		// A process has been re
 // MARK:  Dictionary constants
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-extern NSString* const kLogEntryChangeType;
-extern NSString* const kLogEntryTagsChanged;
-extern NSString* const kLogEntryBranchesChanged;
-extern NSString* const kLogEntryBookmarksChanged;
-extern NSString* const kLogEntryOpenHeadsChanged;
-extern NSString* const kLogEntryDetailsChanged;
+extern NSString* const kRepositoryDataChangeType;
 
+extern NSString* const kRepositoryBranchNameChanged;		// The name of the branch for the current parent changed in the
+															// current repository did change. Clients need to observe this and
+															// refresh accordingly.
+extern NSString* const kRepositoryLabelsInfoChanged;		// The labels of the current repository did change. Clients need to
+															// observe this and refresh accordingly.
+extern NSString* const kRepositoryParentsOfCurrentRevChanged; // The parents of the current repository did change. Clients need to
+															  // observe this and refresh accordingly.
+extern NSString* const kRepositoryTipChanged;				// The tip of the current repository did change. Clients need to
+															// observe this and refresh accordingly.
 
 
 
@@ -486,6 +539,8 @@ BrowserDoubleClickAction		browserBehaviourCommandOptionDoubleClick();
 // MARK: Globals
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+extern NSMutableDictionary* changesetHashToLogRecord;	// Global dictonary of LogRecords
+
 extern NSNumber*		NOasNumber;
 extern NSNumber*		YESasNumber;
 extern NSNumber*		SlotNumber;
@@ -610,6 +665,7 @@ extern int			bitCount(int num1);
 static inline BOOL	bitsInCommon(int num1, int num2)	{ return (num1 & num2) != 0; }
 static inline int	unionBits(int num1, int num2)		{ return num1 | num2; }
 static inline int	andBits(int num1, int num2)			{ return num1 & num2; }
+static inline int	unsetBits(int num1, int num2)		{ return num1 & ~num2; }
 
 
 
@@ -794,7 +850,6 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 // MARK: -
 @interface NSString ( NSStringPlusComparisons )
 - (BOOL)	isNotEqualToString:(NSString*)aString;
-- (BOOL)	numericCompare:(NSString*)aString;
 @end
 
 
@@ -842,6 +897,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 // MARK: -
 @interface NSIndexSet ( NSIndexSetPlusAccessors )
 - (BOOL)	intersectsIndexes:(NSIndexSet*)indexSet;
+- (BOOL)	freeOfIndex:(NSInteger)index;
 @end
 
 
@@ -851,12 +907,16 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 - (void)	addObject:(id)object1 followedBy:(id)object2 followedBy:(id)object3;
 - (void)	addObjectIfNonNil:(id)object1;
 - (id)		popLast;
+- (id)		popFirst;
+- (void)	removeFirstObject;
+- (void)	reverse;
 @end
 
 
 // MARK: -
 @interface NSArray ( NSArrayPlusAccessors )
 - (id)		firstObject;
+- (NSArray*) reversedArray;
 @end
 
 
@@ -865,8 +925,8 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 - (id)		  synchronizedObjectForKey:(id)aKey;
 - (NSArray*)  synchronizedAllKeys;
 - (NSInteger) synchronizedCount;
-- (id)		  synchronizedValueForNumberKey:(NSNumber*)key;
-- (id)		  valueForNumberKey:(NSNumber*)key;
+- (id)		  synchronizedObjectForIntKey:(NSInteger)key;
+- (id)		  objectForIntKey:(NSInteger)key;
 @end
 
 
@@ -874,9 +934,9 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 @interface NSMutableDictionary ( NSMutableDictionaryPlusAccessors )
 - (void)	synchronizedSetObject:(id)anObject forKey:(id)aKey;
 - (void)	synchronizedRemoveObjectForKey:(id)aKey;
-- (void)	synchronizedSetValue:(id)value forNumberKey:(NSNumber*)key;
-- (void)	setValue:(id)value forNumberKey:(NSNumber*)key;
 - (void)	copyValueOfKey:(id)aKey from:(NSDictionary*)aDict;
+- (void)	synchronizedSetObject:(id)value forIntKey:(NSInteger)key;
+- (void)	setObject:(id)value forIntKey:(NSInteger)key;
 @end
 
 

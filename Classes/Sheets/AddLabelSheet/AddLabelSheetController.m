@@ -194,7 +194,7 @@ NSString* kTheRevisionFieldValue = @"theRevisionFieldValue";
 	if (!wasShowingHistoryView)
 		[[theHistoryView logTableView] scrollToCurrentRevision:sender];			// Scroll to the current revision
 	[self setTheNewNameFieldValue:@""];
-	[self setTheRevisionFieldValue:[[theHistoryView logTableView] chosenRevision]];
+	[self setTheRevisionFieldValue:numberAsString([[theHistoryView logTableView] chosenRevision])];
 	[commitMessageTextView setString:@""];
 	[self setForceValue:NO];
 	[self updateButtonsAndMessages];

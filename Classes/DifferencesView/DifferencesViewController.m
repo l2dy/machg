@@ -172,12 +172,12 @@
 
 - (NSString*) revisionNumbers
 {
-	NSString* baseRev    = [baseLogTableView selectedRevision];
-	NSString* compareRev = [compareLogTableView selectedRevision];
+	NSNumber* baseRev    = [baseLogTableView selectedRevision];
+	NSNumber* compareRev = [compareLogTableView selectedRevision];
 	if (IsEmpty(baseRev) || IsEmpty(compareRev))
 		return nil;
 	if ([compareRev isEqualTo:[compareLogTableView incompleteRevision]])
-		return baseRev;	
+		return numberAsString(baseRev);	
 	return fstr(@"%@%:%@", baseRev, compareRev);
 }
 
@@ -193,8 +193,8 @@
 {
 	[self refreshDifferencesView:sender];
 	LowHighPair pair  = [[[myDocument theHistoryView] logTableView] parentToHighestSelectedRevisions];
-	NSString* lowRev  = (pair.lowRevision != NSNotFound)  ? intAsString(pair.lowRevision)  : [myDocument getHGParent1Revision];
-	NSString* highRev = (pair.highRevision != NSNotFound) ? intAsString(pair.highRevision) : [myDocument getHGParent1Revision];
+	NSNumber* lowRev  = (pair.lowRevision  != NSNotFound) ? intAsNumber(pair.lowRevision)  : [myDocument getHGParent1Revision];
+	NSNumber* highRev = (pair.highRevision != NSNotFound) ? intAsNumber(pair.highRevision) : [myDocument getHGParent1Revision];
 	NSInteger lowRow  = [baseLogTableView closestTableRowForRevision:lowRev];
 	NSInteger highRow = [baseLogTableView closestTableRowForRevision:highRev];
 
@@ -261,9 +261,9 @@
 {
 	LowHighPair pair = MakeLowHighPair(stringAsInt(low), stringAsInt(high));
 	[baseLogTableView    scrollToRangeOfRevisions:pair];
-	[baseLogTableView    scrollToRevision:intAsString(pair.lowRevision)];
+	[baseLogTableView    scrollToRevision:intAsNumber(pair.lowRevision)];
 	[compareLogTableView scrollToRangeOfRevisions:pair];
-	[compareLogTableView scrollToRevision:intAsString(pair.highRevision)];
+	[compareLogTableView scrollToRevision:intAsNumber(pair.highRevision)];
 }
 
 

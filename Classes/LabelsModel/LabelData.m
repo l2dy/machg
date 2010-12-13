@@ -32,7 +32,7 @@
 	if (self)
 	{
 		name_ = n;
-		revision_ = r;
+		revision_ = stringAsNumber(r);
 		changeset_ = c;
 		labelType_ = t;
 		info_ = i;
@@ -115,7 +115,7 @@
 {
 	if (![[self name] isEqualToString:[label name]])
 		return NO;
-	if (![[self revision] isEqualToString:[label revision]])
+	if (![[self revision] isEqualToNumber:[label revision]])
 		return NO;
 	if (![[self changeset] isEqualToString:[label changeset]])
 		return NO;
@@ -123,6 +123,9 @@
 		return NO;
 	return YES;
 }
+
+
+- (NSString*) revisionStr { return numberAsString(revision_); }
 
 - (NSString*) labelTypeDescription
 {
@@ -165,11 +168,11 @@
 // MARK:  Operations on Lists of Labels
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-+ (NSArray*) filterLabels:(NSArray*)labels byType:(LabelType)t
++ (NSArray*) filterLabels:(NSArray*)labels byType:(LabelType)type
 {
 	NSMutableArray* newArrayOfLabels = [[NSMutableArray alloc] init];
 	for (LabelData* label in labels)
-		if (bitsInCommon([label labelType], t))
+		if (bitsInCommon([label labelType], type))
 			[newArrayOfLabels addObject:label];
 	return newArrayOfLabels;
 }
@@ -193,6 +196,17 @@
 	return newLabels;
 }
 
++ (NSArray*) filterLabelsDictionary:(NSDictionary*)labelsDict byType:(LabelType)type
+{
+	NSMutableArray* newArrayOfLabels = [[NSMutableArray alloc] init];
+	for (NSArray* labelArray in [labelsDict allValues])
+		for (LabelData* label in labelArray)
+			if (bitsInCommon([label labelType], type))
+				[newArrayOfLabels addObject:label];
+	return newArrayOfLabels;
+}
+
+
 
 
 
@@ -211,7 +225,7 @@
 	if (descriptors)
 		return descriptors;
 	NSSortDescriptor* byName = [NSSortDescriptor sortDescriptorWithKey:@"name"					ascending:YES  selector:@selector(caseInsensitiveCompare:)];
-	NSSortDescriptor* byRev  = [NSSortDescriptor sortDescriptorWithKey:@"revision"				ascending:YES  selector:@selector(numericCompare:)];
+	NSSortDescriptor* byRev  = [NSSortDescriptor sortDescriptorWithKey:@"revision"				ascending:YES  selector:@selector(compare:)];
 	NSSortDescriptor* byType = [NSSortDescriptor sortDescriptorWithKey:@"labelTypeDescription"	ascending:YES  selector:@selector(compare:)];
 	descriptors = [NSArray arrayWithObjects:byName, byRev, byType, nil];
 	return descriptors;
@@ -223,7 +237,7 @@
 	if (descriptors)
 		return descriptors;
 	NSSortDescriptor* byName = [NSSortDescriptor sortDescriptorWithKey:@"name"					ascending:YES  selector:@selector(caseInsensitiveCompare:)];
-	NSSortDescriptor* byRev  = [NSSortDescriptor sortDescriptorWithKey:@"revision"				ascending:YES  selector:@selector(numericCompare:)];
+	NSSortDescriptor* byRev  = [NSSortDescriptor sortDescriptorWithKey:@"revision"				ascending:YES  selector:@selector(compare:)];
 	NSSortDescriptor* byType = [NSSortDescriptor sortDescriptorWithKey:@"labelTypeDescription"	ascending:YES  selector:@selector(compare:)];
 	descriptors = [NSArray arrayWithObjects:byRev, byName, byType, nil];
 	return descriptors;
@@ -235,7 +249,7 @@
 	if (descriptors)
 		return descriptors;	
 	NSSortDescriptor* byName = [NSSortDescriptor sortDescriptorWithKey:@"name"					ascending:YES  selector:@selector(caseInsensitiveCompare:)];
-	NSSortDescriptor* byRev  = [NSSortDescriptor sortDescriptorWithKey:@"revision"				ascending:YES  selector:@selector(numericCompare:)];
+	NSSortDescriptor* byRev  = [NSSortDescriptor sortDescriptorWithKey:@"revision"				ascending:YES  selector:@selector(compare:)];
 	NSSortDescriptor* byType = [NSSortDescriptor sortDescriptorWithKey:@"labelTypeDescription"	ascending:YES  selector:@selector(compare:)];
 	descriptors = [NSArray arrayWithObjects:byType, byRev, byName, nil];
 	return descriptors;

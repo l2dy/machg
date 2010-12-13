@@ -32,7 +32,7 @@
 
 // Initilization
 - (BackoutSheetController*) initBackoutSheetControllerWithDocument:(MacHgDocument*)doc;
-- (void)	 openBackoutSheetWithRevision:(NSString*)revision;
+- (void)	 openBackoutSheetWithRevision:(NSNumber*)revision;
 
 
 // Action Methods

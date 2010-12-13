@@ -35,12 +35,11 @@
 
 // Initilization
 - (UpdateSheetController*) initUpdateSheetControllerWithDocument:(MacHgDocument*)doc;
-- (void)	 openUpdateSheetWithRevision:(NSString*)revision;
+- (void)	 openUpdateSheetWithRevision:(NSNumber*)revision;
 
 
 // Action Methods
 - (IBAction) validate:(id)sender;
-- (void)     openUpdateSheetWithRevision:(NSString*)revision;
 - (IBAction) openUpdateSheetWithCurrentRevision:(id)sender;
 - (IBAction) sheetButtonOk:(id)sender;
 - (IBAction) sheetButtonCancel:(id)sender;

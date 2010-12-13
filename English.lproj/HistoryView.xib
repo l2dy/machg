@@ -2,18 +2,18 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.10">
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
-		<string key="IBDocument.SystemVersion">10F569</string>
-		<string key="IBDocument.InterfaceBuilderVersion">804</string>
-		<string key="IBDocument.AppKitVersion">1038.29</string>
-		<string key="IBDocument.HIToolboxVersion">461.00</string>
+		<string key="IBDocument.SystemVersion">10C540</string>
+		<string key="IBDocument.InterfaceBuilderVersion">740</string>
+		<string key="IBDocument.AppKitVersion">1038.25</string>
+		<string key="IBDocument.HIToolboxVersion">458.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
-			<string key="NS.object.0">804</string>
+			<string key="NS.object.0">740</string>
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
+			<integer value="884"/>
 			<integer value="344"/>
-			<integer value="771"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -987,7 +987,7 @@
 																				<object class="NSSortDescriptor" key="NSSortDescriptorPrototype">
 																					<string key="NSKey">revision</string>
 																					<bool key="NSAscending">YES</bool>
-																					<string key="NSSelector">numericCompare:</string>
+																					<string key="NSSelector">compare:</string>
 																				</object>
 																			</object>
 																			<object class="NSTableColumn" id="360536403">
@@ -3259,6 +3259,7 @@
 							<string>labelsMenuMoveChosenLabel:</string>
 							<string>labelsMenuRemoveChosenLabel:</string>
 							<string>labelsMenuUpdateRepositoryToChosenRevision:</string>
+							<string>mainMenuBackoutChangeset:</string>
 							<string>mainMenuCollapseChangesets:</string>
 							<string>mainMenuCommitAllFiles:</string>
 							<string>mainMenuDiffAllFiles:</string>
@@ -3295,120 +3296,7 @@
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>historyMenuAddLabelToChosenRevision:</string>
-							<string>historyMenuDiffAllToChosenRevision:</string>
-							<string>historyMenuManifestOfChosenRevision:</string>
-							<string>historyMenuMergeRevision:</string>
-							<string>historyMenuUpdateRepositoryToChosenRevision:</string>
-							<string>historyMenuViewRevisionDifferences:</string>
-							<string>labelsMenuMoveChosenLabel:</string>
-							<string>labelsMenuRemoveChosenLabel:</string>
-							<string>labelsMenuUpdateRepositoryToChosenRevision:</string>
-							<string>mainMenuCollapseChangesets:</string>
-							<string>mainMenuCommitAllFiles:</string>
-							<string>mainMenuDiffAllFiles:</string>
-							<string>mainMenuHistoryEditChangesets:</string>
-							<string>mainMenuRebaseChangesets:</string>
-							<string>mainMenuRevertAllFiles:</string>
-							<string>mainMenuStripChangesets:</string>
-							<string>openHistoryView:</string>
-							<string>refreshHistoryView:</string>
-							<string>toolbarCommitFiles:</string>
-							<string>toolbarDiffFiles:</string>
-							<string>toolbarRevertFiles:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBActionInfo">
-								<string key="name">historyMenuAddLabelToChosenRevision:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">historyMenuDiffAllToChosenRevision:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">historyMenuManifestOfChosenRevision:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">historyMenuMergeRevision:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">historyMenuUpdateRepositoryToChosenRevision:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">historyMenuViewRevisionDifferences:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">labelsMenuMoveChosenLabel:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">labelsMenuRemoveChosenLabel:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">labelsMenuUpdateRepositoryToChosenRevision:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">mainMenuCollapseChangesets:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">mainMenuCommitAllFiles:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">mainMenuDiffAllFiles:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">mainMenuHistoryEditChangesets:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">mainMenuRebaseChangesets:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">mainMenuRevertAllFiles:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">mainMenuStripChangesets:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">openHistoryView:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">refreshHistoryView:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">toolbarCommitFiles:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">toolbarDiffFiles:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">toolbarRevertFiles:</string>
-								<string key="candidateClassName">id</string>
-							</object>
+							<string>id</string>
 						</object>
 					</object>
 					<object class="NSMutableDictionary" key="outlets">
@@ -3434,50 +3322,6 @@
 							<string>LabelsTableView</string>
 						</object>
 					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>accordionView</string>
-							<string>detailedEntryTextView</string>
-							<string>detailsView</string>
-							<string>logTableView</string>
-							<string>parentController</string>
-							<string>removeLabelButton</string>
-							<string>theLabelsTableView_</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBToOneOutletInfo">
-								<string key="name">accordionView</string>
-								<string key="candidateClassName">JHAccordionView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">detailedEntryTextView</string>
-								<string key="candidateClassName">LogTableTextView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">detailsView</string>
-								<string key="candidateClassName">NSView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">logTableView</string>
-								<string key="candidateClassName">LogTableView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">parentController</string>
-								<string key="candidateClassName">HistoryViewController</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">removeLabelButton</string>
-								<string key="candidateClassName">NSButton</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">theLabelsTableView_</string>
-								<string key="candidateClassName">LabelsTableView</string>
-							</object>
-						</object>
-					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="179443479">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/HistoryView/HistoryViewController.h</string>
@@ -3490,13 +3334,6 @@
 						<string key="NS.key.0">historyMenuRevertAllToChosenRevision:</string>
 						<string key="NS.object.0">id</string>
 					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<string key="NS.key.0">historyMenuRevertAllToChosenRevision:</string>
-						<object class="IBActionInfo" key="NS.object.0">
-							<string key="name">historyMenuRevertAllToChosenRevision:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBUserSource</string>
 						<string key="minorKey"/>
@@ -3508,13 +3345,6 @@
 					<object class="NSMutableDictionary" key="outlets">
 						<string key="NS.key.0">theHistoryView</string>
 						<string key="NS.object.0">HistoryView</string>
-					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<string key="NS.key.0">theHistoryView</string>
-						<object class="IBToOneOutletInfo" key="NS.object.0">
-							<string key="name">theHistoryView</string>
-							<string key="candidateClassName">HistoryView</string>
-						</object>
 					</object>
 					<reference key="sourceIdentifier" ref="179443479"/>
 				</object>
@@ -3540,25 +3370,6 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>NSView</string>
 							<string>NSView</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>buttonsContainerInDivider</string>
-							<string>divider</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBToOneOutletInfo">
-								<string key="name">buttonsContainerInDivider</string>
-								<string key="candidateClassName">NSView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">divider</string>
-								<string key="candidateClassName">NSView</string>
-							</object>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="243314443">
@@ -3592,30 +3403,6 @@
 							<string>JHAccordionSubView</string>
 						</object>
 					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>pane1Box</string>
-							<string>pane2Box</string>
-							<string>pane3Box</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBToOneOutletInfo">
-								<string key="name">pane1Box</string>
-								<string key="candidateClassName">JHAccordionSubView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">pane2Box</string>
-								<string key="candidateClassName">JHAccordionSubView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">pane3Box</string>
-								<string key="candidateClassName">JHAccordionSubView</string>
-							</object>
-						</object>
-					</object>
 					<reference key="sourceIdentifier" ref="243314443"/>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -3642,45 +3429,6 @@
 							<string>NSView</string>
 						</object>
 					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>buttonsInDivider1Box</string>
-							<string>buttonsInDivider2Box</string>
-							<string>buttonsInDivider3Box</string>
-							<string>divider1Box</string>
-							<string>divider2Box</string>
-							<string>divider3Box</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBToOneOutletInfo">
-								<string key="name">buttonsInDivider1Box</string>
-								<string key="candidateClassName">NSView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">buttonsInDivider2Box</string>
-								<string key="candidateClassName">NSView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">buttonsInDivider3Box</string>
-								<string key="candidateClassName">NSView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">divider1Box</string>
-								<string key="candidateClassName">NSView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">divider2Box</string>
-								<string key="candidateClassName">NSView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">divider3Box</string>
-								<string key="candidateClassName">NSView</string>
-							</object>
-						</object>
-					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBUserSource</string>
 						<string key="minorKey"/>
@@ -3704,30 +3452,6 @@
 							<string>id</string>
 						</object>
 					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>labelTableDoubleClick:</string>
-							<string>labelTableSingleClick:</string>
-							<string>resetTable:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBActionInfo">
-								<string key="name">labelTableDoubleClick:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">labelTableSingleClick:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">resetTable:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-						</object>
-					</object>
 					<object class="NSMutableDictionary" key="outlets">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
@@ -3745,40 +3469,6 @@
 							<string>NSButton</string>
 							<string>NSButton</string>
 							<string>NSButton</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>parentController</string>
-							<string>showBookmarks</string>
-							<string>showBranches</string>
-							<string>showOpenHeads</string>
-							<string>showTags</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBToOneOutletInfo">
-								<string key="name">parentController</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">showBookmarks</string>
-								<string key="candidateClassName">NSButton</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">showBranches</string>
-								<string key="candidateClassName">NSButton</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">showOpenHeads</string>
-								<string key="candidateClassName">NSButton</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">showTags</string>
-								<string key="candidateClassName">NSButton</string>
-							</object>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
@@ -3831,45 +3521,6 @@
 							<string>id</string>
 						</object>
 					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>refreshTable:</string>
-							<string>resetTable:</string>
-							<string>scrollToBeginning:</string>
-							<string>scrollToCurrentRevision:</string>
-							<string>scrollToEnd:</string>
-							<string>scrollToSelected:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBActionInfo">
-								<string key="name">refreshTable:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">resetTable:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">scrollToBeginning:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">scrollToCurrentRevision:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">scrollToEnd:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">scrollToSelected:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-						</object>
-					</object>
 					<object class="NSMutableDictionary" key="outlets">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
@@ -3881,25 +3532,6 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>LogTableTextView</string>
 							<string>id</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>detailedEntryTextView</string>
-							<string>parentController</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBToOneOutletInfo">
-								<string key="name">detailedEntryTextView</string>
-								<string key="candidateClassName">LogTableTextView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">parentController</string>
-								<string key="candidateClassName">id</string>
-							</object>
 						</object>
 					</object>
 					<reference key="sourceIdentifier" ref="35306106"/>
@@ -3988,195 +3620,6 @@
 							<string>id</string>
 						</object>
 					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>actionSwitchViewToBackingView:</string>
-							<string>actionSwitchViewToBrowserView:</string>
-							<string>actionSwitchViewToDifferencesView:</string>
-							<string>actionSwitchViewToHistoryView:</string>
-							<string>actionTestListingItem:</string>
-							<string>doLinkUp:</string>
-							<string>mainMenuAddAndCloneServerRepositoryRef:</string>
-							<string>mainMenuAddLabelToCurrentRevision:</string>
-							<string>mainMenuCloneRepository:</string>
-							<string>mainMenuExportPatches:</string>
-							<string>mainMenuImportPatches:</string>
-							<string>mainMenuIncomingFromRepository:</string>
-							<string>mainMenuManifestOfCurrentVersion:</string>
-							<string>mainMenuMarkResolvedSelectedFiles:</string>
-							<string>mainMenuMergeWith:</string>
-							<string>mainMenuNoAction:</string>
-							<string>mainMenuOpenTerminalHere:</string>
-							<string>mainMenuOutgoingToRepository:</string>
-							<string>mainMenuPullFromRepository:</string>
-							<string>mainMenuPushToRepository:</string>
-							<string>mainMenuRemergeSelectedFiles:</string>
-							<string>mainMenuRollbackCommit:</string>
-							<string>mainMenuUpdateRepository:</string>
-							<string>mainMenuUpdateRepositoryToVersion:</string>
-							<string>refreshBrowserContent:</string>
-							<string>searchFieldChanged:</string>
-							<string>sidebarMenuAddLocalRepositoryRef:</string>
-							<string>sidebarMenuAddNewSidebarGroupItem:</string>
-							<string>sidebarMenuAddServerRepositoryRef:</string>
-							<string>sidebarMenuConfigureLocalRepositoryRef:</string>
-							<string>sidebarMenuConfigureServerRepositoryRef:</string>
-							<string>sidebarMenuOpenTerminalHere:</string>
-							<string>sidebarMenuRemoveSidebarItem:</string>
-							<string>sidebarMenuRevealRepositoryInFinder:</string>
-							<string>testBrowserLoad:</string>
-							<string>toolbarUpdate:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBActionInfo">
-								<string key="name">actionSwitchViewToBackingView:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">actionSwitchViewToBrowserView:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">actionSwitchViewToDifferencesView:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">actionSwitchViewToHistoryView:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">actionTestListingItem:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">doLinkUp:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">mainMenuAddAndCloneServerRepositoryRef:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">mainMenuAddLabelToCurrentRevision:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">mainMenuCloneRepository:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">mainMenuExportPatches:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">mainMenuImportPatches:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">mainMenuIncomingFromRepository:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">mainMenuManifestOfCurrentVersion:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">mainMenuMarkResolvedSelectedFiles:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">mainMenuMergeWith:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">mainMenuNoAction:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">mainMenuOpenTerminalHere:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">mainMenuOutgoingToRepository:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">mainMenuPullFromRepository:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">mainMenuPushToRepository:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">mainMenuRemergeSelectedFiles:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">mainMenuRollbackCommit:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">mainMenuUpdateRepository:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">mainMenuUpdateRepositoryToVersion:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">refreshBrowserContent:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">searchFieldChanged:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">sidebarMenuAddLocalRepositoryRef:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">sidebarMenuAddNewSidebarGroupItem:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">sidebarMenuAddServerRepositoryRef:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">sidebarMenuConfigureLocalRepositoryRef:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">sidebarMenuConfigureServerRepositoryRef:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">sidebarMenuOpenTerminalHere:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">sidebarMenuRemoveSidebarItem:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">sidebarMenuRevealRepositoryInFinder:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">testBrowserLoad:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">toolbarUpdate:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-						</object>
-					</object>
 					<object class="NSMutableDictionary" key="outlets">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
@@ -4210,80 +3653,6 @@
 							<string>NSButton</string>
 							<string>NSButton</string>
 							<string>NSView</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>informationAndActivityBox_</string>
-							<string>informationBox_</string>
-							<string>mainContentBox</string>
-							<string>mainSplitView</string>
-							<string>mainWindow_</string>
-							<string>sidebarAndInformation_</string>
-							<string>sidebar_</string>
-							<string>theProcessListController_</string>
-							<string>toolbarSearchField_</string>
-							<string>toolbarSearchItem_</string>
-							<string>updateAlertAccessoryAlertSuppressionCheckBox</string>
-							<string>updateAlertAccessoryCleanCheckBox</string>
-							<string>updateAlertAccessoryView</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBToOneOutletInfo">
-								<string key="name">informationAndActivityBox_</string>
-								<string key="candidateClassName">NSBox</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">informationBox_</string>
-								<string key="candidateClassName">NSBox</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">mainContentBox</string>
-								<string key="candidateClassName">NSBox</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">mainSplitView</string>
-								<string key="candidateClassName">BWSplitView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">mainWindow_</string>
-								<string key="candidateClassName">NSWindow</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">sidebarAndInformation_</string>
-								<string key="candidateClassName">ThickSplitView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">sidebar_</string>
-								<string key="candidateClassName">Sidebar</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">theProcessListController_</string>
-								<string key="candidateClassName">ProcessListController</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">toolbarSearchField_</string>
-								<string key="candidateClassName">NSSearchField</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">toolbarSearchItem_</string>
-								<string key="candidateClassName">NSToolbarItem</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">updateAlertAccessoryAlertSuppressionCheckBox</string>
-								<string key="candidateClassName">NSButton</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">updateAlertAccessoryCleanCheckBox</string>
-								<string key="candidateClassName">NSButton</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">updateAlertAccessoryView</string>
-								<string key="candidateClassName">NSView</string>
-							</object>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
@@ -4336,40 +3705,6 @@
 							<string>NSTableView</string>
 						</object>
 					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>activityBox</string>
-							<string>informationAndActivityBox</string>
-							<string>informationBox</string>
-							<string>myDocument</string>
-							<string>processListTableView</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBToOneOutletInfo">
-								<string key="name">activityBox</string>
-								<string key="candidateClassName">NSBox</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">informationAndActivityBox</string>
-								<string key="candidateClassName">NSBox</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">informationBox</string>
-								<string key="candidateClassName">NSBox</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">myDocument</string>
-								<string key="candidateClassName">MacHgDocument</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">processListTableView</string>
-								<string key="candidateClassName">NSTableView</string>
-							</object>
-						</object>
-					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/Sidebar/ProcessListController.h</string>
@@ -4382,23 +3717,9 @@
 						<string key="NS.key.0">scrollToLabel:</string>
 						<string key="NS.object.0">id</string>
 					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<string key="NS.key.0">scrollToLabel:</string>
-						<object class="IBActionInfo" key="NS.object.0">
-							<string key="name">scrollToLabel:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-					</object>
 					<object class="NSMutableDictionary" key="outlets">
 						<string key="NS.key.0">logTable</string>
 						<string key="NS.object.0">LogTableView</string>
-					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<string key="NS.key.0">logTable</string>
-						<object class="IBToOneOutletInfo" key="NS.object.0">
-							<string key="name">logTable</string>
-							<string key="candidateClassName">LogTableView</string>
-						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
@@ -4435,60 +3756,6 @@
 							<string>id</string>
 						</object>
 					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>reloadSidebarData:</string>
-							<string>sidebarMenuAddLocalRepositoryRef:</string>
-							<string>sidebarMenuAddNewSidebarGroupItem:</string>
-							<string>sidebarMenuAddServerRepositoryRef:</string>
-							<string>sidebarMenuConfigureLocalRepositoryRef:</string>
-							<string>sidebarMenuConfigureServerRepositoryRef:</string>
-							<string>sidebarMenuOpenTerminalHere:</string>
-							<string>sidebarMenuRemoveSidebarItem:</string>
-							<string>sidebarMenuRevealRepositoryInFinder:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBActionInfo">
-								<string key="name">reloadSidebarData:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">sidebarMenuAddLocalRepositoryRef:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">sidebarMenuAddNewSidebarGroupItem:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">sidebarMenuAddServerRepositoryRef:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">sidebarMenuConfigureLocalRepositoryRef:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">sidebarMenuConfigureServerRepositoryRef:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">sidebarMenuOpenTerminalHere:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">sidebarMenuRemoveSidebarItem:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">sidebarMenuRevealRepositoryInFinder:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-						</object>
-					</object>
 					<object class="NSMutableDictionary" key="outlets">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
@@ -4504,35 +3771,6 @@
 							<string>MacHgDocument</string>
 							<string>NSPathControl</string>
 							<string>NSMenu</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>informationTextView_</string>
-							<string>myDocument</string>
-							<string>repositoryPathControl_</string>
-							<string>sidebarContextualMenu</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBToOneOutletInfo">
-								<string key="name">informationTextView_</string>
-								<string key="candidateClassName">NSTextView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">myDocument</string>
-								<string key="candidateClassName">MacHgDocument</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">repositoryPathControl_</string>
-								<string key="candidateClassName">NSPathControl</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">sidebarContextualMenu</string>
-								<string key="candidateClassName">NSMenu</string>
-							</object>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
@@ -4557,13 +3795,6 @@
 					<object class="NSMutableDictionary" key="actions">
 						<string key="NS.key.0">toggleCollapse:</string>
 						<string key="NS.object.0">id</string>
-					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<string key="NS.key.0">toggleCollapse:</string>
-						<object class="IBActionInfo" key="NS.object.0">
-							<string key="name">toggleCollapse:</string>
-							<string key="candidateClassName">id</string>
-						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
@@ -4698,45 +3929,6 @@
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>printDocument:</string>
-							<string>revertDocumentToSaved:</string>
-							<string>runPageLayout:</string>
-							<string>saveDocument:</string>
-							<string>saveDocumentAs:</string>
-							<string>saveDocumentTo:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBActionInfo">
-								<string key="name">printDocument:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">revertDocumentToSaved:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">runPageLayout:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">saveDocument:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">saveDocumentAs:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">saveDocumentTo:</string>
-								<string key="candidateClassName">id</string>
-							</object>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
@@ -5303,13 +4495,6 @@
 						<string key="NS.key.0">view</string>
 						<string key="NS.object.0">NSView</string>
 					</object>
-					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<string key="NS.key.0">view</string>
-						<object class="IBToOneOutletInfo" key="NS.object.0">
-							<string key="name">view</string>
-							<string key="candidateClassName">NSView</string>
-						</object>
-					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">AppKit.framework/Headers/NSViewController.h</string>
@@ -5347,7 +4532,6 @@
 			</object>
 		</object>
 		<int key="IBDocument.localizationMode">0</int>
-		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaFramework</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencies">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.macosx</string>
 			<integer value="1050" key="NS.object.0"/>
@@ -5363,30 +4547,5 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<string key="IBDocument.LastKnownRelativeProjectPath">../MacHg.xcodeproj</string>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
-		<object class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-			<bool key="EncodedWithXMLCoder">YES</bool>
-			<object class="NSArray" key="dict.sortedKeys">
-				<bool key="EncodedWithXMLCoder">YES</bool>
-				<string>ActionDrop24</string>
-				<string>DividerBackground24</string>
-				<string>DividerThumb</string>
-				<string>NSAddTemplate</string>
-				<string>NSMenuCheckmark</string>
-				<string>NSMenuMixedState</string>
-				<string>NSRemoveTemplate</string>
-				<string>NSSwitch</string>
-			</object>
-			<object class="NSMutableArray" key="dict.values">
-				<bool key="EncodedWithXMLCoder">YES</bool>
-				<string>{32, 25}</string>
-				<string>{1, 24}</string>
-				<string>{11, 10}</string>
-				<string>{8, 8}</string>
-				<string>{9, 8}</string>
-				<string>{7, 2}</string>
-				<string>{8, 8}</string>
-				<string>{15, 15}</string>
-			</object>
-		</object>
 	</data>
 </archive>

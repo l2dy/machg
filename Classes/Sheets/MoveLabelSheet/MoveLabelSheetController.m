@@ -63,9 +63,9 @@
 
 - (IBAction) validate:(id)sender
 {
-	NSString* versionToRevertTo = [logTableView selectedRevision];
+	NSNumber* versionToRevertTo = [logTableView selectedRevision];
 	[sheetInformativeMessageTextField setAttributedStringValue: [self formattedSheetMessage]];
-	BOOL enabled = (versionToRevertTo && [versionToRevertTo isNotEqualToString:[labelToMove_ revision]]);
+	BOOL enabled = (versionToRevertTo && ![versionToRevertTo isEqualToNumber:[labelToMove_ revision]]);
 	[okButton setEnabled:enabled];	
 }
 
@@ -91,7 +91,8 @@
 {
 	[theMoveLabelSheet makeFirstResponder:theMoveLabelSheet];	// Make the text fields of the sheet commit any changes they currently have
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
-	NSString* versionToRevertTo = [logTableView selectedRevision];
+	NSNumber* versionToRevertTo = [logTableView selectedRevision];
+	NSString* versionToRevertToStr = numberAsString(versionToRevertTo);
 
 	NSString* command = @"";
 	BOOL bailEarly = NO;
@@ -104,7 +105,7 @@
 		case eInactiveBranch:
 		case eClosedBranch:
 		{
-			if ([versionToRevertTo isNotEqualToString:[[myDocument repositoryData] getHGParent]])
+			if (![versionToRevertTo isEqualToNumber:[[myDocument repositoryData] getHGParent1Revision]])
 			{
 				BOOL updatedToTagetRev = [myDocument primaryActionUpdateFilesToVersion:versionToRevertTo withCleanOption:NO];
 				if (!updatedToTagetRev)
@@ -127,7 +128,7 @@
 		
 	NSMutableArray* argsMoveLabel = [NSMutableArray arrayWithObjects:command, nil ];
 	if (![labelToMove_ isBranch])
-		[argsMoveLabel addObject: @"--rev" followedBy:versionToRevertTo];
+		[argsMoveLabel addObject: @"--rev" followedBy:versionToRevertToStr];
 	if ([labelToMove_ labelType] == eLocalTag)
 		[argsMoveLabel addObject: @"--local"];
 	[argsMoveLabel addObject: @"--force"];
@@ -176,9 +177,9 @@
 - (NSAttributedString*) formattedSheetMessage
 {
 	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
-	NSString* versionToRevertTo = [logTableView selectedRevision];
+	NSNumber* versionToRevertTo = [logTableView selectedRevision];
 	
-	if (!versionToRevertTo || [versionToRevertTo isEqualToString:[labelToMove_ revision]])
+	if (!versionToRevertTo || [versionToRevertTo isEqualToNumber:[labelToMove_ revision]])
 	{
 		NSString* newSheetMessageText = fstr(@"select a revision to move the %@ %@ to which is different than the current revision %@", [labelToMove_ labelTypeDescription], [labelToMove_ name], [labelToMove_ revision]);
 		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(newSheetMessageText)];
@@ -186,9 +187,9 @@
 	}
 
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(fstr(@"The %@ %@ will be moved from revision ",[labelToMove_ labelTypeDescription], [labelToMove_ name]))];
-	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString([labelToMove_ revision])];
+	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(numberAsString([labelToMove_ revision]))];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" to the selected revision ")];
-	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(versionToRevertTo)];
+	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(numberAsString(versionToRevertTo))];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@".")];
 	return newSheetMessage;
 }

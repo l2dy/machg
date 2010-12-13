@@ -32,7 +32,7 @@
 
 // Initialization
 - (RevertSheetController*) initRevertSheetControllerWithDocument:(MacHgDocument*)doc;
-- (void)	 openRevertSheetWithPaths:(NSArray*)paths andRevision:(NSString*)revision;
+- (void)	 openRevertSheetWithPaths:(NSArray*)paths andRevision:(NSNumber*)revision;
 
 
 // Action Methods

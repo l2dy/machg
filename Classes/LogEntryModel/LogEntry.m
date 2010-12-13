@@ -8,8 +8,8 @@
 //
 
 #import "LogEntry.h"
+#import "LogRecord.h"
 #import "RepositoryData.h"
-#import "Common.h"
 #import "TaskExecutions.h"
 #import "MacHgDocument.h"
 #import "LabelData.h"
@@ -28,14 +28,15 @@
 // MARK:  Local Statics
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-static NSArray*  namesOfPartsShort  = nil;
-static NSArray*  namesOfPartsFull   = nil;
-NSString* templateStringShort = nil;
-NSString* templateStringFull  = nil;
-NSString* const entrySeparator      = @"\n\n‚Äπ‚Ä°‚Ä∫\n";		// We just need to choose two strings which will never be used inside the *comment* of a commit. (It's not disastrous if
-NSString* const entryPartSeparator	= @"\n‚Äπ,‚Ä∫\n";			// they are though it's just the entry for that will display missing....)
+static NSArray*  namesOfLogEntryParts = nil;
+NSString* templateLogEntryString      = nil;
+NSString* const logEntrySeparator     = @"\n";
+NSString* const logEntryPartSeparator = @"|";
+NSString* const incompleteChangeset = @"IncompleteChangeset";
 
-
+static int logEntryPartChangeset;
+static int logEntryPartParents;
+static int logEntryPartRevision;
 
 
 
@@ -44,19 +45,15 @@ NSString* const entryPartSeparator	= @"\n‚Äπ,‚Ä∫\n";			// they are thou
 // MARK:  Local Utilities
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-void setupGlobalsForPartsAndTemplate()
+void setupGlobalsForLogEntryPartsAndTemplate()
 {
-	// For some crazy reason you need to use {branches} to get the branch in the log command. Why?!? Ie you can test this with
-	// 'hg log --template "{branches}\n{branch}" --rev tip'
-	// This of course contradicts the output of 'hg branch' and 'hg branches'
-	NSArray* templateParts;
-	templateParts       = [NSArray arrayWithObjects:@"{rev}",    @"{author|person}", @"{date}", @"{parents}", @"{node|short}", @"{desc|firstline}", nil];
-	namesOfPartsShort   = [NSArray arrayWithObjects:@"revision", @"author",          @"date",   @"parents",   @"changeset",    @"shortComment",     nil];
-	templateStringShort = [[templateParts componentsJoinedByString:entryPartSeparator] stringByAppendingString:entrySeparator];
+	NSArray* templateParts = [NSArray arrayWithObjects:@"{rev}",    @"{parents}", @"{node}", nil];
+	namesOfLogEntryParts   = [NSArray arrayWithObjects:@"revision", @"parents",   @"changeset",    nil];
+	templateLogEntryString = [[templateParts componentsJoinedByString:logEntryPartSeparator] stringByAppendingString:logEntrySeparator];
 
-	templateParts       = [NSArray arrayWithObjects:@"{rev}",    @"{author|person}", @"{author}",     @"{date}", @"{parents}", @"{node|short}", @"{node}",        @"{desc|firstline}", @"{desc}",      nil];
-	namesOfPartsFull    = [NSArray arrayWithObjects:@"revision", @"author",          @"fullAuthor"  , @"date",   @"parents",   @"changeset",    @"fullChangeset", @"shortComment",     @"fullComment", nil];
-	templateStringFull  = [[templateParts componentsJoinedByString:entryPartSeparator] stringByAppendingString:entrySeparator];
+	logEntryPartChangeset  = [namesOfLogEntryParts indexOfObject:@"changeset"];
+	logEntryPartParents    = [namesOfLogEntryParts indexOfObject:@"parents"];
+	logEntryPartRevision   = [namesOfLogEntryParts indexOfObject:@"revision"];	
 }
 
 
@@ -73,18 +70,10 @@ void setupGlobalsForPartsAndTemplate()
 
 @synthesize		loadStatus = loadStatus_;
 @synthesize		revision = revision_;
-@synthesize 	author = author_;
-@synthesize 	fullAuthor = fullAuthor_;
-@synthesize 	shortComment = shortComment_;
-@synthesize 	fullComment = fullComment_;
-@synthesize 	parents = parents_;
+@synthesize 	parentsArray  = parentsArray_;
+@synthesize 	childrenArray = childrenArray_;
 @synthesize		changeset = changeset_;
-@synthesize		fullChangeset = fullChangeset_;
-@synthesize		filesAdded = filesAdded_;
-@synthesize		filesModified = filesModified_;
-@synthesize		filesRemoved = filesRemoved_;
-
-
+@synthesize		fullRecord = fullRecord_;
 
 
 
@@ -101,21 +90,10 @@ void setupGlobalsForPartsAndTemplate()
 		loadStatus_ = eLogEntryLoadedNone;
 		collection_ = collection;
 		revision_ = nil;
-		author_ = nil;
-		fullAuthor_ = nil;
-		date_ = nil;
-		shortComment_ = nil;
-		fullComment_ = nil;
-		parents_ = nil;
-		tags_ = nil;
-		bookmarks_ = nil;
-		branch_ = nil;
-		labels_ = nil;
+		parentsArray_ = nil;
+		childrenArray_ = nil;
 		changeset_ = nil;
-		fullChangeset_ = nil;
-		filesAdded_ = nil;
-		filesModified_ = nil;
-		filesRemoved_ = nil;
+		fullRecord_ = nil;
 	}
     
 	return self;
@@ -130,56 +108,47 @@ void setupGlobalsForPartsAndTemplate()
 // MARK:  Derived information
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+- (NSArray*) labelArray { return [[collection_ revisionNumberToLabels] objectForKey:[self revision]]; }
+
 - (NSArray*) tags
 {
-	if (tags_)
-		return tags_;
-	if (![collection_ revisionToLabels])
+	NSArray* labels = [self labelArray];
+	if (IsEmpty(labels))
 		return [[NSArray alloc]init];
-	NSArray* labels = [[collection_ revisionToLabels] objectForKey:[self revision]];
 	NSArray* tagLabels = [LabelData filterLabels:labels byType:eTagLabel];
 	NSArray* sortedTagLabels = [tagLabels sortedArrayUsingDescriptors:[LabelData descriptorsForSortByNameAscending]];
-	tags_ = [LabelData extractNameFromLabels:sortedTagLabels];
-	return tags_;
+	return [LabelData extractNameFromLabels:sortedTagLabels];
 }
 
 - (NSArray*) bookmarks
 {
-	if (bookmarks_)
-		return bookmarks_;
-	if (![collection_ revisionToLabels])
+	NSArray* labels = [self labelArray];
+	if (IsEmpty(labels))
 		return [[NSArray alloc]init];
-	NSArray* labels = [[collection_ revisionToLabels] objectForKey:[self revision]];
 	NSArray* bookmarkLabels = [LabelData filterLabels:labels byType:eBookmarkLabel];
 	NSArray* sortedBookmarkLabels = [bookmarkLabels sortedArrayUsingDescriptors:[LabelData descriptorsForSortByNameAscending]];
-	bookmarks_ = [LabelData extractNameFromLabels:sortedBookmarkLabels];
-	return bookmarks_;
+	return [LabelData extractNameFromLabels:sortedBookmarkLabels];
 }
 
 - (NSString*) branch
 {
-	if (branch_)
-		return branch_;
-	if (![collection_ revisionToLabels])
+	NSArray* labels = [self labelArray];
+	if (IsEmpty(labels))
 		return @"";
-	NSArray* labels = [[collection_ revisionToLabels] objectForKey:[self revision]];
+	return @"";
 	NSArray* branchLabels = [LabelData filterLabels:labels byType:eBranchLabel];	
-	branch_ = IsNotEmpty(branchLabels) ? [[branchLabels objectAtIndex:0] name] : @"";
-	return branch_;
+	return IsNotEmpty(branchLabels) ? [[branchLabels objectAtIndex:0] name] : @"";
 }
 
 - (NSString*) labels
 {
-	if (labels_)
-		return labels_;
-	if (![collection_ revisionToLabels])
+	NSArray* labels = [self labelArray];
+	if (IsEmpty(labels))
 		return @"";
-	NSArray* labels = [[collection_ revisionToLabels] objectForKey:[self revision]];
 	NSArray* filteredLabels = [LabelData filterLabels:labels byType:eNotOpenHead];
 	NSArray* sortedLabels = [filteredLabels sortedArrayUsingDescriptors:[LabelData descriptorsForSortByTypeAscending]];
 	NSArray* names = [LabelData extractNameFromLabels:sortedLabels];
-	labels_ = [names componentsJoinedByString:@", "];
-	return labels_;
+	return [names componentsJoinedByString:@", "];
 }
 
 
@@ -191,45 +160,34 @@ void setupGlobalsForPartsAndTemplate()
 // MARK: Constructors
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-+ (LogEntry*) fromLogResultLineShort:(NSString*)line  forRepositoryData:(RepositoryData*)collection
++ (LogEntry*) fromLogEntryResultLine:(NSString*)line  forRepositoryData:(RepositoryData*)collection
 {
 	LogEntry* entry = [[LogEntry alloc] initForCollection:collection];
-	[entry loadLogResultLineShort:line];
+	[entry loadLogEntryResultLine:line];
 	return ([entry loadStatus] != eLogEntryLoadedNone) ? entry : nil;
 }
 
-+ (LogEntry*) fromLogResultLineFull:(NSString*)line  forRepositoryData:(RepositoryData*)collection
++ (LogEntry*) pendingLogEntryForRevision:(NSNumber*)revision  forRepositoryData:collection
 {
 	LogEntry* entry = [[LogEntry alloc] initForCollection:collection];
-	[entry loadLogResultLineFull:line];
-	return ([entry loadStatus] != eLogEntryLoadedNone) ? entry : nil;
-}
-
-+ (LogEntry*) pendingEntryForRevision:(NSString*)revisionStr  forRepositoryData:collection
-{
-	LogEntry* entry = [[LogEntry alloc] initForCollection:collection];
-	[entry setRevision:revisionStr];
-	[entry setLoadStatus:eLogEntryLoadedPending];
+	[entry setRevision:revision];
+	[entry setLoadStatus:eLogEntryLoading];
 	return entry;
 }
 
-+ (LogEntry*) unfinishedEntryForRevision:(NSString*)revisionStr  forRepositoryData:collection
++ (LogEntry*) unfinishedEntryForRevision:(NSNumber*)revision  forRepositoryData:collection
 {
 	LogEntry* entry = [[LogEntry alloc] initForCollection:collection];
-	[entry setRevision:revisionStr];
-	[entry setParents:[collection getHGParents]];
-	[entry setShortComment:@"Current version (not yet committed)."];
-	[entry setFullComment:@"Current version (not yet committed)."];
-	entry->date_ = [NSDate dateWithTimeIntervalSinceNow:0];
-	[entry setLoadStatus:eLogEntryLoadedFully];
-	[entry setAuthor:@""];
-	[entry setFullAuthor:@""];
-	entry->branch_ = @"";
-	entry->tags_ = [[NSArray alloc]init];
-	[entry setChangeset:@""];
-	[entry setFilesAdded:nil];
-	[entry setFilesModified:nil];
-	[entry setFilesRemoved:nil];
+	[entry setRevision:revision];
+	NSNumber* parent1 = [collection getHGParent1Revision];
+	NSNumber* parent2 = [collection getHGParent2Revision];
+	if (!parent1)
+		parent1 = intAsNumber(numberAsInt(revision) -1);
+	NSArray* hgParentsArray = parent2 ? [NSArray arrayWithObjects:parent1,parent2,nil] : [NSArray arrayWithObject:parent1];
+	[entry setParentsArray:hgParentsArray];
+	[entry setLoadStatus:eLogEntryLoaded];
+	[entry setChangeset:incompleteChangeset];
+	[entry setFullRecord:[LogRecord unfinishedRecord]];
 	return entry;
 }
 
@@ -242,30 +200,77 @@ void setupGlobalsForPartsAndTemplate()
 // MARK: Flesh Out LogEntry
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) loadLogResultLineShort:(NSString*)line
+- (void) loadLogEntryResultLine:(NSString*)line
 {
-	int itemCount  = [namesOfPartsShort count];
-	NSArray* parts = [line componentsSeparatedByString:entryPartSeparator];
+	static NSString* revHex = @"(\\d+):([0-9a-fA-F]{12})";
+
+	int itemCount  = [namesOfLogEntryParts count];
+	NSArray* parts = [line componentsSeparatedByString:logEntryPartSeparator];
 	if ([parts count] < itemCount)
 		return;
 	
-	for (int item = 0; item <itemCount; item++)
-		[self setValue:[parts objectAtIndex:item] forKey:[namesOfPartsShort objectAtIndex:item]];
-	labels_ = nil;
-	[self setLoadStatus:eLogEntryLoadedPartially];
+	[self setChangeset:[parts objectAtIndex:logEntryPartChangeset]];
+	[self setRevision:stringAsNumber([parts objectAtIndex:logEntryPartRevision])];
+
+	NSString* parents = [parts objectAtIndex:logEntryPartParents];
+	if (IsEmpty(parents))
+	{
+		NSInteger revisionInt = numberAsInt(revision_);
+		if (revisionInt > 0)
+			parentsArray_ = [NSArray arrayWithObject:intAsNumber(revisionInt - 1)];
+		else
+			parentsArray_ = nil;
+	}
+	else
+	{
+		NSMutableArray* parentRevs       = [[NSMutableArray alloc]init];
+		[parents enumerateStringsMatchedByRegex:revHex usingBlock:
+		 ^(NSInteger captureCount, NSString* const capturedStrings[captureCount], const NSRange capturedRanges[captureCount], volatile BOOL* const stop) {
+			 [parentRevs       addObject:stringAsNumber(capturedStrings[1])];
+		 }];
+		parentsArray_ = [NSArray arrayWithArray:parentRevs];
+	}
+	
+	[self setLoadStatus:eLogEntryLoaded];
 }
 
-- (void) loadLogResultLineFull:(NSString*)line
+- (void) fullyLoadEntry
 {
-	int itemCount  = [namesOfPartsFull count];
-	NSArray* parts = [line componentsSeparatedByString:entryPartSeparator];
-	if ([parts count] < itemCount)
+	if (!changeset_)
 		return;
-	
-	for (int item = 0; item <itemCount; item++)
-		[self setValue:[parts objectAtIndex:item] forKey:[namesOfPartsFull objectAtIndex:item]];
-	labels_ = nil;
-	[self setLoadStatus:eLogEntryLoadedFully];
+	if (!fullRecord_)
+		fullRecord_ = [LogRecord createPendingEntryForChangeset:changeset_];
+	[fullRecord_ fillFilesOfLogRecordForRepository:collection_];
+	[fullRecord_ fillDetailsOfLogRecordForRepository:collection_];
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Modify Children of Entry
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (void) addChildRevisionNum:(NSNumber*)childRevNum
+{
+	if (!childRevNum)
+		return;
+	if (!childrenArray_)
+		childrenArray_ = [NSArray arrayWithObject:childRevNum];
+	else if (![childrenArray_ containsObject:childRevNum])
+		childrenArray_ = [childrenArray_ arrayByAddingObject:childRevNum];
+}
+
+- (void) removeChildRevisionNum:(NSNumber*)childRevNum
+{
+	if (childRevNum && [childrenArray_ containsObject:childRevNum])
+	{
+		NSMutableArray* newChildren = [NSMutableArray arrayWithArray:childrenArray_];
+		[newChildren removeObjectIdenticalTo:childRevNum];
+		childrenArray_ = newChildren;
+	}
 }
 
 
@@ -277,16 +282,45 @@ void setupGlobalsForPartsAndTemplate()
 // MARK: Query the LogEntry
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (NSArray*)	parentsOfEntry			{ return [collection_ parentsOfRev:stringAsNumber([self revision])]; }
-- (NSArray*)	childrenOfEntry			{ return [collection_ childrenOfRev:stringAsNumber([self revision])]; }
-- (NSString*)	changesetInShortForm	{ return [changeset_ substringToIndex:MIN(12,[changeset_ length])]; }
-- (BOOL)	    isFullyLoaded			{ return loadStatus_ == eLogEntryLoadedFully; }
 - (RepositoryData*) repositoryData		{ return collection_; }
-- (NSString*)	firstParent
+- (NSInteger)	childCount				{ return [childrenArray_ count]; }
+- (NSInteger)	parentCount				{ return [parentsArray_ count]; }
+- (BOOL)		hasMultipleParents		{ return [parentsArray_ count] > 1; }
+- (NSArray*)	parentsOfEntry			{ return parentsArray_; }
+- (NSArray*)	childrenOfEntry			{ return childrenArray_; }
+- (NSString*)	revisionStr				{ return numberAsString(revision_); }
+- (NSInteger)	revisionInt				{ return numberAsInt(revision_); }
+- (NSInteger)	ithChildRev:(NSInteger)i			{ return (0 <= i && [self childCount]  > i) ? numberAsInt([childrenArray_ objectAtIndex:i]) : NSNotFound; }
+- (NSInteger)	ithParentRev:(NSInteger)i			{ return (0 <= i && [self parentCount] > i) ? numberAsInt([parentsArray_  objectAtIndex:i]) : NSNotFound; }
+- (BOOL)	    revIsDirectParent:(NSInteger)rev	{ return rev == numberAsInt(revision_) - 1; }
+- (BOOL)	    revIsDirectChild:(NSInteger)rev		{ return rev == numberAsInt(revision_) + 1; }
+- (BOOL)		isEqualToEntry:(LogEntry*)entry		{ return [changeset_ isEqualToString:[entry changeset]] && [parentsArray_ isEqualToArray:[entry parentsOfEntry]]; }
+
+
+- (NSString*)	shortChangeset			{ return [changeset_ substringToIndex:MIN(12,[changeset_ length])]; }
+- (BOOL)	    isLoading				{ return loadStatus_ == eLogEntryLoading; }
+- (BOOL)	    isLoaded				{ return loadStatus_ == eLogEntryLoaded; }
+- (BOOL)	    isStale					{ return loadStatus_ == eLogEntryIsStale; }
+- (BOOL)	    isLoadingButAlreadyStale{ return loadStatus_ == eLogEntryLoadingButAlreadyStale; }
+- (BOOL)	    isFullyLoaded			{ return loadStatus_ == eLogEntryLoaded && fullRecord_ && [fullRecord_ isFullyLoaded]; }
+- (void)		makeStatusStale			{ if	  (loadStatus_ == eLogEntryLoaded)  loadStatus_ = eLogEntryIsStale;
+										  else if (loadStatus_ == eLogEntryLoading) loadStatus_ = eLogEntryLoadingButAlreadyStale; }
+
+- (NSNumber*)	firstParent				{ return [parentsArray_ count] > 0 ? [parentsArray_ objectAtIndex:0] : nil; }
+- (NSNumber*)	secondParent			{ return [parentsArray_ count] > 1 ? [parentsArray_ objectAtIndex:1] : nil; }
+- (NSNumber*)   minimumParent
 {
-	if (IsNotEmpty(parents_))
-		return numberAsString([[self parentsOfEntry] objectAtIndex:0]);
-	return intAsString(MAX(0, stringAsInt(revision_) - 1));	
+	switch ([parentsArray_ count])
+	{
+		case 1: return [parentsArray_ objectAtIndex:0];
+		case 2:
+		{
+			NSNumber* p1 = [parentsArray_ objectAtIndex:0];
+			NSNumber* p2 = [parentsArray_ objectAtIndex:1];
+			return ([p1 compare:p2] == NSOrderedAscending) ? p2 : p1;
+		}
+	}
+	return nil;
 }
 
 
@@ -295,63 +329,20 @@ void setupGlobalsForPartsAndTemplate()
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK:  Date handling
+// MARK:  Query the LogRecord
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (NSString*) shortDate
-{
-	static double kSecond = 1;
-	static double kMinute = 60;
-	static double kHour   = 3600;
-	static double kDay    = 3600 * 24;
-	static double kWeek   = 3600 * 24 * 7;
-	static double kMonth  = 3600 * 24 * 30;
-	static double kYear   = 3600 * 24 * 365;
-	
-	if ([collection_ incompleteRevisionEntry] == self)
-		return @"now";
-	
-	NSDate* now = [NSDate dateWithTimeIntervalSinceNow:0];
-	NSTimeInterval delta = ABS([date_ timeIntervalSinceNow]);
-	
-	NSString* description;
-	BOOL inPast = [date_ isBefore:now];
-	NSString* relation = inPast ? @"ago" : @"in the future"; 
-	if      (delta >= 2 * kYear)	description = fstr(@"%d years %@",   lround(floor(delta / kYear)),   relation);
-	else if (delta >= 2 * kMonth)	description = fstr(@"%d months %@",  lround(floor(delta / kMonth)),  relation);
-	else if (delta >= 2 * kWeek)	description = fstr(@"%d weeks %@",   lround(floor(delta / kWeek)),   relation);
-	else if (delta >= 2 * kDay)		description = fstr(@"%d days %@",    lround(floor(delta / kDay)),    relation);
-	else if (delta >= 2 * kHour)	description = fstr(@"%d hours %@",   lround(floor(delta / kHour)),   relation);
-	else if (delta >= 2 * kMinute)	description = fstr(@"%d minutes %@", lround(floor(delta / kMinute)), relation);
-	else							description = fstr(@"%d seconds %@", lround(floor(delta / kSecond)), relation);
-	return description;
-}
+- (NSString*) author			{ return [fullRecord_ author]; }
+- (NSString*) fullAuthor		{ return [fullRecord_ fullAuthor]; }
+- (NSString*) shortComment		{ return [fullRecord_ shortComment]; }
+- (NSString*) fullComment		{ return [fullRecord_ fullComment]; }
+- (NSArray*)  filesAdded		{ return [fullRecord_ filesAdded]; }
+- (NSArray*)  filesModified		{ return [fullRecord_ filesModified]; }
+- (NSArray*)  filesRemoved		{ return [fullRecord_ filesRemoved]; }
 
-- (NSString*) fullDate
-{
-	if ([collection_ incompleteRevisionEntry] == self)
-		return @"now";
-
-	static NSDateFormatter* dateFormatter = nil;
-	if (!dateFormatter)
-	{
-		dateFormatter = [[NSDateFormatter alloc] init];
-		[dateFormatter setDateStyle:NSDateFormatterLongStyle];
-		[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
-		[dateFormatter setDoesRelativeDateFormatting:YES];
-	}
-	
-	return [dateFormatter stringFromDate:date_];
-}
-
-- (NSString*) isoDate { return [date_ isodateDescription]; }
-
-- (void) setDate:(NSString*)dateString
-{
-	date_ = [NSDate dateWithUTCdatePlusOffset:dateString];
-	if (!date_)
-		date_ = [NSDate dateWithTimeIntervalSinceNow:0.0];
-}
+- (NSString*) shortDate			{ return [fullRecord_ shortDate]; }
+- (NSString*) fullDate			{ return [fullRecord_ fullDate]; }
+- (NSString*) isoDate			{ return [fullRecord_ isoDate]; }
 
 
 
@@ -364,11 +355,12 @@ void setupGlobalsForPartsAndTemplate()
 
 - (NSAttributedString*) formattedVerboseEntry
 {
+	[self fullyLoadEntry];
 	NSMutableAttributedString* verboseEntry = [[NSMutableAttributedString alloc] init];
 	if (YES)
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"\nChangeset:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@ : %@\n", revision_, [self changesetInShortForm]))];
+		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@ : %@\n", revision_, [self shortChangeset]))];
 	}
 	if (IsNotEmpty([self tags]))
 	{
@@ -385,31 +377,35 @@ void setupGlobalsForPartsAndTemplate()
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Branch:\t")];
 		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", [self branch]))];
 	}
-	if (stringIsNonWhiteSpace(parents_))
+	if (IsNotEmpty([self parentsOfEntry]))
 	{
-		[verboseEntry appendAttributedString: categoryAttributedString(@"Parents:\t")];
-		for(NSString* parent in [parents_ componentsSeparatedByCharactersInSet:[NSCharacterSet whitespaceCharacterSet]])
+		[verboseEntry appendAttributedString: categoryAttributedString( ([[self parentsOfEntry] count] > 1) ? @"Parents:\t" : @"Parent:\t")];
+		for (NSNumber* parent in [self parentsOfEntry])
 		{
-			if(stringIsNonWhiteSpace(parent))
+			if (IsNotEmpty(parent))
 			{
-				NSTextAttachment* attachment = [ParentTextButtonCell parentButtonAttachmentWithText:parent andLogEntry:self];
+				NSTextAttachment* attachment = [ParentTextButtonCell parentButtonAttachmentWithText:numberAsString(parent) andLogEntry:self];
 				[verboseEntry appendAttributedString: normalAttributedString(@" ")];
 				[verboseEntry appendAttributedString: [NSAttributedString attributedStringWithAttachment:attachment]];
-				
 			}
 		}
 		[verboseEntry appendAttributedString: normalAttributedString(@"\n")];
 	}
-
-	if (stringIsNonWhiteSpace(fullAuthor_))
+//	if (stringIsNonWhiteSpace(children_) && ([self childCount] > 1 || ![self revIsDirectChild:[self ithChildRev:0]]))
+//	{
+//		[verboseEntry appendAttributedString: categoryAttributedString(@"Children:\t")];
+//		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", children_))];
+//	}
+	
+	if (stringIsNonWhiteSpace([self fullAuthor]))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Author:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", fullAuthor_))];
+		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", [self fullAuthor]))];
 	}
 	else
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Author:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", nonNil(author_)))];
+		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", nonNil([self author])))];
 	}
 	
 	if (YES)
@@ -419,21 +415,21 @@ void setupGlobalsForPartsAndTemplate()
 		[verboseEntry appendAttributedString: grayedAttributedString(fstr(@"(%@)\n", [self fullDate]))];
 	}
 
-	if (stringIsNonWhiteSpace(fullComment_))
+	if (stringIsNonWhiteSpace([self fullComment]))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Description:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", fullComment_))];
+		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", [self fullComment]))];
 	}
-	else if (stringIsNonWhiteSpace(shortComment_))
+	else if (stringIsNonWhiteSpace([self shortComment]))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Description:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", shortComment_))];
+		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", [self shortComment]))];
 	}
 	
-	if (IsNotEmpty(filesAdded_))
+	if (IsNotEmpty([self filesAdded]))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Added:\t")];
-		for (NSString* file in filesAdded_)
+		for (NSString* file in [self filesAdded])
 		{
 			NSTextAttachment* attachment = [DiffTextButtonCell diffButtonAttachmentWithLogEntry:self andFile:file andType:eDiffFileAdded];
 			[verboseEntry appendAttributedString: normalAttributedString(@" ")];
@@ -441,10 +437,10 @@ void setupGlobalsForPartsAndTemplate()
 			[verboseEntry appendAttributedString: normalAttributedString(@"\n")];
 		}
 	}
-	if (IsNotEmpty(filesModified_))
+	if (IsNotEmpty([self filesModified]))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Modified:\t")];
-		for (NSString* file in filesModified_)
+		for (NSString* file in [self filesModified])
 		{
 			NSTextAttachment* attachment = [DiffTextButtonCell diffButtonAttachmentWithLogEntry:self andFile:file andType:eDiffFileChanged];
 			[verboseEntry appendAttributedString: normalAttributedString(@" ")];
@@ -452,10 +448,10 @@ void setupGlobalsForPartsAndTemplate()
 			[verboseEntry appendAttributedString: normalAttributedString(@"\n")];
 		}
 	}
-	if (IsNotEmpty(filesRemoved_))
+	if (IsNotEmpty([self filesRemoved]))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Removed:\t")];
-		for (NSString* file in filesRemoved_)
+		for (NSString* file in [self filesRemoved])
 		{
 			NSTextAttachment* attachment = [DiffTextButtonCell diffButtonAttachmentWithLogEntry:self andFile:file andType:eDiffFileRemoved];
 			[verboseEntry appendAttributedString: normalAttributedString(@" ")];
@@ -463,147 +459,52 @@ void setupGlobalsForPartsAndTemplate()
 			[verboseEntry appendAttributedString: normalAttributedString(@"\n")];
 		}
 	}
-	
-	
+
 	return verboseEntry;
-}
-
-
-- (void) fullyLoadEntry
-{
-	if ([self isFullyLoaded])
-		return;
-
-	NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log", @"--rev", revision_, @"--template", templateStringFull, nil];	// templateStringFull is global set in setupGlobalsForPartsAndTemplate()
-	ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:[collection_ rootPath]  logging:eLoggingNone];
-	NSArray* lines = [hgLogResults.outStr componentsSeparatedByString:entrySeparator];
-	[self loadLogResultLineFull:[lines objectAtIndex:0]];
-	
-
-	NSMutableArray* modified = nil;
-	NSMutableArray* added    = nil;
-	NSMutableArray* removed  = nil;
-	NSString* revisionNumbers = fstr(@"%@%:%@", [self firstParent], revision_);
-
-	NSMutableArray* argsStatus = [NSMutableArray arrayWithObjects:@"status", @"--rev", revisionNumbers, @"--added", @"--removed", @"--modified", nil];
-	ExecutionResult* hgStatusResults = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:[collection_ rootPath]  logging:eLoggingNone];
-	NSArray* hgStatusLines = [hgStatusResults.outStr componentsSeparatedByString:@"\n"];
-	for (NSString* statusLine in hgStatusLines)
-	{
-		// If this particular status line is malformed skip this line.
-		if ([statusLine length] < 3)
-			continue;
-		
-		NSString* statusLetter   = [statusLine substringToIndex:1];
-		HGStatus  theStatus      = [FSNodeInfo statusEnumFromLetter:statusLetter];
-		NSString* statusPath     = [statusLine substringFromIndex:2];
-		if (theStatus == eHGStatusModified)
-		{
-			if (!modified) modified = [[NSMutableArray alloc]init];
-			[modified addObject:statusPath];
-		}
-		else if (theStatus == eHGStatusAdded)
-		{
-			if (!added) added = [[NSMutableArray alloc]init];
-			[added addObject:statusPath];
-		}
-		else if (theStatus == eHGStatusRemoved)
-		{
-			if (!removed) removed = [[NSMutableArray alloc]init];
-			[removed addObject:statusPath];
-		}
-	}
-	filesAdded_	   = [NSArray arrayWithArray:added];
-	filesModified_ = [NSArray arrayWithArray:modified];
-	filesRemoved_  = [NSArray arrayWithArray:removed];	
-}
-
-
-- (void) loadAndDisplayFormattedVerboseEntryIn:(id)container
-{
-	if ([self isFullyLoaded])
-	{
-		if ([container isKindOfClass:[NSTextView class]])
-			[[container textStorage] setAttributedString:[self formattedVerboseEntry]];
-		return;
-	}
-
-	if (loadStatus_ == eLogEntryLoadedPending || loadStatus_ == eLogEntryLoadedPartially)
-	{
-		dispatch_async(globalQueue(), ^{
-			[self fullyLoadEntry];
-			if ([container isKindOfClass:[NSTextView class]])
-				[[container textStorage] setAttributedString:[self formattedVerboseEntry]];
-		});
-	}
 }
 
 
 - (NSAttributedString*) formattedBriefEntry
 {
-	[self fullyLoadEntry];
-	NSMutableAttributedString* verboseEntry = [[NSMutableAttributedString alloc] init];
-	[verboseEntry appendAttributedString: categoryAttributedString(@"Commit:\t")];
-	[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@ ", revision_))];
-	[verboseEntry appendAttributedString: grayedAttributedString(fstr(@"(%@)", author_))];
-	[verboseEntry appendAttributedString: normalAttributedString(fstr(@", %@\n", [self shortDate]))];
-	[verboseEntry appendAttributedString: categoryAttributedString(@"Description:\t")];
-	[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", fullComment_))];
-
-	return verboseEntry;
+	NSMutableAttributedString* briefEntry = [[NSMutableAttributedString alloc] init];
+	[briefEntry appendAttributedString: categoryAttributedString(@"Commit:\t")];
+	[briefEntry appendAttributedString: normalAttributedString(fstr(@"%@ ", revision_))];
+	[briefEntry appendAttributedString: grayedAttributedString(fstr(@"(%@)", [self author]))];
+	[briefEntry appendAttributedString: normalAttributedString(fstr(@", %@\n", [self shortDate]))];
+	[briefEntry appendAttributedString: categoryAttributedString(@"Description:\t")];
+	[briefEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", [self fullComment]))];
+	return briefEntry;
 }
 
-
-- (NSString*) fullCommentSynchronous
-{
-	if (loadStatus_ == eLogEntryLoadedPending || loadStatus_ == eLogEntryLoadedPartially)
-	{
-		NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log", @"--rev", revision_, @"--template", templateStringFull, nil];	// templateStringFull is global set in setupGlobalsForPartsAndTemplate()
-		ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:[collection_ rootPath]  logging:eLoggingNone];
-		NSArray* lines = [hgLogResults.outStr componentsSeparatedByString:entrySeparator];
-		[self loadLogResultLineFull:[lines objectAtIndex:0]];
-	}
-	return fullComment_;
-}
 
 - (id) labelsAndShortComment
 {
-	if (IsEmpty(bookmarks_) && IsEmpty(tags_) && IsEmpty(branch_))
-		return shortComment_;
+	NSArray* labels = [self labelArray];
+	if (IsEmpty(labels))
+		return [self shortComment];
+
 
 	NSMutableAttributedString* str = [[NSMutableAttributedString alloc]init];
-	for (NSString* bookmark in bookmarks_)
+	for (LabelData* label in [LabelData filterLabels:labels byType:eBookmarkLabel])
 	{
-		LabelData* label = [[collection_ bookmarkToLabelDictionary] objectForKey:bookmark];
-		if (label)
-		{
-			NSTextAttachment* attachment = [LabelTextButtonCell labelButtonAttachmentWithLabel:label andLogEntry:self];
-			[str appendAttributedString: [NSAttributedString attributedStringWithAttachment:attachment]];
-			[str appendAttributedString: [NSAttributedString string:@" " withAttributes:smallSystemFontAttributes]];
-		}
+		NSTextAttachment* attachment = [LabelTextButtonCell labelButtonAttachmentWithLabel:label andLogEntry:self];
+		[str appendAttributedString: [NSAttributedString attributedStringWithAttachment:attachment]];
+		[str appendAttributedString: [NSAttributedString string:@" " withAttributes:smallSystemFontAttributes]];
 	}
-	for (NSString* tag in tags_)
+	for (LabelData* label in [LabelData filterLabels:labels byType:eTagLabel])
 	{
-		LabelData* label = [[collection_ tagToLabelDictionary] objectForKey:tag];
-		if (label)
-		{
-			NSTextAttachment* attachment = [LabelTextButtonCell labelButtonAttachmentWithLabel:label andLogEntry:self];
-			[str appendAttributedString: [NSAttributedString attributedStringWithAttachment:attachment]];
-			[str appendAttributedString: [NSAttributedString string:@" " withAttributes:smallSystemFontAttributes]];
-		}
+		NSTextAttachment* attachment = [LabelTextButtonCell labelButtonAttachmentWithLabel:label andLogEntry:self];
+		[str appendAttributedString: [NSAttributedString attributedStringWithAttachment:attachment]];
+		[str appendAttributedString: [NSAttributedString string:@" " withAttributes:smallSystemFontAttributes]];
 	}
-	if (branch_)
+	for (LabelData* label in [LabelData filterLabels:labels byType:eBranchLabel])
 	{
-		LabelData* label = [[collection_ branchToLabelDictionary] objectForKey:branch_];
-		if (label)
-		{
-			NSTextAttachment* attachment = [LabelTextButtonCell labelButtonAttachmentWithLabel:label andLogEntry:self];
-			[str appendAttributedString: [NSAttributedString attributedStringWithAttachment:attachment]];
-			[str appendAttributedString: [NSAttributedString string:@" " withAttributes:smallSystemFontAttributes]];
-		}
+		NSTextAttachment* attachment = [LabelTextButtonCell labelButtonAttachmentWithLabel:label andLogEntry:self];
+		[str appendAttributedString: [NSAttributedString attributedStringWithAttachment:attachment]];
+		[str appendAttributedString: [NSAttributedString string:@" " withAttributes:smallSystemFontAttributes]];
 	}
-	if (shortComment_)
-		[str appendAttributedString:[NSAttributedString string:shortComment_ withAttributes:smallSystemFontAttributes]];
+	if ([self shortComment])
+		[str appendAttributedString:[NSAttributedString string:[self shortComment] withAttributes:smallSystemFontAttributes]];
 	return str;
 }
 
@@ -616,7 +517,21 @@ void setupGlobalsForPartsAndTemplate()
 
 - (NSString*) description
 {
-	return fstr(@"LogEntry: rev %@, parents %@, comment %@, status %d", revision_, parents_, shortComment_, loadStatus_);
+	NSString* revString = revision_ ? fstr(@"%@", revision_) : @"nil";
+	NSString* parentsArrayString = parentsArray_ ? fstr(@"%@", parentsArray_) : @"nil";
+	NSString* childrenArrayString = childrenArray_ ? fstr(@"%@", childrenArray_) : @"nil";
+
+	NSString* statusString;
+	switch (loadStatus_)
+	{
+		case eLogEntryLoadedNone:				statusString = @"eLogEntryLoadedNone";				break;
+		case eLogEntryLoading:					statusString = @"eLogEntryLoading";					break;
+		case eLogEntryLoadingButAlreadyStale:	statusString = @"eLogEntryLoadingButAlreadyStale";	break;
+		case eLogEntryIsStale:					statusString = @"eLogEntryIsStale";					break;
+		case eLogEntryLoaded:					statusString = @"eLogEntryLoaded";					break;
+	}
+
+	return fstr(@"LogEntry: rev %@, parents %@, children %@, status %@", revString, parentsArrayString, childrenArrayString, statusString);
 }
 
 @end

@@ -8,37 +8,19 @@
 //
 
 #import <Cocoa/Cocoa.h>
-
-typedef enum
-{
-	eNoLabelType	 = 0,
-	eLocalTag		 = 1<<1,
-	eGlobalTag		 = 1<<2,
-	eBookmark		 = 1<<3,
-	eActiveBranch	 = 1<<4,
-	eInactiveBranch  = 1<<5,
-	eClosedBranch	 = 1<<6,
-	eOpenHead		 = 1<<7,
-	eTagLabel		 = eGlobalTag | eLocalTag,
-	eBranchLabel	 = eActiveBranch | eInactiveBranch | eClosedBranch,
-	eBookmarkLabel   = eBookmark,
-	eLocalLabel		 = eLocalTag | eBookmark,
-	eStationaryLabel = eLocalTag | eGlobalTag,
-	eNotOpenHead     = eTagLabel | eBranchLabel | eBookmarkLabel
-} LabelType;
-
+#import "Common.h"
 
 @interface LabelData : NSObject
 {
 	NSString* name_;
-	NSString* revision_;
+	NSNumber* revision_;
 	NSString* changeset_;
 	LabelType labelType_;
 	NSString* info_;
 }
 
 @property (readonly,assign) NSString* name;
-@property (readonly,assign) NSString* revision;
+@property (readonly,assign) NSNumber* revision;
 @property (readonly,assign) NSString* changeset;
 @property (readonly,assign) LabelType labelType;
 @property (readonly,assign) NSString* info;
@@ -59,14 +41,17 @@ typedef enum
 - (BOOL) isStationary;
 - (BOOL) isEqualToLabel:(LabelData*)label;
 
+- (NSString*) revisionStr;
 - (NSString*) labelTypeDescription;
 - (NSAttributedString*) labelTypeAttributedDescription;
 
 
 // List Operations
-+ (NSArray*) filterLabels:(NSArray*)labels byType:(LabelType)labelType;
++ (NSArray*) filterLabels:(NSArray*)labels byType:(LabelType)type;
 + (NSArray*) extractNameFromLabels:(NSArray*)labels;
 + (NSArray*) removeDuplicateLabels:(NSArray*)labels;
++ (NSArray*) filterLabelsDictionary:(NSDictionary*)labelsDict byType:(LabelType)type;
+
 
 // Sorting
 + (NSArray*) descriptorsForSortByNameAscending;

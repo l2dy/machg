@@ -29,24 +29,15 @@
 
 	NSArray*				labelsTableData_;					// The array of ordered labels (tags, branches, bookmarks) which backs the allLabelsTableView
 
-	RepositoryData*			repositoryData_;					// The current log entry collection which backs this LogTableView.
-	RepositoryData*			oldRepositoryData_;					// The second oldest log entry collection (which we sometimes fall
-																// back to in order to avoid flicker while the repositoryData is
-																// being updated)
-	
-	// Caches, we compare these to the live value from the logEntryController to see if we need to update the backing
-	// labelsTableData_
-	NSDictionary*			cachedTagToLabelDictionary_;		
-	NSDictionary*			cachedBranchToLabelDictionary_;
-	NSDictionary*			cachedBookmarkToLabelDictionary_;
-	NSDictionary*			cachedOpenHeadToLabelDictionary_;
+	LabelType				labelsTableFilterType_;				// We cache the types of labels we are going to show. If this changes
+																// we have to recompute the labelsTableData_
 }
 
-- (MacHgDocument*)		myDocument;
+- (MacHgDocument*)	myDocument;
 
-- (LabelData*) selectedLabel;
-- (LabelData*) chosenLabel;
-- (void)	 unload;
+- (LabelData*)		selectedLabel;
+- (LabelData*)		chosenLabel;
+- (void)			unload;
 
 
 // Actions

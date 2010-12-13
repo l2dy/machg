@@ -83,7 +83,7 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 	
 	for (LogEntry* entry in entries)
 	{
-		NSInteger entryIntRev = stringAsInt([entry revision]);
+		NSInteger entryIntRev = [entry revisionInt];
 
 		if (RevOutside(entryIntRev, low, high))
 			return fstr(@"Unable to perform collapse because the revision %@ lies outside the range %d to %d.", [entry revision], low, high);
@@ -144,11 +144,11 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 	NSArray* revs = [[[myDocument theHistoryView] logTableView] chosenRevisions];
 	if ([revs count] > 0)
 	{
-		NSInteger minRev = stringAsInt([revs objectAtIndex:0]);
-		NSInteger maxRev = stringAsInt([revs objectAtIndex:0]);
-		for (NSString* stringRev in revs)
+		NSInteger minRev = numberAsInt([revs objectAtIndex:0]);
+		NSInteger maxRev = numberAsInt([revs objectAtIndex:0]);
+		for (NSNumber* revision in revs)
 		{
-			NSInteger revInt = stringAsInt(stringRev);
+			NSInteger revInt = numberAsInt(revision);
 			minRev = MIN(revInt, minRev);
 			maxRev = MAX(revInt, maxRev);
 		}
@@ -218,7 +218,7 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 		[myDocument  executeMercurialWithArgs:argsCollapse  fromRoot:rootPath  whileDelayingEvents:YES];
 	}];
 
-	NSString* collapsedRevision = intAsString(pair.lowRevision);
+	NSNumber* collapsedRevision = intAsNumber(pair.lowRevision);
 	[[[myDocument theHistoryView] logTableView] selectAndScrollToRevision:collapsedRevision];
 }
 - (IBAction) sheetButtonCancelForCollapseConfirmationSheet:(id)sender

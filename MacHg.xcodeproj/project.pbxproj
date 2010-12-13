@@ -136,6 +136,7 @@
 		9672AC68114B796A00312CE2 /* TitledButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 9672AC62114B796A00312CE2 /* TitledButton.m */; };
 		9672AC6B114B799500312CE2 /* ResultsWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9672AC69114B799500312CE2 /* ResultsWindow.xib */; };
 		969064EC11601E2400F30915 /* MonitorFSEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 969064EB11601E2400F30915 /* MonitorFSEvents.m */; };
+		9693CFC1129D82DF0064DAB9 /* LogRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 9693CFC0129D82DF0064DAB9 /* LogRecord.m */; };
 		9695007410CBE3E100548D1C /* BrowserView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9695007210CBE3E100548D1C /* BrowserView.xib */; };
 		9695C0AD1108E1C5004CE684 /* PullSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9695C0A91108E1C5004CE684 /* PullSheetController.m */; };
 		9695C0AE1108E1C5004CE684 /* PushSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9695C0AC1108E1C5004CE684 /* PushSheetController.m */; };
@@ -407,6 +408,8 @@
 		9672AC6A114B799500312CE2 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/ResultsWindow.xib; sourceTree = SOURCE_ROOT; };
 		969064EA11601E2400F30915 /* MonitorFSEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MonitorFSEvents.h; sourceTree = "<group>"; };
 		969064EB11601E2400F30915 /* MonitorFSEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MonitorFSEvents.m; sourceTree = "<group>"; };
+		9693CFBF129D82DF0064DAB9 /* LogRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogRecord.h; sourceTree = "<group>"; };
+		9693CFC0129D82DF0064DAB9 /* LogRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogRecord.m; sourceTree = "<group>"; };
 		9695007310CBE3E100548D1C /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/BrowserView.xib; sourceTree = "<group>"; };
 		9695C0A81108E1C5004CE684 /* PullSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PullSheetController.h; sourceTree = "<group>"; };
 		9695C0A91108E1C5004CE684 /* PullSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PullSheetController.m; sourceTree = "<group>"; };
@@ -974,14 +977,16 @@
 			children = (
 				9637C890118E9AB60000C14B /* LogEntry.h */,
 				9637C891118E9AB60000C14B /* LogEntry.m */,
+				9693CFBF129D82DF0064DAB9 /* LogRecord.h */,
+				9693CFC0129D82DF0064DAB9 /* LogRecord.m */,
+				9637C898118E9AB60000C14B /* RepositoryData.h */,
+				9637C899118E9AB60000C14B /* RepositoryData.m */,
 				9637C892118E9AB60000C14B /* LogGraph.h */,
 				9637C893118E9AB60000C14B /* LogGraph.m */,
 				9637C894118E9AB60000C14B /* LogGraphCell.h */,
 				9637C895118E9AB60000C14B /* LogGraphCell.m */,
 				9637C896118E9AB60000C14B /* LogTableView.h */,
 				9637C897118E9AB60000C14B /* LogTableView.m */,
-				9637C898118E9AB60000C14B /* RepositoryData.h */,
-				9637C899118E9AB60000C14B /* RepositoryData.m */,
 				96F5A4F811A81B5B00707404 /* DiffTextButtonCell.h */,
 				96F5A4F911A81B5B00707404 /* DiffTextButtonCell.m */,
 				96F5A70B11A879F100707404 /* LabelTextButtonCell.h */,
@@ -1663,6 +1668,7 @@
 				966E8E6F11CB864C0052FF42 /* BackingViewController.m in Sources */,
 				44D3658012770D10007D631D /* ParentTextButtonCell.m in Sources */,
 				963001A612988A6000C1782B /* BackoutSheetController.m in Sources */,
+				9693CFC1129D82DF0064DAB9 /* LogRecord.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
