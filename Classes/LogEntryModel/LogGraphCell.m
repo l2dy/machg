@@ -215,7 +215,8 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 			[thePath setLineDash:lineDash count:2 phase:0.0];
 			[[NSColor colorWithDeviceHue:hue saturation:0.5 brightness:0.5 alpha:0.5] set];			
 		}
-			
+
+		[thePath setLineWidth:1.5];
 		[thePath stroke];
 	}
 	[NSGraphicsContext restoreGraphicsState];
@@ -239,7 +240,7 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 
 	static NSColor* defaultRed;
 	if (!defaultRed)
-		defaultRed = [NSColor colorWithCalibratedRed:0.5 green:0.0 blue:0.0 alpha:1.0];
+		defaultRed = [NSColor colorWithCalibratedRed:0.4 green:0.0 blue:0.0 alpha:1.0];
 	NSColor* fillColor   = defaultRed;
 	NSColor* strokeColor = nil;
 
