@@ -275,27 +275,29 @@
 	NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"extensions", nil];
 	ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
 
-	BOOL addExtDiff      = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.extdiff\\s*="	options:RKLMultiline];
-	BOOL addExtBookmarks = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.bookmarks\\s*=" options:RKLMultiline];
-	BOOL addExtMq		 = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.mq\\s*="		options:RKLMultiline];
-	BOOL addExtRebase    = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.rebase\\s*="	options:RKLMultiline];
-	BOOL addExtHistEdit	 = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.histedit\\s*="  options:RKLMultiline];
-	BOOL addExtCollapse  = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.collapse\\s*="  options:RKLMultiline];
-	BOOL addExtCedit     = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.cedit\\s*="		options:RKLMultiline];
+	BOOL addExtDiff         = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.extdiff\\s*="	  options:RKLMultiline];
+	BOOL addExtBookmarks    = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.bookmarks\\s*="    options:RKLMultiline];
+	BOOL addExtMq		    = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.mq\\s*="		      options:RKLMultiline];
+	BOOL addExtRebase       = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.rebase\\s*="       options:RKLMultiline];
+	BOOL addExtHistEdit	    = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.histedit\\s*="     options:RKLMultiline];
+	BOOL addExtCollapse     = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.collapse\\s*="     options:RKLMultiline];
+	BOOL addExtCedit        = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.cedit\\s*="		  options:RKLMultiline];
+	BOOL addExtCombinedInfo = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.combinedinfo\\s*=" options:RKLMultiline];
 
-	if (addExtDiff || addExtBookmarks || addExtMq || addExtRebase || addExtHistEdit || addExtCollapse || addExtCedit)
+	if (addExtDiff || addExtBookmarks || addExtMq || addExtRebase || addExtHistEdit || addExtCollapse || addExtCedit || addExtCombinedInfo)
 	{
 		NSFileManager* fileManager = [NSFileManager defaultManager];
 		NSString* macHgHGRCPath = fstr(@"%@/hgrc",applicationSupportFolder());
 		
 		[fileManager appendString:@"\n[extensions]\n" toFilePath:macHgHGRCPath];
-		if (addExtDiff)			[fileManager appendString:@"hgext.extdiff=\n"	toFilePath:macHgHGRCPath];
-		if (addExtBookmarks)	[fileManager appendString:@"hgext.bookmarks=\n" toFilePath:macHgHGRCPath];
-		if (addExtMq)			[fileManager appendString:@"hgext.mq=\n"		toFilePath:macHgHGRCPath];
-		if (addExtRebase)		[fileManager appendString:@"hgext.rebase=\n"	toFilePath:macHgHGRCPath];
-		if (addExtHistEdit)		[fileManager appendString:@"hgext.histedit=\n"	toFilePath:macHgHGRCPath];
-		if (addExtCollapse)		[fileManager appendString:@"hgext.collapse=\n"	toFilePath:macHgHGRCPath];
-		if (addExtCedit)		[fileManager appendString:@"hgext.cedit=\n"	    toFilePath:macHgHGRCPath];
+		if (addExtDiff)			[fileManager appendString:@"hgext.extdiff=\n"	   toFilePath:macHgHGRCPath];
+		if (addExtBookmarks)	[fileManager appendString:@"hgext.bookmarks=\n"    toFilePath:macHgHGRCPath];
+		if (addExtMq)			[fileManager appendString:@"hgext.mq=\n"		   toFilePath:macHgHGRCPath];
+		if (addExtRebase)		[fileManager appendString:@"hgext.rebase=\n"	   toFilePath:macHgHGRCPath];
+		if (addExtHistEdit)		[fileManager appendString:@"hgext.histedit=\n"	   toFilePath:macHgHGRCPath];
+		if (addExtCollapse)		[fileManager appendString:@"hgext.collapse=\n"	   toFilePath:macHgHGRCPath];
+		if (addExtCedit)		[fileManager appendString:@"hgext.cedit=\n"	       toFilePath:macHgHGRCPath];
+		if (addExtCombinedInfo)	[fileManager appendString:@"hgext.combinedinfo=\n" toFilePath:macHgHGRCPath];
 	}
 
 	[[NSUserDefaults standardUserDefaults] setBool:includeHomeHgrc  forKey:MHGIncludeHomeHgrcInHGRCPATH];

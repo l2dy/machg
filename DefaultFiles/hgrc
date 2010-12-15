@@ -13,6 +13,7 @@ git = True
 [extensions]
 hgext.extdiff =
 hgext.bookmarks =
+hgext.combinedinfo =
 hgext.mq =
 hgext.rebase =
 hgext.histedit =
