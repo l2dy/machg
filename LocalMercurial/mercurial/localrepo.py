@@ -427,7 +427,7 @@ class localrepository(repo.repository):
     def _readbranchcache(self):
         partial = {}
         try:
-            f = self.opener("branchheads.cache")
+            f = self.opener(os.path.join("caches","branchheads.cache"))
             lines = f.read().split('\n')
             f.close()
         except (IOError, OSError):
@@ -454,7 +454,7 @@ class localrepository(repo.repository):
 
     def _writebranchcache(self, branches, tip, tiprev):
         try:
-            f = self.opener("branchheads.cache", "w", atomictemp=True)
+            f = self.opener(os.path.join("caches","branchheads.cache"), "w", atomictemp=True)
             f.write("%s %s\n" % (hex(tip), tiprev))
             for label, nodes in branches.iteritems():
                 for node in nodes:
