@@ -15,7 +15,6 @@
 @synthesize revision  = revision_;
 @synthesize changeset = changeset_;
 @synthesize labelType = labelType_;
-@synthesize info	  = info_;
 
 
 
@@ -26,7 +25,7 @@
 // MARK:  Initialization
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (LabelData*) initWithName:(NSString*)n andType:(LabelType)t revision:(NSString*)r changeset:(NSString*)c info:(NSString*)i
+- (LabelData*) initWithName:(NSString*)n andType:(LabelType)t revision:(NSString*)r changeset:(NSString*)c
 {
 	self = [super init];
 	if (self)
@@ -35,65 +34,14 @@
 		revision_ = stringAsNumber(r);
 		changeset_ = c;
 		labelType_ = t;
-		info_ = i;
 	}
 	return self;
 }
 
-+ (LabelData*) labelDataFromBookmarkResultLine:(NSString*)line
++ (LabelData*) labelWithName:(NSString*)n andType:(LabelType)t revision:(NSString*)r changeset:(NSString*)c
 {
-	NSString* bookmarkString = nil;
-	NSString* revString = nil;
-	NSString* bookmarkInfoString = nil;
-	NSString* changesetString = nil;			
-	if ([line getCapturesWithRegexAndTrimedComponents:@"^\\s*([\\*]*)\\s*(\\S.*)\\s+(\\d+):([\\d\\w]+)\\s*(.*)$"
-									   firstComponent:&bookmarkInfoString  secondComponent:&bookmarkString  thirdComponent:&revString  fourthComponent:&changesetString])
-	{
-		LabelType type = eBookmark;
-		return [[LabelData alloc] initWithName:bookmarkString andType:type revision:revString changeset:changesetString info:bookmarkInfoString];
-	}
-	return nil;
+	return [[LabelData alloc] initWithName:n andType:t revision:r changeset:c];
 }
-
-+ (LabelData*) labelDataFromBranchResultLine:(NSString*)line
-{
-	NSString* branchString = nil;
-	NSString* revString = nil;
-	NSString* branchInfoString = nil;
-	NSString* changesetString = nil;
-	if ([line getCapturesWithRegexAndTrimedComponents:@"^(.*)\\s+(\\d+):([\\d\\w]+)\\s*(.*)$"
-							firstComponent:&branchString secondComponent:&revString thirdComponent:&changesetString fourthComponent:&branchInfoString])
-	{
-		LabelType type = [branchInfoString isEqualToString:@"(inactive)"] ? eInactiveBranch : eActiveBranch;
-		return [[LabelData alloc] initWithName:branchString andType:type revision:revString changeset:changesetString info:branchInfoString];
-	}
-	return nil;
-}
-
-+ (LabelData*) labelDataFromTagResultLine:(NSString*)line
-{
-	NSString* tagString = nil;
-	NSString* revString = nil;
-	NSString* tagInfoString = nil;
-	NSString* changesetString = nil;			
-	if ([line getCapturesWithRegexAndTrimedComponents:@"^(.*)\\s+(\\d+):([\\d\\w]+)\\s*(.*)$"
-							firstComponent:&tagString  secondComponent:&revString  thirdComponent:&changesetString  fourthComponent:&tagInfoString])
-	{
-		LabelType type = [tagInfoString isEqualToString:@"local"] ? eLocalTag : eGlobalTag;
-		return [[LabelData alloc] initWithName:tagString andType:type revision:revString changeset:changesetString info:tagInfoString];
-	}
-	return nil;
-}
-
-+ (LabelData*) labelDataFromOpenHeadsLine:(NSString*)line
-{
-	NSString* revString = nil;
-	NSString* changesetString = nil;			
-	if ([line getCapturesWithRegexAndTrimedComponents:@"^(\\d+):([\\d\\w]+)$" firstComponent:&revString  secondComponent:&changesetString])
-		return [[LabelData alloc] initWithName:@"" andType:eOpenHead revision:revString changeset:changesetString info:@""];
-	return nil;
-}
-
 
 
 

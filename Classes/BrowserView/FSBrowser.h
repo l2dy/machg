@@ -91,8 +91,8 @@
 // Refresh / Regenrate Browser
 - (void)		setRowHeightForFont;
 - (void)		markPathsDirty:(RepositoryPaths*)dirtyPaths;
-- (void)		refreshBrowserPaths:(RepositoryPaths*)changes resumeEventsWhenFinished:(BOOL)resume;
-- (void)		repositoryRootDidChange;							// Reset the repository root and regenerate all the data and reload it.
+- (void)		refreshBrowserPaths:(RepositoryPaths*)changes finishingBlock:(BlockProcess)theBlock;
+- (void)		repositoryDataIsNew;								// Reset the repository root and regenerate all the data and reload it.
 - (void)		regenerateBrowserDataAndReload;						// Regenerate all the data for the browser and reload the browser.
 
 @end

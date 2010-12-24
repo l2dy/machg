@@ -11,6 +11,7 @@
 #import "MacHgDocument.h"
 #import "TaskExecutions.h"
 #import "DisclosureBoxController.h"
+#import "RepositoryData.h"
 
 NSString* kAmendOption	 = @"amendOption";
 

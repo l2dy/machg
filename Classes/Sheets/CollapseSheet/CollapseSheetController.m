@@ -213,13 +213,14 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 	[argsCollapse addObject:@"--rev" followedBy:revisionNumbers];
 	[argsCollapse addObject:@"--force"];
 	[argsCollapse addObject:@"--message" followedBy:[combinedCommitMessage string]];
-	
-	[myDocument dispatchToMercurialQueuedWithDescription:collapseDescription  process:^{
-		[myDocument  executeMercurialWithArgs:argsCollapse  fromRoot:rootPath  whileDelayingEvents:YES];
-	}];
 
-	NSNumber* collapsedRevision = intAsNumber(pair.lowRevision);
-	[[[myDocument theHistoryView] logTableView] selectAndScrollToRevision:collapsedRevision];
+	[myDocument dispatchToMercurialQueuedWithDescription:collapseDescription  process:^{
+		[myDocument delayEventsUntilFinishBlock:^{
+			[TaskExecutions executeMercurialWithArgs:argsCollapse  fromRoot:rootPath];
+			NSNumber* collapsedRevision = intAsNumber(pair.lowRevision);
+			[[[myDocument theHistoryView] logTableView] selectAndScrollToRevision:collapsedRevision];
+		}];			
+	}];	
 }
 - (IBAction) sheetButtonCancelForCollapseConfirmationSheet:(id)sender
 {

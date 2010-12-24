@@ -77,6 +77,8 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 
 
 
+
+
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 // MARK: Initializers
@@ -295,17 +297,6 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 - (BOOL)	    revIsDirectParent:(NSInteger)rev	{ return rev == numberAsInt(revision_) - 1; }
 - (BOOL)	    revIsDirectChild:(NSInteger)rev		{ return rev == numberAsInt(revision_) + 1; }
 - (BOOL)		isEqualToEntry:(LogEntry*)entry		{ return [changeset_ isEqualToString:[entry changeset]] && [parentsArray_ isEqualToArray:[entry parentsOfEntry]]; }
-
-
-- (NSString*)	shortChangeset			{ return [changeset_ substringToIndex:MIN(12,[changeset_ length])]; }
-- (BOOL)	    isLoading				{ return loadStatus_ == eLogEntryLoading; }
-- (BOOL)	    isLoaded				{ return loadStatus_ == eLogEntryLoaded; }
-- (BOOL)	    isStale					{ return loadStatus_ == eLogEntryIsStale; }
-- (BOOL)	    isLoadingButAlreadyStale{ return loadStatus_ == eLogEntryLoadingButAlreadyStale; }
-- (BOOL)	    isFullyLoaded			{ return loadStatus_ == eLogEntryLoaded && fullRecord_ && [fullRecord_ isFullyLoaded]; }
-- (void)		makeStatusStale			{ if	  (loadStatus_ == eLogEntryLoaded)  loadStatus_ = eLogEntryIsStale;
-										  else if (loadStatus_ == eLogEntryLoading) loadStatus_ = eLogEntryLoadingButAlreadyStale; }
-
 - (NSNumber*)	firstParent				{ return [parentsArray_ count] > 0 ? [parentsArray_ objectAtIndex:0] : nil; }
 - (NSNumber*)	secondParent			{ return [parentsArray_ count] > 1 ? [parentsArray_ objectAtIndex:1] : nil; }
 - (NSNumber*)   minimumParent
@@ -313,15 +304,25 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 	switch ([parentsArray_ count])
 	{
 		case 1: return [parentsArray_ objectAtIndex:0];
-		case 2:
-		{
-			NSNumber* p1 = [parentsArray_ objectAtIndex:0];
-			NSNumber* p2 = [parentsArray_ objectAtIndex:1];
-			return ([p1 compare:p2] == NSOrderedAscending) ? p2 : p1;
-		}
+		case 2: return minimumNumber([parentsArray_ objectAtIndex:0], [parentsArray_ objectAtIndex:1]);
 	}
 	return nil;
 }
+
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Status and Updating
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (NSString*)	shortChangeset			{ return [changeset_ substringToIndex:MIN(12,[changeset_ length])]; }
+- (BOOL)	    isLoading				{ return loadStatus_ == eLogEntryLoading; }
+- (BOOL)	    isLoaded				{ return loadStatus_ == eLogEntryLoaded; }
+- (BOOL)	    isFullyLoaded			{ return loadStatus_ == eLogEntryLoaded && fullRecord_ && [fullRecord_ isFullyLoaded]; }
 
 
 
@@ -526,8 +527,6 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 	{
 		case eLogEntryLoadedNone:				statusString = @"eLogEntryLoadedNone";				break;
 		case eLogEntryLoading:					statusString = @"eLogEntryLoading";					break;
-		case eLogEntryLoadingButAlreadyStale:	statusString = @"eLogEntryLoadingButAlreadyStale";	break;
-		case eLogEntryIsStale:					statusString = @"eLogEntryIsStale";					break;
 		case eLogEntryLoaded:					statusString = @"eLogEntryLoaded";					break;
 	}
 

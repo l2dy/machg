@@ -34,10 +34,12 @@
 
 - (CGFloat) columnSpacingWithinFrame:(NSRect)bounds
 {
-	LogGraph* theLogGraph = [[logTableView repositoryData] logGraph];
-	if (!theLogGraph)
+	RepositoryData* data = [logTableView repositoryData];
+	if (![data logGraph] && ![data oldLogGraph])
 		return 0;
-	return bounds.size.width/ ([theLogGraph maxColumn] + 2);
+
+	NSInteger maxColumn = MAX([[data logGraph] maxColumn], [[data oldLogGraph] maxColumn]);
+	return bounds.size.width/ (maxColumn + 2);
 }
 
 - (CGFloat) xCoordOfColumn:(NSInteger)column withinFrame:(NSRect)bounds
@@ -165,7 +167,8 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 - (void) drawWithFrame:(NSRect)cellFrame inView:(NSView*)controlView
 {
 	
-	LogGraph* theLogGraph = [[logTableView repositoryData] logGraph];
+	LogGraph* theLogGraph    = [[logTableView repositoryData] logGraph];
+	LogGraph* theOldLogGraph = [[logTableView repositoryData] oldLogGraph];
 	if (!theLogGraph)
 		return;
 		
@@ -183,8 +186,10 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 	NSInteger revisionInt = numberAsInt(revision);
 	NSInteger theColumnOfRev = NSNotFound;
 	NSArray* lines = [[theLogGraph revisionNumberToLineSegments] objectForKey:revision];
+	if (!lines)
+		lines = [[theOldLogGraph revisionNumberToLineSegments] objectForKey:revision];
 	BOOL hasIncompleteRevision = [[logTableView repositoryData] includeIncompleteRevision];
-	NSInteger incompleteRevisionInt = [[logTableView repositoryData] computeNumberOfRevisions];
+	NSInteger incompleteRevisionInt = [[[logTableView repositoryData] incompleteRevisionEntry] revisionInt];
 
 	for (LineSegment* line in lines)
 	{

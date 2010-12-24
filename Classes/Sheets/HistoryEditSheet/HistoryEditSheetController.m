@@ -248,8 +248,8 @@
 	[argsHistoryEdit addObject:intAsString(pair.lowRevision)];
 
 	[myDocument dispatchToMercurialQueuedWithDescription:historyEditDescription  process:^{
-		[myDocument  executeMercurialWithArgs:argsHistoryEdit  fromRoot:rootPath  whileDelayingEvents:YES];
-	}];
+		[myDocument executeMercurialWithArgs:argsHistoryEdit  fromRoot:rootPath  whileDelayingEvents:YES];
+	}];	
 }
 - (IBAction) sheetButtonCancelForHistoryEditConfirmationSheet:(id)sender
 {

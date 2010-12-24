@@ -56,8 +56,8 @@
 
 - (LogGraph*)	initWithRepositoryData:(RepositoryData*)collection;
 
-- (void) removeEntries:(NSArray*)entries;
 - (void) addEntries:(NSArray*)entries;
+- (void) removeEntries:(NSArray*)entries;
 
 @end
 

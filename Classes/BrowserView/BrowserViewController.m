@@ -80,7 +80,7 @@
 	}
 
 	myDocument = [parentContoller myDocument];
-	[self observe:kRepositoryRootChanged		from:[self myDocument]  byCalling:@selector(repositoryRootDidChange)];
+	[self observe:kRepositoryDataIsNew		from:[self myDocument]  byCalling:@selector(repositoryDataIsNew)];
 
 	// Tell the browser to send us messages when it is clicked.
 	[theBrowser setTarget:self];
@@ -134,7 +134,7 @@
 // MARK:  Refreshing
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) repositoryRootDidChange				{ [theBrowser repositoryRootDidChange]; }
+- (void) repositoryDataIsNew					{ [theBrowser repositoryDataIsNew]; }
 
 - (IBAction) refreshBrowserContent:(id)sender	{ return [myDocument refreshBrowserContent:myDocument]; }
 

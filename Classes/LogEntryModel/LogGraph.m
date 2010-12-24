@@ -74,7 +74,6 @@ const NSInteger maxRevDistance = 72;
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 @interface LogGraph (PrivateAPI)
-- (void)	  removeLineFor:(NSInteger)l andHigh:(NSInteger)h;
 - (BOOL)	  fillOutLine:(LineSegment*)line suggestedColumnPlacement:(NSInteger)suggestedCol;
 - (void)      addLineSegment:(LineSegment*)line;
 - (NSMutableIndexSet*) findDrawColumnForLow:(NSInteger)l andHigh:(NSInteger)h;
@@ -217,7 +216,7 @@ static NSInteger closestFreeIndex2(NSIndexSet* indexes1, NSIndexSet* indexes2, N
 			[newLineSegments addObject:line];
 		}
 	}
-
+	
 	@synchronized(revisionNumberToLineSegments_)
 	{
 		while (IsNotEmpty(newLineSegments))
@@ -287,11 +286,12 @@ static NSInteger closestFreeIndex2(NSIndexSet* indexes1, NSIndexSet* indexes2, N
 - (void) removeEntries:(NSArray*)entries
 {
 	@synchronized(revisionNumberToLineSegments_)
-	{		
+	{
 		for (LogEntry* entry in entries)
-			for (NSNumber* theParent in [entry parentsArray])
-				[self removeLineFor:numberAsInt(theParent) andHigh:[entry revisionInt]];
-	}
+			[revisionNumberToLineSegments_ removeObjectForKey:[entry revision]];
+		if (IsEmpty(revisionNumberToLineSegments_))
+			maxColumn = 0;
+	}	
 }
 
 
@@ -302,26 +302,6 @@ static NSInteger closestFreeIndex2(NSIndexSet* indexes1, NSIndexSet* indexes2, N
 // MARK: -
 // MARK:  Add and Remove Lines
 // -----------------------------------------------------------------------------------------------------------------------------------------
-
-- (void) removeLineFor:(NSInteger)l andHigh:(NSInteger)h
-{
-	LineSegment* theLine = [self findSegmentFromLow:l toHigh:h];
-	
-	if (!theLine)
-	{
-		//	DebugLog(@"line not found matching %d to %d", l, h);
-		return;
-	}
-	
-	DebugLog(@"removing :%@",theLine);
-	
-	for (NSInteger rev = l; rev <= h; rev++)
-	{
-		NSMutableArray* lines = [revisionNumberToLineSegments_ objectForKey:intAsNumber(rev)];
-		[lines removeObject:theLine];
-	}	
-}
-
 
 - (void) addLineSegment:(LineSegment*)line
 {

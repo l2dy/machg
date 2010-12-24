@@ -160,9 +160,12 @@
 	[argsStrip addObject:@"--backup"];	
 	NSString* revisionNumber = fstr(@"%d", pair.lowRevision);
 	[argsStrip addObject:revisionNumber];
-	
+
 	[myDocument dispatchToMercurialQueuedWithDescription:stripDescription  process:^{
-		[myDocument  executeMercurialWithArgs:argsStrip  fromRoot:rootPath  whileDelayingEvents:YES]; }];
+		[myDocument delayEventsUntilFinishBlock:^{
+			[TaskExecutions executeMercurialWithArgs:argsStrip  fromRoot:rootPath];
+		}];			
+	}];	
 }
 
 - (IBAction) sheetButtonCancel:(id)sender;

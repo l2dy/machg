@@ -231,7 +231,7 @@
 		[argsRebase addObject:@"--keepbranches"];
 	
 	[myDocument dispatchToMercurialQueuedWithDescription:rebaseDescription  process:^{
-		[myDocument  executeMercurialWithArgs:argsRebase  fromRoot:rootPath  whileDelayingEvents:YES];
+		[myDocument executeMercurialWithArgs:argsRebase  fromRoot:rootPath  whileDelayingEvents:YES];
 	}];	
 }
 

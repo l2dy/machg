@@ -45,11 +45,13 @@
 {
 	queueForAutomaticIncomingComputation_ = [SingleTimedQueue SingleTimedQueueExecutingOn:globalQueue() withTimeDelay:2.0 descriptiveName:@"queueForAutomaticIncomingComputation"];	// Our auto computations start after 2.0 seconds
 	queueForAutomaticOutgoingComputation_ = [SingleTimedQueue SingleTimedQueueExecutingOn:globalQueue() withTimeDelay:2.0 descriptiveName:@"queueForAutomaticOutgoingComputation"];	// Our auto computations start after 2.0 seconds
-
+	queueForUpdatingInformationTextView_  = [SingleTimedQueue SingleTimedQueueExecutingOn:globalQueue() withTimeDelay:0.1 descriptiveName:@"queueForUpdatingInformationTextView"];	// Our updating of the info start after 0.1 seconds	
+	
 	root_ = [SidebarNode sectionNodeWithCaption:kSidebarRootInitializationDummy];
 	[self observe:kUnderlyingRepositoryChanged				from:myDocument  byCalling:@selector(underlyingRepositoryDidChange)];
 	[self observe:kCompatibleRepositoryChanged				from:myDocument  byCalling:@selector(computeIncomingOutgoingToCompatibleRepositories)];
 	[self observe:kReceivedCompatibleRepositoryCount		from:myDocument  byCalling:@selector(reloadData)];
+	[self observe:kRepositoryDataIsNew						from:myDocument  byCalling:@selector(repositoryDataIsNew:)];
 	[self observe:kRepositoryDataDidChange					from:myDocument  byCalling:@selector(repositoryDataDidChange:)];
 
 	// Scroll to the top in case the outline contents is very long
@@ -104,6 +106,11 @@
 - (void) underlyingRepositoryDidChange
 {
 	[self computeIncomingOutgoingToCompatibleRepositories];
+}
+
+- (void) repositoryDataIsNew:(NSNotification*)notification
+{
+	[self updateInformationTextView];
 }
 
 - (void) repositoryDataDidChange:(NSNotification*)notification
@@ -243,7 +250,6 @@
 			return;
 		}
 		[repositoryPathControl_ setURL:[NSURL fileURLWithPath:[selectedNode path]]];
-		[self updateInformationTextView];
 		[self computeIncomingOutgoingToCompatibleRepositories];
 	}
 
@@ -567,14 +573,17 @@
 
 - (void) updateInformationTextView
 {
-	SidebarNode* selectedNode = [self selectedNode];
-	if ([selectedNode isRepositoryRef])
-	{
-		NSAttributedString* newInformativeMessage = [self informationTextViewMessage:selectedNode];
-		dispatch_async(mainQueue(), ^{
-			[[informationTextView_ textStorage] setAttributedString:newInformativeMessage];
-		});
-	}
+	[queueForUpdatingInformationTextView_ addBlockOperation:^{
+		
+		SidebarNode* selectedNode = [self selectedNode];
+		if ([selectedNode isRepositoryRef])
+		{
+			NSAttributedString* newInformativeMessage = [self informationTextViewMessage:selectedNode];
+			dispatch_async(mainQueue(), ^{
+				[[informationTextView_ textStorage] setAttributedString:newInformativeMessage];
+			});
+		}
+	}];
 }
 
 
@@ -940,8 +949,7 @@
 
 	// Normally there is a lot of mercurial stuff happening and processor load just after we call
 	// computeIncomingOutgoingToCompatibleRepositories so to be nice to the processor we delay the computation of these things by
-	// putting them in SingleTimedQueue's.
-
+	// putting them in SingleTimedQueue's, and wait until the main document is not so busy.
 
 	[queueForAutomaticOutgoingComputation_ addBlockOperation:^{
 		NSArray* compatibleRepositories = [self allCompatibleRepositories:theSelectedNode];

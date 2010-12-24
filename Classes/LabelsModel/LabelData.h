@@ -16,20 +16,15 @@
 	NSNumber* revision_;
 	NSString* changeset_;
 	LabelType labelType_;
-	NSString* info_;
 }
 
 @property (readonly,assign) NSString* name;
 @property (readonly,assign) NSNumber* revision;
 @property (readonly,assign) NSString* changeset;
 @property (readonly,assign) LabelType labelType;
-@property (readonly,assign) NSString* info;
 
 // Initilization
-+ (LabelData*) labelDataFromTagResultLine:(NSString*)line;
-+ (LabelData*) labelDataFromBookmarkResultLine:(NSString*)line;
-+ (LabelData*) labelDataFromBranchResultLine:(NSString*)line;
-+ (LabelData*) labelDataFromOpenHeadsLine:(NSString*)line;
++ (LabelData*) labelWithName:(NSString*)n andType:(LabelType)t revision:(NSString*)r changeset:(NSString*)c;
 
 
 // Queries

@@ -34,6 +34,8 @@ void setupGlobalsForLogEntryPartsAndTemplate();
 @property (readwrite,assign) NSString*	changeset;
 @property (readwrite,assign) LogRecord*	fullRecord;
 
+- (RepositoryData*) repositoryData;
+
 - (NSArray*)  tags;
 - (NSArray*)  bookmarks;
 - (NSString*) branch;
@@ -70,18 +72,17 @@ void setupGlobalsForLogEntryPartsAndTemplate();
 - (NSInteger) ithChildRev:(NSInteger)i;
 - (NSInteger) ithParentRev:(NSInteger)i;
 - (BOOL)      isEqualToEntry:(LogEntry*)entry;
-- (BOOL)	  isLoading;
-- (BOOL)	  isLoaded;
-- (BOOL)	  isStale;
-- (BOOL)	  isLoadingButAlreadyStale;
-- (BOOL)	  isFullyLoaded;
-- (void)	  makeStatusStale;
-- (RepositoryData*) repositoryData;
 - (BOOL)	  revIsDirectParent:(NSInteger)rev;
 - (BOOL)	  revIsDirectChild:(NSInteger)rev;
 - (NSNumber*) firstParent;
 - (NSNumber*) secondParent;
 - (NSNumber*) minimumParent;
+
+
+// Status and Updating
+- (BOOL)	  isLoading;
+- (BOOL)	  isLoaded;
+- (BOOL)	  isFullyLoaded;
 
 
 // Query the LogRecord
@@ -92,7 +93,6 @@ void setupGlobalsForLogEntryPartsAndTemplate();
 - (NSArray*)  filesAdded;
 - (NSArray*)  filesModified;
 - (NSArray*)  filesRemoved;
-
 
 
 // Date handling

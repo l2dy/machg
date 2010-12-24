@@ -18,16 +18,10 @@
 #import "FSNodeInfo.h"
 
 @interface RepositoryData (PrivateAPI)
-- (void) loadLabelsInformation;
-- (void) loadBranchNameInformation;
-- (void) loadTipInformation;
-- (void) loadParentsOfCurrentRevisionInformation;
-- (void) loadIncompleteRevisionInformation;
-- (void) imediateSynchronizeTipInformation;
-- (void) relayoutEntriesAbove:(NSNumber*)low;
+- (void) loadCombinedInformationAndNotify:(BOOL)initilizing;
+- (BOOL) imediateLoadIncompleteRevisionInformation;
 - (void) setEntry:(LogEntry*)entry;
-- (void) removeEntry:(LogEntry*)entry;
-- (NSArray*) allEntriesFromLow:(NSInteger)low toHigh:(NSInteger)high;
+- (void) resetEntriesAndLogGraph;
 @end
 
 @implementation RepositoryData
@@ -36,6 +30,7 @@
 @synthesize myDocument = myDocument;
 @synthesize includeIncompleteRevision = includeIncompleteRevision_;
 @synthesize logGraph = logGraph_;
+@synthesize oldLogGraph = oldLogGraph_;
 
 
 
@@ -52,11 +47,15 @@
 	self = [super init];
 	if (self)
 	{
-        revisionNumberToLogEntry_ = [[NSMutableDictionary alloc] init];
+		// Main lookup tables
+        revisionNumberToLogEntry_    = [[NSMutableDictionary alloc] init];
+		oldRevisionNumberToLogEntry_ = [[NSMutableDictionary alloc] init];
+		logGraph_    = [[LogGraph alloc] initWithRepositoryData:self];
+		oldLogGraph_ = [[LogGraph alloc] initWithRepositoryData:self];
 		rootPath_ = rootPath;
 		myDocument = doc;
 		
-		// Parent and tip info
+		// Parent, tip, labels, and incomplete entry
 		parent1Revision_		 = nil;
 		parent2Revision_		 = nil;
 		parent1Changeset_		 = nil;
@@ -65,149 +64,24 @@
 		tipChangeset_			 = nil;
 		branchName_				 = nil;
 		revisionNumberToLabels_  = nil;
-
-		// Tags & Branches
-		labelsInfoLoadStatus_	 = eInformationStatusNotLoaded;
-		branchNameLoadStatus_	 = eInformationStatusNotLoaded;
-		tipLoadStatus_			 = eInformationStatusNotLoaded;
-		parentsInfoLoadStatus_	 = eInformationStatusNotLoaded;
-		incompleteRevLoadStatus_ = eInformationStatusNotLoaded;
+		incompleteRevisionEntry_ = nil;
 
 		hasMultipleOpenHeads_    = NO;
 		includeIncompleteRevision_ = NO;
-		[self adjustCollectionForIncompleteRevisionAllowingNotification:NO];
-		logGraph_ = [[LogGraph alloc] initWithRepositoryData:self];
+		[self loadCombinedInformationAndNotify:YES];
 	}
-    
+    	
 	[self observe:kUnderlyingRepositoryChanged	from:myDocument  byCalling:@selector(underlyingRepositoryDidChange)];
 	return self;
 }
 
 
-
-
-
-
-
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
-// MARK:  Status adjusters
-// -----------------------------------------------------------------------------------------------------------------------------------------
-
-static void makeStatusStale(InformationLoadStatus* loadStatus)
-{
-	if (*loadStatus == eInformationStatusLoading)
-		*loadStatus = eInformationStatusLoadingButAlreadyStale;
-	else if (*loadStatus == eInformationStatusLoaded)
-		*loadStatus = eInformationStatusStale;
-}
-
-
-// Given a load status like eInformationStatusLoading after we complete the load this status must be changed to
-// eInformationStatusLoaded, etc.
-static void adjustStatusForCompletedInformationLoad(InformationLoadStatus* loadStatus)
-{	
-	if (*loadStatus == eInformationStatusLoadingButAlreadyStale)
-		*loadStatus = eInformationStatusStale;
-	else if (*loadStatus ==  eInformationStatusLoading)
-		*loadStatus = eInformationStatusLoaded;
-	else
-	{
-		DebugLog(@"load status desyncronized had %d when expecting %d.", *loadStatus, eInformationStatusLoading);
-		*loadStatus = eInformationStatusLoaded;
-	}
-}
-
-
-- (BOOL) adjustStatusForSynchronizeInformation:(InformationLoadStatus*)loadStatus
-{
-	if (bitsInCommon(*loadStatus,  eInformationStatusLoadedOrLoading))
-		return NO;
-	@synchronized(self)
-	{
-		if (bitsInCommon(*loadStatus,  eInformationStatusLoadedOrLoading))
-			return NO;
-		*loadStatus = eInformationStatusLoading;
-	}
-	return YES;
-}
-
-
 - (void) underlyingRepositoryDidChange
 {
-	@synchronized(self)
-	{
-		makeStatusStale(&tipLoadStatus_);
-		[self imediateSynchronizeTipInformation];
-
-		makeStatusStale(&labelsInfoLoadStatus_);
-		makeStatusStale(&branchNameLoadStatus_);
-		makeStatusStale(&parentsInfoLoadStatus_);
-		makeStatusStale(&incompleteRevLoadStatus_);
-		for (LogEntry* entry in [revisionNumberToLogEntry_ allValues])
-			[entry makeStatusStale];
-	}
-	[myDocument postNotificationWithName:kLogEntriesDidChange];
+	[self loadCombinedInformationAndNotify:NO];
 }
 
 
-
-
-
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
-// MARK:  Synchronizers
-// -----------------------------------------------------------------------------------------------------------------------------------------
-
-- (void) synchronizeLabelsInformation
-{
-	if ([self adjustStatusForSynchronizeInformation:&labelsInfoLoadStatus_])
-		dispatch_async(globalQueue(), ^{
-			[self loadLabelsInformation];
-		});
-}
-
-- (void) synchronizeBranchNameInformation
-{
-	if ([self adjustStatusForSynchronizeInformation:&branchNameLoadStatus_])	
-		dispatch_async(globalQueue(), ^{
-			[self loadBranchNameInformation];
-		});
-}
-
-- (void) synchronizeParentsOfCurrentRevisionInformation
-{
-	if ([self adjustStatusForSynchronizeInformation:&parentsInfoLoadStatus_])		
-		dispatch_async(globalQueue(), ^{
-			[self loadParentsOfCurrentRevisionInformation];
-		});
-}
-
-
-
-- (void) imediateSynchronizeTipInformation
-{
-	@synchronized(self)
-	{
-		if (bitsInCommon(tipLoadStatus_,  eInformationStatusLoadedOrLoading))
-			return;
-		tipLoadStatus_ = eInformationStatusLoading;
-		[self loadTipInformation];
-	}
-}
-
-- (void) imediateSynchronizeIncompleteRevisionInformation
-{
-	if (bitsInCommon(incompleteRevLoadStatus_,  eInformationStatusLoadedOrLoading))
-		return;
-	@synchronized(self)
-	{
-		if (bitsInCommon(incompleteRevLoadStatus_,  eInformationStatusLoadedOrLoading))
-			return;
-		incompleteRevLoadStatus_ = eInformationStatusLoading;
-		[self loadIncompleteRevisionInformation];
-	}
-}
 
 
 
@@ -216,16 +90,64 @@ static void adjustStatusForCompletedInformationLoad(InformationLoadStatus* loadS
 // MARK: Found Repository Information
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (NSNumber*)	  getHGParent1Revision		{ [self synchronizeParentsOfCurrentRevisionInformation];	return parent1Revision_; }
-- (NSNumber*)	  getHGParent2Revision		{ [self synchronizeParentsOfCurrentRevisionInformation];	return parent2Revision_; }
-- (NSString*)	  getHGParent1Changeset		{ [self synchronizeParentsOfCurrentRevisionInformation];	return parent1Changeset_; }
-- (NSString*)	  getHGParent2Changeset		{ [self synchronizeParentsOfCurrentRevisionInformation];	return parent2Changeset_; }
-- (NSString*)	  getHGBranchName			{ [self synchronizeBranchNameInformation];					return branchName_; }
-- (NSDictionary*) revisionNumberToLabels	{ [self synchronizeLabelsInformation];						return revisionNumberToLabels_; }
-- (NSNumber*)	  getHGTipRevision			{ [self imediateSynchronizeTipInformation];					return tipRevision_; }
-- (NSString*)	  getHGTipChangeset			{ [self imediateSynchronizeTipInformation];					return tipChangeset_; }
-- (NSNumber*)	  incompleteRevision		{ [self imediateSynchronizeIncompleteRevisionInformation];	return [incompleteRevisionEntry_ revision]; }
-- (LogEntry*)	  incompleteRevisionEntry	{ [self imediateSynchronizeIncompleteRevisionInformation];	return incompleteRevisionEntry_; }
+- (NSNumber*)	  getHGParent1Revision		{ return parent1Revision_; }
+- (NSNumber*)	  getHGParent2Revision		{ return parent2Revision_; }
+- (NSString*)	  getHGParent1Changeset		{ return parent1Changeset_; }
+- (NSString*)	  getHGParent2Changeset		{ return parent2Changeset_; }
+- (NSString*)	  getHGBranchName			{ return branchName_; }
+- (NSDictionary*) revisionNumberToLabels	{ return revisionNumberToLabels_; }
+- (NSNumber*)	  getHGTipRevision			{ return tipRevision_; }
+- (NSString*)	  getHGTipChangeset			{ return tipChangeset_; }
+- (NSNumber*)	  incompleteRevision		{ return [incompleteRevisionEntry_ revision]; }
+- (LogEntry*)	  incompleteRevisionEntry	{ return incompleteRevisionEntry_; }
+- (NSNumber*)	  minimumParent				{ return (parent1Revision_ && parent2Revision_) ? intAsNumber(MIN(numberAsInt(parent1Revision_), numberAsInt(parent2Revision_))) : parent1Revision_; }
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Incomplete Revision Handling
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (BOOL) shouldChangeIncompleteRevisionInformation
+{
+	LogEntry* oldIncompleteRevisionEntry = incompleteRevisionEntry_;
+	BOOL oldIncludeIncompleteRevision = includeIncompleteRevision_;
+	BOOL newIncludeIncompleteRevision = [myDocument repositoryHasFilesWhichContainStatus:eHGStatusCommittable];
+	BOOL changedVisibility = (oldIncludeIncompleteRevision != newIncludeIncompleteRevision);
+	
+	if (!oldIncludeIncompleteRevision && !newIncludeIncompleteRevision)
+		return NO;
+	
+	NSNumber* ip1 = [oldIncompleteRevisionEntry  firstParent];
+	NSNumber* ip2 = [oldIncompleteRevisionEntry secondParent];
+	NSNumber*  p1 = [self getHGParent1Revision];
+	NSNumber*  p2 = [self getHGParent2Revision];
+	BOOL parents1Differ = (p1 && !ip1) || (!p1 && ip1) || (p1 && ip1 && ![p1 isEqualToNumber:ip1]);
+	BOOL parents2Differ = (p2 && !ip2) || (!p2 && ip2) || (p2 && ip2 && ![p2 isEqualToNumber:ip2]);
+	BOOL changedParents = (parents1Differ || parents2Differ);
+	
+	return changedParents || changedVisibility;
+}
+
+
+- (void) adjustCollectionForIncompleteRevision
+{
+	if (!tipRevision_)
+		return;
+	@synchronized(self)
+	{
+		if (![self shouldChangeIncompleteRevisionInformation])
+			return;
+		[self resetEntriesAndLogGraph];
+	}
+	dispatch_async(mainQueue(), ^{
+		[myDocument postNotificationWithName:kRepositoryDataDidChange];
+		[myDocument postNotificationWithName:kLogEntriesDidChange];
+	});
+}
 
 
 
@@ -255,270 +177,161 @@ static void addLabelToDictionary(NSMutableDictionary* revisionToLabelArray, Labe
 }
 
 
-// In the future introduce a command "hg debuglabels --branches --tags --bookmarks --heads" which produces a table like:
-//
-//	T tip                              515:9f3227875212ae24d75b15f6c69977922a436c02
-//	B default                          515:9f3227875212ae24d75b15f6c69977922a436c02
-//	H                                  515:9f3227875212ae24d75b15f6c69977922a436c02
-//	H                                  464:5e825d8db15f6b297e660fe76e0408a926571f27
-//	T release0.9.9                     428:1f7d725dd7e5c851a74a3d1942e53dddca67efc4
-//	T latestRelease                    428:1f7d725dd7e5c851a74a3d1942e53dddca67efc4
-//	H                                  248:e94c038b0d4a36f026032ae60bd4660e434ece4a
-//	L myLocalTag                       195:c0e38918cdd30c5170e5a66c5e41e10f2afc4932
-//	M myBookmark                       155:53d449e329b2ae010e9afee079c911a3384e97db
-//	T release0.9.4                     124:0bbec94296a77885b2007e78638c5296b8f0cc5d
-//	T release0.9.3                     101:14c71c57ab6eba2c2bedeb06cf671b6d2d666757
-//	T release0.9.2                      69:266d6d82366b0ada26c0d28c393e51e12bf0a47b
-//	T release0.9.1                      36:7ed9b844dd67b45ec768599716f9f860320c78be
-//	T release0.9.0                       7:72bf6b03f21482be1f3711d2ee0b04996b73fa8e
-//
-// Where T is Tag, B is branch, M is bookmark, H is open head, L is local tag
-// For now do this seperatly.
-//
-- (void) loadLabelsInformation
+static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* dict2)
 {
-	NSMutableDictionary* newRevisionToLabels = [[NSMutableDictionary alloc] init];
-	
-	// Load Bookmarks
-	NSMutableArray* bookmarksArgs = [NSMutableArray arrayWithObjects:@"bookmarks", @"--verbose", nil];
-	ExecutionResult* bookmarksResults = [TaskExecutions executeMercurialWithArgs:bookmarksArgs fromRoot: rootPath_ logging:eLoggingNone];
-	NSString* rawBookmarks = trimString(bookmarksResults.outStr);
-	NSArray* bookmarkLines = [rawBookmarks componentsSeparatedByString:@"\n"];
-	for (NSString* line in bookmarkLines)
-	{
-		LabelData* label = [LabelData labelDataFromBookmarkResultLine:line];
-		addLabelToDictionary(newRevisionToLabels, label);
-	}
+	return YES;
+//	for (LabelData* label in [revisionNumberToLabels_ allValues])
+//		if (![label isEqualToLabel:[newRevisionToLabels objectForKey:[label revision]]])
+//			labelsChanged = YES;
+//	for (LabelData* label in [newRevisionToLabels allValues])
+//		if (![label isEqualToLabel:[revisionNumberToLabels_ objectForKey:[label revision]]])
+//			labelsChanged = YES;	
+}
 
-	
-	// Load Tags
-	NSMutableArray* tagsArgs = [NSMutableArray arrayWithObjects:@"tags", @"--verbose", nil];
-	ExecutionResult* tagsResults = [TaskExecutions executeMercurialWithArgs:tagsArgs fromRoot: rootPath_ logging:eLoggingNone];
-	NSString* rawTags = trimString(tagsResults.outStr);
-	NSArray* tagLines = [rawTags componentsSeparatedByString:@"\n"];	
-	for (NSString* line in tagLines)
-	{
-		LabelData* label = [LabelData labelDataFromTagResultLine:line];
-		if (label)
-		{
-			NSNumber* rev = [label revision];
-			NSMutableArray* labelArray = [newRevisionToLabels objectForKey:rev];
-			if (!labelArray)
-			{
-				labelArray = [[NSMutableArray alloc]init];
-				[newRevisionToLabels setObject:labelArray forKey:rev];
-			}
-			BOOL isReallyABookmark = NO;
-			for (LabelData* l in labelArray)
-				if ([l name] == [label name])
-					isReallyABookmark = YES;
-			if (!isReallyABookmark)
-				[labelArray addObject:label];
-		}
-	}
+// loadCombinedInformationAndNotify uses the combinedinfo extension (which I wrote) to generate information like the following
+// which contains information on the tip, parents, local tags, global tags, bookmarks, active branches, inactive branches, closed
+// branches, and open heads.
+//
+// A sample output of combinedinfo looks like:
+//
+//tip 23:43c7d1cb21f0b16b8273d2dd0b3f124e79e97c49
+//parent1 23:43c7d1cb21f0b16b8273d2dd0b3f124e79e97c49
+//globaltag 23:43c7d1cb21f0b16b8273d2dd0b3f124e79e97c49 tip
+//bookmark 13:2483796d252574cc0adf8f49bafe30d82a73ac59 bookjas
+//localtag 6:6f3d5bcfa00bfdfe06d1cf1f7bb418ae9a005f0c localcat
+//activebranch 23:43c7d1cb21f0b16b8273d2dd0b3f124e79e97c49 branchClip
+//activebranch 22:0ea9a6ad294b4f6d86ea7ea3c1c47da8ac271d3b default
+//openhead 23:43c7d1cb21f0b16b8273d2dd0b3f124e79e97c49
+//openhead 22:0ea9a6ad294b4f6d86ea7ea3c1c47da8ac271d3b
+//openhead 19:f8283d02f3b5a8260dd8dcfdbb9cbc03b36e6c31
+//openhead 13:2483796d252574cc0adf8f49bafe30d82a73ac59
+//openhead 12:68dcbb25b2d11e5f6025aec65f29d52c0044185d
 
-	
-	// Load Heads
-	NSMutableArray* argsHeads = [NSMutableArray arrayWithObjects:@"heads", @"--active", @"--template", @"{rev}:{node|short} ", nil];
-	ExecutionResult* headsResults = [TaskExecutions executeMercurialWithArgs:argsHeads fromRoot: rootPath_ logging:eLoggingNone];
-	NSString* openHeadsStr = trimString(headsResults.outStr);
-	
-	NSArray* openHeads = [openHeadsStr componentsSeparatedByString:@" "];
-	int headCount = 0;
-	for (NSString* revChangesetString in openHeads)
-	{
-		LabelData* label = [LabelData labelDataFromOpenHeadsLine:revChangesetString];
-		addLabelToDictionary(newRevisionToLabels, label);
-		headCount++;
-	}
-	
-	
-	// Load Branches
-	NSMutableArray* branchArgs = [NSMutableArray arrayWithObjects:@"branches", nil];
-	ExecutionResult* branchResults = [TaskExecutions executeMercurialWithArgs:branchArgs fromRoot: rootPath_ logging:eLoggingNone];
-	NSString* rawBranches = trimString(branchResults.outStr);
-	NSArray* branchLines = [rawBranches componentsSeparatedByString:@"\n"];	
-	for (NSString* line in branchLines)
-	{
-		LabelData* label = [LabelData labelDataFromBranchResultLine:line];
-		addLabelToDictionary(newRevisionToLabels, label);
-	}
-	
-	
-	// set result
-	dispatch_async(mainQueue(), ^{
-		@synchronized(self)
-		{
-			revisionNumberToLabels_ = newRevisionToLabels;
-			hasMultipleOpenHeads_ = headCount > 1;
-			adjustStatusForCompletedInformationLoad(&labelsInfoLoadStatus_);
-		}
+//
+// Load all of the combined information to do with the repository and post notifications that RepositoryDataDidChange and
+// LogEntriesDidChange
+//
+- (void) loadCombinedInformationAndNotify:(BOOL)initilizing
+{
+	dispatch_async(globalQueue(), ^{
+
+		NSMutableDictionary* newRevisionToLabels = [[NSMutableDictionary alloc] init];
 		
-		[myDocument postNotificationWithName:kRepositoryDataDidChange userInfo:[NSDictionary dictionaryWithObject:kRepositoryLabelsInfoChanged		forKey:kRepositoryDataChangeType]];
-	});
-}
-
-
-- (void) loadBranchNameInformation
-{
-	NSMutableArray* argsBranch = [NSMutableArray arrayWithObjects:@"branch", nil];
-	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsBranch fromRoot:rootPath_];
-	NSString* newBranchName = trimString(results.outStr);
-
-	dispatch_async(mainQueue(), ^{
-		BOOL branchNameChanged = NO;
-		@synchronized(self)
+		NSNumber* oldParent1Revision  = parent1Revision_;
+		NSString* oldParent1Changeset = parent1Changeset_;
+		NSNumber* oldParent2Revision  = parent2Revision_;
+		NSString* oldParent2Changeset = parent2Changeset_;
+		NSNumber* oldTipRevision      = tipRevision_;
+		NSString* oldTipChangeset     = tipChangeset_;
+		NSNumber* newParent1Revision  = nil;
+		NSString* newParent1Changeset = nil;
+		NSNumber* newParent2Revision  = nil;
+		NSString* newParent2Changeset = nil;
+		NSNumber* newTipRevision      = nil;
+		NSString* newTipChangeset     = nil;
+		
+		
+		//
+		// Load all of the new full label information
+		//
+		NSMutableArray* fullLabelArgs = [NSMutableArray arrayWithObjects:@"combinedinfo", nil];
+		ExecutionResult* fullLabelResults = [TaskExecutions executeMercurialWithArgs:fullLabelArgs fromRoot: rootPath_ logging:eLoggingNone];
+		NSString* rawfullLabel = trimString(fullLabelResults.outStr);
+		NSArray* fullLabelLines = [rawfullLabel componentsSeparatedByString:@"\n"];
+		NSInteger headCount = 0;
+		for (NSString* line in fullLabelLines)
 		{
-			branchNameChanged = (branchName_ != newBranchName);
-			branchName_ = newBranchName;
-			adjustStatusForCompletedInformationLoad(&branchNameLoadStatus_);
-		}
-		if (branchNameChanged)
-			[myDocument postNotificationWithName:kRepositoryDataDidChange userInfo:[NSDictionary dictionaryWithObject:kRepositoryBranchNameChanged		forKey:kRepositoryDataChangeType]];
-	});
-}
-
-
-- (void) loadTipInformation
-{
-	NSNumber* oldTipRevision = tipRevision_;
-
-	NSMutableArray* argParents = [NSMutableArray arrayWithObjects:@"tip", @"--template", @"{rev}:{node} ", nil];
-	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argParents fromRoot:rootPath_];
-	NSString* tip = trimString(results.outStr);
-	
-	NSString* revision1       = nil;
-	NSString* changeset1      = nil;
-	BOOL foundTip = [tip getCapturesWithRegexAndComponents:@"(\\d+):([\\d\\w]+)\\s*" firstComponent:&revision1 secondComponent:&changeset1];
-	
-	BOOL tipChanged = NO;
-	@synchronized(self)
-	{
-		if (foundTip)
-		{
-			NSNumber* newTipRevision = stringAsNumber(revision1);
-			NSString* newTipChangeset = changeset1;
-			tipChanged = (newTipRevision != tipRevision_ || newTipChangeset != tipChangeset_);
-			tipRevision_  = newTipRevision;
-			tipChangeset_ = newTipChangeset;
-		}
-		adjustStatusForCompletedInformationLoad(&tipLoadStatus_);
-	}
-	
-	// If the tip changed, get rid of any excess log entries and post the noticiation kRepositoryDataDidChange
-	if (tipChanged)
-	{
-		if (oldTipRevision && tipRevision_ && [tipRevision_ compare:oldTipRevision] == NSOrderedAscending)
-		{
-			NSArray* entries = [self allEntriesFromLow:numberAsInt(tipRevision_) + 1 toHigh:numberAsInt(oldTipRevision)];
-			for (LogEntry* entry in entries)
-				[self removeEntry:entry];
-		}
-		[myDocument postNotificationWithName:kRepositoryDataDidChange userInfo:[NSDictionary dictionaryWithObject:kRepositoryTipChanged		forKey:kRepositoryDataChangeType]];
-	}
-}
-
-
-- (void) loadParentsOfCurrentRevisionInformation
-{
-	NSMutableArray* argParents = [NSMutableArray arrayWithObjects:@"parents", @"--template", @"{rev}:{node} ", nil];
-	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argParents fromRoot:rootPath_];
-	NSString* parents = trimString(results.outStr);
-	
-	NSString* revision1 = nil;
-	NSString* revision2 = nil;
-	NSString* changeset1 = nil;
-	NSString* changeset2 = nil;
-	BOOL oneParent  = NO;
-	BOOL twoParents = [parents getCapturesWithRegexAndComponents:@"(\\d+):([\\d\\w]+)\\s*(\\d+):([\\d\\w]+)" firstComponent:&revision1 secondComponent:&changeset1 thirdComponent:&revision2 fourthComponent:&changeset2];
-	if (!twoParents)
-		oneParent = [parents getCapturesWithRegexAndComponents:@"(\\d+):([\\d\\w]+)\\s*" firstComponent:&revision1 secondComponent:&changeset1];
-
-	dispatch_async(mainQueue(), ^{
-		BOOL parentsOfCurrentRevisionChanged = NO;
-		@synchronized(self)
-		{
-			if (oneParent || twoParents)
+			NSString* labelType = nil;
+			NSString* revString = nil;
+			NSString* changesetString = nil;			
+			NSString* labelName = nil;
+			BOOL parsedLine = [line getCapturesWithRegexAndTrimedComponents:@"^(\\w+) (\\d+):([\\d\\w]+)\\s*(.*)"
+															 firstComponent:&labelType  secondComponent:&revString  thirdComponent:&changesetString  fourthComponent:&labelName];
+			if (!parsedLine)
+				continue;
+			
+			
+			if ([labelType isEqualToString:@"tip"])
 			{
-				NSNumber* newParent1Revision = revision1 ? stringAsNumber(revision1) : nil;
-				NSNumber* newParent2Revision = revision2 ? stringAsNumber(revision2) : nil;
-				parentsOfCurrentRevisionChanged = (newParent1Revision != parent1Revision_ || newParent2Revision != parent2Revision_ || changeset1 != parent1Changeset_ || changeset2 != parent2Changeset_);
-				parent1Revision_  = newParent1Revision;
-				parent1Changeset_ = changeset1;
-				parent2Revision_  = newParent2Revision;
-				parent2Changeset_ = changeset2;
+				newTipRevision  = stringAsNumber(revString);
+				newTipChangeset = [NSString stringWithString:changesetString];
+				continue;
 			}
 			
-			adjustStatusForCompletedInformationLoad(&parentsInfoLoadStatus_);
+			if ([labelType isEqualToString:@"parent1"])
+			{
+				newParent1Revision  = stringAsNumber(revString);
+				newParent1Changeset = [NSString stringWithString:changesetString];
+				continue;
+			}
+			
+			if ([labelType isEqualToString:@"parent2"])
+			{
+				newParent2Revision  = stringAsNumber(revString);
+				newParent2Changeset = [NSString stringWithString:changesetString];
+				continue;
+			}
+			
+			if		([labelType isEqualToString:@"bookmark"])		addLabelToDictionary(newRevisionToLabels, [LabelData labelWithName:labelName  andType:eBookmark		  revision:revString  changeset:changesetString]);
+			else if ([labelType isEqualToString:@"localtag"])		addLabelToDictionary(newRevisionToLabels, [LabelData labelWithName:labelName  andType:eLocalTag		  revision:revString  changeset:changesetString]);
+			else if ([labelType isEqualToString:@"globaltag"])		addLabelToDictionary(newRevisionToLabels, [LabelData labelWithName:labelName  andType:eGlobalTag	  revision:revString  changeset:changesetString]);
+			else if ([labelType isEqualToString:@"activebranch"])	addLabelToDictionary(newRevisionToLabels, [LabelData labelWithName:labelName  andType:eActiveBranch	  revision:revString  changeset:changesetString]);
+			else if ([labelType isEqualToString:@"closedbranch"])	addLabelToDictionary(newRevisionToLabels, [LabelData labelWithName:labelName  andType:eClosedBranch	  revision:revString  changeset:changesetString]);
+			else if ([labelType isEqualToString:@"inactivebranch"])	addLabelToDictionary(newRevisionToLabels, [LabelData labelWithName:labelName  andType:eInactiveBranch revision:revString  changeset:changesetString]);
+			else if ([labelType isEqualToString:@"openhead"])	  { addLabelToDictionary(newRevisionToLabels, [LabelData labelWithName:labelName  andType:eOpenHead		  revision:revString  changeset:changesetString]); headCount++; }
 		}
-		if (parentsOfCurrentRevisionChanged)
-			[myDocument postNotificationWithName:kRepositoryDataDidChange userInfo:[NSDictionary dictionaryWithObject:kRepositoryParentsOfCurrentRevChanged		forKey:kRepositoryDataChangeType]];
+		
+		
+		//
+		// compute tipChanged, parentsChanged, labelsChanged
+		//
+		BOOL tipChanged     = !theSameNumbers(newTipRevision, oldTipRevision) || !theSameStrings(newTipChangeset,oldTipChangeset);
+		BOOL parentsChanged = !theSameNumbers(newParent1Revision, oldParent1Revision)  || !theSameNumbers(newParent2Revision, oldParent2Revision) ||
+							  !theSameStrings(newParent1Changeset,oldParent1Changeset) || !theSameStrings(newParent2Changeset,oldParent2Changeset);
+		BOOL labelsChanged  = labelArrayDictionariesAreEqual(revisionNumberToLabels_, newRevisionToLabels);
+
+		dispatch_async(mainQueue(), ^{
+			BOOL incompleteRevisionChanged;
+			@synchronized(self)
+			{
+				parent1Revision_  = newParent1Revision;
+				parent1Changeset_ = newParent1Changeset;
+				parent2Revision_  = newParent2Revision;
+				parent2Changeset_ = newParent2Changeset;
+				tipRevision_      = newTipRevision;
+				tipChangeset_     = newTipChangeset;
+				revisionNumberToLabels_ = newRevisionToLabels;
+				hasMultipleOpenHeads_ = headCount > 1;
+				
+				incompleteRevisionChanged = [self shouldChangeIncompleteRevisionInformation];
+				[self resetEntriesAndLogGraph];
+			}
+			
+			DebugLog(@"loadCombinedInformationAndNotify");
+
+			if (initilizing)
+				[myDocument postNotificationWithName:kRepositoryDataIsNew];
+			else if (tipChanged || parentsChanged || labelsChanged || incompleteRevisionChanged)
+				[myDocument postNotificationWithName:kRepositoryDataDidChange];
+			[myDocument postNotificationWithName:kLogEntriesDidChange];
+		});
 	});
 }
 
 
-
-
-
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
-// MARK:  Incomplete Revision Handling
-// -----------------------------------------------------------------------------------------------------------------------------------------
-
-- (void) loadIncompleteRevisionInformation
+// This moves all current entry and log graph information into the fall back caches.
+- (void) resetEntriesAndLogGraph
 {
-	if (!includeIncompleteRevision_)
-	{
-		LogEntry* oldIncompleteRevisionEntry = incompleteRevisionEntry_;
-		incompleteRevisionEntry_ = nil;
-		if (oldIncompleteRevisionEntry)
-		{
-			[self removeEntry:oldIncompleteRevisionEntry];
-			[self relayoutEntriesAbove:[oldIncompleteRevisionEntry minimumParent]];
-		}
-	}
-	else
-	{
-		incompleteRevisionEntry_ = [LogEntry unfinishedEntryForRevision:intAsNumber([self computeNumberOfRealRevisions] + 1) forRepositoryData:self];
-		[self setEntry:incompleteRevisionEntry_];
-		LogEntry* newIncompleteRevisionEntry = incompleteRevisionEntry_;
-		[self relayoutEntriesAbove:[newIncompleteRevisionEntry minimumParent]];
-	}
-	adjustStatusForCompletedInformationLoad(&incompleteRevLoadStatus_);
+	[oldRevisionNumberToLogEntry_ addEntriesFromDictionary:revisionNumberToLogEntry_];
+	[revisionNumberToLogEntry_ removeAllObjects];
+	oldLogGraph_ = logGraph_;
+	logGraph_ = [[LogGraph alloc] initWithRepositoryData:self];
+	includeIncompleteRevision_ = [myDocument repositoryHasFilesWhichContainStatus:eHGStatusCommittable];
+	incompleteRevisionEntry_   = includeIncompleteRevision_ ? [LogEntry unfinishedEntryForRevision:intAsNumber([self computeNumberOfRealRevisions] + 1) forRepositoryData:self] : nil;
+	if (incompleteRevisionEntry_)
+		[self setEntry:incompleteRevisionEntry_];	
 }
 
-
-- (void) adjustCollectionForIncompleteRevisionAllowingNotification:(BOOL)allow
-{
-	BOOL postNotification = NO;
-	NSNumber* minParent = nil;
-	@synchronized(self)
-	{
-		LogEntry* oldIncompleteRevisionEntry = incompleteRevisionEntry_;
-		minParent = [oldIncompleteRevisionEntry minimumParent];		
-		
-		BOOL oldIncludeIncompleteRevision = includeIncompleteRevision_;
-		BOOL newIncludeIncompleteRevision = [myDocument repositoryHasFilesWhichContainStatus:eHGStatusCommittable];
-		if (![rootPath_ isEqualToString:[[myDocument rootNodeInfo] absolutePath]])
-			return;
-		
-		[self removeEntry:oldIncompleteRevisionEntry];
-		makeStatusStale(&incompleteRevLoadStatus_);
-		if (oldIncludeIncompleteRevision != newIncludeIncompleteRevision)
-		{
-			includeIncompleteRevision_ = newIncludeIncompleteRevision;
-			postNotification = YES;
-		}
-	}
-	
-	// If we had an incomplete revision then relayout entries below the
-	if (minParent)
-		[self relayoutEntriesAbove:minParent];
-	
-	if (allow && postNotification)
-		dispatch_async(mainQueue(), ^{
-			[myDocument postNotificationWithName:kRepositoryDataDidChange]; });
-}
 
 
 
@@ -591,23 +404,6 @@ static void addLabelToDictionary(NSMutableDictionary* revisionToLabelArray, Labe
 // MARK: -
 // MARK: LogEntry backing
 // -----------------------------------------------------------------------------------------------------------------------------------------
-	
-- (void) removeEntry:(LogEntry*)entry
-{
-	NSNumber* rev = [entry revision];
-	if (!rev)
-		return;
-	
-	@synchronized(revisionNumberToLogEntry_)
-	{
-		LogEntry* oldEntry = [revisionNumberToLogEntry_ objectForKey:rev];
-		if (oldEntry == entry)
-		{
-			[logGraph_ removeEntries:[NSMutableArray arrayWithObject:oldEntry]];
-			[revisionNumberToLogEntry_  removeObjectForKey:rev];
-		}
-	}
-}
 
 - (void) setEntry:(LogEntry*)entry
 {
@@ -617,31 +413,14 @@ static void addLabelToDictionary(NSMutableDictionary* revisionToLabelArray, Labe
 	
 	@synchronized(revisionNumberToLogEntry_)
 	{
-		LogEntry* oldEntry = [revisionNumberToLogEntry_ objectForKey:rev];
-		if (oldEntry)
-			[logGraph_ removeEntries:[NSMutableArray arrayWithObject:oldEntry]];
 		[revisionNumberToLogEntry_  setObject:entry forKey:rev];
-		[logGraph_ addEntries:[NSMutableArray arrayWithObject:entry]];
+		if ([entry parentsArray])
+		{
+			NSArray* entries = [NSMutableArray arrayWithObject:entry];
+			[logGraph_ addEntries:entries];
+			[oldLogGraph_ removeEntries:entries];
+		}
 	}
-}
-
-
-- (NSArray*) allEntriesFromLow:(NSInteger)low toHigh:(NSInteger)high
-{
-	NSMutableArray* entries = [[NSMutableArray alloc] init];
-	for (NSInteger rev = low; rev <= high ; rev++)
-		[entries addObjectIfNonNil:[revisionNumberToLogEntry_ synchronizedObjectForKey:intAsNumber(rev)]];
-	return entries;
-}
-
-
-- (void) relayoutEntriesAbove:(NSNumber*)low
-{
-	if (!low)
-		return;
-	NSArray* entries = [self allEntriesFromLow:numberAsInt(low) toHigh:[self computeNumberOfRevisions]];
-	[logGraph_ removeEntries:entries];
-	[logGraph_ addEntries:entries];
 }
 	
 
@@ -702,58 +481,33 @@ static void addLabelToDictionary(NSMutableDictionary* revisionToLabelArray, Labe
 }
 
 
+// Add the given entries to this repository and post notifications if anything changed
 - (void) setEntriesAndNotify:(NSArray*)entries
 {
-	NSMutableArray* newEntries = [[NSMutableArray alloc] init];
-	NSMutableArray* oldEntries = [[NSMutableArray alloc] init];
+	if (IsEmpty(entries))
+		return;
 	
-	NSMutableSet* revisionsToReconnect = [[NSMutableArray alloc] init];
-
-
 	[self loadLogRecordsOfEntriesIfNecessary:entries];
-	
+
 	dispatch_async(mainQueue(), ^{
 
-		BOOL foundNewEntry = NO;
-		BOOL foundChangedEntry = NO;
-
 		@synchronized(revisionNumberToLogEntry_)
-		{			
+		{
 			//
-			// Determine oldEntries, newEntries, foundChangedEntry and foundNewEntry
+			// Determine revisionsToReconnect
 			//
+			NSMutableSet* revisionsToReconnect = [[NSMutableSet alloc] init];
 			for (LogEntry* entry in entries)
 			{
 				NSNumber* revision = [entry revision];
 				
-				LogEntry* oldEntry = [revisionNumberToLogEntry_ objectForKey:revision];
-				if (!oldEntry)
-					foundNewEntry = YES;
-				else if (![oldEntry isEqualToEntry:entry])
-					foundChangedEntry = YES;
-				else
-				{
-					[oldEntry setLoadStatus:eLogEntryLoaded];
-					continue;
-				}
-				
-				if (oldEntry)
-				{
-					if ([oldEntry childrenArray])
-						[revisionsToReconnect addObjectsFromArray:[oldEntry childrenArray]];
-					if ([oldEntry parentsArray])
-						[revisionsToReconnect addObjectsFromArray:[oldEntry parentsArray]];
-					[oldEntries addObject:oldEntry];
-				}
-				if ([entry parentsArray])
-					[revisionsToReconnect addObjectsFromArray:[entry parentsArray]];
+				LogEntry* oldEntry = [oldRevisionNumberToLogEntry_ objectForKey:revision];
+				if ([oldEntry childrenArray]) [revisionsToReconnect addObjectsFromArray:[oldEntry childrenArray]];
+				if ([oldEntry parentsArray])  [revisionsToReconnect addObjectsFromArray:[oldEntry parentsArray]];
+				if ([entry parentsArray])	  [revisionsToReconnect addObjectsFromArray:[entry parentsArray]];
 				[revisionsToReconnect addObject:revision];
-				[newEntries addObject:entry];
 				[revisionNumberToLogEntry_ setObject:entry forKey:revision];
 			}
-			
-			if (!foundChangedEntry && !foundNewEntry)
-				return;
 
 			
 			// Relink all the revisionsToReconnect
@@ -762,14 +516,13 @@ static void addLabelToDictionary(NSMutableDictionary* revisionToLabelArray, Labe
 			
 			
 			//
-			// Update the graph by removing all old entries and adding all of the new entries.
+			// Update the graph by adding all the newEntries
 			//
-			[logGraph_ removeEntries:oldEntries];
-			[logGraph_ addEntries:newEntries];
+			[logGraph_ addEntries:entries];
+			[oldLogGraph_ removeEntries:entries];
 		}
 
-		if (foundChangedEntry || foundNewEntry)
-			[myDocument postNotificationWithName:kLogEntriesDidChange];
+		[myDocument postNotificationWithName:kLogEntriesDidChange];
 	});
 }
 
@@ -779,9 +532,10 @@ static void addLabelToDictionary(NSMutableDictionary* revisionToLabelArray, Labe
 {
 	if (lowLimit < 0 || highLimit < 0)
 		return;
+	
 	// Now we just fetch the entries from the high limit to the low limit.
 	NSString* revLimits     = fstr(@"%d:%d", highLimit, lowLimit);
-	DebugLog(@"revLimits : %@", revLimits);
+	DebugLog(@"filling revLimits : %@", revLimits);
 	NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log", @"--rev", revLimits, @"--template", templateLogEntryString, nil];	// templateLogEntryString is global set in setupGlobalsForLogEntryPartsAndTemplate()
 	dispatch_async(globalQueue(), ^{
 		NSInteger minFoundEntry = NSNotFound;
@@ -807,15 +561,15 @@ static void addLabelToDictionary(NSMutableDictionary* revisionToLabelArray, Labe
 			if (minFoundEntry == NSNotFound || maxFoundEntry == NSNotFound)
 			{
 				for (NSInteger rev = lowLimit; rev <= highLimit; rev++)
-					[[revisionNumberToLogEntry_ synchronizedObjectForKey:intAsNumber(rev)] makeStatusStale];
+					[revisionNumberToLogEntry_ synchronizedRemoveObjectForKey:intAsNumber(rev)];
 				return;
 			}
 			if (lowLimit < minFoundEntry)
 				for (NSInteger rev = lowLimit; rev <= minFoundEntry; rev++)
-					[[revisionNumberToLogEntry_ synchronizedObjectForKey:intAsNumber(rev)] makeStatusStale];
+					[revisionNumberToLogEntry_ synchronizedRemoveObjectForKey:intAsNumber(rev)];
 			if (maxFoundEntry < highLimit)
 				for (NSInteger rev = maxFoundEntry; rev <= highLimit; rev++)
-					[[revisionNumberToLogEntry_ synchronizedObjectForKey:intAsNumber(rev)] makeStatusStale];
+					[revisionNumberToLogEntry_ synchronizedRemoveObjectForKey:intAsNumber(rev)];
 		}
 		[self setEntriesAndNotify:entries];
 	});
@@ -828,7 +582,7 @@ static void addLabelToDictionary(NSMutableDictionary* revisionToLabelArray, Labe
 	
 	// If we have the entry use it
 	LogEntry* requestedLogEntry = [revisionNumberToLogEntry_ synchronizedObjectForKey:revision];
-	if (requestedLogEntry && ([requestedLogEntry isLoaded] || [requestedLogEntry isLoading]))
+	if (requestedLogEntry)
 		return requestedLogEntry;
 	
 	// We now read in some more lines. We do this since in log files with hundreds of thousands of lines we don't want to read
@@ -840,7 +594,7 @@ static void addLabelToDictionary(NSMutableDictionary* revisionToLabelArray, Labe
 	int highLimit = MIN(highLimitOfNormal, requestedRow + cacheLineCount);
 	
 	if (requestedRow < lowLimit || requestedRow > highLimit)
-		return nil;
+		return (requestedLogEntry == incompleteRevisionEntry_) ? [self incompleteRevisionEntry] : nil;
 	
 	// We add pending LogEntries for all of the revisions we are about to read in. This means we don't redundantly try to
 	// repeatedly do a fillTableFrom:to: If an entry is loading or is already fully loaded then we don't need to set it loading
@@ -852,9 +606,7 @@ static void addLabelToDictionary(NSMutableDictionary* revisionToLabelArray, Labe
 		LogEntry* entry = [revisionNumberToLogEntry_ synchronizedObjectForKey:rev];
 		if (!entry)
 			[self setEntry:[LogEntry pendingLogEntryForRevision:rev forRepositoryData:self]];
-		else if ([entry isStale] || [entry isLoadingButAlreadyStale])
-			[entry setLoadStatus:eLogEntryLoading];
-		else if ([entry isFullyLoaded] || [entry isLoading])
+		else
 		{
 			lowLimit = count;
 			break;
@@ -868,9 +620,7 @@ static void addLabelToDictionary(NSMutableDictionary* revisionToLabelArray, Labe
 		LogEntry* entry = [revisionNumberToLogEntry_ synchronizedObjectForKey:rev];
 		if (!entry)
 			[self setEntry:[LogEntry pendingLogEntryForRevision:rev forRepositoryData:self]];
-		else if ([entry isStale] || [entry isLoadingButAlreadyStale])
-			[entry setLoadStatus:eLogEntryLoading];
-		else if ([entry isFullyLoaded] || [entry isLoading])
+		else
 		{
 			highLimit = count;
 			break;
@@ -879,16 +629,11 @@ static void addLabelToDictionary(NSMutableDictionary* revisionToLabelArray, Labe
 	
 	[self fillTableFrom:lowLimit to:highLimit];		// Asynchronously start the loading of the entries from lowLimit to highLimit
 
-	// If our original entry was stale then we can just mark it as being loaded and return it.
-	if (requestedLogEntry)
-	{
-		[requestedLogEntry setLoadStatus:eLogEntryLoading];
-		return requestedLogEntry;
-	}
-
+	// Start a new entry which is loading, but if we have an old entry use that in the meantime
 	LogEntry* newPendingEntry = [LogEntry pendingLogEntryForRevision:revision forRepositoryData:self];
 	[self setEntry:newPendingEntry];
-	return newPendingEntry;
+	LogEntry* oldRequestedLogEntry = [oldRevisionNumberToLogEntry_ synchronizedObjectForKey:revision];
+	return (oldRequestedLogEntry && [oldRequestedLogEntry isLoaded]) ? oldRequestedLogEntry : newPendingEntry;
 }
 
 

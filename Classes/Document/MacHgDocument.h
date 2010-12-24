@@ -106,7 +106,7 @@
 	PaneViewNum					currentPane_;			// The current Pane being shown by the document
 
 	RepositoryData*				repositoryData_;		// This is the current collection of log entries (the entries which make up the current repository)
-	
+
 	LoadedInitializationData*	loadedDataProxy_;		// When readFromData is called we don't have a fully constructed
 														// object yet so we store the bits we would set, eg which nodes in the
 														// side bar are expanded, etc, then once the object is fully loaded we
@@ -188,7 +188,6 @@
 
 // Undo
 - (void)		removeAllUndoActionsForDocument;
-- (void)		populateOutlineContents;
 
 
 // Query the active repository
@@ -236,10 +235,11 @@
 - (void)		delayEventsUntilFinishBlock:(BlockProcess) theBlock;
 - (void)		addToChangedPathsDuringSuspension:(NSArray*)paths;
 - (void)		resumeEvents;
+- (BOOL)		underlyingRepositoryChangedEventIsQueued;
 - (void)		registerPendingRefresh:(NSArray*)paths;
 - (void)		registerPendingRefresh:(NSArray*)paths  visuallyDirtifyPaths:(BOOL)dirtify;
 - (void)		refreshBrowserPaths:(NSArray*) absolutePaths;
-- (void)		refreshBrowserPaths:(NSArray*) absolutePaths resumeEventsWhenFinished:(BOOL)resume;
+- (void)		refreshBrowserPaths:(NSArray*) absolutePaths finishingBlock:(BlockProcess)theBlock;
 - (IBAction)	refreshBrowserContent:(id)sender;
 - (NSArray*)	statusLinesForPaths:(NSArray*)absolutePaths withRootPath:(NSString*)rootPath;
 
@@ -329,7 +329,6 @@
 
 // RepositoryData handling
 - (RepositoryData*)	 repositoryData;
-- (void)		initializeRepositoryData;
 
 
 // Processes Management

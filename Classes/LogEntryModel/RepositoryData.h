@@ -17,13 +17,16 @@
 {
 	NSMutableDictionary*		revisionNumberToLogEntry_;	// Map of (NSNumber*)revision number -> (LogEntry*)entry. This map
 															// loads progressively as needed
+	NSMutableDictionary*		oldRevisionNumberToLogEntry_;// Map of (NSNumber*)revision number -> (LogEntry*)entry. These are
+															// the old or stale entries.
 
 	NSString*					rootPath_;					// The root of the repository
 	LogEntry*					incompleteRevisionEntry_;	// This is the log entry for the incomplete revision (the next pending commit)
 	BOOL						includeIncompleteRevision_;	// Do we include the incompleteRevision_ in the count of the total number of revisions. and in the LogTable's etc
 	MacHgDocument*				myDocument;
 	
-	LogGraph*					logGraph_;
+	LogGraph*					logGraph_;					// All the current line segments
+	LogGraph*					oldLogGraph_;				// All the old line segments
 	
 	// Parent and tip info
 	NSNumber*					parent1Revision_;			// parent1Rev
@@ -35,14 +38,6 @@
 	NSString*					branchName_;				// name of the current branch we are on
 	NSMutableDictionary*		revisionNumberToLabels_;	// A dictionary mapping (NSNumber*)rev -> (NSArray*)of(LabelData*)labels	
 
-	// Information Load Statues
-	InformationLoadStatus		tipLoadStatus_;				// The status of the tip information in the repository
-	InformationLoadStatus		parentsInfoLoadStatus_;		// The status of the information on the parents of the current
-															// revision in the repository
-	InformationLoadStatus		incompleteRevLoadStatus_;	// The status of the information on the incomplete revision
-	InformationLoadStatus		labelsInfoLoadStatus_;		// The status of the labels information in the repository
-	InformationLoadStatus		branchNameLoadStatus_;		// The status of the branch name information in the repository
-
 	BOOL						hasMultipleOpenHeads_;
 }
 
@@ -50,6 +45,7 @@
 @property (readonly,assign) MacHgDocument*  myDocument;
 @property (readonly,assign) BOOL			includeIncompleteRevision;
 @property (readonly,assign) LogGraph*		logGraph;
+@property (readonly,assign) LogGraph*		oldLogGraph;
 
 // Initilization
 - (id)			initWithRootPath:(NSString*)rootPath andDocument:(MacHgDocument*)doc;
@@ -63,9 +59,13 @@
 - (NSNumber*)	getHGTipRevision;			// Gives the tipRev
 - (NSString*)	getHGTipChangeset;			// Gives the tipChangeset
 - (NSString*)	getHGBranchName;			// Gives the name of the current branch we are on
+- (NSNumber*)	minimumParent;				// Gives the smallest parent
+
 
 - (NSDictionary*) revisionNumberToLabels;
-
+- (LogEntry*)	entryForRevision:(NSNumber*)revision;		// The entry for the given revision. This starts the loading process
+															// for the entry and surrounding entries if the entry is not fully
+															// loaded
 - (NSInteger)	computeNumberOfRevisions;
 - (NSInteger)	computeNumberOfRealRevisions;
 
@@ -80,16 +80,11 @@
 - (NSNumber*)	incompleteRevision;
 - (LogEntry*)	incompleteRevisionEntry;
 
-
-- (LogEntry*)	entryForRevision:(NSNumber*)revision;		// This starts the loading process for the entry and surrounding entries if the entry is not fully loaded
-- (void)		setEntriesAndNotify:(NSArray*)entries;		// Add the given entries to this repository and notify if anything changed
-
 - (NSSet*)		descendantsOfRevisionNumber:(NSNumber*)rev;
 - (NSArray*)	parentsOfRevision:(NSNumber*)rev;
 - (NSArray*)	childrenOfRevision:(NSNumber*)rev;
 
-
-- (void)		adjustCollectionForIncompleteRevisionAllowingNotification:(BOOL)allow;
+- (void)		adjustCollectionForIncompleteRevision;
 - (void)		fillTableFrom:(NSInteger)lowLimit to:(NSInteger)highLimit;
 
 @end

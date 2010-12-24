@@ -229,8 +229,6 @@ typedef enum
 {
 	eLogEntryLoadedNone				= 0,	// Nothing is loaded
 	eLogEntryLoading				= 1,	// We have started on a thread loading this log entry
-	eLogEntryLoadingButAlreadyStale = 2,	// This log entry is out of date and we are reloading it.
-	eLogEntryIsStale				= 3,	// This log entry is out of date. We can use its information, but once we do, it will automatically tigger reloading
 	eLogEntryLoaded					= 4		// We have loaded all the information about a log entry
 } LogEntryLoadStatus;
 
@@ -246,19 +244,6 @@ typedef enum
 	
 	eLogRecordDetailsAndFilesLoaded  = eLogRecordDetailsLoaded  | eLogRecordFilesLoaded
 } LogRecordLoadStatus;
-
-
-// Represents the stage of loading of the information about the repository.
-typedef enum
-{
-	eInformationStatusNotLoaded					= 0,
-	eInformationStatusLoading					= 1<<1,
-	eInformationStatusStale						= 1<<2,
-	eInformationStatusLoadingButAlreadyStale	= 1<<3,
-	eInformationStatusLoaded					= 1<<4,
-	
-	eInformationStatusLoadedOrLoading			= eInformationStatusLoading | eInformationStatusLoadingButAlreadyStale | eInformationStatusLoaded
-} InformationLoadStatus;
 
 
 typedef enum
@@ -724,7 +709,16 @@ static inline NSString* dupString(NSString* str)		{ return str ? [NSString strin
 
 static inline NSInteger constrainInteger(NSInteger val, NSInteger min, NSInteger max)	{ if (val < min) return min; if (val > max) return max; return val; }
 
+static inline BOOL theSameNumbers(NSNumber* a, NSNumber* b)	{ return (!a && !b) || (a && b && [a isEqualToNumber:b]); }
+static inline BOOL theSameStrings(NSString* a, NSString* b)	{ return (!a && !b) || (a && b && [a isEqualToString:b]); }
 
+static inline NSNumber* minimumNumber(NSNumber* a, NSNumber* b)
+{
+	if (a && b) return ([a compare:b] == NSOrderedAscending) ? a : b;
+	if (!a) return b;
+	if (!b) return a;
+	return nil;
+}
 
 
 

@@ -112,7 +112,7 @@
 	
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	if (rootPath)
-		[theBrowser refreshBrowserPaths:[RepositoryPaths fromRootPath:rootPath] resumeEventsWhenFinished:NO];
+		[theBrowser refreshBrowserPaths:[RepositoryPaths fromRootPath:rootPath] finishingBlock:nil];
 }
 
 - (void) unload
@@ -234,7 +234,7 @@
 {
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	if (rootPath)
-		[theBrowser refreshBrowserPaths:[RepositoryPaths fromRootPath:rootPath]  resumeEventsWhenFinished:NO];
+		[theBrowser refreshBrowserPaths:[RepositoryPaths fromRootPath:rootPath]  finishingBlock:nil];
 }
 
 - (void) updateCurrentPreviewImage

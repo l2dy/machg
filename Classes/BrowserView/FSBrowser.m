@@ -65,7 +65,7 @@
 	// columns. (like the finder)).
 	[self setDefaultColumnWidth:sizeOfBrowserColumnsFromDefaults()];
 	[parentController awakeFromNib];	// The parents must ensure that the internals of awakeFromNib only ever happen once.
-	[self repositoryRootDidChange];
+	rootNodeInfo_ = nil;
 }
 
 - (void) unload
@@ -437,12 +437,16 @@
 
 
 
-- (void) refreshBrowserPaths:(RepositoryPaths*)changes resumeEventsWhenFinished:(BOOL)resume
+- (void) refreshBrowserPaths:(RepositoryPaths*)changes finishingBlock:(BlockProcess)theBlock
 {
 	NSString* rootPath = [changes rootPath];
 	NSArray* absoluteChangedPaths = pruneDisallowedPaths([changes absolutePaths]);
 	if (IsEmpty(absoluteChangedPaths) || !pathIsExistentDirectory(rootPath))
+	{
+		if (theBlock)
+			theBlock();
 		return;
+	}
 
 	ProcessListController* theProcessListController = [[self myDocument] theProcessListController];
 	NSNumber* processNum = [theProcessListController addProcessIndicator:@"Refresh Browser Data"];
@@ -485,8 +489,8 @@
 		{
 			[theProcessListController removeProcessIndicator:processNum];
 			dispatchGroupFinish(group);
-			if (resume && isMainFSBrowser_)
-				[[self myDocument] resumeEvents];
+			if (theBlock)
+				theBlock();
 			return;
 		}
 
@@ -503,8 +507,8 @@
 				rootNodeInfo_ = newRootNode;
 				[self reloadData:self];
 				[theSavedState restoreBrowserSelection];		// restore the selection and the scroll positions of the columns and the horizontal scroll
-				if (isMainFSBrowser_)
-					[[[self myDocument] repositoryData] adjustCollectionForIncompleteRevisionAllowingNotification:YES];
+				if (isMainFSBrowser_ && ![[self myDocument] underlyingRepositoryChangedEventIsQueued])
+					[[[self myDocument] repositoryData] adjustCollectionForIncompleteRevision];
 			}
 
 			[theProcessListController removeProcessIndicator:processNum];
@@ -514,13 +518,13 @@
 											// tree... Maybe we could queue this so that the updating of the tree doesn't need to
 											// wait for the display of the tree.
 		dispatchGroupFinish(group);
-		if (resume && isMainFSBrowser_)
-			[[self myDocument] resumeEvents];
+		if (theBlock)
+			theBlock();
 	});
 }
 
 // The parent controller determines when we receive this event.
-- (void) repositoryRootDidChange
+- (void) repositoryDataIsNew
 {
 	if ([[self myDocument] aRepositoryIsSelected])
 	{
@@ -543,7 +547,7 @@
 		return;
 	}
 	NSArray* absoluteChangedPaths = [NSArray arrayWithObject:rootPath];
-	[self refreshBrowserPaths:[RepositoryPaths fromPaths:absoluteChangedPaths withRootPath:rootPath]  resumeEventsWhenFinished:NO];
+	[self refreshBrowserPaths:[RepositoryPaths fromPaths:absoluteChangedPaths withRootPath:rootPath]  finishingBlock:nil];
 }
 
 

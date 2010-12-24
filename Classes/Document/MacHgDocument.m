@@ -90,6 +90,11 @@
 
 
 
+@interface MacHgDocument (PrivateAPI)
+- (void) initializeRepositoryData;
+- (void) populateOutlineContents;
+@end
+
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -996,7 +1001,6 @@
 		NSString* rootPath = [self absolutePathOfRepositoryRoot];
 		repositoryData_ = [[RepositoryData alloc] initWithRootPath:rootPath andDocument:self];
 	}
-	[self postNotificationWithName:kRepositoryDataIsNew];
 }
 
 - (RepositoryData*) repositoryData
@@ -1025,6 +1029,11 @@
 	return eventsSuspensionCount_ > 0;
 }
 
+- (BOOL) underlyingRepositoryChangedEventIsQueued
+{
+	return [queueForUnderlyingRepositoryChangedViaEvents_ operationQueued];
+}
+
 - (void) suspendEvents
 {
 	eventsSuspensionCount_++;
@@ -1049,16 +1058,19 @@
 		eventsSuspensionCount_++;
 		NSArray* changedPaths = changedPathsDuringSuspension_;
 		changedPathsDuringSuspension_ = nil;
-		[self refreshBrowserPaths:changedPaths resumeEventsWhenFinished:YES];
+		[self refreshBrowserPaths:changedPaths finishingBlock:^{[self resumeEvents];}];
 		return;
 	}
 
 	BOOL postNotification = [queueForUnderlyingRepositoryChangedViaEvents_ operationQueued];
 	[queueForUnderlyingRepositoryChangedViaEvents_ resumeQueue];
 	if (postNotification)
+	{
+		DebugLog(@"resume events: queueing underlying repository changed event.");
 		[queueForUnderlyingRepositoryChangedViaEvents_ 
 			addBlockOperation: ^{[self postNotificationWithName:kUnderlyingRepositoryChanged];}
-					withDelay: 1.5];
+					withDelay: 0.5];
+	}
 }
 
 - (void) delayEventsUntilFinishBlock:(BlockProcess) theBlock
@@ -1138,14 +1150,17 @@
 		else
 			[filteredPaths addObject:path];
 
-	if (postNotification)
+	if (postNotification && ![self underlyingRepositoryChangedEventIsQueued])
+	{
+		DebugLog(@"fileEventsOccurredIn : queueing underlying repository changed event.");
 		[queueForUnderlyingRepositoryChangedViaEvents_ addBlockOperation:^{
 			[self postNotificationWithName:kUnderlyingRepositoryChanged]; }];
+	}
 	
 	NSArray* canonicalized = pruneContainedPaths(filteredPaths);
 	DebugLog(@"Some file paths changed. File events are %@.\nThe raw paths are %@. The canonicalized paths are %@", [self eventsAreSuspended]? @"suspended":@"acted on immediately", eventPaths, canonicalized);
 	if (![self eventsAreSuspended])
-		[self refreshBrowserPaths:canonicalized resumeEventsWhenFinished:NO];
+		[self refreshBrowserPaths:canonicalized];
 	else
 		[self addToChangedPathsDuringSuspension:canonicalized];
 }
@@ -1370,8 +1385,11 @@
 
 	if ([node isLocalRepositoryRef] && [self showingBackingView])
 		[self actionSwitchViewToBrowserView:self];
-	
-	[self initializeRepositoryData];
+
+	NSString* rootPath = [self absolutePathOfRepositoryRoot];
+	BOOL rootPathChanged = !repositoryData_ || ![[repositoryData_ rootPath] isEqualToString:rootPath];
+	if (rootPathChanged)
+		[self initializeRepositoryData];
 
 	if ([node isLocalRepositoryRef])
 		[self setupEventlistener];
@@ -1399,10 +1417,10 @@
 // MARK: Refresh / Regenrate Browser
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) refreshBrowserPaths:(NSArray*)absoluteChangedPaths  { [self refreshBrowserPaths:absoluteChangedPaths resumeEventsWhenFinished:NO]; }
-- (void) refreshBrowserPaths:(NSArray*)absoluteChangedPaths  resumeEventsWhenFinished:(BOOL)resume
+- (void) refreshBrowserPaths:(NSArray*)absoluteChangedPaths  { [self refreshBrowserPaths:absoluteChangedPaths finishingBlock:nil]; }
+- (void) refreshBrowserPaths:(NSArray*)absoluteChangedPaths  finishingBlock:(BlockProcess)theBlock
 {
-	[[self theBrowser] refreshBrowserPaths:[RepositoryPaths fromPaths:absoluteChangedPaths withRootPath:[self absolutePathOfRepositoryRoot]] resumeEventsWhenFinished:resume];
+	[[self theBrowser] refreshBrowserPaths:[RepositoryPaths fromPaths:absoluteChangedPaths withRootPath:[self absolutePathOfRepositoryRoot]] finishingBlock:theBlock];
 }
 
 
@@ -1413,7 +1431,7 @@
 		return;
 		
 	NSString* rootPath = [self absolutePathOfRepositoryRoot];	
-	[[self theBrowser] refreshBrowserPaths:[RepositoryPaths fromRootPath:rootPath] resumeEventsWhenFinished:NO];
+	[[self theBrowser] refreshBrowserPaths:[RepositoryPaths fromRootPath:rootPath] finishingBlock:nil];
 	[self setupEventlistener];
 }
 
@@ -1481,7 +1499,7 @@
 		[self registerPendingRefresh:theSelectedFiles visuallyDirtifyPaths:NO];
 		NSString* rootPath = [self absolutePathOfRepositoryRoot];
 		moveFilesToTheTrash(theSelectedFiles);
-		[self refreshBrowserPaths:parentPaths(theSelectedFiles,rootPath) resumeEventsWhenFinished:NO];
+		[self refreshBrowserPaths:parentPaths(theSelectedFiles,rootPath)];
 	}];
 	return YES;
 }
@@ -1631,7 +1649,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 				[hgignoreContents appendFormat:@"%@\n",rootRelativeFile];
 		}
 		[hgignoreContents writeToFile:hgignorePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
-		[self refreshBrowserPaths:pathsToRefresh resumeEventsWhenFinished:NO];
+		[self refreshBrowserPaths:pathsToRefresh];
 	}];
 	return YES;
 }
@@ -1661,7 +1679,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 			hgignoreContents = [hgignoreContents stringByReplacingOccurrencesOfString:@"\n\n" withString:@"\n"];
 			[hgignoreContents writeToFile:hgignorePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
 			
-			[self refreshBrowserPaths:pathsToRefresh resumeEventsWhenFinished:NO];
+			[self refreshBrowserPaths:pathsToRefresh];
 		}
 	}];
 	return YES;
