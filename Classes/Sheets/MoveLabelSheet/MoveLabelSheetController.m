@@ -140,7 +140,8 @@
 	
 	[NSApp endSheet:theMoveLabelSheet];
 	[theMoveLabelSheet orderOut:sender];
-	[myDocument postNotificationWithName:kUnderlyingRepositoryChanged];
+	[myDocument postNotificationWithName:kUnderlyingRepositoryChanged];		// Check that we still need to post this notification. The command
+																			// should like cause a refresh in any case.
 }
 
 
