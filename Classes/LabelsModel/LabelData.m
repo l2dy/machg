@@ -133,6 +133,13 @@
 	return newArrayOfNames;
 }
 
++ (NSArray*) filterLabelsAndExtractNames:(NSArray*)labels byType:(LabelType)type
+{
+	NSArray* filteredLabels = [LabelData filterLabels:labels byType:type];
+	NSArray* sortedLabels = [filteredLabels sortedArrayUsingDescriptors:[LabelData descriptorsForSortByNameAscending]];
+	return [LabelData extractNameFromLabels:sortedLabels];	
+}
+
 // This sorts the array as a side effect
 + (NSArray*) removeDuplicateLabels:(NSArray*)labels
 {

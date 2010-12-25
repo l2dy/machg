@@ -117,9 +117,7 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 	NSArray* labels = [self labelArray];
 	if (IsEmpty(labels))
 		return [[NSArray alloc]init];
-	NSArray* tagLabels = [LabelData filterLabels:labels byType:eTagLabel];
-	NSArray* sortedTagLabels = [tagLabels sortedArrayUsingDescriptors:[LabelData descriptorsForSortByNameAscending]];
-	return [LabelData extractNameFromLabels:sortedTagLabels];
+	return [LabelData filterLabelsAndExtractNames:labels byType:eTagLabel];
 }
 
 - (NSArray*) bookmarks
@@ -127,9 +125,7 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 	NSArray* labels = [self labelArray];
 	if (IsEmpty(labels))
 		return [[NSArray alloc]init];
-	NSArray* bookmarkLabels = [LabelData filterLabels:labels byType:eBookmarkLabel];
-	NSArray* sortedBookmarkLabels = [bookmarkLabels sortedArrayUsingDescriptors:[LabelData descriptorsForSortByNameAscending]];
-	return [LabelData extractNameFromLabels:sortedBookmarkLabels];
+	return [LabelData filterLabelsAndExtractNames:labels byType:eBookmarkLabel];
 }
 
 - (NSString*) branch
@@ -147,9 +143,7 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 	NSArray* labels = [self labelArray];
 	if (IsEmpty(labels))
 		return @"";
-	NSArray* filteredLabels = [LabelData filterLabels:labels byType:eNotOpenHead];
-	NSArray* sortedLabels = [filteredLabels sortedArrayUsingDescriptors:[LabelData descriptorsForSortByTypeAscending]];
-	NSArray* names = [LabelData extractNameFromLabels:sortedLabels];
+	NSArray* names = [LabelData filterLabelsAndExtractNames:labels byType:eNotOpenHead];
 	return [names componentsJoinedByString:@", "];
 }
 

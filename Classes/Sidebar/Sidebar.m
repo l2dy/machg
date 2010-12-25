@@ -15,6 +15,7 @@
 #import "CloneSheetController.h"
 #import "RepositoryData.h"
 #import "LogEntry.h"
+#import "LabelData.h"
 #import "LocalRepositoryRefSheetController.h"
 #import "TaskExecutions.h"
 #import "AppController.h"
@@ -528,10 +529,11 @@
 			return attrString;
 		NSString* parentRevisionStr = numberAsString(parentRevision);
 		NSString* parentRevisions = [repositoryData inMergeState] ? fstr(@"%@, %@", parentRevision, [repositoryData getHGParent2Revision]) : parentRevisionStr;
-		LogEntry* parentEntry = [repositoryData entryForRevision: parentRevision];
-		NSArray*  tags        = [parentEntry tags];
-		NSArray*  bookmarks   = [parentEntry bookmarks];
-		NSString* branch      = [repositoryData getHGBranchName];
+
+		NSArray* labels     = [[repositoryData revisionNumberToLabels] synchronizedObjectForKey:parentRevision];
+		NSArray*  tags      = [LabelData filterLabelsAndExtractNames:labels byType:eTagLabel];
+		NSArray*  bookmarks = [LabelData filterLabelsAndExtractNames:labels byType:eBookmarkLabel];
+		NSString* branch    = [repositoryData getHGBranchName];
 		
 		if (IsNotEmpty(parentRevisions))
 		{

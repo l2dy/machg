@@ -46,6 +46,7 @@
 + (NSArray*) extractNameFromLabels:(NSArray*)labels;
 + (NSArray*) removeDuplicateLabels:(NSArray*)labels;
 + (NSArray*) filterLabelsDictionary:(NSDictionary*)labelsDict byType:(LabelType)type;
++ (NSArray*) filterLabelsAndExtractNames:(NSArray*)labels byType:(LabelType)type;
 
 
 // Sorting
