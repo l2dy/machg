@@ -580,8 +580,18 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 {
 	static int cacheLineCount = 100;
 	
-	// If we have the entry use it
+	// Look for an existing entry to use
 	LogEntry* requestedLogEntry = [revisionNumberToLogEntry_ synchronizedObjectForKey:revision];
+
+	// If the entry is still loading and we have an entry to fall back to, then use that.
+	if (requestedLogEntry && [requestedLogEntry isLoading])
+	{
+		LogEntry* oldRequestedLogEntry = [oldRevisionNumberToLogEntry_ synchronizedObjectForKey:revision];
+		if (oldRequestedLogEntry && [oldRequestedLogEntry isLoaded])
+			return oldRequestedLogEntry;
+	}
+
+	// Even if the new entry is loading then use it.
 	if (requestedLogEntry)
 		return requestedLogEntry;
 	
