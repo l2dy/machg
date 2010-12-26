@@ -30,7 +30,7 @@
 - (IBAction) validateButtons:(id)sender;
 
 // Sheet button actions
-- (IBAction) sheetButtonOk:(id)sender;
+- (IBAction) sheetButtonPull:(id)sender;
 - (IBAction) sheetButtonCancel:(id)sender;
 
 

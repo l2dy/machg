@@ -96,7 +96,7 @@
 }
 
 
-- (IBAction) sheetButtonOk:(id)sender;
+- (IBAction) sheetButtonPush:(id)sender;
 {
 	[sheetWindow makeFirstResponder:sheetWindow]; // Make the text fields of the sheet commit any changes they currently have
 	[NSApp endSheet:sheetWindow];

@@ -29,7 +29,7 @@
 
 
 // Sheet button actions
-- (IBAction) sheetButtonOk:(id)sender;
+- (IBAction) sheetButtonPush:(id)sender;
 - (IBAction) sheetButtonCancel:(id)sender;
 
 
