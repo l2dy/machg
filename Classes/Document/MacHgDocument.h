@@ -236,6 +236,7 @@
 - (void)		addToChangedPathsDuringSuspension:(NSArray*)paths;
 - (void)		resumeEvents;
 - (BOOL)		underlyingRepositoryChangedEventIsQueued;
+- (SingleTimedQueue*) queueForUnderlyingRepositoryChangedViaEvents;
 - (void)		registerPendingRefresh:(NSArray*)paths;
 - (void)		registerPendingRefresh:(NSArray*)paths  visuallyDirtifyPaths:(BOOL)dirtify;
 - (void)		refreshBrowserPaths:(NSArray*) absolutePaths;

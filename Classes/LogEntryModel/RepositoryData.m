@@ -16,6 +16,7 @@
 #import "MacHgDocument.h"
 #import "LabelData.h"
 #import "FSNodeInfo.h"
+#import "SingleTimedQueue.h"
 
 @interface RepositoryData (PrivateAPI)
 - (void) loadCombinedInformationAndNotify:(BOOL)initilizing;
@@ -306,8 +307,19 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 				incompleteRevisionChanged = [self shouldChangeIncompleteRevisionInformation];
 				[self resetEntriesAndLogGraph];
 			}
+
+			if (!tipRevision_)
+			{
+				dispatch_async(mainQueue(), ^{
+					DebugLog(@"Bad repository read in loadCombinedInformationAndNotify.");
+					[[myDocument queueForUnderlyingRepositoryChangedViaEvents] addBlockOperation: ^{
+						[myDocument postNotificationWithName:kUnderlyingRepositoryChanged];
+					}];
+				});
+				return;
+			}
 			
-			DebugLog(@"loadCombinedInformationAndNotify");
+			DebugLog(@"finished loadCombinedInformationAndNotify");
 
 			if (initilizing)
 				[myDocument postNotificationWithName:kRepositoryDataIsNew];

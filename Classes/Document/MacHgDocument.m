@@ -1024,15 +1024,9 @@
 // MARK:  Suspension / Resumption of events
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BOOL) eventsAreSuspended
-{
-	return eventsSuspensionCount_ > 0;
-}
-
-- (BOOL) underlyingRepositoryChangedEventIsQueued
-{
-	return [queueForUnderlyingRepositoryChangedViaEvents_ operationQueued];
-}
+- (BOOL) eventsAreSuspended											{ return eventsSuspensionCount_ > 0; }
+- (BOOL) underlyingRepositoryChangedEventIsQueued					{ return [queueForUnderlyingRepositoryChangedViaEvents_ operationQueued]; }
+- (SingleTimedQueue*) queueForUnderlyingRepositoryChangedViaEvents	{ return queueForUnderlyingRepositoryChangedViaEvents_; }
 
 - (void) suspendEvents
 {
