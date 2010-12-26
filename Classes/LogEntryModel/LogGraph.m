@@ -305,15 +305,14 @@ static NSInteger closestFreeIndex2(NSIndexSet* indexes1, NSIndexSet* indexes2, N
 
 - (void) addLineSegment:(LineSegment*)line
 {
-	DebugLog(@"adding :%@", line);
-	NSInteger r;
+	// DebugLog(@"adding :%@", line);
 	NSInteger maxCol = maxColumn;
 	maxCol = MAX(maxCol, [line highCol]);
 	maxCol = MAX(maxCol, [line lowCol]);
 	maxCol = MAX(maxCol, [line drawCol]);
 	maxColumn = maxCol;
 	
-	for (r = [line lowRev]; r <= [line highRev]; r++)
+	for (NSInteger r = [line lowRev]; r <= [line highRev]; r++)
 	{
 		NSNumber* revision = intAsNumber(r);
 		NSMutableArray* lines = [revisionNumberToLineSegments_ objectForKey:revision];
