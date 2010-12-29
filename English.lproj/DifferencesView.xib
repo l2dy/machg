@@ -1925,7 +1925,7 @@
 					</object>
 					<object class="NSMenuItem" id="303258090">
 						<reference key="NSMenu" ref="572099067"/>
-						<string key="NSTitle">Diff Selected FIles</string>
+						<string key="NSTitle">Diff Selected Files</string>
 						<string key="NSKeyEquiv">D</string>
 						<int key="NSKeyEquivModMask">1048576</int>
 						<int key="NSMnemonicLoc">2147483647</int>

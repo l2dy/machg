@@ -18,12 +18,12 @@ typedef enum
 {
 	eLoggingNone			= 0,
 	eLogResultsToFile		= 1<<1,
-	eLogErrorsToFIle		= 1<<2,
+	eLogErrorsToFile		= 1<<2,
 	eIssueErrorsInAlerts	= 1<<3,
 	eIssueResultsInAlerts	= 1<<4,
 	eDisplayErrorsInWindow	= 1<<5,
 	eDisplayResultsInWindow	= 1<<6,
-	eLogAllToFile			= eLogResultsToFile | eLogErrorsToFIle ,
+	eLogAllToFile			= eLogResultsToFile | eLogErrorsToFile ,
 	eDisplayAllInWindow		= eDisplayErrorsInWindow | eDisplayResultsInWindow,
 	eLogAllAndDisplayAll	= eLogAllToFile | eDisplayAllInWindow,
 	eLogAllIssueErrors		= eLogAllToFile | eIssueErrorsInAlerts
