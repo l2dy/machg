@@ -128,8 +128,8 @@
 
 
 // Delegated Actions
-- (IBAction)	browserSingleClick:(id)sender;
-- (IBAction)	browserDoubleClick:(id)sender;
+- (IBAction)	browserAction:(id)sender;
+- (IBAction)	browserDoubleAction:(id)sender;
 
 
 // Delegate Methods

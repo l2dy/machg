@@ -66,6 +66,8 @@
 
 
 // Actions
+- (IBAction) browserAction:(id)browser;			// Respond to a single click or a key down event
+- (IBAction) browserDoubleAction:(id)browser;	// Respond to a double click
 
 - (IBAction) mainMenuCommitSelectedFiles:(id)sender;
 - (IBAction) mainMenuCommitAllFiles:(id)sender;

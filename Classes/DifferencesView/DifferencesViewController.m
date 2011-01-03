@@ -95,8 +95,8 @@
 
 	// Tell the browser to send us messages when it is clicked.
 	[theBrowser setTarget:self];
-	[theBrowser setAction:@selector(browserSingleClick:)];
-	[theBrowser setDoubleAction:@selector(browserDoubleClick:)];
+	[theBrowser setAction:@selector(browserAction:)];
+	[theBrowser setDoubleAction:@selector(browserDoubleAction:)];
 	[theBrowser setAreNodesVirtual:YES];
 	[mainSplitView setPosition:400 ofDividerAtIndex:0];
 	
@@ -371,8 +371,8 @@
 	}
 }
 
-- (IBAction) browserSingleClick:(id)browser	{ }
-- (IBAction) browserDoubleClick:(id)browser
+- (IBAction) browserAction:(id)browser	{ }
+- (IBAction) browserDoubleAction:(id)browser
 {
 	SEL theAction = [self actionForDoubleClickEnum:[theBrowser actionEnumForBrowserDoubleClick]];
 	[[NSApplication sharedApplication] sendAction:theAction to:nil from:browser];

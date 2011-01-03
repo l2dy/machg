@@ -84,8 +84,8 @@
 
 	// Tell the browser to send us messages when it is clicked or a key is typed in it.
 	[theBrowser setTarget:self];
-	[theBrowser setAction:@selector(browserSingleClick:)];
-	[theBrowser setDoubleAction:@selector(browserDoubleClick:)];
+	[theBrowser setAction:@selector(browserAction:)];
+	[theBrowser setDoubleAction:@selector(browserDoubleAction:)];
 	[theBrowser setAreNodesVirtual:NO];
     
 	[theBrowser setIsMainFSBrowser:YES];
@@ -118,8 +118,9 @@
 	}
 }
 
-- (IBAction) browserSingleClick:(id)browser	{ [self updateCurrentPreviewImage]; }
-- (IBAction) browserDoubleClick:(id)browser
+
+- (IBAction) browserAction:(id)browser	{ [self updateCurrentPreviewImage]; }
+- (IBAction) browserDoubleAction:(id)browser
 {
 	SEL theAction = [self actionForDoubleClickEnum:[theBrowser actionEnumForBrowserDoubleClick]];
 	[[NSApplication sharedApplication] sendAction:theAction to:nil from:browser];
@@ -200,6 +201,8 @@
 	[nodeInspector setAttributedStringValue:attributedString];
 	[nodeIconWell setImage:inspectorImage];
 	
+	// The browser selection might have changed update the quick look preview image if necessary. It would be really nice to have
+	// a NSBrowserSelectionDidChangeNotification
 	if ([QLPreviewPanel sharedPreviewPanelExists] && [[QLPreviewPanel sharedPreviewPanel] isVisible])
 		[[QLPreviewPanel sharedPreviewPanel] reloadData];
 }
