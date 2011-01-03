@@ -89,7 +89,7 @@
 									 ^{
 										 [self showValidationProgressIndicator];
 										 NSString* fullServerURL = FullServerURLWithPassword([theServerRefController serverFieldValue], [theServerRefController needsPassword], [theServerRefController password]);
-										 NSMutableArray* argsIdentify = [NSMutableArray arrayWithObjects:@"identify", @"--rev", @"0", fullServerURL, nil];
+										 NSMutableArray* argsIdentify = [NSMutableArray arrayWithObjects:@"identify", @"--rev", @"tip", fullServerURL, nil];
 										 ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsIdentify  fromRoot:@"/tmp"  logging:eLogAllToFile];
 										 
 										// If our results are still relevant show the success or failure result
