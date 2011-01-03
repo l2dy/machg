@@ -150,7 +150,7 @@
 	for (FSBrowserCell* cell in cells)
 		if (![extension isEqualToString:[[[cell nodeInfo] absolutePath] pathExtension]])
 			return nil;	
-	return [NSWorkspace iconImageOfSize:NSMakeSize(128,128) forPath:[firstNode absolutePath]];		
+	return [firstNode iconImageForPreview];
 }
 
 
@@ -192,8 +192,8 @@
 			// Find the last selected cell and show its information
 			FSBrowserCell* lastSelectedCell = [selectedCells objectAtIndex:[selectedCells count] - 1];
 			FSNodeInfo* fsNode = [lastSelectedCell nodeInfo];
-			attributedString = [fsNode attributedInspectorStringForFSNode];
-			inspectorImage = [NSWorkspace iconImageOfSize:NSMakeSize(128,128) forPath:[fsNode absolutePath]];
+			attributedString   = [fsNode attributedInspectorStringForFSNode];
+			inspectorImage     = [fsNode iconImageForPreview];
 		}
 	}
     
