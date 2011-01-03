@@ -9,7 +9,15 @@
 
 #import <Cocoa/Cocoa.h>
 #import "Common.h"
+#import <Quartz/Quartz.h>	// Quartz framework provides the QLPreviewPanel public API
 
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  ControllerForFSBrowser
+// -----------------------------------------------------------------------------------------------------------------------------------------
 // All Controllers which embed a FSBrowser must conform to this protocol
 @protocol ControllerForFSBrowser <NSObject>
 - (NSArray*)		statusLinesForPaths:(NSArray*)absolutePaths withRootPath:(NSString*)rootPath;
@@ -17,6 +25,25 @@
 - (void)			updateCurrentPreviewImage;
 - (void)			awakeFromNib;	// This routine needs to be able to be called multiple times on the Controller parent of the
 									// FSBrowser, yet interanlly fire only once
+@end
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  PathQuickLookPreviewItem
+// -----------------------------------------------------------------------------------------------------------------------------------------
+@interface PathQuickLookPreviewItem : NSObject <QLPreviewItem>
+{
+	FSNodeInfo*    node_;
+	NSRect         itemRect_;
+}
+@property (readwrite,assign) FSNodeInfo*  node;
++ (PathQuickLookPreviewItem*) previewItemFromNodeInfo:(FSNodeInfo*)node withRect:(NSRect)rect;
+- (NSRect) frameRectOfPath;
+- (NSURL*) previewItemURL;
 @end
 
 
@@ -74,6 +101,7 @@
 - (BOOL)		repositoryHasFilesWhichContainStatus:(HGStatus)status;
 - (NSArray*)	absolutePathsOfBrowserSelectedFiles;
 - (NSArray*)	absolutePathsOfBrowserChosenFiles;
+- (NSArray*)	quickLookPreviewItemsForBrowserSelectedFiles;
 - (NSString*)	enclosingDirectoryOfBrowserChosenFiles;
 - (FSNodeInfo*)	parentNodeInfoForColumn:(NSInteger)column;
 

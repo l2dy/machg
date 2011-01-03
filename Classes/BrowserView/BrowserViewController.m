@@ -82,7 +82,7 @@
 	myDocument = [parentContoller myDocument];
 	[self observe:kRepositoryDataIsNew		from:[self myDocument]  byCalling:@selector(repositoryDataIsNew)];
 
-	// Tell the browser to send us messages when it is clicked.
+	// Tell the browser to send us messages when it is clicked or a key is typed in it.
 	[theBrowser setTarget:self];
 	[theBrowser setAction:@selector(browserSingleClick:)];
 	[theBrowser setDoubleAction:@selector(browserDoubleClick:)];
@@ -199,6 +199,9 @@
     
 	[nodeInspector setAttributedStringValue:attributedString];
 	[nodeIconWell setImage:inspectorImage];
+	
+	if ([QLPreviewPanel sharedPreviewPanelExists] && [[QLPreviewPanel sharedPreviewPanel] isVisible])
+		[[QLPreviewPanel sharedPreviewPanel] reloadData];
 }
 
 
@@ -288,12 +291,20 @@
 
 - (BOOL) toolbarActionAppliesToFilesWith:(HGStatus)status	{ return ([theBrowser statusOfChosenPathsInBrowserContain:status] || (![theBrowser nodesAreChosen] && [theBrowser repositoryHasFilesWhichContainStatus:status])); }
 
+- (BOOL) validateAndSwitchMenuForCommitSelectedFiles:(NSMenuItem*)menuItem
+{
+	if (!menuItem)
+		return NO;
+	BOOL inMergeState = [[myDocument repositoryData] inMergeState];
+	[menuItem setTitle: inMergeState ? @"Commit Merged Files..." : @"Commit Selected Files..."];
+	return inMergeState ? [myDocument repositoryHasFilesWhichContainStatus:eHGStatusCommittable] : ([myDocument pathsAreSelectedInBrowserWhichContainStatus:eHGStatusCommittable] && [myDocument showingBrowserView]);
+}
 
 - (BOOL) validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem, NSObject>)anItem
 {
 	SEL theAction = [anItem action];
 
-	if (theAction == @selector(mainMenuCommitSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && [myDocument validateAndSwitchMenuForCommitSelectedFiles:DynamicCast(NSMenuItem, anItem)];
+	if (theAction == @selector(mainMenuCommitSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && [self validateAndSwitchMenuForCommitSelectedFiles:DynamicCast(NSMenuItem, anItem)];
 	if (theAction == @selector(mainMenuCommitAllFiles:))				return [myDocument repositoryIsSelectedAndReady] && [myDocument validateAndSwitchMenuForCommitAllFiles:DynamicCast(NSMenuItem, anItem)];
 	if (theAction == @selector(toolbarCommitFiles:))					return [myDocument repositoryIsSelectedAndReady] && ([[myDocument repositoryData] inMergeState] || [self toolbarActionAppliesToFilesWith:eHGStatusCommittable]);
 	

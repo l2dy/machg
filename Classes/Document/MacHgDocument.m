@@ -805,6 +805,79 @@
 
 
 
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Quick Look Panel Support
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (BOOL) acceptsPreviewPanelControl:(QLPreviewPanel*)panel	{ return YES; }
+
+- (void) beginPreviewPanelControl:(QLPreviewPanel*)panel
+{
+    // This document is now responsible for the quick look preview panel
+    // It is allowed to set the delegate, data source and refresh panel.
+    panel.delegate = self;
+    panel.dataSource = self;
+}
+
+- (void) endPreviewPanelControl:(QLPreviewPanel*)panel
+{
+    // This document loses its responsisibility for the quick look preview panel, until the next call to
+    // -beginPreviewPanelControl: it must not change the panel's delegate, data source or refresh it.
+    quickLookPreviewPanel = nil;
+}
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Quick Look Panel Handling
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (NSInteger) numberOfPreviewItemsInPreviewPanel:(QLPreviewPanel*)panel							{ return [[[self theBrowser] absolutePathsOfBrowserSelectedFiles] count]; }
+- (id <QLPreviewItem>) previewPanel:(QLPreviewPanel*)panel previewItemAtIndex:(NSInteger)index	{ return [[[self theBrowser] quickLookPreviewItemsForBrowserSelectedFiles] objectAtIndex:index]; }
+
+- (BOOL) previewPanel:(QLPreviewPanel*)panel handleEvent:(NSEvent*)event
+{
+    // redirect all key down events to the browser view
+    if ([event type] == NSKeyDown)
+	{
+        [[self theBrowser] keyDown:event];
+        return YES;
+    }
+    return NO;
+}
+
+// This delegate method provides the rect on screen from which the panel will zoom.
+- (NSRect) previewPanel:(QLPreviewPanel*)panel sourceFrameOnScreenForPreviewItem:(id <QLPreviewItem>)item
+{
+	PathQuickLookPreviewItem* previewItem = DynamicCast(PathQuickLookPreviewItem, item);
+	if (!previewItem)
+		return NSZeroRect;
+	NSRect pathRect = [previewItem frameRectOfPath];
+    NSRect visibleRect = [[self theBrowser] visibleRect];    // check that the path Rect is visible on screen
+
+    if (!NSIntersectsRect(visibleRect, pathRect))
+        return NSZeroRect;
+    
+    // convert icon rect to screen coordinates
+    pathRect = [[self theBrowser] convertRectToBase:pathRect];
+    pathRect.origin = [[[self theBrowser] window] convertBaseToScreen:pathRect.origin];
+    
+    return pathRect;
+}
+
+- (IBAction) togglePreviewPanel:(id)previewPanel
+{
+    if ([QLPreviewPanel sharedPreviewPanelExists] && [[QLPreviewPanel sharedPreviewPanel] isVisible])
+        [[QLPreviewPanel sharedPreviewPanel] orderOut:nil];
+	else
+        [[QLPreviewPanel sharedPreviewPanel] makeKeyAndOrderFront:nil];
+}
+
+
+
+
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
@@ -821,13 +894,14 @@
 	[menuItem setTitle:([[self repositoryData] inMergeState] ? @"Commit Merged Files..." : @"Commit All Files...")];
 	return [self repositoryHasFilesWhichContainStatus:eHGStatusCommittable];
 }
-- (BOOL) validateAndSwitchMenuForCommitSelectedFiles:(NSMenuItem*)menuItem
+- (BOOL) validateAndSwitchMenuForPreviewSelectedFiles:(id)anItem
 {
-	if (!menuItem)
+	if (!anItem)
 		return NO;
-	BOOL inMergeState = [[self repositoryData] inMergeState];
-	[menuItem setTitle: inMergeState ? @"Commit Merged Files..." : @"Commit Selected Files..."];
-	return inMergeState ? [self repositoryHasFilesWhichContainStatus:eHGStatusCommittable] : ([self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusCommittable] && [self showingBrowserView]);
+	BOOL previewIsOpen = [QLPreviewPanel sharedPreviewPanelExists] && [[QLPreviewPanel sharedPreviewPanel] isVisible];
+	NSMenuItem* menuItem = DynamicCast(NSMenuItem, anItem);
+	[menuItem setTitle: previewIsOpen ? @"Close Quick Look panel" : @"Open Quick Look panel"];
+	return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self nodesAreChosenInBrowser];
 }
 
 
@@ -885,7 +959,7 @@
 	if (theAction == @selector(mainMenuExportPatches:))					return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView];
 	
 	if (theAction == @selector(mainMenuNoAction:))						return !showingSheet_ && ([sidebar_ selectedNode] ? YES : NO);
-	
+	if (theAction == @selector(togglePreviewPanel:))					return [self validateAndSwitchMenuForPreviewSelectedFiles:anItem];
 	
 	// subclass of NSDocument, so invoke super's implementation
 	return [super validateUserInterfaceItem:anItem];

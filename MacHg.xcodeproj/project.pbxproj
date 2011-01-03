@@ -135,6 +135,9 @@
 		9672AC67114B796A00312CE2 /* SingleTimedQueue.m in Sources */ = {isa = PBXBuildFile; fileRef = 9672AC5F114B796A00312CE2 /* SingleTimedQueue.m */; };
 		9672AC68114B796A00312CE2 /* TitledButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 9672AC62114B796A00312CE2 /* TitledButton.m */; };
 		9672AC6B114B799500312CE2 /* ResultsWindow.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9672AC69114B799500312CE2 /* ResultsWindow.xib */; };
+		9673CD4412D148AE0043929D /* QuickLook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9673CD4312D148AE0043929D /* QuickLook.framework */; };
+		9673CD4A12D148C70043929D /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9673CD4912D148C70043929D /* Quartz.framework */; };
+		9673D08012D1C99A0043929D /* Quicklook.png in Resources */ = {isa = PBXBuildFile; fileRef = 9673D07F12D1C99A0043929D /* Quicklook.png */; };
 		969064EC11601E2400F30915 /* MonitorFSEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 969064EB11601E2400F30915 /* MonitorFSEvents.m */; };
 		9693CFC1129D82DF0064DAB9 /* LogRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 9693CFC0129D82DF0064DAB9 /* LogRecord.m */; };
 		9695007410CBE3E100548D1C /* BrowserView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9695007210CBE3E100548D1C /* BrowserView.xib */; };
@@ -406,6 +409,9 @@
 		9672AC61114B796A00312CE2 /* TitledButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TitledButton.h; sourceTree = "<group>"; };
 		9672AC62114B796A00312CE2 /* TitledButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TitledButton.m; sourceTree = "<group>"; };
 		9672AC6A114B799500312CE2 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/ResultsWindow.xib; sourceTree = SOURCE_ROOT; };
+		9673CD4312D148AE0043929D /* QuickLook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLook.framework; path = System/Library/Frameworks/QuickLook.framework; sourceTree = SDKROOT; };
+		9673CD4912D148C70043929D /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
+		9673D07F12D1C99A0043929D /* Quicklook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Quicklook.png; path = Images/ToolbarItems/Quicklook.png; sourceTree = SOURCE_ROOT; };
 		969064EA11601E2400F30915 /* MonitorFSEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MonitorFSEvents.h; sourceTree = "<group>"; };
 		969064EB11601E2400F30915 /* MonitorFSEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MonitorFSEvents.m; sourceTree = "<group>"; };
 		9693CFBF129D82DF0064DAB9 /* LogRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogRecord.h; sourceTree = "<group>"; };
@@ -503,6 +509,8 @@
 				969BDE151196B347007AA6D9 /* ScriptingBridge.framework in Frameworks */,
 				9605BBD9119C0E32002EEA47 /* Carbon.framework in Frameworks */,
 				9605BBDE119C0E3F002EEA47 /* Security.framework in Frameworks */,
+				9673CD4412D148AE0043929D /* QuickLook.framework in Frameworks */,
+				9673CD4A12D148C70043929D /* Quartz.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -518,8 +526,10 @@
 				963DBD5710C7D03100189853 /* BWToolkitFramework.framework */,
 				96570599113B1455009FE4C5 /* WebKit.framework */,
 				9624175D1180A3570077F655 /* QuartzCore.framework */,
+				9673CD4912D148C70043929D /* Quartz.framework */,
 				9605BBD8119C0E32002EEA47 /* Carbon.framework */,
 				9605BBDD119C0E3F002EEA47 /* Security.framework */,
+				9673CD4312D148AE0043929D /* QuickLook.framework */,
 			);
 			name = "Linked Frameworks";
 			sourceTree = "<group>";
@@ -666,6 +676,7 @@
 				9654F5E411D237F200826FD6 /* Commit.png */,
 				9654F5E511D237F200826FD6 /* Diff.png */,
 				9654F5E611D237F200826FD6 /* Revert.png */,
+				9673D07F12D1C99A0043929D /* Quicklook.png */,
 				9654F5E711D237F200826FD6 /* Update.png */,
 				9600C2C310CD3D9F00CD8D28 /* toolbar_resolved.png */,
 			);
@@ -1561,6 +1572,7 @@
 				96BEAA8F12891CF0005198B5 /* hgrc in Resources */,
 				96BEAAB812891EF4005198B5 /* hgignore in Resources */,
 				963001AC12988A9100C1782B /* BackoutSheet.xib in Resources */,
+				9673D08012D1C99A0043929D /* Quicklook.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

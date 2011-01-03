@@ -11,6 +11,7 @@
 #import <Cocoa/Cocoa.h>
 #import "Common.h"
 #import "FSBrowser.h"
+#import <Quartz/Quartz.h>	// Quartz framework provides the QLPreviewPanel public API
 
 @class LoadedInitializationData;
 @protocol MonitorFSEventListenerProtocol;
@@ -39,7 +40,7 @@
 // MARK: MyDocument
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-@interface MacHgDocument : NSDocument <MonitorFSEventListenerProtocol>
+@interface MacHgDocument : NSDocument <MonitorFSEventListenerProtocol, QLPreviewPanelDataSource, QLPreviewPanelDelegate>
 {
 	IBOutlet NSBox*					mainContentBox;				// This is the view into which the panes will be attached.
 	IBOutlet Sidebar*				sidebar_;					// The sidebar containing all of the repository references in the document
@@ -58,7 +59,7 @@
 	IBOutlet NSView*				updateAlertAccessoryView;
 	IBOutlet NSButton*				updateAlertAccessoryCleanCheckBox;
 	IBOutlet NSButton*				updateAlertAccessoryAlertSuppressionCheckBox;
-	
+
  @private
 	
 	// Pane Controllers
@@ -89,6 +90,8 @@
 	ServerRepositoryRefSheetController*	theServerRepositoryRefSheetController_;
 	StripSheetController*				theStripSheetController_;
 	UpdateSheetController*				theUpdateSheetController_;
+
+	QLPreviewPanel*						quickLookPreviewPanel;
 
 	
 	// Queues and Events
@@ -311,6 +314,7 @@
 - (void)		viewDifferencesInCurrentRevisionFor:(NSArray*)absolutePaths toRevision:(NSString*)versionToCompareTo;
 
 
+- (IBAction)    togglePreviewPanel:(id)previewPanel;
 - (IBAction)	actionTestListingItem:(id)sender;
 - (IBAction)	doLinkUp:(id)sender;
 
@@ -321,7 +325,6 @@
 - (BOOL)		repositoryOrServerIsSelectedAndReady;
 - (BOOL)		toolbarActionAppliesToFilesWith:(HGStatus)status;
 - (BOOL)		validateAndSwitchMenuForCommitAllFiles:(NSMenuItem*)menuItem;
-- (BOOL)		validateAndSwitchMenuForCommitSelectedFiles:(NSMenuItem*)menuItem;
 
 
 // Saving

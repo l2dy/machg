@@ -23,6 +23,28 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
+// MARK:  PathQuickLookPreviewItem
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+@implementation PathQuickLookPreviewItem
+@synthesize node = node_;
++ (PathQuickLookPreviewItem*) previewItemFromNodeInfo:(FSNodeInfo*)node withRect:(NSRect)rect
+{
+	PathQuickLookPreviewItem* previewItem = [[PathQuickLookPreviewItem alloc] init];
+	previewItem->itemRect_ = rect;
+	[previewItem setNode:node];
+	return previewItem;
+}
+- (NSURL*) previewItemURL	{ return [NSURL fileURLWithPath:[node_ absolutePath]]; }
+- (NSRect) frameRectOfPath  { return itemRect_; }
+@end
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
 // MARK: FSBrowser
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
@@ -223,6 +245,25 @@
 	return [self absolutePathsOfBrowserSelectedFiles];
 }
 
+- (NSArray*) quickLookPreviewItemsForBrowserSelectedFiles
+{
+	if (![self nodesAreSelected])
+		return [NSArray array];
+
+	NSMutableArray* quickLookPreviewItems = [[NSMutableArray alloc] init];
+	NSArray* indexPaths = [self selectionIndexPaths];
+	for (NSIndexPath* indexPath in indexPaths)
+	{
+		FSNodeInfo* node = [self itemAtIndexPath:indexPath];
+		if (!node)
+			continue;
+		NSInteger col = [indexPath length] - 1;
+		NSInteger row = [indexPath indexAtPosition:col];
+		NSRect rect   = [self frameOfRow:row inColumn:col];
+		[quickLookPreviewItems addObject:[PathQuickLookPreviewItem previewItemFromNodeInfo:node withRect:rect]];
+	}
+	return quickLookPreviewItems;
+}
 
 - (NSString*) enclosingDirectoryOfBrowserChosenFiles
 {
@@ -301,6 +342,24 @@
 		theDir = [self absolutePathOfRepositoryRoot];
 
 	DoCommandsInTerminalAt(aliasesForShell(), theDir);
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Key Events
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (void)keyDown:(NSEvent *)theEvent
+{
+    NSString* key = [theEvent charactersIgnoringModifiers];
+    if ([key isEqual:@" "])
+        [[self myDocument] togglePreviewPanel:self];
+	else
+        [super keyDown:theEvent];
 }
 
 
