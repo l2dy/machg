@@ -21,8 +21,8 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="100357"/>
 			<integer value="5"/>
+			<integer value="100357"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -76,6 +76,7 @@
 							<string>A13BCAB8-A377-4632-9D03-BF86A47E4782</string>
 							<string>BDE78052-7400-4B63-92A9-98F5D8C5A1F5</string>
 							<string>BE73DC02-1D71-4E1C-9C61-ABAD629AD19B</string>
+							<string>DD21388B-453D-4965-9990-CF3E938CF162</string>
 							<string>EC0D2EAE-2FA2-497C-8C9B-05717E518390</string>
 							<string>EC7E3BC4-E896-4B77-B716-B4F983EB9457</string>
 							<string>F2C787EC-F654-4921-9F48-2EB3C056A3C5</string>
@@ -555,6 +556,28 @@
 								<bool key="NSToolbarIsUserRemovable">YES</bool>
 								<int key="NSToolbarItemVisibilityPriority">0</int>
 							</object>
+							<object class="NSToolbarItem" id="44773764">
+								<object class="NSMutableString" key="NSToolbarItemIdentifier">
+									<characters key="NS.bytes">DD21388B-453D-4965-9990-CF3E938CF162</characters>
+								</object>
+								<string key="NSToolbarItemLabel">Commit All</string>
+								<string key="NSToolbarItemPaletteLabel">Commit All</string>
+								<nil key="NSToolbarItemToolTip"/>
+								<nil key="NSToolbarItemView"/>
+								<object class="NSCustomResource" key="NSToolbarItemImage" id="342092993">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">Commit</string>
+								</object>
+								<nil key="NSToolbarItemTarget"/>
+								<nil key="NSToolbarItemAction"/>
+								<string key="NSToolbarItemMinSize">{0, 0}</string>
+								<string key="NSToolbarItemMaxSize">{0, 0}</string>
+								<bool key="NSToolbarItemEnabled">YES</bool>
+								<bool key="NSToolbarItemAutovalidates">YES</bool>
+								<int key="NSToolbarItemTag">-1</int>
+								<bool key="NSToolbarIsUserRemovable">YES</bool>
+								<int key="NSToolbarItemVisibilityPriority">0</int>
+							</object>
 							<object class="NSToolbarItem" id="427730028">
 								<object class="NSMutableString" key="NSToolbarItemIdentifier">
 									<characters key="NS.bytes">EC0D2EAE-2FA2-497C-8C9B-05717E518390</characters>
@@ -607,10 +630,7 @@
 								<string key="NSToolbarItemPaletteLabel">Commit</string>
 								<nil key="NSToolbarItemToolTip"/>
 								<nil key="NSToolbarItemView"/>
-								<object class="NSCustomResource" key="NSToolbarItemImage">
-									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">Commit</string>
-								</object>
+								<reference key="NSToolbarItemImage" ref="342092993"/>
 								<nil key="NSToolbarItemTarget"/>
 								<nil key="NSToolbarItemAction"/>
 								<string key="NSToolbarItemMinSize">{0, 0}</string>
@@ -750,7 +770,7 @@
 							</object>
 						</object>
 					</object>
-					<object class="NSMutableArray" key="NSToolbarIBAllowedItems">
+					<object class="NSArray" key="NSToolbarIBAllowedItems">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<reference ref="38296145"/>
 						<reference ref="563642649"/>
@@ -768,6 +788,7 @@
 						<reference ref="435773064"/>
 						<reference ref="1039606225"/>
 						<reference ref="1068556024"/>
+						<reference ref="44773764"/>
 						<reference ref="589496694"/>
 						<reference ref="932174491"/>
 						<reference ref="565095260"/>
@@ -2298,6 +2319,14 @@
 					</object>
 					<int key="connectionID">100454</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">mainMenuCommitAllFiles:</string>
+						<reference key="source" ref="613418571"/>
+						<reference key="destination" ref="44773764"/>
+					</object>
+					<int key="connectionID">100456</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -2375,6 +2404,7 @@
 							<reference ref="565095260"/>
 							<reference ref="158141045"/>
 							<reference ref="661836347"/>
+							<reference ref="44773764"/>
 						</object>
 						<reference key="parent" ref="275939982"/>
 					</object>
@@ -3018,6 +3048,11 @@
 						<reference key="object" ref="661836347"/>
 						<reference key="parent" ref="848710721"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">100455</int>
+						<reference key="object" ref="44773764"/>
+						<reference key="parent" ref="848710721"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -3269,7 +3304,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">100454</int>
+			<int key="maxID">100456</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3281,6 +3316,8 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>browserAction:</string>
+							<string>browserDoubleAction:</string>
 							<string>mainMenuAddRenameRemoveAllFiles:</string>
 							<string>mainMenuAddRenameRemoveSelectedFiles:</string>
 							<string>mainMenuAddSelectedFiles:</string>
@@ -3309,6 +3346,8 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -3340,6 +3379,8 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>browserAction:</string>
+							<string>browserDoubleAction:</string>
 							<string>mainMenuAddRenameRemoveAllFiles:</string>
 							<string>mainMenuAddRenameRemoveSelectedFiles:</string>
 							<string>mainMenuAddSelectedFiles:</string>
@@ -3368,6 +3409,14 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<object class="IBActionInfo">
+								<string key="name">browserAction:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">browserDoubleAction:</string>
+								<string key="candidateClassName">id</string>
+							</object>
 							<object class="IBActionInfo">
 								<string key="name">mainMenuAddRenameRemoveAllFiles:</string>
 								<string key="candidateClassName">id</string>
@@ -3544,8 +3593,8 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>browserDoubleClick:</string>
-							<string>browserSingleClick:</string>
+							<string>browserAction:</string>
+							<string>browserDoubleAction:</string>
 							<string>differencesMenuAnnotateSelectedFiles:</string>
 							<string>differencesMenuNoAction:</string>
 							<string>mainMenuDiffAllFiles:</string>
@@ -3581,8 +3630,8 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>browserDoubleClick:</string>
-							<string>browserSingleClick:</string>
+							<string>browserAction:</string>
+							<string>browserDoubleAction:</string>
 							<string>differencesMenuAnnotateSelectedFiles:</string>
 							<string>differencesMenuNoAction:</string>
 							<string>mainMenuDiffAllFiles:</string>
@@ -3599,11 +3648,11 @@
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<object class="IBActionInfo">
-								<string key="name">browserDoubleClick:</string>
+								<string key="name">browserAction:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
-								<string key="name">browserSingleClick:</string>
+								<string key="name">browserDoubleAction:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">

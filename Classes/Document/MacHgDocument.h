@@ -324,7 +324,7 @@
 - (BOOL)		repositoryIsSelectedAndReady;
 - (BOOL)		repositoryOrServerIsSelectedAndReady;
 - (BOOL)		toolbarActionAppliesToFilesWith:(HGStatus)status;
-- (BOOL)		validateAndSwitchMenuForCommitAllFiles:(NSMenuItem*)menuItem;
+- (BOOL)		validateAndSwitchMenuForCommitAllFiles:(id)menuItem;
 
 
 // Saving

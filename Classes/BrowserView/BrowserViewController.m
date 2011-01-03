@@ -308,7 +308,7 @@
 	SEL theAction = [anItem action];
 
 	if (theAction == @selector(mainMenuCommitSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && [self validateAndSwitchMenuForCommitSelectedFiles:DynamicCast(NSMenuItem, anItem)];
-	if (theAction == @selector(mainMenuCommitAllFiles:))				return [myDocument repositoryIsSelectedAndReady] && [myDocument validateAndSwitchMenuForCommitAllFiles:DynamicCast(NSMenuItem, anItem)];
+	if (theAction == @selector(mainMenuCommitAllFiles:))				return [myDocument repositoryIsSelectedAndReady] && [myDocument validateAndSwitchMenuForCommitAllFiles:anItem];
 	if (theAction == @selector(toolbarCommitFiles:))					return [myDocument repositoryIsSelectedAndReady] && ([[myDocument repositoryData] inMergeState] || [self toolbarActionAppliesToFilesWith:eHGStatusCommittable]);
 	
 	if (theAction == @selector(mainMenuDiffSelectedFiles:))				return [myDocument repositoryIsSelectedAndReady] && [theBrowser statusOfChosenPathsInBrowserContain:eHGStatusModified];

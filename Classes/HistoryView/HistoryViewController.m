@@ -393,7 +393,7 @@
 {
 	SEL theAction = [anItem action];
 	
-	if (theAction == @selector(mainMenuCommitAllFiles:))						return [myDocument repositoryIsSelectedAndReady] && [myDocument validateAndSwitchMenuForCommitAllFiles:DynamicCast(NSMenuItem, anItem)];
+	if (theAction == @selector(mainMenuCommitAllFiles:))						return [myDocument repositoryIsSelectedAndReady] && [myDocument validateAndSwitchMenuForCommitAllFiles:anItem];
 	if (theAction == @selector(toolbarCommitFiles:))							return [myDocument repositoryIsSelectedAndReady] && [myDocument toolbarActionAppliesToFilesWith:eHGStatusCommittable];
 
 	if (theAction == @selector(mainMenuDiffAllFiles:))							return [myDocument repositoryIsSelectedAndReady] && [myDocument repositoryHasFilesWhichContainStatus:eHGStatusModified];

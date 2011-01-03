@@ -887,20 +887,20 @@
 - (BOOL) repositoryIsSelectedAndReady						{ return !showingSheet_ && ([[sidebar_ chosenNode] isLocalRepositoryRef] ? YES : NO); }
 - (BOOL) repositoryOrServerIsSelectedAndReady				{ return !showingSheet_ && ([[sidebar_ chosenNode] isRepositoryRef] ? YES : NO); }
 - (BOOL) toolbarActionAppliesToFilesWith:(HGStatus)status	{ return ([self pathsAreSelectedInBrowserWhichContainStatus:status] || (![self nodesAreChosenInBrowser] && [self repositoryHasFilesWhichContainStatus:status])); }
-- (BOOL) validateAndSwitchMenuForCommitAllFiles:(NSMenuItem*)menuItem
+- (BOOL) validateAndSwitchMenuForCommitAllFiles:(id)anItem
 {
-	if (!menuItem)
-		return NO;
+	NSMenuItem* menuItem = DynamicCast(NSMenuItem, anItem);
 	[menuItem setTitle:([[self repositoryData] inMergeState] ? @"Commit Merged Files..." : @"Commit All Files...")];
 	return [self repositoryHasFilesWhichContainStatus:eHGStatusCommittable];
 }
 - (BOOL) validateAndSwitchMenuForPreviewSelectedFiles:(id)anItem
 {
-	if (!anItem)
-		return NO;
-	BOOL previewIsOpen = [QLPreviewPanel sharedPreviewPanelExists] && [[QLPreviewPanel sharedPreviewPanel] isVisible];
 	NSMenuItem* menuItem = DynamicCast(NSMenuItem, anItem);
-	[menuItem setTitle: previewIsOpen ? @"Close Quick Look panel" : @"Open Quick Look panel"];
+	if (menuItem)
+	{
+		BOOL previewIsOpen = [QLPreviewPanel sharedPreviewPanelExists] && [[QLPreviewPanel sharedPreviewPanel] isVisible];
+		[menuItem setTitle: previewIsOpen ? @"Close Quick Look panel" : @"Open Quick Look panel"];
+	}
 	return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self nodesAreChosenInBrowser];
 }
 
