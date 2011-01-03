@@ -362,11 +362,11 @@
 {
 	switch (theActionEnum)
 	{
-		case eBrowserClickActionOpen:				return @selector(differencesMenuOpenSelectedFilesInFinder:);
-		case eBrowserClickActionRevealInFinder:		return @selector(differencesMenuRevealSelectedFilesInFinder:);
+		case eBrowserClickActionOpen:				return @selector(mainMenuOpenSelectedFilesInFinder:);
+		case eBrowserClickActionRevealInFinder:		return @selector(mainMenuRevealSelectedFilesInFinder:);
 		case eBrowserClickActionDiff:				return @selector(mainMenuDiffSelectedFiles:);
 		case eBrowserClickActionAnnotate:			return @selector(differencesMenuAnnotateSelectedFiles:);
-		case eBrowserClickActionOpenTerminalHere:	return @selector(differencesMenuOpenTerminalHere:);
+		case eBrowserClickActionOpenTerminalHere:	return @selector(mainMenuOpenTerminalHere:);
 		default:									return @selector(differencesMenuNoAction:);
 	}
 }
