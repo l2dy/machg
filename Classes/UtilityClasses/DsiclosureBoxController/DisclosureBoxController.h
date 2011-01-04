@@ -31,17 +31,17 @@
 	IBOutlet NSButton*			disclosureButton;
 	IBOutlet NSBox*				disclosureBox;
 	
-	NSMapTable*					savedViewsInfo;		// Dictionary of NSView* view -> SavedViewInfo (We use an NSMapTable instead
-													// of an NSDictionary since our keys are pointer values.)
-	NSString*					autoSaveName_;		// The NSUserDefaults key name (if any) for the state of the disclosure box
+	NSMapTable*					savedViewsInfo;			// Dictionary of NSView* view -> SavedViewInfo (We use an NSMapTable instead
+														// of an NSDictionary since our keys are pointer values.)
+	NSString*					autoSaveName_;			// The NSUserDefaults key name (if any) for the state of the disclosure box
+	BOOL						disclosureIsVisable_;	// Do we show the disclosure box (if we don't have a button we still need 
 }
 
 - (IBAction) disclosureTrianglePressed:(id)sender;
-- (IBAction) ensureDisclosureBoxIsOpen:(id)sender;
-- (IBAction) ensureDisclosureBoxIsClosed:(id)sender;
-
+- (void)     ensureDisclosureBoxIsOpen:(BOOL)animate;
+- (void)     ensureDisclosureBoxIsClosed:(BOOL)animate;
 - (void)	 setToOpenState:(BOOL)state;
-- (void)	 syncronizeDisclosureBoxToButtonStateWithAnimation:(BOOL)animate;
+- (void)	 syncronizeDisclosureBoxToVisableStateWithAnimation:(BOOL)animate;
 - (CGFloat)  sizeChange;
 
 @end

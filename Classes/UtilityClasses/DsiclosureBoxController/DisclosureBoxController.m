@@ -89,36 +89,42 @@
 // MARK:  Actions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (IBAction) disclosureTrianglePressed:(id)sender	{ [self syncronizeDisclosureBoxToButtonStateWithAnimation:YES]; }
-
-- (IBAction) ensureDisclosureBoxIsOpen:(id)sender
+- (IBAction) disclosureTrianglePressed:(id)sender
 {
+	disclosureIsVisable_ = ([disclosureButton state] == NSOnState) ? YES : NO;
+	[self syncronizeDisclosureBoxToVisableStateWithAnimation:YES];
+}
+
+- (void) ensureDisclosureBoxIsOpen:(BOOL)animate
+{
+	disclosureIsVisable_ = YES;
 	[disclosureButton setState:NSOnState];
-	[self syncronizeDisclosureBoxToButtonStateWithAnimation:NO];
+	[self syncronizeDisclosureBoxToVisableStateWithAnimation:animate];
 }
 
 
-- (IBAction) ensureDisclosureBoxIsClosed:(id)sender
+- (void) ensureDisclosureBoxIsClosed:(BOOL)animate
 {
+	disclosureIsVisable_ = NO;
 	[disclosureButton setState:NSOffState];
-	[self syncronizeDisclosureBoxToButtonStateWithAnimation:NO];
+	[self syncronizeDisclosureBoxToVisableStateWithAnimation:animate];
 }
 
 
 - (void) setToOpenState:(BOOL)state
 {
 	if (state == YES)
-		[self ensureDisclosureBoxIsOpen:self];
+		[self ensureDisclosureBoxIsOpen:NO];
 	else if (state == NO)
-		[self ensureDisclosureBoxIsClosed:self];
+		[self ensureDisclosureBoxIsClosed:NO];
 }
 
 
-- (void) syncronizeDisclosureBoxToButtonStateWithAnimation:(BOOL)animate
+- (void) syncronizeDisclosureBoxToVisableStateWithAnimation:(BOOL)animate
 {
 	[self saveAutosizingMasksAndRelativePositions];
 	if (autoSaveName_)
-		[[NSUserDefaults standardUserDefaults] setBool:([disclosureButton state] == NSOnState) forKey:autoSaveName_];
+		[[NSUserDefaults standardUserDefaults] setBool:disclosureIsVisable_ forKey:autoSaveName_];
 	
 	NSRect windowFrame = [parentWindow frame];
 	CGFloat sizeChange = [self sizeChange];
@@ -126,7 +132,7 @@
 	NSTimeInterval resizeTime = [parentWindow animationResizeTime:windowFrame];
 	[self setAutosizingMasksForDisclose];
 	
-	if ([disclosureButton state] == NSOnState && [disclosureBox isHidden] == YES)
+	if (disclosureIsVisable_ && [disclosureBox isHidden] == YES)
 	{
 		windowFrame.size.height += sizeChange;			// Make the window bigger.
 		windowFrame.origin.y    -= sizeChange;			// Move the origin.
@@ -134,7 +140,7 @@
 		[parentWindow setFrame:windowFrame display:YES animate:animate];
 
 	}	
-	else if ([disclosureButton state] == NSOffState && [disclosureBox isHidden] == NO)
+	else if (!disclosureIsVisable_ && [disclosureBox isHidden] == NO)
 	{
 		windowFrame.size.height -= sizeChange;			// Make the window smaller.
 		windowFrame.origin.y    += sizeChange;			// Move the origin.
