@@ -1245,7 +1245,7 @@
 	NSMutableArray* filteredPaths = [[NSMutableArray alloc]init];
 	NSString* rootDotHGDirPath = [[self absolutePathOfRepositoryRoot] stringByAppendingPathComponent:@".hg"];
 	NSString* rootDotHGFSChecksDirPath  = fstr(@"%@/fschecks",  rootDotHGDirPath);
-	NSString* rootDotHGCachesDirPath    = fstr(@"%@/caches",  rootDotHGDirPath);
+	NSString* rootDotHGCacheDirPath     = fstr(@"%@/cache",     rootDotHGDirPath);
 	NSString* rootDotHGMacHgUndoDirPath = fstr(@"%@/macHgUndo", rootDotHGDirPath);
 	BOOL postNotification = NO;
 	for (NSString* path in eventPaths)
@@ -1254,7 +1254,7 @@
 		{
 			if (pathContainedIn(rootDotHGFSChecksDirPath, path))
 				continue;	// If the path is further contained in just the fschecks dir then we ignore it since Mercurial uses this internally.
-			if (pathContainedIn(rootDotHGCachesDirPath, path))
+			if (pathContainedIn(rootDotHGCacheDirPath, path))
 				continue;	// If the path is further contained in just the caches dir then we ignore it since Mercurial uses this internally.
 			if (pathContainedIn(rootDotHGMacHgUndoDirPath, path))
 				continue;	// If the path is further contained in the undo directory then we also ignore it since we are doing a backup for undo.

@@ -155,7 +155,7 @@ def _readtagcache(ui, repo):
     set, caller is responsible for reading tag info from each head.'''
 
     try:
-        cachefile = repo.opener(os.path.join('caches','tags.cache'), 'r')
+        cachefile = repo.opener(os.path.join('cache', 'tags'), 'r')
         # force reading the file for static-http
         cachelines = iter(cachefile)
     except IOError:
@@ -189,8 +189,8 @@ def _readtagcache(ui, repo):
                     fnode = bin(line[2])
                     cachefnode[headnode] = fnode
         except (ValueError, TypeError):
-            # corruption of tags.cache, just recompute it
-            ui.warn(_('.hg/caches/tags.cache is corrupt, rebuilding it\n'))
+            # corruption of the tags cache, just recompute it
+            ui.warn(_('.hg/cache/tags is corrupt, rebuilding it\n'))
             cacheheads = []
             cacherevs = []
             cachefnode = {}
@@ -252,7 +252,8 @@ def _readtagcache(ui, repo):
 def _writetagcache(ui, repo, heads, tagfnode, cachetags):
 
     try:
-        cachefile = repo.opener(os.path.join('caches','tags.cache'), 'w', atomictemp=True)
+        cachefile = repo.opener(os.path.join('cache', 'tags'), 'w',
+                                atomictemp=True)
     except (OSError, IOError):
         return
 
