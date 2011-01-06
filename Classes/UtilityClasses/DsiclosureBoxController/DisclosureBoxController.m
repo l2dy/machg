@@ -24,6 +24,7 @@
 	NSRect frameRect     = [parentWindow frame];
 	autoSaveName_        = IsNotEmpty(frameName) ? fstr(@"%@:disclosed", frameName) : nil;
 	BOOL disclosed       = autoSaveName_ ? [[NSUserDefaults standardUserDefaults] boolForKey:autoSaveName_] : NO;
+	animationDepth_      = 0;
 
 	[self setToOpenState:disclosed];
 	if (!disclosed && autoSaveName_)
@@ -58,28 +59,56 @@
 		}
 }
 
-- (void) setAutosizingMasksForDisclose
-{	
-	for (NSView* view in savedViewsInfo)
+
+- (void) setStateForDisclose
+{
+	@synchronized(self)
 	{
-		SavedViewInfo* info = DynamicCast(SavedViewInfo,[savedViewsInfo objectForKey:view]);
-		if (!info)
-			continue;	// Should we raise an assert here?
-		if ([info position] == eViewAboveDisclosure)
-			[view setAutoresizingMask:NSViewWidthSizable | NSViewMinYMargin];
-		else
-			[view setAutoresizingMask:NSViewWidthSizable | NSViewMaxYMargin];
-	};
+		if (animationDepth_ < 0)
+			animationDepth_ = 0;
+		animationDepth_++;
+
+		// If we are already animating then we are already in the correct state
+		if (animationDepth_ > 1)
+			return;
+			
+		savedShowsResizeIndicator_ = [parentWindow showsResizeIndicator];
+		[parentWindow setShowsResizeIndicator:NO];
+		
+		for (NSView* view in savedViewsInfo)
+		{
+			SavedViewInfo* info = DynamicCast(SavedViewInfo,[savedViewsInfo objectForKey:view]);
+			if (!info)
+				continue;	// Should we raise an assert here?
+			if ([info position] == eViewAboveDisclosure)
+				[view setAutoresizingMask:NSViewWidthSizable | NSViewMinYMargin];
+			else
+				[view setAutoresizingMask:NSViewWidthSizable | NSViewMaxYMargin];
+		}
+	}
 }
 
-- (void) restoreAutosizingMasks
+
+- (void) restoreStateAfterDisclosure
 {
-	for (NSView* view in savedViewsInfo)
+	@synchronized(self)
 	{
-		SavedViewInfo* info = DynamicCast(SavedViewInfo,[savedViewsInfo objectForKey:view]);
-		if (info)
-			[view setAutoresizingMask:[info mask]];
-	};
+		animationDepth_--;
+	
+		// If we are still animating then don't restore the state yet
+		if (animationDepth_ > 0)
+			return;
+	
+		for (NSView* view in savedViewsInfo)
+		{
+			SavedViewInfo* info = DynamicCast(SavedViewInfo,[savedViewsInfo objectForKey:view]);
+			if (info)
+				[view setAutoresizingMask:[info mask]];
+		}
+		
+		if (savedShowsResizeIndicator_)
+			[parentWindow setShowsResizeIndicator:YES];
+	}
 }
 
 
@@ -139,7 +168,7 @@
 	CGFloat sizeChange = [self sizeChange];
 
 	NSTimeInterval resizeTime = [parentWindow animationResizeTime:windowFrame];
-	[self setAutosizingMasksForDisclose];
+	[self setStateForDisclose];
 	
 	if (disclosureIsVisable_ && [disclosureBox isHidden] == YES)
 	{
@@ -158,9 +187,9 @@
 	}
 
 	if (animate)
-		[self performSelector:@selector(restoreAutosizingMasks) withObject:nil afterDelay:resizeTime];
+		[self performSelector:@selector(restoreStateAfterDisclosure) withObject:nil afterDelay:resizeTime];
 	else
-		[self restoreAutosizingMasks];
+		[self restoreStateAfterDisclosure];
 }
 
 @end
