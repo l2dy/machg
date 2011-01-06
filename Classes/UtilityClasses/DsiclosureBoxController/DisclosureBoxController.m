@@ -213,6 +213,7 @@
 	
 	windowFrame.size.height -= sizeChange;			// Make the window smaller.
 	windowFrame.origin.y    += sizeChange;			// Move the origin.
+	[NSObject cancelPreviousPerformRequestsWithTarget:disclosureBox selector:@selector(setHidden:) object:NOasNumber];	// Cancel any other requests to show the object
 	[disclosureBox setHidden:YES];
 	[parentWindow setFrame:windowFrame display:YES animate:animate];
 
