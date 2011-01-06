@@ -951,7 +951,14 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 // MARK: -
 @implementation NSString ( NSStringPlusComparisons )
 
-- (BOOL) isNotEqualToString:(NSString*)aString	{ return ![self isEqualToString:aString]; }
+- (BOOL) isNotEqualToString:(NSString*)aString	  { return ![self isEqualToString:aString]; }
+- (BOOL) differsOnlyInCaseFrom:(NSString*)aString
+{
+	return
+		[self length] == [aString length] &&
+		[self compare:aString options:NSCaseInsensitiveSearch] == NSOrderedSame &&
+		[self compare:aString options:NSLiteralSearch] != NSOrderedSame;
+}
 
 @end
 
