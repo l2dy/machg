@@ -71,8 +71,6 @@
 {
 	@synchronized(self)
 	{
-		NSSize minSize = [parentWindow minSize];
-		NSSize maxSize = [parentWindow minSize];
 		if (animationDepth_ < 0)
 			animationDepth_ = 0;
 		animationDepth_++;
@@ -188,8 +186,24 @@
 	
 	windowFrame.size.height += sizeChange;			// Make the window bigger.
 	windowFrame.origin.y    -= sizeChange;			// Move the origin.
+	
+	// Adjust the min and max window sizes to account for showing the disclosure box. This content sizing doesn't affect the
+	// resizing via [parentWindow setFrame:...] below
+	NSSize contentMinSize = [parentWindow contentMinSize];
+	NSSize contentMaxSize = [parentWindow contentMaxSize];
+	if (isfinite(contentMinSize.height) && contentMinSize.height > 0)
+	{
+		contentMinSize.height += sizeChange;
+		[parentWindow setContentMinSize:contentMinSize];
+	}
+	if (isfinite(contentMaxSize.height) && contentMaxSize.height > 0)
+	{
+		contentMaxSize.height += sizeChange;
+		[parentWindow setContentMaxSize:contentMaxSize];
+	}
+	
 	[disclosureBox performSelector:@selector(setHidden:) withObject:NOasNumber afterDelay: (animate ? resizeTime : 0.0)];
-	[parentWindow setFrame:windowFrame display:YES animate:animate];		
+	[parentWindow setFrame:windowFrame display:YES animate:animate];
 
 	if (animate)
 		[self performSelector:@selector(restoreStateAfterDisclosure) withObject:nil afterDelay:resizeTime];
@@ -213,6 +227,22 @@
 	
 	windowFrame.size.height -= sizeChange;			// Make the window smaller.
 	windowFrame.origin.y    += sizeChange;			// Move the origin.
+
+	// Adjust the min and max window sizes to account for hiding the disclosure box. This content sizing doesn't affect the
+	// resizing via [parentWindow setFrame:...] below
+	NSSize contentMinSize = [parentWindow contentMinSize];
+	NSSize contentMaxSize = [parentWindow contentMaxSize];
+	if (isfinite(contentMinSize.height) && contentMinSize.height > sizeChange)
+	{
+		contentMinSize.height -= sizeChange;
+		[parentWindow setContentMinSize:contentMinSize];
+	}
+	if (isfinite(contentMaxSize.height) && contentMaxSize.height > sizeChange)
+	{
+		contentMaxSize.height -= sizeChange;
+		[parentWindow setContentMaxSize:contentMaxSize];
+	}
+	
 	[NSObject cancelPreviousPerformRequestsWithTarget:disclosureBox selector:@selector(setHidden:) object:NOasNumber];	// Cancel any other requests to show the object
 	[disclosureBox setHidden:YES];
 	[parentWindow setFrame:windowFrame display:YES animate:animate];
