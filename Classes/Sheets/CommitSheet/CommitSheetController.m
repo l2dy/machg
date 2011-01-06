@@ -135,7 +135,7 @@ NSString* kAmendOption	 = @"amendOption";
 	NSMutableArray* argsGetUserName = [NSMutableArray arrayWithObjects:@"showconfig", @"ui.username", nil];
 	ExecutionResult* userNameResult = [TaskExecutions executeMercurialWithArgs:argsGetUserName  fromRoot:rootPath];
 
-	//[disclosureController setToOpenState:NO];
+	//[disclosureController setToOpenState:NO withAnimation:NO];
 	[self setCommitter:nonNil(userNameResult.outStr)];
 	[self setCommitterOption:NO];
 	[self setDate:[NSDate date]];

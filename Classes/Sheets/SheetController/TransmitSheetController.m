@@ -88,7 +88,7 @@
 	[forceOption setOverallState:[sheetButtonAllowOperationWithAnyRepository state]];
 	[self setConnectionFromFieldsForSource:[self sourceRepository] andDestination:[self destinationRepository]];
 	BOOL showAdvancedOptions = [OptionController containsOptionWhichIsSet:cmdOptions];
-	[disclosureController setToOpenState:showAdvancedOptions];
+	[disclosureController setToOpenState:showAdvancedOptions withAnimation:NO];
 	[self populatePopupMenuItemsAndRelayout:sender];
 }
 
@@ -160,7 +160,7 @@
 		[self populatePopupMenuItemsAndRelayout:self];
 		[self updateIncomingOutgoingCount];
 		BOOL showAdvancedOptions = [OptionController containsOptionWhichIsSet:cmdOptions];
-		[disclosureController setToOpenState:showAdvancedOptions];
+		[disclosureController setToOpenState:showAdvancedOptions withAnimation:NO];
 	});
 	[NSApp beginSheet:sheetWindow modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
 }

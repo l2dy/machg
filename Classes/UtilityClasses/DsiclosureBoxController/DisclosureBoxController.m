@@ -10,6 +10,12 @@
 #import "DisclosureBoxController.h"
 
 
+@interface DisclosureBoxController (PrivateAPI)
+- (void) openDisclosureBoxWithAnimation:(BOOL)animate;
+- (void) closeDisclosureBoxWithAnimation:(BOOL)animate;
+@end
+
+
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 // MARK:  DisclosureBoxController
@@ -25,8 +31,9 @@
 	autoSaveName_        = IsNotEmpty(frameName) ? fstr(@"%@:disclosed", frameName) : nil;
 	BOOL disclosed       = autoSaveName_ ? [[NSUserDefaults standardUserDefaults] boolForKey:autoSaveName_] : NO;
 	animationDepth_      = 0;
+	disclosureIsVisable_ = YES;		// The disclosure is always open on initialization
 
-	[self setToOpenState:disclosed];
+	[self setToOpenState:disclosed withAnimation:NO];
 	if (!disclosed && autoSaveName_)
 		[parentWindow setFrame:frameRect display:NO animate:NO];
 }
@@ -64,6 +71,8 @@
 {
 	@synchronized(self)
 	{
+		NSSize minSize = [parentWindow minSize];
+		NSSize maxSize = [parentWindow minSize];
 		if (animationDepth_ < 0)
 			animationDepth_ = 0;
 		animationDepth_++;
@@ -125,41 +134,73 @@
 
 - (IBAction) disclosureTrianglePressed:(id)sender
 {
-	disclosureIsVisable_ = ([disclosureButton state] == NSOnState) ? YES : NO;
-	[self syncronizeDisclosureBoxToVisableStateWithAnimation:YES];
+	@synchronized(self)
+	{
+		[self setToOpenState:([disclosureButton state] == NSOnState) withAnimation:YES];
+	}
 }
 
 - (void) ensureDisclosureBoxIsOpen:(BOOL)animate
 {
-	disclosureIsVisable_ = YES;
-	[disclosureButton setState:NSOnState];
-	[self syncronizeDisclosureBoxToVisableStateWithAnimation:animate];
+	@synchronized(self)
+	{
+		if (disclosureIsVisable_)
+			return;
+		[disclosureButton setState:NSOnState];
+		[self openDisclosureBoxWithAnimation:animate];
+	}
 }
 
 
 - (void) ensureDisclosureBoxIsClosed:(BOOL)animate
 {
-	disclosureIsVisable_ = NO;
-	[disclosureButton setState:NSOffState];
-	[self syncronizeDisclosureBoxToVisableStateWithAnimation:animate];
+	@synchronized(self)
+	{
+		if (!disclosureIsVisable_)
+			return;
+		[disclosureButton setState:NSOffState];
+		[self closeDisclosureBoxWithAnimation:animate];
+	}
 }
 
 
-- (void) setToOpenState:(BOOL)state
+- (void) setToOpenState:(BOOL)state withAnimation:(BOOL)animate
 {
 	if (state == YES)
-		[self ensureDisclosureBoxIsOpen:NO];
+		[self ensureDisclosureBoxIsOpen:animate];
 	else if (state == NO)
-		[self ensureDisclosureBoxIsClosed:NO];
+		[self ensureDisclosureBoxIsClosed:animate];
 }
 
 
-- (void) syncronizeDisclosureBoxToVisableStateWithAnimation:(BOOL)animate
+- (void) openDisclosureBoxWithAnimation:(BOOL)animate
 {
-	// If we are already synchronized then there is nothing to do
-	if ((disclosureIsVisable_ && [disclosureBox isHidden] == NO) || (!disclosureIsVisable_ && [disclosureBox isHidden] == YES))
-		return;
-		
+	disclosureIsVisable_ = YES;
+	[self saveAutosizingMasksAndRelativePositions];
+	if (autoSaveName_)
+		[[NSUserDefaults standardUserDefaults] setBool:disclosureIsVisable_ forKey:autoSaveName_];
+	
+	NSRect windowFrame = [parentWindow frame];
+	CGFloat sizeChange = [self sizeChange];
+	
+	NSTimeInterval resizeTime = [parentWindow animationResizeTime:windowFrame];
+	[self setStateForDisclose];
+	
+	windowFrame.size.height += sizeChange;			// Make the window bigger.
+	windowFrame.origin.y    -= sizeChange;			// Move the origin.
+	[disclosureBox performSelector:@selector(setHidden:) withObject:NOasNumber afterDelay: (animate ? resizeTime : 0.0)];
+	[parentWindow setFrame:windowFrame display:YES animate:animate];		
+
+	if (animate)
+		[self performSelector:@selector(restoreStateAfterDisclosure) withObject:nil afterDelay:resizeTime];
+	else
+		[self restoreStateAfterDisclosure];
+}
+
+
+- (void) closeDisclosureBoxWithAnimation:(BOOL)animate
+{
+	disclosureIsVisable_ = NO;
 	[self saveAutosizingMasksAndRelativePositions];
 	if (autoSaveName_)
 		[[NSUserDefaults standardUserDefaults] setBool:disclosureIsVisable_ forKey:autoSaveName_];
@@ -170,21 +211,10 @@
 	NSTimeInterval resizeTime = [parentWindow animationResizeTime:windowFrame];
 	[self setStateForDisclose];
 	
-	if (disclosureIsVisable_ && [disclosureBox isHidden] == YES)
-	{
-		windowFrame.size.height += sizeChange;			// Make the window bigger.
-		windowFrame.origin.y    -= sizeChange;			// Move the origin.
-		[disclosureBox performSelector:@selector(setHidden:) withObject:NOasNumber afterDelay: (animate ? resizeTime : 0.0)];
-		[parentWindow setFrame:windowFrame display:YES animate:animate];
-
-	}	
-	else if (!disclosureIsVisable_ && [disclosureBox isHidden] == NO)
-	{
-		windowFrame.size.height -= sizeChange;			// Make the window smaller.
-		windowFrame.origin.y    += sizeChange;			// Move the origin.
-		[disclosureBox setHidden:YES];
-		[parentWindow setFrame:windowFrame display:YES animate:animate];
-	}
+	windowFrame.size.height -= sizeChange;			// Make the window smaller.
+	windowFrame.origin.y    += sizeChange;			// Move the origin.
+	[disclosureBox setHidden:YES];
+	[parentWindow setFrame:windowFrame display:YES animate:animate];
 
 	if (animate)
 		[self performSelector:@selector(restoreStateAfterDisclosure) withObject:nil afterDelay:resizeTime];

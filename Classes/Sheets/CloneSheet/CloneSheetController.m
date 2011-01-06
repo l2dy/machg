@@ -132,7 +132,7 @@
 		[theTitleText setStringValue:fstr(@"Clone “%@”", sourceName)];
 		[self setFieldsFromConnectionForSource:source];
 		BOOL showAdvancedOptions = [OptionController containsOptionWhichIsSet:cmdOptions];
-		[disclosureController setToOpenState:showAdvancedOptions];
+		[disclosureController setToOpenState:showAdvancedOptions withAnimation:NO];
 		[self validateButtons:self];
 	});
 	

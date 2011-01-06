@@ -42,8 +42,7 @@
 - (IBAction) disclosureTrianglePressed:(id)sender;
 - (void)     ensureDisclosureBoxIsOpen:(BOOL)animate;
 - (void)     ensureDisclosureBoxIsClosed:(BOOL)animate;
-- (void)	 setToOpenState:(BOOL)state;
-- (void)	 syncronizeDisclosureBoxToVisableStateWithAnimation:(BOOL)animate;
+- (void)     setToOpenState:(BOOL)state withAnimation:(BOOL)animate;
 - (CGFloat)  sizeChange;
 
 @end
