@@ -41,19 +41,21 @@
 
 - (void) saveAutosizingMasksAndRelativePositions
 {
-	if (!savedViewsInfo)
+	@synchronized(self)
 	{
-		NSMapTable* masks = [NSMapTable mapTableWithWeakToStrongObjects];
-		NSRect discloseRect = [disclosureBox frame];
-		NSArray* viewsInWindow = [[parentWindow contentView] subviews];
-		for (NSView* view in viewsInWindow)
+		if (!savedViewsInfo)
+			savedViewsInfo = [NSMapTable mapTableWithWeakToStrongObjects];
+	}
+
+	NSRect discloseRect = [disclosureBox frame];
+	NSArray* viewsInWindow = [[parentWindow contentView] subviews];
+	for (NSView* view in viewsInWindow)
+		if (![savedViewsInfo objectForKey:view])
 		{
 			ViewPosition position = (NSMaxY([view frame]) > NSMaxY(discloseRect)) ? eViewAboveDisclosure : eViewBelowDisclosure;
 			SavedViewInfo* info = [SavedViewInfo savedViewInfoWithMask:[view autoresizingMask] position:position];
-			[masks setObject:info forKey:view];
+			[savedViewsInfo setObject:info forKey:view];
 		}
-		savedViewsInfo = masks;
-	}
 }
 
 - (void) setAutosizingMasksForDisclose
@@ -61,6 +63,8 @@
 	for (NSView* view in savedViewsInfo)
 	{
 		SavedViewInfo* info = DynamicCast(SavedViewInfo,[savedViewsInfo objectForKey:view]);
+		if (!info)
+			continue;	// Should we raise an assert here?
 		if ([info position] == eViewAboveDisclosure)
 			[view setAutoresizingMask:NSViewWidthSizable | NSViewMinYMargin];
 		else
@@ -73,7 +77,8 @@
 	for (NSView* view in savedViewsInfo)
 	{
 		SavedViewInfo* info = DynamicCast(SavedViewInfo,[savedViewsInfo objectForKey:view]);
-		[view setAutoresizingMask:[info mask]];
+		if (info)
+			[view setAutoresizingMask:[info mask]];
 	};
 }
 
@@ -122,6 +127,10 @@
 
 - (void) syncronizeDisclosureBoxToVisableStateWithAnimation:(BOOL)animate
 {
+	// If we are already synchronized then there is nothing to do
+	if ((disclosureIsVisable_ && [disclosureBox isHidden] == NO) || (!disclosureIsVisable_ && [disclosureBox isHidden] == YES))
+		return;
+		
 	[self saveAutosizingMasksAndRelativePositions];
 	if (autoSaveName_)
 		[[NSUserDefaults standardUserDefaults] setBool:disclosureIsVisable_ forKey:autoSaveName_];
