@@ -24,6 +24,8 @@
 
 @implementation DisclosureBoxController
 
+@synthesize disclosureBox;
+
 - (void) awakeFromNib
 {
 	NSString* frameName  = [parentWindow frameAutosaveName];

@@ -38,6 +38,7 @@
 	NSInteger					animationDepth_;
 	BOOL						savedShowsResizeIndicator_;	// Did this window show its resize indicator
 }
+@property (readonly,assign) NSBox*  disclosureBox;
 
 - (IBAction) disclosureTrianglePressed:(id)sender;
 - (void)     ensureDisclosureBoxIsOpen:(BOOL)animate;
