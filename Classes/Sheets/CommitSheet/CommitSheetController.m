@@ -496,7 +496,7 @@ NSString* kAmendOption	 = @"amendOption";
 	{
 		BOOL pathsAreRootPath = [[pathsToCommit lastObject] isEqual:rootPath];
 		NSString* mainMessage = fstr(@"Amending the latest revision with %@ files", pathsAreRootPath ? @"all" : @"the selected");
-		NSString* subMessage  = fstr(@"Are you sure you want to amend the latest revision in the repository “%@”. This feature is still experimental and is undergoing testing. Use backups. If you are not familiar with Mercurial queues then you may not be able to recover if errors occur.",
+		NSString* subMessage  = fstr(@"Are you sure you want to amend the latest revision in the repository “%@”.",
 									 [myDocument selectedRepositoryShortName]);
 		
 		int result = RunCriticalAlertPanelOptionsWithSuppression(mainMessage, subMessage, @"Amend", @"Cancel", nil, MHGDisplayWarningForAmend);
