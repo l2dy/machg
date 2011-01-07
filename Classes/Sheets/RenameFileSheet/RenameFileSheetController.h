@@ -17,6 +17,9 @@
 	IBOutlet NSTextField* theCurrentNameField;
 	IBOutlet NSTextField* theNewNameField;
 	IBOutlet NSButton*	  theAlreadyMovedButton;
+	IBOutlet NSButton*	  theRenameButton;
+	IBOutlet NSTextField* errorMessageTextField;
+	IBOutlet DisclosureBoxController*	errorDisclosureController;	// The disclosure box for any error messages
 
 	MacHgDocument*		myDocument;
 
@@ -31,10 +34,13 @@
 
 - (RenameFileSheetController*) initRenameFileSheetControllerWithDocument:(MacHgDocument*)doc;
 
-- (IBAction) browseToPath: (id)sender;
-- (IBAction) openRenameFileSheet:(id)sender;
-- (IBAction) sheetButtonOk:(id)sender;
+// Actions
+- (IBAction) validateButtons:(id)sender;
+- (IBAction) sheetButtonRename:(id)sender;
 - (IBAction) sheetButtonCancel:(id)sender;
+- (IBAction) openRenameFileSheet:(id)sender;
+- (IBAction) browseToPath:(id)sender;
 
+- (void) controlTextDidChange:(NSNotification*)aNotification;
 
 @end

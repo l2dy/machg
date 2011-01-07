@@ -11,6 +11,7 @@
 #import "MacHgDocument.h"
 #import "FSNodeInfo.h"
 #import "TaskExecutions.h"
+#import "DisclosureBoxController.h"
 
 @implementation RenameFileSheetController
 @synthesize theCurrentNameFieldValue	= theCurrentNameFieldValue_;
@@ -34,13 +35,52 @@
 }
 
 
-- (IBAction) browseToPath: (id)sender
+- (void) awakeFromNib
 {
-	NSString* filename = getSingleFilePathFromOpenPanel();
-	if (filename)
-		[self setTheNewNameFieldValue:filename];
+	[[errorDisclosureController disclosureBox] setCornerRadius:6];
 }
 
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Validation
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (IBAction) validateButtons:(id)sender
+{
+	BOOL pathsDiffer = [theCurrentNameFieldValue_ isNotEqualToString:theNewNameFieldValue_];
+	if (!pathsDiffer)
+	{
+		[errorMessageTextField setStringValue:@"You must choose a new file name which is different than the current file name."];
+		[errorDisclosureController ensureDisclosureBoxIsOpen:YES];
+		[theRenameButton setEnabled:NO];
+		return;
+	}
+		
+	BOOL pathsDifferOnlyByCase = [theCurrentNameFieldValue_ differsOnlyInCaseFrom:theNewNameFieldValue_];
+	if (pathsDifferOnlyByCase)
+	{
+		[errorMessageTextField setStringValue:@"You cannot rename the current file to a new name which differs only in the case of the name. (The file system used by Macintosh OSX is case insensitive.)"];
+		[errorDisclosureController ensureDisclosureBoxIsOpen:YES];
+		[theRenameButton setEnabled:NO];
+		return;
+	}
+
+	[errorDisclosureController ensureDisclosureBoxIsClosed:YES];
+	[theRenameButton setEnabled:YES];
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Actions
+// -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (IBAction) openRenameFileSheet:(id)sender
 {
@@ -80,6 +120,7 @@
 		return;
 	}
 	
+	[errorDisclosureController setToOpenState:NO withAnimation:NO];
 	
 	NSString* newPath = [filePath stringByDeletingLastPathComponent];
 	NSString* newName = fstr(@"Renamed%@", [filePath lastPathComponent]);
@@ -89,11 +130,12 @@
 	[self setTheCurrentNameFieldValue:filePath];
 	[self setTheNewNameFieldValue:newPathName];
 	[self setTheAlreadyMovedButtonValue:newButtonState];
+	[self validateButtons:self];
 	[NSApp beginSheet:theRenameFileSheet modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
 }
 
 
-- (IBAction) sheetButtonOk:(id)sender
+- (IBAction) sheetButtonRename:(id)sender
 {
 	if (DisplayWarningForRenamingFilesFromDefaults())
 	{
@@ -125,6 +167,26 @@
 {
 	[NSApp endSheet:theRenameFileSheet];
 	[theRenameFileSheet orderOut:sender];
+}
+
+- (IBAction) browseToPath: (id)sender
+{
+	NSString* filename = getSingleFilePathFromOpenPanel();
+	if (filename)
+		[self setTheNewNameFieldValue:filename];
+}
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Delegate Methods
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (void) controlTextDidChange:(NSNotification*)aNotification
+{
+	[self validateButtons:[aNotification object]];
 }
 
 
