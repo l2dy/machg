@@ -652,7 +652,7 @@
 {
 	switch (paneNum)
 	{
-		case eBrowserView:		return [[self theBrowserViewController] view];
+		case eBrowserView:		return [self theBrowserView];
 		case eHistoryView:		return [self theHistoryView];
 		case eDifferencesView:	return [self theDifferencesView];
 		case eBackingView:		return [[self theBackingViewController] view];
