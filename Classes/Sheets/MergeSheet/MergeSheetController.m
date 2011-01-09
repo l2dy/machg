@@ -190,11 +190,17 @@
 - (NSAttributedString*) normalFormattedSheetMessage
 {
 	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
+	NSNumber* parent1Revision = [myDocument getHGParent1Revision];
+	if (!parent1Revision)
+	{
+		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(@"No parent revision.")];
+		return newSheetMessage;
+	}
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"The revision selected above (")];
 	NSNumber* rev = [logTableView selectedRevision];
 	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(rev ? numberAsString(rev) : @"-")];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@") will be merged into the current revision (")];
-	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString([myDocument isCurrentRevisionTip] ? @"tip" : numberAsString([myDocument getHGParent1Revision]))];
+	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString([myDocument isCurrentRevisionTip] ? @"tip" : numberAsString(parent1Revision))];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@").")];
 	return newSheetMessage;
 }
