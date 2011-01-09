@@ -15,12 +15,13 @@
 	IBOutlet NSWindow*					theWindow;
 	IBOutlet NSButton*					okButton;
 	IBOutlet NSTextField*				theTitleText;
-	IBOutlet NSTextField*				pullSourceLabel;		// The short name of the source repository
-	IBOutlet NSTextField*				pullSourceStaticText;	// static text "Source" (used in layout calculations)
-	IBOutlet NSImageView*				sourceIconWell;			// Image well showing an icon of the source.
-	IBOutlet NSBox*						cloneBadPathBox;		// A box containing a message that the destination path already had
-																// files at that location.
-	IBOutlet DisclosureBoxController*	disclosureController;	// The disclosure box for the advanced options
+	IBOutlet NSTextField*				pullSourceLabel;			// The short name of the source repository
+	IBOutlet NSTextField*				pullSourceStaticText;		// static text "Source" (used in layout calculations)
+	IBOutlet NSImageView*				sourceIconWell;				// Image well showing an icon of the source.
+	IBOutlet DisclosureBoxController*	disclosureController;		// The disclosure box for the advanced options
+	IBOutlet DisclosureBoxController*	errorDisclosureController;	// The disclosure box for any error messages
+	IBOutlet NSTextField*				errorMessageTextField;		// The error message explaining why we cant clone
+
 	IBOutlet OptionController*			revOption;
 	IBOutlet OptionController*			sshOption;
 	IBOutlet OptionController*			updaterevOption;

@@ -49,6 +49,7 @@
 	[pullOption			setName:@"pull"];
 	[uncompressedOption setName:@"uncompressed"];
 	cmdOptions = [NSArray arrayWithObjects:revOption, sshOption, updaterevOption, remotecmdOption, noupdateOption, pullOption, uncompressedOption, nil];
+	[[errorDisclosureController disclosureBox] setCornerRadius:6];
 }
 
 
@@ -65,7 +66,7 @@
 	[self setShortNameFieldValue:@""];
 	[self setPathFieldValue:@""];
 	[self validateButtons:self];
-	[cloneBadPathBox setHidden:YES];
+	[errorDisclosureController ensureDisclosureBoxIsClosed:NO];
 }
 
 
@@ -77,7 +78,7 @@
 // MARK: Actions browseToPath
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (IBAction) browseToPath: (id)sender
+- (IBAction) browseToPath:(id)sender
 {
 	NSString* filename = collapseWhiteSpace([sourceNode_ shortName]);
 	NSString* pathName = getSingleDirectoryPathFromOpenPanel();
@@ -94,12 +95,44 @@
 
 - (IBAction) validateButtons:(id)sender
 {
-	BOOL valid = ([[self pathFieldValue] length] > 0) && ([[self shortNameFieldValue] length] > 0);
-	BOOL dir;
-	BOOL exists = [[NSFileManager defaultManager]fileExistsAtPath:[self pathFieldValue] isDirectory:&dir];
-	BOOL allowedToClone = valid && !exists;
-	[cloneBadPathBox setHidden:!exists];
-	[okButton setEnabled:allowedToClone];
+	if ([[self shortNameFieldValue] length] <= 0)
+	{
+		[errorMessageTextField setStringValue:@"You need to enter a short name of your choosing to refer to the repository."];
+		[errorDisclosureController ensureDisclosureBoxIsOpen:YES];
+		[okButton setEnabled:NO];
+		return;
+	}
+
+	if ([[self pathFieldValue] length] <= 0)
+	{
+		[errorMessageTextField setStringValue:@"You need to choose a local destination to clone the repository to."];
+		[errorDisclosureController ensureDisclosureBoxIsOpen:YES];
+		[okButton setEnabled:NO];
+		return;
+	}
+
+	BOOL dir1;
+	BOOL exists1 = [[NSFileManager defaultManager]fileExistsAtPath:[[self pathFieldValue] stringByAppendingPathComponent:@".hg"] isDirectory:&dir1];
+	if (exists1)
+	{
+		[errorMessageTextField setStringValue:@"A Mercurial repository already exists at the chosen local destination."];
+		[errorDisclosureController ensureDisclosureBoxIsOpen:YES];
+		[okButton setEnabled:NO];
+		return;
+	}
+	
+	BOOL dir2;
+	BOOL exists2 = [[NSFileManager defaultManager]fileExistsAtPath:[self pathFieldValue] isDirectory:&dir2];
+	if (exists2)
+	{
+		[errorMessageTextField setStringValue:fstr(@"A %@ already exists at the chosen local destination.", dir2 ? @"directory" : @"file")];
+		[errorDisclosureController ensureDisclosureBoxIsOpen:YES];
+		[okButton setEnabled:NO];
+		return;
+	}
+
+	[errorDisclosureController ensureDisclosureBoxIsClosed:YES];
+	[okButton setEnabled:YES];
 }
 
 
@@ -133,6 +166,7 @@
 		[self setFieldsFromConnectionForSource:source];
 		BOOL showAdvancedOptions = [OptionController containsOptionWhichIsSet:cmdOptions];
 		[disclosureController setToOpenState:showAdvancedOptions withAnimation:NO];
+		[errorDisclosureController setToOpenState:NO withAnimation:NO];
 		[self validateButtons:self];
 	});
 	
