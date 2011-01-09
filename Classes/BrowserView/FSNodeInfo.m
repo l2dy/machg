@@ -171,7 +171,7 @@
 		case '?':	return eHGStatusUnknown;
 		case 'I':	return eHGStatusIgnored;
 		case 'U':	return eHGStatusUnresolved;
-		case 'S':	return eHGStatusResolved;
+		case 'V':	return eHGStatusResolved;
 		default :	return eHGStatusUnknown;
 	}
 }

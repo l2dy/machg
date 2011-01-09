@@ -441,7 +441,7 @@
 // MARK: Refresh / Regenrate Browser
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-// Get any resolve status lines and change the resolved code 'R' to 'S' so that this status letter doesn't conflict with the other
+// Get any resolve status lines and change the resolved code 'R' to 'V' so that this status letter doesn't conflict with the other
 // status letters.
 - (NSArray*) resolveStatusLines:(NSArray*)absolutePaths  withRootPath:(NSString*)rootPath
 {
@@ -461,7 +461,7 @@
 		if (IsNotEmpty(line))
 		{
 			if ([line characterAtIndex:0] == 'R')
-				[newLines addObject:fstr(@"S%@",[line substringFromIndex:1])];
+				[newLines addObject:fstr(@"V%@",[line substringFromIndex:1])];
 			else
 				[newLines addObject:line];
 		}
