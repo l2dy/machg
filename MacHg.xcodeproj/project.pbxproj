@@ -50,6 +50,7 @@
 		96138847116B437D0022F368 /* ActionDrop.png in Resources */ = {isa = PBXBuildFile; fileRef = 96138846116B437D0022F368 /* ActionDrop.png */; };
 		961CB6AB1139BC730071F9F6 /* BrowserPreviewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 961CB6A91139BC730071F9F6 /* BrowserPreviewView.xib */; };
 		961D5A09115DBD9E0064A4DA /* CommandKeyTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 961D5A08115DBD9E0064A4DA /* CommandKeyTextField.m */; };
+		9621CFE912D5FC1F009C192C /* RSVerticallyCenteredTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9621CFE712D5FC1F009C192C /* RSVerticallyCenteredTextFieldCell.m */; };
 		9624175E1180A3570077F655 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9624175D1180A3570077F655 /* QuartzCore.framework */; };
 		962ED03B11875ABC0072211F /* LabelData.m in Sources */ = {isa = PBXBuildFile; fileRef = 962ED03811875ABC0072211F /* LabelData.m */; };
 		962ED03C11875ABC0072211F /* LabelsTableView.m in Sources */ = {isa = PBXBuildFile; fileRef = 962ED03A11875ABC0072211F /* LabelsTableView.m */; };
@@ -276,6 +277,8 @@
 		961CB6AA1139BC730071F9F6 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/BrowserPreviewView.xib; sourceTree = "<group>"; };
 		961D5A07115DBD9E0064A4DA /* CommandKeyTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CommandKeyTextField.h; path = CommandKeyTextField/CommandKeyTextField.h; sourceTree = "<group>"; };
 		961D5A08115DBD9E0064A4DA /* CommandKeyTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CommandKeyTextField.m; path = CommandKeyTextField/CommandKeyTextField.m; sourceTree = "<group>"; };
+		9621CFE612D5FC1F009C192C /* RSVerticallyCenteredTextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSVerticallyCenteredTextFieldCell.h; sourceTree = "<group>"; };
+		9621CFE712D5FC1F009C192C /* RSVerticallyCenteredTextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSVerticallyCenteredTextFieldCell.m; sourceTree = "<group>"; };
 		9624175D1180A3570077F655 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
 		962ED03711875ABC0072211F /* LabelData.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LabelData.h; sourceTree = "<group>"; };
 		962ED03811875ABC0072211F /* LabelData.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LabelData.m; sourceTree = "<group>"; };
@@ -759,6 +762,15 @@
 			name = SplashTitles;
 			sourceTree = "<group>";
 		};
+		9621CFE412D5FC1F009C192C /* RSVerticallyCenteredTextFieldCell */ = {
+			isa = PBXGroup;
+			children = (
+				9621CFE612D5FC1F009C192C /* RSVerticallyCenteredTextFieldCell.h */,
+				9621CFE712D5FC1F009C192C /* RSVerticallyCenteredTextFieldCell.m */,
+			);
+			path = RSVerticallyCenteredTextFieldCell;
+			sourceTree = "<group>";
+		};
 		962ED03611875ABC0072211F /* LabelsModel */ = {
 			isa = PBXGroup;
 			children = (
@@ -916,6 +928,7 @@
 				969064E811601E2400F30915 /* MonitorFSEvents */,
 				9637C8C6118E9C5A0000C14B /* NSString+SymlinksAndAliases */,
 				9631D0681107A7E90007FDF2 /* RegexKitLite */,
+				9621CFE412D5FC1F009C192C /* RSVerticallyCenteredTextFieldCell */,
 				969BDDF11196B0C0007AA6D9 /* ShellHere */,
 			);
 			name = ExternalClasses;
@@ -1682,6 +1695,7 @@
 				44D3658012770D10007D631D /* ParentTextButtonCell.m in Sources */,
 				963001A612988A6000C1782B /* BackoutSheetController.m in Sources */,
 				9693CFC1129D82DF0064DAB9 /* LogRecord.m in Sources */,
+				9621CFE912D5FC1F009C192C /* RSVerticallyCenteredTextFieldCell.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
