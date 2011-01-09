@@ -14,6 +14,8 @@
 #import "CommitSheetController.h"
 #import "RevertSheetController.h"
 #import "RenameFileSheetController.h"
+#import "TaskExecutions.h"
+
 
 
 
@@ -141,8 +143,57 @@
 
 - (NSArray*) statusLinesForPaths:(NSArray*)absolutePaths withRootPath:(NSString*)rootPath
 {
-	return [myDocument statusLinesForPaths:absolutePaths withRootPath:rootPath];
+	// Get status of everything relevant and return this array for use by the node tree to re-flush stale parts of it (or all of it.)
+	NSMutableArray* argsStatus = [NSMutableArray arrayWithObjects:@"status", nil];
+	if (ShowIgnoredFilesInBrowserFromDefaults())	[argsStatus addObject:@"--ignored"];
+	if (ShowCleanFilesInBrowserFromDefaults())		[argsStatus addObject:@"--clean"];
+	if (ShowUnknownFilesInBrowserFromDefaults())	[argsStatus addObject:@"--unknown"];
+	if (ShowAddedFilesInBrowserFromDefaults())		[argsStatus addObject:@"--added"];
+	if (ShowRemovedFilesInBrowserFromDefaults())	[argsStatus addObject:@"--removed"];
+	if (ShowMissingFilesInBrowserFromDefaults())	[argsStatus addObject:@"--deleted"];
+	if (ShowModifiedFilesInBrowserFromDefaults())	[argsStatus addObject:@"--modified"];
+	[argsStatus addObjectsFromArray:absolutePaths];
+	
+	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:rootPath  logging:eLoggingNone onTask:nil];
+	
+	if ([results.errStr length] > 0)
+	{
+		[TaskExecutions logMercurialResult:results];
+		// for an error rather than warning fail by returning nil. Maybe later we will return error codes.
+		if ([results hasErrors])
+			return  nil;			
+	}
+	return [results.outStr componentsSeparatedByString:@"\n"];
 }
+
+
+// Get any resolve status lines and change the resolved code 'R' to 'V' so that this status letter doesn't conflict with the other
+// status letters.
+- (NSArray*) resolveStatusLines:(NSArray*)absolutePaths  withRootPath:(NSString*)rootPath
+{
+	// Get status of everything relevant and return this array for use by the node tree to re-flush stale parts of it (or all of it.)
+	NSMutableArray* argsResolveStatus = [NSMutableArray arrayWithObjects:@"resolve", @"--list", nil];
+	[argsResolveStatus addObjectsFromArray:absolutePaths];
+	
+	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsResolveStatus fromRoot:rootPath  logging:eLoggingNone];
+	if ([results hasErrors])
+	{
+		[TaskExecutions logMercurialResult:results];
+		return nil;
+	}
+	NSArray* lines = [results.outStr componentsSeparatedByString:@"\n"];
+	NSMutableArray* newLines = [[NSMutableArray alloc] init];
+	for (NSString* line in lines)
+		if (IsNotEmpty(line))
+		{
+			if ([line characterAtIndex:0] == 'R')
+				[newLines addObject:fstr(@"V%@",[line substringFromIndex:1])];
+			else
+				[newLines addObject:line];
+		}
+	return newLines;
+}
+
 
 - (NSImage*) imageForMultipleCells:(NSArray*) cells
 {

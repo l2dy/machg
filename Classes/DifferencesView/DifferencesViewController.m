@@ -425,6 +425,12 @@
 }
 
 
+- (NSArray*) resolveStatusLines:(NSArray*)absolutePaths  withRootPath:(NSString*)rootPath
+{
+	return [[NSArray alloc]init]; // We never list any resolved / unresolved files in the differences view
+}
+
+
 - (CGFloat) firstPaneHeight:(NSSplitView*)theSplitView
 {
 	return [[[theSplitView subviews] objectAtIndex:0] frame].size.height;

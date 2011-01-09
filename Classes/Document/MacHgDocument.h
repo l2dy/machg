@@ -245,7 +245,6 @@
 - (void)		refreshBrowserPaths:(NSArray*) absolutePaths;
 - (void)		refreshBrowserPaths:(NSArray*) absolutePaths finishingBlock:(BlockProcess)theBlock;
 - (IBAction)	refreshBrowserContent:(id)sender;
-- (NSArray*)	statusLinesForPaths:(NSArray*)absolutePaths withRootPath:(NSString*)rootPath;
 
 
 // File Menu

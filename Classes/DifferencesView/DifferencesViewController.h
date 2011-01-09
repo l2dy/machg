@@ -135,6 +135,7 @@
 // Delegate Methods
 - (void)		logTableViewSelectionDidChange:(LogTableView*)theLogTable;
 - (NSArray*)	statusLinesForPaths:(NSArray*)absolutePaths withRootPath:(NSString*)rootPath;
+- (NSArray*)	resolveStatusLines: (NSArray*)absolutePaths withRootPath:(NSString*)rootPath;
 - (void)		splitViewDidResizeSubviews:(NSNotification*)aNotification;
 
 

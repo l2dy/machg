@@ -62,6 +62,7 @@
 
 - (IBAction) refreshBrowserContent:(id)sender;
 - (NSArray*) statusLinesForPaths:(NSArray*)absolutePaths withRootPath:(NSString*)rootPath;
+- (NSArray*) resolveStatusLines: (NSArray*)absolutePaths  withRootPath:(NSString*)rootPath;
 - (void)	 updateCurrentPreviewImage;
 
 

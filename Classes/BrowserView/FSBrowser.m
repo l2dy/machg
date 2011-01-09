@@ -441,32 +441,7 @@
 // MARK: Refresh / Regenrate Browser
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-// Get any resolve status lines and change the resolved code 'R' to 'V' so that this status letter doesn't conflict with the other
-// status letters.
-- (NSArray*) resolveStatusLines:(NSArray*)absolutePaths  withRootPath:(NSString*)rootPath
-{
-	// Get status of everything relevant and return this array for use by the node tree to re-flush stale parts of it (or all of it.)
-	NSMutableArray* argsResolveStatus = [NSMutableArray arrayWithObjects:@"resolve", @"--list", nil];
-	[argsResolveStatus addObjectsFromArray:absolutePaths];
 
-	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsResolveStatus fromRoot:rootPath  logging:eLoggingNone];
-	if ([results hasErrors])
-	{
-		[TaskExecutions logMercurialResult:results];
-		return nil;
-	}
-	NSArray* lines = [results.outStr componentsSeparatedByString:@"\n"];
-	NSMutableArray* newLines = [[NSMutableArray alloc] init];
-	for (NSString* line in lines)
-		if (IsNotEmpty(line))
-		{
-			if ([line characterAtIndex:0] == 'R')
-				[newLines addObject:fstr(@"V%@",[line substringFromIndex:1])];
-			else
-				[newLines addObject:line];
-		}
-	return newLines;
-}
 
 - (void) markPathsDirty:(RepositoryPaths*)dirtyPaths;
 {
@@ -531,7 +506,7 @@
 			// diff pane?
 			if ([rootPath isEqualTo:[[self myDocument] absolutePathOfRepositoryRoot]])
 				if ([[self myDocument] inMergeState])
-					newResolveStatusLines = [self resolveStatusLines:absoluteChangedPaths withRootPath:rootPath];
+					newResolveStatusLines = [parentController resolveStatusLines:absoluteChangedPaths withRootPath:rootPath];
 		});
 		
 		dispatch_group_async(group, globalQueue(), ^{

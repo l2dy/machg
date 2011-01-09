@@ -1504,32 +1504,6 @@
 }
 
 
-- (NSArray*) statusLinesForPaths:(NSArray*)absolutePaths withRootPath:(NSString*)rootPath
-{
-	// Get status of everything relevant and return this array for use by the node tree to re-flush stale parts of it (or all of it.)
-	NSMutableArray* argsStatus = [NSMutableArray arrayWithObjects:@"status", nil];
-	if (ShowIgnoredFilesInBrowserFromDefaults())	[argsStatus addObject:@"--ignored"];
-	if (ShowCleanFilesInBrowserFromDefaults())		[argsStatus addObject:@"--clean"];
-	if (ShowUnknownFilesInBrowserFromDefaults())	[argsStatus addObject:@"--unknown"];
-	if (ShowAddedFilesInBrowserFromDefaults())		[argsStatus addObject:@"--added"];
-	if (ShowRemovedFilesInBrowserFromDefaults())	[argsStatus addObject:@"--removed"];
-	if (ShowMissingFilesInBrowserFromDefaults())	[argsStatus addObject:@"--deleted"];
-	if (ShowModifiedFilesInBrowserFromDefaults())	[argsStatus addObject:@"--modified"];
-	[argsStatus addObjectsFromArray:absolutePaths];
-
-	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:rootPath  logging:eLoggingNone onTask:nil];
-
-	if ([results.errStr length] > 0)
-	{
-		[TaskExecutions logMercurialResult:results];
-		// for an error rather than warning fail by returning nil. Maybe later we will return error codes.
-		if ([results hasErrors])
-			return  nil;			
-	}
-	return [results.outStr componentsSeparatedByString:@"\n"];
-}
-
-
 
 
 

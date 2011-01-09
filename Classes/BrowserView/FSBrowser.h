@@ -21,6 +21,7 @@
 // All Controllers which embed a FSBrowser must conform to this protocol
 @protocol ControllerForFSBrowser <NSObject>
 - (NSArray*)		statusLinesForPaths:(NSArray*)absolutePaths withRootPath:(NSString*)rootPath;
+- (NSArray*)		resolveStatusLines: (NSArray*)absolutePaths withRootPath:(NSString*)rootPath;
 - (MacHgDocument*)	myDocument;
 - (void)			updateCurrentPreviewImage;
 - (void)			awakeFromNib;	// This routine needs to be able to be called multiple times on the Controller parent of the
