@@ -173,7 +173,7 @@ typedef enum
 	eHGStatusNoStatus   = 0,
 	eHGStatusIgnored    = 1<<1,
 	eHGStatusClean      = 1<<2,
-	eHGStatusUnknown    = 1<<3,
+	eHGStatusUntracked  = 1<<3,
 	eHGStatusAdded      = 1<<4,
 	eHGStatusRemoved    = 1<<5,
 	eHGStatusMissing    = 1<<6,
@@ -184,13 +184,12 @@ typedef enum
 	
 	
 	eHGStatusInRepository		= eHGStatusIgnored | eHGStatusClean | eHGStatusAdded | eHGStatusRemoved | eHGStatusMissing | eHGStatusModified,
-	eHGStatusNotIgnored         = eHGStatusClean | eHGStatusUnknown | eHGStatusAdded | eHGStatusRemoved | eHGStatusMissing | eHGStatusModified,
+	eHGStatusNotIgnored         = eHGStatusClean | eHGStatusUntracked | eHGStatusAdded | eHGStatusRemoved | eHGStatusMissing | eHGStatusModified,
 	eHGStatusChangedInSomeWay	= eHGStatusAdded | eHGStatusRemoved | eHGStatusMissing | eHGStatusModified,
-	eHGStatusNotable			= eHGStatusAdded | eHGStatusRemoved | eHGStatusMissing | eHGStatusModified | eHGStatusUnknown,
 	eHGStatusCommittable		= eHGStatusAdded | eHGStatusRemoved | eHGStatusModified,
-	eHGStatusAddable			= eHGStatusUnknown,
-	eHGStatusAddableOrRemovable	= eHGStatusUnknown | eHGStatusMissing,
-	eHGStatusPrimary            = eHGStatusIgnored | eHGStatusClean | eHGStatusUnknown | eHGStatusAdded | eHGStatusRemoved | eHGStatusMissing | eHGStatusModified,
+	eHGStatusAddable			= eHGStatusUntracked,
+	eHGStatusAddableOrRemovable	= eHGStatusUntracked | eHGStatusMissing,
+	eHGStatusPrimary            = eHGStatusIgnored | eHGStatusClean | eHGStatusUntracked | eHGStatusAdded | eHGStatusRemoved | eHGStatusMissing | eHGStatusModified,
 	eHGStatusSecondary          = eHGStatusResolved | eHGStatusUnresolved
 } HGStatus;
 
@@ -424,7 +423,7 @@ extern NSString* const MHGShowMissingFilesInBrowser;
 extern NSString* const MHGShowModifiedFilesInBrowser;
 extern NSString* const MHGShowRemovedFilesInBrowser;
 extern NSString* const MHGShowResolvedFilesInBrowser;
-extern NSString* const MHGShowUnknownFilesInBrowser;
+extern NSString* const MHGShowUntrackedFilesInBrowser;
 extern NSString* const MHGShowUnresolvedFilesInBrowser;
 extern NSString* const MHGSizeOfBrowserColumns;
 extern NSString* const MHGToolNameForDiffing;
@@ -476,7 +475,7 @@ BOOL		ShowMissingFilesInBrowserFromDefaults();
 BOOL		ShowModifiedFilesInBrowserFromDefaults();
 BOOL		ShowRemovedFilesInBrowserFromDefaults();
 BOOL		ShowResolvedFilesInBrowserFromDefaults();
-BOOL		ShowUnknownFilesInBrowserFromDefaults();
+BOOL		ShowUntrackedFilesInBrowserFromDefaults();
 BOOL		ShowUnresolvedFilesInBrowserFromDefaults();
 BOOL		UseFileMergeForDiffFromDefaults();
 BOOL		UseFileMergeForMergeFromDefaults();

@@ -58,7 +58,7 @@
 @synthesize showMissingFilesInBrowser    = showMissingFilesInBrowser_;
 @synthesize showModifiedFilesInBrowser   = showModifiedFilesInBrowser_;
 @synthesize showRemovedFilesInBrowser    = showRemovedFilesInBrowser_;
-@synthesize showUnknownFilesInBrowser    = showUnknownFilesInBrowser_;
+@synthesize showUntrackedFilesInBrowser  = showUntrackedFilesInBrowser_;
 @synthesize showCleanFilesInBrowser		 = showCleanFilesInBrowser_;
 @synthesize showUnresolvedFilesInBrowser = showUnresolvedFilesInBrowser_;
 @synthesize showResolvedFilesInBrowser   = showResolvedFilesInBrowser_;
@@ -166,7 +166,7 @@
 	[self setShowModifiedFilesInBrowser:ShowModifiedFilesInBrowserFromDefaults()];
 	[self setShowRemovedFilesInBrowser:ShowRemovedFilesInBrowserFromDefaults()];
 	[self setShowResolvedFilesInBrowser:ShowResolvedFilesInBrowserFromDefaults()];
-	[self setShowUnknownFilesInBrowser:ShowUnknownFilesInBrowserFromDefaults()];
+	[self setShowUntrackedFilesInBrowser:ShowUntrackedFilesInBrowserFromDefaults()];
 	[self setShowUnresolvedFilesInBrowser:ShowUnresolvedFilesInBrowserFromDefaults()];
 }
 
@@ -407,7 +407,7 @@
 
 	if ([self showIgnoredFilesInBrowser])	[argsStatus addObject:@"--ignored"];
 	if ([self showCleanFilesInBrowser])		[argsStatus addObject:@"--clean"];
-	if ([self showUnknownFilesInBrowser])	[argsStatus addObject:@"--unknown"];
+	if ([self showUntrackedFilesInBrowser])	[argsStatus addObject:@"--unknown"];
 	if ([self showAddedFilesInBrowser])		[argsStatus addObject:@"--added"];
 	if ([self showRemovedFilesInBrowser])	[argsStatus addObject:@"--removed"];
 	if ([self showMissingFilesInBrowser])	[argsStatus addObject:@"--deleted"];

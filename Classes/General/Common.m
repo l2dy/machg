@@ -126,7 +126,7 @@ NSString* const MHGShowMissingFilesInBrowser			= @"ShowMissingFilesInBrowser";
 NSString* const MHGShowModifiedFilesInBrowser			= @"ShowModifiedFilesInBrowser";
 NSString* const MHGShowRemovedFilesInBrowser			= @"ShowRemovedFilesInBrowser";
 NSString* const MHGShowResolvedFilesInBrowser			= @"ShowResolvedFilesInBrowser";
-NSString* const MHGShowUnknownFilesInBrowser			= @"ShowUnknownFilesInBrowser";
+NSString* const MHGShowUntrackedFilesInBrowser			= @"ShowUntrackedFilesInBrowser";
 NSString* const MHGShowUnresolvedFilesInBrowser			= @"ShowUnresolvedFilesInBrowser";
 NSString* const MHGSizeOfBrowserColumns					= @"SizeOfBrowserColumns";
 NSString* const MHGToolNameForDiffing					= @"ToolNameForDiffing";
@@ -190,7 +190,7 @@ BOOL		ShowMissingFilesInBrowserFromDefaults()					{ return boolFromDefaultsForKe
 BOOL		ShowModifiedFilesInBrowserFromDefaults()				{ return boolFromDefaultsForKey(MHGShowModifiedFilesInBrowser); }
 BOOL		ShowRemovedFilesInBrowserFromDefaults()					{ return boolFromDefaultsForKey(MHGShowRemovedFilesInBrowser); }
 BOOL		ShowResolvedFilesInBrowserFromDefaults()				{ return boolFromDefaultsForKey(MHGShowResolvedFilesInBrowser); }
-BOOL		ShowUnknownFilesInBrowserFromDefaults()					{ return boolFromDefaultsForKey(MHGShowUnknownFilesInBrowser); }
+BOOL		ShowUntrackedFilesInBrowserFromDefaults()					{ return boolFromDefaultsForKey(MHGShowUntrackedFilesInBrowser); }
 BOOL		ShowUnresolvedFilesInBrowserFromDefaults()				{ return boolFromDefaultsForKey(MHGShowUnresolvedFilesInBrowser); }
 BOOL		UseFileMergeForDiffFromDefaults()						{ return boolFromDefaultsForKey(MHGUseFileMergeForDiff); }
 BOOL		UseFileMergeForMergeFromDefaults()						{ return boolFromDefaultsForKey(MHGUseFileMergeForMerge); }

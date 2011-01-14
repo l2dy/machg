@@ -89,8 +89,8 @@
       </div>
       <div class="two-col-description-item-right">
          <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#addremove">addremove --similarity</a></p>
-         <p><strong>Available:</strong> when one or more files are selected in the Browser View, if at least one of these is marked Unknown or Missing.</p>
-         <p><strong>Operation:</strong> Marks all Unknown files in the selection as Added files, and marks all Missing files in the selection as Removed files. Moreover, the similarity option is used to try to detect when a file has simply had its name changed. You can set the similarity factor in the MacHg preferences under the Mercurial tab. By default, MacHg uses a factor of 95% similarity; but this can be changed in the preferences.</p>
+         <p><strong>Available:</strong> when one or more files are selected in the Browser View, if at least one of these is marked Untracked or Missing.</p>
+         <p><strong>Operation:</strong> Marks all Untracked files in the selection as Added files, and marks all Missing files in the selection as Removed files. Moreover, the similarity option is used to try to detect when a file has simply had its name changed. You can set the similarity factor in the MacHg preferences under the Mercurial tab. By default, MacHg uses a factor of 95% similarity; but this can be changed in the preferences.</p>
          <p><strong>External Help:</strong> <a href="http://stevelosh.com/blog/2009/05/what-i-hate-about-mercurial/#addremove-can-track-renames-but-wont-unless-you-ask-it-really-nicely">AddRemove can track renames</a>, <a href="http://hgbook.red-bean.com/read/mercurial-in-daily-use.html#id362374">MDG: Adding and removing files in one step</a></p>
       </div>
    </div>
@@ -153,8 +153,8 @@
       </div>
       <div class="two-col-description-item-right">
          <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#add">add</a></p>
-         <p><strong>Available:</strong> when one or more files are selected in the Browser View, if at least one of these is marked Unknown.</p>
-         <p><strong>Operation:</strong> Performing this operation changes selected files marked Unknown to ones marked Added, hence files that you presumably want to add to the repository. (To actually add files marked Added to the repository so that the repository can track them, you subsequently need to commit them.)</p>
+         <p><strong>Available:</strong> when one or more files are selected in the Browser View, if at least one of these is marked Untracked.</p>
+         <p><strong>Operation:</strong> Performing this operation changes selected files marked Untracked to ones marked Added, hence files that you presumably want to add to the repository. (To actually add files marked Added to the repository so that the repository can track them, you subsequently need to commit them.)</p>
          <p><strong>External Help:</strong> <a href="http://hgbook.red-bean.com/read/a-tour-of-mercurial-the-basics.html#id349357">MDG: Starting a new project and adding files</a></p>
       </div>
    </div>
@@ -167,8 +167,8 @@
       </div>
       <div class="two-col-description-item-right">
          <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#forget">forget</a></p>
-         <p><strong>Available:</strong> when one or more tracked files are selected in the Browser View. A <strong>tracked file</strong> is any file other than an Unknown file.</p>
-         <p><strong>Operation:</strong> Marks all the selected files as being Unknown files, hence no longer tracked by the repository. You subsequently need to commit these tracking removals to incorporate the changes into the repository.</p>
+         <p><strong>Available:</strong> when one or more tracked files are selected in the Browser View. A <strong>tracked file</strong> is any file other than an Untracked file.</p>
+         <p><strong>Operation:</strong> Marks all the selected files as being Untracked files, hence no longer tracked by the repository. You subsequently need to commit these tracking removals to incorporate the changes into the repository.</p>
       </div>
    </div>
 
@@ -179,7 +179,7 @@
       </div>
       <div class="two-col-description-item-right">
          <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#rename">rename</a></p>
-         <p><strong>Available:</strong> when you select one or more tracked files in the Browser View. A <strong>tracked file</strong> is anything other than a file marked Unknown.</p>
+         <p><strong>Available:</strong> when you select one or more tracked files in the Browser View. A <strong>tracked file</strong> is anything other than a file marked Untracked.</p>
          <p><strong>Operation:</strong> Opens a sheet where you can choose a new name for the file. Renaming allows Mercurial to track the history of the file across the rename, whereas simply removing the file and adding it again will loose this history tracking.</p>
          <p><strong>External Help:</strong> <a href="http://hgbook.red-bean.com/read/mercurial-in-daily-use.html#id364064">MDG: Renaming files</a></p>
       </div>
@@ -307,7 +307,7 @@
       </div>
       <div class="two-col-description-item-right">
          <p><strong>Mercurial command:</strong> <a href="http://www.selenic.com/mercurial/hg.1.html#annotate">annotate</a></p>
-         <p><strong>Available: </strong> when one or more files are selected in the Browser View and none of them are marked Unknown.</p>
+         <p><strong>Available: </strong> when one or more files are selected in the Browser View and none of them are marked Untracked.</p>
          <p><strong>Operation:</strong> Lists a selected file, and on each line of the file, notes the most recent revision in which that line changed and when it changed and who made the change. </p>
       </div>
    </div>

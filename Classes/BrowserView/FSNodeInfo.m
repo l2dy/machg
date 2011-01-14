@@ -159,7 +159,7 @@
 + (HGStatus) statusEnumFromLetter:(NSString*)statusLetter
 {
 	const char* theLetterStr = [statusLetter cStringUsingEncoding:NSUTF8StringEncoding];
-	if (!theLetterStr) return eHGStatusUnknown;
+	if (!theLetterStr) return eHGStatusUntracked;
 	const char theLetter = theLetterStr[0];
 	switch ( theLetter )
 	{
@@ -168,11 +168,11 @@
 		case 'R':	return eHGStatusRemoved;
 		case '!':	return eHGStatusMissing;
 		case 'C':	return eHGStatusClean;
-		case '?':	return eHGStatusUnknown;
+		case '?':	return eHGStatusUntracked;
 		case 'I':	return eHGStatusIgnored;
 		case 'U':	return eHGStatusUnresolved;
 		case 'V':	return eHGStatusResolved;
-		default :	return eHGStatusUnknown;
+		default :	return eHGStatusUntracked;
 	}
 }
 
@@ -241,7 +241,7 @@
 	HGStatus status = [self hgStatus];
 
 	if (bitsInCommon(status, eHGStatusMissing))		[icons addObject:missingImage];
-	if (bitsInCommon(status, eHGStatusUnknown))		[icons addObject:unknownImage];
+	if (bitsInCommon(status, eHGStatusUntracked))	[icons addObject:unknownImage];
 	if (bitsInCommon(status, eHGStatusAdded))		[icons addObject:additionImage];
 	if (bitsInCommon(status, eHGStatusRemoved))		[icons addObject:removedImage];
 	if (bitsInCommon(status, eHGStatusModified))	[icons addObject:modifiedImage];
@@ -265,7 +265,7 @@
 	int iconCount = 0;
 	HGStatus status = [self hgStatus];
 	if (bitsInCommon(status, eHGStatusMissing))		iconCount++;
-	if (bitsInCommon(status, eHGStatusUnknown))		iconCount++;
+	if (bitsInCommon(status, eHGStatusUntracked))	iconCount++;
 	if (bitsInCommon(status, eHGStatusAdded))		iconCount++;
 	if (bitsInCommon(status, eHGStatusModified))	iconCount++;
 	if (bitsInCommon(status, eHGStatusRemoved))		iconCount++;

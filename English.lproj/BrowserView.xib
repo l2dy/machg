@@ -21,6 +21,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
+			<integer value="1"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -48,7 +49,7 @@
 				<string key="NSClassName">NSApplication</string>
 			</object>
 			<object class="NSCustomView" id="453712496">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">274</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -134,7 +135,7 @@
 						</object>
 						<string key="NSPathSeparator">/</string>
 						<int key="NSMinColumnWidth">50</int>
-						<int key="NSNumberOfVisibleColumns">1</int>
+						<int key="NSNumberOfVisibleColumns">3</int>
 						<int key="NSColumnResizingType">2</int>
 						<double key="NSPreferedColumnWidth">267</double>
 						<bool key="NSAllowsTypeSelect">YES</bool>
@@ -273,7 +274,7 @@
 						<object class="NSButtonCell" key="NSCell" id="524347911">
 							<int key="NSCellFlags">-2080244224</int>
 							<int key="NSCellFlags2">163840</int>
-							<string key="NSContents">Unknown</string>
+							<string key="NSContents">Untracked</string>
 							<reference key="NSSupport" ref="26"/>
 							<reference key="NSControlView" ref="314563221"/>
 							<int key="NSButtonFlags">1210864127</int>
@@ -693,9 +694,14 @@
 					</object>
 				</object>
 				<string key="NSFrameSize">{860, 606}</string>
+				<reference key="NSSuperview"/>
 				<string key="NSClassName">BrowserView</string>
 			</object>
 			<object class="NSUserDefaultsController" id="69413389">
+				<object class="NSMutableArray" key="NSDeclaredKeys">
+					<bool key="EncodedWithXMLCoder">YES</bool>
+					<string>ShowUntrackedFilesInBrowser</string>
+				</object>
 				<bool key="NSSharedInstance">YES</bool>
 			</object>
 			<object class="NSMenu" id="1040381362">
@@ -951,22 +957,6 @@
 						</object>
 					</object>
 					<int key="connectionID">58</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: values.ShowUnknownFilesInBrowser</string>
-						<reference key="source" ref="314563221"/>
-						<reference key="destination" ref="69413389"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="314563221"/>
-							<reference key="NSDestination" ref="69413389"/>
-							<string key="NSLabel">value: values.ShowUnknownFilesInBrowser</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">values.ShowUnknownFilesInBrowser</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">59</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
@@ -1335,6 +1325,22 @@
 						<reference key="destination" ref="453712496"/>
 					</object>
 					<int key="connectionID">177</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: values.ShowUntrackedFilesInBrowser</string>
+						<reference key="source" ref="314563221"/>
+						<reference key="destination" ref="69413389"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="314563221"/>
+							<reference key="NSDestination" ref="69413389"/>
+							<string key="NSLabel">value: values.ShowUntrackedFilesInBrowser</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">values.ShowUntrackedFilesInBrowser</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">178</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -2023,7 +2029,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">177</int>
+			<int key="maxID">178</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">

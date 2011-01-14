@@ -72,7 +72,7 @@
 	BOOL						showAddedFilesInBrowser_;
 	BOOL						showRemovedFilesInBrowser_;
 	BOOL						showMissingFilesInBrowser_;
-	BOOL						showUnknownFilesInBrowser_;
+	BOOL						showUntrackedFilesInBrowser_;
 	BOOL						showIgnoredFilesInBrowser_;
 	BOOL						showUnresolvedFilesInBrowser_;
 	BOOL						showResolvedFilesInBrowser_;
@@ -87,7 +87,7 @@
 @property (readwrite,assign) BOOL showMissingFilesInBrowser;
 @property (readwrite,assign) BOOL showModifiedFilesInBrowser;
 @property (readwrite,assign) BOOL showRemovedFilesInBrowser;
-@property (readwrite,assign) BOOL showUnknownFilesInBrowser;
+@property (readwrite,assign) BOOL showUntrackedFilesInBrowser;
 @property (readwrite,assign) BOOL showCleanFilesInBrowser;
 @property (readwrite,assign) BOOL showUnresolvedFilesInBrowser;
 @property (readwrite,assign) BOOL showResolvedFilesInBrowser;

@@ -147,7 +147,7 @@
 	NSMutableArray* argsStatus = [NSMutableArray arrayWithObjects:@"status", nil];
 	if (ShowIgnoredFilesInBrowserFromDefaults())	[argsStatus addObject:@"--ignored"];
 	if (ShowCleanFilesInBrowserFromDefaults())		[argsStatus addObject:@"--clean"];
-	if (ShowUnknownFilesInBrowserFromDefaults())	[argsStatus addObject:@"--unknown"];
+	if (ShowUntrackedFilesInBrowserFromDefaults())	[argsStatus addObject:@"--unknown"];
 	if (ShowAddedFilesInBrowserFromDefaults())		[argsStatus addObject:@"--added"];
 	if (ShowRemovedFilesInBrowserFromDefaults())	[argsStatus addObject:@"--removed"];
 	if (ShowMissingFilesInBrowserFromDefaults())	[argsStatus addObject:@"--deleted"];

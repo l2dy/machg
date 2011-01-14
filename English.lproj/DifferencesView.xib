@@ -21,7 +21,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="389"/>
+			<integer value="303"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1602,7 +1602,7 @@
 										<object class="NSButtonCell" key="NSCell" id="716998448">
 											<int key="NSCellFlags">-2080244224</int>
 											<int key="NSCellFlags2">163840</int>
-											<string key="NSContents">Unknown</string>
+											<string key="NSContents">Untracked</string>
 											<reference key="NSSupport" ref="26"/>
 											<reference key="NSControlView" ref="481174143"/>
 											<int key="NSButtonFlags">1210864127</int>
@@ -2245,22 +2245,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: theDifferencesView.showUnknownFilesInBrowser</string>
-						<reference key="source" ref="481174143"/>
-						<reference key="destination" ref="1001"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="481174143"/>
-							<reference key="NSDestination" ref="1001"/>
-							<string key="NSLabel">value: theDifferencesView.showUnknownFilesInBrowser</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">theDifferencesView.showUnknownFilesInBrowser</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">590</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
 						<string key="label">value: theDifferencesView.showIgnoredFilesInBrowser</string>
 						<reference key="source" ref="573236560"/>
 						<reference key="destination" ref="1001"/>
@@ -2378,6 +2362,22 @@
 						<reference key="destination" ref="192635466"/>
 					</object>
 					<int key="connectionID">609</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: theDifferencesView.showUntrackedFilesInBrowser</string>
+						<reference key="source" ref="481174143"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="481174143"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">value: theDifferencesView.showUntrackedFilesInBrowser</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">theDifferencesView.showUntrackedFilesInBrowser</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">610</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -3592,7 +3592,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">609</int>
+			<int key="maxID">610</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
