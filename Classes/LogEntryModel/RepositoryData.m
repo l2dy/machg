@@ -246,7 +246,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 			NSString* revString = nil;
 			NSString* changesetString = nil;			
 			NSString* labelName = nil;
-			BOOL parsedLine = [line getCapturesWithRegexAndTrimedComponents:@"^(\\w+) (\\d+):([\\d\\w]+)\\s*(.*)"
+			BOOL parsedLine = [line getCapturesWithRegexAndTrimedComponents:@"^(\\w+) (-?\\d+):([\\d\\w]+)\\s*(.*)"
 															 firstComponent:&labelType  secondComponent:&revString  thirdComponent:&changesetString  fourthComponent:&labelName];
 			if (!parsedLine)
 				continue;
