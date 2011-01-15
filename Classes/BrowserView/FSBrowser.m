@@ -225,7 +225,7 @@
 	return combinedStatus;
 }
 
-- (NSArray*) absolutePathsOfBrowserSelectedFiles
+- (NSArray*) absolutePathsOfSelectedFilesInBrowser
 {
 	if (![self nodesAreSelected])
 		return [NSArray array];
@@ -237,15 +237,15 @@
 	return paths;
 }
 
-- (NSArray*) absolutePathsOfBrowserChosenFiles
+- (NSArray*) absolutePathsOfChosenFilesInBrowser
 {
 	if ([self nodeIsClicked] && ![self clickedNodeInSelectedNodes])
 		return [NSArray arrayWithObject:[[self clickedNode] absolutePath]];
 
-	return [self absolutePathsOfBrowserSelectedFiles];
+	return [self absolutePathsOfSelectedFilesInBrowser];
 }
 
-- (NSArray*) quickLookPreviewItemsForBrowserSelectedFiles
+- (NSArray*) quickLookPreviewItemsForSelectedFilesInBrowser
 {
 	if (![self nodesAreSelected])
 		return [NSArray array];
@@ -265,7 +265,7 @@
 	return quickLookPreviewItems;
 }
 
-- (NSString*) enclosingDirectoryOfBrowserChosenFiles
+- (NSString*) enclosingDirectoryOfChosenFilesInBrowser
 {
 	if (![self nodesAreChosen])
 		return nil;
@@ -305,7 +305,7 @@
 
 - (IBAction) browserMenuOpenSelectedFilesInFinder:(id)sender
 {
-	NSArray* paths = [self absolutePathsOfBrowserChosenFiles];
+	NSArray* paths = [self absolutePathsOfChosenFilesInBrowser];
 	for (NSString* path in paths)
 		[[NSWorkspace sharedWorkspace] openFile:path];
 }
@@ -326,7 +326,7 @@
 	}
 
 	NSMutableArray* urls = [[NSMutableArray alloc] init];
-	for (NSString* path in [self absolutePathsOfBrowserChosenFiles])
+	for (NSString* path in [self absolutePathsOfChosenFilesInBrowser])
 	{
 		NSURL* newURL = [NSURL URLWithString:[path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 		[urls addObject:newURL];
@@ -337,7 +337,7 @@
 
 - (IBAction) browserMenuOpenTerminalHere:(id)sender
 {
-	NSString* theDir = [self enclosingDirectoryOfBrowserChosenFiles];
+	NSString* theDir = [self enclosingDirectoryOfChosenFilesInBrowser];
 	if (!theDir)
 		theDir = [self absolutePathOfRepositoryRoot];
 
@@ -617,7 +617,7 @@
 + (BrowserSelectionState*)	saveBrowserState:(FSBrowser*)browser
 {
 	// Save scroll positions of the columns
-	NSArray* selectedPaths = [browser absolutePathsOfBrowserSelectedFiles];
+	NSArray* selectedPaths = [browser absolutePathsOfSelectedFilesInBrowser];
 	BrowserSelectionState* newSavedState = [[BrowserSelectionState alloc] init];
 	newSavedState->theBrowser = browser;
 	int numberOfColumns = [browser lastColumn];

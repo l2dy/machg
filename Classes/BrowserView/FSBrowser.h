@@ -100,10 +100,10 @@
 - (HGStatus)	statusOfChosenPathsInBrowser;
 - (BOOL)		statusOfChosenPathsInBrowserContain:(HGStatus)status;
 - (BOOL)		repositoryHasFilesWhichContainStatus:(HGStatus)status;
-- (NSArray*)	absolutePathsOfBrowserSelectedFiles;
-- (NSArray*)	absolutePathsOfBrowserChosenFiles;
-- (NSArray*)	quickLookPreviewItemsForBrowserSelectedFiles;
-- (NSString*)	enclosingDirectoryOfBrowserChosenFiles;
+- (NSArray*)	absolutePathsOfSelectedFilesInBrowser;
+- (NSArray*)	absolutePathsOfChosenFilesInBrowser;
+- (NSArray*)	quickLookPreviewItemsForSelectedFilesInBrowser;
+- (NSString*)	enclosingDirectoryOfChosenFilesInBrowser;
 - (FSNodeInfo*)	parentNodeInfoForColumn:(NSInteger)column;
 
 

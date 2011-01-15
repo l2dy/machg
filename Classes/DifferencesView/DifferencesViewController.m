@@ -282,7 +282,7 @@
 
 - (IBAction) mainMenuDiffSelectedFiles:(id)sender
 {
-	NSArray* selectedPaths = [theBrowser absolutePathsOfBrowserChosenFiles];
+	NSArray* selectedPaths = [theBrowser absolutePathsOfChosenFilesInBrowser];
 	[myDocument viewDifferencesInCurrentRevisionFor:selectedPaths toRevision:[self revisionNumbers]];
 }
 - (IBAction) mainMenuDiffAllFiles:(id)sender
@@ -301,7 +301,7 @@
 
 - (IBAction) differencesMenuAnnotateSelectedFiles:(id)sender
 {
-	NSArray* selectedFiles = [theBrowser absolutePathsOfBrowserChosenFiles];
+	NSArray* selectedFiles = [theBrowser absolutePathsOfChosenFilesInBrowser];
 	NSMutableArray* options = [[NSMutableArray alloc] init];
 	
 	if (DefaultAnnotationOptionChangesetFromDefaults())		[options addObject:@"--changeset"];

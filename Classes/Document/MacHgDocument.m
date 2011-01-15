@@ -834,8 +834,8 @@
 // MARK:  Quick Look Panel Handling
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (NSInteger) numberOfPreviewItemsInPreviewPanel:(QLPreviewPanel*)panel							{ return [[[self theBrowser] absolutePathsOfBrowserSelectedFiles] count]; }
-- (id <QLPreviewItem>) previewPanel:(QLPreviewPanel*)panel previewItemAtIndex:(NSInteger)index	{ return [[[self theBrowser] quickLookPreviewItemsForBrowserSelectedFiles] objectAtIndex:index]; }
+- (NSInteger) numberOfPreviewItemsInPreviewPanel:(QLPreviewPanel*)panel							{ return [[[self theBrowser] absolutePathsOfSelectedFilesInBrowser] count]; }
+- (id <QLPreviewItem>) previewPanel:(QLPreviewPanel*)panel previewItemAtIndex:(NSInteger)index	{ return [[[self theBrowser] quickLookPreviewItemsForSelectedFilesInBrowser] objectAtIndex:index]; }
 
 - (BOOL) previewPanel:(QLPreviewPanel*)panel handleEvent:(NSEvent*)event
 {
@@ -1301,8 +1301,8 @@
 - (BOOL)			singleItemIsChosenInBrower				{ return [[self theBrowser] singleItemIsChosenInBrower]; }
 - (BOOL)			nodesAreChosenInBrowser					{ return [[self theBrowser] nodesAreChosen]; }
 - (HGStatus)		statusOfChosenPathsInBrowser			{ return [[self theBrowser] statusOfChosenPathsInBrowser]; }
-- (NSArray*)		absolutePathsOfBrowserChosenFiles		{ return [[self theBrowser] absolutePathsOfBrowserChosenFiles]; }
-- (NSString*)		enclosingDirectoryOfBrowserChosenFiles	{ return [[self theBrowser] enclosingDirectoryOfBrowserChosenFiles]; }
+- (NSArray*)		absolutePathsOfBrowserChosenFiles		{ return [[self theBrowser] absolutePathsOfChosenFilesInBrowser]; }
+- (NSString*)		enclosingDirectoryOfBrowserChosenFiles	{ return [[self theBrowser] enclosingDirectoryOfChosenFilesInBrowser]; }
 
 - (BOOL) pathsAreSelectedInBrowserWhichContainStatus:(HGStatus)status	{ return bitsInCommon(status, [[self theBrowser] statusOfChosenPathsInBrowser]); }
 - (BOOL) repositoryHasFilesWhichContainStatus:(HGStatus)status			{ return bitsInCommon(status, [[[self theBrowser] rootNodeInfo] hgStatus]); }

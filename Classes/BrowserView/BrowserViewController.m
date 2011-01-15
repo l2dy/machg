@@ -275,7 +275,7 @@
 }
 
 
-- (IBAction) mainMenuDiffSelectedFiles:(id)sender				{ [myDocument viewDifferencesInCurrentRevisionFor:[theBrowser absolutePathsOfBrowserChosenFiles] toRevision:nil]; }		// nil indicates the current revision
+- (IBAction) mainMenuDiffSelectedFiles:(id)sender				{ [myDocument viewDifferencesInCurrentRevisionFor:[theBrowser absolutePathsOfChosenFilesInBrowser] toRevision:nil]; }		// nil indicates the current revision
 - (IBAction) mainMenuDiffAllFiles:(id)sender					{ [myDocument viewDifferencesInCurrentRevisionFor:[myDocument absolutePathOfRepositoryRootAsArray] toRevision:nil]; }	// nil indicates the current revision
 - (IBAction) toolbarDiffFiles:(id)sender
 {
@@ -285,7 +285,7 @@
 		[self mainMenuDiffAllFiles:sender];	
 }
 
-- (IBAction) mainMenuAddRenameRemoveSelectedFiles:(id)sender	{ [myDocument primaryActionAddRenameRemoveFiles:[theBrowser absolutePathsOfBrowserChosenFiles]]; }
+- (IBAction) mainMenuAddRenameRemoveSelectedFiles:(id)sender	{ [myDocument primaryActionAddRenameRemoveFiles:[theBrowser absolutePathsOfChosenFilesInBrowser]]; }
 - (IBAction) mainMenuAddRenameRemoveAllFiles:(id)sender			{ [myDocument primaryActionAddRenameRemoveFiles:[myDocument absolutePathOfRepositoryRootAsArray]]; }
 - (IBAction) toolbarAddRenameRemoveFiles:(id)sender
 {
@@ -298,7 +298,7 @@
 
 
 
-- (IBAction) mainMenuRevertSelectedFiles:(id)sender				{ [myDocument primaryActionRevertFiles:[theBrowser absolutePathsOfBrowserChosenFiles] toVersion:nil]; }
+- (IBAction) mainMenuRevertSelectedFiles:(id)sender				{ [myDocument primaryActionRevertFiles:[theBrowser absolutePathsOfChosenFilesInBrowser] toVersion:nil]; }
 - (IBAction) mainMenuRevertAllFiles:(id)sender					{ [myDocument primaryActionRevertFiles:[myDocument absolutePathOfRepositoryRootAsArray] toVersion:nil]; }
 - (IBAction) mainMenuRevertSelectedFilesToVersion:(id)sender	{ [[myDocument theRevertSheetController] openRevertSheetWithSelectedFiles:sender]; }
 - (IBAction) toolbarRevertFiles:(id)sender
@@ -311,15 +311,15 @@
 
 
 
-- (IBAction) mainMenuDeleteSelectedFiles:(id)sender				{ [myDocument primaryActionDeleteSelectedFiles:[theBrowser absolutePathsOfBrowserChosenFiles]]; }
-- (IBAction) mainMenuAddSelectedFiles:(id)sender				{ [myDocument primaryActionAddSelectedFiles:[theBrowser absolutePathsOfBrowserChosenFiles]]; }
-- (IBAction) mainMenuUntrackSelectedFiles:(id)sender			{ [myDocument primaryActionUntrackSelectedFiles:[theBrowser absolutePathsOfBrowserChosenFiles]]; }
+- (IBAction) mainMenuDeleteSelectedFiles:(id)sender				{ [myDocument primaryActionDeleteSelectedFiles:[theBrowser absolutePathsOfChosenFilesInBrowser]]; }
+- (IBAction) mainMenuAddSelectedFiles:(id)sender				{ [myDocument primaryActionAddSelectedFiles:[theBrowser absolutePathsOfChosenFilesInBrowser]]; }
+- (IBAction) mainMenuUntrackSelectedFiles:(id)sender			{ [myDocument primaryActionUntrackSelectedFiles:[theBrowser absolutePathsOfChosenFilesInBrowser]]; }
 - (IBAction) mainMenuRenameSelectedFile:(id)sender				{ [[myDocument theRenameFileSheetController] openRenameFileSheet:sender]; }
 
 
-- (IBAction) mainMenuIgnoreSelectedFiles:(id)sender				{ [myDocument primaryActionIgnoreSelectedFiles:[theBrowser absolutePathsOfBrowserChosenFiles]]; }
-- (IBAction) mainMenuUnignoreSelectedFiles:(id)sender			{ [myDocument primaryActionUnignoreSelectedFiles:[theBrowser absolutePathsOfBrowserChosenFiles]]; }
-- (IBAction) mainMenuAnnotateSelectedFiles:(id)sender			{ [myDocument primaryActionAnnotateSelectedFiles:[theBrowser absolutePathsOfBrowserChosenFiles]]; }
+- (IBAction) mainMenuIgnoreSelectedFiles:(id)sender				{ [myDocument primaryActionIgnoreSelectedFiles:[theBrowser absolutePathsOfChosenFilesInBrowser]]; }
+- (IBAction) mainMenuUnignoreSelectedFiles:(id)sender			{ [myDocument primaryActionUnignoreSelectedFiles:[theBrowser absolutePathsOfChosenFilesInBrowser]]; }
+- (IBAction) mainMenuAnnotateSelectedFiles:(id)sender			{ [myDocument primaryActionAnnotateSelectedFiles:[theBrowser absolutePathsOfChosenFilesInBrowser]]; }
 
 
 
