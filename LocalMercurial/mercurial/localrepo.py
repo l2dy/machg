@@ -1248,6 +1248,10 @@ class localrepository(repo.repository):
                 n = p[0]
         return b
 
+    def debugignorepat(self):
+        ignore = self.dirstate._ignore
+        return ignore.includepat
+
     def between(self, pairs):
         r = []
 
