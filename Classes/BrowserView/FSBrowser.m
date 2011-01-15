@@ -195,6 +195,8 @@
 {
 	if (![self nodeIsClicked])
 		return NO;
+	if ([self clickedColumn] != [self selectedColumn])
+		return NO;
 	
 	NSArray* indexPaths = [self selectionIndexPaths];
 	for (NSIndexPath* indexPath in indexPaths)
