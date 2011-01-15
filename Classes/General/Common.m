@@ -960,7 +960,17 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 		[self compare:aString options:NSLiteralSearch] != NSOrderedSame;
 }
 
+- (BOOL) endsWithNewLine
+{
+	if ([self length] <= 0)
+		return NO;
+	unichar lastChar = [self characterAtIndex:[self length]-1];
+	return (lastChar == '\n' || lastChar == '\r');
+}
+
 @end
+
+
 
 
 // MARK: -
@@ -1044,8 +1054,6 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 }
 
 
-
-
 - (BOOL) isMatchedByRegex:(NSString*)regEx options:(RKLRegexOptions)options
 {
 	NSRange MaximumRange = NSMakeRange(0UL,NSUIntegerMax);
@@ -1058,6 +1066,8 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	return textRange.location != NSNotFound;
 }
 @end
+
+
 
 
 // MARK: -
@@ -1095,6 +1105,9 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 }
 @end
 
+
+
+
 // MARK: -
 @implementation NSMutableAttributedString ( NSMutableAttributedStringPlusInitilizers )
 + (NSMutableAttributedString*) string:(NSString*)string withAttributes:(NSDictionary*)theAttributes;
@@ -1106,6 +1119,8 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	[self appendAttributedString:[[NSAttributedString alloc] initWithString:string attributes:theAttributes]];
 }
 @end
+
+
 
 
 // MARK: -
@@ -1143,6 +1158,8 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 @end
 
 
+
+
 // MARK: -
 @implementation NSIndexSet ( NSIndexSetPlusAccessors )
 - (BOOL) intersectsIndexes:(NSIndexSet*)indexSet
@@ -1155,6 +1172,8 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 - (BOOL) freeOfIndex:(NSInteger)index	{ return ![self containsIndex:index]; }
 @end
+
+
 
 
 // MARK: -
@@ -1218,6 +1237,8 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 @end
 
 
+
+
 // MARK: -
 @implementation NSArray ( NSArrayPlusAccessors )
 
@@ -1256,6 +1277,8 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 @end
 
 
+
+
 // MARK: -
 @implementation NSMutableDictionary ( NSMutableDictionaryPlusAccessors )
 - (void) synchronizedSetObject:(id)anObject forKey:(id)aKey			{ @synchronized(self) { [self setObject:anObject forKey:aKey]; }; }
@@ -1286,6 +1309,8 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 @end
 
 
+
+
 // MARK: -
 @implementation NSFileManager ( NSFileManagerPlusAppending )
 - (void) appendString:(NSString*)string toFilePath:(NSString*)path
@@ -1298,6 +1323,8 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	[output writeData:[string dataUsingEncoding:NSUTF8StringEncoding]];
 }
 @end
+
+
 
 
 // MARK: -
@@ -1331,6 +1358,9 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 @end
 
+
+
+
 // MARK: -
 @implementation NSAlert ( NSAlertPlusExtensions )
 - (void) addSuppressionCheckBox
@@ -1342,6 +1372,8 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 @end
 
 
+
+
 // MARK: -
 @implementation NSColor ( NSColorPlusExtensions )
 - (NSColor*) intensifySaturationAndBrightness:(double)factor
@@ -1351,6 +1383,8 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	return [NSColor colorWithCalibratedHue: h saturation:s*factor brightness:b*factor alpha:a];
 }
 @end
+
+
 
 
 // MARK: -
@@ -1390,6 +1424,8 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 }
 
 @end
+
+
 
 
 // MARK: -

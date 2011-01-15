@@ -1682,6 +1682,8 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 		NSMutableString* hgignoreContents = [NSMutableString stringWithContentsOfFile:hgignorePath encoding:NSUTF8StringEncoding error:nil];
 		if (!hgignoreContents)
 			hgignoreContents = [[NSMutableString alloc] init];
+		else if (![hgignoreContents endsWithNewLine])
+			[hgignoreContents appendString:@"\n"];
 		
 		for (NSString* file in theSelectedFiles)
 		{
