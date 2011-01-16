@@ -160,7 +160,12 @@
 
 - (LabelType) labelTypeFilterOfButtons
 {
-	return ([showTags state] ? eTagLabel : eNoLabelType) | ([showBookmarks state] ? eBookmarkLabel : eNoLabelType) | ([showBranches state] ? eBranchLabel : eNoLabelType) | ([showOpenHeads state] ? eOpenHead : eNoLabelType);
+	return
+		([showTags state] ? eTagLabel : eNoLabelType) |
+		([showBookmarks state] ? eBookmarkLabel : eNoLabelType) |
+		([showBranches state] ? eOpenBranchLabel : eNoLabelType) |
+		([showClosedBranches state] ? eClosedBranch : eNoLabelType) |
+		([showOpenHeads state] ? eOpenHead : eNoLabelType);
 }
 
 - (void) recomputeLabelsTableData

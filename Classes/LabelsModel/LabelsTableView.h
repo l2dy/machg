@@ -25,6 +25,7 @@
 	IBOutlet NSButton*		showTags;
 	IBOutlet NSButton*		showBookmarks;
 	IBOutlet NSButton*		showBranches;
+	IBOutlet NSButton*		showClosedBranches;
 	IBOutlet NSButton*		showOpenHeads;
 
 	NSArray*				labelsTableData_;					// The array of ordered labels (tags, branches, bookmarks) which backs the allLabelsTableView

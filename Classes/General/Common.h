@@ -205,6 +205,7 @@ typedef enum
 	eClosedBranch	 = 1<<6,
 	eOpenHead		 = 1<<7,
 	eTagLabel		 = eGlobalTag | eLocalTag,
+	eOpenBranchLabel = eActiveBranch | eInactiveBranch,
 	eBranchLabel	 = eActiveBranch | eInactiveBranch | eClosedBranch,
 	eBookmarkLabel   = eBookmark,
 	eLocalLabel		 = eLocalTag | eBookmark,
