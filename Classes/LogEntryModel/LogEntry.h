@@ -36,10 +36,12 @@ void setupGlobalsForLogEntryPartsAndTemplate();
 
 - (RepositoryData*) repositoryData;
 
+- (NSArray*)  labels;
 - (NSArray*)  tags;
 - (NSArray*)  bookmarks;
 - (NSString*) branch;
-- (NSString*) labels;
+- (NSString*) closedBranch;
+- (NSString*) labelsString;
 
 - (id) labelsAndShortComment;
 

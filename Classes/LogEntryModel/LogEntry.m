@@ -110,11 +110,11 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 // MARK:  Derived information
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (NSArray*) labelArray { return [[collection_ revisionNumberToLabels] objectForKey:[self revision]]; }
+- (NSArray*) labels { return [[collection_ revisionNumberToLabels] objectForKey:[self revision]]; }
 
 - (NSArray*) tags
 {
-	NSArray* labels = [self labelArray];
+	NSArray* labels = [self labels];
 	if (IsEmpty(labels))
 		return [[NSArray alloc]init];
 	return [LabelData filterLabelsAndExtractNames:labels byType:eTagLabel];
@@ -122,7 +122,7 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 
 - (NSArray*) bookmarks
 {
-	NSArray* labels = [self labelArray];
+	NSArray* labels = [self labels];
 	if (IsEmpty(labels))
 		return [[NSArray alloc]init];
 	return [LabelData filterLabelsAndExtractNames:labels byType:eBookmarkLabel];
@@ -130,17 +130,25 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 
 - (NSString*) branch
 {
-	NSArray* labels = [self labelArray];
+	NSArray* labels = [self labels];
 	if (IsEmpty(labels))
 		return @"";
-	return @"";
 	NSArray* branchLabels = [LabelData filterLabels:labels byType:eBranchLabel];	
 	return IsNotEmpty(branchLabels) ? [[branchLabels objectAtIndex:0] name] : @"";
 }
 
-- (NSString*) labels
+- (NSString*) closedBranch
 {
-	NSArray* labels = [self labelArray];
+	NSArray* labels = [self labels];
+	if (IsEmpty(labels))
+		return @"";
+	NSArray* branchLabels = [LabelData filterLabels:labels byType:eClosedBranch];	
+	return IsNotEmpty(branchLabels) ? [[branchLabels objectAtIndex:0] name] : @"";
+}
+
+- (NSString*) labelsString
+{
+	NSArray* labels = [self labels];
 	if (IsEmpty(labels))
 		return @"";
 	NSArray* names = [LabelData filterLabelsAndExtractNames:labels byType:eNotOpenHead];
@@ -474,7 +482,7 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 
 - (id) labelsAndShortComment
 {
-	NSArray* labels = [self labelArray];
+	NSArray* labels = [self labels];
 	if (IsEmpty(labels))
 		return [self shortComment];
 

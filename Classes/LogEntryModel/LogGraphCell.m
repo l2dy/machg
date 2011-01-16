@@ -244,21 +244,17 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 
 - (void) drawGraphDot:(NSPoint) dotCenter;
 {
-	int radius = 3.0;
-	NSRect dotRect;
-	dotRect.origin.x = dotCenter.x - radius;
-	dotRect.origin.y = dotCenter.y - radius;
-	dotRect.size.width  = 2 * radius;
-	dotRect.size.height = 2 * radius;
-	
-	NSBezierPath* path = [NSBezierPath bezierPathWithOvalInRect:dotRect];
-
+	//
+	// Calculate the fillColor and strokeColor
+	//
 	static NSColor* defaultRed;
 	if (!defaultRed)
 		defaultRed = [NSColor colorWithCalibratedRed:0.4 green:0.0 blue:0.0 alpha:1.0];
 	NSColor* fillColor   = defaultRed;
 	NSColor* strokeColor = nil;
-
+	BOOL entryIsClosed   = NO;
+	BOOL hasLabels = IsNotEmpty([entry_ labels]);
+	
 	if ([[logTableView repositoryData] incompleteRevisionEntry] == entry_)
 	{
 		fillColor   = [NSColor whiteColor];
@@ -269,21 +265,59 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 		fillColor   = [LogEntryTableParentHighlightColor() intensifySaturationAndBrightness:4.0];
 		strokeColor = defaultRed;
 	}
-	else if (IsNotEmpty([entry_ branch]))
+	else if (hasLabels && IsNotEmpty([entry_ branch]))
 	{
 		fillColor   = [LogEntryTableBranchHighlightColor() intensifySaturationAndBrightness:4.0];
 		strokeColor = defaultRed;
 	}
-	else if (IsNotEmpty([entry_ bookmarks]))
+	else if (hasLabels && IsNotEmpty([entry_ bookmarks]))
 	{
 		fillColor = [LogEntryTableBookmarkHighlightColor() intensifySaturationAndBrightness:4.0];
 		strokeColor = defaultRed;
 	}
-	else if (IsNotEmpty([entry_ tags]))
+	else if (hasLabels && IsNotEmpty([entry_ tags]))
 	{
 		fillColor = [LogEntryTableTagHighlightColor() intensifySaturationAndBrightness:4.0];
 		strokeColor = defaultRed;
 	}
+
+	if (hasLabels && IsNotEmpty([entry_ closedBranch]))
+	{
+		entryIsClosed = YES;
+		fillColor   = [NSColor grayColor];
+		strokeColor = [NSColor blackColor];
+	}
+	
+	
+
+	NSBezierPath* path = nil;
+
+	// If the entry is closed we draw a bar, or else in the normal case we draw the dot.
+	if (entryIsClosed)
+	{
+		int halfWidth  = 5.0;
+		int halfHeight = 1.0;
+		NSRect dotRect;
+		dotRect.origin.x = dotCenter.x - halfWidth;
+		dotRect.origin.y = dotCenter.y - halfHeight;
+		dotRect.size.width  = 2 * halfWidth;
+		dotRect.size.height = 2 * halfHeight;
+		path = [NSBezierPath bezierPathWithRect:dotRect];
+	}
+	else
+	{
+		int radius = 3.0;
+		NSRect dotRect;
+		dotRect.origin.x = dotCenter.x - radius;
+		dotRect.origin.y = dotCenter.y - radius;
+		dotRect.size.width  = 2 * radius;
+		dotRect.size.height = 2 * radius;
+		path = [NSBezierPath bezierPathWithOvalInRect:dotRect];
+	}
+
+	//
+	// We are drawing a dot
+	//
 	
 	if (fillColor)
 	{
