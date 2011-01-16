@@ -531,7 +531,7 @@
 		NSString* parentRevisionStr = numberAsString(parentRevision);
 		NSString* parentRevisions = [repositoryData inMergeState] ? fstr(@"%@, %@", parentRevision, [repositoryData getHGParent2Revision]) : parentRevisionStr;
 
-		NSArray* labels     = [[repositoryData revisionNumberToLabels] synchronizedObjectForKey:parentRevision];
+		NSArray*  labels    = [[repositoryData revisionNumberToLabels] synchronizedObjectForKey:parentRevision];
 		NSArray*  tags      = [LabelData filterLabelsAndExtractNames:labels byType:eTagLabel];
 		NSArray*  bookmarks = [LabelData filterLabelsAndExtractNames:labels byType:eBookmarkLabel];
 		NSString* branch    = [repositoryData getHGBranchName];
