@@ -141,6 +141,15 @@
 
 - (IBAction) refreshBrowserContent:(id)sender	{ return [myDocument refreshBrowserContent:myDocument]; }
 
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  FSBrowser Protocol Methods
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
 - (NSArray*) statusLinesForPaths:(NSArray*)absolutePaths withRootPath:(NSString*)rootPath
 {
 	// Get status of everything relevant and return this array for use by the node tree to re-flush stale parts of it (or all of it.)
@@ -195,14 +204,43 @@
 }
 
 
-- (NSImage*) imageForMultipleCells:(NSArray*) cells
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Quicklook Handling
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (NSInteger) numberOfQuickLookPreviewItems		{ return [[theBrowser absolutePathsOfSelectedFilesInBrowser] count]; }
+
+- (NSArray*) quickLookPreviewItems
 {
-	FSNodeInfo* firstNode = [[cells objectAtIndex:0] nodeInfo];
-	NSString* extension = [[firstNode absolutePath] pathExtension];
-	for (FSBrowserCell* cell in cells)
-		if (![extension isEqualToString:[[[cell nodeInfo] absolutePath] pathExtension]])
-			return nil;	
-	return [firstNode iconImageForPreview];
+	if (![theBrowser nodesAreSelected])
+		return [NSArray array];
+	
+	NSMutableArray* quickLookPreviewItems = [[NSMutableArray alloc] init];
+	NSArray* indexPaths = [theBrowser selectionIndexPaths];
+	for (NSIndexPath* indexPath in indexPaths)
+	{
+		NSString* path = [[theBrowser itemAtIndexPath:indexPath] absolutePath];
+		if (!path)
+			continue;
+		NSInteger col = [indexPath length] - 1;
+		NSInteger row = [indexPath indexAtPosition:col];
+		NSRect rect   = [theBrowser frameinWindowOfRow:row inColumn:col];
+		[quickLookPreviewItems addObject:[PathQuickLookPreviewItem previewItemForPath:path withRect:rect]];
+	}
+	return quickLookPreviewItems;
+}
+
+- (void) keyDown:(NSEvent *)theEvent
+{
+    NSString* key = [theEvent charactersIgnoringModifiers];
+    if ([key isEqual:@" "])
+        [[self myDocument] togglePreviewPanel:self];
+	else
+        [super keyDown:theEvent];
 }
 
 
@@ -213,6 +251,16 @@
 // MARK: -
 // MARK: Preview Image
 // -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (NSImage*) imageForMultipleCells:(NSArray*) cells
+{
+	FSNodeInfo* firstNode = [[cells objectAtIndex:0] nodeInfo];
+	NSString* extension = [[firstNode absolutePath] pathExtension];
+	for (FSBrowserCell* cell in cells)
+		if (![extension isEqualToString:[[[cell nodeInfo] absolutePath] pathExtension]])
+			return nil;	
+	return [firstNode iconImageForPreview];
+}
 
 - (void) updateCurrentPreviewImage
 {
@@ -254,7 +302,7 @@
 	
 	// The browser selection might have changed update the quick look preview image if necessary. It would be really nice to have
 	// a NSBrowserSelectionDidChangeNotification
-	if ([QLPreviewPanel sharedPreviewPanelExists] && [[QLPreviewPanel sharedPreviewPanel] isVisible])
+	if ([myDocument quicklookPreviewIsVisible])
 		[[QLPreviewPanel sharedPreviewPanel] reloadData];
 }
 

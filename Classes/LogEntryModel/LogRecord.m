@@ -31,6 +31,9 @@ NSMutableDictionary* changesetHashToLogRecord = nil;				// changset (full) -> Lo
 																	// released. Once we load a LogRecord we have it forever
 
 
+
+
+
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 // MARK:  Local Utilities
@@ -56,6 +59,8 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 @synthesize		filesAdded = filesAdded_;
 @synthesize		filesModified = filesModified_;
 @synthesize		filesRemoved = filesRemoved_;
+
+
 
 
 
@@ -123,6 +128,8 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 
 
 
+
+
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 // MARK:  Status Testing
@@ -174,7 +181,6 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 }
 
 
-
 + (void) fillDetailsOfLogRecordsFrom:(NSInteger)lowLimit to:(NSInteger)highLimit forRepository:(RepositoryData*)repository
 {
 	if (lowLimit < 0 || highLimit < 0)
@@ -194,6 +200,7 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 	});
 }
 
+
 - (void) fillDetailsOfLogRecordForRepository:(RepositoryData*)repository
 {
 	if ([self detailsAreLoadingOrLoaded])
@@ -211,6 +218,7 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 			[[repository myDocument] postNotificationWithName:kLogEntriesDidChange];
 	});
 }
+
 
 - (void) fillFilesOfLogRecordForRepository:(RepositoryData*)repository
 {

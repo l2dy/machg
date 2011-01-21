@@ -79,12 +79,15 @@
 - (IBAction)  openWebsite:(id)sender;
 
 
+// Cache handling
+- (NSString*) cacheDirectory;
+
+
 // Changeset handling
 - (NSString*) repositoryIdentityForPath:(NSString*)path;
 - (void)	  setRepositoryIdentity:(NSString*)changeset ForPath:(NSString*)path;
 - (void)	  checkRepositoryIdentities:(NSTimer*)theTimer;
 - (void)	  computeRepositoryIdentityForPath:(NSString*)path;	// recompute the root changeset for a given path
-
 
 @end
 

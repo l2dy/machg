@@ -82,6 +82,7 @@
 
 // Test selection
 - (BOOL)		noRevisionSelected;
+- (BOOL)		revisionsAreSelected;
 - (BOOL)		singleRevisionSelected;
 - (BOOL)		multipleRevisionsSelected;
 
@@ -95,6 +96,9 @@
 - (NSArray*)	selectedEntries;	// Array of LogEntry
 - (NSNumber*)	selectedRevision;
 - (NSArray*)	selectedRevisions;	// Array of NSNumbers
+
+- (LogEntry*)   lowestSelectedEntry;	// The highest revision of the selected revisions
+- (LogEntry*)   highestSelectedEntry;	// The lowest  revision of the selected revisions
 
 - (LowHighPair) lowestToHighestSelectedRevisions;
 - (LowHighPair) parentToHighestSelectedRevisions;
@@ -115,6 +119,10 @@
 
 // Drawing methods
 - (void)		drawRow:(NSInteger)rowIndex clipRect:(NSRect)clipRect;
+
+
+// Graphic Operations
+- (NSRect)		rectOfRowInWindow:(NSInteger)row;
 
 @end
 

@@ -217,7 +217,8 @@
 - (FSNodeInfo*) nodeForPath:(NSString*)absolutePath;
 
 
-// Version Information
+// RepositoryData and Version Information
+- (RepositoryData*)	 repositoryData;
 - (NSNumber*)	getHGParent1Revision;
 - (NSNumber*)	getHGParent2Revision;
 - (NSString*)	getHGParent1Changeset;
@@ -313,9 +314,9 @@
 - (void)		viewDifferencesInCurrentRevisionFor:(NSArray*)absolutePaths toRevision:(NSString*)versionToCompareTo;
 
 
+// Quicklook handling
+- (BOOL)		quicklookPreviewIsVisible;
 - (IBAction)    togglePreviewPanel:(id)previewPanel;
-- (IBAction)	actionTestListingItem:(id)sender;
-- (IBAction)	doLinkUp:(id)sender;
 
 
 // Validation
@@ -330,13 +331,16 @@
 - (void)		saveDocumentIfNamed;
 
 
-// RepositoryData handling
-- (RepositoryData*)	 repositoryData;
+// Cache handling
+- (NSString*)	loadCachedCopyOfPath:(NSString*)absolutePath forChangeset:(NSString*)changeset;
 
 
 // Processes Management
 - (void)		dispatchToMercurialQueuedWithDescription:(NSString*)processDescription process:(BlockProcess)block;
 
+
+- (IBAction)	actionTestListingItem:(id)sender;
+- (IBAction)	doLinkUp:(id)sender;
 
 @end
 

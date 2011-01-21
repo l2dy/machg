@@ -105,6 +105,11 @@
 - (IBAction)	redisplayBrowser:(id)sender;
 - (void)		updateCurrentPreviewImage;
 
+
+// Quicklook
+- (NSInteger)	numberOfQuickLookPreviewItems;
+
+
 // Selecting revisions
 - (void)		compareLowHighValue:(NSValue*)pairAsValue;
 - (void)		compareLow:(NSString*)low toHigh:(NSString*)high;
@@ -134,8 +139,6 @@
 
 // Delegate Methods
 - (void)		logTableViewSelectionDidChange:(LogTableView*)theLogTable;
-- (NSArray*)	statusLinesForPaths:(NSArray*)absolutePaths withRootPath:(NSString*)rootPath;
-- (NSArray*)	resolveStatusLines: (NSArray*)absolutePaths withRootPath:(NSString*)rootPath;
 - (void)		splitViewDidResizeSubviews:(NSNotification*)aNotification;
 
 

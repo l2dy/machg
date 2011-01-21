@@ -38,11 +38,10 @@
 // -----------------------------------------------------------------------------------------------------------------------------------------
 @interface PathQuickLookPreviewItem : NSObject <QLPreviewItem>
 {
-	FSNodeInfo*    node_;
-	NSRect         itemRect_;
+	NSString*    path_;		// absolute path of the item to preview
+	NSRect       itemRect_;	// rect in the windows coordinate system
 }
-@property (readwrite,assign) FSNodeInfo*  node;
-+ (PathQuickLookPreviewItem*) previewItemFromNodeInfo:(FSNodeInfo*)node withRect:(NSRect)rect;
++ (PathQuickLookPreviewItem*) previewItemForPath:(NSString*)path withRect:(NSRect)rect;
 - (NSRect) frameRectOfPath;
 - (NSURL*) previewItemURL;
 @end
@@ -102,9 +101,12 @@
 - (BOOL)		repositoryHasFilesWhichContainStatus:(HGStatus)status;
 - (NSArray*)	absolutePathsOfSelectedFilesInBrowser;
 - (NSArray*)	absolutePathsOfChosenFilesInBrowser;
-- (NSArray*)	quickLookPreviewItemsForSelectedFilesInBrowser;
 - (NSString*)	enclosingDirectoryOfChosenFilesInBrowser;
 - (FSNodeInfo*)	parentNodeInfoForColumn:(NSInteger)column;
+
+
+// Graphic Operations
+- (NSRect)		frameinWindowOfRow:(NSInteger)row inColumn:(NSInteger)column;
 
 
 // Menu Item Actions

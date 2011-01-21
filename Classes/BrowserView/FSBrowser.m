@@ -27,15 +27,14 @@
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 @implementation PathQuickLookPreviewItem
-@synthesize node = node_;
-+ (PathQuickLookPreviewItem*) previewItemFromNodeInfo:(FSNodeInfo*)node withRect:(NSRect)rect
++ (PathQuickLookPreviewItem*) previewItemForPath:(NSString*)path withRect:(NSRect)rect
 {
 	PathQuickLookPreviewItem* previewItem = [[PathQuickLookPreviewItem alloc] init];
 	previewItem->itemRect_ = rect;
-	[previewItem setNode:node];
+	previewItem->path_ = path;
 	return previewItem;
 }
-- (NSURL*) previewItemURL	{ return [NSURL fileURLWithPath:[node_ absolutePath]]; }
+- (NSURL*) previewItemURL	{ return [NSURL fileURLWithPath:path_]; }
 - (NSRect) frameRectOfPath  { return itemRect_; }
 @end
 
@@ -247,25 +246,6 @@
 	return [self absolutePathsOfSelectedFilesInBrowser];
 }
 
-- (NSArray*) quickLookPreviewItemsForSelectedFilesInBrowser
-{
-	if (![self nodesAreSelected])
-		return [NSArray array];
-
-	NSMutableArray* quickLookPreviewItems = [[NSMutableArray alloc] init];
-	NSArray* indexPaths = [self selectionIndexPaths];
-	for (NSIndexPath* indexPath in indexPaths)
-	{
-		FSNodeInfo* node = [self itemAtIndexPath:indexPath];
-		if (!node)
-			continue;
-		NSInteger col = [indexPath length] - 1;
-		NSInteger row = [indexPath indexAtPosition:col];
-		NSRect rect   = [self frameOfRow:row inColumn:col];
-		[quickLookPreviewItems addObject:[PathQuickLookPreviewItem previewItemFromNodeInfo:node withRect:rect]];
-	}
-	return quickLookPreviewItems;
-}
 
 - (NSString*) enclosingDirectoryOfChosenFilesInBrowser
 {
@@ -294,6 +274,30 @@
 	// Find the selected item leading up to this column and grab its FSNodeInfo stored in that cell
 	FSBrowserCell* selectedCell = [self selectedCellInColumn:column-1];
 	return [selectedCell nodeInfo];
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Graphic Operations
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (NSRect) frameinWindowOfRow:(NSInteger)row inColumn:(NSInteger)column
+{
+	NSRect itemRect = [self frameOfRow:row inColumn:column];
+	NSRect itemRectInWindow = NSZeroRect;
+
+	// check that the path Rect is visible on screen
+	if (NSIntersectsRect([self visibleRect], itemRect))
+	{
+		// convert item rect to screen coordinates
+		itemRectInWindow = [self convertRectToBase:itemRect];
+		itemRectInWindow.origin = [[self window] convertBaseToScreen:itemRectInWindow.origin];			
+	}
+	return itemRectInWindow;
 }
 
 
@@ -344,24 +348,6 @@
 		theDir = [self absolutePathOfRepositoryRoot];
 
 	DoCommandsInTerminalAt(aliasesForShell(), theDir);
-}
-
-
-
-
-
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
-// MARK:  Key Events
-// -----------------------------------------------------------------------------------------------------------------------------------------
-
-- (void)keyDown:(NSEvent *)theEvent
-{
-    NSString* key = [theEvent charactersIgnoringModifiers];
-    if ([key isEqual:@" "])
-        [[self myDocument] togglePreviewPanel:self];
-	else
-        [super keyDown:theEvent];
 }
 
 

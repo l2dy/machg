@@ -694,7 +694,8 @@
 }
 
 
-- (PaneViewNum) currentPane								{ return currentPane_; }
+- (NSView*) currentPaneView							{ return [self paneView:currentPane_]; }
+- (PaneViewNum) currentPane							{ return currentPane_; }
 - (void) setCurrentPane:(PaneViewNum)newPaneNum
 {
 	if (currentPane_ == newPaneNum)
@@ -742,6 +743,8 @@
 
 	[NSAnimationContext endGrouping];
 	[self recordWindowFrameToDefaults];
+	if ([self quicklookPreviewIsVisible])
+		[[QLPreviewPanel sharedPreviewPanel] reloadData];
 }
 
 
@@ -834,8 +837,30 @@
 // MARK:  Quick Look Panel Handling
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (NSInteger) numberOfPreviewItemsInPreviewPanel:(QLPreviewPanel*)panel							{ return [[[self theBrowser] absolutePathsOfSelectedFilesInBrowser] count]; }
-- (id <QLPreviewItem>) previewPanel:(QLPreviewPanel*)panel previewItemAtIndex:(NSInteger)index	{ return [[[self theBrowser] quickLookPreviewItemsForSelectedFilesInBrowser] objectAtIndex:index]; }
+- (BOOL) quicklookPreviewIsVisible
+{
+	return [QLPreviewPanel sharedPreviewPanelExists] && [[QLPreviewPanel sharedPreviewPanel] isVisible];
+}
+
+- (NSInteger) numberOfPreviewItemsInPreviewPanel:(QLPreviewPanel*)panel
+{
+	NSView* currentPaneView = [self currentPaneView];
+	if ([currentPaneView respondsToSelector:@selector(numberOfQuickLookPreviewItems)])
+		return [(id)currentPaneView numberOfQuickLookPreviewItems];
+	return 0;
+}
+
+- (id <QLPreviewItem>) previewPanel:(QLPreviewPanel*)panel previewItemAtIndex:(NSInteger)index
+{
+	NSView* currentPaneView = [self currentPaneView];
+	if ([currentPaneView respondsToSelector:@selector(quickLookPreviewItems)])
+	{
+		NSArray* items = [currentPaneView performSelector:@selector(quickLookPreviewItems)];
+		if ([items count] > index)
+			return [items objectAtIndex:index];
+	}
+	return nil;
+}
 
 - (BOOL) previewPanel:(QLPreviewPanel*)panel handleEvent:(NSEvent*)event
 {
@@ -852,24 +877,12 @@
 - (NSRect) previewPanel:(QLPreviewPanel*)panel sourceFrameOnScreenForPreviewItem:(id <QLPreviewItem>)item
 {
 	PathQuickLookPreviewItem* previewItem = DynamicCast(PathQuickLookPreviewItem, item);
-	if (!previewItem)
-		return NSZeroRect;
-	NSRect pathRect = [previewItem frameRectOfPath];
-    NSRect visibleRect = [[self theBrowser] visibleRect];    // check that the path Rect is visible on screen
-
-    if (!NSIntersectsRect(visibleRect, pathRect))
-        return NSZeroRect;
-    
-    // convert icon rect to screen coordinates
-    pathRect = [[self theBrowser] convertRectToBase:pathRect];
-    pathRect.origin = [[[self theBrowser] window] convertBaseToScreen:pathRect.origin];
-    
-    return pathRect;
+	return previewItem ? [previewItem frameRectOfPath] : NSZeroRect;
 }
 
 - (IBAction) togglePreviewPanel:(id)previewPanel
 {
-    if ([QLPreviewPanel sharedPreviewPanelExists] && [[QLPreviewPanel sharedPreviewPanel] isVisible])
+    if ([self quicklookPreviewIsVisible])
         [[QLPreviewPanel sharedPreviewPanel] orderOut:nil];
 	else
         [[QLPreviewPanel sharedPreviewPanel] makeKeyAndOrderFront:nil];
@@ -897,11 +910,11 @@
 {
 	NSMenuItem* menuItem = DynamicCast(NSMenuItem, anItem);
 	if (menuItem)
-	{
-		BOOL previewIsOpen = [QLPreviewPanel sharedPreviewPanelExists] && [[QLPreviewPanel sharedPreviewPanel] isVisible];
-		[menuItem setTitle: previewIsOpen ? @"Close Quick Look panel" : @"Open Quick Look panel"];
-	}
-	return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self nodesAreChosenInBrowser];
+		[menuItem setTitle: [self quicklookPreviewIsVisible] ? @"Close Quick Look panel" : @"Open Quick Look panel"];
+	return [self repositoryIsSelectedAndReady] &&
+			(([self showingBrowserView]     && [[[self theBrowserView]     theBrowser] nodesAreChosen]) ||
+			 ([self showingDifferencesView] && [[[self theDifferencesView] theBrowser] nodesAreChosen]) ||
+			 ([self showingHistoryView]     && [[[self theHistoryView]   logTableView] revisionsAreSelected]));
 }
 
 
@@ -1062,31 +1075,41 @@
 
 
 
+
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK: RepositoryData Handling
+// MARK:  Cache handling
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) initializeRepositoryData
+- (NSString*) loadCachedCopyOfPath:(NSString*)absolutePath forChangeset:(NSString*)changeset
 {
-	@synchronized(self)
+	NSString* cacheDir = [[AppController sharedAppController] cacheDirectory];
+	if (!cacheDir)
+		return nil;
+	
+	NSString* baseDir  = [cacheDir stringByAppendingPathComponent:fstr(@"snapshots/%@", changeset)];
+	NSString* rootPath = [self absolutePathOfRepositoryRoot];
+	NSString* theRelativePath = pathDifference(rootPath, absolutePath);
+	NSString* newPath = [baseDir stringByAppendingPathComponent:theRelativePath];
+	
+	// If the snapshot file already exists then we have cached it before and we are done
+	if (pathIsExistent(newPath))
+		return newPath;
+	
+	// Create the intermediate directories if we have to
+	NSString* containingDir = [newPath stringByDeletingLastPathComponent];
+	if (!pathIsExistentDirectory(containingDir))
 	{
-		DebugLog(@"Initializing log entry collection");
-		NSString* rootPath = [self absolutePathOfRepositoryRoot];
-		repositoryData_ = [[RepositoryData alloc] initWithRootPath:rootPath andDocument:self];
+		NSError* theError;
+		NSFileManager* fileManager = [NSFileManager defaultManager];
+		[fileManager createDirectoryAtPath:containingDir withIntermediateDirectories:YES attributes:nil error:&theError];
 	}
-}
-
-- (RepositoryData*) repositoryData
-{
-	if (repositoryData_)
-		return repositoryData_;
-	@synchronized(self)
-	{
-		if (!repositoryData_)
-			[self initializeRepositoryData];
-	}
-	return repositoryData_;
+	
+	NSMutableArray* argsCat = [NSMutableArray arrayWithObjects:@"cat", @"--output", newPath, @"--rev", changeset, theRelativePath, nil];
+	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsCat  fromRoot:rootPath];
+	if ([results hasErrors])
+		return nil;
+	return newPath;
 }
 
 
@@ -1287,6 +1310,37 @@
 //	NSMutableArray* watchedPaths  = [events_ watchedPaths];
 //	DebugLog(@"The currently watched  Paths : %@", watchedPaths);
 //	DebugLog(@"streamDescription %@", [events_ streamDescription]);
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: RepositoryData Handling
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (void) initializeRepositoryData
+{
+	@synchronized(self)
+	{
+		DebugLog(@"Initializing log entry collection");
+		NSString* rootPath = [self absolutePathOfRepositoryRoot];
+		repositoryData_ = [[RepositoryData alloc] initWithRootPath:rootPath andDocument:self];
+	}
+}
+
+- (RepositoryData*) repositoryData
+{
+	if (repositoryData_)
+		return repositoryData_;
+	@synchronized(self)
+	{
+		if (!repositoryData_)
+			[self initializeRepositoryData];
+	}
+	return repositoryData_;
 }
 
 

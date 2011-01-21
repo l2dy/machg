@@ -427,6 +427,40 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
+// MARK:  Shutting down
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+
+- (NSString*) cacheDirectory
+{
+	NSString* cacheDir = nil;
+	NSArray* paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
+	if ([paths count])
+	{
+		NSString* bundleName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
+		cacheDir = [[paths objectAtIndex:0] stringByAppendingPathComponent:bundleName];
+	}
+	return cacheDir;	
+}
+
+- (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
+{
+	// Remove the cache directory
+	NSString* cacheDir = [self cacheDirectory];
+	if (cacheDir)
+	{
+		NSFileManager* fileManager = [NSFileManager defaultManager];
+		NSString* snapshotsDir = [cacheDir stringByAppendingPathComponent:@"snapshots"];
+		NSError* theError;
+		[fileManager removeItemAtPath:snapshotsDir error:&theError];
+	}
+
+    return NSTerminateNow;
+}
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
 // MARK: Preference Handling
 // -----------------------------------------------------------------------------------------------------------------------------------------
 

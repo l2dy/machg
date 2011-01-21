@@ -245,6 +245,12 @@
 	[myDocument viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:revisionNumbers];
 }
 
+- (void) logTableViewSelectionDidChange:(LogTableView*)theLogTable;
+{
+	if ([myDocument quicklookPreviewIsVisible])
+		[[QLPreviewPanel sharedPreviewPanel] reloadData];
+}
+
 
 
 
@@ -444,6 +450,61 @@
 	[self validateButtons:self];
 }
 
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Quicklook Handling
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (NSArray*) quickLookPreviewItems
+{	
+	NSArray* entries = [logTableView selectedEntries];
+	if ([entries count] <= 0)
+		return [NSArray array];
+		
+	for (LogEntry* entry in entries)
+		 if (![entry isFullyLoaded])
+			 [entry fullyLoadEntry];
+
+	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+	NSMutableArray* quickLookPreviewItems = [[NSMutableArray alloc] init];
+	NSMutableSet* absolutePaths = [[NSMutableSet alloc]init];
+
+	LogEntry* highestEntry = [logTableView highestSelectedEntry];
+	NSString* highestSelectedChangeset = [highestEntry changeset];
+	NSRect itemRect = [logTableView rectOfRowInWindow:[logTableView tableRowForRevision:[highestEntry revision]]];
+
+	for (LogEntry* entry in entries)
+	{
+		for (NSString* path in [entry filesAdded])
+			[absolutePaths addObject:[rootPath stringByAppendingPathComponent:path]];
+		for (NSString* path in [entry filesModified])
+			 [absolutePaths addObject:[rootPath stringByAppendingPathComponent:path]];
+	}
+
+	for (NSString* absolutePath in absolutePaths)
+	{
+		NSString* pathOfCachedCopy = [myDocument loadCachedCopyOfPath:absolutePath forChangeset:highestSelectedChangeset];
+		if (pathOfCachedCopy)
+			[quickLookPreviewItems addObject:[PathQuickLookPreviewItem previewItemForPath:pathOfCachedCopy withRect:itemRect]];
+	}
+	
+	return quickLookPreviewItems;
+}
+
+- (NSInteger) numberOfQuickLookPreviewItems		{ return [[self quickLookPreviewItems] count]; }
+
+- (void) keyDown:(NSEvent *)theEvent
+{
+    NSString* key = [theEvent charactersIgnoringModifiers];
+    if ([key isEqual:@" "])
+        [[self myDocument] togglePreviewPanel:self];
+	else
+        [super keyDown:theEvent];
+}
 
 
 @end

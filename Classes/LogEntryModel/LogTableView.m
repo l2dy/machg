@@ -262,6 +262,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (BOOL)		noRevisionSelected			{ return [[self selectedRowIndexes] count] == 0; }
+- (BOOL)		revisionsAreSelected		{ return [[self selectedRowIndexes] count] >= 1; }
 - (BOOL)		singleRevisionSelected		{ return [[self selectedRowIndexes] count] == 1; }
 - (BOOL)		multipleRevisionsSelected	{ return [[self selectedRowIndexes] count] > 1; }
 
@@ -305,6 +306,28 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	for (NSInteger row = [rows firstIndex]; row != NSNotFound; row = [rows indexGreaterThanIndex: row])
 		[revisions addObjectIfNonNil:[[self entryForTableRow:row] revision]];
 	return revisions;
+}
+
+- (LogEntry*) lowestSelectedEntry
+{
+	NSIndexSet* rows = [self selectedRowIndexes];
+	if (!rows || IsEmpty(rows))
+		return nil;
+	
+	LogEntry* entryFirst = [self entryForTableRow:[rows firstIndex]];
+	LogEntry* entryLast  = [self entryForTableRow:[rows lastIndex]];
+	return ([entryFirst revisionInt] < [entryLast revisionInt]) ? entryFirst : entryLast;
+}
+
+- (LogEntry*) highestSelectedEntry
+{
+	NSIndexSet* rows = [self selectedRowIndexes];
+	if (!rows || IsEmpty(rows))
+		return nil;
+	
+	LogEntry* entryFirst = [self entryForTableRow:[rows firstIndex]];
+	LogEntry* entryLast  = [self entryForTableRow:[rows lastIndex]];
+	return ([entryFirst revisionInt] < [entryLast revisionInt]) ? entryLast : entryFirst;
 }
 
 - (LowHighPair) lowestToHighestSelectedRevisions
@@ -749,6 +772,31 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	}
 	[super drawRow:rowIndex clipRect:clipRect];
 }
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Graphic Operations
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (NSRect) rectOfRowInWindow:(NSInteger)row
+{
+	NSRect itemRect = [self rectOfRow:row];
+	NSRect itemRectInWindow = NSZeroRect;
+	
+	if (NSIntersectsRect([self visibleRect], itemRect))
+	{
+		// convert item rect to screen coordinates
+		itemRectInWindow = [self convertRectToBase:itemRect];
+		itemRectInWindow.origin = [[self window] convertBaseToScreen:itemRectInWindow.origin];			
+	}
+	return itemRectInWindow;
+}
+
+
 
 @end
 

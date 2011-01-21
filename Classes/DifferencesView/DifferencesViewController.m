@@ -12,6 +12,7 @@
 #import "MacHgDocument.h"
 #import "ResultsWindowController.h"
 #import "LogTableView.h"
+#import "LogEntry.h"
 #import "FSBrowser.h"
 #import "FSBrowserCell.h"
 #import "FSNodeInfo.h"
@@ -237,11 +238,24 @@
 		[theBrowser refreshBrowserPaths:[RepositoryPaths fromRootPath:rootPath]  finishingBlock:nil];
 }
 
+
 - (void) updateCurrentPreviewImage
 {
+	// In order to improve performance, we only want to update the preview image if the user pauses for at
+	// least a moment on a select node. This allows one to scroll through the nodes at a more acceptable pace.
+	// First, we cancel the previous request so we don't get a whole bunch of them queued up.
+	[[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateCurrentPreviewImageDoIt) object:nil];
+	[self performSelector:@selector(updateCurrentPreviewImageDoIt) withObject:nil afterDelay:0.05];
 }
 
 
+- (void) updateCurrentPreviewImageDoIt
+{
+	// The browser selection might have changed update the quick look preview image if necessary. It would be really nice to have
+	// a NSBrowserSelectionDidChangeNotification
+	if ([myDocument quicklookPreviewIsVisible])
+		[[QLPreviewPanel sharedPreviewPanel] reloadData];
+}
 
 
 
@@ -371,7 +385,7 @@
 	}
 }
 
-- (IBAction) browserAction:(id)browser	{ }
+- (IBAction) browserAction:(id)browser	{ [self updateCurrentPreviewImage]; }
 - (IBAction) browserDoubleAction:(id)browser
 {
 	SEL theAction = [self actionForDoubleClickEnum:[theBrowser actionEnumForBrowserDoubleClick]];
@@ -450,6 +464,61 @@
 			[baseSV setPosition:svTwoPosition ofDividerAtIndex:0];
 }
 
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Quicklook Handling
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (NSInteger) numberOfQuickLookPreviewItems		{ return [[theBrowser absolutePathsOfSelectedFilesInBrowser] count]; }
+
+- (NSArray*) quickLookPreviewItems
+{
+	if (![theBrowser nodesAreSelected])
+		return [NSArray array];
+	
+	NSNumber* compareRev = [compareLogTableView selectedRevision];
+	if (IsEmpty(compareRev))
+		return [NSArray array];
+	if ([compareRev isEqualTo:[compareLogTableView incompleteRevision]])
+		compareRev = nil;
+	
+	NSMutableArray* quickLookPreviewItems = [[NSMutableArray alloc] init];
+	NSArray* indexPaths = [theBrowser selectionIndexPaths];
+	for (NSIndexPath* indexPath in indexPaths)
+	{
+		NSString* path = [[theBrowser itemAtIndexPath:indexPath] absolutePath];
+		if (!path)
+			continue;
+		
+		NSInteger col = [indexPath length] - 1;
+		NSInteger row = [indexPath indexAtPosition:col];
+		NSRect itemRect   = [theBrowser frameinWindowOfRow:row inColumn:col];
+		
+		if (!compareRev)
+			[quickLookPreviewItems addObject:[PathQuickLookPreviewItem previewItemForPath:path withRect:itemRect]];
+		else
+		{
+			NSString* changesetOfCompareRev = [[compareLogTableView selectedEntry] changeset];
+			NSString* pathOfCachedCopy = [myDocument loadCachedCopyOfPath:path forChangeset:changesetOfCompareRev];
+			if (pathOfCachedCopy)
+				[quickLookPreviewItems addObject:[PathQuickLookPreviewItem previewItemForPath:pathOfCachedCopy withRect:itemRect]];
+		}
+	}
+	return quickLookPreviewItems;
+}
+
+- (void) keyDown:(NSEvent *)theEvent
+{
+    NSString* key = [theEvent charactersIgnoringModifiers];
+    if ([key isEqual:@" "])
+        [[self myDocument] togglePreviewPanel:self];
+	else
+        [super keyDown:theEvent];
+}
 
 
 @end
