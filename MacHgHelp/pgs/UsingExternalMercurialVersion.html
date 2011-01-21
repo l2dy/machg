@@ -41,28 +41,42 @@
    </div>
 </div>
 
-<p>You should almost always use the version of Mercurial which is built into MacHg. It has been tested to work correctly with the version of MacHg you are using. Using a different version of Mercurial will very likely lead to problems. However some developers and other people might like to experiment with using a different version of Mercurial. (In fact personally I would have not included this option at all but there has been a large amount of pressure to include it.)</p>
+<p>MacHg includes its own slightly modified version of Mercurial. There are several small but important changes which have been added to this version of Mercurial. Largely they center around changes which are important for GUI clients but might not be suitable for the main Mercurial software. Note I (Jason Harris) have submitted all changes back to the main Mercurial project whenever possible or applicable. You can consult the source code of MacHg for any changes to the included Mercurial binaries to see the changes, but some of the most important changes are to do with the handling of temporary files Mercurial creates. In MacHg it's important that these temporary files can be easily ignored using the apple OSX FSEvents manager to reduce updates and possible race conditions.
+</p>
+<p>
+However some developers and other people might like to experiment with using a different version of Mercurial. Previously, I had included such a GUI option inside MacHg. However, despite multiple warnings users who experimented with this option were having problems. Thus upon reflection I removed the GUI option in MacHg to specify using a different Mercurial. Moreover, anyone who knows how to patch Mercurial can easily change the version included in MacHg for themselves.)</p>
 
 <div class="task-box-spacing">
    <div class="task-box-frame">
       <h2>To use an External Mercurial Version:</h2>
       <ol>
          <li>
-            <p>Open the MacHg preferences and choose Advanced Preferences</p>
+            <p>Patch the new Mercurial binaries with the appropriate patches that are present in the MacHg repository.</p>
          </li>
          <li>
-            <p>Change the popup 'Mercurial Binary' from 'Builtin' to 'Other'</p>
+            <p>Add the extensions included in MacHg.app/Contents/PlugIns/LocalMercurial/hgext/ to your new Mercurial layout. </p>
          </li>
          <li>
-            <p>In the text field that appears enter the absolute path to the mercurial binary you want to use.</p>
+            <p>Open the MacHg.app application package and replace the mercurial binaries at: /MacHg.app/Contents/PlugIns/LocalMercurial with your new patched version of Mercurial.</p>
          </li>
       </ol>
    </div>
 </div>
 
 <div class="important">
-   <p> <span class="important-prefix">Important:</span> The external Mercurial must have the exact same extensions included in it that the Mercurial included with MacHg uses. Currently this means you must include both the modified histedit and the modified collapse extensions which are included in the bundled version of Mercurial which is included in MacHg. Moreover these modified extensions need to be placed in the extensions folder of the external Mercurial. Specifically you must copy into the external Mercurial extensions folder the following extensions:</p>
+   <p> <span class="important-prefix">Important:</span> The external Mercurial binaries must at a minimum have the patches to do with the temporary file handling (see changeset c5cdee75ac13). Changesets 0c2128e821e1, 8770a011d235, and 27871ee06734 are also highly recommended but not essential.</p>
+</div>
+
+
+<div class="important">
+   <p> <span class="important-prefix">Important:</span> The external Mercurial must have the exact same extensions included in it that the Mercurial included with MacHg uses. Moreover these modified extensions need to be placed in the extensions folder of the external Mercurial. Specifically you must copy into the external Mercurial extensions folder the following extensions:</p>
         <ol>
+         <li>
+            <p>MacHg.app/Contents/PlugIns/LocalMercurial/hgext/combinedinfo.py</p>
+         </li>
+         <li>
+            <p>MacHg.app/Contents/PlugIns/LocalMercurial/hgext/cedit/</p>
+         </li>
          <li>
             <p>MacHg.app/Contents/PlugIns/LocalMercurial/hgext/collapse.py</p>
          </li>
