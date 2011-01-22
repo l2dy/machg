@@ -55,6 +55,8 @@
 		oldLogGraph_ = [[LogGraph alloc] initWithRepositoryData:self];
 		rootPath_ = rootPath;
 		myDocument = doc;
+		hgIgnoreFilesRegEx_      = nil;
+		hgIgnoreFilesTimeStamp_  = nil;
 		
 		// Parent, tip, labels, and incomplete entry
 		parent1Revision_		 = nil;
@@ -148,6 +150,49 @@
 		[myDocument postNotificationWithName:kRepositoryDataDidChange];
 		[myDocument postNotificationWithName:kLogEntriesDidChange];
 	});
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Ignore file handling
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+// We need to detect if there have been changes to either the repo/.hgignore or the ~/.hgignore file.
+- (BOOL) combinedHGIgnoreRegExNeedsRefresh
+{
+	if (!hgIgnoreFilesRegEx_ || !hgIgnoreFilesTimeStamp_)
+		return YES;
+
+	// The following stat checks are fairly fast around the order of 3 milli-seconds on 10.6, dual core 2.66Ghz imac.
+	NSFileManager* fileManager = [NSFileManager defaultManager];
+	NSString* userHgignorePath = [NSHomeDirectory() stringByAppendingPathComponent:@".hgignore"];
+	NSString* repohgIgnorePath  = fstr(@"%@/.hgignore",  rootPath_);
+	NSDate* userhgIgnore = [[fileManager attributesOfItemAtPath:userHgignorePath error:nil] fileModificationDate];
+	NSDate* repohgIgnore = [[fileManager attributesOfItemAtPath:repohgIgnorePath error:nil] fileModificationDate];
+	NSDate* now = [NSDate date];
+	if (userhgIgnore && [userhgIgnore isBefore:now] && [hgIgnoreFilesTimeStamp_ isBefore:userhgIgnore])
+		return YES;
+	if (repohgIgnore && [repohgIgnore isBefore:now] && [hgIgnoreFilesTimeStamp_ isBefore:repohgIgnore])
+		return YES;
+	return NO;
+}
+
+
+- (NSString*) combinedHGIgnoreRegEx
+{
+	if (![self combinedHGIgnoreRegExNeedsRefresh])
+		return hgIgnoreFilesRegEx_;
+	NSMutableArray* argsDebugIgnore = [NSMutableArray arrayWithObjects:@"debugignore", nil];
+	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsDebugIgnore  fromRoot:rootPath_];
+	if ([results hasErrors])
+		return nil;
+	hgIgnoreFilesTimeStamp_ = [NSDate date];
+	hgIgnoreFilesRegEx_ = trimString(results.outStr);
+	return hgIgnoreFilesRegEx_;
 }
 
 

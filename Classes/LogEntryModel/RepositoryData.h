@@ -27,6 +27,10 @@
 	
 	LogGraph*					logGraph_;					// All the current line segments
 	LogGraph*					oldLogGraph_;				// All the old line segments
+
+	NSString*					hgIgnoreFilesRegEx_;		// This regular expression represents the combined regular expression
+															// representing all of the .hgignore files on the path.
+	NSDate*						hgIgnoreFilesTimeStamp_;	// This is the timestamp when we determined hgIgnoreFilesRegEx_ 
 	
 	// Parent and tip info
 	NSNumber*					parent1Revision_;			// parent1Rev
@@ -36,8 +40,7 @@
 	NSNumber*					tipRevision_;				// tipRev
 	NSString*					tipChangeset_;				// tipChangeset
 	NSString*					branchName_;				// name of the current branch we are on
-	NSMutableDictionary*		revisionNumberToLabels_;	// A dictionary mapping (NSNumber*)rev -> (NSArray*)of(LabelData*)labels	
-
+	NSMutableDictionary*		revisionNumberToLabels_;	// A dictionary mapping (NSNumber*)rev -> (NSArray*)of(LabelData*)labels
 	BOOL						hasMultipleOpenHeads_;
 }
 
@@ -47,8 +50,13 @@
 @property (readonly,assign) LogGraph*		logGraph;
 @property (readonly,assign) LogGraph*		oldLogGraph;
 
+
 // Initilization
 - (id)			initWithRootPath:(NSString*)rootPath andDocument:(MacHgDocument*)doc;
+
+
+// .hgignore handling
+- (NSString*)	combinedHGIgnoreRegEx;
 
 
 // Version Information

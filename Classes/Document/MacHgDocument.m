@@ -1180,6 +1180,27 @@
 // MARK: FSEvents
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+// When looking at FSEvents we should discard event paths which match something in the regex which represents the .hgignore files
+- (BOOL) absolutePathMatchedByHGIgnore:(NSString*)path
+{
+	NSString* regex = [[self repositoryData] combinedHGIgnoreRegEx];
+	if (!regex)
+		return NO;
+	
+	// Check all sub directories for a match
+	NSString* relativePath = pathDifference([[self repositoryData] rootPath], path);
+	NSArray* pathComponents = [relativePath pathComponents];
+	NSString* builtPath = @"";
+	for (NSString* component in pathComponents)
+	{
+		builtPath = [builtPath stringByAppendingPathComponent:component];
+		if ([builtPath isMatchedByRegex:regex options:RKLMultiline])
+			return YES;
+	}
+	return NO;
+}
+
+
 // Sets up the event listener using FSEvents and sets its delegate to this controller. The event stream is started by calling
 // startWatchingPaths: while passing the paths to be watched.
 - (void) setupEventlistener
@@ -1205,6 +1226,7 @@
 	NSString* rootDotHGMacHgUndoDirPath = fstr(@"%@/macHgUndo", rootDotHGDirPath);
 	BOOL postNotification = NO;
 	for (NSString* path in eventPaths)
+	{
 		if (pathContainedIn(rootDotHGDirPath, path))
 		{
 			if (pathContainedIn(rootDotHGFSChecksDirPath, path))
@@ -1214,9 +1236,14 @@
 			if (pathContainedIn(rootDotHGMacHgUndoDirPath, path))
 				continue;	// If the path is further contained in the undo directory then we also ignore it since we are doing a backup for undo.
 			postNotification = YES;
+			continue;
 		}
-		else
-			[filteredPaths addObject:path];
+
+		if ([self absolutePathMatchedByHGIgnore:path])
+			continue;
+
+		[filteredPaths addObject:path];
+	}
 
 	if (postNotification && ![self underlyingRepositoryChangedEventIsQueued])
 	{
@@ -1226,6 +1253,9 @@
 	}
 	
 	NSArray* canonicalized = pruneContainedPaths(filteredPaths);
+	if (IsEmpty(canonicalized))
+		return;
+
 	DebugLog(@"Some file paths changed. File events are %@.\nThe raw paths are %@. The canonicalized paths are %@", [self eventsAreSuspended]? @"suspended":@"acted on immediately", eventPaths, canonicalized);
 	if (![self eventsAreSuspended])
 		[self refreshBrowserPaths:canonicalized];
