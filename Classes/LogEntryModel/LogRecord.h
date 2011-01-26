@@ -64,6 +64,7 @@ void setupGlobalsForLogRecordPartsAndTemplate();
 - (NSString*) shortDate;
 - (NSString*) fullDate;
 - (NSString*) isoDate;
+- (NSDate*)   rawDate;
 
 
 //+ (LogRecord*) fullyLoadRecordForChangeset:(NSString*)changeset andRepository:(RepositoryData*)repository;

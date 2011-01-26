@@ -346,6 +346,7 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 - (NSString*) shortDate			{ return [fullRecord_ shortDate]; }
 - (NSString*) fullDate			{ return [fullRecord_ fullDate]; }
 - (NSString*) isoDate			{ return [fullRecord_ isoDate]; }
+- (NSDate*)   rawDate			{ return [fullRecord_ rawDate]; }
 
 
 
@@ -400,6 +401,9 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 //		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", children_))];
 //	}
 	
+	if (![self isFullyLoaded])
+		return verboseEntry;
+
 	if (stringIsNonWhiteSpace([self fullAuthor]))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Author:\t")];
@@ -411,7 +415,7 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", nonNil([self author])))];
 	}
 	
-	if (YES)
+	if (IsNotEmpty([self rawDate]))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Date:\t")];
 		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@   ", [self shortDate]))];

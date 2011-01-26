@@ -339,6 +339,8 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 	return [dateFormatter stringFromDate:date_];
 }
 
+- (NSDate*) rawDate { return date_; }
+
 - (NSString*) isoDate { return [date_ isodateDescription]; }
 
 - (void) setDate:(NSString*)dateString

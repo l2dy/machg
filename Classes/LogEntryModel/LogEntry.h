@@ -101,6 +101,7 @@ void setupGlobalsForLogEntryPartsAndTemplate();
 - (NSString*) shortDate;
 - (NSString*) fullDate;
 - (NSString*) isoDate;
+- (NSDate*)   rawDate;
 
 
 // Presentation of Entry
