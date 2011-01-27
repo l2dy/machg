@@ -1326,6 +1326,7 @@
 	@synchronized(self)
 	{
 		DebugLog(@"Initializing log entry collection");
+		[repositoryData_ stopObserving];	// Stop any old repositoyData object from recieving notifications.
 		NSString* rootPath = [self absolutePathOfRepositoryRoot];
 		repositoryData_ = [[RepositoryData alloc] initWithRootPath:rootPath andDocument:self];
 	}
@@ -1341,6 +1342,14 @@
 			[self initializeRepositoryData];
 	}
 	return repositoryData_;
+}
+
+- (void) abandonCurrentRepository
+{
+	[events_ stopWatchingPaths];
+	[self actionSwitchViewToBackingView:self];
+	[repositoryData_ stopObserving];	// Stop any old repositoyData object from recieving notifications.
+	repositoryData_ = nil;
 }
 
 
@@ -1530,8 +1539,7 @@
 	
 	if (![node isExistentLocalRepositoryRef])
 	{
-		repositoryData_ = nil;
-		[self actionSwitchViewToBackingView:self];
+		[self abandonCurrentRepository];
 		return;
 	}
 

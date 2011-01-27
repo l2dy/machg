@@ -57,6 +57,7 @@
 		myDocument = doc;
 		hgIgnoreFilesRegEx_      = nil;
 		hgIgnoreFilesTimeStamp_  = nil;
+		badRepositoryReadCount_  = 0;
 		
 		// Parent, tip, labels, and incomplete entry
 		parent1Revision_		 = nil;
@@ -357,8 +358,10 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 			{
 				dispatch_async(mainQueue(), ^{
 					DebugLog(@"Bad repository read in loadCombinedInformationAndNotify.");
-					[[myDocument queueForUnderlyingRepositoryChangedViaEvents] addBlockOperation: ^{
-						[myDocument postNotificationWithName:kUnderlyingRepositoryChanged];
+					badRepositoryReadCount_++;
+					if (pathIsExistentDirectory([rootPath_ stringByAppendingPathComponent:@".hg"]) && badRepositoryReadCount_ < 4)
+						[[myDocument queueForUnderlyingRepositoryChangedViaEvents] addBlockOperation: ^{
+							[myDocument postNotificationWithName:kUnderlyingRepositoryChanged];
 					}];
 				});
 				return;
@@ -370,6 +373,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 				[myDocument postNotificationWithName:kRepositoryDataIsNew];
 			else if (tipChanged || parentsChanged || labelsChanged || incompleteRevisionChanged)
 				[myDocument postNotificationWithName:kRepositoryDataDidChange];
+			badRepositoryReadCount_ = 0;	// We have succesfully read the repository information
 			[myDocument postNotificationWithName:kLogEntriesDidChange];
 		});
 	});

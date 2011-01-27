@@ -30,7 +30,10 @@
 
 	NSString*					hgIgnoreFilesRegEx_;		// This regular expression represents the combined regular expression
 															// representing all of the .hgignore files on the path.
-	NSDate*						hgIgnoreFilesTimeStamp_;	// This is the timestamp when we determined hgIgnoreFilesRegEx_ 
+	NSDate*						hgIgnoreFilesTimeStamp_;	// This is the timestamp when we determined hgIgnoreFilesRegEx_
+	
+	NSInteger					badRepositoryReadCount_;	// Records the number of times we have tried to read in the repository
+															// and failed
 	
 	// Parent and tip info
 	NSNumber*					parent1Revision_;			// parent1Rev
