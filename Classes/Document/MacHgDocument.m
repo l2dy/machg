@@ -1348,7 +1348,8 @@
 {
 	[events_ stopWatchingPaths];
 	[self actionSwitchViewToBackingView:self];
-	[repositoryData_ stopObserving];	// Stop any old repositoyData object from recieving notifications.
+	[[self mainWindow] setRepresentedURL:[self fileURL]];	// The drop down repesents the path to the MacHg document
+	[repositoryData_ stopObserving];						// Stop any abandoned repositoyData objects from recieving notifications.
 	repositoryData_ = nil;
 }
 
