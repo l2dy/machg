@@ -319,9 +319,9 @@
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (NSDragOperation) draggingSourceOperationMaskForLocal:(BOOL)isLocal  { return NSDragOperationMove; }
-- (BOOL) outlineView:(NSOutlineView*)outlineView  writeItems:(NSArray*)items  toPasteboard:(NSPasteboard*)pboard
+- (BOOL) outlineView:(NSOutlineView*)outlineView  writeItems:(NSArray*)items  toPasteboard:(NSPasteboard*)pasteboard
 {
-	[pboard declareTypes:[NSArray arrayWithObjects:kSidebarPBoardType, nil] owner:self];
+	[pasteboard declareTypes:[NSArray arrayWithObjects:kSidebarPBoardType, nil] owner:self];
 	
 	// keep track of this nodes for drag feedback in "validateDrop"
 	dragNodesArray = items;
@@ -335,10 +335,10 @@
 	if (index < 0)
 		return NSDragOperationNone;
 
-	NSPasteboard* pboard = [info draggingPasteboard];	// get the pasteboard
-	if ([pboard availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]])
+	NSPasteboard* pasteboard = [info draggingPasteboard];	// get the pasteboard
+	if ([pasteboard availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]])
 	{
-		NSArray* filenames = [pboard propertyListForType:NSFilenamesPboardType];
+		NSArray* filenames = [pasteboard propertyListForType:NSFilenamesPboardType];
 		NSArray* resolvedFilenames = [filenames resolveSymlinksAndAliasesInPaths];
 		for (NSString* file in resolvedFilenames)
 			if (pathIsExistentDirectory(file))
@@ -405,14 +405,14 @@
 
 - (BOOL) outlineView:(NSOutlineView*)outlineView  acceptDrop:(id<NSDraggingInfo>)info  item:(id)targetItem  childIndex:(NSInteger)index
 {
-	NSPasteboard* pboard = [info draggingPasteboard];	// get the pasteboard
+	NSPasteboard* pasteboard = [info draggingPasteboard];	// get the pasteboard
 
 	SidebarNode* targetParent = targetItem;
 	if (targetParent == nil)
 		targetParent = root_;
 
 	// user is doing an intra-app drag within the outline view
-	if ([pboard availableTypeFromArray:[NSArray arrayWithObject:kSidebarPBoardType]])
+	if ([pasteboard availableTypeFromArray:[NSArray arrayWithObject:kSidebarPBoardType]])
 	{
 		SidebarNode* currentSelectedNode = [self selectedNode];
 		NSInteger adjIdx = 0;
@@ -454,13 +454,13 @@
 	}
 
 	// We are dragging files in from the finder.
-	if ([pboard availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]])
+	if ([pasteboard availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]])
 	{
 		SidebarNode* copiedTree = [root_ copyNodeTree];
 		[[self prepareUndoWithTarget:self] setRootAndUpdate:copiedTree];
 		[[self undoManager] setActionName:@"Drag"];
 		
-		NSArray* filenames = [pboard propertyListForType:NSFilenamesPboardType];
+		NSArray* filenames = [pasteboard propertyListForType:NSFilenamesPboardType];
 		NSArray* resolvedFilenames = [filenames resolveSymlinksAndAliasesInPaths];
 		SidebarNode* newSelectedNode = nil;
 		for (id file in resolvedFilenames)
