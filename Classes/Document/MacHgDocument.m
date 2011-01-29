@@ -1081,11 +1081,18 @@
 // MARK:  Cache handling
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+
+// Load the version of the absolutePath for as of the given changeset into the caches directory. If we have already loaded the
+// file then simply return the path of this cached snapshot of the file.
 - (NSString*) loadCachedCopyOfPath:(NSString*)absolutePath forChangeset:(NSString*)changeset
 {
 	NSString* cacheDir = [[AppController sharedAppController] cacheDirectory];
 	if (!cacheDir)
 		return nil;
+	
+	// If we don't have a changeset then just use the current absolute path
+	if (!changeset)
+		return absolutePath;
 	
 	NSString* baseDir  = [cacheDir stringByAppendingPathComponent:fstr(@"snapshots/%@", changeset)];
 	NSString* rootPath = [self absolutePathOfRepositoryRoot];
@@ -1106,7 +1113,7 @@
 	}
 	
 	NSMutableArray* argsCat = [NSMutableArray arrayWithObjects:@"cat", @"--output", newPath, @"--rev", changeset, theRelativePath, nil];
-	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsCat  fromRoot:rootPath];
+	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsCat  fromRoot:rootPath  logging:eLogAllToFile];
 	if ([results hasErrors])
 		return nil;
 	return newPath;

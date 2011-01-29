@@ -203,6 +203,21 @@
 	return newLines;
 }
 
+- (BOOL) writeRowsWithIndexes:(NSIndexSet*)rowIndexes inColumn:(NSInteger)column toPasteboard:(NSPasteboard*)pasteboard
+{
+	NSMutableArray* paths = [[NSMutableArray alloc] init];	
+	for (NSInteger row = [rowIndexes firstIndex]; row != NSNotFound; row = [rowIndexes indexGreaterThanIndex: row])
+	{
+		FSNodeInfo* node = [theBrowser itemAtRow:row inColumn:column];
+		[paths addObject:[node absolutePath]];		
+	}
+
+	[pasteboard declareTypes:[NSArray arrayWithObject:NSFilenamesPboardType] owner:self];
+	[pasteboard setPropertyList:paths forType:NSFilenamesPboardType];
+	
+	return IsNotEmpty(paths) ? YES : NO;
+}
+
 
 
 
@@ -305,6 +320,9 @@
 	if ([myDocument quicklookPreviewIsVisible])
 		[[QLPreviewPanel sharedPreviewPanel] reloadData];
 }
+
+
+
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------

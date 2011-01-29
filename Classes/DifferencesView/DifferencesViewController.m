@@ -445,6 +445,31 @@
 }
 
 
+- (BOOL) writeRowsWithIndexes:(NSIndexSet*)rowIndexes inColumn:(NSInteger)column toPasteboard:(NSPasteboard*)pasteboard
+{
+	NSNumber* compareRev       = [compareLogTableView selectedRevision];
+	if (IsEmpty(compareRev))
+		return NO;
+	BOOL isNotIncompleteRev    = ![compareRev isEqualTo:[compareLogTableView incompleteRevision]];
+	NSString* compareChangeset = isNotIncompleteRev ? [[compareLogTableView selectedEntry] changeset] : nil;
+
+	NSMutableArray* pathsOfCachedItems = [[NSMutableArray alloc] init];
+	for (NSInteger row = [rowIndexes firstIndex]; row != NSNotFound; row = [rowIndexes indexGreaterThanIndex: row])
+	{
+		FSNodeInfo* node = [theBrowser itemAtRow:row inColumn:column];
+		NSString* path = [node absolutePath];
+		NSString* pathOfCachedCopy = [myDocument loadCachedCopyOfPath:path forChangeset:compareChangeset];
+		if (pathOfCachedCopy)
+			[pathsOfCachedItems addObject:pathOfCachedCopy];
+	}
+
+	[pasteboard declareTypes:[NSArray arrayWithObject:NSFilenamesPboardType] owner:self];
+	[pasteboard setPropertyList:pathsOfCachedItems forType:NSFilenamesPboardType];
+	
+	return IsNotEmpty(pathsOfCachedItems) ? YES : NO;
+}
+
+
 - (CGFloat) firstPaneHeight:(NSSplitView*)theSplitView
 {
 	return [[[theSplitView subviews] objectAtIndex:0] frame].size.height;
@@ -479,13 +504,13 @@
 {
 	if (![theBrowser nodesAreSelected])
 		return [NSArray array];
-	
-	NSNumber* compareRev = [compareLogTableView selectedRevision];
+
+	NSNumber* compareRev       = [compareLogTableView selectedRevision];
 	if (IsEmpty(compareRev))
 		return [NSArray array];
-	if ([compareRev isEqualTo:[compareLogTableView incompleteRevision]])
-		compareRev = nil;
-	
+	BOOL isNotIncompleteRev    = ![compareRev isEqualTo:[compareLogTableView incompleteRevision]];
+	NSString* compareChangeset = isNotIncompleteRev ? [[compareLogTableView selectedEntry] changeset] : nil;
+
 	NSMutableArray* quickLookPreviewItems = [[NSMutableArray alloc] init];
 	NSArray* indexPaths = [theBrowser selectionIndexPaths];
 	for (NSIndexPath* indexPath in indexPaths)
@@ -498,15 +523,9 @@
 		NSInteger row = [indexPath indexAtPosition:col];
 		NSRect itemRect   = [theBrowser frameinWindowOfRow:row inColumn:col];
 		
-		if (!compareRev)
-			[quickLookPreviewItems addObject:[PathQuickLookPreviewItem previewItemForPath:path withRect:itemRect]];
-		else
-		{
-			NSString* changesetOfCompareRev = [[compareLogTableView selectedEntry] changeset];
-			NSString* pathOfCachedCopy = [myDocument loadCachedCopyOfPath:path forChangeset:changesetOfCompareRev];
-			if (pathOfCachedCopy)
-				[quickLookPreviewItems addObject:[PathQuickLookPreviewItem previewItemForPath:pathOfCachedCopy withRect:itemRect]];
-		}
+		NSString* pathOfCachedCopy = [myDocument loadCachedCopyOfPath:path forChangeset:compareChangeset];
+		if (pathOfCachedCopy)
+			[quickLookPreviewItems addObject:[PathQuickLookPreviewItem previewItemForPath:pathOfCachedCopy withRect:itemRect]];
 	}
 	return quickLookPreviewItems;
 }
