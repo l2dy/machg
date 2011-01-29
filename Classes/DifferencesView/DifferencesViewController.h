@@ -120,6 +120,7 @@
 - (IBAction)	mainMenuRevealSelectedFilesInFinder:(id)sender;
 - (IBAction)	mainMenuOpenTerminalHere:(id)sender;
 
+- (IBAction)    differencesMenuOpenSelectedFilesInFinder:(id)sender;
 - (IBAction)	differencesMenuAnnotateSelectedFiles:(id)sender;
 - (IBAction)	differencesMenuNoAction:(id)sender;
 

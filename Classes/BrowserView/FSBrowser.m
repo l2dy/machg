@@ -163,6 +163,25 @@
 	return nil;
 }
 
+- (NSArray*) selectedNodes
+{
+	if (![self nodesAreSelected])
+		return [NSArray array];
+	NSArray* theSelectedNodes = [self selectedCells];
+	NSMutableArray* nodes = [[NSMutableArray alloc] init];
+	for (FSBrowserCell* cell in theSelectedNodes)
+		[nodes addObjectIfNonNil:[cell nodeInfo]];
+	return nodes;
+}
+
+- (NSArray*) chosenNodes
+{
+	if ([self nodeIsClicked] && ![self clickedNodeInSelectedNodes])
+		return [NSArray arrayWithObject:[self clickedNode]];
+	
+	return [self selectedNodes];
+}
+
 - (BOOL) singleFileIsChosenInBrower
 {
 	if ([self nodeIsClicked] && [[self clickedNode] isFile])

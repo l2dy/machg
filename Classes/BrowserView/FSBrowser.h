@@ -92,6 +92,8 @@
 - (FSNodeInfo*) clickedNode;
 - (BOOL)		clickedNodeInSelectedNodes;
 - (FSNodeInfo*) chosenNode;
+- (NSArray*)	selectedNodes;
+- (NSArray*)	chosenNodes;
 
 
 // Path and Selection Operations

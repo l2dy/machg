@@ -289,7 +289,7 @@
 // MARK:  Contextual Menu actions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (IBAction) mainMenuOpenSelectedFilesInFinder:(id)sender		{ [theBrowser browserMenuOpenSelectedFilesInFinder:sender]; }
+- (IBAction) mainMenuOpenSelectedFilesInFinder:(id)sender		{ [self differencesMenuOpenSelectedFilesInFinder:sender]; }
 - (IBAction) mainMenuRevealSelectedFilesInFinder:(id)sender		{ [theBrowser browserMenuRevealSelectedFilesInFinder:sender]; }
 - (IBAction) mainMenuOpenTerminalHere:(id)sender				{ [theBrowser browserMenuOpenTerminalHere:sender]; }
 
@@ -332,6 +332,27 @@
 
 - (IBAction) differencesMenuNoAction:(id)sender { }
 
+- (IBAction) differencesMenuOpenSelectedFilesInFinder:(id)sender
+{
+	NSNumber* compareRev       = [compareLogTableView selectedRevision];
+	if (IsEmpty(compareRev))
+		return;
+	BOOL isNotIncompleteRev    = ![compareRev isEqualTo:[compareLogTableView incompleteRevision]];
+	NSString* compareChangeset = isNotIncompleteRev ? [[compareLogTableView selectedEntry] changeset] : nil;
+
+	NSArray* nodes = [theBrowser selectedNodes];
+	for (FSNodeInfo* node in nodes)
+	{
+		// If the node has children its a directory which means we don't want to take a snapshot of it.
+		if (IsNotEmpty([node childNodes]))
+			continue;
+		NSString* path = [node absolutePath];
+		NSString* pathOfCachedCopy = [myDocument loadCachedCopyOfPath:path forChangeset:compareChangeset];
+		if (pathOfCachedCopy)
+			[[NSWorkspace sharedWorkspace] openFile:pathOfCachedCopy];
+	}
+}
+
 
 
 
@@ -340,6 +361,17 @@
 // MARK: -
 // MARK: Validation
 // -----------------------------------------------------------------------------------------------------------------------------------------
+
+// Test to see if we can make a valid snapshot of at least some of the selected nodes in the differences view
+- (BOOL) nodesAreChosenInBrowserWhichAreSnapshotable
+{
+	NSArray* nodes = [theBrowser chosenNodes];
+	for (FSNodeInfo* node in nodes)
+		if (IsEmpty([node childNodes]))
+			if (bitsInCommon([node hgStatus], eHGStatusPresent))
+				return YES;
+	return NO;
+}
 
 - (BOOL) pathsAreSelectedInBrowserWhichContainStatus:(HGStatus)status	{ return bitsInCommon(status, [theBrowser statusOfChosenPathsInBrowser]); }
 - (BOOL) repositoryHasFilesWhichContainStatus:(HGStatus)status			{ return bitsInCommon(status, [[theBrowser rootNodeInfo] hgStatus]); }
@@ -354,12 +386,14 @@
 	if (theAction == @selector(mainMenuDiffAllFiles:))					return [myDocument repositoryIsSelectedAndReady] && [self repositoryHasFilesWhichContainStatus:eHGStatusModified];
 	if (theAction == @selector(toolbarDiffFiles:))						return [myDocument repositoryIsSelectedAndReady] && [self toolbarActionAppliesToFilesWith:eHGStatusModified];
 	
-	if (theAction == @selector(mainMenuOpenSelectedFilesInFinder:))		return [myDocument repositoryIsSelectedAndReady] && [self nodesAreChosenInBrowser];
+	if (theAction == @selector(mainMenuOpenSelectedFilesInFinder:))		return [myDocument repositoryIsSelectedAndReady] && [self nodesAreChosenInBrowserWhichAreSnapshotable];
 	if (theAction == @selector(mainMenuRevealSelectedFilesInFinder:))	return [myDocument repositoryIsSelectedAndReady];
 	if (theAction == @selector(mainMenuOpenTerminalHere:))				return [myDocument repositoryIsSelectedAndReady];
 	if (theAction == @selector(mainMenuDiffSelectedFiles:))				return [myDocument repositoryIsSelectedAndReady] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusModified];
 	if (theAction == @selector(mainMenuDiffAllFiles:))					return [myDocument repositoryIsSelectedAndReady] && [self repositoryHasFilesWhichContainStatus:eHGStatusModified];
-	
+
+	if (theAction == @selector(differencesMenuOpenSelectedFilesInFinder:))	return [myDocument repositoryIsSelectedAndReady] && [self nodesAreChosenInBrowserWhichAreSnapshotable];
+
 	return [myDocument validateUserInterfaceItem:anItem];
 }
 
@@ -459,8 +493,7 @@
 		FSNodeInfo* node = [theBrowser itemAtRow:row inColumn:column];
 		NSString* path = [node absolutePath];
 		NSString* pathOfCachedCopy = [myDocument loadCachedCopyOfPath:path forChangeset:compareChangeset];
-		if (pathOfCachedCopy)
-			[pathsOfCachedItems addObject:pathOfCachedCopy];
+		[pathsOfCachedItems addObjectIfNonNil:pathOfCachedCopy];
 	}
 
 	[pasteboard declareTypes:[NSArray arrayWithObject:NSFilenamesPboardType] owner:self];

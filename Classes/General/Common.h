@@ -189,6 +189,7 @@ typedef enum
 	eHGStatusCommittable		= eHGStatusAdded | eHGStatusRemoved | eHGStatusModified,
 	eHGStatusAddable			= eHGStatusUntracked,
 	eHGStatusAddableOrRemovable	= eHGStatusUntracked | eHGStatusMissing,
+	eHGStatusPresent            = eHGStatusClean | eHGStatusAdded | eHGStatusModified,
 	eHGStatusPrimary            = eHGStatusIgnored | eHGStatusClean | eHGStatusUntracked | eHGStatusAdded | eHGStatusRemoved | eHGStatusMissing | eHGStatusModified,
 	eHGStatusSecondary          = eHGStatusResolved | eHGStatusUnresolved
 } HGStatus;
