@@ -822,6 +822,26 @@
 }
 
 
+// Uncoment to allow the delete key to do a sidebarMenuRemoveSidebarItem
+//- (void) keyDown:(NSEvent *)theEvent
+//{
+//    NSString* key = [theEvent charactersIgnoringModifiers];
+//	
+//	if (IsNotEmpty(key))
+//	{
+//		unichar keyCode = [key characterAtIndex:0];
+//		if (keyCode == NSDeleteCharacter || keyCode == NSBackspaceCharacter)
+//			if ([self numberOfSelectedRows] > 0)
+//			{
+//				[self sidebarMenuRemoveSidebarItem:self];
+//				return;
+//			}
+//	}
+//
+//	[super keyDown:theEvent];
+//}
+
+
 
 
 
