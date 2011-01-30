@@ -77,6 +77,8 @@
 
 	// drag and drop support
 	[self registerForDraggedTypes:[NSArray arrayWithObjects:kPatchesTablePBoardType, NSFilenamesPboardType, nil]];
+	
+	[self setRowHeight:30];
 }
 
 - (MacHgDocument*)		myDocument			{ return [parentController myDocument]; }
@@ -446,6 +448,45 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 	[super drawWithFrame:cellFrame inView:controlView];
 }
 
+- (NSRect)drawingRectForBounds:(NSRect)theRect
+{	
+	// When the text field is being edited or selected, we have to turn off the magic of vertically centering the item because it
+	// screws up the configuration of the field editor. We sneak around this by intercepting selectWithFrame and editWithFrame and
+	// sneaking a reduced, centered rect in at the last minute.
+	if (isEditingOrSelecting_)
+		return [super drawingRectForBounds:theRect];
+	
+	NSRect newRect  = [super drawingRectForBounds:theRect];		// Get the parent's idea of where we should draw
+	NSSize textSize = [self cellSizeForBounds:theRect];			// Get our ideal size for current text
+	
+	// Center that in the proposed rect
+	float heightDelta = newRect.size.height - textSize.height;	
+	if (heightDelta > 0)
+	{
+		newRect.size.height -= heightDelta;
+		newRect.origin.y += (heightDelta / 2);
+	}
+	
+	return newRect;
+}
+
+- (void) selectWithFrame:(NSRect)aRect inView:(NSView*)controlView editor:(NSText*)textObj delegate:(id)anObject start:(NSInteger)selStart length:(NSInteger)selLength
+{
+	aRect = UnionSize(aRect, [[self attributedStringValue] size]);
+	aRect.size.width *= 1.2;
+	isEditingOrSelecting_ = YES;	
+	[super selectWithFrame:aRect inView:controlView editor:textObj delegate:anObject start:selStart length:selLength];
+	isEditingOrSelecting_ = NO;
+}
+
+- (void)editWithFrame:(NSRect)aRect inView:(NSView*)controlView editor:(NSText*)textObj delegate:(id)anObject event:(NSEvent*)theEvent
+{
+	aRect = UnionSize(aRect, [[self attributedStringValue] size]);
+	aRect.size.width *= 1.2;
+	isEditingOrSelecting_ = YES;
+	[super editWithFrame:aRect inView:controlView editor:textObj delegate:anObject event:theEvent];
+	isEditingOrSelecting_ = NO;
+}
 
 
 @end
@@ -462,18 +503,22 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 
 - (void) editWithFrame:(NSRect)aRect inView:(NSView*)controlView editor:(NSText*)textObj delegate:(id)anObject event:(NSEvent*)theEvent
 {
-	aRect = UnionWidthHeight(aRect, 300, 45);
+	aRect = UnionWidthHeight(aRect, 340, 45);
 	aRect = UnionSize(aRect, [[self attributedStringValue] size]);
+	isEditingOrSelecting_ = YES;
     [super editWithFrame:aRect inView:controlView editor:textObj delegate:anObject event:theEvent];
+	isEditingOrSelecting_ = NO;
 }
 
 // NSTableView may call selectWithFrame: or editWithFrame: depending on how it is invoked. This code should mirror the above
 // method. selectWithFrame: differs by starting an editing session and selecting all the text in the cell.
 - (void) selectWithFrame:(NSRect)aRect inView:(NSView*)controlView editor:(NSText*)textObj delegate:(id)anObject start:(NSInteger)selStart length:(NSInteger)selLength
 {
-	aRect = UnionWidthHeight(aRect, 300, 45);
+	aRect = UnionWidthHeight(aRect, 340, 45);
 	aRect = UnionSize(aRect, [[self attributedStringValue] size]);
+	isEditingOrSelecting_ = YES;	
     [super selectWithFrame:aRect inView:controlView editor:textObj delegate:anObject start:selStart length:selLength];
+	isEditingOrSelecting_ = NO;
 }
 
 // Expansion tool tip support

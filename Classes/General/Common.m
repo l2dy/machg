@@ -1382,6 +1382,12 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	[self getHue:&h saturation:&s brightness:&b alpha:&a];
 	return [NSColor colorWithCalibratedHue: h saturation:s*factor brightness:b*factor alpha:a];
 }
+
++ (NSColor *)color255WithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha
+{
+	return [NSColor colorWithDeviceRed:red/255.0 green:green/255.0 blue:blue/255.0 alpha:alpha];
+}
+
 @end
 
 

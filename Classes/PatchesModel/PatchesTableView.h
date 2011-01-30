@@ -65,8 +65,9 @@
 
 @interface PatchesTableCell : NSTextFieldCell
 {
-	NSTableColumn* patchesTableColumn_;
-	PatchData*	   patch_;
+	NSTableColumn*	patchesTableColumn_;
+	PatchData*		patch_;
+	BOOL			isEditingOrSelecting_;
 }
 @property (assign,readwrite) NSTableColumn*	patchesTableColumn;
 @property (assign,readwrite) PatchData*		patch;
