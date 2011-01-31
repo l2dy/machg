@@ -548,12 +548,12 @@
 }
 - (IBAction) openReleaseNotes:(id)sender
 {
-	NSURL* bugReportPage = [NSURL URLWithString:@"http://www.jasonfharris.com/machg/downloads/notes/releasenotes.html"];
+	NSURL* bugReportPage = [NSURL URLWithString:@"http://jasonfharris.com/machg/downloads/notes/releasenotes.html"];
 	[[NSWorkspace sharedWorkspace] openURL:bugReportPage];
 }
 - (IBAction) openWebsite:(id)sender
 {
-	NSURL* bugReportPage = [NSURL URLWithString:@"http://www.jasonfharris.com/machg"];
+	NSURL* bugReportPage = [NSURL URLWithString:@"http://jasonfharris.com/machg"];
 	[[NSWorkspace sharedWorkspace] openURL:bugReportPage];
 }
 
