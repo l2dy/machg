@@ -1251,7 +1251,11 @@ class localrepository(repo.repository):
 
     def debugignorepat(self):
         ignore = self.dirstate._ignore
-        return ignore.includepat
+        if hasattr(ignore, 'includepat'):
+            return ignore.includepat
+        else:
+            self.ui.warn(_("no ignore patterns found\n"))
+            return ""
 
     def between(self, pairs):
         r = []
