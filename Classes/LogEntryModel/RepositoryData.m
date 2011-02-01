@@ -171,13 +171,17 @@
 	// The following stat checks are fairly fast around the order of 3 milli-seconds on 10.6, dual core 2.66Ghz imac.
 	NSFileManager* fileManager = [NSFileManager defaultManager];
 	NSString* userHgignorePath = [NSHomeDirectory() stringByAppendingPathComponent:@".hgignore"];
-	NSString* repohgIgnorePath  = fstr(@"%@/.hgignore",  rootPath_);
+	NSString* repohgIgnorePath = fstr(@"%@/.hgignore",  rootPath_);
+	NSString* macHgIgnorePath  = fstr(@"%@/hgignore", applicationSupportFolder());
 	NSDate* userhgIgnore = [[fileManager attributesOfItemAtPath:userHgignorePath error:nil] fileModificationDate];
 	NSDate* repohgIgnore = [[fileManager attributesOfItemAtPath:repohgIgnorePath error:nil] fileModificationDate];
+	NSDate* appshgIgnore = [[fileManager attributesOfItemAtPath:macHgIgnorePath error:nil] fileModificationDate];
 	NSDate* now = [NSDate date];
 	if (userhgIgnore && [userhgIgnore isBefore:now] && [hgIgnoreFilesTimeStamp_ isBefore:userhgIgnore])
 		return YES;
 	if (repohgIgnore && [repohgIgnore isBefore:now] && [hgIgnoreFilesTimeStamp_ isBefore:repohgIgnore])
+		return YES;
+	if (appshgIgnore && [appshgIgnore isBefore:now] && [hgIgnoreFilesTimeStamp_ isBefore:appshgIgnore])
 		return YES;
 	return NO;
 }
