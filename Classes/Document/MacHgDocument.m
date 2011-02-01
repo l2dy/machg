@@ -1214,7 +1214,7 @@
 - (BOOL) absolutePathMatchedByHGIgnore:(NSString*)path
 {
 	NSString* regex = [[self repositoryData] combinedHGIgnoreRegEx];
-	if (!regex)
+	if (IsEmpty(regex))
 		return NO;
 	
 	// Check all sub directories for a match

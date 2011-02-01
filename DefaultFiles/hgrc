@@ -1,5 +1,4 @@
 [ui]
-ignore.other = ~/.hgignore
 editor = /Applications/TextEdit.app/Contents/MacOS/TextEdit
 ssh = ssh -C
 

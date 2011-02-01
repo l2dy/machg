@@ -218,7 +218,6 @@
 	{
 		NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"hgext.cedit=", @"--add", fstr(@"ui.ignore = %@", userHgignorePath), @"--file", macHgHGRCFilePath, nil];
 		[TaskExecutions executeMercurialWithArgs:argsCedit  fromRoot:@"/tmp"];
-		return;
 	}
 
 	NSString* macHgIgnoreFilePath = fstr(@"%@/hgignore",applicationSupportFolder());
@@ -229,7 +228,7 @@
 		[hgignoreContents writeToFile:macHgIgnoreFilePath atomically:YES encoding:NSUTF8StringEncoding error:nil];	
 	}
 
-	NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"hgext.cedit=", @"--add", fstr(@"ui.ignore = %@", macHgIgnoreFilePath), @"--file", macHgHGRCFilePath, nil];
+	NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"hgext.cedit=", @"--add", fstr(@"ui.ignore.other = %@", macHgIgnoreFilePath), @"--file", macHgHGRCFilePath, nil];
 	[TaskExecutions executeMercurialWithArgs:argsCedit  fromRoot:@"/tmp"];
 }
 
