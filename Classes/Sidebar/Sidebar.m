@@ -252,7 +252,7 @@
 			return;
 		}
 		[repositoryPathControl_ setURL:[NSURL fileURLWithPath:[selectedNode path]]];
-		[[myDocument mainWindow] setRepresentedFilename:[selectedNode path]];
+		[[myDocument mainWindow] setRepresentedFilename:dotHgPath];
 		[self computeIncomingOutgoingToCompatibleRepositories];
 	}
 
