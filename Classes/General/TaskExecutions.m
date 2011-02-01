@@ -121,6 +121,16 @@
 // MARK: Core Execution
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+static NSString* processedPathEnv(NSDictionary* processEnv)
+{
+	// Ensure /usr/local/bin is on the path
+	NSString* pathEnv = [processEnv objectForKey:@"PATH"];
+	if ([pathEnv isMatchedByRegex:@"^(.*:)?/usr/local/bin(:.*)?$"])
+		return pathEnv;
+	BOOL colonTerminated = [pathEnv isMatchedByRegex:@".*:"];
+	return [pathEnv stringByAppendingString: colonTerminated ? @"/usr/local/bin" : @":/usr/local/bin"];
+}
+
 + (NSDictionary*) environmentForHg
 {
 	static NSDictionary* env = nil;
@@ -128,19 +138,22 @@
 	if (!env || includeHomeHgrc != IncludeHomeHgrcInHGRCPATHFromDefaults())
 	{
 		includeHomeHgrc  = IncludeHomeHgrcInHGRCPATHFromDefaults();
-		NSString* hgrc_Path = hgrcPath();
-		NSString* localMercurialPath = fstr(@"%@/LocalMercurial", [[NSBundle mainBundle] builtInPlugInsPath]);
 		
 		NSDictionary* processEnv    = [[NSProcessInfo processInfo] environment];
 		NSMutableDictionary* newEnv = [[NSMutableDictionary alloc] init];
+
+		NSString* hgrc_Path = hgrcPath();
+		NSString* localMercurialPath = fstr(@"%@/LocalMercurial", [[NSBundle mainBundle] builtInPlugInsPath]);
+		NSString* PATHenv = processedPathEnv(processEnv);		// This is $PATH with /usr/local/bin included if necessary
+		
 		[newEnv copyValueOfKey:@"SSH_ASKPASS"	from:processEnv];
 		[newEnv copyValueOfKey:@"SSH_AUTH_SOCK"	from:processEnv];
 		[newEnv copyValueOfKey:@"HOME"			from:processEnv];
-		[newEnv copyValueOfKey:@"PATH"			from:processEnv];
 		[newEnv copyValueOfKey:@"TMPDIR"		from:processEnv];
 		[newEnv copyValueOfKey:@"USER"			from:processEnv];
 		[newEnv setObject:localMercurialPath	 forKey:@"PYTHONPATH"];
 		[newEnv setObject:executableLocationHG() forKey:@"HG"];
+		[newEnv setObject:PATHenv   forKey:@"PATH"];
 		[newEnv setObject:@"UTF-8"  forKey:@"HGENCODING"];
 		[newEnv setObject:@"1"		forKey:@"HGPLAIN"];
 		[newEnv setObject:hgrc_Path	forKey:@"HGRCPATH"];		
