@@ -10,6 +10,8 @@
 #import <Cocoa/Cocoa.h>
 #import "Common.h"
 
+// This sheet controller is the basis for all of our sheets. It catches the command key being pressed, cancel events, and
+// initilization, etc.
 @interface BaseSheetWindowController : NSWindowController
 {
 }
