@@ -296,10 +296,11 @@ class localrepository(repo.repository):
 
         date: date tuple to use if committing'''
 
-        for x in self.status()[:5]:
-            if '.hgtags' in x:
-                raise util.Abort(_('working copy of .hgtags is changed '
-                                   '(please commit .hgtags manually)'))
+        if not local:
+            for x in self.status()[:5]:
+                if '.hgtags' in x:
+                    raise util.Abort(_('working copy of .hgtags is changed '
+                                       '(please commit .hgtags manually)'))
 
         self.tags() # instantiate the cache
         self._tag(names, node, message, local, user, date)
@@ -427,7 +428,7 @@ class localrepository(repo.repository):
     def _readbranchcache(self):
         partial = {}
         try:
-            f = self.opener(os.path.join("cache", "branchheads"))
+            f = self.opener("branchheads.cache")
             lines = f.read().split('\n')
             f.close()
         except (IOError, OSError):
@@ -454,8 +455,7 @@ class localrepository(repo.repository):
 
     def _writebranchcache(self, branches, tip, tiprev):
         try:
-            f = self.opener(os.path.join("cache", "branchheads"), "w",
-                            atomictemp=True)
+            f = self.opener("branchheads.cache", "w", atomictemp=True)
             f.write("%s %s\n" % (hex(tip), tiprev))
             for label, nodes in branches.iteritems():
                 for node in nodes:
@@ -1248,14 +1248,6 @@ class localrepository(repo.repository):
                     break
                 n = p[0]
         return b
-
-    def debugignorepat(self):
-        ignore = self.dirstate._ignore
-        if hasattr(ignore, 'includepat'):
-            return ignore.includepat
-        else:
-            self.ui.warn(_("no ignore patterns found\n"))
-            return ""
 
     def between(self, pairs):
         r = []
