@@ -182,6 +182,16 @@
 	return fstr(@"%@%:%@", baseRev, compareRev);
 }
 
+- (BOOL) equalRevisionsAreSelected
+{
+	NSNumber* baseRev    = [baseLogTableView selectedRevision];
+	NSNumber* compareRev = [compareLogTableView selectedRevision];
+	if (IsEmpty(baseRev) || IsEmpty(compareRev))
+		return NO;
+	return [baseRev isEqualToNumber:compareRev];
+}
+
+
 
 
 
@@ -450,6 +460,24 @@
 	if (IsEmpty(revNumbers))
 		return nil;
 
+	// We need to handle the case when both revisions are the same. In this case its just doing a manifest and marking up the
+	// output with a prefixed 'C ' to indicate clean.
+	if ([self equalRevisionsAreSelected])
+	{
+		NSMutableArray* argsManifest = [NSMutableArray arrayWithObjects:@"manifest", @"--rev", numberAsString([baseLogTableView selectedRevision]), nil];
+		ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsManifest  fromRoot:rootPath  logging:eLoggingNone];
+		if ([results hasErrors])
+		{
+			[TaskExecutions logMercurialResult:results];
+			return nil;
+		}
+		NSMutableArray* statusStrings = [[NSMutableArray alloc]init];
+		NSArray* strings = [results.outStr componentsSeparatedByString:@"\n"];
+		for (NSString* string in strings)
+			[statusStrings addObject:fstr(@"C %@",string)];
+		return statusStrings;
+	}
+	
 	// Get status of everything relevant and return this array for use by the node tree to re-flush stale parts of it (or all of it.)
 	NSMutableArray* argsStatus = [NSMutableArray arrayWithObjects:@"status", nil];
 
