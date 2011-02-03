@@ -25,6 +25,7 @@
 	BOOL applicationHasStarted;
 	InitializationWizardController* theInitilizationWizardController_;
 
+	IBOutlet NSWindow*			aboutWindow;
 	IBOutlet WebView*			creditsWebview;
 	IBOutlet RadialGradiantBox*	backingBox;
 	

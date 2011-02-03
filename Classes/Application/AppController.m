@@ -552,12 +552,17 @@
 
 - (IBAction) showAboutBox:(id)sender
 {
-	[NSBundle loadNibNamed:@"About" owner:self];
-	[backingBox setRadius:[NSNumber numberWithFloat:190.0]];
-	[backingBox setOffsetFromCenter:NSMakePoint(0.0, -40.0)];
-	[backingBox setNeedsDisplay:YES];
-	NSURL* creditsURL = [NSURL fileURLWithPath:fstr(@"%@/MacHGHelp/%@",[[NSBundle mainBundle] resourcePath], @"Credits.html")];
-	[[creditsWebview mainFrame] loadRequest:[NSURLRequest requestWithURL:creditsURL]];
+	if (aboutWindow == NULL)
+	{
+		[NSBundle loadNibNamed:@"About" owner:self];
+		[backingBox setRadius:[NSNumber numberWithFloat:190.0]];
+		[backingBox setOffsetFromCenter:NSMakePoint(0.0, -40.0)];
+		[backingBox setNeedsDisplay:YES];
+		NSURL* creditsURL = [NSURL fileURLWithPath:fstr(@"%@/MacHGHelp/%@",[[NSBundle mainBundle] resourcePath], @"Credits.html")];
+		[[creditsWebview mainFrame] loadRequest:[NSURLRequest requestWithURL:creditsURL]];
+	}
+	
+	[aboutWindow makeKeyAndOrderFront:nil];
 }
 
 
