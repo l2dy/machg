@@ -200,6 +200,8 @@
 		for (NSString* rev in revs)
 			[argsClone addObject:@"--rev" followedBy:rev];
 	}
+	if (!RequireVerifiedServerCertificatesFromDefaults())
+		[argsClone addObject:@"--insecure"];
 	[argsClone addObject:[sourceNode_ fullURLPath] followedBy:destinationPath];
 	
 	[self setConnectionFromFieldsForSource:sourceNode_];		// Cache advanced option settings for this source.

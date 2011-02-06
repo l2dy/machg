@@ -124,6 +124,8 @@
 		[opt addOptionToArgs:argsPush];
 	if (allowOperationWithAnyRepository_ || [forceOption optionIsSet])
 			[argsPush addObject:@"--force"];
+	if (!RequireVerifiedServerCertificatesFromDefaults())
+		[argsPush addObject:@"--insecure"];
 	[argsPush addObject:[pushDestination fullURLPath]];
 	
 	// Execute the push command

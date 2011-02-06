@@ -118,6 +118,8 @@
 		[opt addOptionToArgs:argsIncoming];
 	if (allowOperationWithAnyRepository_ || [forceOption optionIsSet])
 		[argsIncoming addObject:@"--force"];
+	if (!RequireVerifiedServerCertificatesFromDefaults())
+		[argsIncoming addObject:@"--insecure"];
 	[argsIncoming addObject:[incomingSource fullURLPath]];
 	
 	// Execute the incoming command

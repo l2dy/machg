@@ -122,6 +122,8 @@
 		[opt addOptionToArgs:argsPull];
 	if (allowOperationWithAnyRepository_ || [forceOption optionIsSet])
 		[argsPull addObject:@"--force"];
+	if (!RequireVerifiedServerCertificatesFromDefaults())
+		[argsPull addObject:@"--insecure"];
 	[argsPull addObject:[pullSource fullURLPath]];
 	
 	// Execute the pull command

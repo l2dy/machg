@@ -122,6 +122,8 @@
 		[opt addOptionToArgs:argsOutgoing];
 	if (allowOperationWithAnyRepository_ || [forceOption optionIsSet])
 		[argsOutgoing addObject:@"--force"];
+	if (!RequireVerifiedServerCertificatesFromDefaults())
+		[argsOutgoing addObject:@"--insecure"];
 	[argsOutgoing addObject:[outgoingDestination fullURLPath]];
 	
 	// Execute the outgoing command
