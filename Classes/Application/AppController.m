@@ -184,6 +184,16 @@
 // MARK: Configuration Checking
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+- (void) ignoreHomeHGRCBlock:(BlockProcess)block
+{
+	BOOL includeHomeHgrc  = IncludeHomeHgrcInHGRCPATHFromDefaults();
+	[[NSUserDefaults standardUserDefaults] setBool:NO forKey:MHGIncludeHomeHgrcInHGRCPATH];					// Temporarily ignore ~/.hgrc
+	block();
+	[[NSUserDefaults standardUserDefaults] setBool:includeHomeHgrc  forKey:MHGIncludeHomeHgrcInHGRCPATH];	// Restore HGRC path
+}
+
+
+
 - (void) checkForSupportDirectory
 {
 	if (pathIsExistent(applicationSupportFolder()))
@@ -232,6 +242,33 @@
 	[TaskExecutions executeMercurialWithArgs:argsCedit  fromRoot:@"/tmp"];
 }
 
+
+- (void) checkForTrustedCertificates
+{
+	[self ignoreHomeHGRCBlock:^{
+		NSString* macHgHGRCFilePath = fstr(@"%@/hgrc",applicationSupportFolder());
+		NSString* macHgCertFilePath = fstr(@"%@/TrustedCertificates.pem",applicationSupportFolder());
+		
+		// If the ~/.hgignore exists then make sure ~/Application Support/MacHg/hgrc points to it
+		if (!pathIsExistent(macHgCertFilePath))
+		{
+			NSString* sourceCertFilePath = fstr(@"%@/%@",[[NSBundle mainBundle] resourcePath], @"TrustedCertificates.pem");
+			NSString* certFileContents = [NSString stringWithContentsOfFile:sourceCertFilePath encoding:NSUTF8StringEncoding error:nil];
+			[certFileContents writeToFile:macHgCertFilePath atomically:YES encoding:NSUTF8StringEncoding error:nil];	
+		}
+
+		// Determine current configuration:
+		NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"web.cacerts", nil];
+		ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
+		
+		// If we currently don't have a certificate then point to our TrustedCertificates
+		if ([result hasErrors] || [result hasWarnings] || IsEmpty([result outStr]))
+		{
+			NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"hgext.cedit=", @"--add", fstr(@"web.cacerts = %@", macHgCertFilePath), @"--file", macHgHGRCFilePath, nil];
+			[TaskExecutions executeMercurialWithArgs:argsCedit  fromRoot:@"/tmp"];
+		}		
+	}];	
+}
 
 
 - (void) checkConfigFileForUserName
@@ -368,6 +405,7 @@
 	[self checkForConfigFile];
 	[self checkConfigFileForExtensions:YES];
 	[self checkForIgnoreFile];
+	[self checkForTrustedCertificates];
 	[self checkConfigFileForUserName];
 	[self checkForFileMerge];
 	[self checkForMercurialWarningsAndErrors];
