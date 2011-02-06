@@ -534,6 +534,7 @@ if has_https:
                 cacerts = None
 
             hostfingerprint = self.ui.config('hostfingerprints', self.host)
+            strict = self.ui.config('web', 'strictCAverification') != 'off'
             if cacerts and not hostfingerprint:
                 sock = _create_connection((self.host, self.port))
                 self.sock = _ssl_wrap_socket(sock, self.key_file,
@@ -562,11 +563,12 @@ if has_https:
                         self.ui.debug('%s certificate matched fingerprint %s\n' %
                                       (self.host, nicefingerprint))
                     else:
-                        self.ui.warn(_('warning: %s certificate '
-                                       'with fingerprint %s not verified '
-                                       '(check hostfingerprints or web.cacerts '
-                                       'config setting)\n') %
-                                     (self.host, nicefingerprint))
+                        if strict:
+						    self.ui.warn(_('warning: %s certificate '
+							               'with fingerprint %s not verified '
+									       '(check hostfingerprints or web.cacerts '
+										   'config setting)\n') %
+									     (self.host, nicefingerprint))
                 else: # python 2.5 ?
                     if hostfingerprint:
                         raise util.Abort(_('no certificate for %s '
