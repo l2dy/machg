@@ -184,12 +184,15 @@
 // MARK: Configuration Checking
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) ignoreHomeHGRCBlock:(BlockProcess)block
+- (void) includeHomeHGRC:(BOOL)include inProcess:(BlockProcess)block
 {
-	BOOL includeHomeHgrc  = IncludeHomeHgrcInHGRCPATHFromDefaults();
-	[[NSUserDefaults standardUserDefaults] setBool:NO forKey:MHGIncludeHomeHgrcInHGRCPATH];					// Temporarily ignore ~/.hgrc
-	block();
-	[[NSUserDefaults standardUserDefaults] setBool:includeHomeHgrc  forKey:MHGIncludeHomeHgrcInHGRCPATH];	// Restore HGRC path
+	@synchronized(self)
+	{
+		BOOL oldIncludeHomeHgrc  = IncludeHomeHgrcInHGRCPATHFromDefaults();
+		[[NSUserDefaults standardUserDefaults] setBool:include			   forKey:MHGIncludeHomeHgrcInHGRCPATH];	// Temporarily include / exclude ~/.hgrc
+		block();
+		[[NSUserDefaults standardUserDefaults] setBool:oldIncludeHomeHgrc  forKey:MHGIncludeHomeHgrcInHGRCPATH];	// Restore HGRC path
+	}
 }
 
 
@@ -245,7 +248,7 @@
 
 - (void) checkForTrustedCertificates
 {
-	[self ignoreHomeHGRCBlock:^{
+	[self includeHomeHGRC:NO inProcess:^{
 		NSString* macHgHGRCFilePath = fstr(@"%@/hgrc",applicationSupportFolder());
 		NSString* macHgCertFilePath = fstr(@"%@/TrustedCertificates.pem",applicationSupportFolder());
 		
@@ -273,76 +276,78 @@
 
 - (void) checkConfigFileForUserName
 {
-	BOOL includeHomeHgrc  = IncludeHomeHgrcInHGRCPATHFromDefaults();
+	__block BOOL done = NO;
 
 	// If we can find the user name in only our ~/Application Support/MacHg/hgrc file we are done.
-	[[NSUserDefaults standardUserDefaults] setBool:NO forKey:MHGIncludeHomeHgrcInHGRCPATH];
-	NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"ui.username", nil];
-	ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
-	[[NSUserDefaults standardUserDefaults] setBool:includeHomeHgrc  forKey:MHGIncludeHomeHgrcInHGRCPATH];
-	if (!IsEmpty(result.outStr))
+	[self includeHomeHGRC:NO inProcess:^{
+		NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"ui.username", nil];
+		ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
+		done = IsNotEmpty(result.outStr);
+	}];
+	if (done)
 		return;
 
-	// Switch the hgrc path to include both ~/Application Support/MacHg/hgrc and ~/.hgrc and look for the user name, and then
-	// restore the defaults
-	[[NSUserDefaults standardUserDefaults] setBool:YES forKey:MHGIncludeHomeHgrcInHGRCPATH];
-	argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"ui.username", nil];
-	result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
-	[[NSUserDefaults standardUserDefaults] setBool:includeHomeHgrc  forKey:MHGIncludeHomeHgrcInHGRCPATH];
-
-	// If we found a user name in the user ~/.hgrc file but not the application support then copy the user name to the application
-	// support file.
-	if (!IsEmpty(result.outStr))
-	{
-		NSFileManager* fileManager = [NSFileManager defaultManager];
-		NSString* macHgHGRCpath = fstr(@"%@/hgrc", applicationSupportFolder());
-		[fileManager appendString:@"\n[ui]\n" toFilePath:macHgHGRCpath];
-		[fileManager appendString:fstr(@"username = %@\n",	result.outStr) toFilePath:macHgHGRCpath];
-		return;
-	}
 	
+	// Switch the hgrc path to include both ~/Application Support/MacHg/hgrc and ~/.hgrc and look for the user name
+	[self includeHomeHGRC:YES inProcess:^{
+		NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"ui.username", nil];
+		ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
+		
+		// If we found a user name in the user ~/.hgrc file but not the application support then copy the user name to the application
+		// support file.
+		if (!IsEmpty(result.outStr))
+		{
+			NSFileManager* fileManager = [NSFileManager defaultManager];
+			NSString* macHgHGRCpath = fstr(@"%@/hgrc", applicationSupportFolder());
+			[fileManager appendString:@"\n[ui]\n" toFilePath:macHgHGRCpath];
+			[fileManager appendString:fstr(@"username = %@\n",	result.outStr) toFilePath:macHgHGRCpath];
+			done = YES;
+		}
+	}];
+	if (done)
+		return;
+
+
 	// Since we could not find a user name we have to ask the user for it
-	[[self theInitilizationWizardController] showWizard];	
+		[[self theInitilizationWizardController] showWizard];	
 }
 
 
 - (void) checkConfigFileForExtensions:(BOOL)onStartup;
 {
-	// We temporarily switch out ~/.hgrc from our HGRCPath
-	BOOL includeHomeHgrc  = IncludeHomeHgrcInHGRCPATHFromDefaults();
-	[[NSUserDefaults standardUserDefaults] setBool:NO forKey:MHGIncludeHomeHgrcInHGRCPATH];
-
-	// Find out which extensions are enabled within our ~/Application Support/MacHg/hgrc file
-	NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"extensions", nil];
-	ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
-
-	BOOL addExtDiff         = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.extdiff\\s*="	  options:RKLMultiline];
-	BOOL addExtBookmarks    = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.bookmarks\\s*="    options:RKLMultiline];
-	BOOL addExtMq		    = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.mq\\s*="		      options:RKLMultiline];
-	BOOL addExtRebase       = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.rebase\\s*="       options:RKLMultiline];
-	BOOL addExtHistEdit	    = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.histedit\\s*="     options:RKLMultiline];
-	BOOL addExtCollapse     = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.collapse\\s*="     options:RKLMultiline];
-	BOOL addExtCedit        = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.cedit\\s*="		  options:RKLMultiline];
-	BOOL addExtCombinedInfo = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.combinedinfo\\s*=" options:RKLMultiline];
-
-	if (addExtDiff || addExtBookmarks || addExtMq || addExtRebase || addExtHistEdit || addExtCollapse || addExtCedit || addExtCombinedInfo)
-	{
-		NSFileManager* fileManager = [NSFileManager defaultManager];
-		NSString* macHgHGRCPath = fstr(@"%@/hgrc",applicationSupportFolder());
+	[self includeHomeHGRC:NO inProcess:^{
 		
-		[fileManager appendString:@"\n[extensions]\n" toFilePath:macHgHGRCPath];
-		if (addExtDiff)			[fileManager appendString:@"hgext.extdiff=\n"	   toFilePath:macHgHGRCPath];
-		if (addExtBookmarks)	[fileManager appendString:@"hgext.bookmarks=\n"    toFilePath:macHgHGRCPath];
-		if (addExtMq)			[fileManager appendString:@"hgext.mq=\n"		   toFilePath:macHgHGRCPath];
-		if (addExtRebase)		[fileManager appendString:@"hgext.rebase=\n"	   toFilePath:macHgHGRCPath];
-		if (addExtHistEdit)		[fileManager appendString:@"hgext.histedit=\n"	   toFilePath:macHgHGRCPath];
-		if (addExtCollapse)		[fileManager appendString:@"hgext.collapse=\n"	   toFilePath:macHgHGRCPath];
-		if (addExtCedit)		[fileManager appendString:@"hgext.cedit=\n"	       toFilePath:macHgHGRCPath];
-		if (addExtCombinedInfo)	[fileManager appendString:@"hgext.combinedinfo=\n" toFilePath:macHgHGRCPath];
-	}
-
-	[[NSUserDefaults standardUserDefaults] setBool:includeHomeHgrc  forKey:MHGIncludeHomeHgrcInHGRCPATH];
-
+		// Find out which extensions are enabled within our ~/Application Support/MacHg/hgrc file
+		NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"extensions", nil];
+		ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
+		
+		BOOL addExtDiff         = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.extdiff\\s*="	  options:RKLMultiline];
+		BOOL addExtBookmarks    = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.bookmarks\\s*="    options:RKLMultiline];
+		BOOL addExtMq		    = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.mq\\s*="		      options:RKLMultiline];
+		BOOL addExtRebase       = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.rebase\\s*="       options:RKLMultiline];
+		BOOL addExtHistEdit	    = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.histedit\\s*="     options:RKLMultiline];
+		BOOL addExtCollapse     = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.collapse\\s*="     options:RKLMultiline];
+		BOOL addExtCedit        = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.cedit\\s*="		  options:RKLMultiline];
+		BOOL addExtCombinedInfo = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.combinedinfo\\s*=" options:RKLMultiline];
+		
+		if (addExtDiff || addExtBookmarks || addExtMq || addExtRebase || addExtHistEdit || addExtCollapse || addExtCedit || addExtCombinedInfo)
+		{
+			NSFileManager* fileManager = [NSFileManager defaultManager];
+			NSString* macHgHGRCPath = fstr(@"%@/hgrc",applicationSupportFolder());
+			
+			[fileManager appendString:@"\n[extensions]\n" toFilePath:macHgHGRCPath];
+			if (addExtDiff)			[fileManager appendString:@"hgext.extdiff=\n"	   toFilePath:macHgHGRCPath];
+			if (addExtBookmarks)	[fileManager appendString:@"hgext.bookmarks=\n"    toFilePath:macHgHGRCPath];
+			if (addExtMq)			[fileManager appendString:@"hgext.mq=\n"		   toFilePath:macHgHGRCPath];
+			if (addExtRebase)		[fileManager appendString:@"hgext.rebase=\n"	   toFilePath:macHgHGRCPath];
+			if (addExtHistEdit)		[fileManager appendString:@"hgext.histedit=\n"	   toFilePath:macHgHGRCPath];
+			if (addExtCollapse)		[fileManager appendString:@"hgext.collapse=\n"	   toFilePath:macHgHGRCPath];
+			if (addExtCedit)		[fileManager appendString:@"hgext.cedit=\n"	       toFilePath:macHgHGRCPath];
+			if (addExtCombinedInfo)	[fileManager appendString:@"hgext.combinedinfo=\n" toFilePath:macHgHGRCPath];
+		}
+		
+	}];
+	
 	if (!onStartup)
 		NSRunAlertPanel(@"Editing Extensions Enabled", @"The history editing extensions are enabled.", @"OK", nil, nil);
 }
