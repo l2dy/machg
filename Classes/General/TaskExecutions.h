@@ -50,11 +50,15 @@ typedef enum
 + (ExecutionResult*) extractResults:(NSTask*)task;
 + (ExecutionResult*) resultWithCmd:(NSString*)cmd args:(NSArray*)args result:(int)result outStr:(NSString*)outStr errStr:(NSString*)errStr;
 
+// Querying
 - (BOOL) hasErrors;
 - (BOOL) hasNoErrors;
 - (BOOL) hasWarnings;
 - (BOOL) isClean;
-- (void) displayAnyHostIdentificationViolations;
+
+// Logging
+- (void) logAndReportAnyErrors:(LoggingEnum)log;
+- (void) logMercurialResult;
 
 @end
 
@@ -93,8 +97,6 @@ typedef enum
 
 
 // Mercurial task handling
-+ (void)			logMercurialResult:(ExecutionResult*)results;
-+ (void)			logAndReportAnyErrors:(LoggingEnum)log forResults:(ExecutionResult*)results;
 + (BOOL)			taskWasKilled:(ExecutionResult*)results;
 
 + (NSMutableArray*) preProcessMercurialCommandArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath;

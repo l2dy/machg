@@ -468,7 +468,7 @@
 		ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsManifest  fromRoot:rootPath  logging:eLoggingNone];
 		if ([results hasErrors])
 		{
-			[TaskExecutions logMercurialResult:results];
+			[results logMercurialResult];
 			return nil;
 		}
 		NSMutableArray* statusStrings = [[NSMutableArray alloc]init];
@@ -494,7 +494,7 @@
 	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:rootPath  logging:eLoggingNone];
 	if ([results hasErrors])
 	{
-		[TaskExecutions logMercurialResult:results];
+		[results logMercurialResult];
 		return nil;
 	}
 	return [results.outStr componentsSeparatedByString:@"\n"];

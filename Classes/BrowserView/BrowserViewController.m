@@ -167,7 +167,7 @@
 	
 	if ([results.errStr length] > 0)
 	{
-		[TaskExecutions logMercurialResult:results];
+		[results logMercurialResult];
 		// for an error rather than warning fail by returning nil. Maybe later we will return error codes.
 		if ([results hasErrors])
 			return  nil;			
@@ -187,7 +187,7 @@
 	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsResolveStatus fromRoot:rootPath  logging:eLoggingNone];
 	if ([results hasErrors])
 	{
-		[TaskExecutions logMercurialResult:results];
+		[results logMercurialResult];
 		return nil;
 	}
 	NSArray* lines = [results.outStr componentsSeparatedByString:@"\n"];

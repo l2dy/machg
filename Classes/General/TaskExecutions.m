@@ -132,6 +132,49 @@
 	});	
 }
 
+- (void) logMercurialResult
+{
+	NSMutableString* theCommandAsString = [[NSMutableString alloc] init];
+	NSArray* args = generatingArgs_;
+	for (id s in args)
+		[theCommandAsString appendFormat:@"%@ ", s];
+	NSString* filteredCommandString = [theCommandAsString stringByReplacingOccurrencesOfRegex:@"((?:ssh|http|https)://.*?):.*?@" withString:@"$1:***@"];
+	NSString* currentTime = [[NSDate date] description];
+	NSString* hgBinary = executableLocationHG();
+	NSString* message = fstr(@"MacHg issued(%@):\n%@ %@\nResult code was:%d\nStandard out was:\n%@\nStandard error was:\n%@\n\n\n",
+							 currentTime, hgBinary, filteredCommandString, result_, outStr_, errStr_);
+	[[NSFileManager defaultManager] appendString:message toFilePath:MacHgLogFileLocation()];
+}
+
+
+- (void) logAndReportAnyErrors:(LoggingEnum)log
+{
+	
+	// Write to log files.
+	int level = LoggingLevelForHGCommands();
+	if ( (level == 1 && bitsInCommon(log, eLogAllToFile)) || level == 2)
+		[self logMercurialResult];
+	
+	if ([self hasErrors])
+		[self displayAnyHostIdentificationViolations];
+	
+	// report errors if we asked for error reporting and it hasn't already been handled.
+	if (!loggedToAlertOrWindow_ && [self hasErrors] && bitsInCommon(log, eIssueErrorsInAlerts))
+	{
+		NSString* errorMessage = fstr(@"Error During %@", [[generatingArgs_ firstObject] capitalizedString]);
+		
+		// This is a hurestic see the thread I started Versioning of Extensions and Matt's rather empty response here http:
+		// www.selenic.com/pipermail/mercurial/2010-May/032095.html
+		NSString* errorString = IsEmpty(errStr_) ? outStr_ : errStr_;
+		NSString* fullErrorMessage = fstr(@"Mercurial reported error number %d:\n%@", result_, errorString);
+		dispatch_async(mainQueue(), ^{
+			NSRunAlertPanel(errorMessage, fullErrorMessage, @"OK", nil, nil);
+		});
+		loggedToAlertOrWindow_ = YES;
+	}
+}
+
+
 
 @end
 
@@ -288,47 +331,6 @@ static NSString* processedPathEnv(NSDictionary* processEnv)
 // MARK: Mercurial execution
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-+(void) logMercurialResult:(ExecutionResult*)results
-{
-	NSMutableString* theCommandAsString = [[NSMutableString alloc] init];
-	NSArray* args = results.generatingArgs;
-	for (id s in args)
-		[theCommandAsString appendFormat:@"%@ ", s];
-	NSString* filteredCommandString = [theCommandAsString stringByReplacingOccurrencesOfRegex:@"((?:ssh|http|https)://.*?):.*?@" withString:@"$1:***@"];
-	NSString* currentTime = [[NSDate date] description];
-	NSString* hgBinary = executableLocationHG();
-	NSString* message = fstr(@"MacHg issued(%@):\n%@ %@\nResult code was:%d\nStandard out was:\n%@\nStandard error was:\n%@\n\n\n",
-						 currentTime, hgBinary, filteredCommandString, results.result, results.outStr, results.errStr);
-	[[NSFileManager defaultManager] appendString:message toFilePath:MacHgLogFileLocation()];
-}
-
-
-+ (void) logAndReportAnyErrors:(LoggingEnum)log forResults:(ExecutionResult*)result
-{
-	
-	// Write to log files.
-	int level = LoggingLevelForHGCommands();
-	if ( (level == 1 && bitsInCommon(log, eLogAllToFile)) || level == 2)
-		[self logMercurialResult:result];
-
-	if ([result hasErrors])
-		[result displayAnyHostIdentificationViolations];
-
-	// report errors if we asked for error reporting and it hasn't already been handled.
-	if (![result loggedToAlertOrWindow] && [result hasErrors] && bitsInCommon(log, eIssueErrorsInAlerts))
-	{
-		NSString* errorMessage = fstr(@"Error During %@", [[result.generatingArgs objectAtIndex:0] capitalizedString]);
-
-		// This is a hurestic see the thread I started Versioning of Extensions and Matt's rather empty response here http:
-		// www.selenic.com/pipermail/mercurial/2010-May/032095.html
-		NSString* errorString = IsEmpty(result.errStr) ? result.outStr : result.errStr;
-		NSString* fullErrorMessage = fstr(@"Mercurial reported error number %d:\n%@", result.result, errorString);
-		dispatch_async(mainQueue(), ^{
-			NSRunAlertPanel(errorMessage, fullErrorMessage, @"OK", nil, nil);
-		});
-		[result setLoggedToAlertOrWindow:YES];
-	}
-}
 
 
 
@@ -371,7 +373,7 @@ static NSString* processedPathEnv(NSDictionary* processEnv)
 	NSString* hgBinary = executableLocationHG();
 	ExecutionResult* results = [TaskExecutions synchronouslyExecute:hgBinary withArgs:newArgs onTask:theTask];
 	[results pruneMissingExtensionsErrors];
-	[TaskExecutions logAndReportAnyErrors:log forResults:results];
+	[results logAndReportAnyErrors:log];
 	return results;
 }
 
