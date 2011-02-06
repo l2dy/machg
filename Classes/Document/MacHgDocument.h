@@ -226,6 +226,7 @@
 - (NSString*)	getHGParent2Changeset;
 - (NSNumber*)	getHGTipRevision;
 - (NSString*)	getHGTipChangeset;
+- (NSNumber*)	getSelectedRevision;
 - (BOOL)		isCurrentRevisionTip;
 - (BOOL)		inMergeState;
 - (NSInteger)	computeNumberOfRevisions;

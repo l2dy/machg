@@ -41,6 +41,7 @@
 // Action Methods
 - (IBAction) validate:(id)sender;
 - (IBAction) openUpdateSheetWithCurrentRevision:(id)sender;
+- (IBAction) openUpdateSheetWithSelectedRevision:(id)sender;
 - (IBAction) sheetButtonOk:(id)sender;
 - (IBAction) sheetButtonCancel:(id)sender;
 - (IBAction) sheetButtonViewDifferencesForUpdateSheet:(id)sender;

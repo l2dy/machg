@@ -82,7 +82,7 @@
 	
 	[logTableView resetTable:self];
 	[NSApp beginSheet:theUpdateSheet  modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
-	[logTableView scrollToRevision:revision];
+	[logTableView scrollToRevision:revision ? revision : [myDocument getHGParent1Revision]];
 	[self validate:self];
 }
 
@@ -90,6 +90,12 @@
 - (IBAction) openUpdateSheetWithCurrentRevision:(id)sender
 {
 	[self openUpdateSheetWithRevision:[myDocument getHGParent1Revision]];
+}
+
+
+- (IBAction) openUpdateSheetWithSelectedRevision:(id)sender
+{
+	[self openUpdateSheetWithRevision:[myDocument getSelectedRevision]];
 }
 
 

@@ -1376,6 +1376,7 @@
 - (NSString*) getHGParent2Changeset		{ return [[self repositoryData] getHGParent2Changeset]; }
 - (NSNumber*) getHGTipRevision			{ return [[self repositoryData] getHGTipRevision]; }
 - (NSString*) getHGTipChangeset			{ return [[self repositoryData] getHGTipChangeset]; }
+- (NSNumber*) getSelectedRevision		{ return theHistoryViewController_ ? [[[self theHistoryView] logTableView] selectedRevision] : nil; }
 - (BOOL)      isCurrentRevisionTip		{ return [[self repositoryData] isCurrentRevisionTip]; }
 - (BOOL)	  inMergeState				{ return [[self repositoryData] inMergeState]; }
 - (NSInteger) computeNumberOfRevisions	{ return [[self repositoryData] computeNumberOfRevisions]; }
@@ -1707,8 +1708,8 @@
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (IBAction) mainMenuUpdateRepository:(id)sender				{ [self primaryActionUpdateFilesToVersion:[self getHGTipRevision] withCleanOption:NO]; }
-- (IBAction) mainMenuUpdateRepositoryToVersion:(id)sender		{ [[self theUpdateSheetController] openUpdateSheetWithCurrentRevision:sender]; }
-- (IBAction) toolbarUpdate:(id)sender							{ [[self theUpdateSheetController] openUpdateSheetWithCurrentRevision:sender]; }
+- (IBAction) mainMenuUpdateRepositoryToVersion:(id)sender		{ [[self theUpdateSheetController] openUpdateSheetWithSelectedRevision:sender]; }
+- (IBAction) toolbarUpdate:(id)sender							{ [[self theUpdateSheetController] openUpdateSheetWithSelectedRevision:sender]; }
 
 
 
