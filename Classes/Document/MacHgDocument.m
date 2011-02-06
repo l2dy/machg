@@ -903,7 +903,7 @@
 - (BOOL) validateAndSwitchMenuForCommitAllFiles:(id)anItem
 {
 	NSMenuItem* menuItem = DynamicCast(NSMenuItem, anItem);
-	[menuItem setTitle:([[self repositoryData] inMergeState] ? @"Commit Merged Files..." : @"Commit All Files...")];
+	[menuItem setTitle:([[self repositoryData] inMergeState] ? @"Commit Merged Files…" : @"Commit All Files…")];
 	return [self repositoryHasFilesWhichContainStatus:eHGStatusCommittable];
 }
 - (BOOL) validateAndSwitchMenuForPreviewSelectedFiles:(id)anItem
@@ -1911,7 +1911,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 								 version ? fstr(@"revision “%@”", version) :
 								 ([self isCurrentRevisionTip] ? @"the latest revision" : @"current revision"));
 		
-		int result = RunCriticalAlertPanelOptionsWithSuppression(mainMessage, subMessage, @"Revert", @"Cancel", @"Options...", MHGDisplayWarningForRevertingFiles);
+		int result = RunCriticalAlertPanelOptionsWithSuppression(mainMessage, subMessage, @"Revert", @"Cancel", @"Options…", MHGDisplayWarningForRevertingFiles);
 		if (result == NSAlertThirdButtonReturn) // Options
 		{
 			[[self theRevertSheetController] openRevertSheetWithPaths:absolutePaths andRevision:version];
@@ -2032,7 +2032,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 		if (containsChangedFiles)
 			subMessage = fstr(@"There are uncommitted changes. %@", subMessage);
 		
-		NSAlert* alert = NewAlertPanel(mainMessage, subMessage, @"Update", @"Cancel", @"Options...");
+		NSAlert* alert = NewAlertPanel(mainMessage, subMessage, @"Update", @"Cancel", @"Options…");
 		[updateAlertAccessoryCleanCheckBox setState:clean];
 		[updateAlertAccessoryAlertSuppressionCheckBox setState:NO];
 		[updateAlertAccessoryAlertSuppressionCheckBox setHidden:!DisplayWarningForUpdatingFromDefaults()];
@@ -2085,7 +2085,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 		NSString* subMessage  = fstr(@"Are you sure you want to backout (reverse) the changeset “%@” in the repository “%@”?",
 									 version, [self selectedRepositoryShortName]);
 
-		int result = RunCriticalAlertPanelOptionsWithSuppression(mainMessage, subMessage, @"Backout", @"Cancel", @"Options...", MHGDisplayWarningForBackout);
+		int result = RunCriticalAlertPanelOptionsWithSuppression(mainMessage, subMessage, @"Backout", @"Cancel", @"Options…", MHGDisplayWarningForBackout);
 		if (result == NSAlertThirdButtonReturn) // Options
 		{
 			[[self theBackoutSheetController] openBackoutSheetWithRevision:version];
@@ -2136,7 +2136,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 								 ([self isCurrentRevisionTip] ? @"latest revision" : @"current revision"),
 								 [self selectedRepositoryShortName]);
 		
-		int result = RunCriticalAlertPanelOptionsWithSuppression(mainMessage, subMessage, @"Merge", @"Cancel", @"Options...", MHGDisplayWarningForMerging);
+		int result = RunCriticalAlertPanelOptionsWithSuppression(mainMessage, subMessage, @"Merge", @"Cancel", @"Options…", MHGDisplayWarningForMerging);
 		if (result == NSAlertThirdButtonReturn) // Options
 		{
 			[[self theMergeSheetController] openMergeSheetWithRevision:mergeVersion];
