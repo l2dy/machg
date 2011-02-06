@@ -178,6 +178,7 @@
 		96C98EA5113B70C2006816C0 /* MacHgsmaller.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C98EA4113B70C2006816C0 /* MacHgsmaller.png */; };
 		96D2477D117BC1810030815B /* ThickSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D2477C117BC1810030815B /* ThickSplitView.m */; };
 		96D25FB612FC8D5800EB6B70 /* TrustedCertificates.pem in Resources */ = {isa = PBXBuildFile; fileRef = 96D25FB512FC8D5800EB6B70 /* TrustedCertificates.pem */; };
+		96D2608012FE420700EB6B70 /* getHTTPSfingerprint.py in Resources */ = {isa = PBXBuildFile; fileRef = 96D2607F12FE420700EB6B70 /* getHTTPSfingerprint.py */; };
 		96D5FFF81114E83900EE672E /* MyWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D5FFF71114E83900EE672E /* MyWindowController.m */; };
 		96DB336510D43BCB00BB5B08 /* DifferencesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96DB336310D43BCB00BB5B08 /* DifferencesView.xib */; };
 		96DCCC1E10CD41B100C843C9 /* fmdiff.sh in Resources */ = {isa = PBXBuildFile; fileRef = 96DCCC1B10CD41B100C843C9 /* fmdiff.sh */; };
@@ -474,6 +475,7 @@
 		96D2477B117BC1810030815B /* ThickSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThickSplitView.h; sourceTree = "<group>"; };
 		96D2477C117BC1810030815B /* ThickSplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ThickSplitView.m; sourceTree = "<group>"; };
 		96D25FB512FC8D5800EB6B70 /* TrustedCertificates.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TrustedCertificates.pem; sourceTree = "<group>"; };
+		96D2607F12FE420700EB6B70 /* getHTTPSfingerprint.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = getHTTPSfingerprint.py; sourceTree = "<group>"; };
 		96D5FFF61114E83900EE672E /* MyWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyWindowController.h; path = Classes/Document/MyWindowController.h; sourceTree = "<group>"; };
 		96D5FFF71114E83900EE672E /* MyWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MyWindowController.m; path = Classes/Document/MyWindowController.m; sourceTree = "<group>"; };
 		96DB336410D43BCB00BB5B08 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/DifferencesView.xib; sourceTree = "<group>"; };
@@ -1392,6 +1394,7 @@
 		96DCCC1A10CD41B100C843C9 /* scripts */ = {
 			isa = PBXGroup;
 			children = (
+				96D2607F12FE420700EB6B70 /* getHTTPSfingerprint.py */,
 				96DCCC1B10CD41B100C843C9 /* fmdiff.sh */,
 				9606F3441157F1F100968DE8 /* opendiff-w.sh */,
 				96DCCC1C10CD41B100C843C9 /* localhg */,
@@ -1590,6 +1593,7 @@
 				963001AC12988A9100C1782B /* BackoutSheet.xib in Resources */,
 				9673D08012D1C99A0043929D /* Quicklook.png in Resources */,
 				96D25FB612FC8D5800EB6B70 /* TrustedCertificates.pem in Resources */,
+				96D2608012FE420700EB6B70 /* getHTTPSfingerprint.py in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
