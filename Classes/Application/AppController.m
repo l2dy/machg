@@ -612,7 +612,7 @@
 	NSTimeInterval timeOutInSeconds = 5.0 * pow(2.0, attempts);
 	
 	dispatch_async(globalQueue(), ^{
-		NSMutableArray* argsIdentify = [NSMutableArray arrayWithObjects:@"identify", @"--rev", @"0", @"--id", @"--quiet", fullPath, nil];
+		NSMutableArray* argsIdentify = [NSMutableArray arrayWithObjects:@"identify", @"--insecure", @"--rev", @"0", @"--id", @"--quiet", fullPath, nil];
 		__block NSTask* theTask = [[NSTask alloc]init];
 		__block ExecutionResult* results;
 		dispatchWithTimeOut(globalQueue(), timeOutInSeconds, ^{

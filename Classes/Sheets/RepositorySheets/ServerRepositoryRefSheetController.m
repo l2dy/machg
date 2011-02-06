@@ -242,7 +242,7 @@
 		return;
 
 	NSString* fullServerURL = FullServerURLWithPassword(serverFieldValue_, needsPassword_, password_);
-	NSMutableArray* argsIdentify = [NSMutableArray arrayWithObjects:@"identify", @"--rev", @"0", fullServerURL, nil];
+	NSMutableArray* argsIdentify = [NSMutableArray arrayWithObjects:@"identify", @"--insecure", @"--rev", @"0", fullServerURL, nil];
 	NSMutableArray* newArgs = [TaskExecutions preProcessMercurialCommandArgs:argsIdentify fromRoot:@"/tmp"];
 	[newArgs insertObject:LocalWhitelistedHGShellAliasNameFromDefaults() atIndex:0];
 	NSString* identityCommand = [newArgs componentsJoinedByString:@" "];
