@@ -109,10 +109,22 @@
 
 	if (!fingerPrint)
 		return;
-	
-	NSString* errorMessage = @"Unsecured Host Encountered";
-	NSString* fullErrorMessage = fstr(@"The authenticity of host '%@' can't be established.\nThe host is reporting the key fingerprint:\n  %@\nIf you trust that this key fingerprint really represents '%@', you can add this fingerprint to the accepted hosts.", host, fingerPrint, host);
+
 	loggedToAlertOrWindow_ = YES;
+
+	// Check to see if we already have a finger print in which case the fingerprint couldn't be used to verify the host which is bad.
+	NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", fstr(@"hostfingerprints.%@", host), nil];
+	ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
+	if ([result hasNoErrors] && IsNotEmpty(result.outStr))
+	{
+		NSRunCriticalAlertPanel(@"Mismatched Fingerprint Key", fstr(@"The key stored for the host '%@' is different than the key returned by connecting to %@. This could indicate the connection has been compromised. Check your configuration settings!", host, host), @"OK", @"", @"");
+		return;
+	}
+
+	// Report we basically encountered a new host.
+	NSString* errorMessage = @"Unsecured Host Encountered";
+	NSString* fullErrorMessage = fstr(@"The authenticity of host '%@' cannot be established from stored certificates or host keys.\n\nThe host is reporting the key fingerprint:\n  %@\n\nIf you trust that this key fingerprint really represents '%@', you can permanently add this fingerprint to the accepted hosts.", host, fingerPrint, host);
+
 	dispatch_async(mainQueue(), ^{
 		NSInteger response = NSRunCriticalAlertPanel(errorMessage, fullErrorMessage, @"Decline", @"Add", @"");
 		if (response == NSAlertDefaultReturn)
@@ -127,7 +139,7 @@
 		NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"hgext.cedit=", @"--add", fstr(@"hostfingerprints.%@ = %@", host, fingerPrint), @"--file", macHgHGRCFilePath, nil];
 		[TaskExecutions executeMercurialWithArgs:argsCedit  fromRoot:@"/tmp"];
 		
-		NSString* successMessage = fstr(@"Permentantly recorded the fingerprint for %@ so it can be verifiably recognized in the future.", host, [cmd capitalizedString]);
+		NSString* successMessage = fstr(@"Permanently recorded for host '%@' the fingerprint:\n\n%@\n\nso it can be verifiably recognized in the future.", host, fingerPrint);
 		NSRunAlertPanel(@"Fingerprint Added", successMessage, @"Ok", @"", @"");
 	});	
 }
@@ -163,7 +175,7 @@
 	{
 		NSString* errorMessage = fstr(@"Error During %@", [[generatingArgs_ firstObject] capitalizedString]);
 		
-		// This is a hurestic see the thread I started Versioning of Extensions and Matt's rather empty response here http:
+		// This is a heuristic see the thread I started Versioning of Extensions and Matt's rather empty response here http:
 		// www.selenic.com/pipermail/mercurial/2010-May/032095.html
 		NSString* errorString = IsEmpty(errStr_) ? outStr_ : errStr_;
 		NSString* fullErrorMessage = fstr(@"Mercurial reported error number %d:\n%@", result_, errorString);
