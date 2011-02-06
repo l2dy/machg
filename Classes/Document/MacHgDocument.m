@@ -1107,9 +1107,10 @@
 	NSString* containingDir = [newPath stringByDeletingLastPathComponent];
 	if (!pathIsExistentDirectory(containingDir))
 	{
-		NSError* theError;
+		NSError* err = nil;
 		NSFileManager* fileManager = [NSFileManager defaultManager];
-		[fileManager createDirectoryAtPath:containingDir withIntermediateDirectories:YES attributes:nil error:&theError];
+		[fileManager createDirectoryAtPath:containingDir withIntermediateDirectories:YES attributes:nil error:&err];
+		[NSApp presentAnyErrorsAndClear:&err];
 	}
 	
 	NSMutableArray* argsCat = [NSMutableArray arrayWithObjects:@"cat", @"--output", newPath, @"--rev", changeset, theRelativePath, nil];
@@ -1528,8 +1529,7 @@
 {
 	NSError* err = nil;
 	[self pushRepositoryCopyForUndo:&err];
-	if (err)
-		[NSApp presentError:err];		
+	[NSApp presentAnyErrorsAndClear:&err];
 }
 
 
@@ -1776,6 +1776,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 
 	[self removeAllUndoActionsForDocument];
 	[self dispatchToMercurialQueuedWithDescription:@"Ignoring Files" process:^{
+		NSError* err = nil;
 		NSMutableArray* pathsToRefresh = [NSMutableArray arrayWithArray:theSelectedFiles];
 		[pathsToRefresh addObject:hgignorePath];
 		[self registerPendingRefresh:pathsToRefresh];
@@ -1792,7 +1793,8 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 			if (range.location == NSNotFound)
 				[hgignoreContents appendFormat:@"%@\n",rootRelativeFile];
 		}
-		[hgignoreContents writeToFile:hgignorePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+		[hgignoreContents writeToFile:hgignorePath atomically:YES encoding:NSUTF8StringEncoding error:&err];
+		[NSApp presentAnyErrorsAndClear:&err];
 		[self refreshBrowserPaths:pathsToRefresh];
 	}];
 	return YES;
@@ -1819,9 +1821,11 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 				NSString* rootRelativeFile = QuoteRegExCharacters(pathDifference(root, file));
 				hgignoreContents = [hgignoreContents stringByReplacingOccurrencesOfString:rootRelativeFile withString:@""];
 			}
-			
+
+			NSError* err = nil;
 			hgignoreContents = [hgignoreContents stringByReplacingOccurrencesOfString:@"\n\n" withString:@"\n"];
-			[hgignoreContents writeToFile:hgignorePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+			[hgignoreContents writeToFile:hgignorePath atomically:YES encoding:NSUTF8StringEncoding error:&err];
+			[NSApp presentAnyErrorsAndClear:&err];
 			
 			[self refreshBrowserPaths:pathsToRefresh];
 		}

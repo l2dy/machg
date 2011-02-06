@@ -914,7 +914,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 // MARK: -
 @interface NSArray ( NSArrayPlusAccessors )
-- (id)		firstObject;
+- (id)		 firstObject;
 - (NSArray*) reversedArray;
 @end
 
@@ -942,6 +942,12 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 // MARK: -
 @interface NSWorkspace ( NSWorkspacePlusExtensions )
 + (NSImage*) iconImageOfSize:(NSSize)size forPath:(NSString*)path;
+@end
+
+
+// MARK: -
+@interface NSApplication ( NSApplicartionPlusExtensions )
+- (void)	presentAnyErrorsAndClear:(NSError**)err;
 @end
 
 

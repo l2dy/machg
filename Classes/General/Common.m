@@ -1310,6 +1310,18 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 
 
+// MARK: -
+@implementation NSApplication ( NSApplicartionPlusExtensions )
+- (void) presentAnyErrorsAndClear:(NSError**)err;
+{
+	if (*err)
+	{
+		[self presentError:*err];
+		*err = nil;
+	}
+}
+@end
+
 
 // MARK: -
 @implementation NSFileManager ( NSFileManagerPlusAppending )

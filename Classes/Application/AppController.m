@@ -203,8 +203,9 @@
 		return;
 
 	NSFileManager* fileManager = [NSFileManager defaultManager];
-	NSError* theError;
-	[fileManager createDirectoryAtPath:applicationSupportFolder() withIntermediateDirectories:YES attributes:nil error:&theError];
+	NSError* err = nil;
+	[fileManager createDirectoryAtPath:applicationSupportFolder() withIntermediateDirectories:YES attributes:nil error:&err];
+	[NSApp presentAnyErrorsAndClear:&err];
 }
 
 
@@ -214,10 +215,14 @@
 	if (pathIsExistent(macHgHGRCFilePath))
 		return;
 
+	NSError* err = nil;
 	NSString* sourceMacHgHGRCpath = fstr(@"%@/%@",[[NSBundle mainBundle] resourcePath], @"hgrc");
-	NSString* hgrcContents = [NSString stringWithContentsOfFile:sourceMacHgHGRCpath encoding:NSUTF8StringEncoding error:nil];
+	NSString* hgrcContents = [NSString stringWithContentsOfFile:sourceMacHgHGRCpath encoding:NSUTF8StringEncoding error:&err];
+	[NSApp presentAnyErrorsAndClear:&err];
+
 	hgrcContents = [hgrcContents stringByReplacingOccurrencesOfString:@"~" withString:NSHomeDirectory()];
-	[hgrcContents writeToFile:macHgHGRCFilePath atomically:YES encoding:NSUTF8StringEncoding error:nil];
+	[hgrcContents writeToFile:macHgHGRCFilePath atomically:YES encoding:NSUTF8StringEncoding error:&err];
+	[NSApp presentAnyErrorsAndClear:&err];
 }
 
 
@@ -225,6 +230,7 @@
 {
 	NSString* macHgHGRCFilePath = fstr(@"%@/hgrc",applicationSupportFolder());
 	NSString* userHgignorePath = [NSHomeDirectory() stringByAppendingPathComponent:@".hgignore"];
+	NSError* err = nil;
 
 	// If the ~/.hgignore exists then make sure ~/Application Support/MacHg/hgrc points to it
 	if (pathIsExistent(userHgignorePath))
@@ -237,8 +243,10 @@
 	if (!pathIsExistent(macHgIgnoreFilePath))
 	{
 		NSString* sourceMacHgHignorePath = fstr(@"%@/%@",[[NSBundle mainBundle] resourcePath], @"hgignore");
-		NSString* hgignoreContents = [NSString stringWithContentsOfFile:sourceMacHgHignorePath encoding:NSUTF8StringEncoding error:nil];
-		[hgignoreContents writeToFile:macHgIgnoreFilePath atomically:YES encoding:NSUTF8StringEncoding error:nil];	
+		NSString* hgignoreContents = [NSString stringWithContentsOfFile:sourceMacHgHignorePath encoding:NSUTF8StringEncoding error:&err];
+		[NSApp presentAnyErrorsAndClear:&err];
+		[hgignoreContents writeToFile:macHgIgnoreFilePath atomically:YES encoding:NSUTF8StringEncoding error:&err];
+		[NSApp presentAnyErrorsAndClear:&err];
 	}
 
 	NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"hgext.cedit=", @"--add", fstr(@"ui.ignore.other = %@", macHgIgnoreFilePath), @"--file", macHgHGRCFilePath, nil];
@@ -251,13 +259,16 @@
 	[self includeHomeHGRC:NO inProcess:^{
 		NSString* macHgHGRCFilePath = fstr(@"%@/hgrc",applicationSupportFolder());
 		NSString* macHgCertFilePath = fstr(@"%@/TrustedCertificates.pem",applicationSupportFolder());
-		
+		NSError* err = nil;
+
 		// If the ~/.hgignore exists then make sure ~/Application Support/MacHg/hgrc points to it
 		if (!pathIsExistent(macHgCertFilePath))
 		{
 			NSString* sourceCertFilePath = fstr(@"%@/%@",[[NSBundle mainBundle] resourcePath], @"TrustedCertificates.pem");
-			NSString* certFileContents = [NSString stringWithContentsOfFile:sourceCertFilePath encoding:NSUTF8StringEncoding error:nil];
-			[certFileContents writeToFile:macHgCertFilePath atomically:YES encoding:NSUTF8StringEncoding error:nil];	
+			NSString* certFileContents = [NSString stringWithContentsOfFile:sourceCertFilePath encoding:NSMacOSRomanStringEncoding error:&err];
+			[NSApp presentAnyErrorsAndClear:&err];
+			[certFileContents writeToFile:macHgCertFilePath atomically:YES encoding:NSMacOSRomanStringEncoding error:&err];
+			[NSApp presentAnyErrorsAndClear:&err];
 		}
 
 		// Determine current configuration:
@@ -444,9 +455,11 @@
 		// create document ~/Application Support/MacHg/Repositories.machg
 		NSError* err = nil;
 		MacHgDocument* newDoc = [docController openUntitledDocumentAndDisplay:YES error:&err];
+		[NSApp presentAnyErrorsAndClear:&err];
 		if (newDoc)
 		{
 			[newDoc saveToURL:defaultURL ofType:@"MacHgDocument" forSaveOperation:NSSaveAsOperation error:&err];
+			[NSApp presentAnyErrorsAndClear:&err];
 			[newDoc showWindows];
 			return NO;
 		}
@@ -493,8 +506,7 @@
 	{
 		NSFileManager* fileManager = [NSFileManager defaultManager];
 		NSString* snapshotsDir = [cacheDir stringByAppendingPathComponent:@"snapshots"];
-		NSError* theError;
-		[fileManager removeItemAtPath:snapshotsDir error:&theError];
+		[fileManager removeItemAtPath:snapshotsDir error:nil];
 	}
 
     return NSTerminateNow;

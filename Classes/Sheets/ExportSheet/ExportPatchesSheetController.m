@@ -235,7 +235,11 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 					if (![patchFileName isAbsolutePath])
 						patchFileName = [rootPath stringByAppendingPathComponent:patchFileName];
 					if (changingFileName)
-						[content writeToFile:patchFileName atomically:YES encoding:NSUTF8StringEncoding error:nil];
+					{
+						NSError* err = nil;
+						[content writeToFile:patchFileName atomically:YES encoding:NSUTF8StringEncoding error:&err];
+						[NSApp presentAnyErrorsAndClear:&err];
+					}
 					else
 						[[NSFileManager defaultManager] appendString:fstr(@"\n\n%@", content) toFilePath:patchFileName];
 				}
