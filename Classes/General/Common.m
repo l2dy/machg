@@ -117,6 +117,7 @@ NSString* const MHGLogEntryTableTagHighlightColor		= @"LogEntryTableTagHighlight
 NSString* const MHGLoggingLevelForHGCommands			= @"LoggingLevelForHGCommands";
 NSString* const MHGMacHgLogFileLocation					= @"MacHgLogFileLocation";
 NSString* const MHGOnStartupOpen						= @"OnApplicationStartupOpenWhat";
+NSString* const MHGRequireVerifiedServerCertificates	= @"RequireVerifiedServerCertificates";
 NSString* const MHGRevisionSortOrder					= @"RevisionSortOrder";
 NSString* const MHGShowAddedFilesInBrowser				= @"ShowAddedFilesInBrowser";
 NSString* const MHGShowCleanFilesInBrowser				= @"ShowCleanFilesInBrowser";
@@ -126,8 +127,8 @@ NSString* const MHGShowMissingFilesInBrowser			= @"ShowMissingFilesInBrowser";
 NSString* const MHGShowModifiedFilesInBrowser			= @"ShowModifiedFilesInBrowser";
 NSString* const MHGShowRemovedFilesInBrowser			= @"ShowRemovedFilesInBrowser";
 NSString* const MHGShowResolvedFilesInBrowser			= @"ShowResolvedFilesInBrowser";
-NSString* const MHGShowUntrackedFilesInBrowser			= @"ShowUntrackedFilesInBrowser";
 NSString* const MHGShowUnresolvedFilesInBrowser			= @"ShowUnresolvedFilesInBrowser";
+NSString* const MHGShowUntrackedFilesInBrowser			= @"ShowUntrackedFilesInBrowser";
 NSString* const MHGSizeOfBrowserColumns					= @"SizeOfBrowserColumns";
 NSString* const MHGToolNameForDiffing					= @"ToolNameForDiffing";
 NSString* const MHGUseFileMergeForDiff					= @"UseFileMergeForDiff";
@@ -135,8 +136,6 @@ NSString* const MHGUseFileMergeForMerge					= @"UseFileMergeForMerge";
 NSString* const MHGUseWhichToolForDiffing				= @"UseWhichToolForDiffing";
 NSString* const MHGViewsHaveIndependentSizes			= @"ViewsHaveIndependentSizes";
 NSString* const MHGWarnAboutBadMercurialConfiguration   = @"WarnAboutBadMercurialConfiguration";
-
-
 
 
 
@@ -182,6 +181,7 @@ BOOL		DisplayWarningForUntrackingFilesFromDefaults()			{ return boolFromDefaults
 BOOL		DisplayWarningForUpdatingFromDefaults()					{ return boolFromDefaultsForKey(MHGDisplayWarningForUpdating); }
 BOOL		IncludeHomeHgrcInHGRCPATHFromDefaults()					{ return boolFromDefaultsForKey(MHGIncludeHomeHgrcInHGRCPATH); }
 BOOL		LogEntryTableDisplayChangesetColumnFromDefaults()		{ return boolFromDefaultsForKey(MHGLogEntryTableDisplayChangesetColumn); }
+BOOL		RequireVerifiedServerCertificatesFromDefaults()			{ return boolFromDefaultsForKey(MHGRequireVerifiedServerCertificates); }
 BOOL		ShowAddedFilesInBrowserFromDefaults()					{ return boolFromDefaultsForKey(MHGShowAddedFilesInBrowser); }
 BOOL		ShowCleanFilesInBrowserFromDefaults()					{ return boolFromDefaultsForKey(MHGShowCleanFilesInBrowser); }
 BOOL		ShowFilePreviewInBrowserFromDefaults()					{ return boolFromDefaultsForKey(MHGShowFilePreviewInBrowser); }
@@ -190,8 +190,8 @@ BOOL		ShowMissingFilesInBrowserFromDefaults()					{ return boolFromDefaultsForKe
 BOOL		ShowModifiedFilesInBrowserFromDefaults()				{ return boolFromDefaultsForKey(MHGShowModifiedFilesInBrowser); }
 BOOL		ShowRemovedFilesInBrowserFromDefaults()					{ return boolFromDefaultsForKey(MHGShowRemovedFilesInBrowser); }
 BOOL		ShowResolvedFilesInBrowserFromDefaults()				{ return boolFromDefaultsForKey(MHGShowResolvedFilesInBrowser); }
-BOOL		ShowUntrackedFilesInBrowserFromDefaults()					{ return boolFromDefaultsForKey(MHGShowUntrackedFilesInBrowser); }
 BOOL		ShowUnresolvedFilesInBrowserFromDefaults()				{ return boolFromDefaultsForKey(MHGShowUnresolvedFilesInBrowser); }
+BOOL		ShowUntrackedFilesInBrowserFromDefaults()				{ return boolFromDefaultsForKey(MHGShowUntrackedFilesInBrowser); }
 BOOL		UseFileMergeForDiffFromDefaults()						{ return boolFromDefaultsForKey(MHGUseFileMergeForDiff); }
 BOOL		UseFileMergeForMergeFromDefaults()						{ return boolFromDefaultsForKey(MHGUseFileMergeForMerge); }
 BOOL		ViewsHaveIndependentSizesFromDefaults()					{ return boolFromDefaultsForKey(MHGViewsHaveIndependentSizes); }
