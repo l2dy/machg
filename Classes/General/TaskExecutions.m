@@ -26,6 +26,7 @@
 @synthesize result = result_;
 @synthesize outStr = outStr_;
 @synthesize errStr = errStr_;
+@synthesize loggedToAlertOrWindow = loggedToAlertOrWindow_;
 
 + (ExecutionResult*) resultWithCmd:(NSString*)cmd args:(NSArray*)args result:(int)result outStr:(NSString*)outStr errStr:(NSString*)errStr;
 {
@@ -81,6 +82,56 @@
 	[clauses addObject:cmdClause];
 	return fstr(@"<%@ { code:%d, %@} >", [self className], result_, [clauses componentsJoinedByString:@", "]);
 }
+
+- (void) displayAnyHostIdentificationViolations
+{
+	NSString* cmd = [generatingArgs_ firstObject];
+	if (![cmd isMatchedByRegex:@"incoming|outgoing|pull|push|identify"])
+		return;
+	if (IsEmpty(errStr_))
+		return;
+
+	if (![errStr_ isMatchedByRegex:@"warning: (.*) certificate with fingerprint ([0-9a-fA-F:]+) not verified"] &&
+		![errStr_ isMatchedByRegex:@"abort: error:.*certificate verify failed"])
+		return;
+
+	NSString* fingerPrint = nil;
+	NSURL* url = [NSURL URLWithString:[generatingArgs_ lastObject]];
+	NSString* host = [url host];
+	NSNumber* port = [url port];
+	if (!host)
+		return;
+
+	NSString* scriptPath = fstr(@"%@/%@",[[NSBundle mainBundle] resourcePath], @"getHTTPSfingerprint.py");
+	ExecutionResult* results = [TaskExecutions synchronouslyExecute:scriptPath withArgs:[NSArray arrayWithObjects:host, port ? numberAsString(port) : @"443", nil] onTask:nil];
+	if ([results hasNoErrors])
+		fingerPrint = trimString(results.outStr);
+
+	if (!fingerPrint)
+		return;
+	
+	NSString* errorMessage = @"Unsecured Host Encountered";
+	NSString* fullErrorMessage = fstr(@"The authenticity of host '%@' can't be established.\nThe host is reporting the key fingerprint:\n  %@\nIf you trust that this key fingerprint really represents '%@', you can add this fingerprint to the accepted hosts.", host, fingerPrint, host);
+	loggedToAlertOrWindow_ = YES;
+	dispatch_async(mainQueue(), ^{
+		NSInteger response = NSRunCriticalAlertPanel(errorMessage, fullErrorMessage, @"Decline", @"Add", @"");
+		if (response == NSAlertDefaultReturn)
+			return;
+		
+		NSString* macHgHGRCFilePath = fstr(@"%@/hgrc",applicationSupportFolder());
+		if (!pathIsExistent(macHgHGRCFilePath))
+		{
+			NSRunCriticalAlertPanel(@"Missing Configuration File", fstr(@"MacHg's configuration file %@ is missing. Please restart MacHg to recreate this file.", macHgHGRCFilePath), @"OK", @"", @"");		
+			return;
+		}					
+		NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"hgext.cedit=", @"--add", fstr(@"hostfingerprints.%@ = %@", host, fingerPrint), @"--file", macHgHGRCFilePath, nil];
+		[TaskExecutions executeMercurialWithArgs:argsCedit  fromRoot:@"/tmp"];
+		
+		NSString* successMessage = fstr(@"Permentantly recorded the fingerprint for %@ so it can be verifiably recognized in the future.", host, [cmd capitalizedString]);
+		NSRunAlertPanel(@"Fingerprint Added", successMessage, @"Ok", @"", @"");
+	});	
+}
+
 
 @end
 
@@ -254,13 +305,17 @@ static NSString* processedPathEnv(NSDictionary* processEnv)
 
 + (void) logAndReportAnyErrors:(LoggingEnum)log forResults:(ExecutionResult*)result
 {
+	
 	// Write to log files.
 	int level = LoggingLevelForHGCommands();
 	if ( (level == 1 && bitsInCommon(log, eLogAllToFile)) || level == 2)
 		[self logMercurialResult:result];
 
-	// report errors if we asked for error reporting
-	if ([result hasErrors] && bitsInCommon(log, eIssueErrorsInAlerts))
+	if ([result hasErrors])
+		[result displayAnyHostIdentificationViolations];
+
+	// report errors if we asked for error reporting and it hasn't already been handled.
+	if (![result loggedToAlertOrWindow] && [result hasErrors] && bitsInCommon(log, eIssueErrorsInAlerts))
 	{
 		NSString* errorMessage = fstr(@"Error During %@", [[result.generatingArgs objectAtIndex:0] capitalizedString]);
 
@@ -271,8 +326,11 @@ static NSString* processedPathEnv(NSDictionary* processEnv)
 		dispatch_async(mainQueue(), ^{
 			NSRunAlertPanel(errorMessage, fullErrorMessage, @"OK", nil, nil);
 		});
+		[result setLoggedToAlertOrWindow:YES];
 	}
 }
+
+
 
 + (BOOL) taskWasKilled:(ExecutionResult*)results
 {

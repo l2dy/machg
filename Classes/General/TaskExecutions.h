@@ -37,6 +37,7 @@ typedef enum
 	int		  result_;			// The result of executing the command
 	NSString* outStr_;			// The output received on stdOut due to executing the command
 	NSString* errStr_;			// The output received on stdErr due to executing the command
+	BOOL      loggedToAlertOrWindow_;
 }
 
 @property (readonly, assign) NSString* generatingCmd;
@@ -44,6 +45,7 @@ typedef enum
 @property (readonly, assign) int	   result;
 @property (readonly, assign) NSString* outStr;
 @property (readonly, assign) NSString* errStr;
+@property (readwrite,assign) BOOL	   loggedToAlertOrWindow;
 
 + (ExecutionResult*) extractResults:(NSTask*)task;
 + (ExecutionResult*) resultWithCmd:(NSString*)cmd args:(NSArray*)args result:(int)result outStr:(NSString*)outStr errStr:(NSString*)errStr;
@@ -52,6 +54,7 @@ typedef enum
 - (BOOL) hasNoErrors;
 - (BOOL) hasWarnings;
 - (BOOL) isClean;
+- (void) displayAnyHostIdentificationViolations;
 
 @end
 
