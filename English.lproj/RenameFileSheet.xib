@@ -11,7 +11,7 @@
 			<string key="com.brandonwalkin.BWToolkit">1.2.2</string>
 		</dictionary>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-			<integer value="4"/>
+			<integer value="42"/>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -634,6 +634,22 @@
 					</object>
 					<int key="connectionID">107</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">renameSheetTitle</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="685671149"/>
+					</object>
+					<int key="connectionID">108</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">mainMessageTextField</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="994667848"/>
+					</object>
+					<int key="connectionID">109</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -944,9 +960,9 @@
 					<bytes key="NSTransformStruct">P4AAAL+AAABCugAAwxIAAA</bytes>
 				</object>
 				<string key="29.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="3.IBEditorWindowLastContentRect">{{457, 585}, {624, 289}}</string>
+				<string key="3.IBEditorWindowLastContentRect">{{320, 826}, {624, 289}}</string>
 				<string key="3.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="3.IBWindowTemplateEditedContentRect">{{457, 585}, {624, 289}}</string>
+				<string key="3.IBWindowTemplateEditedContentRect">{{320, 826}, {624, 289}}</string>
 				<boolean value="NO" key="3.NSWindowTemplate.visibleAtLaunch"/>
 				<boolean value="YES" key="3.windowTemplate.hasMaxSize"/>
 				<boolean value="YES" key="3.windowTemplate.hasMinSize"/>
@@ -954,6 +970,9 @@
 				<string key="3.windowTemplate.minSize">{540, 289}</string>
 				<string key="4.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="42.IBPluginDependency">com.brandonwalkin.BWToolkit</string>
+				<object class="NSAffineTransform" key="42.IBViewBoundsToFrameTransform">
+					<bytes key="NSTransformStruct">P4AAAL+AAAC/gAAAw5AAAA</bytes>
+				</object>
 				<string key="52.CustomClassName">CommandKeyTextField</string>
 				<string key="52.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="53.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1013,7 +1032,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">107</int>
+			<int key="maxID">109</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1080,11 +1099,15 @@
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
+					<string key="className">NSApplication</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="852618596">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/General/Common.h</string>
 					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<reference key="sourceIdentifier" ref="852618596"/>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">NSView</string>
@@ -1095,7 +1118,7 @@
 					<string key="superclassName">NSTextFieldCell</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/UtilityClasses/RSVerticallyCenteredTextFieldCell/RSVerticallyCenteredTextFieldCell.h</string>
+						<string key="minorKey">Classes/ExternalClasses/RSVerticallyCenteredTextFieldCell/RSVerticallyCenteredTextFieldCell.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -1133,6 +1156,8 @@
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="errorDisclosureController">DisclosureBoxController</string>
 						<string key="errorMessageTextField">NSTextField</string>
+						<string key="mainMessageTextField">NSTextField</string>
+						<string key="renameSheetTitle">NSTextField</string>
 						<string key="theAlreadyMovedButton">NSButton</string>
 						<string key="theCurrentNameField">NSTextField</string>
 						<string key="theNewNameField">NSTextField</string>
@@ -1146,6 +1171,14 @@
 						</object>
 						<object class="IBToOneOutletInfo" key="errorMessageTextField">
 							<string key="name">errorMessageTextField</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="mainMessageTextField">
+							<string key="name">mainMessageTextField</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="renameSheetTitle">
+							<string key="name">renameSheetTitle</string>
 							<string key="candidateClassName">NSTextField</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="theAlreadyMovedButton">

@@ -82,7 +82,7 @@
 - (IBAction) mainMenuDeleteSelectedFiles:(id)sender;
 - (IBAction) mainMenuAddSelectedFiles:(id)sender;
 - (IBAction) mainMenuUntrackSelectedFiles:(id)sender;
-- (IBAction) mainMenuRenameSelectedFile:(id)sender;
+- (IBAction) mainMenuRenameSelectedItem:(id)sender;
 
 - (IBAction) mainMenuRevertSelectedFiles:(id)sender;
 - (IBAction) mainMenuRevertAllFiles:(id)sender;

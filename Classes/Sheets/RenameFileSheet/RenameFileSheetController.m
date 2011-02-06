@@ -104,12 +104,14 @@
 	NSString* filePath = [theSelectedFiles lastObject];
 	
 	FSNodeInfo* theNode = [myDocument nodeForPath:filePath];
-	if ([theNode isDirectory])
+	BOOL itemIsDirectory = [theNode isDirectory];
+	if (itemIsDirectory)
 	{
 		PlayBeep();
-		NSString* subMessage = fstr(@"“%@” is a directory. Mercurial only permits renaming files", [filePath lastPathComponent]);
-		NSRunAlertPanel(@"Rename Not Allowed", subMessage, @"OK", nil, nil);
-		return;
+		NSString* subMessage = fstr(@"“%@” is a directory. Renaming the directory will effectively rename evey file in the directory. Do you want to continue?", [filePath lastPathComponent]);
+		int result = NSRunCriticalAlertPanel(@"Directory Rename", subMessage, @"Cancel", @"Rename", nil);
+		if (result != NSAlertAlternateReturn)
+			return;
 	}
 
 	if (!bitsInCommon([theNode hgStatus],eHGStatusInRepository))
@@ -120,6 +122,11 @@
 		return;
 	}
 	
+	[renameSheetTitle setStringValue:itemIsDirectory ? @"Rename Directory" : @"Rename File"];
+	[mainMessageTextField setStringValue:itemIsDirectory ?
+		@"Please enter a new directory name. (Renaming the directory in Mercurial allows Mercurial to track the history of the files in the directory across name changes." :
+		@"Please enter a new file name. (Renaming the file in Mercurial allows Mercurial to track the history of the file across name changes."];
+
 	[errorDisclosureController setToOpenState:NO withAnimation:NO];
 	
 	NSString* newPath = [filePath stringByDeletingLastPathComponent];

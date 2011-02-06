@@ -14,6 +14,8 @@
 @interface RenameFileSheetController : BaseSheetWindowController
 {
 	IBOutlet NSWindow*	  theRenameFileSheet;
+	IBOutlet NSTextField* renameSheetTitle;
+	IBOutlet NSTextField* mainMessageTextField;
 	IBOutlet NSTextField* theCurrentNameField;
 	IBOutlet NSTextField* theNewNameField;
 	IBOutlet NSButton*	  theAlreadyMovedButton;

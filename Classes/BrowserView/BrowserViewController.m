@@ -380,7 +380,7 @@
 - (IBAction) mainMenuDeleteSelectedFiles:(id)sender				{ [myDocument primaryActionDeleteSelectedFiles:[theBrowser absolutePathsOfChosenFilesInBrowser]]; }
 - (IBAction) mainMenuAddSelectedFiles:(id)sender				{ [myDocument primaryActionAddSelectedFiles:[theBrowser absolutePathsOfChosenFilesInBrowser]]; }
 - (IBAction) mainMenuUntrackSelectedFiles:(id)sender			{ [myDocument primaryActionUntrackSelectedFiles:[theBrowser absolutePathsOfChosenFilesInBrowser]]; }
-- (IBAction) mainMenuRenameSelectedFile:(id)sender				{ [[myDocument theRenameFileSheetController] openRenameFileSheet:sender]; }
+- (IBAction) mainMenuRenameSelectedItem:(id)sender				{ [[myDocument theRenameFileSheetController] openRenameFileSheet:sender]; }
 
 
 - (IBAction) mainMenuIgnoreSelectedFiles:(id)sender				{ [myDocument primaryActionIgnoreSelectedFiles:[theBrowser absolutePathsOfChosenFilesInBrowser]]; }
@@ -416,8 +416,20 @@
 	if (!menuItem)
 		return NO;
 	BOOL inMergeState = [[myDocument repositoryData] inMergeState];
-	[menuItem setTitle: inMergeState ? @"Commit Merged Files..." : @"Commit Selected Files..."];
+	[menuItem setTitle: inMergeState ? @"Commit Merged Files…" : @"Commit Selected Files…"];
 	return inMergeState ? [myDocument repositoryHasFilesWhichContainStatus:eHGStatusCommittable] : ([myDocument pathsAreSelectedInBrowserWhichContainStatus:eHGStatusCommittable] && [myDocument showingBrowserView]);
+}
+
+- (BOOL) validateAndSwitchMenuForRenameSelectedItem:(NSMenuItem*)menuItem
+{
+	if (!menuItem)
+		return NO;
+	NSArray* chosenNodes = [theBrowser chosenNodes];
+	if ([chosenNodes count] != 1)
+		return NO;
+	BOOL isDirectory = [[chosenNodes firstObject] isDirectory];
+	[menuItem setTitle: isDirectory ? @"Rename Selected Directory…" : @"Rename Selected File…"];
+	return [theBrowser statusOfChosenPathsInBrowserContain:eHGStatusInRepository];
 }
 
 - (BOOL) validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem, NSObject>)anItem
@@ -444,7 +456,7 @@
 	if (theAction == @selector(mainMenuDeleteSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && [theBrowser nodesAreChosen];
 	if (theAction == @selector(mainMenuAddSelectedFiles:))				return [myDocument repositoryIsSelectedAndReady] && [theBrowser statusOfChosenPathsInBrowserContain:eHGStatusAddable];
 	if (theAction == @selector(mainMenuUntrackSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && [theBrowser statusOfChosenPathsInBrowserContain:eHGStatusInRepository];
-	if (theAction == @selector(mainMenuRenameSelectedFile:))			return [myDocument repositoryIsSelectedAndReady] && [theBrowser statusOfChosenPathsInBrowserContain:eHGStatusInRepository] && [theBrowser singleItemIsChosenInBrower];
+	if (theAction == @selector(mainMenuRenameSelectedItem:))			return [myDocument repositoryIsSelectedAndReady] && [self validateAndSwitchMenuForRenameSelectedItem:DynamicCast(NSMenuItem, anItem)];
 	// ------
 	if (theAction == @selector(mainMenuRemergeSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && [theBrowser statusOfChosenPathsInBrowserContain:eHGStatusSecondary];
 	if (theAction == @selector(mainMenuMarkResolvedSelectedFiles:))		return [myDocument repositoryIsSelectedAndReady] && [theBrowser statusOfChosenPathsInBrowserContain:eHGStatusUnresolved];

@@ -21,8 +21,6 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="416"/>
-			<integer value="303"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -45,7 +43,7 @@
 				<string key="NSClassName">NSApplication</string>
 			</object>
 			<object class="NSCustomView" id="554596880">
-				<reference key="NSNextResponder"/>
+				<nil key="NSNextResponder"/>
 				<int key="NSvFlags">268</int>
 				<object class="NSMutableArray" key="NSSubviews">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1362,7 +1360,7 @@
 										</object>
 										<string key="NSFirstColumnTitle">Browser</string>
 										<int key="NSMinColumnWidth">50</int>
-										<int key="NSNumberOfVisibleColumns">4</int>
+										<int key="NSNumberOfVisibleColumns">1</int>
 										<int key="NSColumnResizingType">2</int>
 										<double key="NSPreferedColumnWidth">267</double>
 										<bool key="NSAllowsTypeSelect">YES</bool>
@@ -1801,7 +1799,6 @@
 					</object>
 				</object>
 				<string key="NSFrameSize">{1142, 732}</string>
-				<reference key="NSSuperview"/>
 				<string key="NSClassName">DifferencesView</string>
 			</object>
 			<object class="NSUserDefaultsController" id="692698573">
@@ -3619,7 +3616,7 @@
 							<string>mainMenuIgnoreSelectedFiles:</string>
 							<string>mainMenuOpenSelectedFilesInFinder:</string>
 							<string>mainMenuOpenTerminalHere:</string>
-							<string>mainMenuRenameSelectedFile:</string>
+							<string>mainMenuRenameSelectedItem:</string>
 							<string>mainMenuRevealSelectedFilesInFinder:</string>
 							<string>mainMenuRevertAllFiles:</string>
 							<string>mainMenuRevertSelectedFiles:</string>
@@ -3682,7 +3679,7 @@
 							<string>mainMenuIgnoreSelectedFiles:</string>
 							<string>mainMenuOpenSelectedFilesInFinder:</string>
 							<string>mainMenuOpenTerminalHere:</string>
-							<string>mainMenuRenameSelectedFile:</string>
+							<string>mainMenuRenameSelectedItem:</string>
 							<string>mainMenuRevealSelectedFilesInFinder:</string>
 							<string>mainMenuRevertAllFiles:</string>
 							<string>mainMenuRevertSelectedFiles:</string>
@@ -3755,7 +3752,7 @@
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
-								<string key="name">mainMenuRenameSelectedFile:</string>
+								<string key="name">mainMenuRenameSelectedItem:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
@@ -4799,11 +4796,15 @@
 					<reference key="sourceIdentifier" ref="603073630"/>
 				</object>
 				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
+					<string key="className">NSApplication</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="553227317">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/General/Common.h</string>
 					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<reference key="sourceIdentifier" ref="553227317"/>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">NSTableView</string>

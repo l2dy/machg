@@ -204,8 +204,7 @@
 	int selectedColumn = [self selectedColumn];
 	if (selectedColumn >= 0)
 		if ([[self selectedRowIndexesInColumn:selectedColumn] count] == 1)
-			if (![[[self selectedCell] nodeInfo] isDirectory])
-				return YES;
+			return YES;
 	return NO;
 }
 
