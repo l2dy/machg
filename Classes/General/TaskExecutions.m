@@ -126,8 +126,11 @@
 	NSString* fullErrorMessage = fstr(@"The authenticity of host '%@' cannot be established from stored certificates or host keys.\n\nThe host is reporting the key fingerprint:\n  %@\n\nIf you trust that this key fingerprint really represents '%@', you can permanently add this fingerprint to the accepted hosts.", host, fingerPrint, host);
 
 	dispatch_async(mainQueue(), ^{
-		NSInteger response = NSRunCriticalAlertPanel(errorMessage, fullErrorMessage, @"Decline", @"Add", @"");
-		if (response == NSAlertDefaultReturn)
+		NSAlert* alert = NewAlertPanel(errorMessage, fullErrorMessage, @"Decline", @"Add", nil);
+		[alert setShowsHelp:YES];
+		[alert setHelpAnchor:@"AboutServerIdentitySecurity"];
+		int response = [alert runModal];		
+		if (response != NSAlertSecondButtonReturn)
 			return;
 		
 		NSString* macHgHGRCFilePath = fstr(@"%@/hgrc",applicationSupportFolder());
