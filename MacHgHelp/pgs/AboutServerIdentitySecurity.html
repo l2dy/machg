@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>About Security And Passwords</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta name="hatver" content="v2 R6"/>
+<meta name="builddefid" content="4111"/>
+<meta name="topicid" content="27594"/>
+<meta name="Keywords" content="server repository, server, external repository, password, secutiry, encryption, https, ssh, reference"/>
+<!-- do not translate -->
+<meta name="Keywords" content="MacHg" />
+<!-- end do not translate -->
+<meta name="Description" content="About server certificate and host fingerprint keys"/>
+<meta name="template" content="2031"/>
+<meta name="pagetype" content="Task"/>
+<meta name="project" content="MacHgHelp"/>
+<meta name="release" content=""/>
+<meta name="projectcomponent" content="SafariSnow"/>
+<link href="../sty/task.css" rel="stylesheet" type="text/css" media="all"/>
+<link href="../sty/print.css" rel="stylesheet" type="text/css" media="print"/>
+</head>
+
+<body id="apple-pd">
+<!--top navigation area-->
+
+<div id="navbox" class="gradient"> <a name="AboutServerIdentitySecurity"></a>
+
+   <div id="navleftbox"> <a class="navlink_left" href="help:anchor='access' bookID=MacHg Help">Home</a> </div>
+
+   <div id="navrightbox"> <a class="navlink_right" href="help:anchor='xall' bookID=MacHg Help">Index</a> </div>
+</div>
+<!--page head-->
+
+<div id="headerbox">
+
+   <div id="iconbox"> <img id="iconimg" src="../gfx/hgicon.png" alt="MacHg icon" height="32" width="32"/> </div>
+
+   <div id="pagetitle">
+      <h1>About Server Identity Security</h1>
+   </div>
+</div>
+
+<p>When MacHg uses https to communicate with a server, the issue of server identification and certificates is encountered &#8212; i.e., how do you know that the server you are talking to is actually the real server? (This is the reverse of problem of how does the server know that it's actually the real you who is contacting it.)</p>
+
+<h2>HTTPS</h2>
+<p>'HTTPS' stands for "HyperText Transport Protocol Secure." HTTPS is the same thing as HTTP, but uses a secure socket layer (SSL) for security purposes. Some examples of sites that use HTTPS include banking and investment websites, e-commerce websites, and most websites that require you to log in. Websites that use the standard HTTP protocol transmit and receive data in an unsecured manner. This means it is possible for someone to eavesdrop on the data being transferred between the user and the Web server.</p>
+
+<h2>Server Identification</h2>
+<p>In order to recognize a server is actually the server it claims to be, in broad terms the server sends you a certificate digitally signed by some <a href="http://en.wikipedia.org/wikiCertificate_authority">Certificate Authority</a> agency e.g. <a href="http://www.verisign.com/">Verisign</a> or <a href="http://www.thawte.com/">Thawte</a>, which says that this server is indeed authentic.</p>
+
+<p>However, there are two issues with this:<br>
+<ol>
+<li>First, where do you get and how do you store the actual certificates of certifying authorities?</li>
+<li>Second, How do you get certificates for your own servers?</li>
+</ol>
+</p>
+
+<h2>TrustedCertificates.pem</h2>
+<p>MacHg automatically locally installs the standard set of certificates trusted by Mozilla's Firefox. These certificates are stored in the file ~/Application Support/MacHg/TrustedCertificates.pem. Through this TrusteCertificates.pem file MacHg will automatically securely connect to standard Mercurial hosting servers like bitbucket, google code, kiln, etc. without notifying you that it is doing so.</p>
+
+<p>If you have your own server or a company server, which uses a certificate which is self-signed, or signed by an authority not in the certificates in TrustedCertificates.pem, then you can add this certificate to TrustedCertificates.pem. You do this by opening the TrustedCertificates.pem file and copying and pasting the text of the new certificate at, say, the end of the file. Of course, this means that you need to obtain the text of the server's certificate in a secure way. However, if you connect to the server via the internet in order to obtain this certificate in the first place, then you could be subject to a <a href="http://en.wikipedia.org/wiki/Man-in-the-middle_attack">man in the middle attack</a>, etc. Thus it's best to obtain this certificate in an offline way &#8212; e.g. walk to your server and copy the key on a pen drive, or use an ssh session which you already know is
+secure.</p>
+
+<h2>Host Fingerprint Keys</h2>
+<p>Mercurial 1.7.4 introduced host <a href=
+"http://en.wikipedia.org/wiki/Public_key_fingerprint">fingerprint</a> keys in much the same way that ssh uses fingerprint keys. When connecting to a server via https and the server's certificate is self-signed or your system does not have any information about the authority who signed the certificate, then MacHg gives you the option of recognizing the host through a "fingerprint" in future connects. MacHg does this by presenting you with an alert like:</p>
+
+<p><img src="../gfx/UnsecureHost.png" alt="Unsecure Host Message" /></p>
+
+<p>Of course, if you use this method, you have to know that the fingerprint <strong>truly</strong> does represent the host, and there is no intervening entity.</p>
+
+<p>Fingerprints are stored in the section <strong>hostfingerprints</strong> in the configuration file ~/Application Support/MacHg/. Once you locally store the fingerprint for a server, then it will be verifiably identified in future connects.</p>
+
+<h2>Insecure Communication</h2>
+<p>While trying to debug connection problems with https, it might be convenient to disable <em>all</em> server identification checking. This can be done through selecting the Advanced Preferences tab of MacHg's preferences and unchecking the item "Require Verifiable Server Identity".</p>
+
+<p><img src="../gfx/RequireServerIdentity.png" alt="Require Server Identity Checkbox" /></p>
+
+<p>However, this should be used only as a last resort, since it turns off host identification for all servers.</p>
+
+
+<div id="rule">
+   <hr />
+</div>
+
+<div id="linkinternalbox">
+   <h3>Related Topics</h3>
+
+   <p class="linkinternal"><a href="help:anchor=AddingServerRepository bookID=MacHg Help">Adding a Server Repository</a></p>
+
+   <p class="linkinternal"><a href="help:anchor=AboutSecurityAndPasswords bookID=MacHg Help">About Security And Passwords</a></p>
+
+</div>
+
+</body>
+</html>

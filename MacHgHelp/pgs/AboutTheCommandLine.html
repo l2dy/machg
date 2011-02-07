@@ -1,0 +1,105 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>About Repositories</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="hatver" content="v2 R6" />
+<meta name="builddefid" content="4105" />
+<meta name="topicid" content="26296" />
+<meta name="Keywords" content="command line, terminal, command, hg, configuration" />
+<!-- do not translate -->
+<meta name="Keywords" content="MacHg, Mercurial, .hg" />
+<!-- end do not translate -->
+<meta name="Description" content="accessing and interacting with the command line from MacHg" />
+<meta name="template" content="2029" />
+<meta name="pagetype" content="Task" />
+<meta name="project" content="SafariHelp" />
+<meta name="release" content="" />
+<meta name="projectcomponent" content="SafariSnow" />
+<link href="../sty/task.css" rel="stylesheet" type="text/css" media="all" />
+</head>
+
+<body id="apple-pd">
+<!--top navigation area-->
+
+<div id="navbox" class="gradient"> <a name="AboutCommandLine"></a>
+
+   <div id="navleftbox"> <a class="navlink_left" href="help:anchor='access' bookID=MacHg Help">Home</a> </div>
+
+   <div id="navrightbox"> <a class="navlink_right" href="help:anchor='xall' bookID=MacHg Help">Index</a> </div>
+</div>
+<!--page head-->
+
+<div id="headerbox">
+
+   <div id="iconbox"> <img id="iconimg" src="../gfx/hgicon.png" alt="MacHg icon" height="32" width="32" /> </div>
+
+   <div id="pagetitle">
+      <h1>About MacHg and using Mercurial from the Command Line</h1>
+   </div>
+</div>
+
+<p>You can use the command line version of <a href="http://mercurial.selenic.com/">Mercurial</a> (via the Terminal) interchangeably with MacHg. You can freely <a href="http://mercurial.selenic.com/downloads/">download</a> and install whichever version of Mercurial you want on your machine and it will not conflict with MacHg since an independent copy of Mercurial is bundled inside the MacHg application. (In fact MacHg does this to ensure there are no conflicts or other problems with the users Mercurial configuration.)</p>
+<div class="task-box-spacing">
+   <div class="task-box-frame">
+      <h2>To open a Terminal session from MacHg:</h2>
+      <ul>
+         <li>
+            <p>Choose the menu item Repository &gt; Open Terminal Here, or</p>
+         </li>
+         <li>
+            <p>Choose the toolbar item "Terminal", or</p>
+         </li>
+         <li>
+            <p>Choose the contextual menu item Open Terminal Here in the <a href="help:anchor=AboutTheBrowserView bookID=MacHg Help">Browser View</a></p>
+         </li>
+      </ul>
+   </div>
+</div>
+
+<div class="important">
+<p>This will produce something like the following:</p>
+</div>
+<p><img src="../gfx/terminalScreen.png" alt="Terminal Screen" /></p>
+
+<p><strong>Note</strong> in the terminal session you can see the aliases <code>mhg</code> and <code>chg</code> are being set up. These aliases point to the version of Mercurial inside MacHg.</p>
+<h2>mhg</h2>
+<p>Using <code>mhg</code> you can call mercurial just like you would normally use hg if you had (or have) installed the Mercurial tool.</p>
+<ol>
+<li><code>mhg</code> references the Mercurial binaries inside the MacHg application.<br></li>
+<li>It uses your normal ~/.hgrc configuration you have set up.</li>
+</ol>
+<h2>chg</h2>
+<p>Using <code>chg</code> you can call Mercurial in exactly the same way that MacHg calls Mercurial. That is <code>chg</code> is just like <span>mhg</code> except it passes the same configuration settings that MacHg uses.</p>
+<ol>
+<li><code>chg</code> references the Mercurial binaries inside the MacHg application.<br></li>
+<li>It uses the same HGRC path as MacHg preferences are set to. This is ~/Library/Application Support/MacHg/hgrc and optionally it might also include ~/.hgrc<br></li>
+<li><code>chg</code> sets the <code>HGPLAIN</code>
+environment variable.</li>
+</ol>
+<h2>Testing</h2>
+<p>One would mainly use <code>chg</code> in order to ensure that if you run into problems with MacHg you are then able to experiment with the commands in the same way MacHg would issue the command. Eg for testing of connectivity, its important to ensure that non-interactive login is taking place and thus its important to call Mercurial in the same way that MacHg will issue the command.</p>
+<h2>Permanent Alias</h2>
+<p>If you want you can simply copy the alias command from the terminal and put it in your ~/.bashrc or ~/.aliases file. This makes the alias always available. The Mercurial binary lives inside the MacHg application, but it is a full and independent version of Mercurial and MacHg does not need to be running for the terminal to execute the Mercurial commands.</p>
+
+<div id="rule">
+   <hr />
+</div>
+
+<div id="linkinternalbox">
+   <h3>Related Topics</h3>
+
+   <p class="linkinternal"><a href="help:anchor=AddingServerRepository bookID=MacHg Help">Adding a Server Repository</a></p>
+
+   <p class="linkinternal"><a href="help:anchor=AboutSecurityAndPasswords bookID=MacHg Help">About Security And Passwords</a></p>
+
+   <p class="linkinternal"><a href="help:anchor=AboutMacHgDocuments bookID=MacHg Help">About MacHg Documents</a></p>
+
+<div id="linkexternalbox">
+   <h3>External Links</h3>
+
+   <p class="linkexternal"><a href="http://www.apple.com/au/macosx/what-is-macosx/apps-and-utilities.html#terminal">Apple : The Terimal<span class="linkarrow"></span></a></p>
+
+</div>
+</body>
+</html>
