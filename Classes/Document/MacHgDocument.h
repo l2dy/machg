@@ -293,6 +293,7 @@
 - (IBAction)	sidebarMenuRemoveSidebarItem:(id)sender;
 - (IBAction)	sidebarMenuRevealRepositoryInFinder:(id)sender;
 - (IBAction)	sidebarMenuOpenTerminalHere:(id)sender;
+- (IBAction)	mainMenuRevealSelectedFilesInFinder:(id)sender;
 - (IBAction)	mainMenuOpenTerminalHere:(id)sender;
 - (IBAction)	mainMenuAddAndCloneServerRepositoryRef:(id)sender;
 

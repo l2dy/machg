@@ -959,6 +959,7 @@
 	// ------
 	if (theAction == @selector(sidebarMenuRevealRepositoryInFinder:))	return [self repositoryIsSelectedAndReady];
 	if (theAction == @selector(sidebarMenuOpenTerminalHere:))			return [self repositoryIsSelectedAndReady];
+	if (theAction == @selector(mainMenuRevealSelectedFilesInFinder:))	return [self repositoryIsSelectedAndReady];
 	if (theAction == @selector(mainMenuOpenTerminalHere:))				return [self repositoryIsSelectedAndReady];
 	if (theAction == @selector(actionTestListingItem:))					return !showingSheet_ && ([sidebar_ selectedNode] ? YES : NO);
 	
@@ -1742,6 +1743,7 @@
 - (IBAction) sidebarMenuRemoveSidebarItem:(id)sender			{ return [sidebar_ sidebarMenuRemoveSidebarItem:sender]; }
 - (IBAction) sidebarMenuRevealRepositoryInFinder:(id)sender		{ return [sidebar_ sidebarMenuRevealRepositoryInFinder:sender]; }
 - (IBAction) sidebarMenuOpenTerminalHere:(id)sender				{ return [sidebar_ sidebarMenuOpenTerminalHere:sender]; }
+- (IBAction) mainMenuRevealSelectedFilesInFinder:(id)sender		{ return [sidebar_ sidebarMenuRevealRepositoryInFinder:sender]; }
 - (IBAction) mainMenuOpenTerminalHere:(id)sender				{ return [sidebar_ sidebarMenuOpenTerminalHere:sender]; }
 - (IBAction) mainMenuAddAndCloneServerRepositoryRef:(id)sender	{ [[self theServerRepositoryRefSheetController] openSheetForAddAndClone]; }
 

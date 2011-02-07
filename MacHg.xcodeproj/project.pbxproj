@@ -378,7 +378,7 @@
 		9654F5E611D237F200826FD6 /* Revert.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Revert.png; sourceTree = "<group>"; };
 		9654F5E711D237F200826FD6 /* Update.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Update.png; sourceTree = "<group>"; };
 		96570599113B1455009FE4C5 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
-		9658DCF812FF9B5F00FF18B3 /* Reveal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Reveal.png; path = ../../../../../Users/jason/Desktop/Reveal.png; sourceTree = "<group>"; };
+		9658DCF812FF9B5F00FF18B3 /* Reveal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Reveal.png; sourceTree = "<group>"; };
 		965FA57C116424A40074E4AA /* FinderIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FinderIcon.png; sourceTree = "<group>"; };
 		966E8E1711CB732E0052FF42 /* identity.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = identity.png; sourceTree = "<group>"; };
 		966E8E4C11CB86160052FF42 /* HistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HistoryViewController.h; sourceTree = "<group>"; };
