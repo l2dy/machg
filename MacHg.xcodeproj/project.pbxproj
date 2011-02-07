@@ -115,6 +115,7 @@
 		9654F5EB11D237F200826FD6 /* Revert.png in Resources */ = {isa = PBXBuildFile; fileRef = 9654F5E611D237F200826FD6 /* Revert.png */; };
 		9654F5EC11D237F200826FD6 /* Update.png in Resources */ = {isa = PBXBuildFile; fileRef = 9654F5E711D237F200826FD6 /* Update.png */; };
 		9657059A113B1455009FE4C5 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96570599113B1455009FE4C5 /* WebKit.framework */; };
+		9658DCF912FF9B5F00FF18B3 /* Reveal.png in Resources */ = {isa = PBXBuildFile; fileRef = 9658DCF812FF9B5F00FF18B3 /* Reveal.png */; };
 		965FA57D116424A40074E4AA /* FinderIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 965FA57C116424A40074E4AA /* FinderIcon.png */; };
 		966E8E1811CB732E0052FF42 /* identity.png in Resources */ = {isa = PBXBuildFile; fileRef = 966E8E1711CB732E0052FF42 /* identity.png */; };
 		966E8E5011CB86160052FF42 /* HistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E8E4D11CB86160052FF42 /* HistoryViewController.m */; };
@@ -377,6 +378,7 @@
 		9654F5E611D237F200826FD6 /* Revert.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Revert.png; sourceTree = "<group>"; };
 		9654F5E711D237F200826FD6 /* Update.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Update.png; sourceTree = "<group>"; };
 		96570599113B1455009FE4C5 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
+		9658DCF812FF9B5F00FF18B3 /* Reveal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Reveal.png; path = ../../../../../Users/jason/Desktop/Reveal.png; sourceTree = "<group>"; };
 		965FA57C116424A40074E4AA /* FinderIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FinderIcon.png; sourceTree = "<group>"; };
 		966E8E1711CB732E0052FF42 /* identity.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = identity.png; sourceTree = "<group>"; };
 		966E8E4C11CB86160052FF42 /* HistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HistoryViewController.h; sourceTree = "<group>"; };
@@ -682,6 +684,7 @@
 				9654F5E311D237F200826FD6 /* AddRemove.png */,
 				9654F5E411D237F200826FD6 /* Commit.png */,
 				9654F5E511D237F200826FD6 /* Diff.png */,
+				9658DCF812FF9B5F00FF18B3 /* Reveal.png */,
 				9654F5E611D237F200826FD6 /* Revert.png */,
 				9673D07F12D1C99A0043929D /* Quicklook.png */,
 				9654F5E711D237F200826FD6 /* Update.png */,
@@ -1594,6 +1597,7 @@
 				9673D08012D1C99A0043929D /* Quicklook.png in Resources */,
 				96D25FB612FC8D5800EB6B70 /* TrustedCertificates.pem in Resources */,
 				96D2608012FE420700EB6B70 /* getHTTPSfingerprint.py in Resources */,
+				9658DCF912FF9B5F00FF18B3 /* Reveal.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

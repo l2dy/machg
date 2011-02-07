@@ -21,6 +21,7 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
+			<integer value="5"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -70,6 +71,7 @@
 							<string>677DC552-9C5C-405C-BEEA-20C58B4DD23D</string>
 							<string>7CE50119-3358-4979-B461-5DF143649DB7</string>
 							<string>7DC99B47-75C9-418A-8C18-835A4FF6E3FF</string>
+							<string>891E8504-A182-4E3D-A340-BF1BD262C679</string>
 							<string>9AB4BBB6-AB27-48CF-AE80-A0B42063D407</string>
 							<string>A13BCAB8-A377-4632-9D03-BF86A47E4782</string>
 							<string>BDE78052-7400-4B63-92A9-98F5D8C5A1F5</string>
@@ -94,7 +96,7 @@
 								<string key="NSToolbarItemPaletteLabel"/>
 								<nil key="NSToolbarItemToolTip"/>
 								<object class="NSPathControl" key="NSToolbarItemView" id="504442913">
-									<nil key="NSNextResponder"/>
+									<reference key="NSNextResponder"/>
 									<int key="NSvFlags">268</int>
 									<object class="NSMutableSet" key="NSDragTypes">
 										<bool key="EncodedWithXMLCoder">YES</bool>
@@ -105,6 +107,8 @@
 										</object>
 									</object>
 									<string key="NSFrame">{{0, 14}, {179, 20}}</string>
+									<reference key="NSSuperview"/>
+									<reference key="NSWindow"/>
 									<bool key="NSEnabled">YES</bool>
 									<object class="NSPathCell" key="NSCell" id="821488445">
 										<int key="NSCellFlags">337772033</int>
@@ -353,6 +357,28 @@
 								<bool key="NSToolbarIsUserRemovable">YES</bool>
 								<int key="NSToolbarItemVisibilityPriority">0</int>
 							</object>
+							<object class="NSToolbarItem" id="421929319">
+								<object class="NSMutableString" key="NSToolbarItemIdentifier">
+									<characters key="NS.bytes">891E8504-A182-4E3D-A340-BF1BD262C679</characters>
+								</object>
+								<string key="NSToolbarItemLabel">Reveal</string>
+								<string key="NSToolbarItemPaletteLabel">Reveal</string>
+								<nil key="NSToolbarItemToolTip"/>
+								<nil key="NSToolbarItemView"/>
+								<object class="NSCustomResource" key="NSToolbarItemImage">
+									<string key="NSClassName">NSImage</string>
+									<string key="NSResourceName">Reveal</string>
+								</object>
+								<nil key="NSToolbarItemTarget"/>
+								<nil key="NSToolbarItemAction"/>
+								<string key="NSToolbarItemMinSize">{0, 0}</string>
+								<string key="NSToolbarItemMaxSize">{0, 0}</string>
+								<bool key="NSToolbarItemEnabled">YES</bool>
+								<bool key="NSToolbarItemAutovalidates">YES</bool>
+								<int key="NSToolbarItemTag">-1</int>
+								<bool key="NSToolbarIsUserRemovable">YES</bool>
+								<int key="NSToolbarItemVisibilityPriority">0</int>
+							</object>
 							<object class="NSToolbarItem" id="494685999">
 								<object class="NSMutableString" key="NSToolbarItemIdentifier">
 									<characters key="NS.bytes">9AB4BBB6-AB27-48CF-AE80-A0B42063D407</characters>
@@ -361,9 +387,11 @@
 								<string key="NSToolbarItemPaletteLabel">View</string>
 								<nil key="NSToolbarItemToolTip"/>
 								<object class="NSSegmentedControl" key="NSToolbarItemView" id="758125634">
-									<nil key="NSNextResponder"/>
+									<reference key="NSNextResponder"/>
 									<int key="NSvFlags">268</int>
 									<string key="NSFrame">{{0, 14}, {104, 25}}</string>
+									<reference key="NSSuperview"/>
+									<reference key="NSWindow"/>
 									<bool key="NSEnabled">YES</bool>
 									<object class="NSSegmentedCell" key="NSCell" id="1068445230">
 										<int key="NSCellFlags">-2080244224</int>
@@ -472,9 +500,11 @@
 								<string key="NSToolbarItemPaletteLabel">Search</string>
 								<nil key="NSToolbarItemToolTip"/>
 								<object class="NSSearchField" key="NSToolbarItemView" id="59755526">
-									<nil key="NSNextResponder"/>
+									<reference key="NSNextResponder"/>
 									<int key="NSvFlags">268</int>
 									<string key="NSFrame">{{0, 14}, {160, 22}}</string>
+									<reference key="NSSuperview"/>
+									<reference key="NSWindow"/>
 									<bool key="NSViewIsLayerTreeHost">YES</bool>
 									<int key="NSViewLayerContentsRedrawPolicy">2</int>
 									<bool key="NSEnabled">YES</bool>
@@ -762,7 +792,7 @@
 							</object>
 						</object>
 					</object>
-					<object class="NSArray" key="NSToolbarIBAllowedItems">
+					<object class="NSMutableArray" key="NSToolbarIBAllowedItems">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<reference ref="38296145"/>
 						<reference ref="563642649"/>
@@ -786,6 +816,7 @@
 						<reference ref="565095260"/>
 						<reference ref="158141045"/>
 						<reference ref="661836347"/>
+						<reference ref="421929319"/>
 					</object>
 					<object class="NSMutableArray" key="NSToolbarIBDefaultItems">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -810,7 +841,7 @@
 				<string key="NSWindowContentMaxSize">{1.79769e+308, 1.79769e+308}</string>
 				<string key="NSWindowContentMinSize">{300, 200}</string>
 				<object class="NSView" key="NSWindowView" id="568628114">
-					<nil key="NSNextResponder"/>
+					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<object class="NSMutableArray" key="NSSubviews">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1259,6 +1290,7 @@
 						</object>
 					</object>
 					<string key="NSFrameSize">{893, 491}</string>
+					<reference key="NSSuperview"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
 				<string key="NSMinSize">{300, 278}</string>
@@ -2317,6 +2349,14 @@
 					</object>
 					<int key="connectionID">100456</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">mainMenuRevealSelectedFilesInFinder:</string>
+						<reference key="source" ref="613418571"/>
+						<reference key="destination" ref="421929319"/>
+					</object>
+					<int key="connectionID">100458</int>
+				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<object class="NSArray" key="orderedObjects">
@@ -2395,6 +2435,7 @@
 							<reference ref="158141045"/>
 							<reference ref="661836347"/>
 							<reference ref="44773764"/>
+							<reference ref="421929319"/>
 						</object>
 						<reference key="parent" ref="275939982"/>
 					</object>
@@ -3043,6 +3084,11 @@
 						<reference key="object" ref="44773764"/>
 						<reference key="parent" ref="848710721"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">100457</int>
+						<reference key="object" ref="421929319"/>
+						<reference key="parent" ref="848710721"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -3165,7 +3211,7 @@
 				<object class="NSMutableArray" key="dict.values">
 					<bool key="EncodedWithXMLCoder">YES</bool>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{204, 562}, {617, 0}}</string>
+					<string>{{286, 358}, {617, 0}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3267,9 +3313,9 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{66, 71}, {893, 491}}</string>
+					<string>{{148, -133}, {893, 491}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{66, 71}, {893, 491}}</string>
+					<string>{{148, -133}, {893, 491}}</string>
 					<integer value="1"/>
 					<string>{{201, 387}, {507, 413}}</string>
 					<integer value="1"/>
@@ -3294,7 +3340,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">100456</int>
+			<int key="maxID">100458</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3587,6 +3633,7 @@
 							<string>browserDoubleAction:</string>
 							<string>differencesMenuAnnotateSelectedFiles:</string>
 							<string>differencesMenuNoAction:</string>
+							<string>differencesMenuOpenSelectedFilesInFinder:</string>
 							<string>mainMenuDiffAllFiles:</string>
 							<string>mainMenuDiffSelectedFiles:</string>
 							<string>mainMenuOpenSelectedFilesInFinder:</string>
@@ -3614,6 +3661,7 @@
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
+							<string>id</string>
 						</object>
 					</object>
 					<object class="NSMutableDictionary" key="actionInfosByName">
@@ -3624,6 +3672,7 @@
 							<string>browserDoubleAction:</string>
 							<string>differencesMenuAnnotateSelectedFiles:</string>
 							<string>differencesMenuNoAction:</string>
+							<string>differencesMenuOpenSelectedFilesInFinder:</string>
 							<string>mainMenuDiffAllFiles:</string>
 							<string>mainMenuDiffSelectedFiles:</string>
 							<string>mainMenuOpenSelectedFilesInFinder:</string>
@@ -3651,6 +3700,10 @@
 							</object>
 							<object class="IBActionInfo">
 								<string key="name">differencesMenuNoAction:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">differencesMenuOpenSelectedFilesInFinder:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
@@ -4300,12 +4353,14 @@
 							<string>parentController</string>
 							<string>showBookmarks</string>
 							<string>showBranches</string>
+							<string>showClosedBranches</string>
 							<string>showOpenHeads</string>
 							<string>showTags</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>id</string>
+							<string>NSButton</string>
 							<string>NSButton</string>
 							<string>NSButton</string>
 							<string>NSButton</string>
@@ -4319,6 +4374,7 @@
 							<string>parentController</string>
 							<string>showBookmarks</string>
 							<string>showBranches</string>
+							<string>showClosedBranches</string>
 							<string>showOpenHeads</string>
 							<string>showTags</string>
 						</object>
@@ -4334,6 +4390,10 @@
 							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">showBranches</string>
+								<string key="candidateClassName">NSButton</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">showClosedBranches</string>
 								<string key="candidateClassName">NSButton</string>
 							</object>
 							<object class="IBToOneOutletInfo">
@@ -4859,11 +4919,15 @@
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
+					<string key="className">NSApplication</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="1010491287">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/General/Common.h</string>
 					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<reference key="sourceIdentifier" ref="1010491287"/>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">NSTableView</string>
@@ -6061,6 +6125,7 @@
 				<string>Pull</string>
 				<string>Push</string>
 				<string>Quicklook</string>
+				<string>Reveal</string>
 				<string>Revert</string>
 				<string>SmallDividerThumb</string>
 				<string>Update</string>
@@ -6078,11 +6143,12 @@
 				<string>{32, 32}</string>
 				<string>{1, 18}</string>
 				<string>{32, 32}</string>
-				<string>{15, 15}</string>
+				<string>{10, 10}</string>
 				<string>{8, 8}</string>
 				<string>{9, 8}</string>
 				<string>{7, 2}</string>
 				<string>{15, 15}</string>
+				<string>{32, 32}</string>
 				<string>{32, 32}</string>
 				<string>{32, 32}</string>
 				<string>{32, 32}</string>
