@@ -175,6 +175,7 @@
 		96AD9C3C11C468CF00F5C82E /* MacHgHelp in Resources */ = {isa = PBXBuildFile; fileRef = 96AD9C0811C468CF00F5C82E /* MacHgHelp */; };
 		96BEAA8F12891CF0005198B5 /* hgrc in Resources */ = {isa = PBXBuildFile; fileRef = 96BEAA8E12891CF0005198B5 /* hgrc */; };
 		96BEAAB812891EF4005198B5 /* hgignore in Resources */ = {isa = PBXBuildFile; fileRef = 96BEAAB712891EF4005198B5 /* hgignore */; };
+		96C3C3391304C0CF009BB242 /* DiffButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C3C3381304C0CF009BB242 /* DiffButton.png */; };
 		96C613A911B40B0D00B54B09 /* MacHgSplash.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C613A811B40B0D00B54B09 /* MacHgSplash.png */; };
 		96C98EA5113B70C2006816C0 /* MacHgsmaller.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C98EA4113B70C2006816C0 /* MacHgsmaller.png */; };
 		96D2477D117BC1810030815B /* ThickSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D2477C117BC1810030815B /* ThickSplitView.m */; };
@@ -472,6 +473,7 @@
 		96AD9C0811C468CF00F5C82E /* MacHgHelp */ = {isa = PBXFileReference; lastKnownFileType = folder; path = MacHgHelp; sourceTree = "<group>"; };
 		96BEAA8E12891CF0005198B5 /* hgrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = hgrc; sourceTree = "<group>"; };
 		96BEAAB712891EF4005198B5 /* hgignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = hgignore; sourceTree = "<group>"; };
+		96C3C3381304C0CF009BB242 /* DiffButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = DiffButton.png; path = ButtonIcons/DiffButton.png; sourceTree = "<group>"; };
 		96C613A811B40B0D00B54B09 /* MacHgSplash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MacHgSplash.png; path = SplashTitles/MacHgSplash.png; sourceTree = "<group>"; };
 		96C98EA4113B70C2006816C0 /* MacHgsmaller.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MacHgsmaller.png; path = SplashTitles/MacHgsmaller.png; sourceTree = "<group>"; };
 		96D2477B117BC1810030815B /* ThickSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThickSplitView.h; sourceTree = "<group>"; };
@@ -726,6 +728,7 @@
 		961D5167115BC11A0064A4DA /* ButtonIcons */ = {
 			isa = PBXGroup;
 			children = (
+				96C3C3381304C0CF009BB242 /* DiffButton.png */,
 				96138846116B437D0022F368 /* ActionDrop.png */,
 				9637C8C2118E9C300000C14B /* ActionDropButtonSizeSmall.png */,
 				9610639A117C6E4000FF7EB2 /* ActionDrop24.png */,
@@ -1598,6 +1601,7 @@
 				96D25FB612FC8D5800EB6B70 /* TrustedCertificates.pem in Resources */,
 				96D2608012FE420700EB6B70 /* getHTTPSfingerprint.py in Resources */,
 				9658DCF912FF9B5F00FF18B3 /* Reveal.png in Resources */,
+				96C3C3391304C0CF009BB242 /* DiffButton.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

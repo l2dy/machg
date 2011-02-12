@@ -81,6 +81,7 @@
 - (void)	 scrollToSelected;
 
 
+// Menu Actions
 - (IBAction) mainMenuCommitAllFiles:(id)sender;
 - (IBAction) toolbarCommitFiles:(id)sender;
 - (IBAction) mainMenuDiffAllFiles:(id)sender;
@@ -88,6 +89,10 @@
 
 - (IBAction) mainMenuRevertAllFiles:(id)sender;
 - (IBAction) toolbarRevertFiles:(id)sender;
+
+
+// Button Actions
+- (IBAction) diffSelectedRevisions:(id)sender;
 
 
 // LogTableView Contextual Menu
