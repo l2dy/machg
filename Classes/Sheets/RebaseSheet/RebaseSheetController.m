@@ -119,6 +119,13 @@
 	return [[NSFileManager defaultManager] fileExistsAtPath:histEditStatePath];
 }
 
+- (void) deleteRebaseState
+{
+	NSString* repositoryDotHGDirPath = [[myDocument absolutePathOfRepositoryRoot] stringByAppendingPathComponent:@".hg"];
+	NSString* histEditStatePath = [repositoryDotHGDirPath stringByAppendingPathComponent:@"rebasestate"];
+	moveFilesToTheTrash([NSArray arrayWithObject:histEditStatePath]);
+}
+
 - (void) doContinueOrAbort
 {
 	NSInteger result = NSRunCriticalAlertPanel(@"Rebase in Progress", @"A rebase operation is in progress, continue with the operation or abort the operation", @"Continue", @"Abort", @"Cancel");
@@ -129,15 +136,18 @@
 	
 	NSMutableArray* argsRebase = [NSMutableArray arrayWithObjects:@"rebase", nil];
 	
-	[argsRebase addObject: (result == NSAlertDefaultReturn ? @"--continue" : @"--abort")];
+	BOOL abort = (result == NSAlertAlternateReturn);
+	[argsRebase addObject: abort ? @"--abort" : @"--continue"];
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	ExecutionResult* results = [myDocument  executeMercurialWithArgs:argsRebase  fromRoot:rootPath  whileDelayingEvents:YES];
 	if (results.outStr)
 	{
-		NSString* operation = (result == NSAlertDefaultReturn ? @"Continue" : @"Abort");
+		NSString* operation = (abort ? @"Abort" :  @"Continue");
 		NSString* titleMessage = fstr(@"Results of Rebase %@",operation);
 		NSRunAlertPanel(titleMessage, @"Mercurial reported the result of the rebase %@:\n\ncode %d:\n%@", @"OK", nil, nil, operation, results.result, results.outStr);
 	}
+	if (abort)
+		[self deleteRebaseState];
 }
 
 
