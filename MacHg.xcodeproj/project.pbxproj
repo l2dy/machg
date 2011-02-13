@@ -250,7 +250,7 @@
 
 /* Begin PBXFileReference section */
 		089C1660FE840EACC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
-		1DDD58290DA1D0D100B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MyDocument.xib; sourceTree = "<group>"; };
+		1DDD58290DA1D0D100B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MyDocument.xib; sourceTree = SOURCE_ROOT; };
 		2564AD2C0F5327BB00F57823 /* MacHg_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MacHg_Prefix.pch; sourceTree = "<group>"; };
 		43ABE9DF130769180037D7F8 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		43ABE9E1130769180037D7F8 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
@@ -321,7 +321,7 @@
 		9618B3511349B6CA00C38570 /* ScrollToChangesetPanelController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ScrollToChangesetPanelController.h; sourceTree = "<group>"; };
 		9618B3521349B6CA00C38570 /* ScrollToChangesetPanelController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ScrollToChangesetPanelController.m; sourceTree = "<group>"; };
 		9618B35F1349B6E000C38570 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/ScrollToChangesetPanel.xib; sourceTree = SOURCE_ROOT; };
-		961CB6AA1139BC730071F9F6 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/BrowserPreviewView.xib; sourceTree = "<group>"; };
+		961CB6AA1139BC730071F9F6 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/BrowserPreviewView.xib; sourceTree = SOURCE_ROOT; };
 		961D5A07115DBD9E0064A4DA /* CommandKeyTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CommandKeyTextField.h; path = CommandKeyTextField/CommandKeyTextField.h; sourceTree = "<group>"; };
 		961D5A08115DBD9E0064A4DA /* CommandKeyTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CommandKeyTextField.m; path = CommandKeyTextField/CommandKeyTextField.m; sourceTree = "<group>"; };
 		961E283913586C4900FDD502 /* CloneArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CloneArrow.png; path = SheetIcons/CloneArrow.png; sourceTree = "<group>"; };
@@ -407,15 +407,15 @@
 		9637C8C8118E9C5A0000C14B /* NSString+SymlinksAndAliases.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+SymlinksAndAliases.m"; sourceTree = "<group>"; };
 		963D3F2910E7A24D00FD536D /* ProcessListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProcessListController.h; sourceTree = "<group>"; };
 		963D3F2A10E7A24D00FD536D /* ProcessListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProcessListController.m; sourceTree = "<group>"; };
-		963DBC8410C7CEF600189853 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Classes/main.m; sourceTree = SOURCE_ROOT; };
+		963DBC8410C7CEF600189853 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Classes/main.m; sourceTree = "<group>"; };
 		963DBD5710C7D03100189853 /* BWToolkitFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BWToolkitFramework.framework; path = LinkedLibraries/BWToolkit/BWToolkitFramework.framework; sourceTree = "<group>"; };
-		963DBDB910C7D34A00189853 /* Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = Common.h; path = Classes/General/Common.h; sourceTree = SOURCE_ROOT; };
-		963DBDBA10C7D34A00189853 /* Common.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = Common.m; path = Classes/General/Common.m; sourceTree = SOURCE_ROOT; };
+		963DBDB910C7D34A00189853 /* Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Common.h; sourceTree = "<group>"; };
+		963DBDBA10C7D34A00189853 /* Common.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Common.m; sourceTree = "<group>"; };
 		963DBE0B10C7D54800189853 /* Sidebar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sidebar.m; sourceTree = "<group>"; };
 		963DBE0C10C7D54800189853 /* SidebarCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SidebarCell.h; sourceTree = "<group>"; };
 		963DBE0D10C7D54800189853 /* SidebarCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SidebarCell.m; sourceTree = "<group>"; };
-		963DBE0E10C7D54800189853 /* SidebarNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = SidebarNode.h; path = Classes/Sidebar/SidebarNode.h; sourceTree = SOURCE_ROOT; };
-		963DBE0F10C7D54800189853 /* SidebarNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = SidebarNode.m; path = Classes/Sidebar/SidebarNode.m; sourceTree = SOURCE_ROOT; };
+		963DBE0E10C7D54800189853 /* SidebarNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SidebarNode.h; sourceTree = "<group>"; };
+		963DBE0F10C7D54800189853 /* SidebarNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SidebarNode.m; sourceTree = "<group>"; };
 		963DBE3810C7D6CA00189853 /* Sidebar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sidebar.h; sourceTree = "<group>"; };
 		9654F5E311D237F200826FD6 /* AddRemove.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AddRemove.png; sourceTree = "<group>"; };
 		9654F5E411D237F200826FD6 /* Commit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Commit.png; sourceTree = "<group>"; };
@@ -471,7 +471,7 @@
 		969064EB11601E2400F30915 /* MonitorFSEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MonitorFSEvents.m; sourceTree = "<group>"; };
 		9693CFBF129D82DF0064DAB9 /* LogRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogRecord.h; sourceTree = "<group>"; };
 		9693CFC0129D82DF0064DAB9 /* LogRecord.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LogRecord.m; sourceTree = "<group>"; };
-		9695007310CBE3E100548D1C /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/BrowserView.xib; sourceTree = "<group>"; };
+		9695007310CBE3E100548D1C /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/BrowserView.xib; sourceTree = SOURCE_ROOT; };
 		9695C0A81108E1C5004CE684 /* PullSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PullSheetController.h; sourceTree = "<group>"; };
 		9695C0A91108E1C5004CE684 /* PullSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PullSheetController.m; sourceTree = "<group>"; };
 		9695C0AB1108E1C5004CE684 /* PushSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PushSheetController.h; sourceTree = "<group>"; };
@@ -531,7 +531,7 @@
 		96D2607F12FE420700EB6B70 /* getHTTPSfingerprint.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = getHTTPSfingerprint.py; sourceTree = "<group>"; };
 		96D5FFF61114E83900EE672E /* MyWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyWindowController.h; path = Classes/Document/MyWindowController.h; sourceTree = "<group>"; };
 		96D5FFF71114E83900EE672E /* MyWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MyWindowController.m; path = Classes/Document/MyWindowController.m; sourceTree = "<group>"; };
-		96DB336410D43BCB00BB5B08 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/DifferencesView.xib; sourceTree = "<group>"; };
+		96DB336410D43BCB00BB5B08 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/DifferencesView.xib; sourceTree = SOURCE_ROOT; };
 		96DCCC1B10CD41B100C843C9 /* fmdiff.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = fmdiff.sh; path = scripts/fmdiff.sh; sourceTree = SOURCE_ROOT; };
 		96DCCC1C10CD41B100C843C9 /* localhg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = localhg; path = scripts/localhg; sourceTree = SOURCE_ROOT; };
 		96DCCC1D10CD41B100C843C9 /* spawnshellatpath */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = spawnshellatpath; path = scripts/spawnshellatpath; sourceTree = SOURCE_ROOT; };
@@ -607,6 +607,7 @@
 		2A37F4AAFDCFA73011CA2CEA /* MacHGR */ = {
 			isa = PBXGroup;
 			children = (
+				43ABEC8513076B750037D7F8 /* Config */,
 				43ABE6BA130767750037D7F8 /* MacHG */,
 				96DF51E211B83DF900D986FF /* LocalMercurial */,
 				2A37F4B8FDCFA73011CA2CEA /* Resources */,
@@ -705,6 +706,13 @@
 				96000A541353E4E7005FD1BC /* TLMTask.m */,
 			);
 			path = TMLTask;
+			sourceTree = "<group>";
+		};
+		43ABEC8513076B750037D7F8 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			name = Config;
 			sourceTree = "<group>";
 		};
 		9600C28410CD3D9F00CD8D28 /* Images */ = {
