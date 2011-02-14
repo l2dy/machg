@@ -1,0 +1,8 @@
+// MacHG settings for Release configuration
+
+#include "MacHG-All.xcconfig"
+
+
+GCC_ENABLE_OBJC_GC = required
+GCC_OPTIMIZATION_LEVEL = 2
+GCC_ENABLE_FIX_AND_CONTINUE = NO

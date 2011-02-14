@@ -10,6 +10,7 @@
 		1DDD582C0DA1D0D100B32029 /* MyDocument.xib in Resources */ = {isa = PBXBuildFile; fileRef = 1DDD58280DA1D0D100B32029 /* MyDocument.xib */; };
 		43901158135E851B0004EB98 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43ABE9DF130769180037D7F8 /* Cocoa.framework */; };
 		43901159135E851B0004EB98 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 43ABE9E1130769180037D7F8 /* WebKit.framework */; };
+		43901167135E861B0004EB98 /* libicucore.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 4346BFEC1308E429004C6661 /* libicucore.dylib */; };
 		44D3658012770D10007D631D /* ParentTextButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 44D3657F12770D10007D631D /* ParentTextButtonCell.m */; };
 		8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165FFE840EACC02AAC07 /* InfoPlist.strings */; };
 		96000A551353E4E7005FD1BC /* BDSKTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 96000A521353E4E7005FD1BC /* BDSKTask.m */; };
@@ -252,6 +253,11 @@
 		089C1660FE840EACC02AAC07 /* English */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.strings; name = English; path = English.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		1DDD58290DA1D0D100B32029 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MyDocument.xib; sourceTree = SOURCE_ROOT; };
 		2564AD2C0F5327BB00F57823 /* MacHg_Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MacHg_Prefix.pch; sourceTree = "<group>"; };
+		4346BFEC1308E429004C6661 /* libicucore.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libicucore.dylib; path = usr/lib/libicucore.dylib; sourceTree = SDKROOT; };
+		4346C0281308E746004C6661 /* Base.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Base.xcconfig; path = BuildConfiguration/Base.xcconfig; sourceTree = "<group>"; };
+		4346C0291308E746004C6661 /* MacHG-All.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "MacHG-All.xcconfig"; path = "BuildConfiguration/MacHG-All.xcconfig"; sourceTree = "<group>"; };
+		4346C02A1308E746004C6661 /* MacHG-Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "MacHG-Debug.xcconfig"; path = "BuildConfiguration/MacHG-Debug.xcconfig"; sourceTree = "<group>"; };
+		4346C02B1308E746004C6661 /* MacHG-Release.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = "MacHG-Release.xcconfig"; path = "BuildConfiguration/MacHG-Release.xcconfig"; sourceTree = "<group>"; };
 		43ABE9DF130769180037D7F8 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = System/Library/Frameworks/Cocoa.framework; sourceTree = SDKROOT; };
 		43ABE9E1130769180037D7F8 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
 		43ABEB29130769620037D7F8 /* AppKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AppKit.framework; path = System/Library/Frameworks/AppKit.framework; sourceTree = SDKROOT; };
@@ -571,6 +577,7 @@
 				9605BBDE119C0E3F002EEA47 /* Security.framework in Frameworks */,
 				9673CD4412D148AE0043929D /* QuickLook.framework in Frameworks */,
 				9673CD4A12D148C70043929D /* Quartz.framework in Frameworks */,
+				43901167135E861B0004EB98 /* libicucore.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -684,6 +691,7 @@
 				9605BBD8119C0E32002EEA47 /* Carbon.framework */,
 				9605BBDD119C0E3F002EEA47 /* Security.framework */,
 				9673CD4312D148AE0043929D /* QuickLook.framework */,
+				4346BFEC1308E429004C6661 /* libicucore.dylib */,
 			);
 			name = "System Frameworks";
 			sourceTree = "<group>";
@@ -697,6 +705,17 @@
 			name = "Third Party Frameworks";
 			sourceTree = "<group>";
 		};
+		43ABEC8513076B750037D7F8 /* Config */ = {
+			isa = PBXGroup;
+			children = (
+				4346C0281308E746004C6661 /* Base.xcconfig */,
+				4346C0291308E746004C6661 /* MacHG-All.xcconfig */,
+				4346C02A1308E746004C6661 /* MacHG-Debug.xcconfig */,
+				4346C02B1308E746004C6661 /* MacHG-Release.xcconfig */,
+			);
+			name = Config;
+			sourceTree = "<group>";
+		};
 		96000A501353E4E7005FD1BC /* TMLTask */ = {
 			isa = PBXGroup;
 			children = (
@@ -706,13 +725,6 @@
 				96000A541353E4E7005FD1BC /* TLMTask.m */,
 			);
 			path = TMLTask;
-			sourceTree = "<group>";
-		};
-		43ABEC8513076B750037D7F8 /* Config */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			name = Config;
 			sourceTree = "<group>";
 		};
 		9600C28410CD3D9F00CD8D28 /* Images */ = {
@@ -2181,81 +2193,29 @@
 /* Begin XCBuildConfiguration section */
 		C05733C808A9546B00998B17 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4346C02A1308E746004C6661 /* MacHG-Debug.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				COPY_PHASE_STRIP = NO;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/LinkedLibraries/BWToolkit\"",
-					"\"$(SRCROOT)/LinkedLibraries\"",
-					"\"$(SRCROOT)\"",
-				);
-				GCC_DYNAMIC_NO_PIC = NO;
-				GCC_MODEL_TUNING = G5;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = MacHg_Prefix.pch;
-				INFOPLIST_FILE = "MacHg-Info.plist";
-				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				ONLY_ACTIVE_ARCH = NO;
-				OTHER_CFLAGS = "-DDEBUG";
-				OTHER_LDFLAGS = "-licucore";
-				PRODUCT_NAME = MacHg;
-				VALID_ARCHS = "x86_64 i386";
 			};
 			name = Debug;
 		};
 		C05733C908A9546B00998B17 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4346C02B1308E746004C6661 /* MacHG-Release.xcconfig */;
 			buildSettings = {
-				ALWAYS_SEARCH_USER_PATHS = NO;
-				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"\"$(SRCROOT)/LinkedLibraries/BWToolkit\"",
-					"\"$(SRCROOT)/LinkedLibraries\"",
-					"\"$(SRCROOT)\"",
-				);
-				GCC_ENABLE_OBJC_GC = required;
-				GCC_MODEL_TUNING = G5;
-				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = MacHg_Prefix.pch;
-				INFOPLIST_FILE = "MacHg-Info.plist";
-				INSTALL_PATH = "$(HOME)/Applications";
-				LIBRARY_SEARCH_PATHS = "$(inherited)";
-				OTHER_LDFLAGS = "-licucore";
-				PRODUCT_NAME = MacHg;
-				VALID_ARCHS = "x86_64 i386";
 			};
 			name = Release;
 		};
 		C05733CC08A9546B00998B17 /* Debug */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4346C0281308E746004C6661 /* Base.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_ENABLE_OBJC_GC = required;
-				GCC_OPTIMIZATION_LEVEL = 0;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_INITIALIZER_NOT_FULLY_BRACKETED = YES;
-				GCC_WARN_MISSING_PARENTHESES = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				ONLY_ACTIVE_ARCH = NO;
-				SDKROOT = macosx10.6;
-				VALID_ARCHS = "i386 x86_64";
 			};
 			name = Debug;
 		};
 		C05733CD08A9546B00998B17 /* Release */ = {
 			isa = XCBuildConfiguration;
+			baseConfigurationReference = 4346C0281308E746004C6661 /* Base.xcconfig */;
 			buildSettings = {
-				ARCHS = "$(ARCHS_STANDARD_32_64_BIT)";
-				GCC_C_LANGUAGE_STANDARD = gnu99;
-				GCC_WARN_ABOUT_RETURN_TYPE = YES;
-				GCC_WARN_UNUSED_VARIABLE = YES;
-				SDKROOT = macosx10.6;
-				VALID_ARCHS = "i386 x86_64";
 			};
 			name = Release;
 		};
