@@ -472,7 +472,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 
 - (void) selectWithFrame:(NSRect)aRect inView:(NSView*)controlView editor:(NSText*)textObj delegate:(id)anObject start:(NSInteger)selStart length:(NSInteger)selLength
 {
-	aRect = UnionSize(aRect, [[self attributedStringValue] size]);
+	aRect = UnionRectWithSize(aRect, [[self attributedStringValue] size]);
 	aRect.size.width *= 1.2;
 	isEditingOrSelecting_ = YES;	
 	[super selectWithFrame:aRect inView:controlView editor:textObj delegate:anObject start:selStart length:selLength];
@@ -481,7 +481,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 
 - (void)editWithFrame:(NSRect)aRect inView:(NSView*)controlView editor:(NSText*)textObj delegate:(id)anObject event:(NSEvent*)theEvent
 {
-	aRect = UnionSize(aRect, [[self attributedStringValue] size]);
+	aRect = UnionRectWithSize(aRect, [[self attributedStringValue] size]);
 	aRect.size.width *= 1.2;
 	isEditingOrSelecting_ = YES;
 	[super editWithFrame:aRect inView:controlView editor:textObj delegate:anObject event:theEvent];
@@ -504,7 +504,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 - (void) editWithFrame:(NSRect)aRect inView:(NSView*)controlView editor:(NSText*)textObj delegate:(id)anObject event:(NSEvent*)theEvent
 {
 	aRect = UnionWidthHeight(aRect, 340, 45);
-	aRect = UnionSize(aRect, [[self attributedStringValue] size]);
+	aRect = UnionRectWithSize(aRect, [[self attributedStringValue] size]);
 	isEditingOrSelecting_ = YES;
     [super editWithFrame:aRect inView:controlView editor:textObj delegate:anObject event:theEvent];
 	isEditingOrSelecting_ = NO;
@@ -515,7 +515,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 - (void) selectWithFrame:(NSRect)aRect inView:(NSView*)controlView editor:(NSText*)textObj delegate:(id)anObject start:(NSInteger)selStart length:(NSInteger)selLength
 {
 	aRect = UnionWidthHeight(aRect, 340, 45);
-	aRect = UnionSize(aRect, [[self attributedStringValue] size]);
+	aRect = UnionRectWithSize(aRect, [[self attributedStringValue] size]);
 	isEditingOrSelecting_ = YES;	
     [super selectWithFrame:aRect inView:controlView editor:textObj delegate:anObject start:selStart length:selLength];
 	isEditingOrSelecting_ = NO;
@@ -524,7 +524,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 // Expansion tool tip support
 - (NSRect) expansionFrameWithFrame:(NSRect)cellFrame inView:(NSView*)view
 {
-	cellFrame = UnionSize(cellFrame, [[self attributedStringValue] size]);
+	cellFrame = UnionRectWithSize(cellFrame, [[self attributedStringValue] size]);
 	
 	// We want to make the cell *slightly* larger; it looks better when showing the expansion tool tip.
 	cellFrame.size.width += 4.0;
@@ -535,7 +535,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 - (void) drawWithExpansionFrame:(NSRect)cellFrame inView:(NSView*)view
 {
     NSAttributedString* message = [self attributedStringValue];
-	cellFrame = UnionSize(cellFrame, [message size]);
+	cellFrame = UnionRectWithSize(cellFrame, [message size]);
     if ([message length] > 0)
 	{
         cellFrame.origin.x += 2.0;
@@ -567,7 +567,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 	NSDictionary* attributes = [message attributesOfWholeString];
 	message = [NSAttributedString string:fullPath withAttributes:attributes];
 	
-	cellFrame = UnionSize(cellFrame, [message size]);
+	cellFrame = UnionRectWithSize(cellFrame, [message size]);
 	// We want to make the cell *slightly* larger; it looks better when showing the expansion tool tip.
 	cellFrame.size.width += 4.0;
 	cellFrame.origin.x   -= 2.0;
@@ -582,7 +582,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 	NSDictionary* attributes = [message attributesOfWholeString];
 	message = [NSAttributedString string:fullPath withAttributes:attributes];
 
-	cellFrame = UnionSize(cellFrame, [message size]);
+	cellFrame = UnionRectWithSize(cellFrame, [message size]);
     if ([message length] > 0)
 	{
         cellFrame.origin.x += 2.0;

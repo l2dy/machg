@@ -753,7 +753,8 @@ NS_INLINE LowHighPair	MakeLowHighPair(NSInteger low, NSInteger high)			{ return 
 extern void PlayBeep();
 
 static inline NSRect UnionWidthHeight(NSRect r, CGFloat w, CGFloat h) { r.size.width = MAX(r.size.width, w); r.size.height = MAX(r.size.height, h); return r;}
-static inline NSRect UnionSize(NSRect r, NSSize s) { r.size.width = MAX(r.size.width, s.width); r.size.height = MAX(r.size.height, s.height); return r;}
+static inline NSRect UnionRectWithSize(NSRect r, NSSize s) { r.size.width = MAX(r.size.width, s.width); r.size.height = MAX(r.size.height, s.height); return r;}
+static inline NSSize UnionSizeWIthSize(NSSize r, NSSize s) { return NSMakeSize(MAX(r.width, s.width), MAX(r.height, s.height)); }
 
 static inline NSString* fstr(NSString* format, ...)
 {

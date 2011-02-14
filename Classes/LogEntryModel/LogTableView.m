@@ -858,7 +858,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	if (messageSize.width <= cellFrame.size.width && messageSize.height <= cellFrame.size.height)
 		return NSZeroRect;
 	
-	cellFrame = UnionSize(cellFrame, [message size]);
+	cellFrame = UnionRectWithSize(cellFrame, [message size]);
 	
 	// We want to make the cell *slightly* larger; it looks better when showing the expansion tool tip.
 	cellFrame.size.width += 4.0;
@@ -883,7 +883,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 		message = [NSAttributedString string:fullMessageText withAttributes:attributes];
 	}
 	
-	cellFrame = UnionSize(cellFrame, [message size]);	
+	cellFrame = UnionRectWithSize(cellFrame, [message size]);	
     if ([message length] > 0)
 	{
         cellFrame.origin.x += 2.0;
