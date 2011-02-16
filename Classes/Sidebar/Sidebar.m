@@ -358,7 +358,7 @@
 
 // If we are adding a local repository to the document, check to see is the repository has a stored reference to the server and if
 // the server is not present in the document then return a server node which can be added to the document as well.
-- (NSArray*) serversIfAvailableAndNotPresent:(NSString*)file
+- (NSArray*) serversIfAvailable:(NSString*)file includingAlreadyPresent:(BOOL)includeAlreadyPresent
 {
 	// Look for a server in [paths].default
 	NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"paths", nil];
@@ -380,12 +380,13 @@
 		
 		// If the server is already present in the document don't add it again.
 		BOOL duplicate = NO;
-		for (SidebarNode* repo in allRepositories)
-			if ([repo isServerRepositoryRef] && [trimString([repo path]) isEqualToString:url])
-			{
-				duplicate = YES;
-				break;
-			}
+		if (!includeAlreadyPresent)
+			for (SidebarNode* repo in allRepositories)
+				if ([repo isServerRepositoryRef] && [trimString([repo path]) isEqualToString:url])
+				{
+					duplicate = YES;
+					break;
+				}
 		if (duplicate)
 			continue;
 
@@ -466,8 +467,8 @@
 		for (id file in resolvedFilenames)
 			if (pathIsExistentDirectory(file) && repositoryExistsAtPath(file))
 			{
-				SidebarNode* node   = [SidebarNode nodeForLocalURL:file];
-				NSArray* servers = [self serversIfAvailableAndNotPresent:file];
+				SidebarNode* node = [SidebarNode nodeForLocalURL:file];
+				NSArray* servers  = [self serversIfAvailable:file includingAlreadyPresent:NO];
 				[targetParent insertChild:node atIndex:index];
 				[[AppController sharedAppController] computeRepositoryIdentityForPath:file];
 				if (servers)
@@ -927,11 +928,19 @@
 
 - (NSArray*) allCompatibleRepositories:(SidebarNode*)selectedNode;
 {
+	// Get the default servers
+	NSArray* servers = [self serversIfAvailable:[selectedNode path] includingAlreadyPresent:YES];
+
 	NSMutableArray* compatibleRepositories = [[NSMutableArray alloc] init];
 	NSArray* allRepositories = [self allRepositories];
 	for (SidebarNode* repo in allRepositories)
-		if ([repo isCompatibleTo:selectedNode])
+		if ([repo isCompatibleTo:selectedNode] || [repo isCompatibleToNodeInArray:servers])
 			[compatibleRepositories addObject:repo];
+
+	// Add any default servers not already present at the begining of the compatibleRepositories list
+	for (SidebarNode* serverNode in servers)
+		if (![serverNode isCompatibleToNodeInArray:compatibleRepositories])
+			[compatibleRepositories addObject:serverNode];
 	return compatibleRepositories;
 }
 

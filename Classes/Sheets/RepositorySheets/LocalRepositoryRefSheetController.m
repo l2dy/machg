@@ -183,8 +183,8 @@
 		}
 		else
 		{
-			SidebarNode* newNode   = [SidebarNode nodeWithCaption:newName  forLocalPath:newPath];
-			NSArray* newServers = [[myDocument sidebar] serversIfAvailableAndNotPresent:newPath];
+			SidebarNode* newNode = [SidebarNode nodeWithCaption:newName  forLocalPath:newPath];
+			NSArray* newServers  = [[myDocument sidebar] serversIfAvailable:newPath includingAlreadyPresent:NO];
 			[[AppController sharedAppController] computeRepositoryIdentityForPath:newPath];
 			[newNode refreshNodeIcon];
 			if (addNewRepositoryRefTo)

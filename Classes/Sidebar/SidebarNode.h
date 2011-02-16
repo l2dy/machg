@@ -97,6 +97,7 @@ typedef enum
 
 
 // Rootchangeset and Connections
+- (BOOL) isCompatibleToNodeInArray:(NSArray*)nodes;
 - (BOOL) isCompatibleTo:(SidebarNode*)comp;
 - (NSString*) repositoryIdentity;
 - (void) addRecentConnection:(SidebarNode*)mark;

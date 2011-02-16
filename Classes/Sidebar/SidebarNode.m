@@ -327,8 +327,21 @@
 	return [virginRepository isEqualToString:repositoryIdentity];
 }
 
+- (BOOL) isCompatibleToNodeInArray:(NSArray*)nodes
+{
+	for (SidebarNode* node in nodes)
+		if ([self isCompatibleTo:node])
+			return YES;
+	return NO;
+}
+
 - (BOOL) isCompatibleTo:(SidebarNode*)other
 {
+	// If the paths are the same then the servers have to be compatible since they reference the same thing. (This is useful when
+	// you can't actually get a repository identity
+	if ([[self path] isEqualToString:[other path]])
+		return YES;
+	
 	NSString* repositoryIdentitySelf  = [self repositoryIdentity];
 	NSString* repositoryIdentityOther = [other repositoryIdentity];
 

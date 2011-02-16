@@ -46,7 +46,7 @@
 // Addition of Nodes
 - (void) addSidebarNode:(SidebarNode*)newNode;
 - (void) addSidebarNode:(SidebarNode*)newNode afterNode:(SidebarNode*)existingNode;
-- (NSArray*) serversIfAvailableAndNotPresent:(NSString*)file;
+- (NSArray*) serversIfAvailable:(NSString*)file includingAlreadyPresent:(BOOL)includeAlreadyPresent;
 
 
 // Selection Methods
