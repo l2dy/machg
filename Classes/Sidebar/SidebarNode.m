@@ -85,7 +85,7 @@
 	SidebarNode* node = [[SidebarNode alloc] init];
 	[node setNodeKind:type];
 	[node setShortName:cap];
-	[node setPath:thePath];
+	[node setPath:trimString(thePath)];
 	[node setParent:nil];
 	[node setIcon:icn];
 	[node repositoryIdentity];
@@ -339,7 +339,7 @@
 {
 	// If the paths are the same then the servers have to be compatible since they reference the same thing. (This is useful when
 	// you can't actually get a repository identity
-	if ([[self path] isEqualToString:[other path]])
+	if ([trimString([self path]) isEqualToString:trimString([other path])])
 		return YES;
 	
 	NSString* repositoryIdentitySelf  = [self repositoryIdentity];
