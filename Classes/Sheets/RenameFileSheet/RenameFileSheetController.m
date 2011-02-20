@@ -37,7 +37,7 @@
 
 - (void) awakeFromNib
 {
-	[[errorDisclosureController disclosureBox] setCornerRadius:6];
+	[errorDisclosureController roundTheBoxCorners];
 }
 
 

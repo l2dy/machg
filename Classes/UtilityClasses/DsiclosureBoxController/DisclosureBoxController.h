@@ -44,8 +44,11 @@
 - (void)     ensureDisclosureBoxIsOpen:(BOOL)animate;
 - (void)     ensureDisclosureBoxIsClosed:(BOOL)animate;
 - (void)     setToOpenState:(BOOL)state withAnimation:(BOOL)animate;
-- (CGFloat)  sizeChange;
+- (BOOL)	 disclosureIsVisable;
 
+- (void)	 setBackgroundToBad;	// Color the background of the disclosure box in the "error" style
+- (void)	 setBackgroundToGood;	// Color the background of the disclosure box in the "valid" style
+- (void)	 roundTheBoxCorners;	// Set the rounding of the corners of the box so it looks a little nicer.
 @end
 
 

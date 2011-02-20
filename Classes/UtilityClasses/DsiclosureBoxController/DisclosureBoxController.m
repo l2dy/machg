@@ -11,8 +11,9 @@
 
 
 @interface DisclosureBoxController (PrivateAPI)
-- (void) openDisclosureBoxWithAnimation:(BOOL)animate;
-- (void) closeDisclosureBoxWithAnimation:(BOOL)animate;
+- (CGFloat) sizeChange;
+- (void)	openDisclosureBoxWithAnimation:(BOOL)animate;
+- (void)	closeDisclosureBoxWithAnimation:(BOOL)animate;
 @end
 
 
@@ -39,6 +40,19 @@
 	if (!disclosed && autoSaveName_)
 		[parentWindow setFrame:frameRect display:NO animate:NO];
 }
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Styling
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (void)	 setBackgroundToBad	 { [disclosureBox setFillColor:[NSColor color255WithRed:255.0 green:239.0 blue:242.0 alpha:1.0]]; }
+- (void)	 setBackgroundToGood { [disclosureBox setFillColor:[NSColor color255WithRed:240.0 green:255.0 blue:234.0 alpha:1.0]]; }
+- (void)	 roundTheBoxCorners  { [disclosureBox setCornerRadius:6]; }
 
 
 
@@ -123,6 +137,7 @@
 
 - (CGFloat) sizeChange	{ return [disclosureBox frame].size.height + 5; } 		// The extra +5 accounts for the space between the box and its neighboring views
 
+- (BOOL)	disclosureIsVisable { return disclosureIsVisable_; }
 
 
 
