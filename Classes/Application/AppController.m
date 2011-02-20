@@ -50,6 +50,8 @@
 	NSFont* boldSystemFont		= [NSFont boldSystemFontOfSize:	[NSFont systemFontSize]];
 	NSFont* smallSystemFont		= [NSFont systemFontOfSize:		[NSFont smallSystemFontSize]];
 	NSFont* smallBoldSystemFont = [NSFont boldSystemFontOfSize:	[NSFont smallSystemFontSize]];
+	NSFont* smallFixedPitchUserFont = [NSFont userFixedPitchFontOfSize:	[NSFont smallSystemFontSize]];
+
 	// There is no italic version of the system font so we use NSObliquenessAttributeName
 	// NSFont* italicTextFont = [fontManager convertFont:textFont toHaveTrait:NSItalicFontMask];
 	NSColor* grayColor = [NSColor grayColor];
@@ -65,6 +67,7 @@
 	smallGraySystemFontAttributes   = [NSDictionary dictionaryWithObjectsAndKeys: smallSystemFont, NSFontAttributeName, grayColor, NSForegroundColorAttributeName, nil];
 	smallBoldSystemFontAttributes   = [NSDictionary dictionaryWithObjectsAndKeys: smallBoldSystemFont, NSFontAttributeName, nil];
 	smallItalicSystemFontAttributes = [NSDictionary dictionaryWithObjectsAndKeys: smallSystemFont, NSFontAttributeName, [NSNumber numberWithFloat:0.15], NSObliquenessAttributeName, nil];
+	smallFixedWidthUserFontAttributes = [NSDictionary dictionaryWithObjectsAndKeys: smallFixedPitchUserFont, NSFontAttributeName, nil];
 
 	smallCenteredSystemFontAttributes     = [NSDictionary dictionaryWithObjectsAndKeys: smallSystemFont,     NSFontAttributeName, cps, NSParagraphStyleAttributeName, nil];
 	smallBoldCenteredSystemFontAttributes = [NSDictionary dictionaryWithObjectsAndKeys: smallBoldSystemFont, NSFontAttributeName, cps, NSParagraphStyleAttributeName, nil];

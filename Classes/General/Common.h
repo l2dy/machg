@@ -544,6 +544,7 @@ extern NSDictionary*	smallBoldSystemFontAttributes;
 extern NSDictionary*	smallCenteredSystemFontAttributes;
 extern NSDictionary*	smallItalicSystemFontAttributes;
 extern NSDictionary*	smallSystemFontAttributes;
+extern NSDictionary*	smallFixedWidthUserFontAttributes;
 extern NSDictionary*	smallGraySystemFontAttributes;
 extern NSDictionary*	standardSidebarFontAttributes;
 extern NSDictionary*	standardVirginSidebarFontAttributes;
