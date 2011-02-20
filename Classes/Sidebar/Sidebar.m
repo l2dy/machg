@@ -365,7 +365,7 @@
 	ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:file];
 
 	NSArray* paths = [result.outStr arrayOfCaptureComponentsMatchedByRegex:@"^paths\\.((?:[\\w-]+))\\s*=\\s*((?:ssh|http|https)://.*?)$" options:RKLMultiline range:NSMaxiumRange error:NULL];
-	if ([paths count] ==0 || [result hasErrors])
+	if ([paths count] == 0 || [result hasErrors])
 		return nil;
 
 	NSMutableArray* serversToAdd = [[NSMutableArray alloc]init];

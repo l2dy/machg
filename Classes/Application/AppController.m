@@ -662,7 +662,7 @@
 	int attempts = numberAsInt(DynamicCast(NSNumber, val)) + 1;
 	[dirtyRepositoryIdentityForPath_ synchronizedSetObject:intAsNumber(attempts) forKey:path];
 	
-	// If we have attempted to many times to compute the root just give up and mark it "uncomputable"
+	// If we have attempted too many times to compute the root just give up and mark it "uncomputable"
 	if (attempts > 6)
 	{
 		[dirtyRepositoryIdentityForPath_ synchronizedSetObject:@"uncomputable" forKey:path];

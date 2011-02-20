@@ -66,7 +66,6 @@
 @class CloneSheetController;
 @class CollapseSheetController;
 @class CommitSheetController;
-@class ConnectionValidationController;
 @class ExportPatchesSheetController;
 @class HistoryEditSheetController;
 @class ImportPatchesSheetController;
@@ -94,6 +93,7 @@
 @class LNCStopwatch;
 @class AttachedWindowController;
 @class DisclosureBoxController;
+@class ConnectionValidationController;
 @class RadialGradiantBox;
 @class OptionController;
 @class SingleTimedQueue;
