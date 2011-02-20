@@ -657,9 +657,7 @@
 	if (!path)
 		return;
 	
-	NSString* fullPath = path;
-	if ([[self urlUsesPassword] containsObject:path])
-		fullPath = FullServerURL(path, YES);
+	NSString* fullPath = FullServerURL(path);
 
 	// If we are already computing the root changeset then don't compute it again
 	if ([computingRepositoryIdentityForPath_ synchronizedObjectForKey:path])

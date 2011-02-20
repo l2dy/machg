@@ -123,6 +123,13 @@ typedef enum
 
 typedef enum
 {
+	eAllPasswordsAreMangled = 0,
+	eKeyChainPasswordsAreMangled = 1,
+	eAllPasswordsAreVisible = 3
+} PasswordVisibilityType;
+
+typedef enum
+{
 	eDiffFileAdded	 = 0,
 	eDiffFileChanged = 1,
 	eDiffFileRemoved = 2
@@ -638,8 +645,8 @@ NSArray*	pruneContainedPaths(NSArray* paths);
 // MARK:  URL operations
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-NSString*	FullServerURLWithPassword(NSString* baseURL, BOOL usesPassword, NSString* password);	// Specify password (used during server configuration)
-NSString*	FullServerURL(NSString* baseURL, BOOL usesPassword);						// Use password from the keychain
+NSString*	FullServerURLWithPassword(NSString* baseURL, BOOL lookedupPassword, NSString* password, PasswordVisibilityType visibility);	// Specify password (used during server configuration)
+NSString*	FullServerURL(NSString* baseURL);	// Flush out the base url with the password if it is stored in the keychain
 
 
 

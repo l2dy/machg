@@ -244,7 +244,7 @@
 	if (needsPassword_ && ![self authorizeForShowingPassword])
 		return;
 
-	NSString* fullServerURL = FullServerURLWithPassword(serverFieldValue_, needsPassword_, password_);
+	NSString* fullServerURL = FullServerURLWithPassword(serverFieldValue_, needsPassword_, password_, eAllPasswordsAreVisible);
 	NSMutableArray* argsIdentify = [NSMutableArray arrayWithObjects:@"identify", @"--insecure", @"--rev", @"0", fullServerURL, nil];
 	NSMutableArray* newArgs = [TaskExecutions preProcessMercurialCommandArgs:argsIdentify fromRoot:@"/tmp"];
 	[newArgs insertObject:LocalWhitelistedHGShellAliasNameFromDefaults() atIndex:0];

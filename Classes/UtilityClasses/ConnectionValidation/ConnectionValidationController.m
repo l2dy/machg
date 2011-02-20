@@ -22,7 +22,7 @@ NSAttributedString*   fixedWidthAttributedString(NSString* string);
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK:  Initilization
+// MARK:  Initialization
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (id) init
@@ -135,7 +135,12 @@ NSAttributedString*   fixedWidthAttributedString(NSString* string);
 									 // Main Block
 									 ^{
 										 [self showValidationProgressIndicator];
-										 NSString* fullServerURL = FullServerURLWithPassword([theServerRefController serverFieldValue], [theServerRefController needsPassword], [theServerRefController password]);
+										 PasswordVisibilityType visibilityInDisclosure = [theServerRefController showRealPassword] ? eAllPasswordsAreVisible : eKeyChainPasswordsAreMangled;
+										 NSString* theServer     = [theServerRefController serverFieldValue];
+										 BOOL needsPassword		 = [theServerRefController needsPassword];
+										 NSString* thePassword   = [theServerRefController password];
+										 NSString* fullServerURL      = FullServerURLWithPassword(theServer, needsPassword, thePassword, eAllPasswordsAreVisible);
+										 NSString* visibleServerURL   = FullServerURLWithPassword(theServer, needsPassword, thePassword, visibilityInDisclosure);
 										 NSMutableArray* argsIdentify = [NSMutableArray arrayWithObjects:@"identify", @"--insecure", @"--rev", @"tip", fullServerURL, nil];
 										 ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsIdentify  fromRoot:@"/tmp"  logging:eLogAllToFile];
 										 

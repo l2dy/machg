@@ -199,7 +199,7 @@
 {
 	if (!hasPassword || ![self isServerRepositoryRef])
 		return path;	
-	return FullServerURL(path, YES);
+	return FullServerURL(path);
 }
 
 - (NSString*) pathHidingAnyPassword
