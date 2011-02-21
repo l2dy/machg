@@ -981,8 +981,15 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 // MARK: -
 @interface NSView ( NSViewPlusExtensions )
 - (void)	setCenterX:(CGFloat)coord;
+- (void)	setCenterX:(CGFloat)coord animate:(BOOL)animate;
 - (void)	setMinX:(CGFloat)coord;
 - (void)	setMaxX:(CGFloat)coord;
+@end
+
+
+// MARK: -
+@interface NSBox ( NSBoxPlusExtensions )
+- (void)	growToFit;
 @end
 
 

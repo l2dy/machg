@@ -152,8 +152,6 @@
 		9695CB67110A0ACD004CE684 /* OutgoingSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9695CB65110A0ACD004CE684 /* OutgoingSheet.xib */; };
 		9695CB6A110A0AD4004CE684 /* IncomingSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9695CB68110A0AD4004CE684 /* IncomingSheet.xib */; };
 		9695CBD3110A101C004CE684 /* IncomingSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9695CBD2110A101C004CE684 /* IncomingSheetController.m */; };
-		969754B910DE28CD00F02ACF /* pull_32h.png in Resources */ = {isa = PBXBuildFile; fileRef = 969754B710DE28CD00F02ACF /* pull_32h.png */; };
-		969754C310DE296A00F02ACF /* push_32h.png in Resources */ = {isa = PBXBuildFile; fileRef = 969754C210DE296A00F02ACF /* push_32h.png */; };
 		969BD94511953E43007AA6D9 /* AddLabelSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 969BD94411953E43007AA6D9 /* AddLabelSheetController.m */; };
 		969BD94811953E54007AA6D9 /* AddLabelSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 969BD94611953E54007AA6D9 /* AddLabelSheet.xib */; };
 		969BD95511953FAA007AA6D9 /* MoveLabelSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 969BD95411953FAA007AA6D9 /* MoveLabelSheetController.m */; };
@@ -176,6 +174,8 @@
 		96BEAA8F12891CF0005198B5 /* hgrc in Resources */ = {isa = PBXBuildFile; fileRef = 96BEAA8E12891CF0005198B5 /* hgrc */; };
 		96BEAAB812891EF4005198B5 /* hgignore in Resources */ = {isa = PBXBuildFile; fileRef = 96BEAAB712891EF4005198B5 /* hgignore */; };
 		96C3C3391304C0CF009BB242 /* DiffButton.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C3C3381304C0CF009BB242 /* DiffButton.png */; };
+		96C3C4C613079EFE009BB242 /* DownArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C3C4C413079EFE009BB242 /* DownArrow.png */; };
+		96C3C4C713079EFE009BB242 /* UpArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C3C4C513079EFE009BB242 /* UpArrow.png */; };
 		96C613A911B40B0D00B54B09 /* MacHgSplash.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C613A811B40B0D00B54B09 /* MacHgSplash.png */; };
 		96C98EA5113B70C2006816C0 /* MacHgsmaller.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C98EA4113B70C2006816C0 /* MacHgsmaller.png */; };
 		96D2477D117BC1810030815B /* ThickSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D2477C117BC1810030815B /* ThickSplitView.m */; };
@@ -439,8 +439,6 @@
 		9695CB69110A0AD4004CE684 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/IncomingSheet.xib; sourceTree = SOURCE_ROOT; };
 		9695CBD1110A101C004CE684 /* IncomingSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IncomingSheetController.h; sourceTree = "<group>"; };
 		9695CBD2110A101C004CE684 /* IncomingSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IncomingSheetController.m; sourceTree = "<group>"; };
-		969754B710DE28CD00F02ACF /* pull_32h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = pull_32h.png; path = SheetIcons/pull_32h.png; sourceTree = "<group>"; };
-		969754C210DE296A00F02ACF /* push_32h.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = push_32h.png; path = SheetIcons/push_32h.png; sourceTree = "<group>"; };
 		969BD94311953E43007AA6D9 /* AddLabelSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddLabelSheetController.h; sourceTree = "<group>"; };
 		969BD94411953E43007AA6D9 /* AddLabelSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddLabelSheetController.m; sourceTree = "<group>"; };
 		969BD94711953E54007AA6D9 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/AddLabelSheet.xib; sourceTree = SOURCE_ROOT; };
@@ -474,6 +472,8 @@
 		96BEAA8E12891CF0005198B5 /* hgrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = hgrc; sourceTree = "<group>"; };
 		96BEAAB712891EF4005198B5 /* hgignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = hgignore; sourceTree = "<group>"; };
 		96C3C3381304C0CF009BB242 /* DiffButton.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = DiffButton.png; path = ButtonIcons/DiffButton.png; sourceTree = "<group>"; };
+		96C3C4C413079EFE009BB242 /* DownArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = DownArrow.png; path = SheetIcons/DownArrow.png; sourceTree = "<group>"; };
+		96C3C4C513079EFE009BB242 /* UpArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = UpArrow.png; path = SheetIcons/UpArrow.png; sourceTree = "<group>"; };
 		96C613A811B40B0D00B54B09 /* MacHgSplash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MacHgSplash.png; path = SplashTitles/MacHgSplash.png; sourceTree = "<group>"; };
 		96C98EA4113B70C2006816C0 /* MacHgsmaller.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MacHgsmaller.png; path = SplashTitles/MacHgsmaller.png; sourceTree = "<group>"; };
 		96D2477B117BC1810030815B /* ThickSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ThickSplitView.h; sourceTree = "<group>"; };
@@ -757,8 +757,8 @@
 		961D516E115BC17B0064A4DA /* SheetIcons */ = {
 			isa = PBXGroup;
 			children = (
-				969754B710DE28CD00F02ACF /* pull_32h.png */,
-				969754C210DE296A00F02ACF /* push_32h.png */,
+				96C3C4C413079EFE009BB242 /* DownArrow.png */,
+				96C3C4C513079EFE009BB242 /* UpArrow.png */,
 			);
 			name = SheetIcons;
 			sourceTree = "<group>";
@@ -1543,8 +1543,6 @@
 				9606F3451157F1F100968DE8 /* opendiff-w.sh in Resources */,
 				96DCCC2010CD41B100C843C9 /* spawnshellatpath in Resources */,
 				96DB336510D43BCB00BB5B08 /* DifferencesView.xib in Resources */,
-				969754B910DE28CD00F02ACF /* pull_32h.png in Resources */,
-				969754C310DE296A00F02ACF /* push_32h.png in Resources */,
 				9631D2E01107A8380007FDF2 /* CloneSheet.xib in Resources */,
 				9631D2E31107A84A0007FDF2 /* CommitSheet.xib in Resources */,
 				9631D2E61107A8530007FDF2 /* MergeSheet.xib in Resources */,
@@ -1601,6 +1599,8 @@
 				96D2608012FE420700EB6B70 /* getHTTPSfingerprint.py in Resources */,
 				9658DCF912FF9B5F00FF18B3 /* Reveal.png in Resources */,
 				96C3C3391304C0CF009BB242 /* DiffButton.png in Resources */,
+				96C3C4C613079EFE009BB242 /* DownArrow.png in Resources */,
+				96C3C4C713079EFE009BB242 /* UpArrow.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

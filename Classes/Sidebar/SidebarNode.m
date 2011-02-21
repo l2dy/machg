@@ -192,7 +192,7 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK:  FullPath
+// MARK:  Decorated Paths
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (NSString*) fullURLPath
@@ -202,6 +202,19 @@
 	return FullServerURL(path, YES);
 }
 
+- (NSString*) pathHidingAnyPassword
+{
+	if (![self isServerRepositoryRef])
+		return path;
+
+	NSString* pass = [[NSURL URLWithString:path] password];
+	if (!pass)
+		return path;
+
+	NSMutableString* newString = [NSMutableString stringWithString:path];
+	[newString replaceOccurrencesOfString:pass withString:@"***" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [newString length])];
+	return newString;
+}
 
 
 

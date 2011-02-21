@@ -1409,14 +1409,20 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 // MARK: -
 @implementation NSView ( NSViewPlusExtensions )
 
-- (void)	setCenterX:(CGFloat)coord
+- (void)	setCenterX:(CGFloat)coord { [self setCenterX:coord animate:YES]; }
+- (void)	setCenterX:(CGFloat)coord animate:(BOOL)animate
 {
 	NSRect theFrame = [self frame];
-	CGFloat newOriginX = coord - theFrame.size.width / 2;
+	CGFloat newOriginX = round(coord - theFrame.size.width / 2);
+	if (newOriginX < 0)
+		newOriginX = 0;
 	if (newOriginX != theFrame.origin.x)
 	{
 		theFrame.origin.x = newOriginX;
-		[[self animator] setFrame:theFrame];
+		if (animate)
+			[[self animator] setFrame:theFrame];
+		else
+			[self setFrame:theFrame];
 	}
 }
 
@@ -1440,6 +1446,23 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 		theFrame.origin.x = newOriginX;
 		[[self animator] setFrame:theFrame];
 	}
+}
+
+@end
+
+
+
+// MARK: -
+@implementation NSBox ( NSBoxPlusExtensions )
+
+- (void) growToFit
+{
+	NSRect oldFrame = [self frame];
+	[self sizeToFit];
+	NSRect newFrame = [self frame];
+	NSSize maxSize = UnionSizeWIthSize(newFrame.size, oldFrame.size);
+	newFrame = UnionRectWithSize(newFrame, maxSize);
+	[self setFrame:newFrame];	
 }
 
 @end

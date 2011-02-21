@@ -65,7 +65,6 @@
 
 - (SidebarNode*) sourceRepository		{ return [myDocument selectedRepositoryRepositoryRef]; }
 - (SidebarNode*) destinationRepository	{ return [[compatibleRepositoriesPopup selectedItem] representedObject]; }
-- (BOOL)		 sourceOnLeft			{ return YES; }
 - (NSString*)    operationName			{ return @"Push"; }
 
 

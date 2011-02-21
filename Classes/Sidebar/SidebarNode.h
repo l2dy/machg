@@ -82,8 +82,9 @@ typedef enum
 - (NSAttributedString*) attributedStringForNode;
 
 
-// Full URL
+// Decorated Paths
 - (NSString*) fullURLPath;
+- (NSString*) pathHidingAnyPassword;
 
 
 // Undo handling

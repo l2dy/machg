@@ -14,9 +14,24 @@
 #import "MacHgDocument.h"
 #import "Sidebar.h"
 
+
+@interface TransmitSheetController (PrivateAPI)
+- (void) recenterMainGroupingBox;
+@end
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: TransmitSheetController
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+
 @implementation TransmitSheetController
 @synthesize allowOperationWithAnyRepository = allowOperationWithAnyRepository_;
 @synthesize myDocument;
+
+
+
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -27,7 +42,6 @@
 
 - (SidebarNode*)	sourceRepository		{ NSAssert(NO, @"Must Override sourceRepository method");		return nil; }
 - (SidebarNode*)	destinationRepository	{ NSAssert(NO, @"Must Override destinationRepository method");	return nil; }
-- (BOOL)			sourceOnLeft			{ NSAssert(NO, @"Must Override sourceOnLeft method");			return NO; }
 - (NSString*)		operationName			{ NSAssert(NO, @"Must Override operationName method");			return nil; }
 
 
@@ -55,6 +69,26 @@
 	[self layoutGroupsForSource:           source  andDestination:destination];
 	[self updateIncomingOutgoingCountForSource:source andDestination:destination];
 	[advancedOptionsBox setNeedsDisplay:YES];
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Window Delegate
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (void)windowDidResize:(NSNotification*)notification
+{
+	[self recenterMainGroupingBox];
+}
+
+
+- (void) windowDidEndLiveResize:(NSNotification*)notification
+{
+	[self recenterMainGroupingBox];
 }
 
 
@@ -118,7 +152,7 @@
 - (void) updateIncomingOutgoingCountForSource:(SidebarNode*)source andDestination:(SidebarNode*)destination;
 {
 	NSString* theCount;
-	if ([self sourceOnLeft])
+	if ([[self operationName] isMatchedByRegex:@"Push|Outgoing"])
 		theCount = [[myDocument sidebar] outgoingCountTo:destination];
 	else
 		theCount = [[myDocument sidebar] incomingCountFrom:source];
@@ -153,7 +187,7 @@
 	SidebarNode* selectedNode = [[myDocument sidebar] selectedNode];
 	if (!selectedNode || ![selectedNode isLocalRepositoryRef])
 		return;
-	
+
 	// Setup popup and fields with connections from selected popup item
 	NoAnimationBlock(^{
 		[self setAllowOperationWithAnyRepository:NO];
@@ -161,8 +195,18 @@
 		[self updateIncomingOutgoingCount];
 		BOOL showAdvancedOptions = [OptionController containsOptionWhichIsSet:cmdOptions];
 		[disclosureController setToOpenState:showAdvancedOptions withAnimation:NO];
+		[mainGroupingBox sizeToFit];	// On open we reset the size of the main grouping box to its smallest size
+		[self recenterMainGroupingBox];
 	});
+	[sheetWindow setDelegate:self];
 	[NSApp beginSheet:sheetWindow modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+}
+
+
+- (void) recenterMainGroupingBox
+{
+	CGFloat centerWindow = [sheetWindow frame].size.width/2;
+	[mainGroupingBox setCenterX:centerWindow animate:![sheetWindow inLiveResize]];
 }
 
 
@@ -170,13 +214,18 @@
 // text label ("Source:" / "Destination:") and the label or popup.
 - (void) layoutGroupsForSource:(SidebarNode*)source andDestination:(SidebarNode*)destination
 {
-	static CGFloat spacing = 25.0;
-	NSString* sourcePath          = [source path];
-	NSString* destinationPath     = [destination path];
+	NSString* sourcePath          = [source pathHidingAnyPassword];
+	NSString* destinationPath     = [destination pathHidingAnyPassword];
 	NSImage* sourceIconImage      = [source isLocalRepositoryRef]      ? [NSWorkspace iconImageOfSize:[sourceIconWell frame].size forPath:sourcePath]      : [NSImage imageNamed:NSImageNameNetwork];
 	NSImage* destinationIconImage = [destination isLocalRepositoryRef] ? [NSWorkspace iconImageOfSize:[sourceIconWell frame].size forPath:destinationPath] : [NSImage imageNamed:NSImageNameNetwork];
+
 	[sourceIconWell      setImage:sourceIconImage];
+	[sourceURI			 setStringValue:sourcePath];
+	[sourceURI			 sizeToFit];
+
 	[destinationIconWell setImage:destinationIconImage];
+	[destinationURI		 setStringValue:destinationPath];
+	[destinationURI		 sizeToFit];
 	
 	NSTextField* sourceLabelTextField      = DynamicCast(NSTextField, sourceLabel);
 	NSTextField* destinationLabelTextField = DynamicCast(NSTextField, destinationLabel);
@@ -190,29 +239,10 @@
 		[destinationLabelTextField setStringValue:[destination shortName]];
 		[destinationLabelTextField sizeToFit];
 	}
-	
-	CGFloat centerWindow = [sheetWindow frame].size.width/2;
-	
-	CGFloat widthSourceGroup = 0;
-	CGFloat widthDestinationGroup = 0;
-	widthSourceGroup      = MAX(widthSourceGroup, [sourceStaticText bounds].size.width);
-	widthSourceGroup	  = MAX(widthSourceGroup, sourceLabel ? [sourceLabel bounds].size.width : 0);
-	widthSourceGroup      = MAX(widthSourceGroup, [sourceIconWell bounds].size.width);
-	widthDestinationGroup = MAX(widthDestinationGroup, [destinationStaticText bounds].size.width);
-	widthDestinationGroup = MAX(widthDestinationGroup, destinationLabel ? [destinationLabel bounds].size.width : 0);
-	widthDestinationGroup = MAX(widthDestinationGroup, [destinationIconWell bounds].size.width);
-	
-	CGFloat halfCenterWidth = MAX(widthSourceGroup, widthDestinationGroup)/2;
-	CGFloat offsetSpacing = spacing + halfCenterWidth;
-	CGFloat centerXSourceGroup = centerWindow - offsetSpacing * ([self sourceOnLeft] ? 1 : -1);
-	[sourceIconWell setCenterX:centerXSourceGroup];
-	[sourceStaticText setCenterX:centerXSourceGroup];
-	[sourceLabel setCenterX:centerXSourceGroup];
-	
-	CGFloat centerXDestinationGroup = centerWindow + offsetSpacing * ([self sourceOnLeft] ? 1 : -1);
-	[destinationIconWell setCenterX:centerXDestinationGroup];
-	[destinationStaticText setCenterX:centerXDestinationGroup];
-	[destinationLabel setCenterX:centerXDestinationGroup];
+
+	[mainGroupingBox growToFit];
+	[self recenterMainGroupingBox];
+	return;	
 }
 
 
