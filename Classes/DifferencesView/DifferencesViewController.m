@@ -327,17 +327,15 @@
 - (IBAction) differencesMenuAnnotateBaseRevisionOfSelectedFiles:(id)sender
 {
 	NSArray* selectedFiles = [theBrowser absolutePathsOfChosenFilesInBrowser];
-	NSArray* filteredFiles = [theBrowser filterPaths:selectedFiles byBitfield:eHGStatusInRepository];
 	NSArray* options = [[AppController sharedAppController] annotationOptionsFromDefaults];
-	[myDocument annotateFiles:filteredFiles withRevision:[baseLogTableView selectedCompleteRevision] andOptions:options];
+	[myDocument primaryActionAnnotateSelectedFiles:selectedFiles withRevision:[baseLogTableView selectedCompleteRevision] andOptions:options];
 }
 
 - (IBAction) differencesMenuAnnotateCompareRevisionOfSelectedFiles:(id)sender
 {
 	NSArray* selectedFiles = [theBrowser absolutePathsOfChosenFilesInBrowser];
-	NSArray* filteredFiles = [theBrowser filterPaths:selectedFiles byBitfield:eHGStatusInRepository];
 	NSArray* options = [[AppController sharedAppController] annotationOptionsFromDefaults];
-	[myDocument annotateFiles:filteredFiles withRevision:[compareLogTableView selectedCompleteRevision] andOptions:options];
+	[myDocument primaryActionAnnotateSelectedFiles:selectedFiles withRevision:[compareLogTableView selectedCompleteRevision] andOptions:options];
 }
 
 - (IBAction) differencesMenuNoAction:(id)sender { }

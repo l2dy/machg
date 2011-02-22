@@ -1824,10 +1824,9 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 
 - (BOOL) primaryActionAnnotateSelectedFiles:(NSArray*)theSelectedFiles
 {	
-	NSArray* filteredFiles = [[self theBrowser] filterPaths:theSelectedFiles byBitfield:eHGStatusInRepository];
 	NSNumber* revision = [self getHGParent1Revision];
 	NSArray* options = [[AppController sharedAppController] annotationOptionsFromDefaults];
-	[self annotateFiles:filteredFiles withRevision:revision andOptions:options];
+	[self primaryActionAnnotateSelectedFiles:theSelectedFiles withRevision:revision andOptions:options];
 	return YES;
 }
 
@@ -2253,9 +2252,37 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 	}];
 }
 
+- (NSArray*) filterPaths:(NSArray*)absolutePaths byManifestOfRevision:(NSNumber*)version
+{	
+	NSString* rootPath = [self absolutePathOfRepositoryRoot];
+	NSString* versionStr = numberAsString(version);
+	NSMutableArray* argsManifest = [NSMutableArray arrayWithObjects:@"manifest", @"--rev", versionStr, nil];
+	ExecutionResult* results = [self executeMercurialWithArgs:argsManifest  fromRoot:rootPath  whileDelayingEvents:YES];
+	NSArray* allFiles = [results.outStr componentsSeparatedByString:@"\n"];
+	NSMutableSet* allPaths = [[NSMutableSet alloc]init];
+	for (NSString* file in allFiles)
+	{
+		NSArray* pathComponents = [file pathComponents];
+		NSString* builtPath = @"";
+		for (NSString* component in pathComponents)
+		{
+			builtPath = [builtPath stringByAppendingPathComponent:component];
+			[allPaths addObject:builtPath];
+		}		
+	}
+	
+	NSMutableArray* filteredPaths = [[NSMutableArray alloc]init];
+	for (NSString* path in absolutePaths)
+		if ([allPaths containsObject:pathDifference(rootPath,path)])
+			[filteredPaths addObject:path];
+	return filteredPaths;
+}
 
-- (void) annotateFiles:(NSArray*)filteredPaths withRevision:(NSNumber*)version andOptions:(NSArray*)options
+- (void) primaryActionAnnotateSelectedFiles:(NSArray*)absolutePaths withRevision:(NSNumber*)version andOptions:(NSArray*)options
 {
+	NSString* rootPath = [self absolutePathOfRepositoryRoot];
+	NSArray* filteredPaths = [self filterPaths:absolutePaths byManifestOfRevision:version];
+	
 	int numberOfFilesToAnnotate = [filteredPaths count];
 	if (numberOfFilesToAnnotate < 1)
 		{ PlayBeep(); return; }
@@ -2266,9 +2293,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 			return;
 	}
 
-	NSString* rootPath = [self absolutePathOfRepositoryRoot];
 	NSString* versionStr = numberAsString(version);
-	
 	[self dispatchToMercurialQueuedWithDescription:@"Generating Annotations" process:^{
 		DispatchGroup group = dispatch_group_create();
 		for (NSString* file in filteredPaths)

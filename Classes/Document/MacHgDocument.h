@@ -312,7 +312,7 @@
 - (BOOL)		primaryActionBackoutFilesToVersion:(NSNumber*)version;
 - (BOOL)		primaryActionMergeWithVersion:(NSNumber*)mergeVersion andOptions:(NSArray*)options withConfirmation:(BOOL)confirm;
 - (void)		primaryActionDisplayManifestForVersion:(NSNumber*)version;
-- (void)		annotateFiles:(NSArray*)filteredPaths withRevision:(NSNumber*)version andOptions:(NSArray*)options;
+- (void)		primaryActionAnnotateSelectedFiles:(NSArray*)absolutePaths withRevision:(NSNumber*)version andOptions:(NSArray*)options;
 - (void)		viewDifferencesInCurrentRevisionFor:(NSArray*)absolutePaths toRevision:(NSString*)versionToCompareTo;
 
 
