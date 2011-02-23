@@ -2,10 +2,10 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.10">
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
-		<string key="IBDocument.SystemVersion">10H574</string>
+		<string key="IBDocument.SystemVersion">10J567</string>
 		<string key="IBDocument.InterfaceBuilderVersion">823</string>
 		<string key="IBDocument.AppKitVersion">1038.35</string>
-		<string key="IBDocument.HIToolboxVersion">461.00</string>
+		<string key="IBDocument.HIToolboxVersion">462.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<object class="NSArray" key="dict.sortedKeys">
@@ -21,11 +21,12 @@
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
+			<integer value="416"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 			<string>com.brandonwalkin.BWToolkit</string>
+			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 		</object>
 		<object class="NSMutableDictionary" key="IBDocument.Metadata">
 			<string key="NS.key.0">PluginDependencyRecalculationVersion</string>
@@ -159,7 +160,7 @@
 																				<string key="NSColorName">controlColor</string>
 																				<object class="NSColor" key="NSColor" id="378433714">
 																					<int key="NSColorSpace">3</int>
-																					<bytes key="NSWhite">MC42NjY2NjY2NjY3AA</bytes>
+																					<bytes key="NSWhite">MC42NjY2NjY2ODY1AA</bytes>
 																				</object>
 																			</object>
 																			<object class="NSColor" key="NSTextColor" id="291829360">
@@ -1867,6 +1868,32 @@
 						<reference key="NSMixedImage" ref="917952338"/>
 						<int key="NSTag">1</int>
 					</object>
+					<object class="NSMenuItem" id="516478765">
+						<reference key="NSMenu" ref="572099067"/>
+						<bool key="NSIsDisabled">YES</bool>
+						<bool key="NSIsSeparator">YES</bool>
+						<string key="NSTitle"/>
+						<string key="NSKeyEquiv"/>
+						<int key="NSMnemonicLoc">2147483647</int>
+						<reference key="NSOnImage" ref="427382090"/>
+						<reference key="NSMixedImage" ref="917952338"/>
+					</object>
+					<object class="NSMenuItem" id="408049458">
+						<reference key="NSMenu" ref="572099067"/>
+						<string key="NSTitle">Annotate Base Revision of Selected Files</string>
+						<string key="NSKeyEquiv"/>
+						<int key="NSMnemonicLoc">2147483647</int>
+						<reference key="NSOnImage" ref="427382090"/>
+						<reference key="NSMixedImage" ref="917952338"/>
+					</object>
+					<object class="NSMenuItem" id="639855978">
+						<reference key="NSMenu" ref="572099067"/>
+						<string key="NSTitle">Annotate Compare Revision of Selected Files</string>
+						<string key="NSKeyEquiv"/>
+						<int key="NSMnemonicLoc">2147483647</int>
+						<reference key="NSOnImage" ref="427382090"/>
+						<reference key="NSMixedImage" ref="917952338"/>
+					</object>
 				</object>
 			</object>
 		</object>
@@ -2376,6 +2403,22 @@
 						<reference key="destination" ref="192635466"/>
 					</object>
 					<int key="connectionID">612</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">differencesMenuAnnotateBaseRevisionOfSelectedFiles:</string>
+						<reference key="source" ref="1003"/>
+						<reference key="destination" ref="408049458"/>
+					</object>
+					<int key="connectionID">615</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">differencesMenuAnnotateCompareRevisionOfSelectedFiles:</string>
+						<reference key="source" ref="1003"/>
+						<reference key="destination" ref="639855978"/>
+					</object>
+					<int key="connectionID">617</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -2968,6 +3011,9 @@
 							<reference ref="303258090"/>
 							<reference ref="922347648"/>
 							<reference ref="192635466"/>
+							<reference ref="516478765"/>
+							<reference ref="408049458"/>
+							<reference ref="639855978"/>
 						</object>
 						<reference key="parent" ref="0"/>
 					</object>
@@ -3285,6 +3331,21 @@
 						<reference key="object" ref="34981531"/>
 						<reference key="parent" ref="671726421"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">613</int>
+						<reference key="object" ref="516478765"/>
+						<reference key="parent" ref="572099067"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">614</int>
+						<reference key="object" ref="408049458"/>
+						<reference key="parent" ref="572099067"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">616</int>
+						<reference key="object" ref="639855978"/>
+						<reference key="parent" ref="572099067"/>
+					</object>
 				</object>
 			</object>
 			<object class="NSMutableDictionary" key="flattenedProperties">
@@ -3430,6 +3491,9 @@
 					<string>549.IBPluginDependency</string>
 					<string>550.IBPluginDependency</string>
 					<string>551.IBPluginDependency</string>
+					<string>613.IBPluginDependency</string>
+					<string>614.IBPluginDependency</string>
+					<string>616.IBPluginDependency</string>
 				</object>
 				<object class="NSMutableArray" key="dict.values">
 					<bool key="EncodedWithXMLCoder">YES</bool>
@@ -3548,7 +3612,7 @@
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{551, 825}, {227, 113}}</string>
+					<string>{{551, 775}, {392, 163}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3566,6 +3630,9 @@
 					<string>{{239, 1026}, {583, 24}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>ScrollToForLogTable</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3590,7 +3657,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">612</int>
+			<int key="maxID">617</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3881,7 +3948,8 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>browserAction:</string>
 							<string>browserDoubleAction:</string>
-							<string>differencesMenuAnnotateSelectedFiles:</string>
+							<string>differencesMenuAnnotateBaseRevisionOfSelectedFiles:</string>
+							<string>differencesMenuAnnotateCompareRevisionOfSelectedFiles:</string>
 							<string>differencesMenuNoAction:</string>
 							<string>differencesMenuOpenSelectedFilesInFinder:</string>
 							<string>mainMenuDiffAllFiles:</string>
@@ -3912,6 +3980,7 @@
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
+							<string>id</string>
 						</object>
 					</object>
 					<object class="NSMutableDictionary" key="actionInfosByName">
@@ -3920,7 +3989,8 @@
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>browserAction:</string>
 							<string>browserDoubleAction:</string>
-							<string>differencesMenuAnnotateSelectedFiles:</string>
+							<string>differencesMenuAnnotateBaseRevisionOfSelectedFiles:</string>
+							<string>differencesMenuAnnotateCompareRevisionOfSelectedFiles:</string>
 							<string>differencesMenuNoAction:</string>
 							<string>differencesMenuOpenSelectedFilesInFinder:</string>
 							<string>mainMenuDiffAllFiles:</string>
@@ -3945,7 +4015,11 @@
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
-								<string key="name">differencesMenuAnnotateSelectedFiles:</string>
+								<string key="name">differencesMenuAnnotateBaseRevisionOfSelectedFiles:</string>
+								<string key="candidateClassName">id</string>
+							</object>
+							<object class="IBActionInfo">
+								<string key="name">differencesMenuAnnotateCompareRevisionOfSelectedFiles:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">

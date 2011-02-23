@@ -106,6 +106,7 @@
 - (NSArray*)	absolutePathsOfChosenFilesInBrowser;
 - (NSString*)	enclosingDirectoryOfChosenFilesInBrowser;
 - (FSNodeInfo*)	parentNodeInfoForColumn:(NSInteger)column;
+- (NSArray*)	filterPaths:(NSArray*)absolutePaths byBitfield:(HGStatus)status;
 
 
 // Graphic Operations

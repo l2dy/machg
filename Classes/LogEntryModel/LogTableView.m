@@ -279,6 +279,17 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 - (NSNumber*) chosenRevision	{ return [[self chosenEntry] revision]; }
 - (NSNumber*) selectedRevision	{ return [[self selectedEntry] revision]; }
 
+- (NSNumber*) selectedCompleteRevision
+{
+	LogEntry* selectedEntry = [self selectedEntry];
+	
+	// return first parent for incomplete revision
+	if(selectedEntry && selectedEntry == [[self repositoryData] incompleteRevisionEntry] && [selectedEntry.parentsArray count] > 0)
+		return [selectedEntry.parentsArray objectAtIndex:0];
+	
+	return [[self selectedEntry] revision];
+}
+
 - (NSArray*) chosenEntries
 {
 	if (![self rowWasClicked] || [[self selectedRowIndexes] containsIndex:[self clickedRow]])

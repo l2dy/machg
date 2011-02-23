@@ -121,7 +121,8 @@
 - (IBAction)	mainMenuOpenTerminalHere:(id)sender;
 
 - (IBAction)    differencesMenuOpenSelectedFilesInFinder:(id)sender;
-- (IBAction)	differencesMenuAnnotateSelectedFiles:(id)sender;
+- (IBAction)	differencesMenuAnnotateBaseRevisionOfSelectedFiles:(id)sender;
+- (IBAction)	differencesMenuAnnotateCompareRevisionOfSelectedFiles:(id)sender;
 - (IBAction)	differencesMenuNoAction:(id)sender;
 
 - (IBAction)	mainMenuDiffSelectedFiles:(id)sender;

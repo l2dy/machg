@@ -96,6 +96,7 @@
 - (NSArray*)	selectedEntries;	// Array of LogEntry
 - (NSNumber*)	selectedRevision;
 - (NSArray*)	selectedRevisions;	// Array of NSNumbers
+- (NSNumber*)	selectedCompleteRevision;
 
 - (LogEntry*)   lowestSelectedEntry;	// The highest revision of the selected revisions
 - (LogEntry*)   highestSelectedEntry;	// The lowest  revision of the selected revisions

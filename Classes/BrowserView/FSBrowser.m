@@ -295,6 +295,19 @@
 }
 
 
+- (NSArray*) filterPaths:(NSArray*)absolutePaths byBitfield:(HGStatus)status
+{
+	FSNodeInfo* theRoot = [self rootNodeInfo];
+	NSMutableArray* remainingPaths = [[NSMutableArray alloc] init];
+	for (NSString* path in absolutePaths)
+	{
+		FSNodeInfo* node = [theRoot nodeForPathFromRoot:path];
+		BOOL includePath = bitsInCommon([node hgStatus], status);
+		if (includePath)
+			[remainingPaths addObject:path];
+	}
+	return remainingPaths;
+}
 
 
 

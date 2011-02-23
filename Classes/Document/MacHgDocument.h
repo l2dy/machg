@@ -214,7 +214,6 @@
 - (HGStatus)	statusOfChosenPathsInBrowser;
 - (NSArray*)	absolutePathsOfBrowserChosenFiles;
 - (NSString*)	enclosingDirectoryOfBrowserChosenFiles;
-- (NSArray*)	filterPaths:(NSArray*)absolutePaths byBitfield:(HGStatus)status;
 - (FSNodeInfo*) nodeForPath:(NSString*)absolutePath;
 
 
@@ -313,7 +312,7 @@
 - (BOOL)		primaryActionBackoutFilesToVersion:(NSNumber*)version;
 - (BOOL)		primaryActionMergeWithVersion:(NSNumber*)mergeVersion andOptions:(NSArray*)options withConfirmation:(BOOL)confirm;
 - (void)		primaryActionDisplayManifestForVersion:(NSNumber*)version;
-- (void)		primaryActionAnnotateSelectedFiles:(NSArray*)absolutePaths withRevision:(NSNumber*)version andOptions:(NSArray*)options;
+- (void)		annotateFiles:(NSArray*)filteredPaths withRevision:(NSNumber*)version andOptions:(NSArray*)options;
 - (void)		viewDifferencesInCurrentRevisionFor:(NSArray*)absolutePaths toRevision:(NSString*)versionToCompareTo;
 
 

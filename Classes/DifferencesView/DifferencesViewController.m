@@ -8,6 +8,7 @@
 
 #include <Carbon/Carbon.h>
 #import "DifferencesViewController.h"
+#import "AppController.h"
 #import "TaskExecutions.h"
 #import "MacHgDocument.h"
 #import "ResultsWindowController.h"
@@ -323,22 +324,21 @@
 }
 
 
-- (IBAction) differencesMenuAnnotateSelectedFiles:(id)sender
+- (IBAction) differencesMenuAnnotateBaseRevisionOfSelectedFiles:(id)sender
 {
 	NSArray* selectedFiles = [theBrowser absolutePathsOfChosenFilesInBrowser];
-	NSMutableArray* options = [[NSMutableArray alloc] init];
-	
-	if (DefaultAnnotationOptionChangesetFromDefaults())		[options addObject:@"--changeset"];
-	if (DefaultAnnotationOptionDateFromDefaults())			[options addObject:@"--date"];
-	if (DefaultAnnotationOptionFollowFromDefaults())		[options addObject:@"--follow"];
-	if (DefaultAnnotationOptionLineNumberFromDefaults())	[options addObject:@"--line-number"];
-	if (DefaultAnnotationOptionNumberFromDefaults())		[options addObject:@"--number"];
-	if (DefaultAnnotationOptionTextFromDefaults())			[options addObject:@"--text"];
-	if (DefaultAnnotationOptionUserFromDefaults())			[options addObject:@"--user"];
-	
-	[myDocument primaryActionAnnotateSelectedFiles:selectedFiles withRevision:[compareLogTableView selectedRevision] andOptions:options];
+	NSArray* filteredFiles = [theBrowser filterPaths:selectedFiles byBitfield:eHGStatusInRepository];
+	NSArray* options = [[AppController sharedAppController] annotationOptionsFromDefaults];
+	[myDocument annotateFiles:filteredFiles withRevision:[baseLogTableView selectedCompleteRevision] andOptions:options];
 }
 
+- (IBAction) differencesMenuAnnotateCompareRevisionOfSelectedFiles:(id)sender
+{
+	NSArray* selectedFiles = [theBrowser absolutePathsOfChosenFilesInBrowser];
+	NSArray* filteredFiles = [theBrowser filterPaths:selectedFiles byBitfield:eHGStatusInRepository];
+	NSArray* options = [[AppController sharedAppController] annotationOptionsFromDefaults];
+	[myDocument annotateFiles:filteredFiles withRevision:[compareLogTableView selectedCompleteRevision] andOptions:options];
+}
 
 - (IBAction) differencesMenuNoAction:(id)sender { }
 
@@ -423,7 +423,7 @@
 		case eBrowserClickActionOpen:				return @selector(mainMenuOpenSelectedFilesInFinder:);
 		case eBrowserClickActionRevealInFinder:		return @selector(mainMenuRevealSelectedFilesInFinder:);
 		case eBrowserClickActionDiff:				return @selector(mainMenuDiffSelectedFiles:);
-		case eBrowserClickActionAnnotate:			return @selector(differencesMenuAnnotateSelectedFiles:);
+		case eBrowserClickActionAnnotate:			return @selector(differencesMenuAnnotateCompareRevisionOfSelectedFiles:);
 		case eBrowserClickActionOpenTerminalHere:	return @selector(mainMenuOpenTerminalHere:);
 		default:									return @selector(differencesMenuNoAction:);
 	}

@@ -56,6 +56,7 @@
 + (void)	  resetUserPreferences;
 - (IBAction)  resetPreferences: (id)sender;
 - (IBAction)  showPreferences:(id)sender;
+- (NSArray*)  annotationOptionsFromDefaults;
 
 
 // About Box

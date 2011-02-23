@@ -541,6 +541,18 @@
 - (IBAction) resetPreferences:(id)sender	{ [AppController resetUserPreferences]; }
 - (IBAction) showPreferences:(id)sender		{ [[PreferenceController sharedPrefsWindowController] showWindow:nil]; }
 
+- (NSArray*) annotationOptionsFromDefaults
+{
+	NSMutableArray* options = [[NSMutableArray alloc] init];
+	if (DefaultAnnotationOptionChangesetFromDefaults())		[options addObject:@"--changeset"];
+	if (DefaultAnnotationOptionDateFromDefaults())			[options addObject:@"--date"];
+	if (DefaultAnnotationOptionFollowFromDefaults())		[options addObject:@"--follow"];
+	if (DefaultAnnotationOptionLineNumberFromDefaults())	[options addObject:@"--line-number"];
+	if (DefaultAnnotationOptionNumberFromDefaults())		[options addObject:@"--number"];
+	if (DefaultAnnotationOptionTextFromDefaults())			[options addObject:@"--text"];
+	if (DefaultAnnotationOptionUserFromDefaults())			[options addObject:@"--user"];
+	return options;
+}
 
 
 

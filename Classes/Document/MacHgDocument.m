@@ -1411,21 +1411,6 @@
 - (BOOL) pathsAreSelectedInBrowserWhichContainStatus:(HGStatus)status	{ return bitsInCommon(status, [[self theBrowser] statusOfChosenPathsInBrowser]); }
 - (BOOL) repositoryHasFilesWhichContainStatus:(HGStatus)status			{ return bitsInCommon(status, [[[self theBrowser] rootNodeInfo] hgStatus]); }
 
-- (NSArray*) filterPaths:(NSArray*)absolutePaths byBitfield:(HGStatus)status
-{
-	FSNodeInfo* theRoot = [self rootNodeInfo];
-	NSMutableArray* remainingPaths = [[NSMutableArray alloc] init];
-	for (NSString* path in absolutePaths)
-	{
-		FSNodeInfo* node = [theRoot nodeForPathFromRoot:path];
-		BOOL includePath = bitsInCommon([node hgStatus], status);
-		if (includePath)
-			[remainingPaths addObject:path];
-	}
-	return remainingPaths;
-}
-
-
 // Move any "unknown" files ending in .orig to the trash.
 - (void) pruneDotOrigFiles:(NSArray*)paths
 {
@@ -1684,7 +1669,7 @@
 	}
 	
 	[self removeAllUndoActionsForDocument];
-	NSArray* pathsForHGToUntrack = [self filterPaths:theSelectedFiles byBitfield:eHGStatusInRepository];
+	NSArray* pathsForHGToUntrack = [[self theBrowser] filterPaths:theSelectedFiles byBitfield:eHGStatusInRepository];
 	if ([pathsForHGToUntrack count] > 0)
 		[self dispatchToMercurialQueuedWithDescription:@"Untrack Files" process:^{
 			[self registerPendingRefresh:pathsForHGToUntrack];
@@ -1838,18 +1823,11 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 
 
 - (BOOL) primaryActionAnnotateSelectedFiles:(NSArray*)theSelectedFiles
-{
-	NSMutableArray* options = [[NSMutableArray alloc] init];
-	
-	if (DefaultAnnotationOptionChangesetFromDefaults())		[options addObject:@"--changeset"];
-	if (DefaultAnnotationOptionDateFromDefaults())			[options addObject:@"--date"];
-	if (DefaultAnnotationOptionFollowFromDefaults())		[options addObject:@"--follow"];
-	if (DefaultAnnotationOptionLineNumberFromDefaults())	[options addObject:@"--line-number"];
-	if (DefaultAnnotationOptionNumberFromDefaults())		[options addObject:@"--number"];
-	if (DefaultAnnotationOptionTextFromDefaults())			[options addObject:@"--text"];
-	if (DefaultAnnotationOptionUserFromDefaults())			[options addObject:@"--user"];
-	
-	[self primaryActionAnnotateSelectedFiles:theSelectedFiles withRevision:[self getHGParent1Revision] andOptions:options];
+{	
+	NSArray* filteredFiles = [[self theBrowser] filterPaths:theSelectedFiles byBitfield:eHGStatusInRepository];
+	NSNumber* revision = [self getHGParent1Revision];
+	NSArray* options = [[AppController sharedAppController] annotationOptionsFromDefaults];
+	[self annotateFiles:filteredFiles withRevision:revision andOptions:options];
 	return YES;
 }
 
@@ -1899,7 +1877,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 
 - (BOOL) primaryActionRevertFiles:(NSArray*)absolutePaths toVersion:(NSNumber*)version
 {
-	NSArray* filteredPaths = version ? absolutePaths : [self filterPaths:absolutePaths byBitfield:eHGStatusChangedInSomeWay];
+	NSArray* filteredPaths = version ? absolutePaths : [[self theBrowser] filterPaths:absolutePaths byBitfield:eHGStatusChangedInSomeWay];
 	
 	if ([filteredPaths count] <= 0)
 		{ PlayBeep(); DebugLog(@"No files selected to revert"); return NO; }
@@ -2276,11 +2254,8 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 }
 
 
-- (void) primaryActionAnnotateSelectedFiles:(NSArray*)absolutePaths withRevision:(NSNumber*)version andOptions:(NSArray*)options
+- (void) annotateFiles:(NSArray*)filteredPaths withRevision:(NSNumber*)version andOptions:(NSArray*)options
 {
-	NSString* rootPath = [self absolutePathOfRepositoryRoot];
-	NSArray* filteredPaths = [self filterPaths:absolutePaths byBitfield:eHGStatusInRepository];
-	
 	int numberOfFilesToAnnotate = [filteredPaths count];
 	if (numberOfFilesToAnnotate < 1)
 		{ PlayBeep(); return; }
@@ -2291,7 +2266,9 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 			return;
 	}
 
+	NSString* rootPath = [self absolutePathOfRepositoryRoot];
 	NSString* versionStr = numberAsString(version);
+	
 	[self dispatchToMercurialQueuedWithDescription:@"Generating Annotations" process:^{
 		DispatchGroup group = dispatch_group_create();
 		for (NSString* file in filteredPaths)
