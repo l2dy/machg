@@ -152,6 +152,7 @@
 		9695CB67110A0ACD004CE684 /* OutgoingSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9695CB65110A0ACD004CE684 /* OutgoingSheet.xib */; };
 		9695CB6A110A0AD4004CE684 /* IncomingSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9695CB68110A0AD4004CE684 /* IncomingSheet.xib */; };
 		9695CBD3110A101C004CE684 /* IncomingSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9695CBD2110A101C004CE684 /* IncomingSheetController.m */; };
+		9698090F13170E0D006088CA /* NSURL+Parameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 9698090E13170E0D006088CA /* NSURL+Parameters.m */; };
 		969BD94511953E43007AA6D9 /* AddLabelSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 969BD94411953E43007AA6D9 /* AddLabelSheetController.m */; };
 		969BD94811953E54007AA6D9 /* AddLabelSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 969BD94611953E54007AA6D9 /* AddLabelSheet.xib */; };
 		969BD95511953FAA007AA6D9 /* MoveLabelSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 969BD95411953FAA007AA6D9 /* MoveLabelSheetController.m */; };
@@ -439,6 +440,8 @@
 		9695CB69110A0AD4004CE684 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/IncomingSheet.xib; sourceTree = SOURCE_ROOT; };
 		9695CBD1110A101C004CE684 /* IncomingSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IncomingSheetController.h; sourceTree = "<group>"; };
 		9695CBD2110A101C004CE684 /* IncomingSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IncomingSheetController.m; sourceTree = "<group>"; };
+		9698090D13170E0D006088CA /* NSURL+Parameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+Parameters.h"; sourceTree = "<group>"; };
+		9698090E13170E0D006088CA /* NSURL+Parameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+Parameters.m"; sourceTree = "<group>"; };
 		969BD94311953E43007AA6D9 /* AddLabelSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddLabelSheetController.h; sourceTree = "<group>"; };
 		969BD94411953E43007AA6D9 /* AddLabelSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddLabelSheetController.m; sourceTree = "<group>"; };
 		969BD94711953E54007AA6D9 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/AddLabelSheet.xib; sourceTree = SOURCE_ROOT; };
@@ -937,6 +940,7 @@
 				9631D0631107A7E90007FDF2 /* MAAttachedWindow */,
 				969064E811601E2400F30915 /* MonitorFSEvents */,
 				9637C8C6118E9C5A0000C14B /* NSString+SymlinksAndAliases */,
+				9698090C13170E0D006088CA /* NSURL+Parameters */,
 				9631D0681107A7E90007FDF2 /* RegexKitLite */,
 				9621CFE412D5FC1F009C192C /* RSVerticallyCenteredTextFieldCell */,
 				969BDDF11196B0C0007AA6D9 /* ShellHere */,
@@ -1310,6 +1314,15 @@
 				9695CB65110A0ACD004CE684 /* OutgoingSheet.xib */,
 			);
 			path = OutgoingSheet;
+			sourceTree = "<group>";
+		};
+		9698090C13170E0D006088CA /* NSURL+Parameters */ = {
+			isa = PBXGroup;
+			children = (
+				9698090D13170E0D006088CA /* NSURL+Parameters.h */,
+				9698090E13170E0D006088CA /* NSURL+Parameters.m */,
+			);
+			path = "NSURL+Parameters";
 			sourceTree = "<group>";
 		};
 		969BD94211953E43007AA6D9 /* AddLabelSheet */ = {
@@ -1711,6 +1724,7 @@
 				963001A612988A6000C1782B /* BackoutSheetController.m in Sources */,
 				9693CFC1129D82DF0064DAB9 /* LogRecord.m in Sources */,
 				9621CFE912D5FC1F009C192C /* RSVerticallyCenteredTextFieldCell.m in Sources */,
+				9698090F13170E0D006088CA /* NSURL+Parameters.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
