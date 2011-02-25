@@ -50,8 +50,8 @@
 // MARK:  Styling
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void)	 setBackgroundToBad	 { [disclosureBox setFillColor:[NSColor color255WithRed:255.0 green:239.0 blue:242.0 alpha:1.0]]; }
-- (void)	 setBackgroundToGood { [disclosureBox setFillColor:[NSColor color255WithRed:240.0 green:255.0 blue:234.0 alpha:1.0]]; }
+- (void)	 setBackgroundToBad	 { [disclosureBox setFillColor:[NSColor errorColor]]; }
+- (void)	 setBackgroundToGood { [disclosureBox setFillColor:[NSColor successColor]]; }
 - (void)	 roundTheBoxCorners  { [disclosureBox setCornerRadius:6]; }
 
 

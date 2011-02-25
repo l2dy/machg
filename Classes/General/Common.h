@@ -974,7 +974,9 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 // MARK: -
 @interface NSColor ( NSColorPlusExtensions )
 - (NSColor*) intensifySaturationAndBrightness:(double)factor;
-+ (NSColor *)color255WithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha;
++ (NSColor*) color255WithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha;
++ (NSColor*) errorColor;
++ (NSColor*) successColor;
 @end
 
 
