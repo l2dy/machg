@@ -752,7 +752,8 @@
 			deleteRepositoryAsWell = YES;
 	}
 
-	
+	BOOL deletingSelectedNode = ([self selectedNode] == node);
+	SidebarNode* theSelectedNode = [self selectedNode];
 	if (deleteRepositoryAsWell)
 	{
 		moveFilesToTheTrash([NSArray arrayWithObject:[node path]]);
@@ -760,9 +761,13 @@
 		[myDocument updateChangeCount:NSChangeDone];
 		[self removeConnectionsFor:[node path]];
 		[[node parent] removeChild:node];
-		[self deselectAll:self];
+		if (deletingSelectedNode)
+			[self deselectAll:self];
 		[self reloadData];
-		[myDocument abandonCurrentRepository];
+		if (!deletingSelectedNode)
+			[self selectNode:theSelectedNode];
+		if (deletingSelectedNode)
+			[myDocument abandonCurrentRepository];
 		[myDocument saveDocumentIfNamed];
 		return;
 	};
@@ -777,10 +782,14 @@
 		[[self prepareUndoWithTarget:myDocument] setConnections:connectionsCopy];
 		[self removeConnectionsFor:[node path]];
 	}
-	[self deselectAll:self];
+	if (deletingSelectedNode)
+		[self deselectAll:self];
 	[self reloadData];
+	if (!deletingSelectedNode)
+		[self selectNode:theSelectedNode];
 	[myDocument saveDocumentIfNamed];
-	[myDocument abandonCurrentRepository];
+	if (deletingSelectedNode)
+		[myDocument abandonCurrentRepository];
 }
 
 
