@@ -825,7 +825,7 @@
 
 - (void) endPreviewPanelControl:(QLPreviewPanel*)panel
 {
-    // This document loses its responsisibility for the quick look preview panel, until the next call to
+    // This document loses its responsibility for the quick look preview panel, until the next call to
     // -beginPreviewPanelControl: it must not change the panel's delegate, data source or refresh it.
     quickLookPreviewPanel = nil;
 }
@@ -1335,7 +1335,7 @@
 	@synchronized(self)
 	{
 		DebugLog(@"Initializing log entry collection");
-		[repositoryData_ stopObserving];	// Stop any old repositoyData object from recieving notifications.
+		[repositoryData_ stopObserving];	// Stop any old repositoryData object from receiving notifications.
 		NSString* rootPath = [self absolutePathOfRepositoryRoot];
 		repositoryData_ = [[RepositoryData alloc] initWithRootPath:rootPath andDocument:self];
 	}
@@ -1357,8 +1357,8 @@
 {
 	[events_ stopWatchingPaths];
 	[self actionSwitchViewToBackingView:self];
-	[[self mainWindow] setRepresentedURL:[self fileURL]];	// The drop down repesents the path to the MacHg document
-	[repositoryData_ stopObserving];						// Stop any abandoned repositoyData objects from recieving notifications.
+	[[self mainWindow] setRepresentedURL:[self fileURL]];	// The drop down represents the path to the MacHg document
+	[repositoryData_ stopObserving];						// Stop any abandoned repositoryData objects from receiving notifications.
 	repositoryData_ = nil;
 }
 
@@ -1401,8 +1401,8 @@
 - (FSBrowser*)		theBrowser								{ return [[self theBrowserView] theBrowser]; }
 - (FSNodeInfo*)		rootNodeInfo							{ return [[self theBrowser] rootNodeInfo]; }
 - (FSNodeInfo*)		nodeForPath:(NSString*)absolutePath		{ return [[self rootNodeInfo] nodeForPathFromRoot:absolutePath]; }
-- (BOOL)			singleFileIsChosenInBrower				{ return [[self theBrowser] singleFileIsChosenInBrower]; }
-- (BOOL)			singleItemIsChosenInBrower				{ return [[self theBrowser] singleItemIsChosenInBrower]; }
+- (BOOL)			singleFileIsChosenInBrowser				{ return [[self theBrowser] singleFileIsChosenInBrowser]; }
+- (BOOL)			singleItemIsChosenInBrowser				{ return [[self theBrowser] singleItemIsChosenInBrowser]; }
 - (BOOL)			nodesAreChosenInBrowser					{ return [[self theBrowser] nodesAreChosen]; }
 - (HGStatus)		statusOfChosenPathsInBrowser			{ return [[self theBrowser] statusOfChosenPathsInBrowser]; }
 - (NSArray*)		absolutePathsOfBrowserChosenFiles		{ return [[self theBrowser] absolutePathsOfChosenFilesInBrowser]; }
@@ -1477,8 +1477,8 @@
 		NSString* path;
 		while ( (path = [dirEnum nextObject]) )
 		{
-			NSDictionary* pathAttribures = [dirEnum fileAttributes];
-			NSString* pathType = [pathAttribures fileType];
+			NSDictionary* pathAttributes = [dirEnum fileAttributes];
+			NSString* pathType = [pathAttributes fileType];
 			NSString* srcPath = [root stringByAppendingPathComponent:path];
 			NSString* dstPath = [copyDir stringByAppendingPathComponent:path];
 			

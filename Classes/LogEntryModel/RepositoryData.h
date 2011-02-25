@@ -54,7 +54,7 @@
 @property (readonly,assign) LogGraph*		oldLogGraph;
 
 
-// Initilization
+// Initialization
 - (id)			initWithRootPath:(NSString*)rootPath andDocument:(MacHgDocument*)doc;
 
 

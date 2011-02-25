@@ -182,7 +182,7 @@
 	return [self selectedNodes];
 }
 
-- (BOOL) singleFileIsChosenInBrower
+- (BOOL) singleFileIsChosenInBrowser
 {
 	if ([self nodeIsClicked] && [[self clickedNode] isFile])
 		return YES;
@@ -196,7 +196,7 @@
 }
 
 
-- (BOOL) singleItemIsChosenInBrower
+- (BOOL) singleItemIsChosenInBrowser
 {
 	if ([self nodeIsClicked] && [[self clickedNode] isDirectory])
 		return YES;

@@ -34,7 +34,7 @@
 	autoSaveName_        = IsNotEmpty(frameName) ? fstr(@"%@:disclosed", frameName) : nil;
 	BOOL disclosed       = autoSaveName_ ? [[NSUserDefaults standardUserDefaults] boolForKey:autoSaveName_] : NO;
 	animationDepth_      = 0;
-	disclosureIsVisable_ = YES;		// The disclosure is always open on initialization
+	disclosureIsVisible_ = YES;		// The disclosure is always open on initialization
 
 	[self setToOpenState:disclosed withAnimation:NO];
 	if (!disclosed && autoSaveName_)
@@ -137,7 +137,7 @@
 
 - (CGFloat) sizeChange	{ return [disclosureBox frame].size.height + 5; } 		// The extra +5 accounts for the space between the box and its neighboring views
 
-- (BOOL)	disclosureIsVisable { return disclosureIsVisable_; }
+- (BOOL)	disclosureIsVisible { return disclosureIsVisible_; }
 
 
 
@@ -159,7 +159,7 @@
 {
 	@synchronized(self)
 	{
-		if (disclosureIsVisable_)
+		if (disclosureIsVisible_)
 			return;
 		[disclosureButton setState:NSOnState];
 		[self openDisclosureBoxWithAnimation:animate];
@@ -171,7 +171,7 @@
 {
 	@synchronized(self)
 	{
-		if (!disclosureIsVisable_)
+		if (!disclosureIsVisible_)
 			return;
 		[disclosureButton setState:NSOffState];
 		[self closeDisclosureBoxWithAnimation:animate];
@@ -190,10 +190,10 @@
 
 - (void) openDisclosureBoxWithAnimation:(BOOL)animate
 {
-	disclosureIsVisable_ = YES;
+	disclosureIsVisible_ = YES;
 	[self saveAutosizingMasksAndRelativePositions];
 	if (autoSaveName_)
-		[[NSUserDefaults standardUserDefaults] setBool:disclosureIsVisable_ forKey:autoSaveName_];
+		[[NSUserDefaults standardUserDefaults] setBool:disclosureIsVisible_ forKey:autoSaveName_];
 	
 	NSRect windowFrame = [parentWindow frame];
 	CGFloat sizeChange = [self sizeChange];
@@ -231,10 +231,10 @@
 
 - (void) closeDisclosureBoxWithAnimation:(BOOL)animate
 {
-	disclosureIsVisable_ = NO;
+	disclosureIsVisible_ = NO;
 	[self saveAutosizingMasksAndRelativePositions];
 	if (autoSaveName_)
-		[[NSUserDefaults standardUserDefaults] setBool:disclosureIsVisable_ forKey:autoSaveName_];
+		[[NSUserDefaults standardUserDefaults] setBool:disclosureIsVisible_ forKey:autoSaveName_];
 	
 	NSRect windowFrame = [parentWindow frame];
 	CGFloat sizeChange = [self sizeChange];

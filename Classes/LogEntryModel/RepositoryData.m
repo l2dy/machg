@@ -19,8 +19,7 @@
 #import "SingleTimedQueue.h"
 
 @interface RepositoryData (PrivateAPI)
-- (void) loadCombinedInformationAndNotify:(BOOL)initilizing;
-- (BOOL) imediateLoadIncompleteRevisionInformation;
+- (void) loadCombinedInformationAndNotify:(BOOL)initializing;
 - (void) setEntry:(LogEntry*)entry;
 - (void) resetEntriesAndLogGraph;
 @end
@@ -42,7 +41,7 @@
 // MARK: Initialization
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-// Designated initilizer for RepositoryData
+// Designated initializer for RepositoryData
 - (id) initWithRootPath:(NSString*)rootPath andDocument:(MacHgDocument*)doc
 {
 	self = [super init];
@@ -262,7 +261,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 // Load all of the combined information to do with the repository and post notifications that RepositoryDataDidChange and
 // LogEntriesDidChange
 //
-- (void) loadCombinedInformationAndNotify:(BOOL)initilizing
+- (void) loadCombinedInformationAndNotify:(BOOL)initializing
 {
 	dispatch_async(globalQueue(), ^{
 
@@ -373,11 +372,11 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 			
 			DebugLog(@"finished loadCombinedInformationAndNotify");
 
-			if (initilizing)
+			if (initializing)
 				[myDocument postNotificationWithName:kRepositoryDataIsNew];
 			else if (tipChanged || parentsChanged || labelsChanged || incompleteRevisionChanged)
 				[myDocument postNotificationWithName:kRepositoryDataDidChange];
-			badRepositoryReadCount_ = 0;	// We have succesfully read the repository information
+			badRepositoryReadCount_ = 0;	// We have successfully read the repository information
 			[myDocument postNotificationWithName:kLogEntriesDidChange];
 		});
 	});
@@ -516,7 +515,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 
 
 
-// Given a set of entries check that we are loading or have the full log recrod for this entry and if not then load the full log
+// Given a set of entries check that we are loading or have the full log record for this entry and if not then load the full log
 // record for this entry.
 - (void) loadLogRecordsOfEntriesIfNecessary:(NSArray*)entries
 {
@@ -622,7 +621,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 		// Recover if we didn't get the entries we expected...
 		if (minFoundEntry != lowLimit || maxFoundEntry != highLimit)
 		{
-			DebugLog(@"Loading dropped entries. Asked for %d..%d but recived %d..%d", lowLimit, highLimit, minFoundEntry, maxFoundEntry);
+			DebugLog(@"Loading dropped entries. Asked for %d..%d but received %d..%d", lowLimit, highLimit, minFoundEntry, maxFoundEntry);
 			if (minFoundEntry == NSNotFound || maxFoundEntry == NSNotFound)
 			{
 				for (NSInteger rev = lowLimit; rev <= highLimit; rev++)

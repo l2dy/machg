@@ -19,7 +19,7 @@
 @class SidebarNode;
 @class SidebarCell;
 
-// Pane Contollers
+// Pane Controllers
 @class BrowserViewController;
 @class HistoryViewController;
 @class DifferencesViewController;
@@ -298,7 +298,7 @@ extern NSString* const kRepositoryRootChanged;				// The sidebar bookmark now po
 
 extern NSString* const kSidebarSelectionDidChange;			// The selection in the sidebar bookmark changed
 extern NSString* const kUnderlyingRepositoryChanged;		// The underlying mercurial repository changed. (A commit or update
-															// happened, etc.) Upon recite of this notifcaiton the RepositoryData
+															// happened, etc.) Upon recite of this notification the RepositoryData
 															// marks its stored data as stale. Subsequently the repository data is
 															// reloaded when it is accessed.
 
@@ -527,7 +527,7 @@ BrowserDoubleClickAction		browserBehaviourCommandOptionDoubleClick();
 // MARK: Globals
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-extern NSMutableDictionary* changesetHashToLogRecord;	// Global dictonary of LogRecords
+extern NSMutableDictionary* changesetHashToLogRecord;	// Global dictionary of LogRecords
 
 extern NSNumber*		NOasNumber;
 extern NSNumber*		YESasNumber;
@@ -948,7 +948,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 
 // MARK: -
-@interface NSApplication ( NSApplicartionPlusExtensions )
+@interface NSApplication ( NSApplicationPlusExtensions )
 - (void)	presentAnyErrorsAndClear:(NSError**)err;
 @end
 

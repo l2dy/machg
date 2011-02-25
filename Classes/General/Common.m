@@ -1312,7 +1312,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 
 // MARK: -
-@implementation NSApplication ( NSApplicartionPlusExtensions )
+@implementation NSApplication ( NSApplicationPlusExtensions )
 - (void) presentAnyErrorsAndClear:(NSError**)err;
 {
 	if (*err)

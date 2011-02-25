@@ -34,7 +34,7 @@
 	NSMapTable*					savedViewsInfo;			// Dictionary of NSView* view -> SavedViewInfo (We use an NSMapTable instead
 														// of an NSDictionary since our keys are pointer values.)
 	NSString*					autoSaveName_;			// The NSUserDefaults key name (if any) for the state of the disclosure box
-	BOOL						disclosureIsVisable_;	// Do we show the disclosure box (if we don't have a button we still need
+	BOOL						disclosureIsVisible_;	// Do we show the disclosure box (if we don't have a button we still need
 	NSInteger					animationDepth_;
 	BOOL						savedShowsResizeIndicator_;	// Did this window show its resize indicator
 }
@@ -44,7 +44,7 @@
 - (void)     ensureDisclosureBoxIsOpen:(BOOL)animate;
 - (void)     ensureDisclosureBoxIsClosed:(BOOL)animate;
 - (void)     setToOpenState:(BOOL)state withAnimation:(BOOL)animate;
-- (BOOL)	 disclosureIsVisable;
+- (BOOL)	 disclosureIsVisible;
 
 - (void)	 setBackgroundToBad;	// Color the background of the disclosure box in the "error" style
 - (void)	 setBackgroundToGood;	// Color the background of the disclosure box in the "valid" style
