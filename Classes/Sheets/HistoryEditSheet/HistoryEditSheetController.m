@@ -105,13 +105,6 @@
 // MARK:  Handle Interrupted HistoryEdit
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BOOL) historyEditInProgress
-{
-	NSString* repositoryDotHGDirPath = [[myDocument absolutePathOfRepositoryRoot] stringByAppendingPathComponent:@".hg"];
-	NSString* histEditStatePath = [repositoryDotHGDirPath stringByAppendingPathComponent:@"histedit-state"];
-	return [[NSFileManager defaultManager] fileExistsAtPath:histEditStatePath];
-}
-
 - (void) doContinueOrAbort
 {
 	NSInteger result = NSRunCriticalAlertPanel(@"Edit in Progress", @"A history edit operation is in progress, continue with the operation or abort the operation", @"Continue", @"Abort", @"Cancel");
@@ -122,17 +115,20 @@
 	
 	NSMutableArray* argsHistoryEdit = [NSMutableArray arrayWithObjects:@"histedit", nil];
 
-	[argsHistoryEdit addObject: (result == NSAlertDefaultReturn ? @"--continue" : @"--abort")];
+	BOOL abort = (result == NSAlertAlternateReturn);
+	[argsHistoryEdit addObject: (abort ? @"--abort" : @"--continue")];
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	
 	ExecutionResult* results = [myDocument  executeMercurialWithArgs:argsHistoryEdit  fromRoot:rootPath  whileDelayingEvents:YES];
 
 	if (results.outStr)
 	{
-		NSString* operation = (result == NSAlertDefaultReturn ? @"Continue" : @"Abort");
+		NSString* operation = (abort ? @"Abort" : @"Continue");
 		NSString* titleMessage = fstr(@"Results of History Edit %@",operation);
 		NSRunAlertPanel(titleMessage, @"Mercurial reported the result of the history edit %@:\n\ncode %d:\n%@", @"OK", nil, nil, operation, results.result, results.outStr);
 	}
+	if (abort)
+		[[myDocument repositoryData] deleteHistoryEditState];
 }
 
 
@@ -146,7 +142,7 @@
 
 - (IBAction) openHistoryEditSheetWithSelectedRevisions:(id)sender
 {
-	if ([self historyEditInProgress])
+	if ([[myDocument repositoryData] historyEditInProgress])
 	{
 		[self doContinueOrAbort];
 		return;

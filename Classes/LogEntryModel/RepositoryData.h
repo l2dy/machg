@@ -80,6 +80,8 @@
 - (NSInteger)	computeNumberOfRevisions;
 - (NSInteger)	computeNumberOfRealRevisions;
 
+
+// Derived Information
 - (BOOL)		isCurrentRevisionTip;
 - (BOOL)		revisionIsParent:(NSNumber*)rev;
 - (BOOL)		inMergeState;					// Are we in the process of merging two branches? ie does 'hg parents --template "{rev} "'
@@ -87,6 +89,14 @@
 - (BOOL)		hasMultipleOpenHeads;			// Do we have more than one "open" head in the repository. If not then we have nothing
 												// to merge with.
 - (BOOL)		isRollbackInformationAvailable;	// Could we rollback the last operation if we wanted to?
+
+
+// State Maintenance
+- (BOOL)		rebaseInProgress;
+- (void)		deleteRebaseState;
+- (BOOL)		historyEditInProgress;
+- (void)		deleteHistoryEditState;
+
 
 - (NSNumber*)	incompleteRevision;
 - (LogEntry*)	incompleteRevisionEntry;

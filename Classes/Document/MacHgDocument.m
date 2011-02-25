@@ -2034,6 +2034,13 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 	NSString* rootPath = [self absolutePathOfRepositoryRoot];
 	NSString* versionStr = numberAsString(version);
 	[self dispatchToMercurialQueuedWithDescription:@"Updating Files" process:^{
+		
+		if (clean)
+		{
+			[[self repositoryData] deleteRebaseState];
+			[[self repositoryData] deleteHistoryEditState];
+		}
+		
 		NSMutableArray* argsUpdate = [NSMutableArray arrayWithObjects:@"update", @"--rev", versionStr, nil];
 		if (clean)
 			[argsUpdate addObject:@"--clean"];

@@ -112,20 +112,6 @@
 // MARK:  Handle Interrupted Rebase
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BOOL) rebaseInProgress
-{
-	NSString* repositoryDotHGDirPath = [[myDocument absolutePathOfRepositoryRoot] stringByAppendingPathComponent:@".hg"];
-	NSString* histEditStatePath = [repositoryDotHGDirPath stringByAppendingPathComponent:@"rebasestate"];
-	return [[NSFileManager defaultManager] fileExistsAtPath:histEditStatePath];
-}
-
-- (void) deleteRebaseState
-{
-	NSString* repositoryDotHGDirPath = [[myDocument absolutePathOfRepositoryRoot] stringByAppendingPathComponent:@".hg"];
-	NSString* histEditStatePath = [repositoryDotHGDirPath stringByAppendingPathComponent:@"rebasestate"];
-	moveFilesToTheTrash([NSArray arrayWithObject:histEditStatePath]);
-}
-
 - (void) doContinueOrAbort
 {
 	NSInteger result = NSRunCriticalAlertPanel(@"Rebase in Progress", @"A rebase operation is in progress, continue with the operation or abort the operation", @"Continue", @"Abort", @"Cancel");
@@ -147,7 +133,7 @@
 		NSRunAlertPanel(titleMessage, @"Mercurial reported the result of the rebase %@:\n\ncode %d:\n%@", @"OK", nil, nil, operation, results.result, results.outStr);
 	}
 	if (abort)
-		[self deleteRebaseState];
+		[[myDocument repositoryData] deleteRebaseState];
 }
 
 
@@ -161,7 +147,7 @@
 
 - (IBAction) openRebaseSheetWithSelectedRevisions:(id)sender
 {
-	if ([self rebaseInProgress])
+	if ([[myDocument repositoryData] rebaseInProgress])
 	{
 		[self doContinueOrAbort];
 		return;

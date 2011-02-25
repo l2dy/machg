@@ -427,6 +427,42 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
+// MARK:  State Maintenance
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (BOOL) rebaseInProgress
+{
+	NSString* repositoryDotHGDirPath = [[myDocument absolutePathOfRepositoryRoot] stringByAppendingPathComponent:@".hg"];
+	NSString* histEditStatePath = [repositoryDotHGDirPath stringByAppendingPathComponent:@"rebasestate"];
+	return [[NSFileManager defaultManager] fileExistsAtPath:histEditStatePath];
+}
+
+- (void) deleteRebaseState
+{
+	NSString* repositoryDotHGDirPath = [[myDocument absolutePathOfRepositoryRoot] stringByAppendingPathComponent:@".hg"];
+	NSString* histEditStatePath = [repositoryDotHGDirPath stringByAppendingPathComponent:@"rebasestate"];
+	moveFilesToTheTrash([NSArray arrayWithObject:histEditStatePath]);
+}
+
+- (BOOL) historyEditInProgress
+{
+	NSString* repositoryDotHGDirPath = [[myDocument absolutePathOfRepositoryRoot] stringByAppendingPathComponent:@".hg"];
+	NSString* histEditStatePath = [repositoryDotHGDirPath stringByAppendingPathComponent:@"histedit-state"];
+	return [[NSFileManager defaultManager] fileExistsAtPath:histEditStatePath];
+}
+
+- (void) deleteHistoryEditState
+{
+	NSString* repositoryDotHGDirPath = [[myDocument absolutePathOfRepositoryRoot] stringByAppendingPathComponent:@".hg"];
+	NSString* histEditStatePath = [repositoryDotHGDirPath stringByAppendingPathComponent:@"histedit-state"];
+	moveFilesToTheTrash([NSArray arrayWithObject:histEditStatePath]);
+}
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
 // MARK: Parent / Children handling
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
