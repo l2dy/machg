@@ -96,5 +96,14 @@
 
 
 
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  URL operations
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+NSString*	FullServerURLWithPassword(NSString* baseURL, BOOL lookedupPassword, NSString* password, PasswordVisibilityType visibility);	// Specify password (used during server configuration)
+NSString* FullServerURL(NSString* baseURL, PasswordVisibilityType visibility);	// Flush out the base url with the password if it is stored in the keychain
+
+
 
 

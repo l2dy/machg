@@ -9,7 +9,6 @@
 
 #import "Common.h"
 #import "RegexKitLite.h"
-#import "EMKeychainItem.h"
 
 
 
@@ -486,57 +485,6 @@ NSArray* getListOfFilePathsFromOpenPanel(NSString* startingPath)
 	return [panel filenames];
 }
 
-
-NSString* manglePasswordAccordingToVisibility(NSString* path, PasswordVisibilityType visibility, BOOL usedKeyChain)
-{
-	if (visibility == eAllPasswordsAreVisible)
-		return path;
-	if (visibility == eKeyChainPasswordsAreMangled && !usedKeyChain)
-		return path;
-
-	NSString* pass = [[NSURL URLWithString:path] password];
-	if (!pass)
-		return path;
-	
-	NSMutableString* newString = [NSMutableString stringWithString:path];
-	[newString replaceOccurrencesOfString:pass withString:@"***" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [newString length])];
-	return newString;
-}
-
-
-NSString* FullServerURLWithPassword(NSString* baseURL, BOOL lookedupPassword, NSString* password, PasswordVisibilityType visibility)
-{
-	if (!baseURL)
-		return nil;
-
-	NSString* protocolAndName;
-	NSString* server;	
-	NSString* protocol;
-	NSString* rest;
-	NSString fullURL;
-
-	if (!lookedupPassword)
-		fullURL = baseURL;
-	else if ([baseURL getCapturesWithRegexAndComponents:@"(.*?)(@.*)"  firstComponent:&protocolAndName  secondComponent:&server])
-		fullURL = fstr(@"%@:%@%@", nonNil(protocolAndName), nonNil(password), nonNil(server));
-	else if ([baseURL getCapturesWithRegexAndComponents:@"(.*?://)(.*)"  firstComponent:&protocol  secondComponent:&rest])
-		fullURL = fstr(@"%@%@%@", nonNil(protocol), nonNil(password), nonNil(rest));
-	else
-	{		
-		NSRunAlertPanel(@"Badly Formed Server URL", fstr(@"The server URL %@ is not of the form protocol://username@server", baseURL), @"OK", nil, nil);
-		return nil;
-	}
-	return manglePasswordAccordingToVisibility(fullURL, visibility, lookedupPassword);
-}
-
-NSString* FullServerURL(NSString* baseURL)
-{
-	BOOL passwordStoredInKeyChain = [[AppController sharedAppController] containsObject:path];	
-	if (!passwordStoredInKeyChain)
-		return FullServerURLWithPassword(baseURL, NO, nil, eAllPasswordsAreVisible);
-	EMGenericKeychainItem* passwordItem = [EMGenericKeychainItem genericKeychainItemForService:kMacHgApp withUsername:baseURL];
-	return FullServerURLWithPassword(baseURL, YES, passwordItem.password, eAllPasswordsAreVisible);
-}
 
 
 

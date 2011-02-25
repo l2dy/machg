@@ -199,22 +199,16 @@
 {
 	if (!hasPassword || ![self isServerRepositoryRef])
 		return path;	
-	return FullServerURL(path);
+	return FullServerURL(path, eAllPasswordsAreVisible);
 }
 
 - (NSString*) pathHidingAnyPassword
 {
 	if (![self isServerRepositoryRef])
 		return path;
-
-	NSString* pass = [[NSURL URLWithString:path] password];
-	if (!pass)
-		return path;
-
-	NSMutableString* newString = [NSMutableString stringWithString:path];
-	[newString replaceOccurrencesOfString:pass withString:@"***" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [newString length])];
-	return newString;
+	return FullServerURL(path, eAllPasswordsAreMangled);
 }
+
 
 
 

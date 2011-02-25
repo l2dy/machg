@@ -13,6 +13,7 @@
 #import "SingleTimedQueue.h"
 #import "ServerRepositoryRefSheetController.h"
 #import "DisclosureBoxController.h"
+#import "AppController.h"
 
 NSAttributedString*   titledAttributedString(NSString* string);
 NSAttributedString*   fixedWidthAttributedString(NSString* string);
