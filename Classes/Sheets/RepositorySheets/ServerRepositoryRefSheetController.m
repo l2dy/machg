@@ -168,6 +168,7 @@
 	cloneAfterAddition_ = NO;
 	[theTitleText setStringValue:@"Add Server Repository"];
 	[okButton setTitle:@"Add Server"];
+	[theConnectionValidationController resetForSheetOpen];
 	[NSApp beginSheet:theWindow modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
 }
 
@@ -184,6 +185,7 @@
 	cloneAfterAddition_ = YES;
 	[theTitleText setStringValue:@"Add and Clone Server Repository"];
 	[okButton setTitle:@"Add and Clone"];
+	[theConnectionValidationController resetForSheetOpen];
 	[NSApp beginSheet:theWindow modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];	
 }
 
@@ -223,6 +225,7 @@
 	[theTitleText setStringValue:@"Configure Server Repository"];
 	[okButton setTitle:@"Configure Server"];
 	cloneAfterAddition_ = NO;
+	[theConnectionValidationController resetForSheetOpen];
 	[self validateButtons:self];
 	[NSApp beginSheet:theWindow modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
 }

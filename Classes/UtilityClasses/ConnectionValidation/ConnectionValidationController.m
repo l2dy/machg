@@ -12,8 +12,18 @@
 #import "MacHgDocument.h"
 #import "SingleTimedQueue.h"
 #import "ServerRepositoryRefSheetController.h"
+#import "DisclosureBoxController.h"
+
+NSAttributedString*   titledAttributedString(NSString* string);
+NSAttributedString*   fixedWidthAttributedString(NSString* string);
 
 @implementation ConnectionValidationController
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Initilization
+// -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (id) init
 {
@@ -27,12 +37,30 @@
     return self;
 }
 
-- (void) hideValidationGraphicAndMessage
+
+- (void) awakeFromNib
 {
-	[repositoryConnectionStatusImage		setHidden:YES];
-	[repositoryConnectionStatusMessage		setHidden:YES];
+	[connectionDetailsDisclosure roundTheBoxCorners];
 }
 
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Showing and Hiding
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (void) hideValidationGraphicAndMessage
+{
+	if (![showConnectionDetailsButton isHidden])
+		detailsWasOpen_ = [connectionDetailsDisclosure disclosureIsVisible];
+	[repositoryConnectionStatusImage	setHidden:YES];
+	[repositoryConnectionStatusMessage	setHidden:YES];
+	[showConnectionDetailsButton		setHidden:YES];
+	[connectionDetailsDisclosure		ensureDisclosureBoxIsClosed:YES];
+}
 
 - (void) showBadValidationGraphicAndMessage
 {
@@ -41,6 +69,9 @@
 	[repositoryConnectionStatusMessage	setStringValue:@"Remote Repository is Unreachable"];
 	[repositoryConnectionStatusMessage	setHidden:NO];
 	[repositoryConnectionStatusMessage	setNeedsDisplay:YES];
+	[showConnectionDetailsButton		setHidden:NO];
+	[connectionDetailsDisclosure		setBackgroundToBad];
+	[connectionDetailsDisclosure		setToOpenState:detailsWasOpen_ withAnimation:YES];
 }
 
 - (void) showGoodValidationGraphicAndMessage
@@ -50,6 +81,9 @@
 	[repositoryConnectionStatusMessage	setStringValue:@"Remote Repository is Reachable"];
 	[repositoryConnectionStatusMessage	setHidden:NO];
 	[repositoryConnectionStatusMessage	setNeedsDisplay:YES];
+	[showConnectionDetailsButton		setHidden:NO];
+	[connectionDetailsDisclosure		setBackgroundToGood];
+	[connectionDetailsDisclosure		setToOpenState:detailsWasOpen_ withAnimation:YES];
 }
 
 - (void) showValidationProgressIndicator
@@ -66,6 +100,19 @@
 
 
 
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Interface Methods
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (void) resetForSheetOpen
+{
+	[self hideValidationGraphicAndMessage];
+	[self hideValidationProgressIndicator];
+	detailsWasOpen_ = NO;
+}
 
 
 - (IBAction) testConnection:(id)sender
@@ -95,11 +142,31 @@
 										// If our results are still relevant show the success or failure result
 										 if ([queueForConnectionValidation_ operationNumber] == validationAttempt)
 										 {
-											 [self hideValidationProgressIndicator];
-											 if (IsNotEmpty(results.outStr) && [results.outStr length] >= 12 && [results isClean])
-												 [self showGoodValidationGraphicAndMessage];
-											 else
-												 [self showBadValidationGraphicAndMessage];
+											 NSString* visibleCommand = fstr(@"chg identify --insecure --rev tip %@", visibleServerURL);
+											 NSMutableAttributedString* resultsStr = [[NSMutableAttributedString alloc]init];
+
+											 [resultsStr appendAttributedString: titledAttributedString(@"Command:\n")];
+											 [resultsStr appendAttributedString: fixedWidthAttributedString(fstr(@"%@\n", visibleCommand))];
+											 if (IsNotEmpty(results.outStr))
+											 {
+												 [resultsStr appendAttributedString: titledAttributedString(@"\nOutput:\n")];
+												 [resultsStr appendAttributedString: fixedWidthAttributedString(fstr(@"%@", trimString(results.outStr)))];
+											 }
+											 if (IsNotEmpty(results.errStr))
+											 {
+												 [resultsStr appendAttributedString: titledAttributedString(@"\nErrors:\n")];
+												 [resultsStr appendAttributedString: fixedWidthAttributedString(fstr(@"%@", trimString(results.errStr)))];
+											 }
+											 											 
+											 dispatch_async(mainQueue(), ^{
+												 [[repositoryConnectionStatusDetails textStorage] setAttributedString:resultsStr];
+											 
+												 [self hideValidationProgressIndicator];
+												 if (IsNotEmpty(results.outStr) && [results.outStr length] >= 12 && [results isClean])
+													 [self showGoodValidationGraphicAndMessage];
+												 else
+													 [self showBadValidationGraphicAndMessage];
+											 });
 										 }
 									 },
 									 
@@ -121,3 +188,7 @@
 
 
 @end
+
+NSAttributedString*   titledAttributedString(NSString* string)		{ return [NSAttributedString string:string withAttributes:graySystemFontAttributes]; }
+NSAttributedString*   fixedWidthAttributedString(NSString* string)	{ return [NSAttributedString string:string withAttributes:smallFixedWidthUserFontAttributes]; }
+
