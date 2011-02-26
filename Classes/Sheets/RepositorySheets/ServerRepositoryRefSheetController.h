@@ -18,7 +18,9 @@
 	IBOutlet NSButton*							showPasswordButton;
 	IBOutlet ConnectionValidationController*	theConnectionValidationController;
 	IBOutlet NSTextField*						theTitleText;
-	IBOutlet NSTextField*						theServerTextField;
+	IBOutlet NSTextField*						theBaseServerTextField;
+	IBOutlet NSTextField*						theFullServerTextField;
+	IBOutlet NSTextField*						theUsernameTextField;
 	IBOutlet NSTextField*						theSecurePasswordTextField;
 	IBOutlet NSTextField*						theUnsecurePasswordTextField;
 
@@ -26,23 +28,28 @@
 	MacHgDocument*		myDocument;
 	
 	NSString*			shortNameFieldValue_;
-	NSString*			serverFieldValue_;
+	NSString*			baseServerURLFieldValue_;
+	NSString*			fullServerURLFieldValue_;
 	SidebarNode*		nodeToConfigure;
+	NSString*			username_;
 	NSString*			password_;
-	BOOL				needsPassword_;
+	BOOL				hasPassword_;
 	BOOL				showRealPassword_;
 	EMGenericKeychainItem* passwordKeyChainItem_;
 	SingleTimedQueue*	timeoutQueueForSecurity_;
 	BOOL				cloneAfterAddition_;
 }
 @property (readwrite,assign) NSString*	  shortNameFieldValue;
-@property (readwrite,assign) NSString*	  serverFieldValue;
+@property (readwrite,assign) NSString*	  baseServerURLFieldValue;
+@property (readwrite,assign) NSString*	  fullServerURLFieldValue;
 @property (readwrite,assign) NSString*	  password;
-@property (readwrite,assign) BOOL		  needsPassword;
+@property (readwrite,assign) BOOL		  hasPassword;
+@property (readwrite,assign) NSString*	  username;
 
 
 - (BOOL) showRealPassword;
 - (void) setShowRealPassword:(BOOL)val;		// Setting this enables / disables the show password button
+- (NSString*) generateFullServerURLIncludingPassword:(BOOL)includePass andMaskingPassword:(BOOL)mask;
 
 
 // Initilization

@@ -126,22 +126,19 @@ NSAttributedString*   fixedWidthAttributedString(NSString* string);
 	// Once we are validating we try to validate during 20 seconds, upon doing the validation if our results are still relevant
 	// (ie another verification hasn't yet been requested) then we put up the success / fail of the validation. If we timed out
 	// and again our results are still relevant then we put up the failure of the validation.
-	if (IsNotEmpty([theServerRefController serverFieldValue]))
+	if (IsNotEmpty([theServerRefController baseServerURLFieldValue]))
 	{
 		NSInteger validationAttempt = [queueForConnectionValidation_ operationNumber] + 1;	// Once we add the next block operation, the operationNumber will be
 																							// incremented so + 1 will give the operationNumber we are just about to get...
 		[queueForConnectionValidation_ addBlockOperation:^{
+			PasswordVisibilityType visibilityInDisclosure = [theServerRefController showRealPassword] ? eAllPasswordsAreVisible : eKeyChainPasswordsAreMangled;
+			NSString* fullServerURL      = [theServerRefController generateFullServerURLIncludingPassword:YES andMaskingPassword:NO];
+			NSString* visibleServerURL   = [theServerRefController generateFullServerURLIncludingPassword:YES andMaskingPassword:visibilityInDisclosure != eAllPasswordsAreVisible];
 			dispatchWithTimeOutBlock(globalQueue(), 20.0,
 									 
 									 // Main Block
 									 ^{
 										 [self showValidationProgressIndicator];
-										 PasswordVisibilityType visibilityInDisclosure = [theServerRefController showRealPassword] ? eAllPasswordsAreVisible : eKeyChainPasswordsAreMangled;
-										 NSString* theServer     = [theServerRefController serverFieldValue];
-										 BOOL needsPassword		 = [theServerRefController needsPassword];
-										 NSString* thePassword   = [theServerRefController password];
-										 NSString* fullServerURL      = FullServerURLWithPassword(theServer, needsPassword, thePassword, eAllPasswordsAreVisible);
-										 NSString* visibleServerURL   = FullServerURLWithPassword(theServer, needsPassword, thePassword, visibilityInDisclosure);
 										 NSMutableArray* argsIdentify = [NSMutableArray arrayWithObjects:@"identify", @"--insecure", @"--rev", @"tip", fullServerURL, nil];
 										 ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsIdentify  fromRoot:@"/tmp"  logging:eLogAllToFile];
 										 
@@ -181,8 +178,21 @@ NSAttributedString*   fixedWidthAttributedString(NSString* string);
 										 // If our results are still relevant but we timed out show failure result
 										 if ([queueForConnectionValidation_ operationNumber] == validationAttempt)
 										 {
-											 [self hideValidationProgressIndicator];
-											 [self showBadValidationGraphicAndMessage];
+											 NSString* visibleCommand = fstr(@"chg identify --insecure --rev tip %@", visibleServerURL);
+											 NSMutableAttributedString* resultsStr = [[NSMutableAttributedString alloc]init];
+											 
+											 [resultsStr appendAttributedString: titledAttributedString(@"Command:\n")];
+											 [resultsStr appendAttributedString: fixedWidthAttributedString(fstr(@"%@\n", visibleCommand))];
+											 
+											 [resultsStr appendAttributedString: titledAttributedString(@"\nOutput:\n")];
+											 [resultsStr appendAttributedString: fixedWidthAttributedString(@"Operation timed out after 20 seconds.")];
+											 
+											 dispatch_async(mainQueue(), ^{
+												 [[repositoryConnectionStatusDetails textStorage] setAttributedString:resultsStr];
+
+												 [self hideValidationProgressIndicator];
+												 [self showBadValidationGraphicAndMessage];
+											 });
 										 }
 									 }
 									 );

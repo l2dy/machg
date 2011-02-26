@@ -16,13 +16,21 @@
 #import "AppController.h"
 #import "SingleTimedQueue.h"
 #import "ShellHere.h"
+#import "NSURL+Parameters.h"
+
+@interface ServerRepositoryRefSheetController (PrivateAPI)
+- (void) passwordChanged;
+- (void) baseServerURLEndedEdits;
+@end
 
 
 @implementation ServerRepositoryRefSheetController
-@synthesize shortNameFieldValue = shortNameFieldValue_;
-@synthesize serverFieldValue    = serverFieldValue_;
-@synthesize password			= password_;
-@synthesize needsPassword		= needsPassword_;
+@synthesize shortNameFieldValue		= shortNameFieldValue_;
+@synthesize baseServerURLFieldValue = baseServerURLFieldValue_;
+@synthesize fullServerURLFieldValue = fullServerURLFieldValue_;
+@synthesize password				= password_;
+@synthesize hasPassword				= hasPassword_;
+@synthesize username				= username_;
 
 
 
@@ -52,11 +60,15 @@
 // MARK: Server Methods
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) clearSheetFieldValues
+- (void) clearSheetValues
 {
 	[self setShortNameFieldValue:@""];
-	[self setServerFieldValue:@""];
-	[self validateButtons:self];
+	[self setBaseServerURLFieldValue:@""];
+	[self setUsername:@""];
+	[self setPassword:@""];
+	[self setHasPassword:NO];
+	[self setShowRealPassword:YES];
+	
 }
 
 
@@ -74,6 +86,7 @@
 	AuthorizationCreate(NULL, kAuthorizationEmptyEnvironment, kAuthorizationFlagDefaults, &myAuthorizationRef);
 	AuthorizationFree(myAuthorizationRef, kAuthorizationFlagDestroyRights);	
 	[self setShowRealPassword:NO];
+	[self passwordChanged];
 }
 
 
@@ -125,6 +138,7 @@
 		[self didChangeValueForKey:@"showRealPassword"];
 	}
 	[showPasswordButton setState:val];
+	[self passwordChanged];
 }
 
 
@@ -138,9 +152,9 @@
 
 - (IBAction) validateButtons:(id)sender
 {
-	BOOL valid = ([[self serverFieldValue] length] > 0) && ([[self shortNameFieldValue] length] > 0);
+	BOOL valid = ([[self baseServerURLFieldValue] length] > 0) && ([[self shortNameFieldValue] length] > 0);
 	[okButton setEnabled:valid];
-	if (sender == theServerTextField || sender == self || sender == theSecurePasswordTextField || sender == theUnsecurePasswordTextField)
+	if (sender == theBaseServerTextField || sender == self || sender == theUsernameTextField || sender == theSecurePasswordTextField || sender == theUnsecurePasswordTextField)
 	{
 		[theConnectionValidationController testConnection:sender];
 		[timeoutQueueForSecurity_ addBlockOperation:^{
@@ -158,11 +172,9 @@
 
 - (void) openSheetForNewRepositoryRef
 {
-	[self clearSheetFieldValues];
-	[self setNeedsPassword:NO];
-	[self setPassword:@""];
-	[self setShowRealPassword:YES];
-
+	[self clearSheetValues];
+	[self validateButtons:self];
+	
 	nodeToConfigure = nil;
 	passwordKeyChainItem_ = nil;
 	cloneAfterAddition_ = NO;
@@ -175,10 +187,8 @@
 
 - (void) openSheetForAddAndClone
 {
-	[self clearSheetFieldValues];
-	[self setNeedsPassword:NO];
-	[self setPassword:@""];
-	[self setShowRealPassword:YES];
+	[self clearSheetValues];
+	[self validateButtons:self];
 	
 	nodeToConfigure = nil;
 	passwordKeyChainItem_ = nil;
@@ -198,18 +208,19 @@
 		[[myDocument theLocalRepositoryRefSheetController] openSheetForConfigureRepositoryRef:node];
 		return;
 	}
-	
+
 	nodeToConfigure = node;
+	[self clearSheetValues];
+	
 	if ([node isServerRepositoryRef])
 	{
 		[self setShortNameFieldValue:[node shortName]];
-		[self setServerFieldValue:[node path]];
+		[self setBaseServerURLFieldValue:[node path]];
+		[self baseServerURLEndedEdits];
 	}
-	else
-		[self clearSheetFieldValues];
 	
-	[self setNeedsPassword:[node hasPassword]];
-	if ([self needsPassword])
+	[self setHasPassword:[node hasPassword]];
+	if ([self hasPassword])
 	{
 		passwordKeyChainItem_ = [EMGenericKeychainItem genericKeychainItemForService:kMacHgApp withUsername:[node path]];
 		[self setPassword:passwordKeyChainItem_.password];
@@ -221,6 +232,7 @@
 		[self setPassword:@""];
 		[self setShowRealPassword:YES];
 	}
+	[self passwordChanged];
 
 	[theTitleText setStringValue:@"Configure Server Repository"];
 	[okButton setTitle:@"Configure Server"];
@@ -236,15 +248,15 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK:  Actions AddRepository
+// MARK:  Actions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (IBAction) testConnectionInTerminal:(id)sender
 {
-	if (needsPassword_ && ![self authorizeForShowingPassword])
+	if (hasPassword_ && ![self authorizeForShowingPassword])
 		return;
 
-	NSString* fullServerURL = FullServerURLWithPassword(serverFieldValue_, needsPassword_, password_, eAllPasswordsAreVisible);
+	NSString* fullServerURL = [self generateFullServerURLIncludingPassword:YES andMaskingPassword:NO];
 	NSMutableArray* argsIdentify = [NSMutableArray arrayWithObjects:@"identify", @"--insecure", @"--rev", @"0", fullServerURL, nil];
 	NSMutableArray* newArgs = [TaskExecutions preProcessMercurialCommandArgs:argsIdentify fromRoot:@"/tmp"];
 	[newArgs insertObject:LocalWhitelistedHGShellAliasNameFromDefaults() atIndex:0];
@@ -267,6 +279,7 @@
 	if (![self authorizeForShowingPassword])
 	{
 		[showPasswordButton setState:NSOffState];
+		[self passwordChanged];
 		return;
 	}
 
@@ -283,25 +296,25 @@
 	[[theSidebar undoManager] setActionName: (nodeToConfigure ? @"Configure Repository" : @"Add Server Repository")];
 
 	NSString* newName    = [shortNameFieldValue_ copy];
-	NSString* newPath    = [serverFieldValue_ copy];
+	NSString* newPath    = [self generateFullServerURLIncludingPassword:NO andMaskingPassword:NO];
 	if (nodeToConfigure)
 	{
 		[theSidebar removeConnectionsFor:[nodeToConfigure path]];
 		[nodeToConfigure setPath:newPath];
-		[nodeToConfigure setHasPassword:needsPassword_];
+		[nodeToConfigure setHasPassword:hasPassword_];
 		[nodeToConfigure setShortName:newName];
 		[nodeToConfigure refreshNodeIcon];
 	}
 	else
 	{
 		SidebarNode* newNode = [SidebarNode nodeWithCaption:newName  forServerPath:newPath];
-		[newNode setHasPassword:needsPassword_];
+		[newNode setHasPassword:hasPassword_];
 		[newNode refreshNodeIcon];
 		[[myDocument sidebar] addSidebarNode:newNode];
 		[theSidebar selectNode:newNode];
 	}
 
-	if (needsPassword_)
+	if (hasPassword_)
 	{
 		if (!passwordKeyChainItem_)
 			passwordKeyChainItem_ = [EMGenericKeychainItem addGenericKeychainItemForService:kMacHgApp withUsername:newPath password:[self password]];
@@ -335,6 +348,63 @@
 
 
 
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Field updating
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (NSString*) generateFullServerURLIncludingPassword:(BOOL)includePass andMaskingPassword:(BOOL)mask
+{
+	NSURL* theBaseURL = [NSURL URLWithString:baseServerURLFieldValue_];
+	BOOL valid = [theBaseURL scheme] && [theBaseURL host];
+	if (!valid || IsEmpty(username_))
+		return baseServerURLFieldValue_;
+	
+	NSURL* withUser     = [theBaseURL URLByReplacingUser:username_];
+	if (!includePass || IsEmpty(password_))
+		return [withUser absoluteString];
+	
+	NSURL* withPassword = [withUser URLByReplacingPassword:mask ? @"***" : password_];
+	return [withPassword absoluteString];
+}
+
+- (void) baseServerURLChanged
+{
+	NSURL* theBaseURL = [NSURL URLWithString:baseServerURLFieldValue_];
+
+	if (IsNotEmpty([theBaseURL password]))
+		[self setPassword:[theBaseURL password]];
+	if (IsNotEmpty([theBaseURL user]))
+		[self setUsername:[theBaseURL user]];
+
+	[self setFullServerURLFieldValue:[self generateFullServerURLIncludingPassword:YES andMaskingPassword:!showRealPassword_]];
+}
+
+- (void) baseServerURLEndedEdits
+{
+	[self baseServerURLChanged];
+	NSURL* theBaseURL = [NSURL URLWithString:baseServerURLFieldValue_];
+	if (IsEmpty([theBaseURL password]) && IsEmpty([theBaseURL user]))
+		return;
+	[self setBaseServerURLFieldValue:[[theBaseURL URLByDeletingUserAndPassword] absoluteString]];
+}
+
+
+- (void) usernameChanged
+{
+	[self setFullServerURLFieldValue:[self generateFullServerURLIncludingPassword:YES andMaskingPassword:!showRealPassword_]];
+}
+
+- (void) passwordChanged
+{
+	[self setFullServerURLFieldValue:[self generateFullServerURLIncludingPassword:YES andMaskingPassword:!showRealPassword_]];
+}
+
+
+
+
+
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 // MARK: Delegate Methods
@@ -342,9 +412,20 @@
 
 - (void) controlTextDidChange:(NSNotification*)aNotification
 {
+	id sender = [aNotification object];
+	if		(sender == theBaseServerTextField)			[self baseServerURLChanged];
+	else if (sender == theUsernameTextField)			[self usernameChanged];
+	else if (sender == theSecurePasswordTextField)		[self passwordChanged];
+	else if (sender == theUnsecurePasswordTextField)	[self passwordChanged];
+
 	[self validateButtons:[aNotification object]];
 }
 
+- (void) controlTextDidEndEditing:(NSNotification*)aNotification
+{
+	id sender = [aNotification object];
+	if		(sender == theBaseServerTextField)			[self baseServerURLEndedEdits];
+}
 
 
 @end
