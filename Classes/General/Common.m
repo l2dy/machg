@@ -1411,8 +1411,8 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 // MARK: -
 @implementation NSView ( NSViewPlusExtensions )
 
-- (void)	setCenterX:(CGFloat)coord { [self setCenterX:coord animate:YES]; }
-- (void)	setCenterX:(CGFloat)coord animate:(BOOL)animate
+- (void) setCenterX:(CGFloat)coord { [self setCenterX:coord animate:YES]; }
+- (void) setCenterX:(CGFloat)coord animate:(BOOL)animate
 {
 	NSRect theFrame = [self frame];
 	CGFloat newOriginX = round(coord - theFrame.size.width / 2);
@@ -1428,7 +1428,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	}
 }
 
-- (void)	setMinX:(CGFloat)coord
+- (void) setMinX:(CGFloat)coord
 {
 	NSRect theFrame = [self frame];
 	CGFloat newOriginX = coord;
@@ -1439,7 +1439,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	}
 }
 
-- (void)	setMaxX:(CGFloat)coord
+- (void) setMaxX:(CGFloat)coord
 {
 	NSRect theFrame = [self frame];
 	CGFloat newOriginX = coord - theFrame.size.width;
@@ -1448,6 +1448,14 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 		theFrame.origin.x = newOriginX;
 		[[self animator] setFrame:theFrame];
 	}
+}
+
+- (void) setToRightOf:(NSView*)theView bySpacing:(CGFloat)coord
+{
+	NSRect theViewFrame = [theView frame];
+	NSRect selfFrame = [self frame];
+	selfFrame.origin.x = NSMaxX(theViewFrame) + 10;
+	[[self animator] setFrame:selfFrame];
 }
 
 @end

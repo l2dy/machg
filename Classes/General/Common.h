@@ -986,6 +986,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 - (void)	setCenterX:(CGFloat)coord animate:(BOOL)animate;
 - (void)	setMinX:(CGFloat)coord;
 - (void)	setMaxX:(CGFloat)coord;
+- (void)	setToRightOf:(NSView*)theView bySpacing:(CGFloat)coord;
 @end
 
 
