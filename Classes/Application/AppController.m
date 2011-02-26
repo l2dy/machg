@@ -18,7 +18,6 @@
 #import "NSURL+Parameters.h"
 
 @implementation AppController
-@synthesize urlUsesPassword = urlUsesPassword_;
 
 
 
@@ -91,7 +90,6 @@
 	repositoryIdentityForPath_	        = [[NSMutableDictionary alloc]init];
 	computingRepositoryIdentityForPath_ = [[NSMutableDictionary alloc]init];
 	dirtyRepositoryIdentityForPath_     = [[NSMutableDictionary alloc]init];
-	urlUsesPassword_					= [[NSMutableSet alloc]init];
 
 	// Initlize globals
 	changesetHashToLogRecord			= [[NSMutableDictionary alloc]init];
@@ -738,17 +736,14 @@ NSString* FullServerURL(NSString* baseURLString, PasswordVisibilityType visibili
 	if (!baseURL || ![baseURL scheme] || ![baseURL host])
 		return baseURLString;
 
-	BOOL passwordStoredInKeyChain = [[[AppController sharedAppController] urlUsesPassword] containsObject:baseURLString];
-	BOOL hasPassword = passwordStoredInKeyChain || [baseURL password];
+	EMGenericKeychainItem* newKeychainItem = [EMGenericKeychainItem genericKeychainItemForService:kMacHgApp withUsername:baseURLString];
+	BOOL hasPassword = newKeychainItem || [baseURL password];
 	if (hasPassword && visibility == eAllPasswordsAreMangled)
 		password = @"***";
-	else if (passwordStoredInKeyChain && visibility == eKeyChainPasswordsAreMangled)
+	else if (newKeychainItem && visibility == eKeyChainPasswordsAreMangled)
 		password = @"***";
-	else if (passwordStoredInKeyChain)
-	{
-		EMGenericKeychainItem* passwordItem = [EMGenericKeychainItem genericKeychainItemForService:kMacHgApp withUsername:baseURLString];
-		password = nonNil(passwordItem.password);
-	}
+	else if (newKeychainItem)
+		password = nonNil(newKeychainItem.password);
 	else
 		password = [baseURL password];
 

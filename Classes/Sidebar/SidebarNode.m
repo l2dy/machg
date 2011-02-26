@@ -263,14 +263,6 @@
 		else
 			NSRunCriticalAlertPanel(@"Max Path Length exceeded", fstr(@"The maximum path length for the path to the repository root was exceeded. Functionality for this repository could be erratic. The path is", path), @"OK", nil, nil);
 	}
-
-	if ([self isServerRepositoryRef] && path)
-	{
-		if (hasPassword)
-			[[[AppController sharedAppController] urlUsesPassword] addObject:path];
-		else
-			[[[AppController sharedAppController] urlUsesPassword] removeObject:path];		
-	}
 	
 	if ([self isRepositoryRef] && path)
 	{
