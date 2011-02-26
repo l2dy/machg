@@ -34,7 +34,6 @@
 	SidebarNode*		nodeToConfigure;
 	NSString*			username_;
 	NSString*			password_;
-	BOOL				hasPassword_;
 	BOOL				showRealPassword_;
 	EMGenericKeychainItem* passwordKeyChainItem_;
 	SingleTimedQueue*	timeoutQueueForSecurity_;
@@ -44,7 +43,6 @@
 @property (readwrite,assign) NSString*	  baseServerURLFieldValue;
 @property (readwrite,assign) NSString*	  fullServerURLFieldValue;
 @property (readwrite,assign) NSString*	  password;
-@property (readwrite,assign) BOOL		  hasPassword;
 @property (readwrite,assign) NSString*	  username;
 
 

@@ -30,7 +30,6 @@
 @synthesize baseServerURLFieldValue = baseServerURLFieldValue_;
 @synthesize fullServerURLFieldValue = fullServerURLFieldValue_;
 @synthesize password				= password_;
-@synthesize hasPassword				= hasPassword_;
 @synthesize username				= username_;
 
 
@@ -67,7 +66,6 @@
 	[self setBaseServerURLFieldValue:@""];
 	[self setUsername:@""];
 	[self setPassword:@""];
-	[self setHasPassword:NO];
 	[self setShowRealPassword:YES];
 	
 }
@@ -220,18 +218,17 @@
 		[self baseServerURLEndedEdits];
 	}
 	
-	[self setHasPassword:[node hasPassword]];
-	if ([self hasPassword])
+	passwordKeyChainItem_ = [EMGenericKeychainItem genericKeychainItemForService:kMacHgApp withUsername:[node path]];
+	if (passwordKeyChainItem_)
 	{
-		passwordKeyChainItem_ = [EMGenericKeychainItem genericKeychainItemForService:kMacHgApp withUsername:[node path]];
 		[self setPassword:passwordKeyChainItem_.password];
 		[self setShowRealPassword:NO];
 	}
 	else
 	{
 		passwordKeyChainItem_ = nil;
-		[self setPassword:@""];
-		[self setShowRealPassword:YES];
+		if (IsEmpty(password_))
+			[self setShowRealPassword:YES];
 	}
 	[self passwordChanged];
 
@@ -254,7 +251,7 @@
 
 - (IBAction) testConnectionInTerminal:(id)sender
 {
-	if (hasPassword_ && ![self authorizeForShowingPassword])
+	if (IsNotEmpty(password_) && ![self authorizeForShowingPassword])
 		return;
 
 	NSString* fullServerURL = [self generateFullServerURLIncludingPassword:YES andMaskingPassword:NO];
@@ -302,31 +299,33 @@
 	{
 		[theSidebar removeConnectionsFor:[nodeToConfigure path]];
 		[nodeToConfigure setPath:newPath];
-		[nodeToConfigure setHasPassword:hasPassword_];
+		[nodeToConfigure setHasPassword:IsNotEmpty(password_)];
 		[nodeToConfigure setShortName:newName];
 		[nodeToConfigure refreshNodeIcon];
 	}
 	else
 	{
 		SidebarNode* newNode = [SidebarNode nodeWithCaption:newName  forServerPath:newPath];
-		[newNode setHasPassword:hasPassword_];
+		[newNode setHasPassword:IsNotEmpty(password_)];
 		[newNode refreshNodeIcon];
 		[[myDocument sidebar] addSidebarNode:newNode];
 		[theSidebar selectNode:newNode];
 	}
-
-	if (hasPassword_)
-	{
-		if (!passwordKeyChainItem_)
-			passwordKeyChainItem_ = [EMGenericKeychainItem addGenericKeychainItemForService:kMacHgApp withUsername:newPath password:[self password]];
-		else
-		{
-			passwordKeyChainItem_.username = newPath;
-			passwordKeyChainItem_.password = [self password];
-		}
-	}
-		
 	
+	[passwordKeyChainItem_ removeFromKeychain];
+
+	if (IsNotEmpty(password_))
+	{
+		EMGenericKeychainItem* newKeychainItem = [EMGenericKeychainItem genericKeychainItemForService:kMacHgApp withUsername:newPath];
+		if (newKeychainItem)
+		{
+			newKeychainItem.username = newPath;
+			newKeychainItem.password = [self password];
+		}
+		else
+			[EMGenericKeychainItem addGenericKeychainItemForService:kMacHgApp withUsername:newPath password:[self password]];
+	}
+
 	[[AppController sharedAppController] computeRepositoryIdentityForPath:newPath];
 	
 	[NSApp endSheet:theWindow];
