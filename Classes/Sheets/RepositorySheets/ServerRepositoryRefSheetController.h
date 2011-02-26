@@ -16,6 +16,7 @@
 	IBOutlet NSWindow*							theWindow;
 	IBOutlet NSButton*							okButton;
 	IBOutlet NSButton*							showPasswordButton;
+	IBOutlet NSButton*							testConnectionButton;
 	IBOutlet ConnectionValidationController*	theConnectionValidationController;
 	IBOutlet NSTextField*						theTitleText;
 	IBOutlet NSTextField*						theBaseServerTextField;

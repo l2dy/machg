@@ -53,6 +53,15 @@ NSAttributedString*   fixedWidthAttributedString(NSString* string);
 // MARK:  Showing and Hiding
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+- (void) repositionDetailsButton
+{
+	[repositoryConnectionStatusMessage sizeToFit];
+	[NSAnimationContext beginGrouping];
+	[[NSAnimationContext currentContext] setDuration:0.2];
+	[showConnectionDetailsButton setToRightOf:repositoryConnectionStatusMessage bySpacing:10];
+	[NSAnimationContext endGrouping];	
+}
+
 - (void) hideValidationGraphicAndMessage
 {
 	if (![showConnectionDetailsButton isHidden])
@@ -73,6 +82,7 @@ NSAttributedString*   fixedWidthAttributedString(NSString* string);
 	[showConnectionDetailsButton		setHidden:NO];
 	[connectionDetailsDisclosure		setBackgroundToBad];
 	[connectionDetailsDisclosure		setToOpenState:detailsWasOpen_ withAnimation:YES];
+	[self performSelector:@selector(repositionDetailsButton) withObject:nil afterDelay:0.05];
 }
 
 - (void) showGoodValidationGraphicAndMessage
@@ -85,6 +95,7 @@ NSAttributedString*   fixedWidthAttributedString(NSString* string);
 	[showConnectionDetailsButton		setHidden:NO];
 	[connectionDetailsDisclosure		setBackgroundToGood];
 	[connectionDetailsDisclosure		setToOpenState:detailsWasOpen_ withAnimation:YES];
+	[self performSelector:@selector(repositionDetailsButton) withObject:nil afterDelay:0.05];
 }
 
 - (void) showValidationProgressIndicator

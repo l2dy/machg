@@ -21,6 +21,7 @@
 @interface ServerRepositoryRefSheetController (PrivateAPI)
 - (void) passwordChanged;
 - (void) baseServerURLEndedEdits;
+- (void) repositionTestConnectionButton;
 @end
 
 
@@ -348,6 +349,23 @@
 
 
 
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Button positioning
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (void) repositionTestConnectionButton
+{
+	[theFullServerTextField sizeToFit];
+	[NSAnimationContext beginGrouping];
+	[[NSAnimationContext currentContext] setDuration:0.1];
+	[testConnectionButton setToRightOf:theFullServerTextField bySpacing:10];
+	[NSAnimationContext endGrouping];	
+}
+
+
+
+
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
@@ -379,6 +397,7 @@
 		[self setUsername:[theBaseURL user]];
 
 	[self setFullServerURLFieldValue:[self generateFullServerURLIncludingPassword:YES andMaskingPassword:!showRealPassword_]];
+	[self performSelector:@selector(repositionTestConnectionButton) withObject:nil afterDelay:0.05];
 }
 
 - (void) baseServerURLEndedEdits
@@ -394,11 +413,13 @@
 - (void) usernameChanged
 {
 	[self setFullServerURLFieldValue:[self generateFullServerURLIncludingPassword:YES andMaskingPassword:!showRealPassword_]];
+	[self performSelector:@selector(repositionTestConnectionButton) withObject:nil afterDelay:0.05];
 }
 
 - (void) passwordChanged
 {
 	[self setFullServerURLFieldValue:[self generateFullServerURLIncludingPassword:YES andMaskingPassword:!showRealPassword_]];
+	[self performSelector:@selector(repositionTestConnectionButton) withObject:nil afterDelay:0.05];
 }
 
 
@@ -417,7 +438,7 @@
 	else if (sender == theUsernameTextField)			[self usernameChanged];
 	else if (sender == theSecurePasswordTextField)		[self passwordChanged];
 	else if (sender == theUnsecurePasswordTextField)	[self passwordChanged];
-
+	
 	[self validateButtons:[aNotification object]];
 }
 
