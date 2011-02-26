@@ -1010,7 +1010,7 @@
 									 
 									 // Main Block
 									 ^{
-										 NSMutableArray* argsOutgoing = [NSMutableArray arrayWithObjects:@"outgoing", @"--insecure", @"--quiet", @"--template", @"+", [repo fullURLPath], nil];
+										 NSMutableArray* argsOutgoing = [NSMutableArray arrayWithObjects:@"outgoing", @"--insecure", @"--quiet", @"--noninteractive", @"--template", @"+", [repo fullURLPath], nil];
 										 ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsOutgoing  fromRoot:rootPath  logging:eLoggingNone  onTask:theTask];
 										 dispatch_async(mainQueue(), ^{
 											 if (![rootPath isEqualTo:[[self selectedNode] path]])
@@ -1046,7 +1046,7 @@
 									 
 									 // Main Block
 									 ^{
-										 NSMutableArray* argsOutgoing = [NSMutableArray arrayWithObjects:@"incoming", @"--insecure", @"--quiet", @"--template", @"-", [repo fullURLPath], nil];
+										 NSMutableArray* argsOutgoing = [NSMutableArray arrayWithObjects:@"incoming", @"--insecure", @"--quiet", @"--noninteractive", @"--template", @"-", [repo fullURLPath], nil];
 										 ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsOutgoing  fromRoot:rootPath  logging:eLoggingNone  onTask:theTask];
 										 dispatch_async(mainQueue(), ^{
 											 if (![rootPath isEqualTo:[[self selectedNode] path]])

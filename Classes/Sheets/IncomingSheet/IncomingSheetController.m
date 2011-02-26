@@ -112,7 +112,7 @@
 	
 	// Construct the incoming args
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
-	NSMutableArray* argsIncoming = [NSMutableArray arrayWithObjects:@"incoming", nil];
+	NSMutableArray* argsIncoming = [NSMutableArray arrayWithObjects:@"incoming", @"--noninteractive", nil];
 	for (OptionController* opt in cmdOptions)
 		[opt addOptionToArgs:argsIncoming];
 	if (allowOperationWithAnyRepository_ || [forceOption optionIsSet])

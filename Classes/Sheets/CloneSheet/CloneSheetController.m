@@ -191,7 +191,7 @@
 	NSString* destinationPath  = [pathFieldValue_ copy];
 	NSString* cloneDescription = fstr(@"Cloning “%@”", sourceName);
 
-	NSMutableArray* argsClone = [NSMutableArray arrayWithObjects:@"clone", nil];
+	NSMutableArray* argsClone = [NSMutableArray arrayWithObjects:@"clone", @"--noninteractive", nil];
 	for (OptionController* opt in cmdOptions)
 		[opt addOptionToArgs:argsClone];
 	if ([revOption optionIsSet])

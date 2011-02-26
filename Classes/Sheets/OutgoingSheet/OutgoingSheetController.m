@@ -116,7 +116,7 @@
 	
 	// Construct the outgoing args
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
-	NSMutableArray* argsOutgoing = [NSMutableArray arrayWithObjects:@"outgoing", nil];
+	NSMutableArray* argsOutgoing = [NSMutableArray arrayWithObjects:@"outgoing", @"--noninteractive", nil];
 	for (OptionController* opt in cmdOptions)
 		[opt addOptionToArgs:argsOutgoing];
 	if (allowOperationWithAnyRepository_ || [forceOption optionIsSet])

@@ -139,13 +139,13 @@ NSAttributedString*   fixedWidthAttributedString(NSString* string);
 									 // Main Block
 									 ^{
 										 [self showValidationProgressIndicator];
-										 NSMutableArray* argsIdentify = [NSMutableArray arrayWithObjects:@"identify", @"--insecure", @"--rev", @"tip", fullServerURL, nil];
+										 NSMutableArray* argsIdentify = [NSMutableArray arrayWithObjects:@"identify", @"--insecure", @"--noninteractive", @"--rev", @"tip", fullServerURL, nil];
 										 ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsIdentify  fromRoot:@"/tmp"  logging:eLogAllToFile];
 										 
 										// If our results are still relevant show the success or failure result
 										 if ([queueForConnectionValidation_ operationNumber] == validationAttempt)
 										 {
-											 NSString* visibleCommand = fstr(@"chg identify --insecure --rev tip %@", visibleServerURL);
+											 NSString* visibleCommand = fstr(@"chg identify --insecure --noninteractive --rev tip %@", visibleServerURL);
 											 NSMutableAttributedString* resultsStr = [[NSMutableAttributedString alloc]init];
 
 											 [resultsStr appendAttributedString: titledAttributedString(@"Command:\n")];
@@ -178,7 +178,7 @@ NSAttributedString*   fixedWidthAttributedString(NSString* string);
 										 // If our results are still relevant but we timed out show failure result
 										 if ([queueForConnectionValidation_ operationNumber] == validationAttempt)
 										 {
-											 NSString* visibleCommand = fstr(@"chg identify --insecure --rev tip %@", visibleServerURL);
+											 NSString* visibleCommand = fstr(@"chg identify --insecure --noninteractive --rev tip %@", visibleServerURL);
 											 NSMutableAttributedString* resultsStr = [[NSMutableAttributedString alloc]init];
 											 
 											 [resultsStr appendAttributedString: titledAttributedString(@"Command:\n")];

@@ -118,7 +118,7 @@
 	
 	// Construct the push args
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
-	NSMutableArray* argsPush = [NSMutableArray arrayWithObjects:@"push", nil];
+	NSMutableArray* argsPush = [NSMutableArray arrayWithObjects:@"push", @"--noninteractive", nil];
 	for (OptionController* opt in cmdOptions)
 		[opt addOptionToArgs:argsPush];
 	if (allowOperationWithAnyRepository_ || [forceOption optionIsSet])

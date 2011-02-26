@@ -116,7 +116,7 @@
 	
 	// Construct the pull args
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
-	NSMutableArray* argsPull = [NSMutableArray arrayWithObjects:@"pull", nil];
+	NSMutableArray* argsPull = [NSMutableArray arrayWithObjects:@"pull", @"--noninteractive", nil];
 	for (OptionController* opt in cmdOptions)
 		[opt addOptionToArgs:argsPull];
 	if (allowOperationWithAnyRepository_ || [forceOption optionIsSet])
