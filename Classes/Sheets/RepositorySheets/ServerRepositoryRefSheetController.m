@@ -22,7 +22,7 @@
 @interface ServerRepositoryRefSheetController (PrivateAPI)
 - (void) passwordChanged;
 - (void) baseServerURLEndedEdits;
-- (void) repositionTestConnectionButton;
+- (void) repositionConnectionStatusBox;
 @end
 
 
@@ -173,7 +173,7 @@
 - (void) openSheetForNewRepositoryRef
 {
 	[self clearSheetValues];
-	[disclosureController setToOpenState:NO withAnimation:NO];
+	[advancedOptionsDisclosureController setToOpenState:NO withAnimation:NO];
 	[self validateButtons:self];
 	
 	nodeToConfigure = nil;
@@ -189,7 +189,7 @@
 - (void) openSheetForAddAndClone
 {
 	[self clearSheetValues];
-	[disclosureController setToOpenState:NO withAnimation:NO];
+	[advancedOptionsDisclosureController setToOpenState:NO withAnimation:NO];
 	[self validateButtons:self];
 	
 	nodeToConfigure = nil;
@@ -213,7 +213,7 @@
 
 	nodeToConfigure = node;
 	[self clearSheetValues];
-	[disclosureController setToOpenState:NO withAnimation:NO];
+	[advancedOptionsDisclosureController setToOpenState:NO withAnimation:NO];
 	
 	if ([node isServerRepositoryRef])
 	{
@@ -355,12 +355,12 @@
 // MARK:  Button positioning
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) repositionTestConnectionButton
+- (void) repositionConnectionStatusBox
 {
 	[theFullServerTextField sizeToFit];
 	[NSAnimationContext beginGrouping];
 	[[NSAnimationContext currentContext] setDuration:0.1];
-	[testConnectionButton setToRightOf:theFullServerTextField bySpacing:10];
+	[connectionStatusBox setToRightOf:theFullServerTextField bySpacing:10];
 	[NSAnimationContext endGrouping];	
 }
 
@@ -398,7 +398,7 @@
 		[self setUsername:[theBaseURL user]];
 
 	[self setFullServerURLFieldValue:[self generateFullServerURLIncludingPassword:YES andMaskingPassword:!showRealPassword_]];
-	[self performSelector:@selector(repositionTestConnectionButton) withObject:nil afterDelay:0.05];
+	[self performSelector:@selector(repositionConnectionStatusBox) withObject:nil afterDelay:0.05];
 }
 
 - (void) baseServerURLEndedEdits
@@ -414,13 +414,13 @@
 - (void) usernameChanged
 {
 	[self setFullServerURLFieldValue:[self generateFullServerURLIncludingPassword:YES andMaskingPassword:!showRealPassword_]];
-	[self performSelector:@selector(repositionTestConnectionButton) withObject:nil afterDelay:0.05];
+	[self performSelector:@selector(repositionConnectionStatusBox) withObject:nil afterDelay:0.05];
 }
 
 - (void) passwordChanged
 {
 	[self setFullServerURLFieldValue:[self generateFullServerURLIncludingPassword:YES andMaskingPassword:!showRealPassword_]];
-	[self performSelector:@selector(repositionTestConnectionButton) withObject:nil afterDelay:0.05];
+	[self performSelector:@selector(repositionConnectionStatusBox) withObject:nil afterDelay:0.05];
 }
 
 

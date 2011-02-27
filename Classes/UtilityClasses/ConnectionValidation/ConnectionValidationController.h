@@ -14,7 +14,6 @@
 @interface ConnectionValidationController : NSObject
 {
 	IBOutlet NSImageView*		repositoryConnectionStatusImage;
-	IBOutlet NSTextField*		repositoryConnectionStatusMessage;
 	IBOutlet NSTextView*		repositoryConnectionStatusDetails;
 	IBOutlet NSProgressIndicator* validationProgressIndicator;
 	IBOutlet NSButton*			showConnectionDetailsButton;

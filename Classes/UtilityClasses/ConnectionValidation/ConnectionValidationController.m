@@ -53,21 +53,11 @@ NSAttributedString*   fixedWidthAttributedString(NSString* string);
 // MARK:  Showing and Hiding
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) repositionDetailsButton
-{
-	[repositoryConnectionStatusMessage sizeToFit];
-	[NSAnimationContext beginGrouping];
-	[[NSAnimationContext currentContext] setDuration:0.2];
-	[showConnectionDetailsButton setToRightOf:repositoryConnectionStatusMessage bySpacing:10];
-	[NSAnimationContext endGrouping];	
-}
-
 - (void) hideValidationGraphicAndMessage
 {
 	if (![showConnectionDetailsButton isHidden])
 		detailsWasOpen_ = [connectionDetailsDisclosure disclosureIsVisible];
 	[repositoryConnectionStatusImage	setHidden:YES];
-	[repositoryConnectionStatusMessage	setHidden:YES];
 	[showConnectionDetailsButton		setHidden:YES];
 	[connectionDetailsDisclosure		ensureDisclosureBoxIsClosed:YES];
 }
@@ -76,26 +66,18 @@ NSAttributedString*   fixedWidthAttributedString(NSString* string);
 {
 	[repositoryConnectionStatusImage	setImage:badNetworkImage_];
 	[repositoryConnectionStatusImage	setHidden:NO];
-	[repositoryConnectionStatusMessage	setStringValue:@"Remote Repository is Unreachable"];
-	[repositoryConnectionStatusMessage	setHidden:NO];
-	[repositoryConnectionStatusMessage	setNeedsDisplay:YES];
 	[showConnectionDetailsButton		setHidden:NO];
 	[connectionDetailsDisclosure		setBackgroundToBad];
 	[connectionDetailsDisclosure		setToOpenState:detailsWasOpen_ withAnimation:YES];
-	[self performSelector:@selector(repositionDetailsButton) withObject:nil afterDelay:0.05];
 }
 
 - (void) showGoodValidationGraphicAndMessage
 {
 	[repositoryConnectionStatusImage	setImage:goodNetworkImage_];
 	[repositoryConnectionStatusImage	setHidden:NO];
-	[repositoryConnectionStatusMessage	setStringValue:@"Remote Repository is Reachable"];
-	[repositoryConnectionStatusMessage	setHidden:NO];
-	[repositoryConnectionStatusMessage	setNeedsDisplay:YES];
 	[showConnectionDetailsButton		setHidden:NO];
 	[connectionDetailsDisclosure		setBackgroundToGood];
 	[connectionDetailsDisclosure		setToOpenState:detailsWasOpen_ withAnimation:YES];
-	[self performSelector:@selector(repositionDetailsButton) withObject:nil afterDelay:0.05];
 }
 
 - (void) showValidationProgressIndicator
