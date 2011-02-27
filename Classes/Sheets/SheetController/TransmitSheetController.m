@@ -220,23 +220,23 @@
 	NSImage* destinationIconImage = [destination isLocalRepositoryRef] ? [NSWorkspace iconImageOfSize:[sourceIconWell frame].size forPath:destinationPath] : [NSImage imageNamed:NSImageNameNetwork];
 
 	[sourceIconWell      setImage:sourceIconImage];
-	[sourceURI			 setStringValue:sourcePath];
+	[sourceURI			 setStringValue:nonNil(sourcePath)];
 	[sourceURI			 sizeToFit];
 
 	[destinationIconWell setImage:destinationIconImage];
-	[destinationURI		 setStringValue:destinationPath];
+	[destinationURI		 setStringValue:nonNil(destinationPath)];
 	[destinationURI		 sizeToFit];
 	
 	NSTextField* sourceLabelTextField      = DynamicCast(NSTextField, sourceLabel);
 	NSTextField* destinationLabelTextField = DynamicCast(NSTextField, destinationLabel);
 	if (sourceLabelTextField)
 	{
-		[sourceLabelTextField setStringValue:[source shortName]];
+		[sourceLabelTextField setStringValue:nonNil([source shortName])];
 		[sourceLabelTextField sizeToFit];
 	}
 	if (destinationLabelTextField)
 	{
-		[destinationLabelTextField setStringValue:[destination shortName]];
+		[destinationLabelTextField setStringValue:nonNil([destination shortName])];
 		[destinationLabelTextField sizeToFit];
 	}
 
