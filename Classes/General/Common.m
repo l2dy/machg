@@ -981,7 +981,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	NSArray* parts = [self captureComponentsMatchedByRegex:regEx];
 	if ([parts count] <= 1)
 		return NO;
-	*first = [parts objectAtIndex:1];
+	if (first) *first = [parts objectAtIndex:1];
 	return YES;
 }
 - (BOOL) getCapturesWithRegexAndComponents:(NSString*)regEx  firstComponent:(NSString**)first  secondComponent:(NSString**)second
@@ -989,8 +989,8 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	NSArray* parts = [self captureComponentsMatchedByRegex:regEx];
 	if ([parts count] <= 2)
 		return NO;
-	*first  = [parts objectAtIndex:1];
-	*second = [parts objectAtIndex:2];
+	if (first)  *first  = [parts objectAtIndex:1];
+	if (second) *second = [parts objectAtIndex:2];
 	return YES;
 }
 - (BOOL) getCapturesWithRegexAndComponents:(NSString*)regEx  firstComponent:(NSString**)first  secondComponent:(NSString**)second  thirdComponent:(NSString**)third
@@ -998,9 +998,9 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	NSArray* parts = [self captureComponentsMatchedByRegex:regEx];
 	if ([parts count] <= 3)
 		return NO;
-	*first  = [parts objectAtIndex:1];
-	*second = [parts objectAtIndex:2];
-	*third  = [parts objectAtIndex:3];
+	if (first)  *first  = [parts objectAtIndex:1];
+	if (second) *second = [parts objectAtIndex:2];
+	if (third)  *third  = [parts objectAtIndex:3];
 	return YES;
 }
 - (BOOL) getCapturesWithRegexAndComponents:(NSString*)regEx  firstComponent:(NSString**)first  secondComponent:(NSString**)second  thirdComponent:(NSString**)third  fourthComponent:(NSString**)fourth
@@ -1008,10 +1008,10 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	NSArray* parts = [self captureComponentsMatchedByRegex:regEx];
 	if ([parts count] <= 4)
 		return NO;
-	*first  = [parts objectAtIndex:1];
-	*second = [parts objectAtIndex:2];
-	*third  = [parts objectAtIndex:3];
-	*fourth = [parts objectAtIndex:4];
+	if (first)  *first  = [parts objectAtIndex:1];
+	if (second) *second = [parts objectAtIndex:2];
+	if (third)  *third  = [parts objectAtIndex:3];
+	if (fourth) *fourth = [parts objectAtIndex:4];
 	return YES;
 }
 
@@ -1020,7 +1020,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	NSArray* parts = [self captureComponentsMatchedByRegex:regEx];
 	if ([parts count] <= 1)
 		return NO;
-	*first = trimString([parts objectAtIndex:1]);
+	if (first)  *first = trimString([parts objectAtIndex:1]);
 	return YES;
 }
 - (BOOL) getCapturesWithRegexAndTrimedComponents:(NSString*)regEx  firstComponent:(NSString**)first  secondComponent:(NSString**)second
@@ -1028,8 +1028,8 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	NSArray* parts = [self captureComponentsMatchedByRegex:regEx];
 	if ([parts count] <= 2)
 		return NO;
-	*first  = trimString([parts objectAtIndex:1]);
-	*second = trimString([parts objectAtIndex:2]);
+	if (first)  *first  = trimString([parts objectAtIndex:1]);
+	if (second) *second = trimString([parts objectAtIndex:2]);
 	return YES;
 }
 - (BOOL) getCapturesWithRegexAndTrimedComponents:(NSString*)regEx  firstComponent:(NSString**)first  secondComponent:(NSString**)second  thirdComponent:(NSString**)third
@@ -1037,9 +1037,9 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	NSArray* parts = [self captureComponentsMatchedByRegex:regEx];
 	if ([parts count] <= 3)
 		return NO;
-	*first  = trimString([parts objectAtIndex:1]);
-	*second = trimString([parts objectAtIndex:2]);
-	*third  = trimString([parts objectAtIndex:3]);
+	if (first)  *first  = trimString([parts objectAtIndex:1]);
+	if (second) *second = trimString([parts objectAtIndex:2]);
+	if (third)  *third  = trimString([parts objectAtIndex:3]);
 	return YES;
 }
 - (BOOL) getCapturesWithRegexAndTrimedComponents:(NSString*)regEx  firstComponent:(NSString**)first  secondComponent:(NSString**)second  thirdComponent:(NSString**)third  fourthComponent:(NSString**)fourth
@@ -1047,10 +1047,10 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	NSArray* parts = [self captureComponentsMatchedByRegex:regEx];
 	if ([parts count] <= 4)
 		return NO;
-	*first  = trimString([parts objectAtIndex:1]);
-	*second = trimString([parts objectAtIndex:2]);
-	*third  = trimString([parts objectAtIndex:3]);
-	*fourth = trimString([parts objectAtIndex:4]);
+	if (first)  *first  = trimString([parts objectAtIndex:1]);
+	if (second) *second = trimString([parts objectAtIndex:2]);
+	if (third)  *third  = trimString([parts objectAtIndex:3]);
+	if (fourth) *fourth = trimString([parts objectAtIndex:4]);
 	return YES;
 }
 
