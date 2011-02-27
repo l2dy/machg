@@ -19,32 +19,34 @@
 	IBOutlet NSBox*								connectionStatusBox;
 	IBOutlet NSTextField*						theTitleText;
 	IBOutlet NSTextField*						theBaseServerTextField;
-	IBOutlet NSTextField*						theFullServerTextField;
 	IBOutlet NSTextField*						theUsernameTextField;
 	IBOutlet NSTextField*						theSecurePasswordTextField;
 	IBOutlet NSTextField*						theUnsecurePasswordTextField;
+	IBOutlet NSTextField*						theFullServerTextField;
 	IBOutlet ConnectionValidationController*	theConnectionValidationController;
 	IBOutlet DisclosureBoxController*			advancedOptionsDisclosureController;		// The disclosure box for the advanced options
 
 	
 	MacHgDocument*		myDocument;
+	EMGenericKeychainItem* passwordKeyChainItem_;
+	SingleTimedQueue*	timeoutQueueForSecurity_;
+	SidebarNode*		nodeToConfigure;
 	
 	NSString*			shortNameFieldValue_;
 	NSString*			baseServerURLFieldValue_;
-	NSString*			fullServerURLFieldValue_;
-	SidebarNode*		nodeToConfigure;
 	NSString*			username_;
 	NSString*			password_;
 	BOOL				showRealPassword_;
-	EMGenericKeychainItem* passwordKeyChainItem_;
-	SingleTimedQueue*	timeoutQueueForSecurity_;
+	NSString*			repositoryIdentity_;
+	NSString*			fullServerURLFieldValue_;
 	BOOL				cloneAfterAddition_;
 }
 @property (readwrite,assign) NSString*	  shortNameFieldValue;
 @property (readwrite,assign) NSString*	  baseServerURLFieldValue;
-@property (readwrite,assign) NSString*	  fullServerURLFieldValue;
-@property (readwrite,assign) NSString*	  password;
 @property (readwrite,assign) NSString*	  username;
+@property (readwrite,assign) NSString*	  password;
+@property (readwrite,assign) NSString*	  repositoryIdentity;
+@property (readwrite,assign) NSString*	  fullServerURLFieldValue;
 
 
 - (BOOL) showRealPassword;

@@ -29,9 +29,10 @@
 @implementation ServerRepositoryRefSheetController
 @synthesize shortNameFieldValue		= shortNameFieldValue_;
 @synthesize baseServerURLFieldValue = baseServerURLFieldValue_;
-@synthesize fullServerURLFieldValue = fullServerURLFieldValue_;
 @synthesize password				= password_;
 @synthesize username				= username_;
+@synthesize repositoryIdentity		= repositoryIdentity_;
+@synthesize fullServerURLFieldValue = fullServerURLFieldValue_;
 
 
 
@@ -68,7 +69,7 @@
 	[self setUsername:@""];
 	[self setPassword:@""];
 	[self setShowRealPassword:YES];
-	
+	[self setRepositoryIdentity:@""];
 }
 
 
@@ -220,6 +221,7 @@
 		[self setShortNameFieldValue:[node shortName]];
 		[self setBaseServerURLFieldValue:[node path]];
 		[self baseServerURLEndedEdits];
+		[self setRepositoryIdentity:[node repositoryIdentity]];
 	}
 	
 	passwordKeyChainItem_ = [EMGenericKeychainItem genericKeychainItemForService:kMacHgApp withUsername:[node path]];
@@ -299,17 +301,20 @@
 
 	NSString* newName    = [shortNameFieldValue_ copy];
 	NSString* newPath    = [self generateFullServerURLIncludingPassword:NO andMaskingPassword:NO];
+	NSString* newId      = IsNotEmpty(repositoryIdentity_) ? repositoryIdentity_ : nil;
 	if (nodeToConfigure)
 	{
 		[theSidebar removeConnectionsFor:[nodeToConfigure path]];
 		[nodeToConfigure setPath:newPath];
 		[nodeToConfigure setShortName:newName];
 		[nodeToConfigure refreshNodeIcon];
+		[nodeToConfigure setRepositoryIdentity:newId];
 	}
 	else
 	{
 		SidebarNode* newNode = [SidebarNode nodeWithCaption:newName  forServerPath:newPath];
 		[newNode refreshNodeIcon];
+		[newNode setRepositoryIdentity:newId];
 		[[myDocument sidebar] addSidebarNode:newNode];
 		[theSidebar selectNode:newNode];
 	}
