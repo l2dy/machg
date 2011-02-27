@@ -1256,6 +1256,8 @@
 	NSString* rootDotHGFSChecksDirPath  = fstr(@"%@/fschecks",  rootDotHGDirPath);
 	NSString* rootDotHGCacheDirPath     = fstr(@"%@/cache",     rootDotHGDirPath);
 	NSString* rootDotHGMacHgUndoDirPath = fstr(@"%@/macHgUndo", rootDotHGDirPath);
+	NSString* rootDotHGGitCaches        = fstr(@"%@/git/refs/heads", rootDotHGDirPath);
+	NSString* rootDotHGGit              = fstr(@"%@/hggit", rootDotHGDirPath);
 	BOOL postNotification = NO;
 	for (NSString* path in eventPaths)
 	{
@@ -1267,6 +1269,10 @@
 				continue;	// If the path is further contained in just the caches dir then we ignore it since Mercurial uses this internally.
 			if (pathContainedIn(rootDotHGMacHgUndoDirPath, path))
 				continue;	// If the path is further contained in the undo directory then we also ignore it since we are doing a backup for undo.
+			if (pathContainedIn(rootDotHGGitCaches, path))
+				continue;	// If the path is further contained in the caches for hggit then hggit is using this interally
+			if (pathContainedIn(rootDotHGGit, path))
+				continue;	// If the path is further contained in the caches hggit uses then hggit is using this interally
 			postNotification = YES;
 			continue;
 		}
