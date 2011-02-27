@@ -265,7 +265,7 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 		fillColor   = [LogEntryTableParentHighlightColor() intensifySaturationAndBrightness:4.0];
 		strokeColor = defaultRed;
 	}
-	else if (hasLabels && IsNotEmpty([entry_ branch]))
+	else if (hasLabels && IsNotEmpty([entry_ branchHead]))
 	{
 		fillColor   = [LogEntryTableBranchHighlightColor() intensifySaturationAndBrightness:4.0];
 		strokeColor = defaultRed;
@@ -281,7 +281,7 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 		strokeColor = defaultRed;
 	}
 
-	if (hasLabels && IsNotEmpty([entry_ closedBranch]))
+	if (hasLabels && IsNotEmpty([entry_ closedBranchHead]))
 	{
 		entryIsClosed = YES;
 		fillColor   = [NSColor grayColor];

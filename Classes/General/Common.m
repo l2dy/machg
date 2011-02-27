@@ -110,6 +110,7 @@ NSString* const MHGLocalHGShellAliasName				= @"LocalHGShellAliasName";
 NSString* const MHGLocalWhitelistedHGShellAliasName		= @"LocalWhitelistedHGShellAliasName";
 NSString* const MHGLogEntryTableBookmarkHighlightColor	= @"LogEntryTableBookmarkHighlightColor";
 NSString* const MHGLogEntryTableBranchHighlightColor	= @"LogEntryTableBranchHighlightColor";
+NSString* const MHGLogEntryTableDisplayBranchColumn	    = @"LogEntryTableDisplayBranchColumn";
 NSString* const MHGLogEntryTableDisplayChangesetColumn	= @"LogEntryTableDisplayChangesetColumn";
 NSString* const MHGLogEntryTableParentHighlightColor	= @"LogEntryTableParentHighlightColor";
 NSString* const MHGLogEntryTableTagHighlightColor		= @"LogEntryTableTagHighlightColor";
@@ -179,6 +180,7 @@ BOOL		DisplayWarningForTagRemovalFromDefaults()				{ return boolFromDefaultsForK
 BOOL		DisplayWarningForUntrackingFilesFromDefaults()			{ return boolFromDefaultsForKey(MHGDisplayWarningForUntrackingFiles); }
 BOOL		DisplayWarningForUpdatingFromDefaults()					{ return boolFromDefaultsForKey(MHGDisplayWarningForUpdating); }
 BOOL		IncludeHomeHgrcInHGRCPATHFromDefaults()					{ return boolFromDefaultsForKey(MHGIncludeHomeHgrcInHGRCPATH); }
+BOOL		LogEntryTableDisplayBranchColumnFromDefaults()			{ return boolFromDefaultsForKey(MHGLogEntryTableDisplayBranchColumn); }
 BOOL		LogEntryTableDisplayChangesetColumnFromDefaults()		{ return boolFromDefaultsForKey(MHGLogEntryTableDisplayChangesetColumn); }
 BOOL		RequireVerifiedServerCertificatesFromDefaults()			{ return boolFromDefaultsForKey(MHGRequireVerifiedServerCertificates); }
 BOOL		ShowAddedFilesInBrowserFromDefaults()					{ return boolFromDefaultsForKey(MHGShowAddedFilesInBrowser); }

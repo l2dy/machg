@@ -41,8 +41,8 @@ NSMutableDictionary* changesetHashToLogRecord = nil;				// changset (full) -> Lo
 
 void setupGlobalsForLogRecordPartsAndTemplate()
 {
-	NSArray* templateParts         = [NSArray arrayWithObjects: @"{node}",    @"{author|person}", @"{author}",     @"{date}",   @"{desc|firstline}", @"{desc}",      nil];
-	namesOfLogRecordDetailsParts   = [NSArray arrayWithObjects: @"changeset", @"author",          @"fullAuthor"  , @"date",     @"shortComment",     @"fullComment", nil];
+	NSArray* templateParts         = [NSArray arrayWithObjects: @"{node}",    @"{author|person}", @"{author}",     @"{date}",   @"{branches}", @"{desc|firstline}", @"{desc}",      nil];
+	namesOfLogRecordDetailsParts   = [NSArray arrayWithObjects: @"changeset", @"author",          @"fullAuthor"  , @"date",     @"branch",     @"shortComment",     @"fullComment", nil];
 	templateLogRecordString = [[templateParts componentsJoinedByString:LogRecordDetailsPartSeparator] stringByAppendingString:LogRecordSeparator];
 }
 
@@ -53,6 +53,7 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 @synthesize		loadStatus = loadStatus_;
 @synthesize 	author = author_;
 @synthesize 	fullAuthor = fullAuthor_;
+@synthesize     branch = branch_;
 @synthesize 	shortComment = shortComment_;
 @synthesize 	fullComment = fullComment_;
 @synthesize		changeset = changeset_;
@@ -77,6 +78,7 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 		loadStatus_ = eLogEntryLoadedNone;
 		author_ = nil;
 		fullAuthor_ = nil;
+		branch_ = nil;
 		date_ = nil;
 		shortComment_ = nil;
 		fullComment_ = nil;

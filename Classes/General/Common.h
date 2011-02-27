@@ -417,6 +417,7 @@ extern NSString* const MHGLocalHGShellAliasName;
 extern NSString* const MHGLocalWhitelistedHGShellAliasName;
 extern NSString* const MHGLogEntryTableBookmarkHighlightColor;
 extern NSString* const MHGLogEntryTableBranchHighlightColor;
+extern NSString* const MHGLogEntryTableDisplayBranchColumn;
 extern NSString* const MHGLogEntryTableDisplayChangesetColumn;
 extern NSString* const MHGLogEntryTableParentHighlightColor;
 extern NSString* const MHGLogEntryTableTagHighlightColor;

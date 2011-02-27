@@ -25,6 +25,7 @@ NSString* kKeyPathTagHighColor				= @"values.LogEntryTableTagHighlightColor";
 NSString* kKeyPathParentHighColor			= @"values.LogEntryTableParentHighlightColor";
 NSString* kKeyPathBranchHighColor			= @"values.LogEntryTableBranchHighlightColor";
 NSString* kKeyPathBookmarkHighColor			= @"values.LogEntryTableBookmarkHighlightColor";
+NSString* kKeyPathDisplayBranchColumn	    = @"values.LogEntryTableDisplayBranchColumn";
 NSString* kKeyPathDisplayChangesetColumn	= @"values.LogEntryTableDisplayChangesetColumn";
 NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 
@@ -84,6 +85,8 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 	NSDictionary* negateValueTransformer = [NSDictionary dictionaryWithObject:NSNegateBooleanTransformerName forKey:@"NSValueTransformerName"];
 	NSTableColumn* col = [self tableColumnWithIdentifier:@"changeset"];
 	[col  bind:@"hidden"  toObject:defaults  withKeyPath:kKeyPathDisplayChangesetColumn  options:negateValueTransformer];
+	col = [self tableColumnWithIdentifier:@"branch"];
+	[col  bind:@"hidden"  toObject:defaults  withKeyPath:kKeyPathDisplayBranchColumn  options:negateValueTransformer];
 	
 	// Receive a notification when the tag highlight color changes.
 	[defaults  addObserver:self  forKeyPath:kKeyPathTagHighColor		options:NSKeyValueObservingOptionNew  context:NULL];

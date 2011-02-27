@@ -128,7 +128,7 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 	return [LabelData filterLabelsAndExtractNames:labels byType:eBookmarkLabel];
 }
 
-- (NSString*) branch
+- (NSString*) branchHead
 {
 	NSArray* labels = [self labels];
 	if (IsEmpty(labels))
@@ -137,7 +137,7 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 	return IsNotEmpty(branchLabels) ? [[branchLabels objectAtIndex:0] name] : @"";
 }
 
-- (NSString*) closedBranch
+- (NSString*) closedBranchHead
 {
 	NSArray* labels = [self labels];
 	if (IsEmpty(labels))
@@ -337,6 +337,7 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 
 - (NSString*) author			{ return [fullRecord_ author]; }
 - (NSString*) fullAuthor		{ return [fullRecord_ fullAuthor]; }
+- (NSString*) branch            { return stringIsNonWhiteSpace([fullRecord_ branch]) ? [fullRecord_ branch] : @"default"; }
 - (NSString*) shortComment		{ return [fullRecord_ shortComment]; }
 - (NSString*) fullComment		{ return [fullRecord_ fullComment]; }
 - (NSArray*)  filesAdded		{ return [fullRecord_ filesAdded]; }
@@ -376,10 +377,10 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Bookmarks:\t")];
 		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", [[self bookmarks] componentsJoinedByString:@", "]))];
 	}	
-	if (stringIsNonWhiteSpace([self branch]))
+	if (stringIsNonWhiteSpace([self branchHead]))
 	{
-		[verboseEntry appendAttributedString: categoryAttributedString(@"Branch:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", [self branch]))];
+		[verboseEntry appendAttributedString: categoryAttributedString(@"Branch Head:\t")];
+		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", [self branchHead]))];
 	}
 	if (IsNotEmpty([self parentsOfEntry]))
 	{
@@ -415,6 +416,10 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", nonNil([self author])))];
 	}
 	
+	// branches is always non-null/non-empty
+	[verboseEntry appendAttributedString: categoryAttributedString(@"Branch:\t")];
+	[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", [self branch]))];
+
 	if (IsNotEmpty([self rawDate]))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Date:\t")];
