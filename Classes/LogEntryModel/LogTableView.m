@@ -83,10 +83,10 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 	// Bind the show / hide of the column to the preferences LogEntryTableDisplayChangesetColumn which is bound to a checkbox in the prefs.
 	id defaults = [NSUserDefaultsController sharedUserDefaultsController];
 	NSDictionary* negateValueTransformer = [NSDictionary dictionaryWithObject:NSNegateBooleanTransformerName forKey:@"NSValueTransformerName"];
-	NSTableColumn* col = [self tableColumnWithIdentifier:@"changeset"];
-	[col  bind:@"hidden"  toObject:defaults  withKeyPath:kKeyPathDisplayChangesetColumn  options:negateValueTransformer];
-	col = [self tableColumnWithIdentifier:@"branch"];
-	[col  bind:@"hidden"  toObject:defaults  withKeyPath:kKeyPathDisplayBranchColumn  options:negateValueTransformer];
+	NSTableColumn* changesetCol = [self tableColumnWithIdentifier:@"changeset"];
+	NSTableColumn* branchesCol  = [self tableColumnWithIdentifier:@"branch"];
+	[changesetCol  bind:@"hidden"  toObject:defaults  withKeyPath:kKeyPathDisplayChangesetColumn  options:negateValueTransformer];
+	[branchesCol   bind:@"hidden"  toObject:defaults  withKeyPath:kKeyPathDisplayBranchColumn     options:negateValueTransformer];
 	
 	// Receive a notification when the tag highlight color changes.
 	[defaults  addObserver:self  forKeyPath:kKeyPathTagHighColor		options:NSKeyValueObservingOptionNew  context:NULL];
