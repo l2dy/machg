@@ -15,6 +15,7 @@
 #import "LogRecord.h"
 #import "RadialGradiantBox.h"
 #import "EMKeychainItem.h"
+#import "NSURL+Parameters.h"
 
 @implementation AppController
 @synthesize urlUsesPassword = urlUsesPassword_;
@@ -730,55 +731,29 @@
 // MARK:  Server Path Utilities
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-NSString* manglePasswordAccordingToVisibility(NSString* path, PasswordVisibilityType visibility, BOOL usedKeyChain)
+NSString* FullServerURL(NSString* baseURLString, PasswordVisibilityType visibility)
 {
-	if (visibility == eAllPasswordsAreVisible)
-		return path;
-	if (visibility == eKeyChainPasswordsAreMangled && !usedKeyChain)
-		return path;
-	
-	NSString* pass = [[NSURL URLWithString:path] password];
-	if (!pass)
-		return path;
-	
-	NSMutableString* newString = [NSMutableString stringWithString:path];
-	[newString replaceOccurrencesOfString:pass withString:@"***" options:NSCaseInsensitiveSearch range:NSMakeRange(0, [newString length])];
-	return newString;
-}
+	NSString* password = nil;
+	NSURL* baseURL = [NSURL URLWithString:baseURLString];
+	if (!baseURL || ![baseURL scheme] || ![baseURL host])
+		return baseURLString;
 
-
-NSString* FullServerURLWithPassword(NSString* baseURL, BOOL lookedupPassword, NSString* password, PasswordVisibilityType visibility)
-{
-	if (!baseURL)
-		return nil;
-	
-	NSString* protocolAndName;
-	NSString* server;	
-	NSString* protocol;
-	NSString* rest;
-	NSString* fullURL;
-	
-	if (!lookedupPassword)
-		fullURL = baseURL;
-	else if ([baseURL getCapturesWithRegexAndComponents:@"(.*?)(@.*)"  firstComponent:&protocolAndName  secondComponent:&server])
-		fullURL = fstr(@"%@:%@%@", nonNil(protocolAndName), nonNil(password), nonNil(server));
-	else if ([baseURL getCapturesWithRegexAndComponents:@"(.*?://)(.*)"  firstComponent:&protocol  secondComponent:&rest])
-		fullURL = fstr(@"%@%@%@", nonNil(protocol), nonNil(password), nonNil(rest));
-	else
-	{		
-		NSRunAlertPanel(@"Badly Formed Server URL", fstr(@"The server URL %@ is not of the form protocol://username@server", baseURL), @"OK", nil, nil);
-		return nil;
+	BOOL passwordStoredInKeyChain = [[[AppController sharedAppController] urlUsesPassword] containsObject:baseURLString];
+	BOOL hasPassword = passwordStoredInKeyChain || [baseURL password];
+	if (hasPassword && visibility == eAllPasswordsAreMangled)
+		password = @"***";
+	else if (passwordStoredInKeyChain && visibility == eKeyChainPasswordsAreMangled)
+		password = @"***";
+	else if (passwordStoredInKeyChain)
+	{
+		EMGenericKeychainItem* passwordItem = [EMGenericKeychainItem genericKeychainItemForService:kMacHgApp withUsername:baseURLString];
+		password = nonNil(passwordItem.password);
 	}
-	return manglePasswordAccordingToVisibility(fullURL, visibility, lookedupPassword);
-}
+	else
+		password = [baseURL password];
 
-NSString* FullServerURL(NSString* baseURL, PasswordVisibilityType visibility)
-{
-	BOOL passwordStoredInKeyChain = [[[AppController sharedAppController] urlUsesPassword] containsObject:baseURL];	
-	if (!passwordStoredInKeyChain)
-		return FullServerURLWithPassword(baseURL, NO, nil, visibility);
-	EMGenericKeychainItem* passwordItem = [EMGenericKeychainItem genericKeychainItemForService:kMacHgApp withUsername:baseURL];
-	return FullServerURLWithPassword(baseURL, YES, passwordItem.password, visibility);
+	NSString* fullURLString = [[baseURL URLByReplacingPassword:password] absoluteString];
+	return fullURLString ? fullURLString : baseURLString;
 }
 
 
