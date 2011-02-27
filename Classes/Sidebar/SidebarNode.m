@@ -14,6 +14,12 @@
 #import "AppController.h"
 #import "NSString+SymlinksAndAliases.h"
 
+
+@interface SidebarNode (PrivateAPI)
+- (void) checkReportedRepositoryIdentity:(NSNotification*)notification;
+@end
+
+
 @implementation SidebarNode
 
 @synthesize nodeKind;
@@ -21,6 +27,7 @@
 @synthesize parent;
 @synthesize shortName;
 @synthesize path;
+@synthesize repositoryIdentity;
 @synthesize recentConnections;
 @synthesize icon;
 @synthesize isExpanded;
@@ -42,9 +49,11 @@
 		parent		= nil;
 		shortName	= nil;
 		path		= nil;
+		repositoryIdentity = nil;
 		recentConnections = nil;
 		icon		= nil;
 		isExpanded	= NO;
+		[self observe:kRepositoryIdentityChanged  from:nil  byCalling:@selector(checkReportedRepositoryIdentity:)];
 	}
 	
 	return self;
@@ -144,7 +153,7 @@
 	NSInteger depth = [self nodeDepth];
 	for (NSInteger i = 0; i < depth; i++)
 		[part appendString:@"   "];
-	[part appendFormat:@"<%@{ caption = %@, path = %@ }\n", [self className], shortName, path];
+	[part appendFormat:@"<%@{ caption = %@, path = %@, id = %@ }\n", [self className], shortName, path, nonNil(repositoryIdentity)];
 	for (SidebarNode* node in children)
 		[part appendString:[node description]];
 	if (recentConnections)
@@ -162,12 +171,13 @@
 // Duplicate a tree but don't copy the immutable bits, so the size of the copy is smallish.
 - (SidebarNode*) copyNodeTree
 {
-	SidebarNode* newNode = [[SidebarNode alloc]init];
-	newNode->nodeKind    = nodeKind;
-	newNode->shortName	 = shortName;
-	newNode->path		 = path;
-	newNode->icon        = icon;
-	newNode->isExpanded	 = isExpanded;
+	SidebarNode* newNode		= [[SidebarNode alloc]init];
+	newNode->nodeKind			= nodeKind;
+	newNode->shortName			= shortName;
+	newNode->path				= path;
+	newNode->repositoryIdentity = repositoryIdentity;
+	newNode->icon				= icon;
+	newNode->isExpanded			= isExpanded;
 
 	if (children)
 	{
@@ -228,7 +238,6 @@
 	[coder encodeObject:path forKey:@"path"];
 	[coder encodeObject:recentConnections forKey:@"recentConnections"];
 
-	NSString* repositoryIdentity = [[AppController sharedAppController] repositoryIdentityForPath:path];
 	if (repositoryIdentity)
 		[coder encodeObject:repositoryIdentity forKey:@"repositoryIdentity"];
 }
@@ -243,7 +252,8 @@
 	isExpanded	= [coder decodeBoolForKey:@"nodeIsExpanded"];
 	path		= [coder decodeObjectForKey:@"path"];
 	recentConnections  = [coder decodeObjectForKey:@"recentConnections"];
-	
+	[self observe:kRepositoryIdentityChanged  from:nil  byCalling:@selector(checkReportedRepositoryIdentity:)];
+
 	if ([self isLocalRepositoryRef] && path)
 	{
 		if ([path length] < PATH_MAX)
@@ -261,9 +271,7 @@
 	
 	if ([self isRepositoryRef] && path)
 	{
-		NSString* repositoryIdentity = [coder decodeObjectForKey:@"repositoryIdentity"];
-		if (repositoryIdentity)
-			[[AppController sharedAppController]  setRepositoryIdentity:repositoryIdentity  ForPath:path];
+		repositoryIdentity = [coder decodeObjectForKey:@"repositoryIdentity"];
 		[[AppController sharedAppController] computeRepositoryIdentityForPath:path];
 	}
 
@@ -290,6 +298,14 @@
 // MARK: Root Changeset
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+- (void) checkReportedRepositoryIdentity:(NSNotification*)notification
+{
+	NSDictionary* userInfo = [notification userInfo];
+	NSString* sentPath = [userInfo objectForKey:@"path"];
+	if ([sentPath isEqualTo:path])
+		repositoryIdentity = [userInfo objectForKey:@"repositoryIdentity"];
+}
+
 - (void) addRecentConnection:(SidebarNode*)mark
 {
 	if (!recentConnections)
@@ -304,8 +320,7 @@
 - (BOOL) isVirginRepository
 {
 	static NSString* virginRepository = @"000000000000";
-	NSString* repositoryIdentity  = [self repositoryIdentity];
-	return [virginRepository isEqualToString:repositoryIdentity];
+	return [repositoryIdentity isEqualToString:virginRepository];
 }
 
 - (BOOL) isCompatibleToNodeInArray:(NSArray*)nodes
@@ -332,8 +347,6 @@
 		return YES;
 	return [repositoryIdentitySelf isEqualToString:repositoryIdentityOther];
 }
-
-- (NSString*) repositoryIdentity	{ return [[AppController sharedAppController] repositoryIdentityForPath:path]; }
 
 - (void) pruneRecentConnectionsOf:(NSString*)deadPath
 {

@@ -17,13 +17,14 @@
 	IBOutlet NSButton*							okButton;
 	IBOutlet NSButton*							showPasswordButton;
 	IBOutlet NSButton*							testConnectionButton;
-	IBOutlet ConnectionValidationController*	theConnectionValidationController;
 	IBOutlet NSTextField*						theTitleText;
 	IBOutlet NSTextField*						theBaseServerTextField;
 	IBOutlet NSTextField*						theFullServerTextField;
 	IBOutlet NSTextField*						theUsernameTextField;
 	IBOutlet NSTextField*						theSecurePasswordTextField;
 	IBOutlet NSTextField*						theUnsecurePasswordTextField;
+	IBOutlet ConnectionValidationController*	theConnectionValidationController;
+	IBOutlet DisclosureBoxController*			disclosureController;		// The disclosure box for the advanced options
 
 	
 	MacHgDocument*		myDocument;

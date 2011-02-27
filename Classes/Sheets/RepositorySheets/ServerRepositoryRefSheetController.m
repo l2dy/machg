@@ -17,6 +17,7 @@
 #import "SingleTimedQueue.h"
 #import "ShellHere.h"
 #import "NSURL+Parameters.h"
+#import "DisclosureBoxController.h"
 
 @interface ServerRepositoryRefSheetController (PrivateAPI)
 - (void) passwordChanged;
@@ -172,6 +173,7 @@
 - (void) openSheetForNewRepositoryRef
 {
 	[self clearSheetValues];
+	[disclosureController setToOpenState:NO withAnimation:NO];
 	[self validateButtons:self];
 	
 	nodeToConfigure = nil;
@@ -187,6 +189,7 @@
 - (void) openSheetForAddAndClone
 {
 	[self clearSheetValues];
+	[disclosureController setToOpenState:NO withAnimation:NO];
 	[self validateButtons:self];
 	
 	nodeToConfigure = nil;
@@ -210,6 +213,7 @@
 
 	nodeToConfigure = node;
 	[self clearSheetValues];
+	[disclosureController setToOpenState:NO withAnimation:NO];
 	
 	if ([node isServerRepositoryRef])
 	{

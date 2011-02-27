@@ -87,7 +87,6 @@
 	self = [super init];
 	applicationHasStarted = NO;
 	theTaskExecutions = [TaskExecutions theInstance];
-	repositoryIdentityForPath_	        = [[NSMutableDictionary alloc]init];
 	computingRepositoryIdentityForPath_ = [[NSMutableDictionary alloc]init];
 	dirtyRepositoryIdentityForPath_     = [[NSMutableDictionary alloc]init];
 
@@ -640,9 +639,6 @@
 // MARK: Changeset handling
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (NSString*) repositoryIdentityForPath:(NSString*)path								{ return DynamicCast(NSString, [repositoryIdentityForPath_ synchronizedObjectForKey:path]); }
-- (void)	  setRepositoryIdentity:(NSString*)changeset ForPath:(NSString*)path	{ [repositoryIdentityForPath_ synchronizedSetObject:changeset forKey:path]; }
-
 - (void) checkRepositoryIdentities:(NSTimer*)theTimer
 {
 	NSArray* allDirtyRepos = [dirtyRepositoryIdentityForPath_ synchronizedAllKeys];
@@ -696,16 +692,16 @@
 	
 		if (![theTask isRunning] && results.result == 0 && IsEmpty(results.errStr) && IsNotEmpty(results.outStr))
 		{
-			NSString* changesetIdentity = trimString(results.outStr);
-			NSString* oldValue = [repositoryIdentityForPath_ synchronizedObjectForKey:path];
-			[repositoryIdentityForPath_ synchronizedSetObject:changesetIdentity forKey:path];
-			if ([changesetIdentity isNotEqualTo:oldValue])
-			{
-				NSDictionary* info = [NSDictionary dictionaryWithObject:path forKey:@"path"];
-				[self postNotificationWithName:kRepositoryIdentityChanged userInfo:info];
-			}
+			// We look for the 12 digit hashKey which is optionally seperated from other bits by whitespace.
+			static NSString* pickOutHashKeyRegex = @"^(.*\\s+)?([0-9abcdefABCDEF]{12})(\\s+.*)?$";
+			NSString* repositoryIdentity;
+			BOOL matched = [results.outStr getCapturesWithRegexAndComponents:pickOutHashKeyRegex firstComponent:nil secondComponent:&repositoryIdentity thirdComponent:nil];
+			if (!matched)
+				return;
+			NSDictionary* info = [NSDictionary dictionaryWithObjectsAndKeys:path, @"path", repositoryIdentity, @"repositoryIdentity", nil];
+			[self postNotificationWithName:kRepositoryIdentityChanged userInfo:info];
 			[dirtyRepositoryIdentityForPath_ synchronizedRemoveObjectForKey:path];
-			//DebugLog(@"Root changeset of %@ is %@ on attempt %d", path, changesetIdentity, attempts);
+			//DebugLog(@"Root changeset of %@ is %@ on attempt %d", path, repositoryIdentity, attempts);
 			return;
 		}
 
