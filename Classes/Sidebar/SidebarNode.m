@@ -24,7 +24,6 @@
 @synthesize recentConnections;
 @synthesize icon;
 @synthesize isExpanded;
-@synthesize hasPassword;
 
 
 
@@ -46,7 +45,6 @@
 		recentConnections = nil;
 		icon		= nil;
 		isExpanded	= NO;
-		hasPassword = NO;
 	}
 	
 	return self;
@@ -170,7 +168,6 @@
 	newNode->path		 = path;
 	newNode->icon        = icon;
 	newNode->isExpanded	 = isExpanded;
-	newNode->hasPassword = hasPassword;
 
 	if (children)
 	{
@@ -197,7 +194,7 @@
 
 - (NSString*) fullURLPath
 {
-	if (!hasPassword || ![self isServerRepositoryRef])
+	if (![self isServerRepositoryRef])
 		return path;	
 	return FullServerURL(path, eAllPasswordsAreVisible);
 }
@@ -228,7 +225,6 @@
 	[coder encodeObject:children forKey:@"children"];
 	[coder encodeObject:shortName forKey:@"caption"];
 	[coder encodeBool:isExpanded forKey:@"nodeIsExpanded"];
-	[coder encodeBool:hasPassword forKey:@"nodeHasPassword"];
 	[coder encodeObject:path forKey:@"path"];
 	[coder encodeObject:recentConnections forKey:@"recentConnections"];
 
@@ -245,7 +241,6 @@
 	children	= [coder decodeObjectForKey:@"children"];
 	shortName	= [coder decodeObjectForKey:@"caption"];
 	isExpanded	= [coder decodeBoolForKey:@"nodeIsExpanded"];
-	hasPassword	= [coder decodeBoolForKey:@"nodeHasPassword"];
 	path		= [coder decodeObjectForKey:@"path"];
 	recentConnections  = [coder decodeObjectForKey:@"recentConnections"];
 	

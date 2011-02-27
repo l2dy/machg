@@ -299,14 +299,12 @@
 	{
 		[theSidebar removeConnectionsFor:[nodeToConfigure path]];
 		[nodeToConfigure setPath:newPath];
-		[nodeToConfigure setHasPassword:IsNotEmpty(password_)];
 		[nodeToConfigure setShortName:newName];
 		[nodeToConfigure refreshNodeIcon];
 	}
 	else
 	{
 		SidebarNode* newNode = [SidebarNode nodeWithCaption:newName  forServerPath:newPath];
-		[newNode setHasPassword:IsNotEmpty(password_)];
 		[newNode refreshNodeIcon];
 		[[myDocument sidebar] addSidebarNode:newNode];
 		[theSidebar selectNode:newNode];

@@ -36,15 +36,11 @@ typedef enum
 										// if it's a server or /Users/jason/Projects/MyProject if it's a local file path.
 	NSMutableArray* recentConnections;	// Internal list of a number of other repository references from which this server has
 										// pushed / pulled data.
-	
-	// Further if this node is a server repository reference then the following are relevant
-	BOOL			hasPassword;		// True if this server repository reference has a password stored in the keychain
 }
 
 @property (assign) SidebarNodeKind nodeKind;
 @property (nonatomic, retain) NSMutableArray* children;
 @property (assign, readwrite) BOOL isExpanded;
-@property (assign, readwrite) BOOL hasPassword;
 @property (assign, readwrite) SidebarNode* parent;
 @property (assign, readonly)  NSString* shortName;
 @property (readwrite, assign) NSString* path;
