@@ -331,12 +331,13 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 	
 	static NSDateFormatter* dateFormatter = nil;
 	if (!dateFormatter)
-	{
-		dateFormatter = [[NSDateFormatter alloc] init];
-		[dateFormatter setDateStyle:NSDateFormatterLongStyle];
-		[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
-		[dateFormatter setDoesRelativeDateFormatting:YES];
-	}
+		@synchronized(NSApp)
+		{
+			dateFormatter = [[NSDateFormatter alloc] init];
+			[dateFormatter setDateStyle:NSDateFormatterLongStyle];
+			[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+			[dateFormatter setDoesRelativeDateFormatting:YES];
+		}
 	
 	return [dateFormatter stringFromDate:date_];
 }
