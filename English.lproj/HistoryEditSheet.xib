@@ -11,7 +11,7 @@
 			<string key="com.brandonwalkin.BWToolkit">1.2.2</string>
 		</dictionary>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-			<integer value="2"/>
+			<integer value="38"/>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.brandonwalkin.BWToolkit</string>
@@ -74,7 +74,7 @@
 															<object class="_NSCornerView" key="NSCornerView" id="88631559">
 																<reference key="NSNextResponder" ref="919231178"/>
 																<int key="NSvFlags">-2147483392</int>
-																<string key="NSFrame">{{-26, 0}, {16, 17}}</string>
+																<string key="NSFrame">{{777, 0}, {16, 17}}</string>
 																<reference key="NSSuperview" ref="919231178"/>
 															</object>
 															<array class="NSMutableArray" key="NSTableColumns">
@@ -229,7 +229,7 @@
 																</object>
 																<object class="NSTableColumn" id="52768326">
 																	<string key="NSIdentifier">labelsAndShortComment</string>
-																	<double key="NSWidth">391</double>
+																	<double key="NSWidth">312</double>
 																	<double key="NSMinWidth">10</double>
 																	<double key="NSMaxWidth">3.4028230607370965e+38</double>
 																	<object class="NSTableHeaderCell" key="NSHeaderCell">
@@ -250,6 +250,33 @@
 																		<reference key="NSTextColor" ref="280240888"/>
 																	</object>
 																	<int key="NSResizingMask">3</int>
+																	<bool key="NSIsResizeable">YES</bool>
+																	<bool key="NSIsEditable">YES</bool>
+																	<reference key="NSTableView" ref="140976401"/>
+																</object>
+																<object class="NSTableColumn" id="851042783">
+																	<string key="NSIdentifier">branch</string>
+																	<double key="NSWidth">76</double>
+																	<double key="NSMinWidth">10</double>
+																	<double key="NSMaxWidth">3.4028234663852886e+38</double>
+																	<object class="NSTableHeaderCell" key="NSHeaderCell">
+																		<int key="NSCellFlags">75628096</int>
+																		<int key="NSCellFlags2">2048</int>
+																		<string key="NSContents">branch</string>
+																		<reference key="NSSupport" ref="26"/>
+																		<reference key="NSBackgroundColor" ref="686235400"/>
+																		<reference key="NSTextColor" ref="431884351"/>
+																	</object>
+																	<object class="NSTextFieldCell" key="NSDataCell" id="795379050">
+																		<int key="NSCellFlags">337772096</int>
+																		<int key="NSCellFlags2">133120</int>
+																		<string key="NSContents">Text Cell</string>
+																		<reference key="NSSupport" ref="26"/>
+																		<reference key="NSControlView" ref="140976401"/>
+																		<reference key="NSBackgroundColor" ref="971479045"/>
+																		<reference key="NSTextColor" ref="280240888"/>
+																	</object>
+																	<int key="NSResizingMask">2</int>
 																	<bool key="NSIsResizeable">YES</bool>
 																	<bool key="NSIsEditable">YES</bool>
 																	<reference key="NSTableView" ref="140976401"/>
@@ -319,7 +346,7 @@
 												<object class="NSScroller" id="391819972">
 													<reference key="NSNextResponder" ref="919231178"/>
 													<int key="NSvFlags">-2147483392</int>
-													<string key="NSFrame">{{777, 17}, {15, 164}}</string>
+													<string key="NSFrame">{{777, 17}, {15, 308}}</string>
 													<reference key="NSSuperview" ref="919231178"/>
 													<reference key="NSTarget" ref="919231178"/>
 													<string key="NSAction">_doScroller:</string>
@@ -328,12 +355,12 @@
 												<object class="NSScroller" id="461278233">
 													<reference key="NSNextResponder" ref="919231178"/>
 													<int key="NSvFlags">-2147483392</int>
-													<string key="NSFrame">{{1, 181}, {791, 15}}</string>
+													<string key="NSFrame">{{1, 325}, {791, 15}}</string>
 													<reference key="NSSuperview" ref="919231178"/>
 													<int key="NSsFlags">1</int>
 													<reference key="NSTarget" ref="919231178"/>
 													<string key="NSAction">_doScroller:</string>
-													<double key="NSPercent">0.99496853351593018</double>
+													<double key="NSPercent">0.93498820066452026</double>
 												</object>
 												<object class="NSClipView" id="311060080">
 													<reference key="NSNextResponder" ref="919231178"/>
@@ -1477,6 +1504,7 @@ ZHJvcCA9IHJlbW92ZSBjb21taXQgZnJvbSBoaXN0b3J5A</string>
 							<reference ref="750783134"/>
 							<reference ref="961363893"/>
 							<reference ref="420789055"/>
+							<reference ref="851042783"/>
 						</array>
 						<reference key="parent" ref="919231178"/>
 					</object>
@@ -1921,6 +1949,19 @@ ZHJvcCA9IHJlbW92ZSBjb21taXQgZnJvbSBoaXN0b3J5A</string>
 						<reference key="object" ref="543578851"/>
 						<reference key="parent" ref="719076253"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">222</int>
+						<reference key="object" ref="851042783"/>
+						<array class="NSMutableArray" key="children">
+							<reference ref="795379050"/>
+						</array>
+						<reference key="parent" ref="140976401"/>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">223</int>
+						<reference key="object" ref="795379050"/>
+						<reference key="parent" ref="851042783"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -2006,6 +2047,7 @@ ZHJvcCA9IHJlbW92ZSBjb21taXQgZnJvbSBoaXN0b3J5A</string>
 				</object>
 				<string key="216.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="217.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="223.CustomClassName">LogTableTextFieldCell</string>
 				<string key="29.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="30.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="33.IBPluginDependency">com.brandonwalkin.BWToolkit</string>
@@ -2042,7 +2084,7 @@ ZHJvcCA9IHJlbW92ZSBjb21taXQgZnJvbSBoaXN0b3J5A</string>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">217</int>
+			<int key="maxID">223</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2136,11 +2178,15 @@ ZHJvcCA9IHJlbW92ZSBjb21taXQgZnJvbSBoaXN0b3J5A</string>
 					<reference key="sourceIdentifier" ref="283181310"/>
 				</object>
 				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
+					<string key="className">NSApplication</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="235826209">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/General/Common.h</string>
 					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<reference key="sourceIdentifier" ref="235826209"/>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">NSTableView</string>
@@ -2550,6 +2596,55 @@ ZHJvcCA9IHJlbW92ZSBjb21taXQgZnJvbSBoaXN0b3J5A</string>
 					<string key="className">NSObject</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">ImageKit.framework/Headers/IKImageBrowserView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">ImageKit.framework/Headers/IKSaveOptions.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">ImageKit.framework/Headers/ImageKitDeprecated.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">PDFKit.framework/Headers/PDFDocument.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">PDFKit.framework/Headers/PDFView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">QuartzComposer.framework/Headers/QCCompositionParameterView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">QuartzComposer.framework/Headers/QCCompositionPickerView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">QuartzCore.framework/Headers/CAAnimation.h</string>
 					</object>
 				</object>
@@ -2565,6 +2660,20 @@ ZHJvcCA9IHJlbW92ZSBjb21taXQgZnJvbSBoaXN0b3J5A</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">QuartzCore.framework/Headers/CIImageProvider.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">QuartzFilters.framework/Headers/QuartzFilterManager.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">QuickLookUI.framework/Headers/QLPreviewPanel.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
