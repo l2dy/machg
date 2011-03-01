@@ -81,14 +81,28 @@
 	
 	[logTableView resetTable:self];
 	[NSApp beginSheet:theBackoutSheet  modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
-	[logTableView scrollToRevision:revision];
+	[logTableView selectAndScrollToRevision:revision];
 	[self validate:self];
 }
 
 
 - (IBAction) openBackoutSheetWithSelectedRevision:(id)sender
 {
-	[self openBackoutSheetWithRevision:[myDocument getHGParent1Revision]];
+	NSArray* revs = [[[myDocument theHistoryView] logTableView] chosenRevisions];
+	if ([revs count] > 0)
+	{
+		NSInteger minRev = numberAsInt([revs objectAtIndex:0]);
+		NSInteger maxRev = numberAsInt([revs objectAtIndex:0]);
+		for (NSNumber* revision in revs)
+		{
+			NSInteger revInt = numberAsInt(revision);
+			minRev = MIN(revInt, minRev);
+			maxRev = MAX(revInt, maxRev);
+		}
+		[self openBackoutSheetWithRevision:intAsNumber(minRev)];
+	}
+	else
+		[self openBackoutSheetWithRevision:[myDocument getHGParent1Revision]];
 }
 
 
