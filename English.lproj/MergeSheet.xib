@@ -11,7 +11,7 @@
 			<string key="com.brandonwalkin.BWToolkit">1.2.2</string>
 		</dictionary>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-			<integer value="174"/>
+			<integer value="149"/>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.brandonwalkin.BWToolkit</string>
@@ -662,7 +662,7 @@
 						</object>
 						<object class="NSButton" id="235547652">
 							<reference key="NSNextResponder" ref="175589374"/>
-							<int key="NSvFlags">289</int>
+							<int key="NSvFlags">292</int>
 							<string key="NSFrame">{{18, 111}, {104, 18}}</string>
 							<reference key="NSSuperview" ref="175589374"/>
 							<bool key="NSEnabled">YES</bool>
