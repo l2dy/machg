@@ -140,7 +140,7 @@ typedef enum
 	eOpenLastDocument	= 0,
 	eOpenNewDocument	= 1,
 	eDontOpenAnything	= 2
-} OnStartupOpenWhatOption;
+} OnActivationOpenWhatOption;
 
 typedef enum
 {
@@ -423,7 +423,7 @@ extern NSString* const MHGLogEntryTableParentHighlightColor;
 extern NSString* const MHGLogEntryTableTagHighlightColor;
 extern NSString* const MHGLoggingLevelForHGCommands;
 extern NSString* const MHGMacHgLogFileLocation;
-extern NSString* const MHGOnStartupOpen;
+extern NSString* const MHGOnActivationOpen;
 extern NSString* const MHGRequireVerifiedServerCertificates;
 extern NSString* const MHGRevisionSortOrder;
 extern NSString* const MHGShowAddedFilesInBrowser;
@@ -518,7 +518,7 @@ AfterMergeDoOption				AfterMergeDoFromDefaults();
 AfterMergeSwitchToOption		AfterMergeSwitchToFromDefaults();
 RevisionSortOrderOption			RevisionSortOrderFromDefaults();
 HandleOrigFilesOption			HandleGeneratedOrigFilesFromDefaults();
-OnStartupOpenWhatOption			OnStartupOpenFromDefaults();
+OnActivationOpenWhatOption		OnActivationOpenFromDefaults();
 ToolForDiffing					UseWhichToolForDiffingFromDefaults();
 
 BrowserDoubleClickAction		browserBehaviourDoubleClick();

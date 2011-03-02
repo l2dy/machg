@@ -439,11 +439,8 @@
 // file instead See http://cocoawithlove.com/2008/05/open-previous-document-on-application.html
 - (BOOL) applicationShouldOpenUntitledFile:(NSApplication*)sender
 {
-	static BOOL startingUp = YES;
-
-	if (startingUp && OnStartupOpenFromDefaults() == eOpenLastDocument)
+	if (OnActivationOpenFromDefaults() == eOpenLastDocument)
 	{
-		startingUp = NO;
 		// Reopen last document
 		NSDocumentController* docController = [NSDocumentController sharedDocumentController];
 		if ([[docController recentDocumentURLs] count] > 0)
@@ -472,12 +469,10 @@
 		}
 		return YES;
 	}
-
-	startingUp = NO;
 	
-	if (OnStartupOpenFromDefaults() == eDontOpenAnything)
+	if (OnActivationOpenFromDefaults() == eDontOpenAnything)
 		return NO;
-	if (OnStartupOpenFromDefaults() == eOpenNewDocument)
+	if (OnActivationOpenFromDefaults() == eOpenNewDocument)
 		return YES;
 
 	return YES;			// If we are not starting up then the user can open an untitled document

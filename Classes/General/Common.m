@@ -116,7 +116,7 @@ NSString* const MHGLogEntryTableParentHighlightColor	= @"LogEntryTableParentHigh
 NSString* const MHGLogEntryTableTagHighlightColor		= @"LogEntryTableTagHighlightColor";
 NSString* const MHGLoggingLevelForHGCommands			= @"LoggingLevelForHGCommands";
 NSString* const MHGMacHgLogFileLocation					= @"MacHgLogFileLocation";
-NSString* const MHGOnStartupOpen						= @"OnApplicationStartupOpenWhat";
+NSString* const MHGOnActivationOpen						= @"OnApplicationActivationOpenWhat";
 NSString* const MHGRequireVerifiedServerCertificates	= @"RequireVerifiedServerCertificates";
 NSString* const MHGRevisionSortOrder					= @"RevisionSortOrder";
 NSString* const MHGShowAddedFilesInBrowser				= @"ShowAddedFilesInBrowser";
@@ -225,7 +225,7 @@ AfterMergeDoOption			AfterMergeDoFromDefaults()				{ return enumFromDefaultsForK
 AfterMergeSwitchToOption	AfterMergeSwitchToFromDefaults()		{ return enumFromDefaultsForKey(MHGAfterMergeSwitchTo); }
 RevisionSortOrderOption		RevisionSortOrderFromDefaults()			{ return enumFromDefaultsForKey(MHGRevisionSortOrder); }
 HandleOrigFilesOption		HandleGeneratedOrigFilesFromDefaults()	{ return enumFromDefaultsForKey(MHGHandleGeneratedOrigFiles); }
-OnStartupOpenWhatOption		OnStartupOpenFromDefaults()				{ return enumFromDefaultsForKey(MHGOnStartupOpen); }
+OnActivationOpenWhatOption	OnActivationOpenFromDefaults()			{ return enumFromDefaultsForKey(MHGOnActivationOpen); }
 ToolForDiffing				UseWhichToolForDiffingFromDefaults()	{ return enumFromDefaultsForKey(MHGUseWhichToolForDiffing); }
 
 
