@@ -34,6 +34,11 @@
 	NOasNumber  = [NSNumber numberWithBool:NO];
 	YESasNumber = [NSNumber numberWithBool:YES];
 	SlotNumber  = [NSNumber numberWithInteger:(NSNotFound -1)];
+	FullDateFormatter = [[NSDateFormatter alloc] init];
+	[FullDateFormatter setDateStyle:NSDateFormatterLongStyle];
+	[FullDateFormatter setTimeStyle:NSDateFormatterShortStyle];
+	[FullDateFormatter setDoesRelativeDateFormatting:YES];
+	
 
 	setupGlobalsForLogEntryPartsAndTemplate();
 	setupGlobalsForLogRecordPartsAndTemplate();

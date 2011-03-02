@@ -540,6 +540,7 @@ extern NSMutableDictionary* changesetHashToLogRecord;	// Global dictionary of Lo
 extern NSNumber*		NOasNumber;
 extern NSNumber*		YESasNumber;
 extern NSNumber*		SlotNumber;
+extern NSDateFormatter*	FullDateFormatter;
 
 
 // Font Attributes

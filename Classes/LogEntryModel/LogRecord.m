@@ -328,18 +328,8 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 {
 	if (self == [LogRecord unfinishedRecord])
 		return @"now";
-	
-	static NSDateFormatter* dateFormatter = nil;
-	if (!dateFormatter)
-		@synchronized(NSApp)
-		{
-			dateFormatter = [[NSDateFormatter alloc] init];
-			[dateFormatter setDateStyle:NSDateFormatterLongStyle];
-			[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
-			[dateFormatter setDoesRelativeDateFormatting:YES];
-		}
-	
-	return [dateFormatter stringFromDate:date_];
+
+	return [FullDateFormatter stringFromDate:date_];
 }
 
 - (NSDate*) rawDate { return date_; }

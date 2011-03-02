@@ -499,6 +499,7 @@ NSArray* getListOfFilePathsFromOpenPanel(NSString* startingPath)
 NSNumber*		NOasNumber  = nil;
 NSNumber*		YESasNumber = nil;
 NSNumber*		SlotNumber  = nil;
+NSDateFormatter* FullDateFormatter = nil;
 
 // Font attributes
 NSDictionary*	boldSystemFontAttributes		      = nil;
