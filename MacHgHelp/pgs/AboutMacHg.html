@@ -39,32 +39,79 @@
    </div>
 </div>
 
-<p>MacHg is a front end for the revision control system Mercurial. This means you manage a collection of files in a nice graphical way, adding things to the collection, saving a snapshot of the collection, restoring the collection to an earlier state and in general working with the files. Revision control systems have existed for a long time and Mercurial is among one of the newer, and better systems. <a href="http://mercurial.selenic.com/">Mercurial</a> is a <a href="http://en.wikipedia.org/wiki/Distributed_revision_control">distributed version control system</a>. For more on Mercurial see: <a href="http://hgbook.red-bean.com/read/how-did-we-get-here.html">Definitive Guide : revision control primer</a>. Other modern distributed revision control systems are <a href="http://git-scm.com/">git</a> and <a href="http://bazaar.canonical.com/en/">bazaar</a>.</p>
+<p>MacHg is a free open source OSX GUI for the distributed revision control system <a href="http://mercurial.selenic.com/">Mercurial</a>. This allows you in a nice graphical way to manage a collection of files, to add things to the collection, to save a snapshot of the collection, to restore the collection to an earlier state and in general to work with the files. In my humble opinion it's the best Mercurial client for OSX.</p>
+
 
 <h2>Some of the Features of MacHg</h2>
 <ul>
    <li>Document based structure with multiple repositories per document</li>
-   <li>View incoming and outgoing changes at a glance between compatible repositories</li>
-   <li>Auto status refreshing when files change in the background</li>
+   <li>View incoming and outgoing at a glance between compatible repositories</li>
+   <li>Auto refreshes the status of tracked files and / or repository changes as they occur</li>
    <li>Incremental loading of history (for efficiency)</li>
+   <li>Works with large repositories (ie for example can easily load and work with the Mozilla repository which is 3.35Gb)</li>
    <li>Fully compatible with command line Mercurial (You can make changes on the command line and they are reflected in MacHg.)</li>
-   <li>Fully multi-threaded using grand central dispatch and threading goodness</li>
+   <li>Includes a built in copy of Mercurial so there is no possibility of incompatibility</li>
+   <li>Fully multi-threaded using Grand Central Dispatch and threading goodness</li>
    <li>File browser view to work with files</li>
    <li>History view to explore the changeset history</li>
-   <li>Integrated editing and seeking of labels (tags, branches, bookmarks)</li>
+   <li>Stable history graph layout algorithm</li>
    <li>Differences view to explore the historical changes between different revisions</li>
    <li>Interacting with other repositories: pull, push, incoming, outgoing, clone, etc</li>
-   <li>Contextual menus throughout</li>
+   <li>Contextual menus, shortcuts, drag and drop in many places</li>
    <li>Diff multiple files at once</li>
-   <li>Renaming, merging, updating, reverting, adding files, removing files, importing and exporting of patches</li>
-   <li>Interface to history editing: collapse, histedit, rebase, strip</li>
+   <li>QuickLook is supported in all main views</li>
+   <li>Renaming, merging, updating, reverting, adding files, removing files, etc</li>
+   <li>Add and remove local tags, global tags, bookmarks, and branches</li>
+   <li>Interface to history editing: collapse, histedit, rebase, strip, amend</li>
+   <li>Importing and exporting of patches</li>
+   <li>Works with external diff tools: AraxisMerge, kdiff3, DiffMerge, Changes, etc</li>
+   <li>Uses the Sparkle framework for "in application" updates</li>
 </ul>
 
-<p>MacHg includes a complete duplicate of the source files of <a href="http://mercurial.selenic.com/">Mercurial</a>. By doing this, MacHg can ensure any changes you make to the Mercurial environment on your local machine will not affect the functioning of MacHg. </p>
-<h2>Scope</h2>
 
-<p>You should be able to accomplish almost all of your normal daily Mercurial tasks with MacHg. Currently however, although MacHg is compatible with Mercurial queues, you can't directly manage queues from inside MacHg. However, I have plans to rectify this. Additionally, an extra view is planned where one can interactively explore the annotations of a particular file stepping forward or backward in history.</p>
+<p><strong>Revision control</strong>: <a href="http://mercurial.selenic.com/">Mercurial</a> is a distributed version control system. Distributed Revision Control Systems (DVCS's) are a relatively new development in the overall class of revision control systems, and Mercurial is one of the leading systems in this new class of revision control systems. For more on Mercurial see: <a href="http://hgbook.red-bean.com/read/how-did-we-get-here.html">Definitive Guide : revision control primer</a>. Other modern distributed revision control systems are <a href="http://git-scm.com/">git</a> and <a href="http://bazaar.canonical.com/en/">bazaar</a>. You can obtain <a href="http://jasonfharris.com/machg/support/">commercial support</a> for Mercurial and MacHg if needed.</p>
 
-<p><em><strong>Jason F Harris</strong></em> © 2010</p>
+<p><strong>Document based structure</strong>: MacHg uses the standard left sidebar model you see in Mail, or iCal, or other Macintosh applications. This allows you to collect and group repositories and servers into the structure you want.</p>
+
+<p><strong>Status at a glance</strong>: When you select a repository all related repositories and servers will report the number of incoming and outgoing changes relative to the selected repository. This allows you at a glance to see the number of changes this repository has with respect to the other repositories.</p>
+
+<p><strong>Auto refreshes</strong>: When working with a repository any changes to the files in the repository or to the repository itself are automatically detected using apples FSFileEvents. This means the status of the repository and its tracked files when they change on your computer are automatically reflected inside MacHg.</p>
+
+<p><strong>Incremental loading of history</strong>: MacHg will incrementally load the changeset history in chunks. Thus updates are super speedy since they don't need to pull in the entire changeset history in a single hit. (It's of course more complicated internally to manage this incremental loading, which is why some lesser clients are brought to their knees when they load the entire history at once. Not so with MacHg.)</p>
+
+<p><strong>Industrial Strength</strong>: Because MacHg was written from the ground up to work in an incremental way and coded using multithreaded programming to take advantage of the full power of your Macintosh, MacHg can easily work with large repositories. For instance MacHg can easily work with the Mozilla repository which is around 3.35 Gb in size.</p>
+
+<p><strong>Command Line Compatible</strong>: MacHg is fully compatible with the use of Mercurial from the command line. Any changes you make to the repository are reflected inside MacHg due to the auto-refreshing of detected changes.</p>
+
+<p><strong>Mercurial Included</strong>: MacHg includes a full and functioning copy of Mercurial built into the application. This means you don't need to install the command line version at all. Just install MacHg by drag and drop anywhere you want and you are good to go. Moreover, if you install a different version of Mercurial on your machine it will in no way conflict with the version of Mercurial included with MacHg.</p>
+
+<p><strong>Multithreading Goodness</strong>: MacHg was written from the ground up using Apple's Grand Central Dispatch technology. This means MacHg can make use of all the cores of the processors in your machine in an efficient way. Importantly, this also means that the UI of MacHg will be fast and responsive.</p>
+
+<p><strong>Browser View</strong>: The file view interface of MacHg uses a "browser" approach just like the OSX finder. In the browser view you can see at a glance the "stacked" status of the enclosed items so you can tell what type of changes have occurred within the sub folders. Moreover you can "drill down" just like in the finder to view changes in sub folders with ease.</p>
+
+<p><strong>History View</strong>: You can examine the log or history of the changesets in the repository through the History View and from here use execute specific operations on changesets of your choosing. The History View provides a "stable" graph as you scroll through the changesets so its easy to track merges and branchings. You can easily examine the details of each changeset including author, date, full commit message, labels (if any), and modified files. You can easily diff all (or a selected subset) of the files in a changeset. You can narrow down the number of changesets displayed by searching on keywords. You can in short interact fully with the history of the repository.</p>
+
+<p><strong>Differences View</strong>: You can examine the differences between two chosen revisions easily through the Differences View. Often after a sequence of commits, a group of files might change in a variety of ways and its important to be able to see a collected view of the overall net changes from this sequence of changesets. The Differences View provides these changes through a virtual browser where you can diff or interact with the selected files you want.</p>
+
+<p><strong>Connect</strong>: You can of course interact with other repositories by pushing, pulling, cloning, or viewing incoming or outgoing changes to other repositories. Each of these connectivity functions brings up a tailored sheet where the available destinations are automatically populated by compatible destinations.</p>
+
+<p><strong>Full Interface</strong>: In MacHg there are multiple ways to interact with your repositories and files including: menu items, contextual menu items, drag and drop, shortcuts, and toolbar items. Often these bring up tailored sheets or directly execute the requested action. In fact MacHg has tailored interfaces for: committing, pushing, pulling, incoming, outgoing, cloning, annotating, renaming, merging, updating, reverting, adding files, removing files, exporting patches, importing patches, adding repositories, initializing repositories, and much more.</p>
+
+<p><strong>QuickLook</strong>: MacHg supports quick look in all the main views. In the History View and differences view you can examine snapshots of past revisions.</p>
+
+<p><strong>Labeling</strong>: MacHg provides an interface to global tags, local tags, bookmarks, and branches. In many appropriate places inside MacHg there are drop down menus where you can choose to go directly to a named revision. Moreover in the History View you can interact with the Labels subview to move labels around, add labels, or delete labels.</p>
+
+<p><strong>Rewrite History</strong>: With history editing you can clean up sequences of changesets, grouping and rearranging the related parts into an order which makes coherent sense after the fact. (Since lets face, it development is an often organic process and its nice to prune dead ideas at some stages.) MacHg provides an intuitive interface to Mercurial's history editing extensions. You can collapse, rebase, strip, or reorder and rearrange* changesets (*via histedit). </p>
+
+<p><strong>Patches</strong>: WIth MacHg you can easily create sequence of patches to share with other people or import a sequence of patches into you current repository. Sometimes this is quite useful to transplant changesets between one repository and another, or to send changes to colleagues.</p>
+
+<p><strong>Diffing</strong>: Viewing the differences in files is a cornerstone of revision control systems and in MacHg you can do it with ease. By default MacHg uses Apple's own FileMerge to view the diffs but you can easily change this diffing tool to be any of the other popular difference viewing tools such as AraxisMerge, kdiff3, DiffMerge, Changes, Kaleidoscope, etc. Moreover you can view all the differences in a changeset by just double clicking the changeset or directory. (But of course its configurable in the preferences.)</p>
+
+<p><strong>Sparkle</strong>: MacHg stays up to date by using the sparkle framework to automatically check for updates and, if you choose, update itself in a clean and simple manner.</p>
+<h2>Roadmap</h2>
+
+<p>MacHg is currently very stable and many users worldwide are currently using MacHg in a production setting to fulfill their needs of a GUI interface to Mercurial on OSX. However, there are currently several future additions planned for MacHg. A rough roadmap of <a href="http://jasonfharris.com/machg/roadmap/">additions</a> is outlined here.</p>
+
+<p><em><strong>Jason F Harris</strong></em> ©2010, ©2011</p>
 </body>
 </html>
