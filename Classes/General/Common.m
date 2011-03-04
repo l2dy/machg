@@ -515,6 +515,7 @@ NSDictionary*	smallSystemFontAttributes             = nil;
 NSDictionary*	smallFixedWidthUserFontAttributes     = nil;
 NSDictionary*	smallGraySystemFontAttributes         = nil;
 NSDictionary*	standardSidebarFontAttributes         = nil;
+NSDictionary*	standardMissingSidebarFontAttributes  = nil;
 NSDictionary*	standardVirginSidebarFontAttributes   = nil;
 NSDictionary*	systemFontAttributes			      = nil;
 

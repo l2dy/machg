@@ -127,11 +127,16 @@
 - (NSAttributedString*) attributedStringForNode
 {
 	NSDictionary* attributesToApply;
-	[self isServerRepositoryRef] ? italicSidebarFontAttributes : standardSidebarFontAttributes;
-	if (![self isVirginRepository])
-		attributesToApply = [self isServerRepositoryRef] ? italicSidebarFontAttributes : standardSidebarFontAttributes;
-	else
-		attributesToApply = [self isServerRepositoryRef] ? italicVirginSidebarFontAttributes : standardVirginSidebarFontAttributes;
+	if ([self isServerRepositoryRef])
+		attributesToApply = [self isVirginRepository] ? italicVirginSidebarFontAttributes : italicSidebarFontAttributes;
+	else if ([self isLocalRepositoryRef])
+	{
+		BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:[path stringByAppendingPathComponent:@".hg"]];
+		if (!exists)
+			attributesToApply = standardMissingSidebarFontAttributes;
+		else
+			attributesToApply = [self isVirginRepository] ? standardVirginSidebarFontAttributes : standardSidebarFontAttributes;
+	}
 	return [NSAttributedString string:shortName withAttributes:attributesToApply];
 }
 
@@ -284,7 +289,13 @@
 - (void) refreshNodeIcon
 {
 	if (nodeKind == kSidebarNodeKindLocalRepositoryRef)
-		icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
+	{
+		BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:[path stringByAppendingPathComponent:@".hg"]];
+		if (exists)
+			icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
+		else
+			icon = [NSImage imageNamed:@"MissingRepository.png"];
+	}
 	else if (nodeKind == kSidebarNodeKindServerRepositoryRef)
 		icon = [NSImage imageNamed:NSImageNameNetwork];	
 }

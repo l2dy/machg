@@ -61,7 +61,8 @@
 	// There is no italic version of the system font so we use NSObliquenessAttributeName
 	// NSFont* italicTextFont = [fontManager convertFont:textFont toHaveTrait:NSItalicFontMask];
 	NSColor* grayColor = [NSColor grayColor];
-	NSColor* darkGreen = [NSColor colorWithCalibratedRed:0.0 green:0.35 blue:0.0 alpha:1.0];
+	NSColor* darkGreen = [NSColor colorWithCalibratedRed:0.0  green:0.35 blue:0.0 alpha:1.0];
+	NSColor* fadedRed   = [NSColor colorWithCalibratedRed:0.5 green:0.0  blue:0.0 alpha:0.4];
 
 	// Set up font attributes
 	systemFontAttributes			= [NSDictionary dictionaryWithObjectsAndKeys: systemFont, NSFontAttributeName, nil];
@@ -84,7 +85,7 @@
 	standardVirginSidebarFontAttributes	= [NSDictionary dictionaryWithObjectsAndKeys: smallSystemFont, NSFontAttributeName, darkGreen, NSForegroundColorAttributeName, ps, NSParagraphStyleAttributeName, nil];
 	italicVirginSidebarFontAttributes	= [NSDictionary dictionaryWithObjectsAndKeys: smallSystemFont, NSFontAttributeName, darkGreen, NSForegroundColorAttributeName, ps, NSParagraphStyleAttributeName, [NSNumber numberWithFloat:0.15], NSObliquenessAttributeName, nil];
 
-	//grayedAttributes   = [NSDictionary dictionaryWithObjectsAndKeys: textFont,       NSFontAttributeName, greyColor, NSForegroundColorAttributeName, ps, NSParagraphStyleAttributeName, nil];
+	standardMissingSidebarFontAttributes = [NSDictionary dictionaryWithObjectsAndKeys: smallSystemFont, NSFontAttributeName, fadedRed, NSForegroundColorAttributeName, ps, NSParagraphStyleAttributeName, nil];
 }
 
 - (id) init

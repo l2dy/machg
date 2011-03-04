@@ -117,6 +117,7 @@
 		9657059A113B1455009FE4C5 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 96570599113B1455009FE4C5 /* WebKit.framework */; };
 		9658DCF912FF9B5F00FF18B3 /* Reveal.png in Resources */ = {isa = PBXBuildFile; fileRef = 9658DCF812FF9B5F00FF18B3 /* Reveal.png */; };
 		965FA57D116424A40074E4AA /* FinderIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 965FA57C116424A40074E4AA /* FinderIcon.png */; };
+		96602188131FFAEC0051F426 /* MissingRepository.png in Resources */ = {isa = PBXBuildFile; fileRef = 96602187131FFAEC0051F426 /* MissingRepository.png */; };
 		966E8E1811CB732E0052FF42 /* identity.png in Resources */ = {isa = PBXBuildFile; fileRef = 966E8E1711CB732E0052FF42 /* identity.png */; };
 		966E8E5011CB86160052FF42 /* HistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E8E4D11CB86160052FF42 /* HistoryViewController.m */; };
 		966E8E5111CB86160052FF42 /* JHAccordionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E8E4F11CB86160052FF42 /* JHAccordionView.m */; };
@@ -382,6 +383,7 @@
 		96570599113B1455009FE4C5 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = /System/Library/Frameworks/WebKit.framework; sourceTree = "<absolute>"; };
 		9658DCF812FF9B5F00FF18B3 /* Reveal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Reveal.png; sourceTree = "<group>"; };
 		965FA57C116424A40074E4AA /* FinderIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FinderIcon.png; sourceTree = "<group>"; };
+		96602187131FFAEC0051F426 /* MissingRepository.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MissingRepository.png; sourceTree = "<group>"; };
 		966E8E1711CB732E0052FF42 /* identity.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = identity.png; sourceTree = "<group>"; };
 		966E8E4C11CB86160052FF42 /* HistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HistoryViewController.h; sourceTree = "<group>"; };
 		966E8E4D11CB86160052FF42 /* HistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HistoryViewController.m; sourceTree = "<group>"; };
@@ -636,6 +638,7 @@
 				961D516D115BC1460064A4DA /* NetworkStatus */,
 				961D5167115BC11A0064A4DA /* ButtonIcons */,
 				9600C2A210CD3D9F00CD8D28 /* Preferences */,
+				96602186131FFAEC0051F426 /* SidebarItems */,
 				9600C2A610CD3D9F00CD8D28 /* StatusItems */,
 				9600C2B010CD3D9F00CD8D28 /* ToolbarItems */,
 				966E8E1611CB732E0052FF42 /* WizardIcons */,
@@ -1107,6 +1110,14 @@
 			);
 			name = Sidebar;
 			path = Classes/Sidebar;
+			sourceTree = "<group>";
+		};
+		96602186131FFAEC0051F426 /* SidebarItems */ = {
+			isa = PBXGroup;
+			children = (
+				96602187131FFAEC0051F426 /* MissingRepository.png */,
+			);
+			path = SidebarItems;
 			sourceTree = "<group>";
 		};
 		966E8E1611CB732E0052FF42 /* WizardIcons */ = {
@@ -1614,6 +1625,7 @@
 				96C3C3391304C0CF009BB242 /* DiffButton.png in Resources */,
 				96C3C4C613079EFE009BB242 /* DownArrow.png in Resources */,
 				96C3C4C713079EFE009BB242 /* UpArrow.png in Resources */,
+				96602188131FFAEC0051F426 /* MissingRepository.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
