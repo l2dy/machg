@@ -12,6 +12,7 @@
 
 @interface DisclosureBoxController (PrivateAPI)
 - (CGFloat) sizeChange;
+- (void)	saveAutosizingMasksAndRelativePositions;
 - (void)	openDisclosureBoxWithAnimation:(BOOL)animate;
 - (void)	closeDisclosureBoxWithAnimation:(BOOL)animate;
 @end
@@ -30,15 +31,18 @@
 - (void) awakeFromNib
 {
 	NSString* frameName  = [parentWindow frameAutosaveName];
-	NSRect frameRect     = [parentWindow frame];
 	autoSaveName_        = IsNotEmpty(frameName) ? fstr(@"%@:disclosed", frameName) : nil;
-	BOOL disclosed       = autoSaveName_ ? [[NSUserDefaults standardUserDefaults] boolForKey:autoSaveName_] : NO;
 	animationDepth_      = 0;
 	disclosureIsVisible_ = YES;		// The disclosure is always open on initialization
+	[self saveAutosizingMasksAndRelativePositions];
+}
 
+
+// If we need to optionally restore the state of the disclosure to its last saved state we can easily do so
+- (void) resoreToSavedState
+{
+	BOOL disclosed       = autoSaveName_ ? [[NSUserDefaults standardUserDefaults] boolForKey:autoSaveName_] : NO;
 	[self setToOpenState:disclosed withAnimation:NO];
-	if (!disclosed && autoSaveName_)
-		[parentWindow setFrame:frameRect display:NO animate:NO];
 }
 
 
@@ -159,9 +163,9 @@
 {
 	@synchronized(self)
 	{
+		[disclosureButton setState:NSOnState];
 		if (disclosureIsVisible_)
 			return;
-		[disclosureButton setState:NSOnState];
 		[self openDisclosureBoxWithAnimation:animate];
 	}
 }
@@ -171,9 +175,9 @@
 {
 	@synchronized(self)
 	{
+		[disclosureButton setState:NSOffState];
 		if (!disclosureIsVisible_)
 			return;
-		[disclosureButton setState:NSOffState];
 		[self closeDisclosureBoxWithAnimation:animate];
 	}
 }
