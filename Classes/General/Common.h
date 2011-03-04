@@ -634,7 +634,6 @@ BOOL		pathIsExistent(NSString* path);
 BOOL		pathIsExistentDirectory(NSString* path);
 BOOL		pathIsExistentFile(NSString* path);
 BOOL		pathIsReadable(NSString* path);
-BOOL		pathIsVisible(NSString* path);
 BOOL		repositoryExistsAtPath(NSString* path);			// Does a repository exist at the given local file path.
 NSArray*	pruneDisallowedPaths(NSArray* paths);
 NSArray*	pruneContainedPaths(NSArray* paths);

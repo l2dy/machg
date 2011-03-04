@@ -404,19 +404,12 @@ BOOL pathIsReadable(NSString* path)
 }
 
 
-BOOL pathIsVisible(NSString* path)
-{
-	// Make this as sophisticated for example to hide more files you don't think the user should see!
-	NSString* lastPathComponent = [path lastPathComponent];
-	return ([lastPathComponent length] ? ([lastPathComponent characterAtIndex:0]!='.') : NO);
-}
-
-
 BOOL repositoryExistsAtPath(NSString* path)
 {
 	NSString* repositoryDotHGDirPath = [path stringByAppendingPathComponent:@".hg"];
 	return pathIsExistentDirectory(repositoryDotHGDirPath);
 }
+
 
 NSArray* pruneDisallowedPaths(NSArray* paths)
 {
