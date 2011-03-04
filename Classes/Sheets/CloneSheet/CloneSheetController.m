@@ -110,9 +110,8 @@
 		[okButton setEnabled:NO];
 		return;
 	}
-
-	BOOL dir1;
-	BOOL exists1 = [[NSFileManager defaultManager]fileExistsAtPath:[[self pathFieldValue] stringByAppendingPathComponent:@".hg"] isDirectory:&dir1];
+	
+	BOOL exists1 = repositoryExistsAtPath([self pathFieldValue]);
 	if (exists1)
 	{
 		[errorMessageTextField setStringValue:@"A Mercurial repository already exists at the chosen local destination."];
@@ -122,7 +121,7 @@
 	}
 	
 	BOOL dir2;
-	BOOL exists2 = [[NSFileManager defaultManager]fileExistsAtPath:[self pathFieldValue] isDirectory:&dir2];
+	BOOL exists2 = [[NSFileManager defaultManager] fileExistsAtPath:[self pathFieldValue] isDirectory:&dir2];
 	if (exists2)
 	{
 		[errorMessageTextField setStringValue:fstr(@"A %@ already exists at the chosen local destination.", dir2 ? @"directory" : @"file")];

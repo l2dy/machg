@@ -131,8 +131,7 @@
 		attributesToApply = [self isVirginRepository] ? italicVirginSidebarFontAttributes : italicSidebarFontAttributes;
 	else if ([self isLocalRepositoryRef])
 	{
-		BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:[path stringByAppendingPathComponent:@".hg"]];
-		if (!exists)
+		if (!repositoryExistsAtPath(path))
 			attributesToApply = standardMissingSidebarFontAttributes;
 		else
 			attributesToApply = [self isVirginRepository] ? standardVirginSidebarFontAttributes : standardSidebarFontAttributes;
@@ -288,15 +287,11 @@
 
 - (void) refreshNodeIcon
 {
-	if (nodeKind == kSidebarNodeKindLocalRepositoryRef)
-	{
-		BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:[path stringByAppendingPathComponent:@".hg"]];
-		if (exists)
-			icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
-		else
-			icon = [NSImage imageNamed:@"MissingRepository.png"];
-	}
-	else if (nodeKind == kSidebarNodeKindServerRepositoryRef)
+	if ([self isLocalRepositoryRef] && repositoryExistsAtPath(path))
+		icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
+	else if ([self isLocalRepositoryRef])
+		icon = [NSImage imageNamed:@"MissingRepository.png"];
+	else if ([self isServerRepositoryRef])
 		icon = [NSImage imageNamed:NSImageNameNetwork];	
 }
 

@@ -215,7 +215,7 @@
 		// If the icon disagrees with the repo being present or not then update it.
 		if ([node isLocalRepositoryRef])
 		{
-			BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:[[node path] stringByAppendingPathComponent:@".hg"]];
+			BOOL exists = repositoryExistsAtPath([node path]);
 			NSString* name = [[node icon] name];
 			BOOL nameIsMissingRepository = [name isEqualToString:@"MissingRepository"];
 			if ((exists && nameIsMissingRepository) || (!exists && !nameIsMissingRepository))

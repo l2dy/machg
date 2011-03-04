@@ -362,7 +362,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 				dispatch_async(mainQueue(), ^{
 					DebugLog(@"Bad repository read in loadCombinedInformationAndNotify.");
 					badRepositoryReadCount_++;
-					if (pathIsExistentDirectory([rootPath_ stringByAppendingPathComponent:@".hg"]) && badRepositoryReadCount_ < 4)
+					if (repositoryExistsAtPath(rootPath_) && badRepositoryReadCount_ < 4)
 						[[myDocument queueForUnderlyingRepositoryChangedViaEvents] addBlockOperation: ^{
 							[myDocument postNotificationWithName:kUnderlyingRepositoryChanged];
 					}];
