@@ -1753,11 +1753,9 @@
 
 static inline NSString* QuoteRegExCharacters(NSString* theName)
 {
-	NSString* sanitizedFileName = theName;
-	sanitizedFileName = [sanitizedFileName stringByReplacingOccurrencesOfString:@"#" withString:@"\\#"];
-	sanitizedFileName = [sanitizedFileName stringByReplacingOccurrencesOfString:@"*" withString:@"\\*"];
-	sanitizedFileName = [sanitizedFileName stringByReplacingOccurrencesOfString:@"+" withString:@"\\+"];
-	return sanitizedFileName;
+	NSString* regexString       = @"(\\#|\\*|\\+|\\(|\\)|\\?|\\.|\\[|\\]|\\||\\^|\\$)";
+	NSString* replaceWithString = @"\\\\$1";
+	return [theName stringByReplacingOccurrencesOfRegex:regexString withString:replaceWithString];	
 }
 
 
