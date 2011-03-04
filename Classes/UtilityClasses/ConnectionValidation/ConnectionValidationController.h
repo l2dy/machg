@@ -14,6 +14,7 @@
 @interface ConnectionValidationController : NSObject
 {
 	IBOutlet NSImageView*		repositoryConnectionStatusImage;
+	IBOutlet NSImageView*		repositoryDetailsStatusImage;
 	IBOutlet NSTextView*		repositoryConnectionStatusDetails;
 	IBOutlet NSProgressIndicator* validationProgressIndicator;
 	IBOutlet NSButton*			showConnectionDetailsButton;
@@ -23,6 +24,8 @@
 	SingleTimedQueue*			queueForConnectionValidation_;
 	NSImage*					goodNetworkImage_;
 	NSImage*					badNetworkImage_;
+	NSImage*					goodDetailsImage_;
+	NSImage*					badDetailsImage_;
 	BOOL						detailsWasOpen_;	// The state of the disclosure just before we hide everything (normally we are
 													// about to do a new validation)
 }

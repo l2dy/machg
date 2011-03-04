@@ -11,7 +11,7 @@
 			<string key="com.brandonwalkin.BWToolkit">1.2.2</string>
 		</dictionary>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-			<integer value="581"/>
+			<integer value="479"/>
 		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.brandonwalkin.BWToolkit</string>
@@ -347,7 +347,7 @@
 												<string>NeXT Encapsulated PostScript v1.2 pasteboard type</string>
 												<string>NeXT TIFF v4.0 pasteboard type</string>
 											</set>
-											<string key="NSFrame">{{11, 76}, {24, 24}}</string>
+											<string key="NSFrame">{{11, 74}, {24, 24}}</string>
 											<reference key="NSSuperview" ref="730993038"/>
 											<bool key="NSEnabled">YES</bool>
 											<object class="NSImageCell" key="NSCell" id="434976954">
@@ -1406,6 +1406,14 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 					</object>
 					<int key="connectionID">626</int>
 				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">repositoryDetailsStatusImage</string>
+						<reference key="source" ref="271946156"/>
+						<reference key="destination" ref="270513223"/>
+					</object>
+					<int key="connectionID">627</int>
+				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
 				<array key="orderedObjects">
@@ -2103,7 +2111,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">626</int>
+			<int key="maxID">627</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2134,6 +2142,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 						<string key="connectionDetailsDisclosure">DisclosureBoxController</string>
 						<string key="repositoryConnectionStatusDetails">NSTextView</string>
 						<string key="repositoryConnectionStatusImage">NSImageView</string>
+						<string key="repositoryDetailsStatusImage">NSImageView</string>
 						<string key="showConnectionDetailsButton">NSButton</string>
 						<string key="theServerRefController">ServerRepositoryRefSheetController</string>
 						<string key="validationProgressIndicator">NSProgressIndicator</string>

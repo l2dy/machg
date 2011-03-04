@@ -34,6 +34,8 @@ NSAttributedString*   fixedWidthAttributedString(NSString* string);
 		queueForConnectionValidation_ = [SingleTimedQueue SingleTimedQueueExecutingOn:globalQueue()  withTimeDelay:1.5  descriptiveName:@"queueForConnectionValidation"];
 		goodNetworkImage_ = [NSImage imageNamed:@"GoodNetwork.png"];
 		badNetworkImage_  = [NSImage imageNamed:@"BadNetwork.png"];
+		goodDetailsImage_ = [NSImage imageNamed:@"toolbar_resolved.png"];
+		badDetailsImage_  = [NSImage imageNamed:@"AlertPreferences.png"];
     }
     return self;
 }
@@ -58,6 +60,7 @@ NSAttributedString*   fixedWidthAttributedString(NSString* string);
 	if (![showConnectionDetailsButton isHidden])
 		detailsWasOpen_ = [connectionDetailsDisclosure disclosureIsVisible];
 	[repositoryConnectionStatusImage	setHidden:YES];
+	[repositoryDetailsStatusImage		setHidden:YES];
 	[showConnectionDetailsButton		setHidden:YES];
 	[connectionDetailsDisclosure		ensureDisclosureBoxIsClosed:YES];
 }
@@ -65,7 +68,9 @@ NSAttributedString*   fixedWidthAttributedString(NSString* string);
 - (void) showBadValidationGraphicAndMessage
 {
 	[repositoryConnectionStatusImage	setImage:badNetworkImage_];
+	[repositoryDetailsStatusImage		setImage:badDetailsImage_];
 	[repositoryConnectionStatusImage	setHidden:NO];
+	[repositoryDetailsStatusImage		setHidden:NO];
 	[showConnectionDetailsButton		setHidden:NO];
 	[connectionDetailsDisclosure		setBackgroundToBad];
 	[connectionDetailsDisclosure		setToOpenState:detailsWasOpen_ withAnimation:YES];
@@ -74,7 +79,9 @@ NSAttributedString*   fixedWidthAttributedString(NSString* string);
 - (void) showGoodValidationGraphicAndMessage
 {
 	[repositoryConnectionStatusImage	setImage:goodNetworkImage_];
+	[repositoryDetailsStatusImage		setImage:goodDetailsImage_];
 	[repositoryConnectionStatusImage	setHidden:NO];
+	[repositoryDetailsStatusImage		setHidden:NO];
 	[showConnectionDetailsButton		setHidden:NO];
 	[connectionDetailsDisclosure		setBackgroundToGood];
 	[connectionDetailsDisclosure		setToOpenState:detailsWasOpen_ withAnimation:YES];
