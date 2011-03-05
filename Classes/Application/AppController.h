@@ -39,6 +39,8 @@
 	NSTimer*					periodicCheckingForRepositoryIdentity;
 }
 
+@property (readwrite, assign) NSMutableDictionary* repositoryIdentityForPath;
+
 
 + (AppController*)				sharedAppController;
 - (InitializationWizardController*) theInitilizationWizardController;
@@ -84,8 +86,9 @@
 
 // Changeset handling
 - (void)	  checkRepositoryIdentities:(NSTimer*)theTimer;
-- (void)	  computeRepositoryIdentityForPath:(NSString*)path;	// recompute the root changeset for a given path
-
+- (void)	  computeRepositoryIdentityForPath:(NSString*)path;									// recompute the root changeset for a given path
+- (void)	  computeRepositoryIdentityForPath:(NSString*)path forNodePath:(NSString*)nodePath;	// recompute the root changeset for a given path and announce this for
+																								// sidebar nodes with path nodePath.
 @end
 
 

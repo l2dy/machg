@@ -19,6 +19,9 @@
 
 @implementation AppController
 
+@synthesize repositoryIdentityForPath = repositoryIdentityForPath_;
+
+
 
 
 
@@ -93,6 +96,7 @@
 	self = [super init];
 	applicationHasStarted = NO;
 	theTaskExecutions = [TaskExecutions theInstance];
+	repositoryIdentityForPath_			= [[NSMutableDictionary alloc]init];
 	computingRepositoryIdentityForPath_ = [[NSMutableDictionary alloc]init];
 	dirtyRepositoryIdentityForPath_     = [[NSMutableDictionary alloc]init];
 
@@ -649,7 +653,12 @@
 }
 
 
-- (void) computeRepositoryIdentityForPath:(NSString*)path;
+- (void) computeRepositoryIdentityForPath:(NSString*)path
+{
+	[self computeRepositoryIdentityForPath:path forNodePath:path];
+}
+
+- (void) computeRepositoryIdentityForPath:(NSString*)path forNodePath:(NSString*)nodePath
 {
 	if (!path)
 		return;
@@ -657,25 +666,25 @@
 	NSString* fullPath = FullServerURL(path, eAllPasswordsAreVisible);
 
 	// If we are already computing the root changeset then don't compute it again
-	if ([computingRepositoryIdentityForPath_ synchronizedObjectForKey:path])
+	if ([computingRepositoryIdentityForPath_ synchronizedObjectForKey:nodePath])
 		return;
 	
 	// Indicate that we are now about to compute the root changeset of the path
-	[computingRepositoryIdentityForPath_ synchronizedSetObject:YESasNumber forKey:path];
+	[computingRepositoryIdentityForPath_ synchronizedSetObject:YESasNumber forKey:nodePath];
 	
 	// Find out how many times we have tried to compute the path before.
-	id val = [dirtyRepositoryIdentityForPath_ synchronizedObjectForKey:path];
+	id val = [dirtyRepositoryIdentityForPath_ synchronizedObjectForKey:nodePath];
 	if ([val isEqual:@"uncomputable"])
 		return;
 	
 	// Increment the attempt number.
 	int attempts = numberAsInt(DynamicCast(NSNumber, val)) + 1;
-	[dirtyRepositoryIdentityForPath_ synchronizedSetObject:intAsNumber(attempts) forKey:path];
+	[dirtyRepositoryIdentityForPath_ synchronizedSetObject:intAsNumber(attempts) forKey:nodePath];
 	
 	// If we have attempted too many times to compute the root just give up and mark it "uncomputable"
 	if (attempts > 6)
 	{
-		[dirtyRepositoryIdentityForPath_ synchronizedSetObject:@"uncomputable" forKey:path];
+		[dirtyRepositoryIdentityForPath_ synchronizedSetObject:@"uncomputable" forKey:nodePath];
 		return;
 	}
 
@@ -689,19 +698,25 @@
 			results = [TaskExecutions executeMercurialWithArgs:argsIdentify fromRoot:@"/tmp" logging:eLoggingNone onTask:theTask];
 		});
 
-		[computingRepositoryIdentityForPath_ synchronizedRemoveObjectForKey:path];
+		[computingRepositoryIdentityForPath_ synchronizedRemoveObjectForKey:nodePath];
 	
 		if (![theTask isRunning] && results.result == 0 && IsEmpty(results.errStr) && IsNotEmpty(results.outStr))
 		{
 			// We look for the 12 digit hashKey which is optionally seperated from other bits by whitespace.
 			static NSString* pickOutHashKeyRegex = @"^(.*\\s+)?([0-9abcdefABCDEF]{12})(\\s+.*)?$";
-			NSString* repositoryIdentity;
-			BOOL matched = [results.outStr getCapturesWithRegexAndComponents:pickOutHashKeyRegex firstComponent:nil secondComponent:&repositoryIdentity thirdComponent:nil];
+			NSString* newRepositoryIdentity;
+			BOOL matched = [results.outStr getCapturesWithRegexAndComponents:pickOutHashKeyRegex firstComponent:nil secondComponent:&newRepositoryIdentity thirdComponent:nil];
 			if (!matched)
 				return;
-			NSDictionary* info = [NSDictionary dictionaryWithObjectsAndKeys:path, @"path", repositoryIdentity, @"repositoryIdentity", nil];
-			[self postNotificationWithName:kRepositoryIdentityChanged userInfo:info];
-			[dirtyRepositoryIdentityForPath_ synchronizedRemoveObjectForKey:path];
+
+			NSString* oldRepositoryIdentity = [repositoryIdentityForPath_ synchronizedObjectForKey:nodePath];
+			[repositoryIdentityForPath_ synchronizedSetObject:newRepositoryIdentity forKey:nodePath];
+			if ([oldRepositoryIdentity isNotEqualToString:newRepositoryIdentity])
+			{
+				NSDictionary* info = [NSDictionary dictionaryWithObjectsAndKeys:nodePath, @"path", newRepositoryIdentity, @"repositoryIdentity", nil];
+				[self postNotificationWithName:kRepositoryIdentityChanged userInfo:info];
+			}
+			[dirtyRepositoryIdentityForPath_ synchronizedRemoveObjectForKey:nodePath];
 			//DebugLog(@"Root changeset of %@ is %@ on attempt %d", path, repositoryIdentity, attempts);
 			return;
 		}

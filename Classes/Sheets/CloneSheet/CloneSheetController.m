@@ -211,6 +211,7 @@
 			dispatch_async(mainQueue(), ^{
 				SidebarNode* newNode = [SidebarNode nodeWithCaption:destinationName  forLocalPath:destinationPath];
 				[[AppController sharedAppController] computeRepositoryIdentityForPath:destinationPath];
+				[[AppController sharedAppController] computeRepositoryIdentityForPath:destinationPath forNodePath:[sourceNode_ path]];
 				[[myDocument sidebar] addSidebarNode:newNode afterNode:sourceNode_];
 				[[myDocument sidebar] selectNode:newNode];
 				[[myDocument sidebar] reloadData];

@@ -34,10 +34,6 @@ typedef enum
 	// If this node is a repository reference (local or server) then the following are relevant
 	NSString*		path;				// The local file path or server path; ie something like  http://www.codebase.org/code/main/myproject
 										// if it's a server or /Users/jason/Projects/MyProject if it's a local file path.
-	NSString*		repositoryIdentity;	// The unique repository identity of this repository or server. (Usually is 'hg identify
-										// --rev 0' but for some servers like a google code or hggit or svn server we need to
-										// force it.) If this repository is the same for two repositories then they are both
-										// "based" on the same repository.
 	NSMutableArray* recentConnections;	// Internal list of a number of other repository references from which this server has
 										// pushed / pulled data.
 }
@@ -48,7 +44,6 @@ typedef enum
 @property (assign, readwrite) SidebarNode* parent;
 @property (assign, readonly)  NSString* shortName;
 @property (readwrite, assign) NSString* path;
-@property (readwrite, assign) NSString* repositoryIdentity;
 @property (readwrite, assign) NSMutableArray* recentConnections;
 
 @property (assign) NSImage* icon;
@@ -98,12 +93,11 @@ typedef enum
 
 
 // Rootchangeset and Connections
+- (NSString*) repositoryIdentity;
 - (BOOL) isCompatibleToNodeInArray:(NSArray*)nodes;
 - (BOOL) isCompatibleTo:(SidebarNode*)comp;
-- (NSString*) repositoryIdentity;
 - (void) addRecentConnection:(SidebarNode*)mark;
 - (void) pruneRecentConnectionsOf:(NSString*)deadPath;
 - (BOOL) isVirginRepository;
-
 
 @end

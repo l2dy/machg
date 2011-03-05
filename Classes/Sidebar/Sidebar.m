@@ -75,6 +75,7 @@
 	// Set up Delegates & Data Source
 	[self setDataSource:self];
 	[self setDelegate:self];
+	[self observe:kRepositoryIdentityChanged  from:nil  byCalling:@selector(computeIncomingOutgoingToCompatibleRepositories)];
 }
 
 

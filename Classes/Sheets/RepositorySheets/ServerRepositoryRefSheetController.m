@@ -310,17 +310,16 @@
 		[nodeToConfigure setPath:newPath];
 		[nodeToConfigure setShortName:newName];
 		[nodeToConfigure refreshNodeIcon];
-		[nodeToConfigure setRepositoryIdentity:newId];
 	}
 	else
 	{
 		SidebarNode* newNode = [SidebarNode nodeWithCaption:newName  forServerPath:newPath];
 		[newNode refreshNodeIcon];
-		[newNode setRepositoryIdentity:newId];
 		[[myDocument sidebar] addSidebarNode:newNode];
 		[theSidebar selectNode:newNode];
 	}
-	
+
+	[[[AppController sharedAppController] repositoryIdentityForPath] synchronizedSetObject:newId forKey:newPath];
 	[passwordKeyChainItem_ removeFromKeychain];
 
 	if (IsNotEmpty(password_))

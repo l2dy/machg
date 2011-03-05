@@ -27,7 +27,6 @@
 @synthesize parent;
 @synthesize shortName;
 @synthesize path;
-@synthesize repositoryIdentity;
 @synthesize recentConnections;
 @synthesize icon;
 @synthesize isExpanded;
@@ -49,11 +48,9 @@
 		parent		= nil;
 		shortName	= nil;
 		path		= nil;
-		repositoryIdentity = nil;
 		recentConnections = nil;
 		icon		= nil;
 		isExpanded	= NO;
-		[self observe:kRepositoryIdentityChanged  from:nil  byCalling:@selector(checkReportedRepositoryIdentity:)];
 	}
 	
 	return self;
@@ -95,7 +92,6 @@
 	[node setPath:trimString(thePath)];
 	[node setParent:nil];
 	[node setIcon:icn];
-	[node repositoryIdentity];
 	return node;
 }
 
@@ -157,7 +153,7 @@
 	NSInteger depth = [self nodeDepth];
 	for (NSInteger i = 0; i < depth; i++)
 		[part appendString:@"   "];
-	[part appendFormat:@"<%@{ caption = %@, path = %@, id = %@ }\n", [self className], shortName, path, nonNil(repositoryIdentity)];
+	[part appendFormat:@"<%@{ caption = %@, path = %@, id = %@ }\n", [self className], shortName, path, nonNil([self repositoryIdentity])];
 	for (SidebarNode* node in children)
 		[part appendString:[node description]];
 	if (recentConnections)
@@ -179,7 +175,6 @@
 	newNode->nodeKind			= nodeKind;
 	newNode->shortName			= shortName;
 	newNode->path				= path;
-	newNode->repositoryIdentity = repositoryIdentity;
 	newNode->icon				= icon;
 	newNode->isExpanded			= isExpanded;
 
@@ -242,6 +237,7 @@
 	[coder encodeObject:path forKey:@"path"];
 	[coder encodeObject:recentConnections forKey:@"recentConnections"];
 
+	NSString* repositoryIdentity = [self repositoryIdentity];
 	if (repositoryIdentity)
 		[coder encodeObject:repositoryIdentity forKey:@"repositoryIdentity"];
 }
@@ -256,7 +252,6 @@
 	isExpanded	= [coder decodeBoolForKey:@"nodeIsExpanded"];
 	path		= [coder decodeObjectForKey:@"path"];
 	recentConnections  = [coder decodeObjectForKey:@"recentConnections"];
-	[self observe:kRepositoryIdentityChanged  from:nil  byCalling:@selector(checkReportedRepositoryIdentity:)];
 
 	if ([self isLocalRepositoryRef] && path)
 	{
@@ -275,8 +270,9 @@
 	
 	if ([self isRepositoryRef] && path)
 	{
-		repositoryIdentity = [coder decodeObjectForKey:@"repositoryIdentity"];
-		[[AppController sharedAppController] computeRepositoryIdentityForPath:path];
+		NSString* repositoryIdentity = [coder decodeObjectForKey:@"repositoryIdentity"];
+		if (repositoryIdentity)
+			[[[AppController sharedAppController] repositoryIdentityForPath] synchronizedSetObject:repositoryIdentity forKey:path];
 	}
 
 	// Regenerate the icon as above to save space.
@@ -304,13 +300,7 @@
 // MARK: Root Changeset
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) checkReportedRepositoryIdentity:(NSNotification*)notification
-{
-	NSDictionary* userInfo = [notification userInfo];
-	NSString* sentPath = [userInfo objectForKey:@"path"];
-	if ([sentPath isEqualTo:path])
-		repositoryIdentity = [userInfo objectForKey:@"repositoryIdentity"];
-}
+- (NSString*) repositoryIdentity	{ return [[[AppController sharedAppController] repositoryIdentityForPath] synchronizedObjectForKey:path]; }
 
 - (void) addRecentConnection:(SidebarNode*)mark
 {
@@ -326,7 +316,7 @@
 - (BOOL) isVirginRepository
 {
 	static NSString* virginRepository = @"000000000000";
-	return [repositoryIdentity isEqualToString:virginRepository];
+	return [[self repositoryIdentity] isEqualToString:virginRepository];
 }
 
 - (BOOL) isCompatibleToNodeInArray:(NSArray*)nodes
