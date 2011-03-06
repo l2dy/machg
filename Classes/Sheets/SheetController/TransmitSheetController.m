@@ -97,25 +97,129 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK: Derived Generic Methods
+// MARK: Popup Menu Handling
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) populateAndSetupPopupMenu:(NSPopUpButton*)popup withItems:(NSArray*)items
+- (NSInteger) indexOfPopup:(NSPopUpButton*)popup matchingPath:(NSString*)path
 {
-	[popup removeAllItems];
-	for (SidebarNode* r in items)
+	for (NSInteger i = 0; i < [[popup menu] numberOfItems]; i++)
 	{
-		NSMenuItem* item = [[NSMenuItem alloc]init];
-		NSDictionary* attributesToApply = [r isServerRepositoryRef] ? italicSystemFontAttributes : systemFontAttributes;
-		NSAttributedString* menuTitle = [NSAttributedString string:[r shortName] withAttributes:attributesToApply];
-		[item setAttributedTitle:menuTitle];
-		[item setRepresentedObject:r];
-		[[popup menu] addItem:item];
+		SidebarNode* representedObject = [[[popup menu] itemAtIndex:i] representedObject];
+		if ([trimmedURL([representedObject path]) isEqualToString:trimmedURL(path)])			
+			return i;
 	}
-	[popup sizeToFit];
-	[popup selectItemAtIndex:0];
+	return NSNotFound;
 }
 
+
+- (void) chooseInitialPopupItem:(NSPopUpButton*)popup
+{
+	NSMutableArray* orderedPaths = [[NSMutableArray alloc] init];
+	NSString* matchingPath = (sourceLabel == compatibleRepositoriesPopup) ? [[self destinationRepository] recentPullConnection] : [[self sourceRepository] recentPushConnection];
+	[orderedPaths addObjectIfNonNil:matchingPath];
+	
+	Sidebar* theSidebar = [[self myDocument] sidebar];
+	SidebarNode* selectedNode = [theSidebar selectedNode];
+	NSArray* allServers = [theSidebar serversIfAvailable:[selectedNode path] includingAlreadyPresent:YES];	
+	for (SidebarNode* node in allServers)
+		[orderedPaths addObjectIfNonNil:[node path]];
+	
+	for (NSString* path in orderedPaths)
+	{
+		NSInteger index = [self indexOfPopup:popup matchingPath:path];
+		if (index != NSNotFound)
+		{
+			[popup selectItemAtIndex:index];
+			return;
+		}
+	}
+	
+	// If we didn't find any of our perfered paths, then choose the first repository reference available
+	for (NSInteger index = 0; index < [[popup menu] numberOfItems]; index++)
+	{
+		SidebarNode* representedObject = [[[popup menu] itemAtIndex:index] representedObject];
+		if ([representedObject isRepositoryRef])
+		{
+			[popup selectItemAtIndex:index];
+			return;			
+		}		
+	}	
+}
+
+
+- (void) populateNewAndSetupPopupMenu:(NSPopUpButton*)popup withSubtree:(SidebarNode*)node atLevel:(NSInteger)level
+{
+	// Don't include the currently selected node since we don't push / pull to ourselves.
+	if ([trimmedURL([[[self myDocument] selectedRepositoryRepositoryRef] path]) isEqualToString:trimmedURL([node path])])
+		return;
+	
+	NSMenuItem* item = [[NSMenuItem alloc]init];
+	if ([node isRepositoryRef])
+	{
+		NSDictionary* attributesToApply = [node isServerRepositoryRef] ? italicSystemFontAttributes : systemFontAttributes;
+		NSAttributedString* menuTitle = [NSAttributedString string:[node shortName] withAttributes:attributesToApply];
+		[item setIndentationLevel:level];
+		[item setAttributedTitle:menuTitle];
+		[item setEnabled:YES];
+		[item setRepresentedObject:node];
+		[[popup menu] addItem:item];
+		return;
+	}
+	
+	NSAttributedString* menuTitle = [NSAttributedString string:[node shortName] withAttributes:graySystemFontAttributes];
+	[item setAttributedTitle:menuTitle];
+	[item setEnabled:NO];
+	[item setIndentationLevel:level];
+	[[popup menu] addItem:item];
+	for (SidebarNode* child in [node children])
+		[self populateNewAndSetupPopupMenu:popup withSubtree:child atLevel:level+1];
+}
+
+- (void) populateNewAndSetupPopupMenu:(NSPopUpButton*)popup withItems:(SidebarNode*)root
+{
+	[popup removeAllItems];
+	[[popup menu] setAutoenablesItems:NO];
+
+	// Get the default servers
+	Sidebar* theSidebar = [[self myDocument] sidebar];
+	SidebarNode* selectedNode = [theSidebar selectedNode];
+	NSArray* missingServers   = [theSidebar serversIfAvailable:[selectedNode path] includingAlreadyPresent:NO];
+
+	// If there are some servers in the [paths] section of the config file then add these
+	if (IsNotEmpty(missingServers))
+	{
+		SidebarNode* serverGroup = [SidebarNode sectionNodeWithCaption:@"Default Servers"];
+		[serverGroup setChildren:[NSMutableArray arrayWithArray:missingServers]];
+		[self populateNewAndSetupPopupMenu:popup withSubtree:serverGroup atLevel:0];
+	}
+	
+	for (SidebarNode* r in [root children])
+		[self populateNewAndSetupPopupMenu:popup withSubtree:r atLevel:0];
+	[popup sizeToFit];
+	
+	[self chooseInitialPopupItem:popup];
+}
+
+- (IBAction) populatePopupMenuItemsAndRelayout:(id)sender
+{
+	SidebarNode* oppositeToPopup = (sourceLabel == compatibleRepositoriesPopup) ? [self destinationRepository] : [self sourceRepository];
+	SidebarNode* compatibleRoot = [[[[self myDocument] sidebar] root] copySubtreeCompatibleTo:oppositeToPopup];
+	SidebarNode* root = [sheetButtonAllowOperationWithAnyRepository state] ? [[[self myDocument] sidebar] root] : compatibleRoot;
+	[self populateNewAndSetupPopupMenu:compatibleRepositoriesPopup withItems:root];
+	[[compatibleRepositoriesPopup menu] setDelegate:self];
+	
+	[self setFieldsFromConnectionForSource:[self sourceRepository]  andDestination:[self destinationRepository]];
+	[self layoutGroupsForSource:           [self sourceRepository]  andDestination:[self destinationRepository]];
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Derived Generic Methods
+// -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (IBAction) syncForceOptionToAllowOperationAndRepopulate:(id)sender
 {
@@ -124,16 +228,6 @@
 	BOOL showAdvancedOptions = [OptionController containsOptionWhichIsSet:cmdOptions];
 	[disclosureController setToOpenState:showAdvancedOptions withAnimation:NO];
 	[self populatePopupMenuItemsAndRelayout:sender];
-}
-
-- (IBAction) populatePopupMenuItemsAndRelayout:(id)sender
-{
-	SidebarNode* oppositeToPopup = (sourceLabel == compatibleRepositoriesPopup) ? [self destinationRepository] : [self sourceRepository];
-	NSArray* items = [[[self myDocument] sidebar] orderedRepositoryListCompatibleTo:oppositeToPopup allowingAnyRepository:[sheetButtonAllowOperationWithAnyRepository state]];
-	[self populateAndSetupPopupMenu:compatibleRepositoriesPopup withItems:items];
-	[[compatibleRepositoriesPopup menu] setDelegate:self];
-	[self setFieldsFromConnectionForSource:[self sourceRepository]  andDestination:[self destinationRepository]];
-	[self layoutGroupsForSource:           [self sourceRepository]  andDestination:[self destinationRepository]];
 }
 
 - (void) setConnectionFromFieldsForSource:(SidebarNode*)source andDestination:(SidebarNode*)destination

@@ -387,14 +387,14 @@
 	{
 		NSString* serverId = trimString([path objectAtIndex:1]);
 		NSString* serverPath = [path objectAtIndex:2];
-		NSString* url = trimString(serverPath);
+		NSString* url = trimmedURL(serverPath);
 		NSString* caption;
 		
 		// If the server is already present in the document don't add it again.
 		BOOL duplicate = NO;
 		if (!includeAlreadyPresent)
 			for (SidebarNode* repo in allRepositories)
-				if ([repo isServerRepositoryRef] && [trimString([repo path]) isEqualToString:url])
+				if ([repo isServerRepositoryRef] && [trimmedURL([repo path]) isEqualToString:url])
 				{
 					duplicate = YES;
 					break;
@@ -940,42 +940,13 @@
 
 - (NSArray*) allCompatibleRepositories:(SidebarNode*)selectedNode;
 {
-	// Get the default servers
-	NSArray* servers = [self serversIfAvailable:[selectedNode path] includingAlreadyPresent:YES];
-
 	NSMutableArray* compatibleRepositories = [[NSMutableArray alloc] init];
 	NSArray* allRepositories = [self allRepositories];
 	for (SidebarNode* repo in allRepositories)
-		if ([repo isCompatibleTo:selectedNode] || [repo isCompatibleToNodeInArray:servers])
+		if ([repo isCompatibleTo:selectedNode])
 			[compatibleRepositories addObject:repo];
 
-	// Add any default servers not already present at the begining of the compatibleRepositories list
-	for (SidebarNode* serverNode in servers)
-		if (![serverNode isCompatibleToNodeInArray:compatibleRepositories])
-			[compatibleRepositories addObject:serverNode];
 	return compatibleRepositories;
-}
-
-
-- (NSArray*) orderedRepositoryListCompatibleTo:(SidebarNode*)node allowingAnyRepository:(BOOL)allowAnyRepository
-{
-	NSMutableArray* items = [NSMutableArray arrayWithArray:[node recentConnections]];
-	
-	NSArray* compatibleRepositories = node ? [self allCompatibleRepositories:node] : nil;
-	for (SidebarNode* r in compatibleRepositories)
-		if (![items containsObject:r])
-			[items addObject:r];
-	
-	if (allowAnyRepository)
-	{
-		NSArray* allRepositories = [self allRepositories];
-		for (SidebarNode* r in allRepositories)
-			if (![items containsObject:r])
-				[items addObject:r];
-	}
-	
-	[items removeObject:node];
-	return items;
 }
 
 
@@ -985,7 +956,6 @@
 	for (NSString* key in allOfTheKeys)
 		if ([key containsString:deadPath])
 			[[myDocument connections] removeObjectForKey:key];
-	[root_ pruneRecentConnectionsOf:deadPath];
 }
 
 

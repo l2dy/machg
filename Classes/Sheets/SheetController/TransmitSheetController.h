@@ -41,8 +41,8 @@
 @property (readwrite,assign) MacHgDocument*	myDocument;
 
 
-// These methods *must* be re-implemented in the children. What I would like to do here is say these methods are
-// pure like in C++ I would say = 0 here, but I don't think this is possible in Objective-C. If you know and it is then email me!
+// These methods *must* be re-implemented in the children. What I would like to do here is say these methods are pure like in C++
+// I would say = 0 here, but I don't think this is possible in Objective-C. If you know and it is then email me!
 - (SidebarNode*)	sourceRepository;
 - (SidebarNode*)	destinationRepository;
 - (NSString*)		operationName;
@@ -60,7 +60,6 @@
 // PopupMenu control and syncing
 - (IBAction)  syncForceOptionToAllowOperationAndRepopulate:(id)sender;
 - (IBAction)  populatePopupMenuItemsAndRelayout:(id)sender;
-- (void)	  populateAndSetupPopupMenu:(NSPopUpButton*)popup withItems:(NSArray*)items;
 - (void)	  setConnectionFromFieldsForSource:(SidebarNode*)source		andDestination:(SidebarNode*)destination;
 - (void)	  setFieldsFromConnectionForSource:(SidebarNode*)source		andDestination:(SidebarNode*)destination;
 - (void)	  updateIncomingOutgoingCountForSource:(SidebarNode*)source andDestination:(SidebarNode*)destination;

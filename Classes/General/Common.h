@@ -664,6 +664,7 @@ static inline int	unsetBits(int num1, int num2)		{ return num1 & ~num2; }
 
 NSString*	trimString(NSString* string);
 NSString*	trimTrailingString(NSString* string);
+NSString*	trimmedURL(NSString* string);
 NSString*	collapseWhiteSpace(NSString* string);
 BOOL		stringIsNonWhiteSpace(NSString* string);
 NSString*	riffleComponents(NSArray* components, NSString* separator);

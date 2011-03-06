@@ -34,8 +34,8 @@ typedef enum
 	// If this node is a repository reference (local or server) then the following are relevant
 	NSString*		path;				// The local file path or server path; ie something like  http://www.codebase.org/code/main/myproject
 										// if it's a server or /Users/jason/Projects/MyProject if it's a local file path.
-	NSMutableArray* recentConnections;	// Internal list of a number of other repository references from which this server has
-										// pushed / pulled data.
+	NSString*		recentPushConnection;	// The path of the most recent push connection if there has been one.
+	NSString*		recentPullConnection;	// The path of the most recent pull connection if there has been one.
 }
 
 @property (assign) SidebarNodeKind nodeKind;
@@ -44,7 +44,8 @@ typedef enum
 @property (assign, readwrite) SidebarNode* parent;
 @property (assign, readonly)  NSString* shortName;
 @property (readwrite, assign) NSString* path;
-@property (readwrite, assign) NSMutableArray* recentConnections;
+@property (readwrite, assign) NSString* recentPushConnection;
+@property (readwrite, assign) NSString* recentPullConnection;
 
 @property (assign) NSImage* icon;
 
@@ -98,8 +99,7 @@ typedef enum
 - (NSString*) repositoryIdentity;
 - (BOOL) isCompatibleToNodeInArray:(NSArray*)nodes;
 - (BOOL) isCompatibleTo:(SidebarNode*)comp;
-- (void) addRecentConnection:(SidebarNode*)mark;
-- (void) pruneRecentConnectionsOf:(NSString*)deadPath;
+- (SidebarNode*) copySubtreeCompatibleTo:(SidebarNode*)comp;
 - (BOOL) isVirginRepository;
 
 @end

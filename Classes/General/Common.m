@@ -615,6 +615,13 @@ NSString* trimTrailingString(NSString* string)
 	return trimmed;
 }
 
+NSString* trimmedURL(NSString* string)
+{
+	NSString* trimmed = nil;
+	[string getCapturesWithRegexAndComponents:@"(?s:^\\s*(.*?)/*\\s*$)" firstComponent:&trimmed];
+	return trimmed;
+}
+
 NSString* collapseWhiteSpace(NSString* string)
 {
 	return [string stringByReplacingOccurrencesOfRegex:@"\\s+" withString:@""];

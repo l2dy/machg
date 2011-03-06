@@ -73,7 +73,6 @@
 // Connections
 - (NSArray*)  allRepositories;
 - (NSArray*)  allCompatibleRepositories:(SidebarNode*)selectedNode;
-- (NSArray*)  orderedRepositoryListCompatibleTo:(SidebarNode*)node allowingAnyRepository:(BOOL)allowAnyRepository;
 - (void)      removeConnectionsFor:(NSString*) deadPath;
 - (void)	  computeIncomingOutgoingToCompatibleRepositories;
 - (NSString*) outgoingCountTo:(SidebarNode*)destination;

@@ -139,7 +139,7 @@
 	
 	// Cache the connection parameters
 	[self setConnectionFromFieldsForSource:pullSource andDestination:pullDestination];
-	[pullDestination addRecentConnection:pullSource];
+	[pullDestination setRecentPullConnection:[pullSource path]];
 }
 
 - (IBAction) sheetButtonCancel:(id)sender;

@@ -26,10 +26,11 @@
 @synthesize children;
 @synthesize parent;
 @synthesize shortName;
-@synthesize path;
-@synthesize recentConnections;
 @synthesize icon;
 @synthesize isExpanded;
+@synthesize path;
+@synthesize recentPullConnection;
+@synthesize recentPushConnection;
 
 
 
@@ -48,9 +49,10 @@
 		parent		= nil;
 		shortName	= nil;
 		path		= nil;
-		recentConnections = nil;
 		icon		= nil;
 		isExpanded	= NO;
+		recentPullConnection = nil;
+		recentPushConnection = nil;
 	}
 	
 	return self;
@@ -104,8 +106,8 @@
 	newNode->path				= path;
 	newNode->icon				= icon;
 	newNode->isExpanded			= isExpanded;
-	if (recentConnections)
-		newNode->recentConnections = [NSMutableArray arrayWithArray:recentConnections];	
+	newNode->recentPullConnection = recentPullConnection;
+	newNode->recentPushConnection = recentPushConnection;
 	return newNode;
 }
 
@@ -185,13 +187,10 @@
 	[part appendFormat:@"<%@{ caption = %@, path = %@, id = %@ }\n", [self className], shortName, path, nonNil([self repositoryIdentity])];
 	for (SidebarNode* node in children)
 		[part appendString:[node description]];
-	if (recentConnections)
-		for (SidebarNode* node in recentConnections)
-		{
-			for (NSInteger i = 0; i < depth+1; i++)
-				[part appendString:@"   "];
-			[part appendFormat:@"recentConnection: %@ @ %@\n", [node shortName], [node path]];
-		}
+	if (recentPushConnection)
+		[part appendFormat:@"recentPushConnection: %@\n", [self recentPushConnection]];
+	if (recentPullConnection)
+		[part appendFormat:@"recentPullConnection: %@\n", [self recentPullConnection]];
 	
 	return part;
 }
@@ -239,7 +238,8 @@
 	[coder encodeObject:shortName forKey:@"caption"];
 	[coder encodeBool:isExpanded forKey:@"nodeIsExpanded"];
 	[coder encodeObject:path forKey:@"path"];
-	[coder encodeObject:recentConnections forKey:@"recentConnections"];
+	[coder encodeObject:recentPushConnection forKey:@"recentPushConnection"];
+	[coder encodeObject:recentPullConnection forKey:@"recentPullConnection"];
 
 	NSString* repositoryIdentity = [self repositoryIdentity];
 	if (repositoryIdentity)
@@ -255,7 +255,8 @@
 	shortName	= [coder decodeObjectForKey:@"caption"];
 	isExpanded	= [coder decodeBoolForKey:@"nodeIsExpanded"];
 	path		= [coder decodeObjectForKey:@"path"];
-	recentConnections  = [coder decodeObjectForKey:@"recentConnections"];
+	recentPushConnection = [coder decodeObjectForKey:@"recentPushConnection"];
+	recentPullConnection = [coder decodeObjectForKey:@"recentPullConnection"];
 
 	if ([self isLocalRepositoryRef] && path)
 	{
@@ -306,14 +307,6 @@
 
 - (NSString*) repositoryIdentity	{ return [[[AppController sharedAppController] repositoryIdentityForPath] synchronizedObjectForKey:path]; }
 
-- (void) addRecentConnection:(SidebarNode*)mark
-{
-	if (!recentConnections)
-		recentConnections = [[NSMutableArray alloc]init];
-	
-	[recentConnections removeObject:mark];		// Remove old occurrences of equivalent records.
-	[recentConnections insertObject:mark atIndex:0];
-}
 
 // Virgin repositories are freshly initialized repositories in mercurial without any commits in them at all. The first commit or
 // push to such a repository will "crystalize" the repository in this new state.
@@ -348,20 +341,23 @@
 	return [repositoryIdentitySelf isEqualToString:repositoryIdentityOther];
 }
 
-- (void) pruneRecentConnectionsOf:(NSString*)deadPath
-{
-	if ([self isRepositoryRef])
-	{
-		NSMutableArray* nodes = [self recentConnections];
-		NSMutableArray* newNodes = [NSMutableArray arrayWithArray:nodes];		
-		for (SidebarNode* node in nodes)
-			if ([[node path] containsString:deadPath])
-				[newNodes removeObject:node];
-		[self setRecentConnections:newNodes];
-	}
 
-	for (SidebarNode* child in [self children])
-		[child pruneRecentConnectionsOf:deadPath];
+- (SidebarNode*) copySubtreeCompatibleTo:(SidebarNode*)comp
+{
+	if ([self isRepositoryRef] && [self isCompatibleTo:comp])
+		return [self copyNode];
+	NSMutableArray* compatibleChildren = [[NSMutableArray alloc]init];
+	for (SidebarNode* node in children)
+	{
+		SidebarNode* subtree = [node copySubtreeCompatibleTo:comp];
+		if (subtree)
+			[compatibleChildren addObject:subtree];
+	}
+	if (IsEmpty(compatibleChildren))
+		return nil;
+	SidebarNode* prunedNode = [self copyNode];
+	prunedNode->children = compatibleChildren;
+	return prunedNode;
 }
 
 
