@@ -95,6 +95,35 @@
 	return node;
 }
 
+// Duplicate a node but don't copy the immutable bits, so the size of the copy is smallish.
+- (SidebarNode*) copyNode
+{
+	SidebarNode* newNode		= [[SidebarNode alloc]init];
+	newNode->nodeKind			= nodeKind;
+	newNode->shortName			= shortName;
+	newNode->path				= path;
+	newNode->icon				= icon;
+	newNode->isExpanded			= isExpanded;
+	if (recentConnections)
+		newNode->recentConnections = [NSMutableArray arrayWithArray:recentConnections];	
+	return newNode;
+}
+
+// Duplicate a tree but don't copy the immutable bits, so the size of the copy is smallish.
+- (SidebarNode*) copyNodeTree
+{
+	SidebarNode* newNode = [self copyNode];
+	if (children)
+	{
+		newNode->children = [[NSMutableArray alloc]init];
+		for (SidebarNode* node in children)
+			[newNode->children addObject:[node copyNodeTree]];
+		for (SidebarNode* node in newNode->children)
+			[node setParent:newNode];
+	}
+	return newNode;
+}
+
 
 
 
@@ -165,31 +194,6 @@
 		}
 	
 	return part;
-}
-
-
-// Duplicate a tree but don't copy the immutable bits, so the size of the copy is smallish.
-- (SidebarNode*) copyNodeTree
-{
-	SidebarNode* newNode		= [[SidebarNode alloc]init];
-	newNode->nodeKind			= nodeKind;
-	newNode->shortName			= shortName;
-	newNode->path				= path;
-	newNode->icon				= icon;
-	newNode->isExpanded			= isExpanded;
-
-	if (children)
-	{
-		newNode->children = [[NSMutableArray alloc]init];
-		for (SidebarNode* node in children)
-			[newNode->children addObject:[node copyNodeTree]];
-		for (SidebarNode* node in newNode->children)
-			[node setParent:newNode];
-	}
-	if (recentConnections)
-		newNode->recentConnections = [NSMutableArray arrayWithArray:recentConnections];
-
-	return newNode;
 }
 
 

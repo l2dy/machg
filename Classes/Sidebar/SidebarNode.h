@@ -55,6 +55,9 @@ typedef enum
 + (SidebarNode*) nodeWithCaption:(NSString*)cap  forLocalPath:(NSString*)path;
 + (SidebarNode*) nodeWithCaption:(NSString*)cap  forServerPath:(NSString*)path;
 + (SidebarNode*) nodeWithCaption:(NSString*)cap  path:(NSString*)thePath  icon:(NSImage*)icn  nodeKind:(SidebarNodeKind)type;
+- (SidebarNode*) copyNode;
+- (SidebarNode*) copyNodeTree;
+
 
 // Child maintenance
 - (void) addChild:(SidebarNode*)node;
@@ -64,9 +67,11 @@ typedef enum
 - (SidebarNode*) childNodeAtIndex:(int)index;
 - (NSUInteger) numberOfChildren;
 
+
 // Setters
 - (void) setNodeKind:(SidebarNodeKind)type;
 - (void) setShortName:(NSString*)cap;
+
 
 // Accessors
 - (BOOL) isLocalRepositoryRef;
@@ -82,9 +87,6 @@ typedef enum
 - (NSString*) fullURLPath;
 - (NSString*) pathHidingAnyPassword;
 
-
-// Undo handling
-- (SidebarNode*) copyNodeTree;
 
 // Saving and Loading
 - (void) encodeWithCoder:(NSCoder*)coder;
