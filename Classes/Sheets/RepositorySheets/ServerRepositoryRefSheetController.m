@@ -319,7 +319,8 @@
 		[theSidebar selectNode:newNode];
 	}
 
-	[[[AppController sharedAppController] repositoryIdentityForPath] synchronizedSetObject:newId forKey:newPath];
+	if (IsNotEmpty(newId) && IsNotEmpty(newPath))
+		[[[AppController sharedAppController] repositoryIdentityForPath] synchronizedSetObject:newId forKey:newPath];
 	[passwordKeyChainItem_ removeFromKeychain];
 
 	if (IsNotEmpty(password_))
@@ -381,6 +382,8 @@
 
 - (NSString*) generateFullServerURLIncludingPassword:(BOOL)includePass andMaskingPassword:(BOOL)mask
 {
+	if (IsEmpty(baseServerURLFieldValue_))
+		return nil;
 	NSURL* theBaseURL = [NSURL URLWithString:baseServerURLFieldValue_];
 	BOOL valid = [theBaseURL scheme] && [theBaseURL host];
 	if (!valid || IsEmpty(username_))
@@ -396,6 +399,8 @@
 
 - (void) baseServerURLChanged
 {
+	if (IsEmpty(baseServerURLFieldValue_))
+		return;
 	NSURL* theBaseURL = [NSURL URLWithString:baseServerURLFieldValue_];
 
 	if (IsNotEmpty([theBaseURL password]))

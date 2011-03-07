@@ -134,6 +134,8 @@ NSAttributedString*   fixedWidthAttributedString(NSString* string);
 			PasswordVisibilityType visibilityInDisclosure = [theServerRefController showRealPassword] ? eAllPasswordsAreVisible : eKeyChainPasswordsAreMangled;
 			NSString* fullServerURL      = [theServerRefController generateFullServerURLIncludingPassword:YES andMaskingPassword:NO];
 			NSString* visibleServerURL   = [theServerRefController generateFullServerURLIncludingPassword:YES andMaskingPassword:visibilityInDisclosure != eAllPasswordsAreVisible];
+			if (IsEmpty(fullServerURL) || IsEmpty(visibleServerURL))
+				return;
 			dispatchWithTimeOutBlock(globalQueue(), 20.0,
 									 
 									 // Main Block
