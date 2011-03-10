@@ -163,7 +163,7 @@
 	if (ShowModifiedFilesInBrowserFromDefaults())	[argsStatus addObject:@"--modified"];
 	[argsStatus addObjectsFromArray:absolutePaths];
 	
-	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:rootPath  logging:eLoggingNone onTask:nil];
+	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:rootPath  logging:eLoggingNone];
 	
 	if ([results.errStr length] > 0)
 	{
