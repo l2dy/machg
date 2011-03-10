@@ -8,7 +8,6 @@
 //
 
 #import "TaskExecutions.h"
-#import "AppController.h"
 #import "Common.h"
 
 
@@ -204,22 +203,6 @@
 // MARK: -
 
 @implementation TaskExecutions
-
-+ (TaskExecutions*) theInstance
-{
-	static TaskExecutions* theTaskExecutions = nil;
-	if (!theTaskExecutions)
-		theTaskExecutions = [[TaskExecutions alloc] init];	// This will actually get the instance in the init method.
-	return theTaskExecutions;
-}
-
-- (TaskExecutions*) init
-{
-	static TaskExecutions* theTaskExecutions = nil;
-	if (!theTaskExecutions)
-		theTaskExecutions = [TaskExecutions alloc];
-	return theTaskExecutions;
-}
 
 
 

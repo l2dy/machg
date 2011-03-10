@@ -82,13 +82,7 @@ typedef enum
 
 @interface TaskExecutions : NSObject
 {
-	AppController* appController;
 }
-
-// Initialization
-+ (TaskExecutions*) theInstance;
-- (TaskExecutions*) init;	// The init method returns the unique instance.
-
 
 // General Task handling.
 + (ExecutionResult*) synchronouslyExecute:(NSString*)cmd withArgs:(NSArray*)args onTask:(NSTask*)theTask;

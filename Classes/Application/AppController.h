@@ -29,7 +29,6 @@
 	IBOutlet WebView*			creditsWebview;
 	IBOutlet RadialGradiantBox*	backingBox;
 	
-	TaskExecutions*				theTaskExecutions;						// We have this reference to ensure garbage collection doesn't collect this.
 	NSMutableDictionary*		repositoryIdentityForPath_;				// This dictionary contains the collection of root changesets for a given path.
 																		// Ie for /Users/jason/Development/MyProject the value might be 2e7ba9cebde9
 	NSMutableDictionary*		dirtyRepositoryIdentityForPath_;		// This dictionary contains the paths of repositories where we need to recompute

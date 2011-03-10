@@ -95,7 +95,6 @@
 {
 	self = [super init];
 	applicationHasStarted = NO;
-	theTaskExecutions = [TaskExecutions theInstance];
 	repositoryIdentityForPath_			= [[NSMutableDictionary alloc]init];
 	computingRepositoryIdentityForPath_ = [[NSMutableDictionary alloc]init];
 	dirtyRepositoryIdentityForPath_     = [[NSMutableDictionary alloc]init];
