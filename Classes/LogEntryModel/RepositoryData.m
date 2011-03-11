@@ -342,11 +342,13 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 		//
 		// compute tipChanged, parentsChanged, labelsChanged
 		//
-		BOOL tipChanged     = !theSameNumbers(newTipRevision, oldTipRevision) || !theSameStrings(newTipChangeset,oldTipChangeset);
-		BOOL parentsChanged = !theSameNumbers(newParent1Revision, oldParent1Revision)  || !theSameNumbers(newParent2Revision, oldParent2Revision) ||
-							  !theSameStrings(newParent1Changeset,oldParent1Changeset) || !theSameStrings(newParent2Changeset,oldParent2Changeset);
-		BOOL labelsChanged  = labelArrayDictionariesAreEqual(revisionNumberToLabels_, newRevisionToLabels);
-
+		BOOL tipChanged       = !theSameNumbers(newTipRevision, oldTipRevision) || !theSameStrings(newTipChangeset,oldTipChangeset);
+		BOOL parentsChanged   = !theSameNumbers(newParent1Revision, oldParent1Revision)  || !theSameNumbers(newParent2Revision, oldParent2Revision) ||
+							    !theSameStrings(newParent1Changeset,oldParent1Changeset) || !theSameStrings(newParent2Changeset,oldParent2Changeset);
+		BOOL labelsChanged    = labelArrayDictionariesAreEqual(revisionNumberToLabels_, newRevisionToLabels);		
+		NSString* browserRoot = [[myDocument theBrowser] absolutePathOfRepositoryRoot];
+		BOOL rootChanged      = !browserRoot || !rootPath_ || [browserRoot isNotEqualToString:rootPath_];
+		
 		dispatch_async(mainQueue(), ^{
 			BOOL incompleteRevisionChanged;
 			@synchronized(self)
@@ -379,7 +381,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 			
 			DebugLog(@"finished loadCombinedInformationAndNotify");
 
-			if (initializing)
+			if (initializing || rootChanged)
 				[myDocument postNotificationWithName:kRepositoryDataIsNew];
 			else if (tipChanged || parentsChanged || labelsChanged || incompleteRevisionChanged)
 				[myDocument postNotificationWithName:kRepositoryDataDidChange];
