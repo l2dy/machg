@@ -854,9 +854,9 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	const char* threadName = [[[NSThread currentThread] name] UTF8String];
 	NSString* fileName=[[NSString stringWithUTF8String:file] lastPathComponent];
 	if (threadName)
-		fprintf(stderr,"%s/%s (%s:%d) %s",threadName,funcName,[fileName UTF8String],lineNumber,[body UTF8String]);
+		fprintf(stderr,"%s/%s %s",threadName,funcName,[body UTF8String]);
 	else
-		fprintf(stderr,"%p/%s (%s:%d) %s",[NSThread currentThread],funcName,[fileName UTF8String],lineNumber,[body UTF8String]);
+		fprintf(stderr,"%p/%s %s",[NSThread currentThread],funcName,[body UTF8String]);
 	[body release];	
 }
 
