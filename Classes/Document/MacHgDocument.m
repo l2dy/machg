@@ -203,7 +203,7 @@
 
 - (void) awakeFromNib
 {
-	[self observe:kRepositoryRootChanged		from:self  byCalling:@selector(repositoryRootDidChange)];
+	[self observe:kRepositoryRootChanged		from:self		  byCalling:@selector(repositoryRootDidChange)];
 	[self observe:NSWindowDidMoveNotification	from:mainWindow_  byCalling:@selector(recordWindowFrameToDefaults)];
 	[self observe:NSWindowDidResizeNotification	from:mainWindow_  byCalling:@selector(recordWindowFrameToDefaults)];
 	//[self observe:nil from:self byCalling:@selector(LogNotification:)];

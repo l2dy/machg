@@ -10,7 +10,7 @@
 //
 //
 // To use this class:
-// 1. in Interface builder construct a NSSplitView with 3 panes (Or generalize the methods below too 4, 5 panes etc.)
+// 1. in Interface builder construct a NSSplitView with 3 panes (Or generalize the methods below to 4, 5 panes etc.)
 // 2. Change the NSSplitView into a JHAccordionView.  (Interface Builder : Menu Tools-> IdentityInspector. In the class identity change it there.)
 // 3. Change each of the children of the JHAccordionView into a JHAccordionSubView. (Again through the IdentityInspector)
 // 4. Hook up the outlets (pane1Box, pane2Box, pane3Box) of the JHAccordionView to point to the JHAccordionSubView's.
@@ -187,7 +187,7 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 
 
 // We need to do this tight drag loop by "hand" since NSSplitView does a tight drag loop, ie if you override mouseDragged here it
-// will never be called when you are dragging a divider since NSSplitView will be swallowing the events. Thus we dod the same
+// will never be called when you are dragging a divider since NSSplitView will be swallowing the events. Thus we do the same
 // thing here. This complication is necessary since we want to be able to drag one divider past another and have both dividers
 // move. The UI is just better this way. When playing with it before I was frustrated by this lack of movement and this fixes it.
 - (void) doDividerDragLoop:(NSEvent*)theEvent
