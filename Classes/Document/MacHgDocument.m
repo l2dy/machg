@@ -2346,27 +2346,21 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 		
 		DispatchGroup group = dispatch_group_create();
 
-		for (NSString* file in filesWhichHaveDifferences)
+		NSString* cmd;
+		if (UseWhichToolForDiffingFromDefaults() == eUseFileMergeForDiffs)
+			cmd = @"opendiff";
+		else if (IsNotEmpty(ToolNameForDiffingFromDefaults()))
+			cmd = ToolNameForDiffingFromDefaults();
+		else
+			cmd = @"diff";		
+		
+		if ([cmd isEqualToString: @"ksdiff"])
+		{
 			dispatch_group_async(group, globalQueue(), ^{
-				NSString* cmd;
-				if (UseWhichToolForDiffingFromDefaults() == eUseFileMergeForDiffs)
-					cmd = @"opendiff";
-				else if (IsNotEmpty(ToolNameForDiffingFromDefaults()))
-					cmd = ToolNameForDiffingFromDefaults();
-				else
-					cmd = @"diff";
-
 				NSMutableArray* diffArgs = [NSMutableArray arrayWithObjects: cmd, @"--cwd", rootPath, nil];
-				if (UseWhichToolForDiffingFromDefaults() == eUseFileMergeForDiffs)
-				{
-					NSString* absPathToDiffScript = fstr(@"%@/%@",[[NSBundle mainBundle] resourcePath], @"fmdiff.sh");
-					NSString* cmdOverride = fstr(@"extdiff.cmd.opendiff=%@",absPathToDiffScript);
-					[diffArgs addObject:@"--config" followedBy:cmdOverride];
-					[diffArgs addObject:@"--config" followedBy:@"extensions.hgext.extdiff="];
-				}
 				if (versionToCompareTo)
 					[diffArgs addObject:@"--rev" followedBy:versionToCompareTo];
-				[diffArgs addObject:file];
+				[diffArgs addObjectsFromArray:filesWhichHaveDifferences];
 				
 				NSTask* task     = [[NSTask alloc] init];
 				NSString* hgPath = executableLocationHG();
@@ -2375,6 +2369,31 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 				[task setArguments:diffArgs];
 				[task launch];			// Start the process
 			});
+		}
+		else
+		{
+			for (NSString* file in filesWhichHaveDifferences)
+				dispatch_group_async(group, globalQueue(), ^{
+					NSMutableArray* diffArgs = [NSMutableArray arrayWithObjects: cmd, @"--cwd", rootPath, nil];
+					if (UseWhichToolForDiffingFromDefaults() == eUseFileMergeForDiffs)
+					{
+						NSString* absPathToDiffScript = fstr(@"%@/%@",[[NSBundle mainBundle] resourcePath], @"fmdiff.sh");
+						NSString* cmdOverride = fstr(@"extdiff.cmd.opendiff=%@",absPathToDiffScript);
+						[diffArgs addObject:@"--config" followedBy:cmdOverride];
+						[diffArgs addObject:@"--config" followedBy:@"extensions.hgext.extdiff="];
+					}
+					if (versionToCompareTo)
+						[diffArgs addObject:@"--rev" followedBy:versionToCompareTo];
+					[diffArgs addObject:file];
+					
+					NSTask* task     = [[NSTask alloc] init];
+					NSString* hgPath = executableLocationHG();
+					[task setLaunchPath: hgPath];
+					[task setEnvironment:[TaskExecutions environmentForHg]];
+					[task setArguments:diffArgs];
+					[task launch];			// Start the process
+				});
+		}
 		dispatchGroupWaitAndFinish(group);
 	}];
 }
