@@ -582,7 +582,7 @@
 		else							       pathType = @"\n";
 		
 		[attrString appendAttributedString: [NSAttributedString string:pathType withAttributes:smallGraySystemFontAttributes]];
-		[attrString appendAttributedString: [NSAttributedString string:[node path] withAttributes:smallSystemFontAttributes]];
+		[attrString appendAttributedString: [NSAttributedString string:[node pathHidingAnyPassword] withAttributes:smallSystemFontAttributes]];
 	}
 	return attrString;
 }
