@@ -200,7 +200,7 @@
 - (NSString*)	selectedRepositoryShortName;
 - (NSString*)	selectedRepositoryPath;
 - (SidebarNode*) selectedRepositoryRepositoryRef;
-- (void)		abandonCurrentRepository;
+- (void)		discardCurrentRepository;
 
 
 // Query the browsed files of the repository

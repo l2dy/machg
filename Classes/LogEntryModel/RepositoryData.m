@@ -57,6 +57,7 @@
 		hgIgnoreFilesRegEx_      = nil;
 		hgIgnoreFilesTimeStamp_  = nil;
 		badRepositoryReadCount_  = 0;
+		discarded_				 = NO;
 		
 		// Parent, tip, labels, and incomplete entry
 		parent1Revision_		 = nil;
@@ -78,6 +79,10 @@
 	return self;
 }
 
+- (void) markAsDiscarded
+{
+	discarded_ = YES;
+}
 
 - (void) underlyingRepositoryDidChange
 {
@@ -286,6 +291,8 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 		//
 		NSMutableArray* fullLabelArgs = [NSMutableArray arrayWithObjects:@"combinedinfo", nil];
 		ExecutionResult* fullLabelResults = [TaskExecutions executeMercurialWithArgs:fullLabelArgs fromRoot: rootPath_ logging:eLoggingNone];
+		if (discarded_)
+			return;
 		NSString* rawfullLabel = trimString(fullLabelResults.outStr);
 		NSArray* fullLabelLines = [rawfullLabel componentsSeparatedByString:@"\n"];
 		NSInteger headCount = 0;

@@ -1359,12 +1359,13 @@
 	return repositoryData_;
 }
 
-- (void) abandonCurrentRepository
+- (void) discardCurrentRepository
 {
 	[events_ stopWatchingPaths];
 	[self actionSwitchViewToBackingView:self];
 	[[self mainWindow] setRepresentedURL:[self fileURL]];	// The drop down represents the path to the MacHg document
 	[repositoryData_ stopObserving];						// Stop any abandoned repositoryData objects from receiving notifications.
+	[repositoryData_ markAsDiscarded];
 	repositoryData_ = nil;
 }
 
@@ -1540,7 +1541,7 @@
 	
 	if (![node isExistentLocalRepositoryRef])
 	{
-		[self abandonCurrentRepository];
+		[self discardCurrentRepository];
 		return;
 	}
 

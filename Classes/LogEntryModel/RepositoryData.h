@@ -34,8 +34,11 @@
 	
 	NSInteger					badRepositoryReadCount_;	// Records the number of times we have tried to read in the repository
 															// and failed
+	BOOL						discarded_;					// When we abadon a repoository data it means the controlling document
+															// has moved on to other repositories. None of our results or
+															// computations for this repository data will be used
 	
-	// Parent and tip info
+	// Parent and tip info from my combinedinfo extension
 	NSNumber*					parent1Revision_;			// parent1Rev
 	NSNumber*					parent2Revision_;			// parent2Rev
 	NSString*					parent1Changeset_;			// parent1Changeset
@@ -56,6 +59,7 @@
 
 // Initialization
 - (id)			initWithRootPath:(NSString*)rootPath andDocument:(MacHgDocument*)doc;
+- (void)		markAsDiscarded;			// Mark this repository data as no longer being used / needed
 
 
 // .hgignore handling
