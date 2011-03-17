@@ -153,7 +153,7 @@
 
 - (NSAttributedString*) attributedStringForNode
 {
-	NSDictionary* attributesToApply;
+	NSDictionary* attributesToApply = standardMissingSidebarFontAttributes;
 	if ([self isServerRepositoryRef])
 		attributesToApply = [self isVirginRepository] ? italicVirginSidebarFontAttributes : italicSidebarFontAttributes;
 	else if ([self isLocalRepositoryRef])

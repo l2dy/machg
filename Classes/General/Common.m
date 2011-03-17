@@ -1289,7 +1289,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 @implementation NSApplication ( NSApplicationPlusExtensions )
 - (void) presentAnyErrorsAndClear:(NSError**)err;
 {
-	if (*err)
+	if (err && *err)
 	{
 		[self presentError:*err];
 		*err = nil;

@@ -539,6 +539,7 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 		case eLogEntryLoadedNone:				statusString = @"eLogEntryLoadedNone";				break;
 		case eLogEntryLoading:					statusString = @"eLogEntryLoading";					break;
 		case eLogEntryLoaded:					statusString = @"eLogEntryLoaded";					break;
+		default:								statusString = @"error";							break;
 	}
 
 	return fstr(@"LogEntry: rev %@, parents %@, children %@, status %@", revString, parentsArrayString, childrenArrayString, statusString);
