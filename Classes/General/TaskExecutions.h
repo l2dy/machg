@@ -30,6 +30,26 @@ typedef enum
 } LoggingEnum;
 
 
+@interface ShellTask : NSObject
+{
+	NSString*		generatingCmd_;		// The command that was executed
+	NSArray*		generatingArgs_;	// The arguments used to the command
+	int				result_;			// The result of executing the command
+	NSPipe*			outPipe_;			// We keep this around so garbage collection can't clean the pipe up prematurely.
+	NSPipe*			errPipe_;			// We keep this around so garbage collection can't clean the pipe up prematurely.
+    NSFileHandle*	outHandle_;
+	NSFileHandle*	errHandle_;
+    NSMutableData*	outputData_;
+	NSMutableData*	errorData_;
+	NSTask*			task_;
+    BOOL			isFinished_;
+	BOOL			pendingTermination_;
+}
+
++ (ExecutionResult*) execute:(NSString*)cmd withArgs:(NSArray*)args onTask:(NSTask*)task;
+
+@end
+
 @interface ExecutionResult : NSObject
 {
 	NSString* generatingCmd_;	// The command that was executed
@@ -38,6 +58,8 @@ typedef enum
 	NSString* outStr_;			// The output received on stdOut due to executing the command
 	NSString* errStr_;			// The output received on stdErr due to executing the command
 	BOOL      loggedToAlertOrWindow_;
+	@public
+	ShellTask* theShellTask_;
 }
 
 @property (readonly, assign) NSString* generatingCmd;

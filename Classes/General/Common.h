@@ -959,7 +959,8 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 // MARK: -
 @interface NSFileHandle (CSFileHandleExtensions)
-- (NSData*)	readDataToEndOfFileIgnoringErros;
+- (NSData*)	readDataToEndOfFileIgnoringErrors;
+- (NSData*)	availableDataIgnoringErrors;
 @end
 
 

@@ -852,11 +852,11 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	NSString* body =  [[NSString alloc] initWithFormat: format arguments: ap];
 	va_end (ap);
 	const char* threadName = [[[NSThread currentThread] name] UTF8String];
-	NSString* fileName=[[NSString stringWithUTF8String:file] lastPathComponent];
+	// NSString* fileName = [[NSString stringWithUTF8String:file] lastPathComponent];
 	if (threadName)
-		fprintf(stderr,"%s/%s %s",threadName,funcName,[body UTF8String]);
+		fprintf(stderr,"%s/%-40s %s",threadName,funcName,[body UTF8String]);
 	else
-		fprintf(stderr,"%p/%s %s",[NSThread currentThread],funcName,[body UTF8String]);
+		fprintf(stderr,"%p/%-40s %s",[NSThread currentThread],funcName,[body UTF8String]);
 	[body release];	
 }
 
@@ -1316,7 +1316,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 // MARK: -
 @implementation NSFileHandle (CSFileHandleExtensions)
-- (NSData*)	readDataToEndOfFileIgnoringErros
+- (NSData*)	readDataToEndOfFileIgnoringErrors
 {
 	int tryCount = 0;
 	for (;;)
@@ -1341,6 +1341,22 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 			@throw;
 		}
 	}
+}
+
+
+- (NSData*)	availableDataIgnoringErrors
+{
+	@try
+	{
+		return [self availableData];
+	}
+	@catch (NSException *e)
+	{
+		if ([[e name] isEqualToString:NSFileHandleOperationException] && [[e reason] isMatchedByRegex:@"\\[NSConcreteFileHandle availableData\\]"])
+			return nil;
+		@throw;
+	}
+	return nil;
 }
 
 @end

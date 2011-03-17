@@ -12,6 +12,262 @@
 
 
 
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  ShellTask
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+
+@interface ShellTask (PrivateAPI)
+- (BOOL) shouldFinishUp;
+- (void) finishUp;
+- (void) close;
+- (NSString*) commandLineString;
+@end
+
+
+@implementation ShellTask
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Notification Handling
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (void) setPendingTermination
+{
+	pendingTermination_ = YES;
+	[NSObject cancelPreviousPerformRequestsWithTarget:self  selector:@selector(finishUp)  object:nil];
+	[self performSelector:@selector(finishUp)  withObject:nil  afterDelay:10.0];
+}
+
+- (void) resetPendingTermination
+{
+	[NSObject cancelPreviousPerformRequestsWithTarget:self  selector:@selector(finishUp)  object:nil];
+	pendingTermination_ = NO;
+}
+
+
+
+- (void) gotOutput:(NSNotification*)notification
+{
+    NSData* data = [notification.userInfo objectForKey:NSFileHandleNotificationDataItem];
+    if (notification.object == outHandle_)
+	{
+        if (data.length > 0)
+		{
+			DebugLog(@"...got Output for %@ ...", [self commandLineString]);
+            [outHandle_ readInBackgroundAndNotify];
+			[outputData_ appendData:data];
+			[self resetPendingTermination];
+        }
+		else
+		{
+			DebugLog(@"...got NULL standard Output for %@ ...", [self commandLineString]);
+            outHandle_ = nil;
+            if ([self shouldFinishUp])
+                [self finishUp];
+        }
+    }
+}
+
+- (void) gotError:(NSNotification*)notification
+{
+    if (notification.object == errHandle_)
+	{
+        NSData* data = [notification.userInfo objectForKey:NSFileHandleNotificationDataItem];
+        if (data.length > 0)
+		{
+			DebugLog(@"...got Error for %@ ...", [self commandLineString]);
+            [errHandle_ readInBackgroundAndNotify];
+            [errorData_ appendData:data];
+			[self resetPendingTermination];
+        }
+		else
+		{
+			DebugLog(@"...got NULL Error Output for %@ ...", [self commandLineString]);
+            errHandle_ = nil;
+            if ([self shouldFinishUp])
+                [self finishUp];
+        }
+    }
+}
+
+
+- (void) gotExit:(NSNotification*)notification
+{
+	if (notification)
+		DebugLog(@"...got Exit for %@ ...", [self commandLineString]);
+	if ([self shouldFinishUp])
+		[self finishUp];
+    else
+        [self setPendingTermination];
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Handling
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+
+- (void) stop
+{
+    [task_ interrupt];
+    [self finishUp];
+}
+
+- (void) close
+{
+}
+
+
+- (BOOL) shouldFinishUp
+{
+	return ![task_ isRunning] && !outHandle_ && !errHandle_;
+}
+
+- (void) finishUp
+{
+	if (isFinished_)
+		return;
+	
+	DebugLog(@"...Finishing up for %@ ...", [self commandLineString]);
+	
+	[NSObject cancelPreviousPerformRequestsWithTarget:self  selector:@selector(finishUp)  object:nil];
+	[self stopObserving:NSFileHandleReadCompletionNotification from:nil];
+	[self stopObserving:NSTaskDidTerminateNotification from:nil];
+	
+	[task_ terminate];
+	
+	// Clear standard out and standard error
+	NSData* data;
+	while ((data = [outHandle_ availableDataIgnoringErrors]) && [data length])
+		[outputData_ appendData:data];	
+	while ((data = [errHandle_ availableDataIgnoringErrors]) && [data length])
+		[errorData_ appendData:data];
+	
+	outHandle_ = nil;
+	errHandle_ = nil;
+	result_ = [task_ terminationStatus];
+	isFinished_ = YES;	
+}
+
+
+- (NSString*) commandLineString
+{
+    NSMutableString* desc = [NSMutableString stringWithString:[generatingCmd_ lastPathComponent]];
+    for (NSString* arg in generatingArgs_)
+	{
+        [desc appendString:@" "];
+        [desc appendString:arg];
+    }
+    return desc;
+}
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Execution
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (BOOL) waitTillFinished
+{
+    // wait for task to exit:
+    while (![self shouldFinishUp])
+	{
+		// If the task is terminated we should set up a pending termination which will terminate in a bit. This catches some
+		// zombie NSTasks where either the outputData or errorData of 0 were never posted..
+		BOOL terminated = ![task_ isRunning];
+		if (terminated && !pendingTermination_)
+		{
+			DebugLog(@"...Found terminated for %@ ...", [self commandLineString]);
+			[self setPendingTermination];
+		}
+		
+		BOOL runLoopRan = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+		if (!runLoopRan)
+			break;
+		if (!isFinished_)
+			DebugLog(@"...waitTillFinished still waiting for %@ ...", [self commandLineString]);
+	}
+	
+	[self finishUp];
+	DebugLog(@"...Exiting waitTillFinished for %@ ...", [self commandLineString]);
+    return (result_ == 0);
+}
+
+
+- (id) initWithCommand:(NSString*)cmd andArgs:(NSArray*)args onTask:(NSTask*)task
+{	
+	generatingCmd_ = cmd;
+	generatingArgs_ = args;
+	task_ = task ? task : [[NSTask alloc] init];
+	
+	outPipe_    = [[NSPipe alloc] init];     // Create the pipe to write standard out to
+	errPipe_    = [[NSPipe alloc] init];     // Create the pipe to write standard error to
+	outHandle_  = [outPipe_ fileHandleForReading];
+	errHandle_  = [errPipe_ fileHandleForReading];
+	outputData_ = [[NSMutableData alloc] init];
+	errorData_  = [[NSMutableData alloc] init];
+	
+	[task_ setLaunchPath:cmd];
+	[task_ setArguments:args];
+	[task_ setStandardInput:[NSPipe pipe]];
+	[task_ setStandardOutput:outPipe_];
+	[task_ setStandardError:errPipe_];
+	
+	[self observe:NSFileHandleReadCompletionNotification from:outHandle_	byCalling:@selector(gotOutput:)];
+	[self observe:NSFileHandleReadCompletionNotification from:errHandle_	byCalling:@selector(gotError:)];
+	[self observe:NSTaskDidTerminateNotification		 from:task_			byCalling:@selector(gotExit:)];
+	
+	[outHandle_ readInBackgroundAndNotify];
+	[errHandle_ readInBackgroundAndNotify];
+	isFinished_			= NO;
+	pendingTermination_ = NO;
+	
+	return self;
+}
+
++ (ExecutionResult*) execute:(NSString*)cmd withArgs:(NSArray*)args onTask:(NSTask*)task
+{
+	ShellTask* shellTask = [[ShellTask alloc] initWithCommand:cmd andArgs:args onTask:task];
+	
+	[shellTask->task_ launch];			// Start the process
+	DebugLog(@"launched %@", [shellTask commandLineString]);
+	
+	NSAssert(shellTask->task_.isRunning, @"The task must be running after launching it");
+	
+	[shellTask waitTillFinished];
+
+	DebugLog(@"Finished execute cmd for %@", [shellTask commandLineString]);
+	
+	if (IsEmpty(shellTask->outputData_) && IsEmpty(shellTask->errorData_) && [[shellTask->generatingArgs_ firstObject] isNotEqualToString:@"combinedinfo"])
+		DebugLog(@"Null result posted for operation %@", [shellTask commandLineString]);
+	// Move the process into our group if we can so when we quit all child processes are killed. See http:
+	// www.cocoadev.com/index.pl?NSTaskTermination. Maybe there is a better way to do this in which case I would like to know.
+	//	pid_t group = setsid();
+	//	if (group == -1)
+	//		group = getpgrp();
+	//	setpgid([self processIdentifier], group);
+	NSString* outStr = [[NSString alloc] initWithData:shellTask->outputData_ encoding:NSUTF8StringEncoding];
+	NSString* errStr = [[NSString alloc] initWithData:shellTask->errorData_  encoding:NSUTF8StringEncoding];
+	ExecutionResult* result = [ExecutionResult resultWithCmd:cmd args:args result:shellTask->result_ outStr:outStr errStr:errStr];
+	result->theShellTask_ = shellTask;
+	return result;
+}
+
+@end
+
+
+
+
+
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 // MARK:  ExecutionResult*
@@ -44,8 +300,8 @@
 	ExecutionResult* results = [[ExecutionResult alloc]init];
 	NSPipe* outPipe = [task standardOutput];												// get the standard output
 	NSPipe* errPipe = [task standardError];													// get the standard error
-	NSData* outData = [[outPipe fileHandleForReading] readDataToEndOfFileIgnoringErros];	// Read the output
-	NSData* errData = [[errPipe fileHandleForReading] readDataToEndOfFileIgnoringErros];	// Read the output
+	NSData* outData = [[outPipe fileHandleForReading] readDataToEndOfFileIgnoringErrors];	// Read the output
+	NSData* errData = [[errPipe fileHandleForReading] readDataToEndOfFileIgnoringErrors];	// Read the output
 	[task waitUntilExit];	// Wait *after* the data read. Seems counter intuitive but see the Cocodev articles about NSTask
 	results->generatingCmd_   = [task launchPath];
 	results->generatingArgs_  = [NSArray arrayWithArray:[task arguments]];
@@ -260,8 +516,9 @@ static NSString* processedPathEnv(NSDictionary* processEnv)
 
 	NSTask* task = theTask ? theTask : [[NSTask alloc] init];
 	[task setEnvironment:[self environmentForHg]];
-	[task startExecution:cmd withArgs:args];
-	return [ExecutionResult extractResults:task];
+	return [ShellTask execute:cmd withArgs:args onTask:task];
+//	[task startExecution:cmd withArgs:args];
+//	return [ExecutionResult extractResults:task];
 }
 
 
