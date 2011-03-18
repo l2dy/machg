@@ -67,6 +67,7 @@
 		{
 			DebugLog(@"...got NULL standard Output for %@ ...", [self commandLineString]);
             outHandle_ = nil;
+			taskOutputClosed_ = YES;
             if ([self shouldFinishUp])
                 [self finishUp];
         }
@@ -89,6 +90,7 @@
 		{
 			DebugLog(@"...got NULL Error Output for %@ ...", [self commandLineString]);
             errHandle_ = nil;
+			taskErrorClosed_ = YES;
             if ([self shouldFinishUp])
                 [self finishUp];
         }
@@ -100,6 +102,7 @@
 {
 	if (notification)
 		DebugLog(@"...got Exit for %@ ...", [self commandLineString]);
+	taskComplete_ = YES;
 	if ([self shouldFinishUp])
 		[self finishUp];
     else
@@ -129,7 +132,7 @@
 
 - (BOOL) shouldFinishUp
 {
-	return ![task_ isRunning] && !outHandle_ && !errHandle_;
+	return taskComplete_ && taskOutputClosed_ && taskErrorClosed_;
 }
 
 - (void) finishUp
@@ -215,7 +218,10 @@
 	errHandle_  = [errPipe_ fileHandleForReading];
 	outputData_ = [[NSMutableData alloc] init];
 	errorData_  = [[NSMutableData alloc] init];
-	
+	taskComplete_ = NO;
+	taskOutputClosed_ = NO;
+	taskErrorClosed_ = NO;
+
 	[task_ setLaunchPath:cmd];
 	[task_ setArguments:args];
 	[task_ setStandardInput:[NSPipe pipe]];
