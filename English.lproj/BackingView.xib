@@ -10,7 +10,9 @@
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
 			<string key="NS.object.0">740</string>
 		</object>
-		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs"/>
+		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
+			<integer value="38"/>
+		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 		</array>
@@ -26,7 +28,7 @@
 				<string key="NSClassName">NSApplication</string>
 			</object>
 			<object class="NSCustomView" id="93727628">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">4370</int>
 				<array class="NSMutableArray" key="NSSubviews">
 					<object class="NSBox" id="545855797">
@@ -144,10 +146,31 @@
 															<int key="NSPeriodicInterval">25</int>
 														</object>
 													</object>
-													<object class="NSButton" id="73992133">
+													<object class="NSButton" id="925887045">
 														<reference key="NSNextResponder" ref="866118483"/>
 														<int key="NSvFlags">268</int>
 														<string key="NSFrame">{{245, 139}, {183, 25}}</string>
+														<reference key="NSSuperview" ref="866118483"/>
+														<int key="NSViewLayerContentsRedrawPolicy">2</int>
+														<bool key="NSEnabled">YES</bool>
+														<object class="NSButtonCell" key="NSCell" id="387613973">
+															<int key="NSCellFlags">67239424</int>
+															<int key="NSCellFlags2">134217728</int>
+															<string key="NSContents">Manage a Repository</string>
+															<reference key="NSSupport" ref="982911427"/>
+															<reference key="NSControlView" ref="925887045"/>
+															<int key="NSButtonFlags">-2038284033</int>
+															<int key="NSButtonFlags2">163</int>
+															<string key="NSAlternateContents"/>
+															<string key="NSKeyEquivalent"/>
+															<int key="NSPeriodicDelay">200</int>
+															<int key="NSPeriodicInterval">25</int>
+														</object>
+													</object>
+													<object class="NSButton" id="73992133">
+														<reference key="NSNextResponder" ref="866118483"/>
+														<int key="NSvFlags">268</int>
+														<string key="NSFrame">{{245, 107}, {183, 25}}</string>
 														<reference key="NSSuperview" ref="866118483"/>
 														<int key="NSViewLayerContentsRedrawPolicy">2</int>
 														<bool key="NSEnabled">YES</bool>
@@ -168,7 +191,7 @@
 													<object class="NSButton" id="377340515">
 														<reference key="NSNextResponder" ref="866118483"/>
 														<int key="NSvFlags">268</int>
-														<string key="NSFrame">{{245, 107}, {183, 25}}</string>
+														<string key="NSFrame">{{245, 75}, {183, 25}}</string>
 														<reference key="NSSuperview" ref="866118483"/>
 														<int key="NSViewLayerContentsRedrawPolicy">2</int>
 														<bool key="NSEnabled">YES</bool>
@@ -189,7 +212,7 @@
 													<object class="NSButton" id="219131648">
 														<reference key="NSNextResponder" ref="866118483"/>
 														<int key="NSvFlags">268</int>
-														<string key="NSFrame">{{245, 75}, {183, 25}}</string>
+														<string key="NSFrame">{{245, 43}, {183, 25}}</string>
 														<reference key="NSSuperview" ref="866118483"/>
 														<int key="NSViewLayerContentsRedrawPolicy">2</int>
 														<bool key="NSEnabled">YES</bool>
@@ -210,7 +233,7 @@
 													<object class="NSButton" id="562179527">
 														<reference key="NSNextResponder" ref="866118483"/>
 														<int key="NSvFlags">268</int>
-														<string key="NSFrame">{{245, 43}, {183, 25}}</string>
+														<string key="NSFrame">{{245, 11}, {183, 25}}</string>
 														<reference key="NSSuperview" ref="866118483"/>
 														<int key="NSViewLayerContentsRedrawPolicy">2</int>
 														<bool key="NSEnabled">YES</bool>
@@ -290,6 +313,7 @@
 					</object>
 				</array>
 				<string key="NSFrameSize">{817, 465}</string>
+				<reference key="NSSuperview"/>
 				<bool key="NSViewIsLayerTreeHost">YES</bool>
 				<int key="NSViewLayerContentsRedrawPolicy">2</int>
 				<string key="NSClassName">NSView</string>
@@ -344,6 +368,14 @@
 						<reference key="destination" ref="208882678"/>
 					</object>
 					<int key="connectionID">62</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">sidebarMenuAddLocalRepositoryRef:</string>
+						<reference key="source" ref="1003"/>
+						<reference key="destination" ref="925887045"/>
+					</object>
+					<int key="connectionID">84</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -400,6 +432,7 @@
 							<reference ref="219131648"/>
 							<reference ref="562179527"/>
 							<reference ref="15647591"/>
+							<reference ref="925887045"/>
 						</array>
 						<reference key="parent" ref="545855797"/>
 					</object>
@@ -486,10 +519,24 @@
 						<reference key="object" ref="357916345"/>
 						<reference key="parent" ref="15647591"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">82</int>
+						<reference key="object" ref="925887045"/>
+						<array class="NSMutableArray" key="children">
+							<reference ref="387613973"/>
+						</array>
+						<reference key="parent" ref="208882678"/>
+						<string key="objectName">Round Textured Button (Mange Existing Repository)</string>
+					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">83</int>
+						<reference key="object" ref="387613973"/>
+						<reference key="parent" ref="925887045"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
-				<string key="1.IBEditorWindowLastContentRect">{{147, 37}, {817, 465}}</string>
+				<string key="1.IBEditorWindowLastContentRect">{{510, 491}, {817, 465}}</string>
 				<string key="1.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1.editorWindowContentRectSynchronizationRect">{{305, 620}, {664, 405}}</string>
 				<string key="37.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -554,12 +601,15 @@
 				<string key="51.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="59.CustomClassName">RadialGradiantBox</string>
 				<string key="59.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<dictionary class="NSMutableDictionary" key="82.IBAttributePlaceholdersKey"/>
+				<string key="82.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+				<string key="83.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 			</dictionary>
 			<dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">78</int>
+			<int key="maxID">84</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -570,6 +620,14 @@
 						<string key="backingBox">NSBox</string>
 						<string key="buttonBox">NSBox</string>
 					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">Classes/BackingView/BackingViewController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">BackingViewController</string>
+					<string key="superclassName">NSViewController</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBUserSource</string>
 						<string key="minorKey"/>
@@ -604,25 +662,11 @@
 						<string key="actionSwitchViewToDifferencesView:">id</string>
 						<string key="actionSwitchViewToHistoryView:">id</string>
 						<string key="actionTestListingItem:">id</string>
-						<string key="browserMenuOpenSelectedFilesInFinder:">id</string>
-						<string key="browserMenuOpenTerminalHere:">id</string>
-						<string key="browserMenuRevealSelectedFilesInFinder:">id</string>
+						<string key="doLinkUp:">id</string>
 						<string key="mainMenuAddAndCloneServerRepositoryRef:">id</string>
 						<string key="mainMenuAddLabelToCurrentRevision:">id</string>
-						<string key="mainMenuAddRenameRemoveAllFiles:">id</string>
-						<string key="mainMenuAddRenameRemoveSelectedFiles:">id</string>
-						<string key="mainMenuAddSelectedFiles:">id</string>
-						<string key="mainMenuAnnotateSelectedFiles:">id</string>
 						<string key="mainMenuCloneRepository:">id</string>
-						<string key="mainMenuCollapseChangesets:">id</string>
-						<string key="mainMenuCommitAllFiles:">id</string>
-						<string key="mainMenuCommitSelectedFiles:">id</string>
-						<string key="mainMenuDeleteSelectedFiles:">id</string>
-						<string key="mainMenuDiffAllFiles:">id</string>
-						<string key="mainMenuDiffSelectedFiles:">id</string>
 						<string key="mainMenuExportPatches:">id</string>
-						<string key="mainMenuHistoryEditChangesets:">id</string>
-						<string key="mainMenuIgnoreSelectedFiles:">id</string>
 						<string key="mainMenuImportPatches:">id</string>
 						<string key="mainMenuIncomingFromRepository:">id</string>
 						<string key="mainMenuManifestOfCurrentVersion:">id</string>
@@ -633,17 +677,9 @@
 						<string key="mainMenuOutgoingToRepository:">id</string>
 						<string key="mainMenuPullFromRepository:">id</string>
 						<string key="mainMenuPushToRepository:">id</string>
-						<string key="mainMenuRebaseChangesets:">id</string>
 						<string key="mainMenuRemergeSelectedFiles:">id</string>
-						<string key="mainMenuRenameSelectedFile:">id</string>
-						<string key="mainMenuRevertAllFiles:">id</string>
-						<string key="mainMenuRevertAllFilesToVersion:">id</string>
-						<string key="mainMenuRevertSelectedFiles:">id</string>
-						<string key="mainMenuRevertSelectedFilesToVersion:">id</string>
+						<string key="mainMenuRevealSelectedFilesInFinder:">id</string>
 						<string key="mainMenuRollbackCommit:">id</string>
-						<string key="mainMenuStripChangesets:">id</string>
-						<string key="mainMenuUnignoreSelectedFiles:">id</string>
-						<string key="mainMenuUntrackSelectedFiles:">id</string>
 						<string key="mainMenuUpdateRepository:">id</string>
 						<string key="mainMenuUpdateRepositoryToVersion:">id</string>
 						<string key="refreshBrowserContent:">id</string>
@@ -657,6 +693,8 @@
 						<string key="sidebarMenuRemoveSidebarItem:">id</string>
 						<string key="sidebarMenuRevealRepositoryInFinder:">id</string>
 						<string key="testBrowserLoad:">id</string>
+						<string key="togglePreviewPanel:">id</string>
+						<string key="toolbarUpdate:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="informationAndActivityBox_">NSBox</string>
@@ -679,11 +717,19 @@
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
+					<string key="className">NSApplication</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="143233862">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/General/Common.h</string>
 					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSBox</string>
+					<reference key="sourceIdentifier" ref="143233862"/>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<reference key="sourceIdentifier" ref="143233862"/>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">NSTableView</string>
@@ -1184,6 +1230,55 @@
 					<string key="className">NSObject</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">ImageKit.framework/Headers/IKImageBrowserView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">ImageKit.framework/Headers/IKSaveOptions.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">ImageKit.framework/Headers/ImageKitDeprecated.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">PDFKit.framework/Headers/PDFDocument.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">PDFKit.framework/Headers/PDFView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">QuartzComposer.framework/Headers/QCCompositionParameterView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">QuartzComposer.framework/Headers/QCCompositionPickerView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">QuartzCore.framework/Headers/CAAnimation.h</string>
 					</object>
 				</object>
@@ -1199,6 +1294,20 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">QuartzCore.framework/Headers/CIImageProvider.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">QuartzFilters.framework/Headers/QuartzFilterManager.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">QuickLookUI.framework/Headers/QLPreviewPanel.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
