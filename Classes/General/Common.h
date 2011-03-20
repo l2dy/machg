@@ -53,6 +53,7 @@
 // Processes
 @class ProcessListController;
 @class TaskExecutions;
+@class ShellTask;
 @class ExecutionResult;
 
 // Document
@@ -822,8 +823,19 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 // MARK: Extensions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+// MARK: -
 @protocol AccessesDocument
 - (MacHgDocument*)	myDocument;
+@end
+
+
+// MARK: -
+@protocol ShellTaskDelegate <NSObject>
+@optional
+- (void) gotError:(NSString*)errorString;
+- (void) gotOutput:(NSString*)outputString;
+- (void) taskFinished;
+- (void) shellTaskCreated:(ShellTask*)shellTask;
 @end
 
 
@@ -936,6 +948,12 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 - (void)	copyValueOfKey:(id)aKey from:(NSDictionary*)aDict;
 - (void)	synchronizedSetObject:(id)value forIntKey:(NSInteger)key;
 - (void)	setObject:(id)value forIntKey:(NSInteger)key;
+@end
+
+
+// MARK: -
+@interface NSTask (NSTaskPlusExtensions)
+- (void) cancelTask;
 @end
 
 

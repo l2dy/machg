@@ -12,6 +12,7 @@
 
 @class AppController;
 @class MonitorFSEvents;
+@class ShellTask;
 
 
 typedef enum
@@ -30,6 +31,26 @@ typedef enum
 } LoggingEnum;
 
 
+
+@interface ShellTaskController : NSObject <ShellTaskDelegate>
+{
+	ShellTask* shellTask_;
+}
+@property (nonatomic, assign) ShellTask* shellTask;
+
+- (void)	shellTaskCreated:(ShellTask*)shellTask;
+- (NSTask*) task;
+@end
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: ShellTask
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
 @interface ShellTask : NSObject
 {
 	NSString*		generatingCmd_;		// The command that was executed
@@ -40,11 +61,23 @@ typedef enum
 	NSFileHandle*	errHandle_;
     NSMutableData*	outputData_;
 	NSMutableData*	errorData_;
+	id <ShellTaskDelegate> delegate_;
 }
 
-+ (ExecutionResult*) execute:(NSString*)cmd withArgs:(NSArray*)args onTask:(NSTask*)task;
+@property (nonatomic, assign) NSTask* task;
+
++ (ExecutionResult*) execute:(NSString*)cmd withArgs:(NSArray*)args withDelegate:(id <ShellTaskDelegate>)delegate;
 
 @end
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: ExecutionResult
+// -----------------------------------------------------------------------------------------------------------------------------------------
 
 @interface ExecutionResult : NSObject
 {
@@ -65,7 +98,6 @@ typedef enum
 @property (readonly, assign) NSString* errStr;
 @property (readwrite,assign) BOOL	   loggedToAlertOrWindow;
 
-+ (ExecutionResult*) extractResults:(NSTask*)task;
 + (ExecutionResult*) resultWithCmd:(NSString*)cmd args:(NSArray*)args result:(int)result outStr:(NSString*)outStr errStr:(NSString*)errStr;
 
 // Querying
@@ -83,15 +115,6 @@ typedef enum
 
 
 
-// NSTask category extensions
-@interface NSTask (NSTaskPlusExtensions)
-- (void) startExecution:(NSString*)cmd withArgs:(NSArray*)args;
-- (void) cancelTask;
-@end
-
-
-
-
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
@@ -103,7 +126,8 @@ typedef enum
 }
 
 // General Task handling.
-+ (ExecutionResult*) synchronouslyExecute:(NSString*)cmd withArgs:(NSArray*)args onTask:(NSTask*)theTask;
++ (ExecutionResult*) synchronouslyExecute:(NSString*)cmd withArgs:(NSArray*)args;
++ (ExecutionResult*) synchronouslyExecute:(NSString*)cmd withArgs:(NSArray*)args withDelegate:(id <ShellTaskDelegate>)delegate;
 + (NSMutableArray*) parseArguments:(NSString*)args;
 + (NSMutableArray*) filterOptions:(NSArray*)options byValidOptions:(NSArray*)validOptions;
 
@@ -116,7 +140,7 @@ typedef enum
 
 + (ExecutionResult*) executeMercurialWithArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath;
 + (ExecutionResult*) executeMercurialWithArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath  logging:(LoggingEnum)log;
-+ (ExecutionResult*) executeMercurialWithArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath  logging:(LoggingEnum)log  onTask:(NSTask*)theTask;
++ (ExecutionResult*) executeMercurialWithArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath  logging:(LoggingEnum)log  withDelegate:(id <ShellTaskDelegate>)delegate;
 
 @end
 

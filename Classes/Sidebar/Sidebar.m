@@ -987,13 +987,13 @@
 		
 		for (SidebarNode* repo in compatibleRepositories)
 		{
-			__block NSTask* theTask = [[NSTask alloc]init];
+			__block ShellTaskController* theOutgoingController = [[ShellTaskController alloc]init];
 			dispatchWithTimeOutBlock(globalQueue(), 30.0 /* try for 30 seconds to get result of "outgoing"*/,
 									 
 									 // Main Block
 									 ^{
 										 NSMutableArray* argsOutgoing = [NSMutableArray arrayWithObjects:@"outgoing", @"--insecure", @"--quiet", @"--noninteractive", @"--template", @"+", [repo fullURLPath], nil];
-										 ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsOutgoing  fromRoot:rootPath  logging:eLoggingNone  onTask:theTask];
+										 ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsOutgoing  fromRoot:rootPath  logging:eLoggingNone  withDelegate:theOutgoingController];
 										 dispatch_async(mainQueue(), ^{
 											 if (![rootPath isEqualTo:[[self selectedNode] path]])
 												 return;
@@ -1008,7 +1008,7 @@
 									 
 									 // Timeout Block
 									 ^{
-										 [theTask cancelTask];	// We timed out so kill the task which timed out...
+										 [[[theOutgoingController shellTask] task] cancelTask];	// We timed out so kill the task which timed out...
 										 dispatch_async(mainQueue(), ^{
 											 if (![rootPath isEqualTo:[[self selectedNode] path]])
 												 return;											 
@@ -1023,13 +1023,13 @@
 		NSArray* compatibleRepositories = [self allCompatibleRepositories:theSelectedNode];
 		for (SidebarNode* repo in compatibleRepositories)
 		{
-			__block NSTask* theTask = [[NSTask alloc]init];
+			__block ShellTaskController* theIncomingController = [[ShellTaskController alloc]init];
 			dispatchWithTimeOutBlock(globalQueue(), 30.0 /* try for 30 seconds to get result of "outgoing"*/,
 									 
 									 // Main Block
 									 ^{
 										 NSMutableArray* argsOutgoing = [NSMutableArray arrayWithObjects:@"incoming", @"--insecure", @"--quiet", @"--noninteractive", @"--template", @"-", [repo fullURLPath], nil];
-										 ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsOutgoing  fromRoot:rootPath  logging:eLoggingNone  onTask:theTask];
+										 ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsOutgoing  fromRoot:rootPath  logging:eLoggingNone  withDelegate:theIncomingController];
 										 dispatch_async(mainQueue(), ^{
 											 if (![rootPath isEqualTo:[[self selectedNode] path]])
 												 return;
@@ -1044,7 +1044,7 @@
 									 
 									 // Timeout Block
 									 ^{
-										 [theTask cancelTask];	// We timed out so kill the task which timed out...
+										 [[[theIncomingController shellTask] task] cancelTask];	// We timed out so kill the task which timed out...
 										 dispatch_async(mainQueue(), ^{
 											 if (![rootPath isEqualTo:[[self selectedNode] path]])
 												 return;											 

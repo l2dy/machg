@@ -390,7 +390,7 @@
 {
 	NSArray* versionArgs = [NSArray arrayWithObject:@"version"];
 	NSString* hgBinary = executableLocationHG();
-	ExecutionResult* results = [TaskExecutions synchronouslyExecute:hgBinary withArgs:versionArgs onTask:nil];
+	ExecutionResult* results = [TaskExecutions synchronouslyExecute:hgBinary withArgs:versionArgs];
 	if ([results hasWarnings] && WarnAboutBadMercurialConfigurationFromDefaults())
 	{
 		NSString* mainMessage = fstr(@"The version of Mercurial included with MacHg is producing the following warnings:\n\n%@\n\nMacHg might not function as intended. To resolve this check your configuration settings in your .hgrc file.", results.errStr);
@@ -418,7 +418,7 @@
 	[self setupGlobals];
 	// mv now old log file ontop of old old log file name
 	NSString* oldMacHgLogFileLocation = fstr(@"%@.old",MacHgLogFileLocation());
-	[TaskExecutions synchronouslyExecute:@"/bin/mv" withArgs:[NSArray arrayWithObjects:@"-f", MacHgLogFileLocation(), oldMacHgLogFileLocation, nil] onTask:nil];
+	[TaskExecutions synchronouslyExecute:@"/bin/mv" withArgs:[NSArray arrayWithObjects:@"-f", MacHgLogFileLocation(), oldMacHgLogFileLocation, nil]];
 }
 
 
@@ -691,15 +691,15 @@
 	
 	dispatch_async(globalQueue(), ^{
 		NSMutableArray* argsIdentify = [NSMutableArray arrayWithObjects:@"identify", @"--insecure", @"--noninteractive", @"--rev", @"0", @"--id", @"--quiet", fullPath, nil];
-		__block NSTask* theTask = [[NSTask alloc]init];
+		__block ShellTaskController* theTaskController = [[ShellTaskController alloc]init];
 		__block ExecutionResult* results;
 		dispatchWithTimeOut(globalQueue(), timeOutInSeconds, ^{
-			results = [TaskExecutions executeMercurialWithArgs:argsIdentify fromRoot:@"/tmp" logging:eLoggingNone onTask:theTask];
+			results = [TaskExecutions executeMercurialWithArgs:argsIdentify fromRoot:@"/tmp" logging:eLoggingNone withDelegate:theTaskController];
 		});
 
 		[computingRepositoryIdentityForPath_ synchronizedRemoveObjectForKey:nodePath];
 	
-		if (![theTask isRunning] && results.result == 0 && IsEmpty(results.errStr) && IsNotEmpty(results.outStr))
+		if (![[theTaskController task] isRunning] && results.result == 0 && IsEmpty(results.errStr) && IsNotEmpty(results.outStr))
 		{
 			// We look for the 12 digit hashKey which is optionally seperated from other bits by whitespace.
 			static NSString* pickOutHashKeyRegex = @"^(.*\\s+)?([0-9abcdefABCDEF]{12})(\\s+.*)?$";
@@ -720,12 +720,12 @@
 			return;
 		}
 
-		//if ([theTask isRunning])
+		//if ([[theTaskController task] isRunning])
 		//	DebugLog(@"Determining root changeset for the repository at %@ timed out after %f seconds on attempt %d", path, timeOutInSeconds, attempts);
 		//else
 		//	DebugLog(@"Unable to determine root changeset for the repository at %@ on attempt %d", path, attempts);
 		
-		[theTask cancelTask];
+		[[theTaskController task] cancelTask];
 	});
 }
 

@@ -12,6 +12,20 @@
 
 
 
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  ShellTaskController
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+
+@implementation ShellTaskController
+@synthesize shellTask = shellTask_;
+- (void)	shellTaskCreated:(ShellTask*)shellTask	{ shellTask_ = shellTask; }
+- (NSTask*) task									{ return [shellTask_ task]; }
+@end
+
+
+
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -27,6 +41,7 @@
 
 @implementation ShellTask
 
+@synthesize task = task_;
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
@@ -42,6 +57,8 @@
 		{
 			DebugLog(@"...got Output for %@ ...", [self commandLineString]);
 			[outputData_ appendData:data];
+			if ([delegate_ respondsToSelector:@selector(gotOutput:)])
+				[delegate_ gotOutput:[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]];
             [outHandle_ readInBackgroundAndNotify];
         }
 		else
@@ -61,6 +78,8 @@
 		{
 			DebugLog(@"...got Error for %@ ...", [self commandLineString]);
             [errorData_ appendData:data];
+			if ([delegate_ respondsToSelector:@selector(gotError:)])
+				[delegate_ gotError:[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]];
             [errHandle_ readInBackgroundAndNotify];
         }
 		else
@@ -79,12 +98,6 @@
 // MARK: -
 // MARK:  Handling
 // -----------------------------------------------------------------------------------------------------------------------------------------
-
-
-- (void) stop
-{
-    [task_ interrupt];
-}
 
 - (NSString*) commandLineString
 {
@@ -107,7 +120,9 @@
 {
     // wait for task to exit:
 	[task_ waitUntilExit];
-
+	if ([delegate_ respondsToSelector:@selector(taskFinished)])
+		[delegate_ taskFinished];
+	
 	[self stopObserving:NSFileHandleReadCompletionNotification from:nil];
 
 	[task_ terminate];
@@ -120,11 +135,14 @@
 }
 
 
-- (id) initWithCommand:(NSString*)cmd andArgs:(NSArray*)args onTask:(NSTask*)task
+- (id) initWithCommand:(NSString*)cmd andArgs:(NSArray*)args withDelegate:(id <ShellTaskDelegate>)delegate;
 {	
 	generatingCmd_ = cmd;
 	generatingArgs_ = args;
-	task_ = task ? task : [[NSTask alloc] init];
+	delegate_ = delegate;
+	task_ = [[NSTask alloc] init];
+	[task_ setEnvironment:[TaskExecutions environmentForHg]];
+
 	
 	NSPipe* outPipe    = [[NSPipe alloc] init];     // Create the pipe to write standard out to
 	NSPipe* errPipe    = [[NSPipe alloc] init];     // Create the pipe to write standard error to
@@ -148,9 +166,11 @@
 	return self;
 }
 
-+ (ExecutionResult*) execute:(NSString*)cmd withArgs:(NSArray*)args onTask:(NSTask*)task
++ (ExecutionResult*) execute:(NSString*)cmd withArgs:(NSArray*)args withDelegate:(id <ShellTaskDelegate>)delegate;
 {
-	ShellTask* shellTask = [[ShellTask alloc] initWithCommand:cmd andArgs:args onTask:task];
+	ShellTask* shellTask = [[ShellTask alloc] initWithCommand:cmd andArgs:args withDelegate:delegate];
+	if ([delegate respondsToSelector:@selector(shellTaskCreated:)])
+		[delegate shellTaskCreated:shellTask];
 	
 	[shellTask->task_ launch];			// Start the process
 	DebugLog(@"launched %@", [shellTask commandLineString]);
@@ -190,7 +210,7 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK:  ExecutionResult*
+// MARK:  ExecutionResult
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 
@@ -214,23 +234,6 @@
 	return newResult;
 }
 
-
-+ (ExecutionResult*) extractResults:(NSTask*)task
-{
-	ExecutionResult* results = [[ExecutionResult alloc]init];
-	NSPipe* outPipe = [task standardOutput];												// get the standard output
-	NSPipe* errPipe = [task standardError];													// get the standard error
-	NSData* outData = [[outPipe fileHandleForReading] readDataToEndOfFileIgnoringErrors];	// Read the output
-	NSData* errData = [[errPipe fileHandleForReading] readDataToEndOfFileIgnoringErrors];	// Read the output
-	[task waitUntilExit];	// Wait *after* the data read. Seems counter intuitive but see the Cocodev articles about NSTask
-	results->generatingCmd_   = [task launchPath];
-	results->generatingArgs_  = [NSArray arrayWithArray:[task arguments]];
-	results->outStr_ = [[NSString alloc] initWithData:outData  encoding:NSUTF8StringEncoding];
-	results->errStr_ = [[NSString alloc] initWithData:errData  encoding:NSUTF8StringEncoding];
-	results->result_ = [task terminationStatus];
-	[task cancelTask];
-	return results;
-}
 
 // This isn't really an error for us so go ahead and prune the missing extensions warnings.
 - (void) pruneMissingExtensionsErrors
@@ -278,7 +281,7 @@
 		return;
 
 	NSString* scriptPath = fstr(@"%@/%@",[[NSBundle mainBundle] resourcePath], @"getHTTPSfingerprint.py");
-	ExecutionResult* results = [TaskExecutions synchronouslyExecute:scriptPath withArgs:[NSArray arrayWithObjects:host, port ? numberAsString(port) : @"443", nil] onTask:nil];
+	ExecutionResult* results = [TaskExecutions synchronouslyExecute:scriptPath withArgs:[NSArray arrayWithObjects:host, port ? numberAsString(port) : @"443", nil]];
 	if ([results hasNoErrors])
 		fingerPrint = trimString(results.outStr);
 
@@ -364,8 +367,6 @@
 	}
 }
 
-
-
 @end
 
 
@@ -431,14 +432,13 @@ static NSString* processedPathEnv(NSDictionary* processEnv)
 }
 
 
-+ (ExecutionResult*) synchronouslyExecute:(NSString*)cmd withArgs:(NSArray*)args onTask:(NSTask*)theTask
++ (ExecutionResult*) synchronouslyExecute:(NSString*)cmd withArgs:(NSArray*)args
 {
-
-	NSTask* task = theTask ? theTask : [[NSTask alloc] init];
-	[task setEnvironment:[self environmentForHg]];
-	return [ShellTask execute:cmd withArgs:args onTask:task];
-//	[task startExecution:cmd withArgs:args];
-//	return [ExecutionResult extractResults:task];
+	return [ShellTask execute:cmd withArgs:args withDelegate:nil];
+}
++ (ExecutionResult*) synchronouslyExecute:(NSString*)cmd withArgs:(NSArray*)args withDelegate:(id <ShellTaskDelegate>)delegate
+{
+	return [ShellTask execute:cmd withArgs:args withDelegate:delegate];
 }
 
 
@@ -533,20 +533,20 @@ static NSString* processedPathEnv(NSDictionary* processEnv)
 // Execute the hg command with the arguments args putting results into pipe and reading the data from that and returning it.
 + (ExecutionResult*) executeMercurialWithArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath
 {
-	return [TaskExecutions executeMercurialWithArgs:args  fromRoot:rootPath   logging:eLogAllIssueErrors  onTask:nil];
+	return [TaskExecutions executeMercurialWithArgs:args  fromRoot:rootPath   logging:eLogAllIssueErrors  withDelegate:nil];
 }
 + (ExecutionResult*) executeMercurialWithArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath logging:(LoggingEnum)log
 {
-	return [TaskExecutions executeMercurialWithArgs:args  fromRoot:rootPath   logging:log onTask:nil];
+	return [TaskExecutions executeMercurialWithArgs:args  fromRoot:rootPath   logging:log  withDelegate:nil];
 }
-+ (ExecutionResult*) executeMercurialWithArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath  logging:(LoggingEnum)log  onTask:(NSTask*)theTask
++ (ExecutionResult*) executeMercurialWithArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath  logging:(LoggingEnum)log  withDelegate:(id <ShellTaskDelegate>)delegate
 {
 	if (!rootPath)
 		return [ExecutionResult resultWithCmd:executableLocationHG() args:[NSArray arrayWithArray:args] result:255 outStr: @"" errStr:@"Null root path"];
 
 	NSMutableArray* newArgs = [self preProcessMercurialCommandArgs:args fromRoot:rootPath];
 	NSString* hgBinary = executableLocationHG();
-	ExecutionResult* results = [TaskExecutions synchronouslyExecute:hgBinary withArgs:newArgs onTask:theTask];
+	ExecutionResult* results = [TaskExecutions  synchronouslyExecute:hgBinary  withArgs:newArgs  withDelegate:delegate];
 	[results pruneMissingExtensionsErrors];
 	[results logAndReportAnyErrors:log];
 	return results;
@@ -608,37 +608,4 @@ OSStatus DoTerminalScript(NSString* script)
 
 
 
-
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
-// MARK: Extensions
-// -----------------------------------------------------------------------------------------------------------------------------------------
-
-@implementation NSTask (NSTaskPlusExtensions)
-
-- (void) startExecution:(NSString*)cmd withArgs:(NSArray*)args
-{
-	NSPipe* outPipe = [[NSPipe alloc] init];     // Create the pipe to write standard out to
-	NSPipe* errPipe = [[NSPipe alloc] init];     // Create the pipe to write standard error to
-	[self setLaunchPath:cmd];
-	[self setArguments:args];
-	[self setStandardOutput:outPipe];
-	[self setStandardError:errPipe];
-	[self launch];			// Start the process
-
-	// Move the process into our group if we can so when we quit all child processes are killed. See http:
-	// www.cocoadev.com/index.pl?NSTaskTermination. Maybe there is a better way to do this in which case I would like to know.
-	pid_t group = setsid();
-	if (group == -1)
-		group = getpgrp();
-	setpgid([self processIdentifier], group);
-}
-
-- (void) cancelTask
-{
-	if ([self isRunning])
-		[self terminate];
-}
-
-@end
 

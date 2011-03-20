@@ -131,7 +131,7 @@
 		[diffStatHeader	setObject:[NSFont fontWithName:@"Monaco"  size:15] forKey:NSFontAttributeName];
 	}
 
-	ExecutionResult* result = [TaskExecutions synchronouslyExecute:@"/usr/bin/diffstat" withArgs:[NSArray arrayWithObjects:path_, nil] onTask:nil];
+	ExecutionResult* result = [TaskExecutions synchronouslyExecute:@"/usr/bin/diffstat" withArgs:[NSArray arrayWithObjects:path_, nil]];
 	if ([result hasNoErrors])
 	{
 		[colorized appendAttributedString:[NSAttributedString string:@"Patch Statistics\n" withAttributes:diffStatHeader]];

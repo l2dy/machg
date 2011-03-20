@@ -1267,6 +1267,18 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 
 // MARK: -
+@implementation NSTask (NSTaskPlusExtensions)
+- (void) cancelTask
+{
+	if ([self isRunning])
+		[self terminate];
+}
+@end
+
+
+
+
+// MARK: -
 @implementation NSWorkspace ( NSWorkspacePlusExtensions )
 + (NSImage*) iconImageOfSize:(NSSize)size forPath:(NSString*)path
 {
