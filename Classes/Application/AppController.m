@@ -390,7 +390,7 @@
 {
 	NSArray* versionArgs = [NSArray arrayWithObject:@"version"];
 	NSString* hgBinary = executableLocationHG();
-	ExecutionResult* results = [TaskExecutions synchronouslyExecute:hgBinary withArgs:versionArgs];
+	ExecutionResult* results = [ShellTask execute:hgBinary withArgs:versionArgs];
 	if ([results hasWarnings] && WarnAboutBadMercurialConfigurationFromDefaults())
 	{
 		NSString* mainMessage = fstr(@"The version of Mercurial included with MacHg is producing the following warnings:\n\n%@\n\nMacHg might not function as intended. To resolve this check your configuration settings in your .hgrc file.", results.errStr);
@@ -418,7 +418,7 @@
 	[self setupGlobals];
 	// mv now old log file ontop of old old log file name
 	NSString* oldMacHgLogFileLocation = fstr(@"%@.old",MacHgLogFileLocation());
-	[TaskExecutions synchronouslyExecute:@"/bin/mv" withArgs:[NSArray arrayWithObjects:@"-f", MacHgLogFileLocation(), oldMacHgLogFileLocation, nil]];
+	[ShellTask execute:@"/bin/mv" withArgs:[NSArray arrayWithObjects:@"-f", MacHgLogFileLocation(), oldMacHgLogFileLocation, nil]];
 }
 
 

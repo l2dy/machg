@@ -166,6 +166,7 @@
 	return self;
 }
 
++ (ExecutionResult*) execute:(NSString*)cmd withArgs:(NSArray*)args	{ return [self execute:cmd withArgs:args withDelegate:nil]; }
 + (ExecutionResult*) execute:(NSString*)cmd withArgs:(NSArray*)args withDelegate:(id <ShellTaskDelegate>)delegate;
 {
 	ShellTask* shellTask = [[ShellTask alloc] initWithCommand:cmd andArgs:args withDelegate:delegate];
@@ -281,7 +282,7 @@
 		return;
 
 	NSString* scriptPath = fstr(@"%@/%@",[[NSBundle mainBundle] resourcePath], @"getHTTPSfingerprint.py");
-	ExecutionResult* results = [TaskExecutions synchronouslyExecute:scriptPath withArgs:[NSArray arrayWithObjects:host, port ? numberAsString(port) : @"443", nil]];
+	ExecutionResult* results = [ShellTask execute:scriptPath withArgs:[NSArray arrayWithObjects:host, port ? numberAsString(port) : @"443", nil]];
 	if ([results hasNoErrors])
 		fingerPrint = trimString(results.outStr);
 
@@ -432,16 +433,6 @@ static NSString* processedPathEnv(NSDictionary* processEnv)
 }
 
 
-+ (ExecutionResult*) synchronouslyExecute:(NSString*)cmd withArgs:(NSArray*)args
-{
-	return [ShellTask execute:cmd withArgs:args withDelegate:nil];
-}
-+ (ExecutionResult*) synchronouslyExecute:(NSString*)cmd withArgs:(NSArray*)args withDelegate:(id <ShellTaskDelegate>)delegate
-{
-	return [ShellTask execute:cmd withArgs:args withDelegate:delegate];
-}
-
-
 // Give a string of arguments like "--rev 23 --git --force --no-merges --remotecmd blargsplatter" break this into the array
 // ["--rev", "23", "--git", "--force", "--no-merges", "--remotecmd", "blargsplatter"]
 + (NSMutableArray*) parseArguments:(NSString*)args
@@ -546,7 +537,7 @@ static NSString* processedPathEnv(NSDictionary* processEnv)
 
 	NSMutableArray* newArgs = [self preProcessMercurialCommandArgs:args fromRoot:rootPath];
 	NSString* hgBinary = executableLocationHG();
-	ExecutionResult* results = [TaskExecutions  synchronouslyExecute:hgBinary  withArgs:newArgs  withDelegate:delegate];
+	ExecutionResult* results = [ShellTask  execute:hgBinary  withArgs:newArgs  withDelegate:delegate];
 	[results pruneMissingExtensionsErrors];
 	[results logAndReportAnyErrors:log];
 	return results;

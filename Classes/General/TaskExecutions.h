@@ -66,6 +66,7 @@ typedef enum
 
 @property (nonatomic, assign) NSTask* task;
 
++ (ExecutionResult*) execute:(NSString*)cmd withArgs:(NSArray*)args;
 + (ExecutionResult*) execute:(NSString*)cmd withArgs:(NSArray*)args withDelegate:(id <ShellTaskDelegate>)delegate;
 
 @end
@@ -126,8 +127,6 @@ typedef enum
 }
 
 // General Task handling.
-+ (ExecutionResult*) synchronouslyExecute:(NSString*)cmd withArgs:(NSArray*)args;
-+ (ExecutionResult*) synchronouslyExecute:(NSString*)cmd withArgs:(NSArray*)args withDelegate:(id <ShellTaskDelegate>)delegate;
 + (NSMutableArray*) parseArguments:(NSString*)args;
 + (NSMutableArray*) filterOptions:(NSArray*)options byValidOptions:(NSArray*)validOptions;
 
