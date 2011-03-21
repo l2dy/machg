@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>AddRemoveSimilarityFactor</key>
-	<real>0.94999999999999996</real>
+	<real>0.95</real>
 	<key>AddRemoveUsesSimilarity</key>
 	<true/>
 	<key>AfterMergeDo</key>
@@ -98,29 +98,17 @@
 	<key>LocalWhitelistedHGShellAliasName</key>
 	<string>chg</string>
 	<key>LogEntryTableBookmarkHighlightColor</key>
-	<data>
-	BAtzdHJlYW10eXBlZIHoA4QBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMBhARm
-	ZmZmgyhxLj+DNd1VP4Og1n4/AYY=
-	</data>
+	<data>BAtzdHJlYW10eXBlZIHoA4QBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMBhARmZmZmgyhxLj+DNd1VP4Og1n4/AYY=</data>
 	<key>LogEntryTableBranchHighlightColor</key>
-	<data>
-	BAtzdHJlYW10eXBlZIHoA4QBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMBhARm
-	ZmZmAYPqOmo/g748Pj8Bhg==
-	</data>
+	<data>BAtzdHJlYW10eXBlZIHoA4QBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMBhARmZmZmAYPqOmo/g748Pj8Bhg==</data>
 	<key>LogEntryTableDisplayBranchColumn</key>
 	<false/>
 	<key>LogEntryTableDisplayChangesetColumn</key>
 	<true/>
 	<key>LogEntryTableParentHighlightColor</key>
-	<data>
-	BAtzdHJlYW10eXBlZIHoA4QBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMBhARm
-	ZmZmg6hAYD+Dpr9SPwEBhg==
-	</data>
+	<data>BAtzdHJlYW10eXBlZIHoA4QBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMBhARmZmZmg6hAYD+Dpr9SPwEBhg==</data>
 	<key>LogEntryTableTagHighlightColor</key>
-	<data>
-	BAtzdHJlYW10eXBlZIHoA4QBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMBhARm
-	ZmZmg747AD+DoOd/P4MNbeA+AYY=
-	</data>
+	<data>BAtzdHJlYW10eXBlZIHoA4QBQISEhAdOU0NvbG9yAISECE5TT2JqZWN0AIWEAWMBhARmZmZmg747AD+DoOd/P4MNbeA+AYY=</data>
 	<key>LoggingLevelForHGCommands</key>
 	<integer>1</integer>
 	<key>MacHgLogFileLocation</key>
@@ -159,9 +147,9 @@
 	<integer>210</integer>
 	<key>ToolNameForDiffing</key>
 	<string></string>
-	<key>UseFileMergeForMerge</key>
-	<true/>
 	<key>UseWhichToolForDiffing</key>
+	<integer>0</integer>
+	<key>UseWhichToolForMerging</key>
 	<integer>0</integer>
 	<key>ViewsHaveIndependentSizes</key>
 	<true/>

@@ -170,6 +170,14 @@ typedef enum
 
 typedef enum
 {
+	eUseFileMergeForMerges = 0,
+	eUseOtherForMerges	   = 1,
+	eUseNothingForMerges   = 2
+} ToolForMerging;
+
+
+typedef enum
+{
 	eMoveOrigFilesToTrash = 0,
 	eLeaveOrigFilesAlone  = 1
 } HandleOrigFilesOption;
@@ -439,8 +447,9 @@ extern NSString* const MHGShowUnresolvedFilesInBrowser;
 extern NSString* const MHGShowUntrackedFilesInBrowser;
 extern NSString* const MHGSizeOfBrowserColumns;
 extern NSString* const MHGToolNameForDiffing;
-extern NSString* const MHGUseFileMergeForMerge;
+extern NSString* const MHGToolNameForMerging;
 extern NSString* const MHGUseWhichToolForDiffing;
+extern NSString* const MHGUseWhichToolForMerging;
 extern NSString* const MHGViewsHaveIndependentSizes;
 extern NSString* const MHGWarnAboutBadMercurialConfiguration;
 
@@ -490,8 +499,6 @@ BOOL		ShowRemovedFilesInBrowserFromDefaults();
 BOOL		ShowResolvedFilesInBrowserFromDefaults();
 BOOL		ShowUnresolvedFilesInBrowserFromDefaults();
 BOOL		ShowUntrackedFilesInBrowserFromDefaults();
-BOOL		UseFileMergeForDiffFromDefaults();
-BOOL		UseFileMergeForMergeFromDefaults();
 BOOL		ViewsHaveIndependentSizesFromDefaults();
 BOOL		WarnAboutBadMercurialConfigurationFromDefaults();
 
@@ -509,6 +516,7 @@ NSString*	LocalHGShellAliasNameFromDefaults();
 NSString*	LocalWhitelistedHGShellAliasNameFromDefaults();
 NSString*	MacHgLogFileLocation();
 NSString*	ToolNameForDiffingFromDefaults();
+NSString*	ToolNameForMergingFromDefaults();
 NSColor*	LogEntryTableTagHighlightColor();
 NSColor*	LogEntryTableParentHighlightColor();
 NSColor*	LogEntryTableBranchHighlightColor();
@@ -521,6 +529,7 @@ RevisionSortOrderOption			RevisionSortOrderFromDefaults();
 HandleOrigFilesOption			HandleGeneratedOrigFilesFromDefaults();
 OnActivationOpenWhatOption		OnActivationOpenFromDefaults();
 ToolForDiffing					UseWhichToolForDiffingFromDefaults();
+ToolForMerging					UseWhichToolForMergingFromDefaults();
 
 BrowserDoubleClickAction		browserBehaviourDoubleClick();
 BrowserDoubleClickAction		browserBehaviourCommandDoubleClick();

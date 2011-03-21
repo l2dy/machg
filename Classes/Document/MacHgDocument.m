@@ -2094,11 +2094,15 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 	[self dispatchToMercurialQueuedWithDescription:@"Backout" process:^{
 		NSMutableArray* argsBackout = [NSMutableArray arrayWithObjects:@"backout", @"--rev", versionStr, nil];
 
-		if (UseFileMergeForMergeFromDefaults())
+		if (UseWhichToolForMergingFromDefaults() == eUseFileMergeForMerges)
 		{
 			[argsBackout addObject:@"--config" followedBy:@"merge-tools.filemerge.args= $local $other -ancestor $base -merge $output"];
 			[argsBackout addObject:@"--config" followedBy: fstr(@"merge-tools.filemerge.executable=%@/opendiff-w.sh",[[NSBundle mainBundle] resourcePath]) ];
 			[argsBackout addObject:@"--config" followedBy: @"merge-tools.priority=100"];	// Use FileMerge with a priority of 100. This should be more than the other tools.
+		}
+		else if (UseWhichToolForMergingFromDefaults() == eUseOtherForMerges)
+		{
+			[argsBackout addObject:@"--tool" followedBy:ToolNameForMergingFromDefaults()];
 		}
 		
 		ExecutionResult* results = [self executeMercurialWithArgs:argsBackout  fromRoot:rootPath whileDelayingEvents:YES];
@@ -2147,11 +2151,15 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 	NSMutableArray* argsMerge = [NSMutableArray arrayWithObjects:@"merge", @"--rev", mergeVersionStr, nil];
 	[argsMerge addObjectsFromArray:options];
 
-	if (UseFileMergeForMergeFromDefaults())
+	if (UseWhichToolForMergingFromDefaults() == eUseFileMergeForMerges)
 	{
 		[argsMerge addObject:@"--config" followedBy:@"merge-tools.filemerge.args= $local $other -ancestor $base -merge $output"];
 		[argsMerge addObject:@"--config" followedBy: fstr(@"merge-tools.filemerge.executable=%@/opendiff-w.sh",[[NSBundle mainBundle] resourcePath]) ];
 		[argsMerge addObject:@"--config" followedBy: @"merge-tools.priority=100"];	// Use FileMerge with a priority of 100. This should be more than the other tools.
+	}
+	else if (UseWhichToolForMergingFromDefaults() == eUseOtherForMerges)
+	{
+		[argsMerge addObject:@"--tool" followedBy:ToolNameForMergingFromDefaults()];
 	}
 
 	__block ExecutionResult* results;

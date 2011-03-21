@@ -131,9 +131,9 @@ NSString* const MHGShowUnresolvedFilesInBrowser			= @"ShowUnresolvedFilesInBrows
 NSString* const MHGShowUntrackedFilesInBrowser			= @"ShowUntrackedFilesInBrowser";
 NSString* const MHGSizeOfBrowserColumns					= @"SizeOfBrowserColumns";
 NSString* const MHGToolNameForDiffing					= @"ToolNameForDiffing";
-NSString* const MHGUseFileMergeForDiff					= @"UseFileMergeForDiff";
-NSString* const MHGUseFileMergeForMerge					= @"UseFileMergeForMerge";
+NSString* const MHGToolNameForMerging					= @"ToolNameForMerging";
 NSString* const MHGUseWhichToolForDiffing				= @"UseWhichToolForDiffing";
+NSString* const MHGUseWhichToolForMerging				= @"UseWhichToolForMerging";
 NSString* const MHGViewsHaveIndependentSizes			= @"ViewsHaveIndependentSizes";
 NSString* const MHGWarnAboutBadMercurialConfiguration   = @"WarnAboutBadMercurialConfiguration";
 
@@ -193,8 +193,6 @@ BOOL		ShowRemovedFilesInBrowserFromDefaults()					{ return boolFromDefaultsForKe
 BOOL		ShowResolvedFilesInBrowserFromDefaults()				{ return boolFromDefaultsForKey(MHGShowResolvedFilesInBrowser); }
 BOOL		ShowUnresolvedFilesInBrowserFromDefaults()				{ return boolFromDefaultsForKey(MHGShowUnresolvedFilesInBrowser); }
 BOOL		ShowUntrackedFilesInBrowserFromDefaults()				{ return boolFromDefaultsForKey(MHGShowUntrackedFilesInBrowser); }
-BOOL		UseFileMergeForDiffFromDefaults()						{ return boolFromDefaultsForKey(MHGUseFileMergeForDiff); }
-BOOL		UseFileMergeForMergeFromDefaults()						{ return boolFromDefaultsForKey(MHGUseFileMergeForMerge); }
 BOOL		ViewsHaveIndependentSizesFromDefaults()					{ return boolFromDefaultsForKey(MHGViewsHaveIndependentSizes); }
 BOOL		WarnAboutBadMercurialConfigurationFromDefaults()		{ return boolFromDefaultsForKey(MHGWarnAboutBadMercurialConfiguration); }
 
@@ -212,6 +210,7 @@ NSString*	LocalHGShellAliasNameFromDefaults()						{ return stringFromDefaultsFo
 NSString*	LocalWhitelistedHGShellAliasNameFromDefaults()			{ return stringFromDefaultsForKey(MHGLocalWhitelistedHGShellAliasName); }
 NSString*	MacHgLogFileLocation()									{ return stringFromDefaultsForKey(MHGMacHgLogFileLocation); }
 NSString*	ToolNameForDiffingFromDefaults()						{ return stringFromDefaultsForKey(MHGToolNameForDiffing); }
+NSString*	ToolNameForMergingFromDefaults()						{ return stringFromDefaultsForKey(MHGToolNameForMerging); }
 float		fontSizeOfBrowserItemsFromDefaults()					{ return floatFromDefaultsForKey(MHGFontSizeOfBrowserItems); }
 float		sizeOfBrowserColumnsFromDefaults()						{ return floatFromDefaultsForKey(MHGSizeOfBrowserColumns); }
 int			LoggingLevelForHGCommands()								{ return integerFromDefaultsForKey(MHGLoggingLevelForHGCommands); }
@@ -227,6 +226,7 @@ RevisionSortOrderOption		RevisionSortOrderFromDefaults()			{ return enumFromDefa
 HandleOrigFilesOption		HandleGeneratedOrigFilesFromDefaults()	{ return enumFromDefaultsForKey(MHGHandleGeneratedOrigFiles); }
 OnActivationOpenWhatOption	OnActivationOpenFromDefaults()			{ return enumFromDefaultsForKey(MHGOnActivationOpen); }
 ToolForDiffing				UseWhichToolForDiffingFromDefaults()	{ return enumFromDefaultsForKey(MHGUseWhichToolForDiffing); }
+ToolForMerging				UseWhichToolForMergingFromDefaults()	{ return enumFromDefaultsForKey(MHGUseWhichToolForMerging); }
 
 
 
