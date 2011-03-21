@@ -8,6 +8,7 @@
 //
 
 #import "Common.h"
+#import "TaskExecutions.h"
 
 
 
@@ -43,5 +44,11 @@
 	NSProgressIndicator* indicator_;
 }
 - (void) setIndicator:(NSProgressIndicator*)indicator;
-
 @end
+
+
+@interface ProcessController : ShellTaskController
+{
+}
+@end
+
