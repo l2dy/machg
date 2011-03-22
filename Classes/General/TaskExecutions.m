@@ -399,7 +399,7 @@ static NSString* processedPathEnv(NSDictionary* processEnv)
 	NSString* pathEnv = [processEnv objectForKey:@"PATH"];
 	if ([pathEnv isMatchedByRegex:@"^(.*:)?/usr/local/bin(:.*)?$"])
 		return pathEnv;
-	BOOL colonTerminated = [pathEnv isMatchedByRegex:@".*:"];
+	BOOL colonTerminated = [pathEnv hasSuffix:@":"];
 	return [pathEnv stringByAppendingString: colonTerminated ? @"/usr/local/bin" : @":/usr/local/bin"];
 }
 
