@@ -2769,7 +2769,7 @@
 									<object class="NSTextField" id="825922060">
 										<reference key="NSNextResponder" ref="370821575"/>
 										<int key="NSvFlags">266</int>
-										<string key="NSFrame">{{270, 44}, {259, 22}}</string>
+										<string key="NSFrame">{{293, 44}, {236, 22}}</string>
 										<reference key="NSSuperview" ref="370821575"/>
 										<bool key="NSEnabled">YES</bool>
 										<object class="NSTextFieldCell" key="NSCell" id="188158562">
@@ -2802,7 +2802,7 @@
 									<object class="NSPopUpButton" id="341756604">
 										<reference key="NSNextResponder" ref="370821575"/>
 										<int key="NSvFlags">266</int>
-										<string key="NSFrame">{{122, 41}, {143, 26}}</string>
+										<string key="NSFrame">{{122, 41}, {166, 26}}</string>
 										<reference key="NSSuperview" ref="370821575"/>
 										<bool key="NSEnabled">YES</bool>
 										<object class="NSPopUpButtonCell" key="NSCell" id="740630641">
@@ -2822,6 +2822,10 @@
 												<string key="NSKeyEquiv"/>
 												<int key="NSMnemonicLoc">2147483647</int>
 												<int key="NSState">1</int>
+												<object class="NSCustomResource" key="NSImage" id="796370093">
+													<string key="NSClassName">NSImage</string>
+													<string key="NSResourceName">FileMerge</string>
+												</object>
 												<reference key="NSOnImage" ref="124414396"/>
 												<reference key="NSMixedImage" ref="724100393"/>
 												<string key="NSAction">_popUpItemAction:</string>
@@ -2837,6 +2841,10 @@
 														<string key="NSTitle">AraxisMerge</string>
 														<string key="NSKeyEquiv"/>
 														<int key="NSMnemonicLoc">2147483647</int>
+														<object class="NSCustomResource" key="NSImage" id="71991945">
+															<string key="NSClassName">NSImage</string>
+															<string key="NSResourceName">AraxisMerge</string>
+														</object>
 														<reference key="NSOnImage" ref="124414396"/>
 														<reference key="NSMixedImage" ref="724100393"/>
 														<string key="NSAction">_popUpItemAction:</string>
@@ -2848,6 +2856,10 @@
 														<string key="NSTitle">P4Merge</string>
 														<string key="NSKeyEquiv"/>
 														<int key="NSMnemonicLoc">2147483647</int>
+														<object class="NSCustomResource" key="NSImage" id="345313513">
+															<string key="NSClassName">NSImage</string>
+															<string key="NSResourceName">p4merge</string>
+														</object>
 														<reference key="NSOnImage" ref="124414396"/>
 														<reference key="NSMixedImage" ref="724100393"/>
 														<string key="NSAction">_popUpItemAction:</string>
@@ -2859,6 +2871,10 @@
 														<string key="NSTitle">DiffMerge</string>
 														<string key="NSKeyEquiv"/>
 														<int key="NSMnemonicLoc">2147483647</int>
+														<object class="NSCustomResource" key="NSImage" id="998141520">
+															<string key="NSClassName">NSImage</string>
+															<string key="NSResourceName">DiffMerge</string>
+														</object>
 														<reference key="NSOnImage" ref="124414396"/>
 														<reference key="NSMixedImage" ref="724100393"/>
 														<string key="NSAction">_popUpItemAction:</string>
@@ -2870,6 +2886,10 @@
 														<string key="NSTitle">KDiff3</string>
 														<string key="NSKeyEquiv"/>
 														<int key="NSMnemonicLoc">2147483647</int>
+														<object class="NSCustomResource" key="NSImage" id="490910818">
+															<string key="NSClassName">NSImage</string>
+															<string key="NSResourceName">kdiff3</string>
+														</object>
 														<reference key="NSOnImage" ref="124414396"/>
 														<reference key="NSMixedImage" ref="724100393"/>
 														<string key="NSAction">_popUpItemAction:</string>
@@ -2881,6 +2901,10 @@
 														<string key="NSTitle">DeltaWalker</string>
 														<string key="NSKeyEquiv"/>
 														<int key="NSMnemonicLoc">2147483647</int>
+														<object class="NSCustomResource" key="NSImage" id="321349992">
+															<string key="NSClassName">NSImage</string>
+															<string key="NSResourceName">DeltaWalker</string>
+														</object>
 														<reference key="NSOnImage" ref="124414396"/>
 														<reference key="NSMixedImage" ref="724100393"/>
 														<string key="NSAction">_popUpItemAction:</string>
@@ -2892,6 +2916,10 @@
 														<string key="NSTitle">Kaleidoscope</string>
 														<string key="NSKeyEquiv"/>
 														<int key="NSMnemonicLoc">2147483647</int>
+														<object class="NSCustomResource" key="NSImage">
+															<string key="NSClassName">NSImage</string>
+															<string key="NSResourceName">Kaleidoscope</string>
+														</object>
 														<reference key="NSOnImage" ref="124414396"/>
 														<reference key="NSMixedImage" ref="724100393"/>
 														<string key="NSAction">_popUpItemAction:</string>
@@ -2903,6 +2931,10 @@
 														<string key="NSTitle">Changes</string>
 														<string key="NSKeyEquiv"/>
 														<int key="NSMnemonicLoc">2147483647</int>
+														<object class="NSCustomResource" key="NSImage">
+															<string key="NSClassName">NSImage</string>
+															<string key="NSResourceName">Changes</string>
+														</object>
 														<reference key="NSOnImage" ref="124414396"/>
 														<reference key="NSMixedImage" ref="724100393"/>
 														<string key="NSAction">_popUpItemAction:</string>
@@ -2914,6 +2946,10 @@
 														<string key="NSTitle">DiffFork</string>
 														<string key="NSKeyEquiv"/>
 														<int key="NSMnemonicLoc">2147483647</int>
+														<object class="NSCustomResource" key="NSImage">
+															<string key="NSClassName">NSImage</string>
+															<string key="NSResourceName">DiffFork</string>
+														</object>
 														<reference key="NSOnImage" ref="124414396"/>
 														<reference key="NSMixedImage" ref="724100393"/>
 														<string key="NSAction">_popUpItemAction:</string>
@@ -2925,6 +2961,10 @@
 														<string key="NSTitle">BBEdit</string>
 														<string key="NSKeyEquiv"/>
 														<int key="NSMnemonicLoc">2147483647</int>
+														<object class="NSCustomResource" key="NSImage">
+															<string key="NSClassName">NSImage</string>
+															<string key="NSResourceName">BBEdit</string>
+														</object>
 														<reference key="NSOnImage" ref="124414396"/>
 														<reference key="NSMixedImage" ref="724100393"/>
 														<string key="NSAction">_popUpItemAction:</string>
@@ -2936,6 +2976,10 @@
 														<string key="NSTitle">TextWrangler</string>
 														<string key="NSKeyEquiv"/>
 														<int key="NSMnemonicLoc">2147483647</int>
+														<object class="NSCustomResource" key="NSImage">
+															<string key="NSClassName">NSImage</string>
+															<string key="NSResourceName">TextWrangler</string>
+														</object>
 														<reference key="NSOnImage" ref="124414396"/>
 														<reference key="NSMixedImage" ref="724100393"/>
 														<string key="NSAction">_popUpItemAction:</string>
@@ -2964,7 +3008,7 @@
 									<object class="NSTextField" id="20371428">
 										<reference key="NSNextResponder" ref="370821575"/>
 										<int key="NSvFlags">266</int>
-										<string key="NSFrame">{{270, 14}, {259, 22}}</string>
+										<string key="NSFrame">{{293, 14}, {236, 22}}</string>
 										<reference key="NSSuperview" ref="370821575"/>
 										<bool key="NSEnabled">YES</bool>
 										<object class="NSTextFieldCell" key="NSCell" id="571808986">
@@ -2997,7 +3041,7 @@
 									<object class="NSPopUpButton" id="508660357">
 										<reference key="NSNextResponder" ref="370821575"/>
 										<int key="NSvFlags">266</int>
-										<string key="NSFrame">{{122, 11}, {143, 26}}</string>
+										<string key="NSFrame">{{122, 11}, {166, 26}}</string>
 										<reference key="NSSuperview" ref="370821575"/>
 										<bool key="NSEnabled">YES</bool>
 										<object class="NSPopUpButtonCell" key="NSCell" id="949591833">
@@ -3017,6 +3061,7 @@
 												<string key="NSKeyEquiv"/>
 												<int key="NSMnemonicLoc">2147483647</int>
 												<int key="NSState">1</int>
+												<reference key="NSImage" ref="796370093"/>
 												<reference key="NSOnImage" ref="124414396"/>
 												<reference key="NSMixedImage" ref="724100393"/>
 												<string key="NSAction">_popUpItemAction:</string>
@@ -3032,6 +3077,7 @@
 														<string key="NSTitle">AraxisMerge</string>
 														<string key="NSKeyEquiv"/>
 														<int key="NSMnemonicLoc">2147483647</int>
+														<reference key="NSImage" ref="71991945"/>
 														<reference key="NSOnImage" ref="124414396"/>
 														<reference key="NSMixedImage" ref="724100393"/>
 														<string key="NSAction">_popUpItemAction:</string>
@@ -3043,6 +3089,7 @@
 														<string key="NSTitle">P4Merge</string>
 														<string key="NSKeyEquiv"/>
 														<int key="NSMnemonicLoc">2147483647</int>
+														<reference key="NSImage" ref="345313513"/>
 														<reference key="NSOnImage" ref="124414396"/>
 														<reference key="NSMixedImage" ref="724100393"/>
 														<string key="NSAction">_popUpItemAction:</string>
@@ -3054,6 +3101,7 @@
 														<string key="NSTitle">DiffMerge</string>
 														<string key="NSKeyEquiv"/>
 														<int key="NSMnemonicLoc">2147483647</int>
+														<reference key="NSImage" ref="998141520"/>
 														<reference key="NSOnImage" ref="124414396"/>
 														<reference key="NSMixedImage" ref="724100393"/>
 														<string key="NSAction">_popUpItemAction:</string>
@@ -3065,6 +3113,7 @@
 														<string key="NSTitle">KDiff3</string>
 														<string key="NSKeyEquiv"/>
 														<int key="NSMnemonicLoc">2147483647</int>
+														<reference key="NSImage" ref="490910818"/>
 														<reference key="NSOnImage" ref="124414396"/>
 														<reference key="NSMixedImage" ref="724100393"/>
 														<string key="NSAction">_popUpItemAction:</string>
@@ -3076,6 +3125,7 @@
 														<string key="NSTitle">DeltaWalker</string>
 														<string key="NSKeyEquiv"/>
 														<int key="NSMnemonicLoc">2147483647</int>
+														<reference key="NSImage" ref="321349992"/>
 														<reference key="NSOnImage" ref="124414396"/>
 														<reference key="NSMixedImage" ref="724100393"/>
 														<string key="NSAction">_popUpItemAction:</string>
@@ -7002,7 +7052,7 @@ dGVyLiAgKC0tc2ltaWxhcml0eSBvcHRpb24pA</string>
 				<dictionary class="NSMutableDictionary" key="1519.IBAttributePlaceholdersKey"/>
 				<string key="1519.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1520.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="1521.IBEditorWindowLastContentRect">{{286, 326}, {143, 243}}</string>
+				<string key="1521.IBEditorWindowLastContentRect">{{286, 326}, {166, 243}}</string>
 				<string key="1521.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1523.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1525.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -7074,7 +7124,7 @@ dGVyLiAgKC0tc2ltaWxhcml0eSBvcHRpb24pA</string>
 				<dictionary class="NSMutableDictionary" key="1689.IBAttributePlaceholdersKey"/>
 				<string key="1689.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1690.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-				<string key="1691.IBEditorWindowLastContentRect">{{286, 396}, {143, 143}}</string>
+				<string key="1691.IBEditorWindowLastContentRect">{{286, 396}, {166, 143}}</string>
 				<string key="1691.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1694.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
 				<string key="1695.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
