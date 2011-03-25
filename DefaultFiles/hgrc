@@ -10,14 +10,8 @@ git = True
 
 
 [extensions]
-hgext.extdiff =
+# MacHg uses many extensions like: rebase, mq, strip, histedit, combinedinfo, extdiff
 hgext.bookmarks =
-hgext.combinedinfo =
-hgext.mq =
-hgext.rebase =
-hgext.histedit =
-hgext.collapse =
-hgext.cedit =
 
 
 

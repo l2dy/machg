@@ -292,14 +292,14 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	// If the ~/.hgignore exists then make sure ~/Application Support/MacHg/hgrc points to it
 	if (pathIsExistent(userHgignorePath))
 	{
-		NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"hgext.cedit=", @"--add", fstr(@"ui.ignore = %@", userHgignorePath), @"--file", macHgHGRCFilePath, nil];
+		NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"extensions.cedit=", @"--add", fstr(@"ui.ignore = %@", userHgignorePath), @"--file", macHgHGRCFilePath, nil];
 		[TaskExecutions executeMercurialWithArgs:argsCedit  fromRoot:@"/tmp"];
 	}
 
 	NSString* macHgIgnoreFilePath = fstr(@"%@/hgignore",applicationSupportFolder());
 	[self ensureFileExists:macHgIgnoreFilePath orCopyFromBundleResource:@"hgignore"];
 
-	NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"hgext.cedit=", @"--add", fstr(@"ui.ignore.other = %@", macHgIgnoreFilePath), @"--file", macHgHGRCFilePath, nil];
+	NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"extensions.cedit=", @"--add", fstr(@"ui.ignore.other = %@", macHgIgnoreFilePath), @"--file", macHgHGRCFilePath, nil];
 	[TaskExecutions executeMercurialWithArgs:argsCedit  fromRoot:@"/tmp"];
 }
 
@@ -319,7 +319,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		// If we currently don't have a certificate then point to our TrustedCertificates
 		if ([result hasErrors] || [result hasWarnings] || IsEmpty([result outStr]))
 		{
-			NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"hgext.cedit=", @"--add", fstr(@"web.cacerts = %@", macHgCertFilePath), @"--file", macHgHGRCFilePath, nil];
+			NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"extensions.cedit=", @"--add", fstr(@"web.cacerts = %@", macHgCertFilePath), @"--file", macHgHGRCFilePath, nil];
 			[TaskExecutions executeMercurialWithArgs:argsCedit  fromRoot:@"/tmp"];
 		}		
 	}];	
@@ -373,29 +373,15 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"extensions", nil];
 		ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
 		
-		BOOL addExtDiff         = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.extdiff\\s*="	  options:RKLMultiline];
 		BOOL addExtBookmarks    = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.bookmarks\\s*="    options:RKLMultiline];
-		BOOL addExtMq		    = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.mq\\s*="		      options:RKLMultiline];
-		BOOL addExtRebase       = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.rebase\\s*="       options:RKLMultiline];
-		BOOL addExtHistEdit	    = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.histedit\\s*="     options:RKLMultiline];
-		BOOL addExtCollapse     = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.collapse\\s*="     options:RKLMultiline];
-		BOOL addExtCedit        = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.cedit\\s*="		  options:RKLMultiline];
-		BOOL addExtCombinedInfo = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.combinedinfo\\s*=" options:RKLMultiline];
 		
-		if (addExtDiff || addExtBookmarks || addExtMq || addExtRebase || addExtHistEdit || addExtCollapse || addExtCedit || addExtCombinedInfo)
+		if (addExtBookmarks)
 		{
 			NSFileManager* fileManager = [NSFileManager defaultManager];
 			NSString* macHgHGRCPath = fstr(@"%@/hgrc",applicationSupportFolder());
 			
 			[fileManager appendString:@"\n[extensions]\n" toFilePath:macHgHGRCPath];
-			if (addExtDiff)			[fileManager appendString:@"hgext.extdiff=\n"	   toFilePath:macHgHGRCPath];
 			if (addExtBookmarks)	[fileManager appendString:@"hgext.bookmarks=\n"    toFilePath:macHgHGRCPath];
-			if (addExtMq)			[fileManager appendString:@"hgext.mq=\n"		   toFilePath:macHgHGRCPath];
-			if (addExtRebase)		[fileManager appendString:@"hgext.rebase=\n"	   toFilePath:macHgHGRCPath];
-			if (addExtHistEdit)		[fileManager appendString:@"hgext.histedit=\n"	   toFilePath:macHgHGRCPath];
-			if (addExtCollapse)		[fileManager appendString:@"hgext.collapse=\n"	   toFilePath:macHgHGRCPath];
-			if (addExtCedit)		[fileManager appendString:@"hgext.cedit=\n"	       toFilePath:macHgHGRCPath];
-			if (addExtCombinedInfo)	[fileManager appendString:@"hgext.combinedinfo=\n" toFilePath:macHgHGRCPath];
 		}
 		
 	}];

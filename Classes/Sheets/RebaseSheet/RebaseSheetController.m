@@ -214,10 +214,8 @@
 	LowHighPair pair = [sourceLogTableView lowestToHighestSelectedRevisions];
 	NSNumber* destinationRev = [destinationLogTableView selectedRevision];
 	NSString* rebaseDescription = fstr(@"rebasing %d-%d in “%@”", pair.lowRevision, pair.highRevision, repositoryName);
-	NSMutableArray* argsRebase = [NSMutableArray arrayWithObjects:@"rebase", nil];
-	
-	[argsRebase addObject:@"--config" followedBy:@"hgext.rebase="];		// We are using MacHgs rebase command so we need to specify that it is
-																		// in the extensions folder of the included Mercurial
+	NSMutableArray* argsRebase = [NSMutableArray arrayWithObjects:@"rebase", @"--config", @"extensions.rebase=", nil];	// We are using MacHgs rebase command so we need to specify that it is
+																														// in the extensions folder of the included Mercurial
 	[argsRebase addObject:@"--detach"];
 	[argsRebase addObject:@"--source" followedBy:intAsString(pair.lowRevision)];
 	[argsRebase addObject:@"--dest" followedBy:numberAsString(destinationRev)];

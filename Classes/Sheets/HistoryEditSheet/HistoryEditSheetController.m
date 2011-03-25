@@ -113,7 +113,7 @@
 	if (result == NSAlertOtherReturn)
 		return;
 	
-	NSMutableArray* argsHistoryEdit = [NSMutableArray arrayWithObjects:@"histedit", nil];
+	NSMutableArray* argsHistoryEdit = [NSMutableArray arrayWithObjects:@"histedit", @"--config", @"extensions.histedit=", nil];
 
 	BOOL abort = (result == NSAlertAlternateReturn);
 	[argsHistoryEdit addObject: (abort ? @"--abort" : @"--continue")];
@@ -212,7 +212,7 @@
 {
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
-	NSMutableArray* argsHistoryEdit = [NSMutableArray arrayWithObjects:@"histedit", nil];
+	NSMutableArray* argsHistoryEdit = [NSMutableArray arrayWithObjects:@"histedit", @"--config", @"extensions.histedit=", nil];
 	
 	[argsHistoryEdit addObject:@"--startingrules"];
 	[argsHistoryEdit addObject:intAsString(pair.lowRevision)];
@@ -238,7 +238,7 @@
 	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
 	NSString* repositoryName = [[[myDocument sidebar] selectedNode] shortName];
 	NSString* historyEditDescription = fstr(@"Editing descendants of %d in “%@”", pair.lowRevision, repositoryName);
-	NSMutableArray* argsHistoryEdit = [NSMutableArray arrayWithObjects:@"histedit", nil];	
+	NSMutableArray* argsHistoryEdit = [NSMutableArray arrayWithObjects:@"histedit", @"--config", @"extensions.histedit=", nil];	
 	
 	[argsHistoryEdit addObject:@"--rules" followedBy:[confirmationSheetMessage string]];
 	[argsHistoryEdit addObject:intAsString(pair.lowRevision)];
