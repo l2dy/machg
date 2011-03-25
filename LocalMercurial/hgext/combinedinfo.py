@@ -22,6 +22,7 @@ def printFullCombinedInfo(ui, repo, **opts):
     ctx = repo[None]
     parents = ctx.parents()
 
+
     #
     # print tip and parents
     #
@@ -32,30 +33,30 @@ def printFullCombinedInfo(ui, repo, **opts):
     if (len(parents) == 2):
         ui.write("parent2 %s:%s\n" % (parents[1].rev(), parents[1].hex()))
 
-    #
-    # compute bookmarks from the .hg/bookmarks file
-    #
-    bookmarks = set([])
-    try:
-        for line in repo.opener('bookmarks'):
-            sha, refspec = line.strip().split(' ', 1)
-            bookmarks.add(sha)
-    except:
-        pass
-
 
     #
     # write out localtags, globaltags, and bookmarks
     #
     for t, n in reversed(repo.tagslist()):
         hn = hex(n) 
-        if hn in bookmarks:
-            tagtype = "bookmark"
-        elif repo.tagtype(t) == 'local':
+        if repo.tagtype(t) == 'local':
             tagtype = "localtag"
         else:
             tagtype = "globaltag"
         ui.write("%s %d:%s %s\n" % (tagtype, repo.changelog.rev(n), hn, t))
+
+
+    #
+    # compute bookmarks from the .hg/bookmarks file
+    #
+    try:
+        tagtype = "bookmark"
+        for line in repo.opener('bookmarks'):
+            sha, refspec = line.strip().split(' ', 1)
+            n = repo.lookup(sha)
+            ui.write("%s %d:%s %s\n" % (tagtype, repo.changelog.rev(n), sha, refspec))
+    except:
+        pass
 
 
     #
@@ -83,6 +84,7 @@ def printFullCombinedInfo(ui, repo, **opts):
         else:
             label = 'inactivebranch'
         ui.write("%s %s:%s %s\n" % (label, str(node), hex(hn), tag))
+
 
     #
     # write out the open heads
