@@ -564,7 +564,7 @@ NSString* hgrcPath()
 		return macHgHGRCpath;
 
 	NSString* homeHGRCpath  = [NSHomeDirectory() stringByAppendingPathComponent:@".hgrc"];	
-	return fstr(@"%@:%@", macHgHGRCpath, homeHGRCpath);
+	return fstr(@"%@:%@", homeHGRCpath, macHgHGRCpath);		// macHgHGRCpath takes precedence
 }
 
 NSArray* aliasesForShell()
