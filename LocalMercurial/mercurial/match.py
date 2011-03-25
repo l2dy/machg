@@ -161,7 +161,8 @@ def _patsplit(pat, default):
     actual pattern."""
     if ':' in pat:
         kind, val = pat.split(':', 1)
-        if kind in ('re', 'glob', 'path', 'relglob', 'relpath', 'relre'):
+        if kind in ('re', 'glob', 'path', 'relglob', 'relpath', 'relre',
+                    'listfile', 'listfile0'):
             return kind, val
     return default, pat
 
@@ -253,7 +254,7 @@ def _buildmatch(pats, tail):
         l = len(pats)
         if l < 2:
             raise
-        pata, a = _buildmatch(pats[:l//2], tail),
+        pata, a = _buildmatch(pats[:l//2], tail)
         patb, b = _buildmatch(pats[l//2:], tail)
         return pat, lambda s: a(s) or b(s)
     except re.error:
@@ -271,6 +272,15 @@ def _normalize(names, default, root, cwd, auditor):
             name = util.canonpath(root, cwd, name, auditor)
         elif kind in ('relglob', 'path'):
             name = util.normpath(name)
+        elif kind in ('listfile', 'listfile0'):
+            delimiter = kind == 'listfile0' and '\0' or '\n'
+            try:
+                files = open(name, 'r').read().split(delimiter)
+                files = [f for f in files if f]
+            except EnvironmentError:
+                raise util.Abort(_("unable to read file list (%s)") % name)
+            pats += _normalize(files, default, root, cwd, auditor)
+            continue
 
         pats.append((kind, name))
     return pats

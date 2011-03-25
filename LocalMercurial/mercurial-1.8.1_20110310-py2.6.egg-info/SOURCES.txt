@@ -3,7 +3,6 @@ hg
 setup.py
 hgext/__init__.py
 hgext/acl.py
-hgext/bookmarks.py
 hgext/bugzilla.py
 hgext/children.py
 hgext/churn.py
@@ -57,6 +56,7 @@ mercurial/ancestor.py
 mercurial/archival.py
 mercurial/base85.c
 mercurial/bdiff.c
+mercurial/bookmarks.py
 mercurial/bundlerepo.py
 mercurial/byterange.py
 mercurial/changegroup.py
