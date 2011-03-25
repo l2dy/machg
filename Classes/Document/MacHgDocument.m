@@ -2092,19 +2092,8 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 	NSString* rootPath = [self absolutePathOfRepositoryRoot];
 	NSString* versionStr = numberAsString(version);
 	[self dispatchToMercurialQueuedWithDescription:@"Backout" process:^{
-		NSMutableArray* argsBackout = [NSMutableArray arrayWithObjects:@"backout", @"--rev", versionStr, nil];
-
-		if (UseWhichToolForMergingFromDefaults() == eUseFileMergeForMerges)
-		{
-			[argsBackout addObject:@"--config" followedBy:@"merge-tools.filemerge.args= $local $other -ancestor $base -merge $output"];
-			[argsBackout addObject:@"--config" followedBy: fstr(@"merge-tools.filemerge.executable=%@/opendiff-w.sh",[[NSBundle mainBundle] resourcePath]) ];
-			[argsBackout addObject:@"--config" followedBy: @"merge-tools.priority=100"];	// Use FileMerge with a priority of 100. This should be more than the other tools.
-		}
-		else if (UseWhichToolForMergingFromDefaults() == eUseOtherForMerges)
-		{
-			[argsBackout addObject:@"--tool" followedBy:ToolNameForMergingFromDefaults()];
-		}
-		
+		NSString* scriptName = [[AppController sharedAppController] scriptNameForMergeTool:UseWhichToolForMergingFromDefaults()];
+		NSMutableArray* argsBackout = [NSMutableArray arrayWithObjects:@"backout", @"--rev", versionStr, @"--tool", scriptName, nil];
 		ExecutionResult* results = [self executeMercurialWithArgs:argsBackout  fromRoot:rootPath whileDelayingEvents:YES];
 
 		if (YES) // There is no DisplayResultsOfBackoutFromDefaults() since it's not that common...
@@ -2148,19 +2137,9 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 	[self registerPendingRefresh:rootPathAsArray];
 
 	NSString* mergeVersionStr = numberAsString(mergeVersion);
-	NSMutableArray* argsMerge = [NSMutableArray arrayWithObjects:@"merge", @"--rev", mergeVersionStr, nil];
+	NSString* scriptName = [[AppController sharedAppController] scriptNameForMergeTool:UseWhichToolForMergingFromDefaults()];
+	NSMutableArray* argsMerge = [NSMutableArray arrayWithObjects:@"merge", @"--rev", mergeVersionStr, @"--tool", scriptName, nil];
 	[argsMerge addObjectsFromArray:options];
-
-	if (UseWhichToolForMergingFromDefaults() == eUseFileMergeForMerges)
-	{
-		[argsMerge addObject:@"--config" followedBy:@"merge-tools.filemerge.args= $local $other -ancestor $base -merge $output"];
-		[argsMerge addObject:@"--config" followedBy: fstr(@"merge-tools.filemerge.executable=%@/opendiff-w.sh",[[NSBundle mainBundle] resourcePath]) ];
-		[argsMerge addObject:@"--config" followedBy: @"merge-tools.priority=100"];	// Use FileMerge with a priority of 100. This should be more than the other tools.
-	}
-	else if (UseWhichToolForMergingFromDefaults() == eUseOtherForMerges)
-	{
-		[argsMerge addObject:@"--tool" followedBy:ToolNameForMergingFromDefaults()];
-	}
 
 	__block ExecutionResult* results;
 	[self delayEventsUntilFinishBlock:^{
@@ -2354,15 +2333,10 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 		
 		DispatchGroup group = dispatch_group_create();
 
-		NSString* cmd;
-		if (UseWhichToolForDiffingFromDefaults() == eUseFileMergeForDiffs)
-			cmd = @"opendiff";
-		else if (IsNotEmpty(ToolNameForDiffingFromDefaults()))
-			cmd = ToolNameForDiffingFromDefaults();
-		else
-			cmd = @"diff";		
-		
-		if ([cmd isEqualToString: @"ksdiff"])
+		ToolForDiffing diffTool = UseWhichToolForDiffingFromDefaults();
+		[[AppController sharedAppController] preLaunchDiffToolIfNeeded:diffTool];
+		NSString* cmd = [[AppController sharedAppController] scriptNameForDiffTool:diffTool];
+		if ([[AppController sharedAppController] diffToolWantsGroupedFiles:diffTool])
 		{
 			dispatch_group_async(group, globalQueue(), ^{
 				NSMutableArray* diffArgs = [NSMutableArray arrayWithObjects: cmd, @"--cwd", rootPath, nil];
@@ -2383,13 +2357,6 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 			for (NSString* file in filesWhichHaveDifferences)
 				dispatch_group_async(group, globalQueue(), ^{
 					NSMutableArray* diffArgs = [NSMutableArray arrayWithObjects: cmd, @"--cwd", rootPath, nil];
-					if (UseWhichToolForDiffingFromDefaults() == eUseFileMergeForDiffs)
-					{
-						NSString* absPathToDiffScript = fstr(@"%@/%@",[[NSBundle mainBundle] resourcePath], @"fmdiff.sh");
-						NSString* cmdOverride = fstr(@"extdiff.cmd.opendiff=%@",absPathToDiffScript);
-						[diffArgs addObject:@"--config" followedBy:cmdOverride];
-						[diffArgs addObject:@"--config" followedBy:@"extensions.hgext.extdiff="];
-					}
 					if (versionToCompareTo)
 						[diffArgs addObject:@"--rev" followedBy:versionToCompareTo];
 					[diffArgs addObject:file];

@@ -17,6 +17,19 @@
 #import "EMKeychainItem.h"
 #import "NSURL+Parameters.h"
 
+NSString* kKeyPathUseWhichToolForDiffing = @"values.UseWhichToolForDiffing";
+NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
+
+
+
+
+@interface AppController (PrivateAPI)
+- (void) checkDiffTool;
+- (void) checkMergeTool;
+- (NSString*) bundleIdentiferForDiffTool: (ToolForDiffing)tool;
+- (NSString*) bundleIdentiferForMergeTool:(ToolForMerging)tool;
+@end
+
 @implementation AppController
 
 @synthesize repositoryIdentityForPath = repositoryIdentityForPath_;
@@ -101,7 +114,21 @@
 
 	// Initlize globals
 	changesetHashToLogRecord			= [[NSMutableDictionary alloc]init];
+
+	// Receive a notification when the diff tool and merge tool change in the preferences.
+	id defaults = [NSUserDefaultsController sharedUserDefaultsController];
+	[defaults  addObserver:self  forKeyPath:kKeyPathUseWhichToolForDiffing	options:NSKeyValueObservingOptionNew  context:NULL];
+	[defaults  addObserver:self  forKeyPath:kKeyPathUseWhichToolForMerging	options:NSKeyValueObservingOptionNew  context:NULL];	
+	
 	return self;
+}
+
+- (void) observeValueForKeyPath:(NSString*)keyPath  ofObject:(id)object  change:(NSDictionary*)change  context:(void*)context
+{
+    if ([keyPath isEqualToString:kKeyPathUseWhichToolForDiffing])
+		[self checkDiffTool];
+    if ([keyPath isEqualToString:kKeyPathUseWhichToolForMerging])
+		[self checkMergeTool];
 }
 
 + (void) initialize
@@ -195,6 +222,26 @@
 // MARK: Configuration Checking
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+- (void) ensureFileExists:(NSString*)filePath orCopyFromBundleResource:(NSString*)resourceName
+{
+	NSError* err = nil;
+	if (pathIsExistent(filePath))
+		return;
+	
+	NSFileManager* fileManager = [NSFileManager defaultManager];
+
+	if (!pathIsExistent([filePath stringByDeletingLastPathComponent]))
+	{
+		[fileManager createDirectoryAtPath:[filePath stringByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:nil error:&err];
+		[NSApp presentAnyErrorsAndClear:&err];		
+	}
+
+	NSString* sourcePath = fstr(@"%@/%@",[[NSBundle mainBundle] resourcePath], resourceName);
+	[fileManager copyItemAtPath:sourcePath toPath:filePath error:&err];
+	[NSApp presentAnyErrorsAndClear:&err];
+}
+
+
 - (void) includeHomeHGRC:(BOOL)include inProcess:(BlockProcess)block
 {
 	@synchronized(self)
@@ -241,7 +288,6 @@
 {
 	NSString* macHgHGRCFilePath = fstr(@"%@/hgrc",applicationSupportFolder());
 	NSString* userHgignorePath = [NSHomeDirectory() stringByAppendingPathComponent:@".hgignore"];
-	NSError* err = nil;
 
 	// If the ~/.hgignore exists then make sure ~/Application Support/MacHg/hgrc points to it
 	if (pathIsExistent(userHgignorePath))
@@ -251,14 +297,7 @@
 	}
 
 	NSString* macHgIgnoreFilePath = fstr(@"%@/hgignore",applicationSupportFolder());
-	if (!pathIsExistent(macHgIgnoreFilePath))
-	{
-		NSString* sourceMacHgHignorePath = fstr(@"%@/%@",[[NSBundle mainBundle] resourcePath], @"hgignore");
-		NSString* hgignoreContents = [NSString stringWithContentsOfFile:sourceMacHgHignorePath encoding:NSUTF8StringEncoding error:&err];
-		[NSApp presentAnyErrorsAndClear:&err];
-		[hgignoreContents writeToFile:macHgIgnoreFilePath atomically:YES encoding:NSUTF8StringEncoding error:&err];
-		[NSApp presentAnyErrorsAndClear:&err];
-	}
+	[self ensureFileExists:macHgIgnoreFilePath orCopyFromBundleResource:@"hgignore"];
 
 	NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"hgext.cedit=", @"--add", fstr(@"ui.ignore.other = %@", macHgIgnoreFilePath), @"--file", macHgHGRCFilePath, nil];
 	[TaskExecutions executeMercurialWithArgs:argsCedit  fromRoot:@"/tmp"];
@@ -270,17 +309,8 @@
 	[self includeHomeHGRC:NO inProcess:^{
 		NSString* macHgHGRCFilePath = fstr(@"%@/hgrc",applicationSupportFolder());
 		NSString* macHgCertFilePath = fstr(@"%@/TrustedCertificates.pem",applicationSupportFolder());
-		NSError* err = nil;
 
-		// If the ~/.hgignore exists then make sure ~/Application Support/MacHg/hgrc points to it
-		if (!pathIsExistent(macHgCertFilePath))
-		{
-			NSString* sourceCertFilePath = fstr(@"%@/%@",[[NSBundle mainBundle] resourcePath], @"TrustedCertificates.pem");
-			NSString* certFileContents = [NSString stringWithContentsOfFile:sourceCertFilePath encoding:NSMacOSRomanStringEncoding error:&err];
-			[NSApp presentAnyErrorsAndClear:&err];
-			[certFileContents writeToFile:macHgCertFilePath atomically:YES encoding:NSMacOSRomanStringEncoding error:&err];
-			[NSApp presentAnyErrorsAndClear:&err];
-		}
+		[self ensureFileExists:macHgCertFilePath orCopyFromBundleResource:@"TrustedCertificates.pem"];
 
 		// Determine current configuration:
 		NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"web.cacerts", nil];
@@ -385,6 +415,16 @@
 		NSRunCriticalAlertPanel(@"Opendiff not found", @"/usr/bin/opendiff was not found on this system. Please install the full developer tools from the system disk which came with your computer (they contain the application FileMerge). MacHg can function without FileMerge but you cannot view any diffs, since this is the tool MacHg uses to view diffs.", @"OK", nil, nil);
 }
 
+- (void) checkForAraxisScripts
+{
+	// Make sure ~/Application Support/MacHg/AraxisScripts scripts exists
+	NSString* araxishgmergePath = fstr(@"%@/AraxisScripts/araxishgmerge",applicationSupportFolder());
+	[self ensureFileExists:araxishgmergePath orCopyFromBundleResource:@"araxishgmerge"];
+	NSString* araxiscomparePath = fstr(@"%@/AraxisScripts/araxiscompare",applicationSupportFolder());
+	[self ensureFileExists:araxiscomparePath orCopyFromBundleResource:@"araxiscompare"];
+}
+
+
 
 - (void) checkForMercurialWarningsAndErrors
 {
@@ -401,6 +441,364 @@
 		NSString* mainMessage = fstr(@"The version of Mercurial included with MacHg is producing the following Errors:\n\n%@\n\nMacHg cannot proceed. To resolve this check your configuration settings in your .hgrc file.", results.errStr);
 		NSRunCriticalAlertPanel(@"Mercurial Errors", mainMessage, @"OK", nil, nil);
 		[NSApp terminate:self];
+	}
+}
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Common External Tool Support
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (void) preLaunchApplicationWithBundleIdentifier:(NSString*)bundleIdentifier
+{
+	if (!bundleIdentifier)
+		return;
+	
+	NSArray* runningApplications = [NSRunningApplication runningApplicationsWithBundleIdentifier:bundleIdentifier];
+	if (IsNotEmpty(runningApplications))
+		return;
+	
+	[[NSWorkspace sharedWorkspace] launchAppWithBundleIdentifier:bundleIdentifier options:NSWorkspaceLaunchDefault additionalEventParamDescriptor:nil launchIdentifier:nil];
+}
+
+-(void) installExtToolConfiguration:(NSString*)configurationString forApplicationWithBundleID:(NSString*)bundleIdentifier
+{
+	if (!bundleIdentifier)
+		return;
+	NSString* toolPath = [[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:bundleIdentifier];
+	if (!toolPath)
+		return;
+	NSString* macHgHGRCFilePath = fstr(@"%@/hgrc",applicationSupportFolder());
+	NSString* macHgBundleResourcePath = [[NSBundle mainBundle] resourcePath];
+	NSString* configurationString1 = [configurationString  stringByReplacingOccurrencesOfRegex:@"TOOL_PATH" withString:toolPath];	
+	NSString* configurationString2 = [configurationString1 stringByReplacingOccurrencesOfRegex:@"MACHG_RESOURCE_PATH" withString:macHgBundleResourcePath];	
+	NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"extensions.cedit=", @"--add", configurationString2, @"--file", macHgHGRCFilePath, nil];
+	[TaskExecutions executeMercurialWithArgs:argsCedit  fromRoot:@"/tmp"];
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: External Diff Tool Support
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+
+- (void) checkAvailbilityOfDiffTool:(ToolForDiffing)tool
+{
+	BOOL revert = NO;
+	NSString* applicationName  = [self applicationNameForDiffTool:tool];
+	NSString* bundleIdentifier = [self bundleIdentiferForDiffTool:tool];
+	if (!applicationName || !bundleIdentifier)
+		return;
+
+	if ((tool == eUseP4MergeForDiffs) && !pathIsExistent(@"/Applications/p4merge.app"))
+	{
+		NSString* path = @"/Applications/p4merge.app";
+		NSRunCriticalAlertPanel(fstr(@"%@ not found", applicationName), fstr(@"%@ was not found at %@. Please download and install %@ and place it at %@ in order to view diffs using %@.", applicationName, path, applicationName, path, applicationName), @"OK", nil, nil);
+		revert = YES;
+	}
+	
+	if (!revert && ![[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:bundleIdentifier])
+	{
+		NSRunCriticalAlertPanel(fstr(@"%@ not found", applicationName), fstr(@"%@ was not found on this system. Please download and install %@ in order to view diffs using %@.", applicationName, applicationName, applicationName), @"OK", nil, nil);
+		revert = YES;
+	}
+
+	if (!revert && (tool == eUseKaleidoscopeForDiffs) && !pathIsExistentFile(@"/usr/local/bin/ksdiff-wrapper"))
+	{
+		NSRunCriticalAlertPanel(fstr(@"%@ scripts not found", applicationName), @"The Kaleidoscope scripts are not installed on this system. Please open Kaleidoscope and install the Kaleidoscope Command Line Tool from the menu Kaleidoscope > Integration... in order to use Kaleidoscope with MacHg.", @"OK", nil, nil);
+		revert = YES;
+	}
+
+	if (revert)
+		dispatch_async(globalQueue(), ^{
+			usleep(0.3 * USEC_PER_SEC);
+			[[NSUserDefaults standardUserDefaults] setInteger:eUseNothingForDiffs forKey:MHGUseWhichToolForDiffing];
+		});
+}
+
+
+- (NSString*) bundleIdentiferForDiffTool:(ToolForDiffing)tool
+{
+	switch (tool)
+	{
+		case eUseFileMergeForDiffs:			return @"com.apple.FileMerge";
+		case eUseAraxisMergeForDiffs:		return @"com.araxis.merge";
+		case eUseP4MergeForDiffs:			return @"com.perforce.p4merge";
+		case eUseDiffMergeForDiffs:			return @"com.sourcegear.DiffMerge";
+		case eUseKDiff3ForDiffs:			return @"com.yourcompany.kdiff3";
+		case eUseDelatWalkerForDiffs:		return @"com.deltopia.deltawalker";
+		case eUseKaleidoscopeForDiffs:		return @"com.madebysofa.Kaleidoscope";
+		case eUseChangesForDiffs:			return @"com.skorpiostech.Changes";
+		case eUseBBEditForDiffs:			return @"com.barebones.bbedit";
+		case eUseTextWranglerForDiffs:		return @"com.barebones.textwrangler";
+		case eUseDiffForkForDiffs:			return @"com.dotfork.DiffFork";
+		default:							return nil;
+	}
+	return nil;
+}
+
+
+- (NSString*) scriptNameForDiffTool:(ToolForDiffing)tool
+{
+	switch (tool)
+	{
+		case eUseFileMergeForDiffs:			return @"opendiff";
+		case eUseAraxisMergeForDiffs:		return @"arxdiff";
+		case eUseP4MergeForDiffs:			return @"p4diff";
+		case eUseDiffMergeForDiffs:			return @"diffmerge";
+		case eUseKDiff3ForDiffs:			return @"kdiff3";
+		case eUseDelatWalkerForDiffs:		return @"deltawalker";
+		case eUseKaleidoscopeForDiffs:		return @"ksdiff";
+		case eUseChangesForDiffs:			return @"chdiff";
+		case eUseDiffForkForDiffs:			return @"dfdiff";
+		case eUseBBEditForDiffs:			return @"bbdiff";
+		case eUseTextWranglerForDiffs:		return @"twdiff";
+		case eUseOtherForDiffs:				return ToolNameForDiffingFromDefaults();
+		default:							return @"diff";
+	}
+	return nil;
+}
+
+- (NSString*) applicationNameForDiffTool:(ToolForDiffing)tool
+{
+	switch (tool)
+	{
+		case eUseFileMergeForDiffs:			return @"FileMerge";
+		case eUseAraxisMergeForDiffs:		return @"Araxis Merge";
+		case eUseP4MergeForDiffs:			return @"p4merge";
+		case eUseDiffMergeForDiffs:			return @"DiffMerge";
+		case eUseKDiff3ForDiffs:			return @"kdiff3";
+		case eUseDelatWalkerForDiffs:		return @"DeltaWalker";
+		case eUseKaleidoscopeForDiffs:		return @"Kaleidoscope";
+		case eUseChangesForDiffs:			return @"Changes";
+		case eUseDiffForkForDiffs:			return @"DiffFork";
+		case eUseBBEditForDiffs:			return @"BBEdit";
+		case eUseTextWranglerForDiffs:		return @"TextWrangler";
+		default:							return nil;
+	}
+	return nil;
+}
+
+- (BOOL) diffToolNeedsPreLaunch:(ToolForDiffing)tool
+{
+	switch (tool)
+	{
+		case eUseFileMergeForDiffs:			return NO;
+		case eUseAraxisMergeForDiffs:		return YES;
+		case eUseP4MergeForDiffs:			return YES;
+		case eUseDiffMergeForDiffs:			return NO;
+		case eUseKDiff3ForDiffs:			return NO;
+		case eUseDelatWalkerForDiffs:		return NO;
+		case eUseKaleidoscopeForDiffs:		return NO;
+		case eUseChangesForDiffs:			return NO;
+		case eUseDiffForkForDiffs:			return NO;
+		case eUseBBEditForDiffs:			return YES;
+		case eUseTextWranglerForDiffs:		return YES;
+		default:							return NO;
+	}
+	return NO;
+}
+
+- (BOOL) diffToolWantsGroupedFiles:(ToolForDiffing)tool
+{
+	switch (tool)
+	{
+		case eUseFileMergeForDiffs:			return NO;
+		case eUseAraxisMergeForDiffs:		return NO;
+		case eUseP4MergeForDiffs:			return NO;
+		case eUseDiffMergeForDiffs:			return NO;
+		case eUseKDiff3ForDiffs:			return NO;
+		case eUseDelatWalkerForDiffs:		return NO;
+		case eUseKaleidoscopeForDiffs:		return YES;
+		case eUseChangesForDiffs:			return NO;
+		case eUseDiffForkForDiffs:			return NO;
+		case eUseBBEditForDiffs:			return NO;
+		case eUseTextWranglerForDiffs:		return NO;
+		default:							return NO;
+	}
+	return NO;
+}
+
+- (void) preLaunchDiffToolIfNeeded:(ToolForDiffing)tool
+{
+	if (![self diffToolNeedsPreLaunch:tool])
+		return;
+	[self preLaunchApplicationWithBundleIdentifier:[self bundleIdentiferForDiffTool:tool]];
+}
+
+
+- (void) installExtDiffToolConfiguration:(NSString*)configurationString forTool:(ToolForDiffing)tool
+{
+	[self installExtToolConfiguration:configurationString forApplicationWithBundleID:[self bundleIdentiferForDiffTool:tool]];
+}
+
+- (void) checkDiffTool
+{
+	ToolForDiffing tool = UseWhichToolForDiffingFromDefaults();
+	switch (tool)
+	{
+		case eUseFileMergeForDiffs:			[self checkAvailbilityOfDiffTool:tool];		[self installExtDiffToolConfiguration:@"extdiff.cmd.opendiff = MACHG_RESOURCE_PATH/fmdiff.sh"						forTool:tool];		break;
+		case eUseAraxisMergeForDiffs:		[self checkAvailbilityOfDiffTool:tool];																																				break;
+		case eUseP4MergeForDiffs:			[self checkAvailbilityOfDiffTool:tool];		[self installExtDiffToolConfiguration:@"extdiff.cmd.p4diff = TOOL_PATH/Contents/Resources/launchp4merge"			forTool:tool];		break;
+		case eUseDiffMergeForDiffs:			[self checkAvailbilityOfDiffTool:tool];		[self installExtDiffToolConfiguration:@"extdiff.cmd.diffmerge = TOOL_PATH/Contents/MacOS/DiffMerge"					forTool:tool];		break;
+		case eUseKDiff3ForDiffs:			[self checkAvailbilityOfDiffTool:tool];		[self installExtDiffToolConfiguration:@"extdiff.cmd.kdiff3 = TOOL_PATH/Contents/MacOS/kdiff3"						forTool:tool];		break;
+		case eUseDelatWalkerForDiffs:		[self checkAvailbilityOfDiffTool:tool];		[self installExtDiffToolConfiguration:@"extdiff.cmd.deltawalker = TOOL_PATH/Contents/MacOS/hg"						forTool:tool];		break;
+		case eUseKaleidoscopeForDiffs:		[self checkAvailbilityOfDiffTool:tool];																																				break;
+		case eUseChangesForDiffs:			[self checkAvailbilityOfDiffTool:tool];		[self installExtDiffToolConfiguration:@"extdiff.cmd.chdiff = TOOL_PATH/Contents/Resources/chdiff"					forTool:tool];		break;
+		case eUseDiffForkForDiffs:			[self checkAvailbilityOfDiffTool:tool];		[self installExtDiffToolConfiguration:@"extdiff.cmd.dfdiff = TOOL_PATH/Contents/SharedSupport/Support/bin/difffork"	forTool:tool];		break;
+		case eUseBBEditForDiffs:			[self checkAvailbilityOfDiffTool:tool];		[self installExtDiffToolConfiguration:@"extdiff.cmd.bbdiff = TOOL_PATH/Contents/MacOS/bbdiff"						forTool:tool];		break;
+		case eUseTextWranglerForDiffs:		[self checkAvailbilityOfDiffTool:tool];		[self installExtDiffToolConfiguration:@"extdiff.cmd.twdiff = TOOL_PATH/Contents/MacOS/twdiff"						forTool:tool];		break;
+		default:							break;
+	}
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: External Merge Tool Support
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+
+- (void) checkAvailbilityOfMergeTool:(ToolForMerging)tool
+{
+	BOOL revert = NO;
+	NSString* applicationName  = [self applicationNameForMergeTool:tool];
+	NSString* bundleIdentifier = [self bundleIdentiferForMergeTool:tool];
+	if (!applicationName || !bundleIdentifier)
+		return;
+	
+	if ((tool == eUseP4MergeForMerges) && !pathIsExistent(@"/Applications/p4merge.app"))
+	{
+		NSString* path = @"/Applications/p4merge.app";
+		NSRunCriticalAlertPanel(fstr(@"%@ not found", applicationName), fstr(@"%@ was not found at %@. Please download and install %@ and place it at %@ in order to view merges using %@.", applicationName, path, applicationName, path, applicationName), @"OK", nil, nil);
+		revert = YES;
+	}
+	
+	if (!revert && ![[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:bundleIdentifier])
+	{
+		NSRunCriticalAlertPanel(fstr(@"%@ not found", applicationName), fstr(@"%@ was not found on this system. Please download and install %@ in order to view merges using %@.", applicationName, applicationName, applicationName), @"OK", nil, nil);
+		revert = YES;
+	}
+
+	if (revert)
+		dispatch_async(globalQueue(), ^{
+			usleep(0.3 * USEC_PER_SEC);
+			[[NSUserDefaults standardUserDefaults] setInteger:eUseNothingForMerges forKey:MHGUseWhichToolForMerging];
+		});
+}
+
+
+- (NSString*) bundleIdentiferForMergeTool:(ToolForMerging)tool
+{
+	switch (tool)
+	{
+		case eUseFileMergeForMerges:		return @"com.apple.FileMerge";
+		case eUseAraxisMergeForMerges:		return @"com.araxis.merge";
+		case eUseP4MergeForMerges:			return @"com.perforce.p4merge";
+		case eUseDiffMergeForMerges:		return @"com.sourcegear.DiffMerge";
+		case eUseKDiff3ForMerges:			return @"com.yourcompany.kdiff3";
+		case eUseDelatWalkerForMerges:		return @"com.deltopia.deltawalker";
+		default:							return nil;
+	}
+	return nil;
+}
+
+
+- (NSString*) scriptNameForMergeTool:(ToolForMerging)tool
+{
+	switch (tool)
+	{
+		case eUseFileMergeForMerges:		return @"opendiff";
+		case eUseAraxisMergeForMerges:		return @"arxmerge";
+		case eUseP4MergeForMerges:			return @"p4merge";
+		case eUseDiffMergeForMerges:		return @"diffmerge";
+		case eUseKDiff3ForMerges:			return @"kdiff3";
+		case eUseDelatWalkerForMerges:		return @"deltawalker";
+		case eUseOtherForMerges:			return ToolNameForMergingFromDefaults();
+		default:							return nil;
+	}
+	return nil;
+}
+
+- (NSString*) applicationNameForMergeTool:(ToolForMerging)tool
+{
+	switch (tool)
+	{
+		case eUseFileMergeForMerges:		return @"FileMerge";
+		case eUseAraxisMergeForMerges:		return @"Araxis Merge";
+		case eUseP4MergeForMerges:			return @"p4merge";
+		case eUseDiffMergeForMerges:		return @"DiffMerge";
+		case eUseKDiff3ForMerges:			return @"kdiff3";
+		case eUseDelatWalkerForMerges:		return @"DeltaWalker";
+		default:							return nil;
+	}
+	return nil;
+}
+
+- (BOOL) mergeToolNeedsPreLaunch:(ToolForMerging)tool
+{
+	switch (tool)
+	{
+		case eUseFileMergeForMerges:		return NO;
+		case eUseAraxisMergeForMerges:		return YES;
+		case eUseP4MergeForMerges:			return YES;
+		case eUseDiffMergeForMerges:		return NO;
+		case eUseKDiff3ForMerges:			return NO;
+		case eUseDelatWalkerForMerges:		return NO;
+		default:							return NO;
+	}
+	return NO;
+}
+
+- (BOOL) mergeToolWantsGroupedFiles:(ToolForMerging)tool
+{
+	switch (tool)
+	{
+		case eUseFileMergeForMerges:		return NO;
+		case eUseAraxisMergeForMerges:		return NO;
+		case eUseP4MergeForMerges:			return NO;
+		case eUseDiffMergeForMerges:		return NO;
+		case eUseKDiff3ForMerges:			return NO;
+		case eUseDelatWalkerForMerges:		return NO;
+		default:							return NO;
+	}
+	return NO;
+}
+
+- (void) preLaunchMergeToolIfNeeded:(ToolForMerging)tool
+{
+	if (![self mergeToolNeedsPreLaunch:tool])
+		return;
+	[self preLaunchApplicationWithBundleIdentifier:[self bundleIdentiferForMergeTool:tool]];
+}
+
+
+- (void) installExtMergeToolConfiguration:(NSString*)configurationString forTool:(ToolForMerging)tool
+{
+	[self installExtToolConfiguration:configurationString forApplicationWithBundleID:[self bundleIdentiferForMergeTool:tool]];
+}
+
+- (void) checkMergeTool
+{
+	ToolForMerging tool = UseWhichToolForMergingFromDefaults();
+	switch (tool)
+	{
+		case eUseFileMergeForMerges:	[self checkAvailbilityOfMergeTool:tool];	[self installExtMergeToolConfiguration:@"merge-tools.opendiff.executable = MACHG_RESOURCE_PATH/opendiff-w.sh"			forTool:tool];		break;
+		case eUseAraxisMergeForMerges:	[self checkAvailbilityOfMergeTool:tool];																																				break;
+		case eUseP4MergeForMerges:		[self checkAvailbilityOfMergeTool:tool];	[self installExtMergeToolConfiguration:@"merge-tools.p4merge.executable = TOOL_PATH/Contents/Resources/launchp4merge"	forTool:tool];		break;
+		case eUseDiffMergeForMerges:	[self checkAvailbilityOfMergeTool:tool];	[self installExtMergeToolConfiguration:@"merge-tools.diffmerge.executable = TOOL_PATH/Contents/MacOS/DiffMerge"			forTool:tool];		break;
+		case eUseKDiff3ForMerges:		[self checkAvailbilityOfMergeTool:tool];	[self installExtMergeToolConfiguration:@"merge-tools.kdiff3.executable = TOOL_PATH/Contents/MacOS/kdiff3"				forTool:tool];		break;
+		case eUseDelatWalkerForMerges:	[self checkAvailbilityOfMergeTool:tool];	[self installExtMergeToolConfiguration:@"merge-tools.deltawalker.executable = TOOL_PATH/Contents/MacOS/hg"				forTool:tool];		break;
+		default:							break;
 	}
 }
 
@@ -435,7 +833,10 @@
 	[self checkForTrustedCertificates];
 	[self checkConfigFileForUserName];
 	[self checkForFileMerge];
+	[self checkForAraxisScripts];
 	[self checkForMercurialWarningsAndErrors];
+	[self checkDiffTool];
+	[self checkMergeTool];
 }
 
 

@@ -27,3 +27,21 @@
 - (IBAction) openHomeHGRCFileInExternalEditor:(id)sender;
 
 @end
+
+
+@interface UseWhichDiffToolToHideFieldTransformer : NSValueTransformer
+{
+}
++ (Class) transformedValueClass;
++ (BOOL)  allowsReverseTransformation;
+- (id)	  transformedValue:(id)value;
+@end
+
+
+@interface UseWhichMergeToolToHideFieldTransformer : NSValueTransformer
+{
+}
++ (Class) transformedValueClass;
++ (BOOL)  allowsReverseTransformation;
+- (id)	  transformedValue:(id)value;
+@end

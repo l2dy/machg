@@ -20,49 +20,87 @@ hgext.collapse =
 hgext.cedit =
 
 
+
 [extdiff]
-#cmd.opendiff = ~/bin/cvsScripts/fmdiff.sh
 
-#cmd.arxdiff = ~/bin/AraxisUtilities/compare
-#opts.arxdiff = -2
+# FileMerge
+cmd.opendiff = Applications/MacHg.app/Contents/Resources/fmdiff.sh
 
-#cmd.kdiff = ~/bin/kdiff3.app/Contents/MacOS/kdiff3
+# Araxis Merge
+cmd.arxdiff = ~/Library/Application Support/MacHg/AraxisScripts/araxiscompare
+opts.arxdiff = -2 -wait
 
-#cmd.diffmerge = ~/bin/diffmerge.sh
+# P4merge
+cmd.p4diff = /Applications/p4merge.app/Contents/Resources/launchp4merge
 
-#cmd.chdiff =
-#opts.chdiff = --wait
+# DiffMerge
+cmd.diffmerge = /Applications/DiffMerge.app/Contents/MacOS/DiffMerge
+opts.diffmerge = --nosplash
 
-#cmd.deltawalker = ~/bin/deltawalker-diff.sh
+# KDiff3
+cmd.kdiff3 = /Applications/kdiff3.app/Contents/MacOS/kdiff3
 
-#cmd.ksdiff = /usr/local/bin/ksdiff-wrapper
-#opts.ksdiff = hg
+# DeltaWalker
+cmd.deltawalker = /Applications/DeltaWalker.app/Contents/MacOS/hg
 
+# Kaleidoscope
+cmd.ksdiff = /usr/local/bin/ksdiff-wrapper
+opts.ksdiff = hg
+
+# DiffFork
+cmd.dfdiff = /Applications/DiffFork.app/Contents/SharedSupport/Support/bin/difffork
+opts.dfdiff = -w
+
+# Changes
+cmd.chdiff = /Applications/Changes.app/Contents/Resources/chdiff
+opts.chdiff = --wait
+
+# BBEdit
+cmd.bbdiff = /Applications/BBEdit.app/Contents/MacOS/bbdiff
+opts.bbdiff = --resume --wait --reverse
+
+# TextWrangler
+cmd.twdiff = /Applications/TextWrangler.app/Contents/MacOS/twdiff
+opts.twdiff = --resume --wait --reverse
 
 
 [merge-tools]
-#filemerge.executable = fmdiff.sh
-#filemerge.args = $local $other -ancestor $base -merge $output
-#filemerge.executable = ~/bin/cvsScripts/opendiff-w
-#filemerge.priority = 3
 
-# kdiff3.executable = ~/bin/kdiff3.app/Contents/MacOS/kdiff3
-# kdiff3.args = $base $local $other -o $output
-# kdiff3.priority = 1
-# 
-# araxismergetool.premerge = False
-# araxismergetool.args = $other $base $local $output
-# araxismergetool.executable = ~/bin/AraxisUtilities/araxishgmerge
-# araxismergetool.checkconflict = True
-# araxismergetool.binary = True
-# araxismergetool.gui =  True
-# araxismergetool.priority = 2
-# 
-# diffmerge.executable = ~/bin/diffmerge.sh
-# diffmerge.args = --result=$output -t1="Local Version" -t2=$output -t3="Other Version" --caption=$output  $local $base $other
-# diffmerge.binary = False
-# diffmerge.symlinks = False
-# diffmerge.gui = True
-# diffmerge.premerge = True
-# diffmerge.priority = 3
+#FileMerge
+opendiff.args = $local $other -ancestor $base -merge $output
+opendiff.executable = Applications/MacHg.app/Contents/Resources/opendiff-w.sh
+
+# Araxis Merge
+arxmerge.premerge = False
+arxmerge.args = $other $base $local $output
+arxmerge.executable = ~/Library/Application Support/MacHg/AraxisScripts/araxishgmerge
+arxmerge.checkconflict = True
+arxmerge.binary = True
+arxmerge.gui =  True
+
+# P4merge
+p4merge.premerge = True
+p4merge.executable = /Applications/p4merge.app/Contents/Resources/launchp4merge
+p4merge.args = $base $local $other $output
+p4merge.binary = False
+p4merge.diffargs = $parent $child
+p4merge.diff3args=$child $parent1 $parent2
+p4merge.dirdiff=False
+
+# DiffMerge
+diffmerge.executable = /Applications/DiffMerge.app/Contents/MacOS/DiffMerge
+diffmerge.args = --nosplash --result=$output -t1="Local Version" -t2=$output -t3="Other Version" --caption=$output  $local $base $other
+diffmerge.binary = False
+diffmerge.symlinks = False
+diffmerge.gui = True
+diffmerge.premerge = True
+
+# KDiff3
+kdiff3.executable = ~/bin/kdiff3.app/Contents/MacOS/kdiff3
+kdiff3.args = $base $local $other -o $output
+
+# DeltaWalker
+deltawalker.executable = /Applications/DeltaWalker.app/Contents/MacOS/hg
+deltawalker.args = $local $other $base -merged=$output
+deltawalker.gui = True
 

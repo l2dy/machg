@@ -72,6 +72,22 @@
 - (NSAttributedString*) fullVersionString;
 
 
+// External Diff Support
+- (NSString*) scriptNameForDiffTool:(ToolForDiffing)tool;
+- (NSString*) applicationNameForDiffTool:(ToolForDiffing)tool;
+- (void)	  preLaunchDiffToolIfNeeded:(ToolForDiffing)tool;
+- (BOOL)	  diffToolWantsGroupedFiles:(ToolForDiffing)tool;
+- (BOOL)	  diffToolNeedsPreLaunch:(ToolForDiffing)tool;
+
+
+// External Merge Support
+- (NSString*) scriptNameForMergeTool:(ToolForMerging)tool;
+- (NSString*) applicationNameForMergeTool:(ToolForMerging)tool;
+- (void)	  preLaunchMergeToolIfNeeded:(ToolForMerging)tool;
+- (BOOL)	  mergeToolWantsGroupedFiles:(ToolForMerging)tool;
+- (BOOL)	  mergeToolNeedsPreLaunch:(ToolForMerging)tool;
+
+
 // Help Menus
 - (IBAction)  openQuickStartPage:(id)sender;
 - (IBAction)  openBugReportPage:(id)sender;

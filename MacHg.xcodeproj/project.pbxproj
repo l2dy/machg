@@ -48,6 +48,8 @@
 		9609EF4911391D3C0077E178 /* tb-LogListPane.png in Resources */ = {isa = PBXBuildFile; fileRef = 9609EF4611391D3C0077E178 /* tb-LogListPane.png */; };
 		9610639B117C6E4000FF7EB2 /* ActionDrop24.png in Resources */ = {isa = PBXBuildFile; fileRef = 9610639A117C6E4000FF7EB2 /* ActionDrop24.png */; };
 		96138847116B437D0022F368 /* ActionDrop.png in Resources */ = {isa = PBXBuildFile; fileRef = 96138846116B437D0022F368 /* ActionDrop.png */; };
+		9618880313382E3C00C38570 /* araxishgmerge in Resources */ = {isa = PBXBuildFile; fileRef = 9618880113382E3C00C38570 /* araxishgmerge */; };
+		9618881B133836B800C38570 /* araxiscompare in Resources */ = {isa = PBXBuildFile; fileRef = 9618881A133836B800C38570 /* araxiscompare */; };
 		961CB6AB1139BC730071F9F6 /* BrowserPreviewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 961CB6A91139BC730071F9F6 /* BrowserPreviewView.xib */; };
 		961D5A09115DBD9E0064A4DA /* CommandKeyTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 961D5A08115DBD9E0064A4DA /* CommandKeyTextField.m */; };
 		9621CFE912D5FC1F009C192C /* RSVerticallyCenteredTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9621CFE712D5FC1F009C192C /* RSVerticallyCenteredTextFieldCell.m */; };
@@ -280,6 +282,8 @@
 		9609EF4611391D3C0077E178 /* tb-LogListPane.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tb-LogListPane.png"; sourceTree = "<group>"; };
 		9610639A117C6E4000FF7EB2 /* ActionDrop24.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ActionDrop24.png; path = ButtonIcons/ActionDrop24.png; sourceTree = "<group>"; };
 		96138846116B437D0022F368 /* ActionDrop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ActionDrop.png; path = ButtonIcons/ActionDrop.png; sourceTree = "<group>"; };
+		9618880113382E3C00C38570 /* araxishgmerge */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = araxishgmerge; sourceTree = "<group>"; };
+		9618881A133836B800C38570 /* araxiscompare */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.executable"; path = araxiscompare; sourceTree = "<group>"; };
 		961CB6AA1139BC730071F9F6 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/BrowserPreviewView.xib; sourceTree = "<group>"; };
 		961D5A07115DBD9E0064A4DA /* CommandKeyTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CommandKeyTextField.h; path = CommandKeyTextField/CommandKeyTextField.h; sourceTree = "<group>"; };
 		961D5A08115DBD9E0064A4DA /* CommandKeyTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CommandKeyTextField.m; path = CommandKeyTextField/CommandKeyTextField.m; sourceTree = "<group>"; };
@@ -1424,6 +1428,8 @@
 		96DCCC1A10CD41B100C843C9 /* scripts */ = {
 			isa = PBXGroup;
 			children = (
+				9618880113382E3C00C38570 /* araxishgmerge */,
+				9618881A133836B800C38570 /* araxiscompare */,
 				96D2607F12FE420700EB6B70 /* getHTTPSfingerprint.py */,
 				96DCCC1B10CD41B100C843C9 /* fmdiff.sh */,
 				9606F3441157F1F100968DE8 /* opendiff-w.sh */,
@@ -1626,6 +1632,8 @@
 				96C3C4C613079EFE009BB242 /* DownArrow.png in Resources */,
 				96C3C4C713079EFE009BB242 /* UpArrow.png in Resources */,
 				96602188131FFAEC0051F426 /* MissingRepository.png in Resources */,
+				9618880313382E3C00C38570 /* araxishgmerge in Resources */,
+				9618881B133836B800C38570 /* araxiscompare in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

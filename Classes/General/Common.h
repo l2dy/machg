@@ -163,16 +163,31 @@ typedef enum
 
 typedef enum
 {
-	eUseFileMergeForDiffs = 0,
-	eUseOtherForDiffs	  = 1,
-	eUseNothingForDiffs	  = 2
+	eUseNothingForDiffs		 = -1,
+	eUseFileMergeForDiffs	 = 0,
+	eUseAraxisMergeForDiffs  = 1,
+	eUseP4MergeForDiffs		 = 2,
+	eUseDiffMergeForDiffs	 = 3,
+	eUseKDiff3ForDiffs		 = 4,
+	eUseDelatWalkerForDiffs	 = 5,
+	eUseKaleidoscopeForDiffs = 6,	// First diff only tool
+	eUseChangesForDiffs		 = 7,
+	eUseDiffForkForDiffs	 = 8,
+	eUseBBEditForDiffs		 = 9,
+	eUseTextWranglerForDiffs = 10,
+	eUseOtherForDiffs		 = 11
 } ToolForDiffing;
 
 typedef enum
 {
-	eUseFileMergeForMerges = 0,
-	eUseOtherForMerges	   = 1,
-	eUseNothingForMerges   = 2
+	eUseNothingForMerges		= -1,
+	eUseFileMergeForMerges		= 0,
+	eUseAraxisMergeForMerges	= 1,
+	eUseP4MergeForMerges		= 2,
+	eUseDiffMergeForMerges		= 3,
+	eUseKDiff3ForMerges			= 4,
+	eUseDelatWalkerForMerges	= 5,
+	eUseOtherForMerges			= 6
 } ToolForMerging;
 
 

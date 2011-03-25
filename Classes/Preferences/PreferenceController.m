@@ -42,5 +42,17 @@
 - (IBAction) repositoryEditingPreferencesChanged:(id)sender	{ [[AppController sharedAppController] checkConfigFileForExtensions:NO]; }
 - (IBAction) openMacHgHGRCFileInExternalEditor:(id)sender	{ [[NSWorkspace sharedWorkspace] openFile:fstr(@"%@/hgrc", applicationSupportFolder())]; }
 - (IBAction) openHomeHGRCFileInExternalEditor:(id)sender	{ [[NSWorkspace sharedWorkspace] openFile:[NSHomeDirectory() stringByAppendingPathComponent:@".hgrc"]]; }
+@end
 
+
+@implementation UseWhichDiffToolToHideFieldTransformer
++ (Class) transformedValueClass			{ return [NSNumber class]; }
++ (BOOL)  allowsReverseTransformation	{ return NO; }
+- (id)	  transformedValue:(id)value	{ return [value intValue] != eUseOtherForDiffs ? YESasNumber : NOasNumber; }
+@end
+
+@implementation UseWhichMergeToolToHideFieldTransformer
++ (Class) transformedValueClass			{ return [NSNumber class]; }
++ (BOOL)  allowsReverseTransformation	{ return NO; }
+- (id)	  transformedValue:(id)value	{ return [value intValue] != eUseOtherForMerges ? YESasNumber : NOasNumber; }
 @end
