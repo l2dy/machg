@@ -208,8 +208,8 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 	if ([self detailsAreLoadingOrLoaded])
 		return;
 	
-	NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log", @"--rev", changeset_, @"--template", templateLogRecordString, nil];	// templateLogEntryString is global set in setupGlobalsForLogEntryPartsAndTemplate()
 	dispatch_async(globalQueue(), ^{
+		NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log", @"--rev", changeset_, @"--template", templateLogRecordString, nil];	// templateLogEntryString is global set in setupGlobalsForLogEntryPartsAndTemplate()
 		ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:[repository rootPath]  logging:eLoggingNone];
 		NSArray* lines = [hgLogResults.outStr componentsSeparatedByString:LogRecordSeparator];
 		BOOL foundNewRecord = NO;
@@ -226,52 +226,65 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 {
 	if ([self filesAreLoadingOrLoaded])
 		return;
-	
-	// Load the added files, modified files, and removed files
-	NSMutableArray* modified = nil;
-	NSMutableArray* added    = nil;
-	NSMutableArray* removed  = nil;
-	
-	NSMutableArray* argsStatus = [NSMutableArray arrayWithObjects:@"status", @"--change", changeset_, @"--added", @"--removed", @"--modified", nil];
-	ExecutionResult* hgStatusResults = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:[repository rootPath]  logging:eLoggingNone];
-	NSArray* hgStatusLines = [hgStatusResults.outStr componentsSeparatedByString:@"\n"];
-	for (NSString* statusLine in hgStatusLines)
-	{
-		// If this particular status line is malformed skip this line.
-		if ([statusLine length] < 3)
-			continue;
-		
-		NSString* statusLetter   = [statusLine substringToIndex:1];
-		HGStatus  theStatus      = [FSNodeInfo statusEnumFromLetter:statusLetter];
-		NSString* statusPath     = [statusLine substringFromIndex:2];
-		if (theStatus == eHGStatusModified)
-		{
-			if (!modified) modified = [[NSMutableArray alloc]init];
-			[modified addObject:statusPath];
-		}
-		else if (theStatus == eHGStatusAdded)
-		{
-			if (!added) added = [[NSMutableArray alloc]init];
-			[added addObject:statusPath];
-		}
-		else if (theStatus == eHGStatusRemoved)
-		{
-			if (!removed) removed = [[NSMutableArray alloc]init];
-			[removed addObject:statusPath];
-		}
-	}
-	
-	LogRecordLoadStatus status = [self loadStatus];
-	status = unsetBits(status, eLogRecordFilesLoading);
-	status = unionBits(status, eLogRecordFilesLoaded);
+
 	@synchronized(self)
 	{		
+		if ([self filesAreLoadingOrLoaded])
+			return;
+		
+		LogRecordLoadStatus status = [self loadStatus];
+		status = unionBits(status, eLogRecordFilesLoading);
 		[self setLoadStatus:status];
-		[self setFilesAdded:[NSArray arrayWithArray:added]];
-		[self setFilesModified:[NSArray arrayWithArray:modified]];
-		[self setFilesRemoved:[NSArray arrayWithArray:removed]];
+
+		dispatch_async(globalQueue(), ^{
+			// Load the added files, modified files, and removed files
+			NSMutableArray* modified = nil;
+			NSMutableArray* added    = nil;
+			NSMutableArray* removed  = nil;
+			
+			NSMutableArray* argsStatus = [NSMutableArray arrayWithObjects:@"status", @"--change", changeset_, @"--added", @"--removed", @"--modified", nil];
+			ExecutionResult* hgStatusResults = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:[repository rootPath]  logging:eLoggingNone];
+			NSArray* hgStatusLines = [hgStatusResults.outStr componentsSeparatedByString:@"\n"];
+			for (NSString* statusLine in hgStatusLines)
+			{
+				// If this particular status line is malformed skip this line.
+				if ([statusLine length] < 3)
+					continue;
+				
+				NSString* statusLetter   = [statusLine substringToIndex:1];
+				HGStatus  theStatus      = [FSNodeInfo statusEnumFromLetter:statusLetter];
+				NSString* statusPath     = [statusLine substringFromIndex:2];
+				if (theStatus == eHGStatusModified)
+				{
+					if (!modified) modified = [[NSMutableArray alloc]init];
+					[modified addObject:statusPath];
+				}
+				else if (theStatus == eHGStatusAdded)
+				{
+					if (!added) added = [[NSMutableArray alloc]init];
+					[added addObject:statusPath];
+				}
+				else if (theStatus == eHGStatusRemoved)
+				{
+					if (!removed) removed = [[NSMutableArray alloc]init];
+					[removed addObject:statusPath];
+				}
+			}
+			
+			LogRecordLoadStatus status = [self loadStatus];
+			status = unsetBits(status, eLogRecordFilesLoading);
+			status = unionBits(status, eLogRecordFilesLoaded);
+			@synchronized(self)
+			{		
+				[self setLoadStatus:status];
+				[self setFilesAdded:[NSArray arrayWithArray:added]];
+				[self setFilesModified:[NSArray arrayWithArray:modified]];
+				[self setFilesRemoved:[NSArray arrayWithArray:removed]];
+			}
+			[[repository myDocument] postNotificationWithName:kLogEntriesDidChange];
+		});
 	}
-	[[repository myDocument] postNotificationWithName:kLogEntriesDidChange];
+	
 }
 
 //+ (LogRecord*) fullyLoadRecordForChangeset:(NSString*)changeset andRepository:(RepositoryData*)repository
