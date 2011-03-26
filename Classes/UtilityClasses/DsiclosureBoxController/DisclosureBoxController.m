@@ -9,6 +9,7 @@
 
 #import "DisclosureBoxController.h"
 
+static NSInteger disclosureAnimationCount = 0;
 
 @interface DisclosureBoxController (PrivateAPI)
 - (CGFloat) sizeChange;
@@ -95,10 +96,13 @@
 			animationDepth_ = 0;
 		animationDepth_++;
 
+		disclosureAnimationCount++;	// Up the overall animation count
+
 		// If we are already animating then we are already in the correct state
 		if (animationDepth_ > 1)
 			return;
-			
+
+
 		savedShowsResizeIndicator_ = [parentWindow showsResizeIndicator];
 		[parentWindow setShowsResizeIndicator:NO];
 		
@@ -123,18 +127,20 @@
 		animationDepth_--;
 	
 		// If we are still animating then don't restore the state yet
-		if (animationDepth_ > 0)
-			return;
-	
-		for (NSView* view in savedViewsInfo)
+		if (animationDepth_ == 0)
 		{
-			SavedViewInfo* info = DynamicCast(SavedViewInfo,[savedViewsInfo objectForKey:view]);
-			if (info)
-				[view setAutoresizingMask:[info mask]];
+			for (NSView* view in savedViewsInfo)
+			{
+				SavedViewInfo* info = DynamicCast(SavedViewInfo,[savedViewsInfo objectForKey:view]);
+				if (info)
+					[view setAutoresizingMask:[info mask]];
+			}
+			
+			if (savedShowsResizeIndicator_)
+				[parentWindow setShowsResizeIndicator:YES];
 		}
 		
-		if (savedShowsResizeIndicator_)
-			[parentWindow setShowsResizeIndicator:YES];
+		disclosureAnimationCount--;
 	}
 }
 
@@ -195,6 +201,7 @@
 - (void) openDisclosureBoxWithAnimation:(BOOL)animate
 {
 	disclosureIsVisible_ = YES;
+	
 	[self saveAutosizingMasksAndRelativePositions];
 	if (autoSaveName_)
 		[[NSUserDefaults standardUserDefaults] setBool:disclosureIsVisible_ forKey:autoSaveName_];
@@ -203,6 +210,7 @@
 	CGFloat sizeChange = [self sizeChange];
 	
 	NSTimeInterval resizeTime = [parentWindow animationResizeTime:windowFrame];
+	animate = (disclosureAnimationCount > 0) ? NO : animate;
 	[self setStateForDisclose];
 	
 	windowFrame.size.height += sizeChange;			// Make the window bigger.
@@ -244,6 +252,7 @@
 	CGFloat sizeChange = [self sizeChange];
 
 	NSTimeInterval resizeTime = [parentWindow animationResizeTime:windowFrame];
+	animate = (disclosureAnimationCount > 0) ? NO : animate;
 	[self setStateForDisclose];
 	
 	windowFrame.size.height -= sizeChange;			// Make the window smaller.
