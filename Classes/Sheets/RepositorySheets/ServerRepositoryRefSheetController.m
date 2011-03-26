@@ -21,6 +21,7 @@
 
 @interface ServerRepositoryRefSheetController (PrivateAPI)
 - (void) passwordChanged;
+- (void) baseServerURLChanged;
 - (void) baseServerURLEndedEdits;
 - (void) repositionConnectionStatusBox;
 @end
@@ -410,12 +411,24 @@
 {
 	if (IsEmpty(baseServerURLFieldValue_))
 		return;
+
+	// Clean up base server of newlines.
+	BOOL commitNew = NO;
+	if ([baseServerURLFieldValue_ isMatchedByRegex:@"\n|\r"])
+	{
+		baseServerURLFieldValue_ = [baseServerURLFieldValue_ stringByReplacingOccurrencesOfString:@"\n" withString:@""];
+		baseServerURLFieldValue_ = [baseServerURLFieldValue_ stringByReplacingOccurrencesOfString:@"\r" withString:@""];
+		commitNew = YES;
+	}
+	
 	NSURL* theBaseURL = [NSURL URLWithString:baseServerURLFieldValue_];
 
 	if (IsNotEmpty([theBaseURL password]))
 		[self setPassword:[theBaseURL password]];
 	if (IsNotEmpty([theBaseURL user]))
 		[self setUsername:[theBaseURL user]];
+	if (commitNew)
+		[self setBaseServerURLFieldValue:[[theBaseURL URLByDeletingUserAndPassword] absoluteString]];
 
 	[self setFullServerURLFieldValue:[self generateFullServerURLIncludingPassword:YES andMaskingPassword:!showRealPassword_]];
 	[self performSelector:@selector(repositionConnectionStatusBox) withObject:nil afterDelay:0.05];
