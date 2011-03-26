@@ -170,7 +170,7 @@
 		[results logMercurialResult];
 		// for an error rather than warning fail by returning nil. Maybe later we will return error codes.
 		if ([results hasErrors])
-			return  nil;			
+			return  nil;
 	}
 	return [results.outStr componentsSeparatedByString:@"\n"];
 }
@@ -205,11 +205,11 @@
 
 - (BOOL) writeRowsWithIndexes:(NSIndexSet*)rowIndexes inColumn:(NSInteger)column toPasteboard:(NSPasteboard*)pasteboard
 {
-	NSMutableArray* paths = [[NSMutableArray alloc] init];	
+	NSMutableArray* paths = [[NSMutableArray alloc] init];
 	for (NSInteger row = [rowIndexes firstIndex]; row != NSNotFound; row = [rowIndexes indexGreaterThanIndex: row])
 	{
 		FSNodeInfo* node = [theBrowser itemAtRow:row inColumn:column];
-		[paths addObject:[node absolutePath]];		
+		[paths addObject:[node absolutePath]];
 	}
 
 	[pasteboard declareTypes:[NSArray arrayWithObject:NSFilenamesPboardType] owner:self];
@@ -273,7 +273,7 @@
 	NSString* extension = [[firstNode absolutePath] pathExtension];
 	for (FSBrowserCell* cell in cells)
 		if (![extension isEqualToString:[[[cell nodeInfo] absolutePath] pathExtension]])
-			return nil;	
+			return nil;
 	return [firstNode iconImageForPreview];
 }
 
@@ -348,7 +348,7 @@
 	if ([theBrowser nodesAreChosen])
 		[self mainMenuDiffSelectedFiles:sender];
 	else
-		[self mainMenuDiffAllFiles:sender];	
+		[self mainMenuDiffAllFiles:sender];
 }
 
 - (IBAction) mainMenuAddRenameRemoveSelectedFiles:(id)sender	{ [myDocument primaryActionAddRenameRemoveFiles:[theBrowser absolutePathsOfChosenFilesInBrowser]]; }
@@ -372,7 +372,7 @@
 	if ([theBrowser nodesAreChosen])
 		[self mainMenuRevertSelectedFilesToVersion:sender];
 	else
-		[self mainMenuRevertAllFiles:sender];	
+		[self mainMenuRevertAllFiles:sender];
 }
 
 

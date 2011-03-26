@@ -137,7 +137,7 @@
 {
 	NSArray* filteredLabels = [LabelData filterLabels:labels byType:type];
 	NSArray* sortedLabels = [filteredLabels sortedArrayUsingDescriptors:[LabelData descriptorsForSortByNameAscending]];
-	return [LabelData extractNameFromLabels:sortedLabels];	
+	return [LabelData extractNameFromLabels:sortedLabels];
 }
 
 // This sorts the array as a side effect
@@ -202,7 +202,7 @@
 {
 	static NSArray* descriptors = nil;
 	if (descriptors)
-		return descriptors;	
+		return descriptors;
 	NSSortDescriptor* byName = [NSSortDescriptor sortDescriptorWithKey:@"name"					ascending:YES  selector:@selector(caseInsensitiveCompare:)];
 	NSSortDescriptor* byRev  = [NSSortDescriptor sortDescriptorWithKey:@"revision"				ascending:YES  selector:@selector(compare:)];
 	NSSortDescriptor* byType = [NSSortDescriptor sortDescriptorWithKey:@"labelTypeDescription"	ascending:YES  selector:@selector(compare:)];

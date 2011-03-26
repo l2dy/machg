@@ -310,14 +310,14 @@
 		NSAlert* alert = NewAlertPanel(errorMessage, fullErrorMessage, @"Decline", @"Add", nil);
 		[alert setShowsHelp:YES];
 		[alert setHelpAnchor:@"AboutServerIdentitySecurity"];
-		int response = [alert runModal];		
+		int response = [alert runModal];
 		if (response != NSAlertSecondButtonReturn)
 			return;
 		
 		NSString* macHgHGRCFilePath = fstr(@"%@/hgrc",applicationSupportFolder());
 		if (!pathIsExistent(macHgHGRCFilePath))
 		{
-			NSRunCriticalAlertPanel(@"Missing Configuration File", fstr(@"MacHg's configuration file %@ is missing. Please restart MacHg to recreate this file.", macHgHGRCFilePath), @"OK", @"", @"");		
+			NSRunCriticalAlertPanel(@"Missing Configuration File", fstr(@"MacHg's configuration file %@ is missing. Please restart MacHg to recreate this file.", macHgHGRCFilePath), @"OK", @"", @"");
 			return;
 		}					
 		NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"extensions.cedit=", @"--add", fstr(@"hostfingerprints.%@ = %@", host, fingerPrint), @"--file", macHgHGRCFilePath, nil];
@@ -428,7 +428,7 @@ static NSString* processedPathEnv(NSDictionary* processEnv)
 		[newEnv setObject:PATHenv   forKey:@"PATH"];
 		[newEnv setObject:@"UTF-8"  forKey:@"HGENCODING"];
 		[newEnv setObject:@"1"		forKey:@"HGPLAIN"];
-		[newEnv setObject:hgrc_Path	forKey:@"HGRCPATH"];		
+		[newEnv setObject:hgrc_Path	forKey:@"HGRCPATH"];
 		env = [NSDictionary dictionaryWithDictionary:newEnv];
 	}
 	return env;

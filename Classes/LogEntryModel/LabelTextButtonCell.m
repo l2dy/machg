@@ -92,7 +92,7 @@
 {
 	// I am not sure what action clicking on the label should have for now.
 	//	MacHgDocument* document = [[entry_ repositoryData] myDocument];
-	//	if (![document showingASheet] && [document showingHistoryView])		
+	//	if (![document showingASheet] && [document showingHistoryView])
 }
 
 
@@ -100,7 +100,7 @@
 {
 	NSAttributedString* title = [self attributedTitle];
 	NSSize s = [title size];
-	return NSMakeRect(0, -5, s.width + 15, 15);	
+	return NSMakeRect(0, -5, s.width + 15, 15);
 }
 
 - (void)drawWithFrame:(NSRect)cellFrame inView:(NSView*)aView

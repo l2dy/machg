@@ -177,7 +177,7 @@
 	if (!patch)
 		return NSNotFound;
 	if (IsEmpty(patchesTableData_))
-		return NSNotFound;	
+		return NSNotFound;
 	return [patchesTableData_ indexOfObject:patch];
 }
 
@@ -257,7 +257,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 	NSInteger selectedRowCount = [[self selectedRowIndexes] count];
 	if (selectedRowCount == 0)
 	{
-		[[detailedPatchTextView textStorage] setAttributedString:grayedAttributedString(@"No Patch Selected")];		
+		[[detailedPatchTextView textStorage] setAttributedString:grayedAttributedString(@"No Patch Selected")];
 	}
 	else if (selectedRowCount > 1)
 	{
@@ -361,9 +361,9 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 		[newTableData removeObjectsAtIndexes:rowIndexes];
 		NSArray* patchesToMove = [patchesTableData_ objectsAtIndexes:rowIndexes];
 		NSInteger rowsRemovedBeforeDropRow = [rowIndexes countOfIndexesInRange:NSMakeRange(0, dropRow)];
-		NSIndexSet* insertionIndexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(dropRow - rowsRemovedBeforeDropRow, [rowIndexes count])]; 
+		NSIndexSet* insertionIndexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(dropRow - rowsRemovedBeforeDropRow, [rowIndexes count])];
 		[newTableData insertObjects:patchesToMove atIndexes:insertionIndexes];
-		patchesTableData_ = newTableData;		
+		patchesTableData_ = newTableData;
 		[self reloadData];
 		[self selectRowIndexes:insertionIndexes byExtendingSelection:NO];
 		[parentController patchesDidChange];
@@ -382,9 +382,9 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 				[newPatches addObject:patch];
 			}
 		NSMutableArray* newTableData = [[NSMutableArray alloc] initWithArray:patchesTableData_];
-		NSIndexSet* insertionIndexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(dropRow, [newPatches count])]; 
+		NSIndexSet* insertionIndexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(dropRow, [newPatches count])];
 		[newTableData insertObjects:newPatches atIndexes:insertionIndexes];
-		patchesTableData_ = newTableData;		
+		patchesTableData_ = newTableData;
 		[self reloadData];
 		[self selectRowIndexes:insertionIndexes byExtendingSelection:NO];
 		[parentController patchesDidChange];
@@ -460,7 +460,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 	NSSize textSize = [self cellSizeForBounds:theRect];			// Get our ideal size for current text
 	
 	// Center that in the proposed rect
-	float heightDelta = newRect.size.height - textSize.height;	
+	float heightDelta = newRect.size.height - textSize.height;
 	if (heightDelta > 0)
 	{
 		newRect.size.height -= heightDelta;
@@ -474,7 +474,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 {
 	aRect = UnionRectWithSize(aRect, [[self attributedStringValue] size]);
 	aRect.size.width *= 1.2;
-	isEditingOrSelecting_ = YES;	
+	isEditingOrSelecting_ = YES;
 	[super selectWithFrame:aRect inView:controlView editor:textObj delegate:anObject start:selStart length:selLength];
 	isEditingOrSelecting_ = NO;
 }
@@ -516,7 +516,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 {
 	aRect = UnionWidthHeight(aRect, 340, 45);
 	aRect = UnionRectWithSize(aRect, [[self attributedStringValue] size]);
-	isEditingOrSelecting_ = YES;	
+	isEditingOrSelecting_ = YES;
     [super selectWithFrame:aRect inView:controlView editor:textObj delegate:anObject start:selStart length:selLength];
 	isEditingOrSelecting_ = NO;
 }
@@ -618,7 +618,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 	[NSAnimationContext beginGrouping];
 	[[NSAnimationContext currentContext] setDuration:1.0];
 	[[buttonMessage animator] setHidden:YES];
-	[NSAnimationContext endGrouping];	
+	[NSAnimationContext endGrouping];
 }
 
 - (BOOL) showsBorderOnlyWhileMouseInside

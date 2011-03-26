@@ -60,7 +60,7 @@
 {
 	NSAttributedString* title = [self attributedTitle];
 	NSSize s = [title size];
-	return NSMakeRect(0, -7, s.width + 30, 22);	
+	return NSMakeRect(0, -7, s.width + 30, 22);
 }
 
 - (void) setButtonTitle:(NSString*)title

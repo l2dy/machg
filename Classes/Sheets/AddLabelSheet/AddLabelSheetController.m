@@ -173,7 +173,7 @@ NSString* kTheRevisionFieldValue = @"theRevisionFieldValue";
 
 - (IBAction) didChangeFieldContents:(id)sender
 {
-	[self updateButtonsAndMessages];	
+	[self updateButtonsAndMessages];
 }
 
 

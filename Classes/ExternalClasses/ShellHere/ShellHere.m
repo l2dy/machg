@@ -46,7 +46,7 @@ void OpenTerminalAt(NSString* path)
 	
 	TerminalTab* currentTab = nil;
 	
-	// If there is only a single window with a single tab, Terminal may 
+	// If there is only a single window with a single tab, Terminal may
 	// have been just launched. If so, I want to use the new window.
 	if(!terminalWasRunning)
 		for(TerminalWindow* terminalWindow in terminalWindows)
@@ -82,7 +82,7 @@ void DoCommandsInTerminalAt(NSArray* cmds, NSString* path)
 	
 	TerminalTab* currentTab = nil;
 	
-	// If there is only a single window with a single tab, Terminal may 
+	// If there is only a single window with a single tab, Terminal may
 	// have been just launched. If so, I want to use the new window.
 	if(!terminalWasRunning)
 		for(TerminalWindow* terminalWindow in terminalWindows)
@@ -123,7 +123,7 @@ NSString* quotePath(NSString* path)
 	
 	// Create a character set that will replace any unicode characters that
 	// aren't path-friendly.
-	NSMutableCharacterSet* punctuation = 
+	NSMutableCharacterSet* punctuation =
     [NSMutableCharacterSet punctuationCharacterSet];
 	
 	// Add symbols and whitespace to the list to be replaced.

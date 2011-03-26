@@ -33,8 +33,8 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 
 - (void) splitView:(NSSplitView*)splitView resizeSubviewsWithOldSize:(NSSize)oldSize
 {
-	NSArray* views		= [self subviews]; 
-	NSView* outline		= [views objectAtIndex:0];	
+	NSArray* views		= [self subviews];
+	NSView* outline		= [views objectAtIndex:0];
 	NSView* info		= [views objectAtIndex:1];
 	NSRect outlineFrame = [outline frame];
 	outlineFrame.size.height = [self frame].size.height - [info frame].size.height;

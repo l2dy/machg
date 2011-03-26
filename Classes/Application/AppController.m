@@ -118,7 +118,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	// Receive a notification when the diff tool and merge tool change in the preferences.
 	id defaults = [NSUserDefaultsController sharedUserDefaultsController];
 	[defaults  addObserver:self  forKeyPath:kKeyPathUseWhichToolForDiffing	options:NSKeyValueObservingOptionNew  context:NULL];
-	[defaults  addObserver:self  forKeyPath:kKeyPathUseWhichToolForMerging	options:NSKeyValueObservingOptionNew  context:NULL];	
+	[defaults  addObserver:self  forKeyPath:kKeyPathUseWhichToolForMerging	options:NSKeyValueObservingOptionNew  context:NULL];
 	
 	return self;
 }
@@ -201,7 +201,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 
 - (NSAttributedString*) fullVersionString
 {
-	NSMutableAttributedString* version = [[NSMutableAttributedString alloc] init];	
+	NSMutableAttributedString* version = [[NSMutableAttributedString alloc] init];
 	[version appendString:[self shortVersionString] withAttributes:systemFontAttributes];
 	[version appendString:fstr(@" (%@)",[self macHgBuildHashKeyString]) withAttributes:smallGraySystemFontAttributes];
 	
@@ -233,7 +233,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	if (!pathIsExistent([filePath stringByDeletingLastPathComponent]))
 	{
 		[fileManager createDirectoryAtPath:[filePath stringByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:nil error:&err];
-		[NSApp presentAnyErrorsAndClear:&err];		
+		[NSApp presentAnyErrorsAndClear:&err];
 	}
 
 	NSString* sourcePath = fstr(@"%@/%@",[[NSBundle mainBundle] resourcePath], resourceName);
@@ -361,7 +361,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 
 
 	// Since we could not find a user name we have to ask the user for it
-		[[self theInitilizationWizardController] showWizard];	
+		[[self theInitilizationWizardController] showWizard];
 }
 
 
@@ -422,7 +422,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	if ([results hasWarnings] && WarnAboutBadMercurialConfigurationFromDefaults())
 	{
 		NSString* mainMessage = fstr(@"The version of Mercurial included with MacHg is producing the following warnings:\n\n%@\n\nMacHg might not function as intended. To resolve this check your configuration settings in your .hgrc file.", results.errStr);
-		RunCriticalAlertPanelWithSuppression(@"Mercurial Warnings", mainMessage, @"OK", nil, MHGWarnAboutBadMercurialConfiguration);	
+		RunCriticalAlertPanelWithSuppression(@"Mercurial Warnings", mainMessage, @"OK", nil, MHGWarnAboutBadMercurialConfiguration);
 	}	
 	if ([results hasErrors])
 	{
@@ -460,8 +460,8 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		return;
 	NSString* macHgHGRCFilePath = fstr(@"%@/hgrc",applicationSupportFolder());
 	NSString* macHgBundleResourcePath = [[NSBundle mainBundle] resourcePath];
-	NSString* configurationString1 = [configurationString  stringByReplacingOccurrencesOfRegex:@"TOOL_PATH" withString:toolPath];	
-	NSString* configurationString2 = [configurationString1 stringByReplacingOccurrencesOfRegex:@"MACHG_RESOURCE_PATH" withString:macHgBundleResourcePath];	
+	NSString* configurationString1 = [configurationString  stringByReplacingOccurrencesOfRegex:@"TOOL_PATH" withString:toolPath];
+	NSString* configurationString2 = [configurationString1 stringByReplacingOccurrencesOfRegex:@"MACHG_RESOURCE_PATH" withString:macHgBundleResourcePath];
 	NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"extensions.cedit=", @"--add", configurationString2, @"--file", macHgHGRCFilePath, nil];
 	[TaskExecutions executeMercurialWithArgs:argsCedit  fromRoot:@"/tmp"];
 }
@@ -890,7 +890,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		NSString* bundleName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
 		cacheDir = [[paths objectAtIndex:0] stringByAppendingPathComponent:bundleName];
 	}
-	return cacheDir;	
+	return cacheDir;
 }
 
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender

@@ -179,7 +179,7 @@
 	if (IsEmpty(baseRev) || IsEmpty(compareRev))
 		return nil;
 	if ([compareRev isEqualTo:[compareLogTableView incompleteRevision]])
-		return numberAsString(baseRev);	
+		return numberAsString(baseRev);
 	return fstr(@"%@%:%@", baseRev, compareRev);
 }
 
@@ -278,8 +278,8 @@
 - (void) compareLowHighValue:(NSValue*)pairAsValue
 {
 	LowHighPair pair;
-	[pairAsValue getValue:&pair];	
-	[self compareLow:intAsString(pair.lowRevision) toHigh:intAsString(pair.highRevision)];  
+	[pairAsValue getValue:&pair];
+	[self compareLow:intAsString(pair.lowRevision) toHigh:intAsString(pair.highRevision)];
 }
 
 - (void) compareLow:(NSString*)low toHigh:(NSString*)high
@@ -320,7 +320,7 @@
 	if ([theBrowser nodesAreChosen])
 		[self mainMenuDiffSelectedFiles:sender];
 	else
-		[self mainMenuDiffAllFiles:sender];	
+		[self mainMenuDiffAllFiles:sender];
 }
 
 

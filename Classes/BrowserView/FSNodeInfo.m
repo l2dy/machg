@@ -571,7 +571,7 @@ static NSString* stringFromItemCount(NSInteger theCount)
 
 	NSString* dateCreatedString = [dateFormatter stringFromDate:[fileAttributes fileCreationDate]];
 	[attrString appendAttributedString: [NSAttributedString string:@"Crd. " withAttributes:smallBoldCenteredSystemFontAttributes]];
-	[attrString appendAttributedString: [NSAttributedString string:fstr( @"%@\n", dateCreatedString) withAttributes:smallCenteredSystemFontAttributes]];	
+	[attrString appendAttributedString: [NSAttributedString string:fstr( @"%@\n", dateCreatedString) withAttributes:smallCenteredSystemFontAttributes]];
 	
 	return attrString;
 }

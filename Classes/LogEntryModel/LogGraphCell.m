@@ -220,9 +220,9 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 		{
 			CGFloat lineDash[2];
 			lineDash[0] = 4.0;
-			lineDash[1] = 4.0;			
+			lineDash[1] = 4.0;
 			[thePath setLineDash:lineDash count:2 phase:0.0];
-			[[NSColor colorWithDeviceHue:hue saturation:0.5 brightness:0.5 alpha:0.5] set];			
+			[[NSColor colorWithDeviceHue:hue saturation:0.5 brightness:0.5 alpha:0.5] set];
 		}
 
 		[thePath setLineWidth:1.5];

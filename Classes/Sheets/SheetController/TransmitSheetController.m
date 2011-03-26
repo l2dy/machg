@@ -105,7 +105,7 @@
 	for (NSInteger i = 0; i < [[popup menu] numberOfItems]; i++)
 	{
 		SidebarNode* representedObject = [[[popup menu] itemAtIndex:i] representedObject];
-		if ([trimmedURL([representedObject path]) isEqualToString:trimmedURL(path)])			
+		if ([trimmedURL([representedObject path]) isEqualToString:trimmedURL(path)])
 			return i;
 	}
 	return NSNotFound;
@@ -120,7 +120,7 @@
 	
 	Sidebar* theSidebar = [[self myDocument] sidebar];
 	SidebarNode* selectedNode = [theSidebar selectedNode];
-	NSArray* allServers = [theSidebar serversIfAvailable:[selectedNode path] includingAlreadyPresent:YES];	
+	NSArray* allServers = [theSidebar serversIfAvailable:[selectedNode path] includingAlreadyPresent:YES];
 	for (SidebarNode* node in allServers)
 		[orderedPaths addObjectIfNonNil:[node path]];
 	
@@ -141,7 +141,7 @@
 		if ([representedObject isRepositoryRef])
 		{
 			[popup selectItemAtIndex:index];
-			return;			
+			return;
 		}		
 	}	
 }
@@ -336,7 +336,7 @@
 
 	[mainGroupingBox growToFit];
 	[self recenterMainGroupingBox];
-	return;	
+	return;
 }
 
 

@@ -225,7 +225,7 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 						NSString* header1 = @"# HG changeset patch";
 						NSString* header2 = fstr(@"# User %@", [entry fullAuthor]);
 						NSString* header3 = fstr(@"Backout: %@\n", [entry fullComment]);
-						content = [[NSArray arrayWithObjects:header1, header2, header3, content, nil] componentsJoinedByString:@"\n"];						
+						content = [[NSArray arrayWithObjects:header1, header2, header3, content, nil] componentsJoinedByString:@"\n"];
 					}
 					NSString* patchFileName = fileNameTemplate;
 					patchFileName = [patchFileName stringByReplacingOccurrencesOfRegex:@"\\%R" withString:intAsString(rev)];

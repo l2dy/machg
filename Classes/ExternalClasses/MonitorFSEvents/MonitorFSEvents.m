@@ -60,7 +60,7 @@ static void FSEventsCallBack_(ConstFSEventStreamRef streamRef, void* clientCallB
     
     [self setWatchedPaths:paths];
     [self setupEventsStream_];
-    FSEventStreamScheduleWithRunLoop(eventStream, [runLoop getCFRunLoop], kCFRunLoopDefaultMode);	    // Schedule the event stream on the supplied run loop    
+    FSEventStreamScheduleWithRunLoop(eventStream, [runLoop getCFRunLoop], kCFRunLoopDefaultMode);	    // Schedule the event stream on the supplied run loop
     FSEventStreamStart(eventStream);	    // Start the event stream
 	isWatchingPaths = YES;
     return YES;
@@ -127,7 +127,7 @@ static void FSEventsCallBack_(ConstFSEventStreamRef streamRef, void* clientCallB
 
 - (void) finalize
 {
-	delegate = nil;	
+	delegate = nil;
 	if (isWatchingPaths)
 		[self stopWatchingPaths];
 
@@ -145,7 +145,7 @@ static void FSEventsCallBack_(ConstFSEventStreamRef streamRef, void* clientCallB
  */
 - (void) setupEventsStream_
 {
-    FSEventStreamContext callbackInfo;	
+    FSEventStreamContext callbackInfo;
 	callbackInfo.version = 0;
 	callbackInfo.info    = (void*)self;
 	callbackInfo.retain  = NULL;
@@ -166,7 +166,7 @@ static void FSEventsCallBack_(ConstFSEventStreamRef streamRef, void* clientCallB
  */
 static void FSEventsCallBack_(ConstFSEventStreamRef streamRef, void* clientCallBackInfo, size_t numEvents, void* eventPaths, const FSEventStreamEventFlags eventFlags[], const FSEventStreamEventId eventIds[])
 {
-    MonitorFSEvents* pathWatcher = (MonitorFSEvents*)clientCallBackInfo;    
+    MonitorFSEvents* pathWatcher = (MonitorFSEvents*)clientCallBackInfo;
 	if ([[pathWatcher delegate] conformsToProtocol:@protocol(MonitorFSEventListenerProtocol)])
 		[[pathWatcher delegate] fileEventsOccurredIn:eventPaths];
 }

@@ -27,8 +27,8 @@ NSString* const kMacHgApp								= @"MacHgApp";
 
 // Notifications
 NSString* const kBrowserDisplayPreferencesChanged		= @"BrowserDisplayPreferencesChanged";
-NSString* const kCommandKeyIsDown						= @"CommandKeyIsDown"; 
-NSString* const kCommandKeyIsUp							= @"CommandKeyIsUp"; 
+NSString* const kCommandKeyIsDown						= @"CommandKeyIsDown";
+NSString* const kCommandKeyIsUp							= @"CommandKeyIsUp";
 NSString* const kCompatibleRepositoryChanged			= @"CompatibleRepositoryChanged";
 NSString* const kLogEntriesDidChange                    = @"LogEntriesDidChange";
 NSString* const kProcessAddedToProcessList				= @"ProcessAddedToProcessList";
@@ -364,7 +364,7 @@ NSString* caseSensitiveFilePath(NSString* filePath)
     int len = PATH_MAX + 1;
     char cRealPath[len];
     memset(cRealPath, 0, len);
-    char* result = realpath(cFilePath, cRealPath);	
+    char* result = realpath(cFilePath, cRealPath);
 	return result ? [fileManager stringWithFileSystemRepresentation:result length:strlen(result)] : nil;
 }
 
@@ -563,7 +563,7 @@ NSString* hgrcPath()
 	if (!IncludeHomeHgrcInHGRCPATHFromDefaults())
 		return macHgHGRCpath;
 
-	NSString* homeHGRCpath  = [NSHomeDirectory() stringByAppendingPathComponent:@".hgrc"];	
+	NSString* homeHGRCpath  = [NSHomeDirectory() stringByAppendingPathComponent:@".hgrc"];
 	return fstr(@"%@:%@", homeHGRCpath, macHgHGRCpath);		// macHgHGRCpath takes precedence
 }
 
@@ -857,7 +857,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 		fprintf(stderr,"%s/%-40s %s",threadName,funcName,[body UTF8String]);
 	else
 		fprintf(stderr,"%p/%-40s %s",[NSThread currentThread],funcName,[body UTF8String]);
-	[body release];	
+	[body release];
 }
 
 
@@ -1125,7 +1125,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	{
 		double date   = [base floatValue];
 		if (date != NAN)
-			return [NSDate dateWithTimeIntervalSince1970: date];		
+			return [NSDate dateWithTimeIntervalSince1970: date];
 	}
 	
 	return nil;
@@ -1382,7 +1382,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 {
 	NSAttributedString* smallSuppressionMessage = [NSAttributedString string:@"Do not show this kind of message again" withAttributes: smallSystemFontAttributes];
 	[self setShowsSuppressionButton:YES];
-	[[self suppressionButton] setAttributedTitle:smallSuppressionMessage];	
+	[[self suppressionButton] setAttributedTitle:smallSuppressionMessage];
 }
 @end
 
@@ -1474,7 +1474,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	NSRect newFrame = [self frame];
 	NSSize maxSize = UnionSizeWIthSize(newFrame.size, oldFrame.size);
 	newFrame = UnionRectWithSize(newFrame, maxSize);
-	[self setFrame:newFrame];	
+	[self setFrame:newFrame];
 }
 
 @end

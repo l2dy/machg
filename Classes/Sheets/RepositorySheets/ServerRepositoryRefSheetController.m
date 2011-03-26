@@ -88,7 +88,7 @@
 {
 	AuthorizationRef myAuthorizationRef;
 	AuthorizationCreate(NULL, kAuthorizationEmptyEnvironment, kAuthorizationFlagDefaults, &myAuthorizationRef);
-	AuthorizationFree(myAuthorizationRef, kAuthorizationFlagDestroyRights);	
+	AuthorizationFree(myAuthorizationRef, kAuthorizationFlagDestroyRights);
 	[self setShowRealPassword:NO];
 	[self passwordChanged];
 }
@@ -211,7 +211,7 @@
 	[theTitleText setStringValue:@"Add and Clone Server Repository"];
 	[okButton setTitle:@"Add and Clone"];
 	[theConnectionValidationController resetForSheetOpen];
-	[NSApp beginSheet:theWindow modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];	
+	[NSApp beginSheet:theWindow modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
 }
 
 
@@ -378,7 +378,7 @@
 	[NSAnimationContext beginGrouping];
 	[[NSAnimationContext currentContext] setDuration:0.1];
 	[connectionStatusBox setToRightOf:theFullServerTextField bySpacing:10];
-	[NSAnimationContext endGrouping];	
+	[NSAnimationContext endGrouping];
 }
 
 

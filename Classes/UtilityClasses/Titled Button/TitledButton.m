@@ -17,7 +17,7 @@
 	NSMutableParagraphStyle* ps = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
 	[ps setAlignment:NSCenterTextAlignment];
 	NSUInteger mask = [self keyEquivalentModifierMask];
-	NSMutableString* modifiers = [[NSMutableString alloc] init];	
+	NSMutableString* modifiers = [[NSMutableString alloc] init];
 	if (mask & NSControlKeyMask)	[modifiers appendString:@"⌃"];
 	if (mask & NSAlternateKeyMask)	[modifiers appendString:@"⌥"];
 	if (mask & NSCommandKeyMask)	[modifiers appendString:@"⌘"];
@@ -29,7 +29,7 @@
 	NSDictionary* grayedAttributes   = [NSDictionary dictionaryWithObjectsAndKeys: keyFont, NSFontAttributeName, [NSColor colorWithDeviceHue:0.0 saturation:0.0 brightness:0.8 alpha:1.0] , NSForegroundColorAttributeName, ps, NSParagraphStyleAttributeName, nil];
 	NSMutableAttributedString* constructDecoratedTitle = [NSMutableAttributedString string:originalTitle withAttributes:standardAttributes];
 	[constructDecoratedTitle appendAttributedString: [NSAttributedString string:fstr(@" %@%@", modifiers, key) withAttributes:grayedAttributes]];
-	return constructDecoratedTitle;	
+	return constructDecoratedTitle;
 }
 
 - (void) switchToDecoratedTitle	{ [self setAttributedTitle:decoratedTitle]; }

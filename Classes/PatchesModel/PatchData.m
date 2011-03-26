@@ -140,7 +140,7 @@
 
 	
 	NSMutableArray* lines = [[NSMutableArray alloc]init];
-	NSInteger start = 0;	
+	NSInteger start = 0;
 	while (start < [patchBody_ length])
 	{
 		NSRange nextLine = [patchBody_ lineRangeForRange:NSMakeRange(start, 1)];
@@ -240,7 +240,7 @@
 
 	parts = [header captureComponentsMatchedByRegex:authorRegEx options:RKLMultiline range:NSMaxiumRange error:NULL];
 	if ([parts count] >= 1)
-		author_ = trimString([parts objectAtIndex:1]);		
+		author_ = trimString([parts objectAtIndex:1]);
 
 	parts = [header captureComponentsMatchedByRegex:dateRegEx options:RKLMultiline range:NSMaxiumRange error:NULL];
 	if ([parts count] >= 1)
@@ -256,15 +256,15 @@
 
 	parts = [header captureComponentsMatchedByRegex:parentRegEx options:RKLMultiline range:NSMaxiumRange error:NULL];
 	if ([parts count] >= 1)
-		parent_ = trimString([parts objectAtIndex:1]);		
+		parent_ = trimString([parts objectAtIndex:1]);
 
 	parts = [header captureComponentsMatchedByRegex:nodeRegEx options:RKLMultiline range:NSMaxiumRange error:NULL];
 	if ([parts count] >= 1)
-		nodeID_ = trimString([parts objectAtIndex:1]);		
+		nodeID_ = trimString([parts objectAtIndex:1]);
 
 	parts = [header captureComponentsMatchedByRegex:commitMessageRegEx options:(RKLDotAll) range:NSMaxiumRange error:NULL];
 	if ([parts count] >= 1)
-		commitMessage_ = trimString([parts objectAtIndex:1]);		
+		commitMessage_ = trimString([parts objectAtIndex:1]);
 	
 	return self;
 }

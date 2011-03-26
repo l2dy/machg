@@ -25,7 +25,7 @@
 	if (isCommandDown)
 		[self showCommandKeyEquivalent];
 	else
-		[self hideCommandKeyEquivalent];	
+		[self hideCommandKeyEquivalent];
 }
 
 - (void) awakeFromNib

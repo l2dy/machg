@@ -33,7 +33,7 @@
 	@abstract EMKeychainItem is a self-contained wrapper class for two-way communication with the keychain. You can add, retrieve, and remove both generic and internet keychain items.
 	@dicussion All keychain items have a username, password, and optionally a label.
  */
-@interface EMKeychainItem : NSObject 
+@interface EMKeychainItem : NSObject
 {
 	@private
 	NSString *mUsername;
@@ -74,7 +74,7 @@
  */
 - (void)removeFromKeychain;
 
-@end 
+@end
 
 #pragma mark -
 

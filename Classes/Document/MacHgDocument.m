@@ -112,7 +112,7 @@
 @synthesize events      = events_;
 @synthesize connections = connections_;
 @synthesize toolbarSearchField = toolbarSearchField_;
-@synthesize toolbarSearchItem  = toolbarSearchItem_; 
+@synthesize toolbarSearchItem  = toolbarSearchItem_;
 
 
 
@@ -719,8 +719,8 @@
 	
 	
 	currentPane_ = newPaneNum;
-	NSView* newView = [self paneView:newPaneNum];	
-	NSRect newFrame = [self newWindowFrameWhenSwitchingContentTo:[newView frame]];	// Figure out new frame size	
+	NSView* newView = [self paneView:newPaneNum];
+	NSRect newFrame = [self newWindowFrameWhenSwitchingContentTo:[newView frame]];	// Figure out new frame size
 	[NSAnimationContext beginGrouping];												// Using an animation grouping because we may be changing the duration
 
 	// With the shift key down, do slow-mo animation
@@ -1167,7 +1167,7 @@
 	if (postNotification)
 	{
 		DebugLog(@"resume events: queueing underlying repository changed event.");
-		[queueForUnderlyingRepositoryChangedViaEvents_ 
+		[queueForUnderlyingRepositoryChangedViaEvents_
 			addBlockOperation: ^{[self postNotificationWithName:kUnderlyingRepositoryChanged];}
 					withDelay: 0.5];
 	}
@@ -1238,7 +1238,7 @@
 - (void) setupEventlistener
 {
 	dispatchSpliced(mainQueue(), ^{
-		[events_ setDelegate:self];		
+		[events_ setDelegate:self];
 		NSMutableArray* paths = [NSMutableArray arrayWithObject:[self absolutePathOfRepositoryRoot]];
 		[events_ stopWatchingPaths];
 		[events_ startWatchingPaths:paths];
@@ -1592,7 +1592,7 @@
 	if (!repoIsSelected)
 		return;
 		
-	NSString* rootPath = [self absolutePathOfRepositoryRoot];	
+	NSString* rootPath = [self absolutePathOfRepositoryRoot];
 	[[self theBrowser] refreshBrowserPaths:[RepositoryPaths fromRootPath:rootPath] finishingBlock:nil];
 	[self setupEventlistener];
 }
@@ -1683,7 +1683,7 @@
 			NSString* rootPath = [self absolutePathOfRepositoryRoot];
 			NSMutableArray* argsForget = [NSMutableArray arrayWithObjects:@"forget", nil];
 			[argsForget addObjectsFromArray:pathsForHGToUntrack];
-			[self delayEventsUntilFinishBlock:^{				
+			[self delayEventsUntilFinishBlock:^{
 				[TaskExecutions executeMercurialWithArgs:argsForget  fromRoot:rootPath];
 				[self addToChangedPathsDuringSuspension:pathsForHGToUntrack];
 			}];
@@ -1756,7 +1756,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 {
 	NSString* regexString       = @"(\\#|\\*|\\+|\\(|\\)|\\?|\\.|\\[|\\]|\\||\\^|\\$)";
 	NSString* replaceWithString = @"\\\\$1";
-	return [theName stringByReplacingOccurrencesOfRegex:regexString withString:replaceWithString];	
+	return [theName stringByReplacingOccurrencesOfRegex:regexString withString:replaceWithString];
 }
 
 

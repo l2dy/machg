@@ -53,7 +53,7 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 
 	logEntryPartChangeset  = [namesOfLogEntryParts indexOfObject:@"changeset"];
 	logEntryPartParents    = [namesOfLogEntryParts indexOfObject:@"parents"];
-	logEntryPartRevision   = [namesOfLogEntryParts indexOfObject:@"revision"];	
+	logEntryPartRevision   = [namesOfLogEntryParts indexOfObject:@"revision"];
 }
 
 
@@ -133,7 +133,7 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 	NSArray* labels = [self labels];
 	if (IsEmpty(labels))
 		return @"";
-	NSArray* branchLabels = [LabelData filterLabels:labels byType:eBranchLabel];	
+	NSArray* branchLabels = [LabelData filterLabels:labels byType:eBranchLabel];
 	return IsNotEmpty(branchLabels) ? [[branchLabels objectAtIndex:0] name] : @"";
 }
 
@@ -142,7 +142,7 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 	NSArray* labels = [self labels];
 	if (IsEmpty(labels))
 		return @"";
-	NSArray* branchLabels = [LabelData filterLabels:labels byType:eClosedBranch];	
+	NSArray* branchLabels = [LabelData filterLabels:labels byType:eClosedBranch];
 	return IsNotEmpty(branchLabels) ? [[branchLabels objectAtIndex:0] name] : @"";
 }
 

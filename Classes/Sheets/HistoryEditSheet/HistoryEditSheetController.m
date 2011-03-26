@@ -165,7 +165,7 @@
 	
 	NSArray* revs = [[[myDocument theHistoryView] logTableView] chosenRevisions];
 	if ([revs count] <= 0)
-		[logTableView scrollToRevision:[myDocument getHGTipRevision]];		
+		[logTableView scrollToRevision:[myDocument getHGTipRevision]];
 	{
 		NSInteger minRev = numberAsInt([revs objectAtIndex:0]);
 		for (NSNumber* revision in revs)
@@ -225,7 +225,7 @@
 	
 	[sheetConfirmationInformativeMessageTextField setAttributedStringValue:[sheetInformativeMessageTextField attributedStringValue]];
 	[self setWindow:theHistoryEditConfirmationSheet];
-	[NSApp beginSheet:theHistoryEditConfirmationSheet  modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];	
+	[NSApp beginSheet:theHistoryEditConfirmationSheet  modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
 }
 
 - (IBAction) sheetButtonOkForHistoryEditConfirmationSheet:(id)sender
@@ -238,7 +238,7 @@
 	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
 	NSString* repositoryName = [[[myDocument sidebar] selectedNode] shortName];
 	NSString* historyEditDescription = fstr(@"Editing descendants of %d in “%@”", pair.lowRevision, repositoryName);
-	NSMutableArray* argsHistoryEdit = [NSMutableArray arrayWithObjects:@"histedit", @"--config", @"extensions.histedit=", nil];	
+	NSMutableArray* argsHistoryEdit = [NSMutableArray arrayWithObjects:@"histedit", @"--config", @"extensions.histedit=", nil];
 	
 	[argsHistoryEdit addObject:@"--rules" followedBy:[confirmationSheetMessage string]];
 	[argsHistoryEdit addObject:intAsString(pair.lowRevision)];

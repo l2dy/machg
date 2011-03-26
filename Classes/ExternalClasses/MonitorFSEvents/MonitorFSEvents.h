@@ -23,7 +23,7 @@
     id <MonitorFSEventListenerProtocol> delegate;    // The delegate that FSEvents is to notify when events occur.
     
     BOOL             isWatchingPaths;         // Is the events stream currently running.
-    FSEventStreamRef eventStream;             // The actual FSEvents stream reference.      
+    FSEventStreamRef eventStream;             // The actual FSEvents stream reference.
     NSMutableArray*  watchedPaths;            // The paths that are to be watched for events.
 }
 

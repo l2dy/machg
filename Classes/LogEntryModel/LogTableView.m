@@ -123,7 +123,7 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 	NSString* newRepositoryRootPath = [repositoryData_ rootPath];
 	if ([newRepositoryRootPath isNotEqualToString:rootPath_])
 		[self scrollToCurrentRevision:self];
-	rootPath_ = newRepositoryRootPath;	
+	rootPath_ = newRepositoryRootPath;
 }
 
 - (void) logEntriesDidChange:(NSNotification*)notification
@@ -376,7 +376,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 		parentRevInt = MAX(0, lowRevInt - 1);	// Step back one to see the differences from the previous version to this version.
 	else
 		parentRevInt = numberAsInt([parents objectAtIndex:0]);
-	return MakeLowHighPair(parentRevInt, highRevInt);	
+	return MakeLowHighPair(parentRevInt, highRevInt);
 }
 
 
@@ -496,7 +496,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 			NSMutableAttributedString* str = [[NSMutableAttributedString alloc]init];
 			[str initWithAttributedString:[aCell attributedStringValue]];
 			[str addAttributes:newColorAttribute range:NSMakeRange(0, [str length])];
-			[aCell setAttributedStringValue:str];			
+			[aCell setAttributedStringValue:str];
 		}
 	}
 }
@@ -604,7 +604,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 {
 	if (tableColumn && [[tableColumn identifier] isEqualToString:@"revision"])
 	{
-		RevisionSortOrderOption newOrder = [self sortRevisionOrder] ? eSortRevisionsDescending : eSortRevisionsAscending; 
+		RevisionSortOrderOption newOrder = [self sortRevisionOrder] ? eSortRevisionsDescending : eSortRevisionsAscending;
 		[[NSUserDefaults standardUserDefaults] setInteger:newOrder forKey:MHGRevisionSortOrder];
 	}
 }
@@ -730,7 +730,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 		theTableRows_ = [self sortTableRowsAccordingToSortOrder:newTableRows];
 		[self setNumberOfTableRows:[theTableRows_ count]];
 
-		[self refreshTable:sender];		
+		[self refreshTable:sender];
 		[self selectAndScrollToRevisions:theSelectedRevisions];
 	}
 }
@@ -805,7 +805,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	{
 		// convert item rect to screen coordinates
 		itemRectInWindow = [self convertRectToBase:itemRect];
-		itemRectInWindow.origin = [[self window] convertBaseToScreen:itemRectInWindow.origin];			
+		itemRectInWindow.origin = [[self window] convertBaseToScreen:itemRectInWindow.origin];
 	}
 	return itemRectInWindow;
 }
@@ -886,7 +886,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 		message = [NSAttributedString string:fullMessageText withAttributes:attributes];
 	}
 	
-	cellFrame = UnionRectWithSize(cellFrame, [message size]);	
+	cellFrame = UnionRectWithSize(cellFrame, [message size]);
     if ([message length] > 0)
 	{
         cellFrame.origin.x += 2.0;

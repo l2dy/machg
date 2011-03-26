@@ -199,7 +199,7 @@ static BOOL _logsErrors;
 	return nil;
 }
 
-+ (id)_genericKeychainItemWithCoreKeychainItem:(SecKeychainItemRef)coreKeychainItem 
++ (id)_genericKeychainItemWithCoreKeychainItem:(SecKeychainItemRef)coreKeychainItem
 								forServiceName:(NSString *)serviceName
 									  username:(NSString *)username
 									  password:(NSString *)password
@@ -219,7 +219,7 @@ static BOOL _logsErrors;
 
 #pragma mark -
 
-+ (EMGenericKeychainItem *)genericKeychainItemForService:(NSString *)serviceName 
++ (EMGenericKeychainItem *)genericKeychainItemForService:(NSString *)serviceName
 											withUsername:(NSString *)username
 {
 	if (!serviceName || !username)
@@ -364,7 +364,7 @@ static BOOL _logsErrors;
 	if (returnStatus != noErr && protocol == kSecProtocolTypeFTP)
 	{
 		//Some clients (like Transmit) still save passwords with kSecProtocolTypeFTPAccount, which was deprecated.  Let's check for that.
-		protocol = kSecProtocolTypeFTPAccount;		
+		protocol = kSecProtocolTypeFTPAccount;
 		returnStatus = SecKeychainFindInternetPassword(NULL, strlen(serverCString), serverCString, 0, NULL, strlen(usernameCString), usernameCString, strlen(pathCString), pathCString, port, protocol, 0, &passwordLength, (void **)&password, &item);
 	}
 	
@@ -421,7 +421,7 @@ static BOOL _logsErrors;
 			return;
 		
 		[mServer release];
-		mServer = [newServer copy];	
+		mServer = [newServer copy];
 		
 		const char *newServerCString = [newServer UTF8String];
 		[self _modifyAttributeWithTag:kSecServerItemAttr toBeValue:(void *)newServerCString ofLength:strlen(newServerCString)];

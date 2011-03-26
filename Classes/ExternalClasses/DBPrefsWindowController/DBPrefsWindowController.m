@@ -58,7 +58,7 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 		[viewAnimation setAnimationCurve:NSAnimationEaseInOut];
 		[viewAnimation setDelegate:self];
 		
-		[self setCrossFade:YES]; 
+		[self setCrossFade:YES];
 		[self setShiftSlowsAnimation:YES];
 	}
 	return self;
@@ -195,7 +195,7 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 #pragma mark Overriding Methods
 
 
-- (IBAction)showWindow:(id)sender 
+- (IBAction)showWindow:(id)sender
 {
 		// This forces the resources in the nib to load.
 	(void)[self window];
@@ -246,7 +246,7 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 
 
 
-- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar 
+- (NSArray *)toolbarAllowedItemIdentifiers:(NSToolbar*)toolbar
 {
 	return toolbarIdentifiers;
 
@@ -265,7 +265,7 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 
 
 
-- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)identifier willBeInsertedIntoToolbar:(BOOL)willBeInserted 
+- (NSToolbarItem *)toolbar:(NSToolbar *)toolbar itemForItemIdentifier:(NSString *)identifier willBeInsertedIntoToolbar:(BOOL)willBeInserted
 {
 	return [toolbarItems objectForKey:identifier];
 	(void)toolbar;
@@ -306,7 +306,7 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 		}
 	}
 	
-	if (![newView isEqualTo:oldView]) {		
+	if (![newView isEqualTo:oldView]) {
 		NSRect frame = [newView bounds];
 		frame.origin.y = NSHeight([contentSubview frame]) - NSHeight([newView bounds]);
 		[newView setFrame:frame];

@@ -66,7 +66,7 @@
 	NSNumber* versionToRevertTo = [logTableView selectedRevision];
 	[sheetInformativeMessageTextField setAttributedStringValue: [self formattedSheetMessage]];
 	BOOL enabled = (versionToRevertTo && ![versionToRevertTo isEqualToNumber:[labelToMove_ revision]]);
-	[okButton setEnabled:enabled];	
+	[okButton setEnabled:enabled];
 }
 
 

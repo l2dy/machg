@@ -41,7 +41,7 @@
 	{
 		processNum = [NSNumber numberWithInt:(processNumber_++)];
 		if ([progressIndicators_ synchronizedCount] == 0)
-			[[informationAndActivityBox animator] setContentView:activityBox];		
+			[[informationAndActivityBox animator] setContentView:activityBox];
 		[processList_ synchronizedSetObject:processDescription forKey:processNum];
 		[progressIndicators_ synchronizedSetObject:indicator forKey:processNum];
 		dispatch_async(mainQueue(), ^{
@@ -56,10 +56,10 @@
 {
 	@synchronized(self)
 	{
-		NSProgressIndicator* indicator = [progressIndicators_ synchronizedObjectForKey:processNum];		
+		NSProgressIndicator* indicator = [progressIndicators_ synchronizedObjectForKey:processNum];
 		[processList_ synchronizedRemoveObjectForKey:processNum];
 		[progressIndicators_ synchronizedRemoveObjectForKey:processNum];
-		dispatch_async(mainQueue(), ^{			
+		dispatch_async(mainQueue(), ^{
 			[indicator setHidden:YES];
 			[indicator removeFromSuperview];
 			[processListTableView reloadData];

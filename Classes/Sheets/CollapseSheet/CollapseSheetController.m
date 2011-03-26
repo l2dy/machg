@@ -195,7 +195,7 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 
 	[sheetConfirmationInformativeMessageTextField setAttributedStringValue:[sheetInformativeMessageTextField attributedStringValue]];
 	[self setWindow:theCollapseConfirmationSheet];
-	[NSApp beginSheet:theCollapseConfirmationSheet  modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];	
+	[NSApp beginSheet:theCollapseConfirmationSheet  modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
 }
 - (IBAction) sheetButtonOkForCollapseConfirmationSheet:(id)sender
 {

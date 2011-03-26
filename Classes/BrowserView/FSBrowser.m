@@ -326,7 +326,7 @@
 	{
 		// convert item rect to screen coordinates
 		itemRectInWindow = [self convertRectToBase:itemRect];
-		itemRectInWindow.origin = [[self window] convertBaseToScreen:itemRectInWindow.origin];			
+		itemRectInWindow.origin = [[self window] convertBaseToScreen:itemRectInWindow.origin];
 	}
 	return itemRectInWindow;
 }
@@ -680,7 +680,7 @@
 	
 	// Save the selectedPaths
 	newSavedState.savedSelectedPaths = selectedPaths;
-	newSavedState.restoreFirstResponderToBrowser = restoreFirstResponderToBrowser;	
+	newSavedState.restoreFirstResponderToBrowser = restoreFirstResponderToBrowser;
 	
 	return newSavedState;
 }

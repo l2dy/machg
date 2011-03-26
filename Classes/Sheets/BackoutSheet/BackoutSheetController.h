@@ -25,7 +25,7 @@
 	IBOutlet NSButton*		okButton;
 	
 	// Lower TabView Panes
-	IBOutlet LogTableTextView*	detailedEntryTextView;	
+	IBOutlet LogTableTextView*	detailedEntryTextView;
 }
 
 @property (readwrite,assign) MacHgDocument*  myDocument;

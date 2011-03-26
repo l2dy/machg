@@ -141,7 +141,7 @@
 	NSString* newTitle = fstr(@"Importing Patches into %@", [myDocument selectedRepositoryShortName]);
 	[importSheetTitle setStringValue:newTitle];
 	 
-	// Report the branch we are about to import to in the dialog	
+	// Report the branch we are about to import to in the dialog
 	[patchesTable resetTable:self];
 	[self validate:self];
 	

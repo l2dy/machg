@@ -182,7 +182,7 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 		return;
 	}
 	
-	[super mouseDown:theEvent];	
+	[super mouseDown:theEvent];
 }
 
 

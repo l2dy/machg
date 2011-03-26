@@ -196,7 +196,7 @@
 	if (!label)
 		return NSNotFound;
 	if (IsEmpty(labelsTableData_))
-		return NSNotFound;	
+		return NSNotFound;
 	return [labelsTableData_ indexOfObject:label];
 }
 

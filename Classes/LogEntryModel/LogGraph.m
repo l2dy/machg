@@ -206,7 +206,7 @@ static NSInteger closestFreeIndex2(NSIndexSet* indexes1, NSIndexSet* indexes2, N
 	//
 	// Initially compute the newLineSegments
 	//
-	NSMutableArray* newLineSegments = [[NSMutableArray alloc]init];	
+	NSMutableArray* newLineSegments = [[NSMutableArray alloc]init];
 	for (LogEntry* entry in sortedEntries)
 	{
 		NSInteger h = [entry revisionInt];
@@ -257,7 +257,7 @@ static NSInteger closestFreeIndex2(NSIndexSet* indexes1, NSIndexSet* indexes2, N
 			//
 			// Find the draw column for the chain
 			//
-			NSMutableIndexSet* usedDrawColumns = [self findDrawColumnForLow:[[bestChain lastObject] lowRev] andHigh:[[bestChain firstObject] highRev]];			
+			NSMutableIndexSet* usedDrawColumns = [self findDrawColumnForLow:[[bestChain lastObject] lowRev] andHigh:[[bestChain firstObject] highRev]];
 			NSInteger drawColumnForChain;
 			if ([[bestChain firstObject] highColKnown])
 				drawColumnForChain = closestFreeIndex(usedDrawColumns, [[bestChain firstObject] highCol]);

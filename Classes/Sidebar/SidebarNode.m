@@ -207,7 +207,7 @@
 - (NSString*) fullURLPath
 {
 	if (![self isServerRepositoryRef])
-		return path;	
+		return path;
 	return FullServerURL(path, eAllPasswordsAreVisible);
 }
 
@@ -295,7 +295,7 @@
 	else if ([self isLocalRepositoryRef])
 		icon = [NSImage imageNamed:@"MissingRepository.png"];
 	else if ([self isServerRepositoryRef])
-		icon = [NSImage imageNamed:NSImageNameNetwork];	
+		icon = [NSImage imageNamed:NSImageNameNetwork];
 }
 
 

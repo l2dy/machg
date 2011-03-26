@@ -326,7 +326,7 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 	
 	NSString* description;
 	BOOL inPast = [date_ isBefore:now];
-	NSString* relation = inPast ? @"ago" : @"in the future"; 
+	NSString* relation = inPast ? @"ago" : @"in the future";
 	if      (delta >= 2 * kYear)	description = fstr(@"%d years %@",   lround(floor(delta / kYear)),   relation);
 	else if (delta >= 2 * kMonth)	description = fstr(@"%d months %@",  lround(floor(delta / kMonth)),  relation);
 	else if (delta >= 2 * kWeek)	description = fstr(@"%d weeks %@",   lround(floor(delta / kWeek)),   relation);

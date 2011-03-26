@@ -47,7 +47,7 @@
 {
 	queueForAutomaticIncomingComputation_ = [SingleTimedQueue SingleTimedQueueExecutingOn:globalQueue() withTimeDelay:2.0 descriptiveName:@"queueForAutomaticIncomingComputation"];	// Our auto computations start after 2.0 seconds
 	queueForAutomaticOutgoingComputation_ = [SingleTimedQueue SingleTimedQueueExecutingOn:globalQueue() withTimeDelay:2.0 descriptiveName:@"queueForAutomaticOutgoingComputation"];	// Our auto computations start after 2.0 seconds
-	queueForUpdatingInformationTextView_  = [SingleTimedQueue SingleTimedQueueExecutingOn:globalQueue() withTimeDelay:0.1 descriptiveName:@"queueForUpdatingInformationTextView"];	// Our updating of the info start after 0.1 seconds	
+	queueForUpdatingInformationTextView_  = [SingleTimedQueue SingleTimedQueueExecutingOn:globalQueue() withTimeDelay:0.1 descriptiveName:@"queueForUpdatingInformationTextView"];	// Our updating of the info start after 0.1 seconds
 	
 	root_ = [SidebarNode sectionNodeWithCaption:kSidebarRootInitializationDummy];
 	[self observe:kUnderlyingRepositoryChanged				from:myDocument  byCalling:@selector(underlyingRepositoryDidChange)];
@@ -317,7 +317,7 @@
 
 - (void) pathControlDoubleClickAction:(id)sender
 {
-	NSPathComponentCell* cell = [repositoryPathControl_ clickedPathComponentCell];   
+	NSPathComponentCell* cell = [repositoryPathControl_ clickedPathComponentCell];
 	NSString* thePath = [[cell URL] path];
 	[[NSWorkspace sharedWorkspace] selectFile:thePath inFileViewerRootedAtPath:nil];
 }
@@ -555,23 +555,23 @@
 		{
 			NSString* parentField = [repositoryData inMergeState] ? @"\nParents: " : @"\nParent: ";
 			[attrString appendAttributedString: [NSAttributedString string:parentField     withAttributes:smallGraySystemFontAttributes]];
-			[attrString appendAttributedString: [NSAttributedString string:parentRevisions withAttributes:smallSystemFontAttributes]];		
+			[attrString appendAttributedString: [NSAttributedString string:parentRevisions withAttributes:smallSystemFontAttributes]];
 		}		
 		if (IsNotEmpty(tags))
 		{
 			[attrString appendAttributedString: [NSAttributedString string:@"\nTags: " withAttributes:smallGraySystemFontAttributes]];
-			[attrString appendAttributedString: [NSAttributedString string:[tags componentsJoinedByString:@", "] withAttributes:smallSystemFontAttributes]];		
+			[attrString appendAttributedString: [NSAttributedString string:[tags componentsJoinedByString:@", "] withAttributes:smallSystemFontAttributes]];
 		}
 		if (IsNotEmpty(bookmarks))
 		{
 			NSString* bookmarksField = [bookmarks count] > 1 ? @"\nBookmarks: " : @"\nBookmark: ";
 			[attrString appendAttributedString: [NSAttributedString string:bookmarksField withAttributes:smallGraySystemFontAttributes]];
-			[attrString appendAttributedString: [NSAttributedString string:[bookmarks componentsJoinedByString:@", "] withAttributes:smallSystemFontAttributes]];		
+			[attrString appendAttributedString: [NSAttributedString string:[bookmarks componentsJoinedByString:@", "] withAttributes:smallSystemFontAttributes]];
 		}
 		if (IsNotEmpty(branch))
 		{
 			[attrString appendAttributedString: [NSAttributedString string:@"\nBranch: " withAttributes:smallGraySystemFontAttributes]];
-			[attrString appendAttributedString: [NSAttributedString string:branch		 withAttributes:smallSystemFontAttributes]];		
+			[attrString appendAttributedString: [NSAttributedString string:branch		 withAttributes:smallSystemFontAttributes]];
 		}
 	}
 	
@@ -981,7 +981,7 @@
 
 		// Order local repositories before server repositories for speed
 		compatibleRepositories = [compatibleRepositories sortedArrayUsingComparator: ^(id obj1, id obj2) {
-			if ([obj1 nodeKind] < [obj2 nodeKind]) return (NSComparisonResult)NSOrderedAscending;			
+			if ([obj1 nodeKind] < [obj2 nodeKind]) return (NSComparisonResult)NSOrderedAscending;
 			if ([obj1 nodeKind] > [obj2 nodeKind]) return (NSComparisonResult)NSOrderedDescending;
 			return (NSComparisonResult)NSOrderedSame;
 		}];
@@ -1012,7 +1012,7 @@
 										 [[[theOutgoingController shellTask] task] cancelTask];	// We timed out so kill the task which timed out...
 										 dispatch_async(mainQueue(), ^{
 											 if (![rootPath isEqualTo:[[self selectedNode] path]])
-												 return;											 
+												 return;
 											 [outgoingCounts setObject:@"-" forKey:[repo path]];
 											 [self reloadData];
 										 });										 
@@ -1048,7 +1048,7 @@
 										 [[[theIncomingController shellTask] task] cancelTask];	// We timed out so kill the task which timed out...
 										 dispatch_async(mainQueue(), ^{
 											 if (![rootPath isEqualTo:[[self selectedNode] path]])
-												 return;											 
+												 return;
 											 [incomingCounts setObject:@"-" forKey:[repo path]];
 											 [self reloadData];
 										 });										 

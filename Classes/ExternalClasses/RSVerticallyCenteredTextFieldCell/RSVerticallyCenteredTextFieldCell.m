@@ -38,7 +38,7 @@
 	NSSize textSize = [self cellSizeForBounds:theRect];			// Get our ideal size for current text
 	
 	// Center that in the proposed rect
-	float heightDelta = newRect.size.height - textSize.height;	
+	float heightDelta = newRect.size.height - textSize.height;
 	if (heightDelta > 0)
 	{
 		newRect.size.height -= heightDelta;
@@ -51,7 +51,7 @@
 - (void) selectWithFrame:(NSRect)aRect inView:(NSView*)controlView editor:(NSText*)textObj delegate:(id)anObject start:(NSInteger)selStart length:(NSInteger)selLength
 {
 	aRect = [self drawingRectForBounds:aRect];
-	mIsEditingOrSelecting = YES;	
+	mIsEditingOrSelecting = YES;
 	[super selectWithFrame:aRect inView:controlView editor:textObj delegate:anObject start:selStart length:selLength];
 	mIsEditingOrSelecting = NO;
 }

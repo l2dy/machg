@@ -66,7 +66,7 @@
 
 - (void) resetTimer
 {
-	[timer_ invalidate];	
+	[timer_ invalidate];
 	if (!suspended_)
 		dispatchSpliced(mainQueue(), ^{
 			timer_ = [NSTimer scheduledTimerWithTimeInterval:delay_ target:self selector:@selector(executeTheBlock:) userInfo:nil repeats:NO];

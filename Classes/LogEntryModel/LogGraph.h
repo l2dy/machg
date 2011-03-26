@@ -42,12 +42,12 @@
 
 	
 	NSMutableDictionary*	revisionNumberToLineSegments_;	// Map of (NSNumber*)revision -> (NSMutableArray*)LineSegment LineSegments
-															// passing or intersecting this rev.	
+															// passing or intersecting this rev.
 
 	// Computed
 	NSInteger				maxColumn;						// The max column used to draw the connections. 0 based, so if one
 															// column used this will be 0, if two columns used this will be 1,
-															// etc.		
+															// etc.
 }
 
 @property (readonly) NSInteger maxColumn;

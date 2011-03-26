@@ -66,7 +66,7 @@ NSString* kAmendOption	 = @"amendOption";
 	[filesToCommitTableView setAction:@selector(handleFilesToCommitTableClick:)];
 	[previousCommitMessagesTableView setTarget:self];
 	[previousCommitMessagesTableView setDoubleAction:@selector(handlePreviousCommitMessagesTableDoubleClick:)];
-	[previousCommitMessagesTableView setAction:@selector(handlePreviousCommitMessagesTableClick:)];	
+	[previousCommitMessagesTableView setAction:@selector(handlePreviousCommitMessagesTableClick:)];
 }
 
 
@@ -227,15 +227,15 @@ NSString* kAmendOption	 = @"amendOption";
 	if ([myDocument inMergeState])
 		excludeTooltipMessage = @"Cannot exclude files during a merge commit.";
 	else if (amendOption_)
-		excludeTooltipMessage = @"Exclude files from the amend.";	
+		excludeTooltipMessage = @"Exclude files from the amend.";
 	[excludePathsButton setToolTip:excludeTooltipMessage];
 
 	NSString* includeTooltipMessage = @"Reinclude files for the commit.";
 	if ([myDocument inMergeState])
 		includeTooltipMessage = @"Cannot exclude files during a merge commit.";
 	else if (amendOption_)
-		includeTooltipMessage = @"Reinclude files for the amend.";	
-	[includePathsButton setToolTip:includeTooltipMessage];	
+		includeTooltipMessage = @"Reinclude files for the amend.";
+	[includePathsButton setToolTip:includeTooltipMessage];
 }
 
 
@@ -248,7 +248,7 @@ NSString* kAmendOption	 = @"amendOption";
 
 - (BOOL) validateUserInterfaceItem:(id < NSValidatedUserInterfaceItem >)anItem
 {
-	SEL theAction = [anItem action];	
+	SEL theAction = [anItem action];
 	// CommitSheet contextual items
 	NSIndexSet* selectedIndexes = [self chosenIndexesOfFilesToCommit];
 	if (theAction == @selector(commitSheetDiffAction:))			return [self filesToCommitAreSelected];
@@ -333,7 +333,7 @@ NSString* kAmendOption	 = @"amendOption";
 			NSMutableAttributedString* str = [[NSMutableAttributedString alloc]init];
 			[str initWithAttributedString:[aCell attributedStringValue]];
 			[str addAttributes:newColorAttribute range:NSMakeRange(0, [str length])];
-			[aCell setAttributedStringValue:str];			
+			[aCell setAttributedStringValue:str];
 		}
 }
 
@@ -414,7 +414,7 @@ NSString* kAmendOption	 = @"amendOption";
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	NSString* file = [filesToCommitTableSourceData objectAtIndex:[filesToCommitTableView chosenRow]];
 	NSString* relativePath = [file substringFromIndex:2];
-	NSString* absolutePath = [rootPath stringByAppendingPathComponent:relativePath];	
+	NSString* absolutePath = [rootPath stringByAppendingPathComponent:relativePath];
 	return absolutePath;
 }
 
@@ -454,7 +454,7 @@ NSString* kAmendOption	 = @"amendOption";
 - (IBAction) includePathsAction:(id)sender
 {
 	if (!excludedItems)
-		return;	
+		return;
 	[excludedItems removeIndexes:[self chosenIndexesOfFilesToCommit]];
 	[filesToCommitTableView reloadData];
 	[self validateButtons:self];
@@ -514,7 +514,7 @@ NSString* kAmendOption	 = @"amendOption";
 		return;
 	}
 	
-	[myDocument dispatchToMercurialQueuedWithDescription:@"Committing Files" process:^{		
+	[myDocument dispatchToMercurialQueuedWithDescription:@"Committing Files" process:^{
 
 		[myDocument registerPendingRefresh:pathsToCommit];
 

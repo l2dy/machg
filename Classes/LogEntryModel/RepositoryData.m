@@ -240,7 +240,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 //			labelsChanged = YES;
 //	for (LabelData* label in [newRevisionToLabels allValues])
 //		if (![label isEqualToLabel:[revisionNumberToLabels_ objectForKey:[label revision]]])
-//			labelsChanged = YES;	
+//			labelsChanged = YES;
 }
 
 // loadCombinedInformationAndNotify uses the combinedinfo extension (which I wrote) to generate information like the following
@@ -300,7 +300,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 		{
 			NSString* labelType = nil;
 			NSString* revString = nil;
-			NSString* changesetString = nil;			
+			NSString* changesetString = nil;
 			NSString* labelName = nil;
 			BOOL parsedLine = [line getCapturesWithRegexAndTrimedComponents:@"^(\\w+) (-?\\d+):([\\d\\w]+)\\s*(.*)"
 															 firstComponent:&labelType  secondComponent:&revString  thirdComponent:&changesetString  fourthComponent:&labelName];
@@ -345,7 +345,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 		BOOL tipChanged       = !theSameNumbers(newTipRevision, oldTipRevision) || !theSameStrings(newTipChangeset,oldTipChangeset);
 		BOOL parentsChanged   = !theSameNumbers(newParent1Revision, oldParent1Revision)  || !theSameNumbers(newParent2Revision, oldParent2Revision) ||
 							    !theSameStrings(newParent1Changeset,oldParent1Changeset) || !theSameStrings(newParent2Changeset,oldParent2Changeset);
-		BOOL labelsChanged    = labelArrayDictionariesAreEqual(revisionNumberToLabels_, newRevisionToLabels);		
+		BOOL labelsChanged    = labelArrayDictionariesAreEqual(revisionNumberToLabels_, newRevisionToLabels);
 		NSString* browserRoot = [[myDocument theBrowser] absolutePathOfRepositoryRoot];
 		BOOL rootChanged      = !browserRoot || !rootPath_ || [browserRoot isNotEqualToString:rootPath_];
 		
@@ -402,7 +402,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 	includeIncompleteRevision_ = [myDocument repositoryHasFilesWhichContainStatus:eHGStatusCommittable];
 	incompleteRevisionEntry_   = includeIncompleteRevision_ ? [LogEntry unfinishedEntryForRevision:intAsNumber([self computeNumberOfRealRevisions] + 1) forRepositoryData:self] : nil;
 	if (incompleteRevisionEntry_)
-		[self setEntry:incompleteRevisionEntry_];	
+		[self setEntry:incompleteRevisionEntry_];
 }
 
 
@@ -425,7 +425,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 
 - (BOOL)      isRollbackInformationAvailable
 {
-	NSString* rollbackFile = fstr(@"%@/.hg/store/undo", rootPath_);	
+	NSString* rollbackFile = fstr(@"%@/.hg/store/undo", rootPath_);
 	BOOL sourceIsDir = NO;
 	return [[[NSFileManager alloc] init] fileExistsAtPath:rollbackFile isDirectory:&sourceIsDir];
 }
@@ -555,7 +555,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 		}
 	}
 	for (NSNumber* childRevision in childrenToRemove)
-		[entry removeChildRevisionNum:childRevision];	
+		[entry removeChildRevisionNum:childRevision];
 }
 
 

@@ -103,7 +103,7 @@
 	[theLabelsTableView_ setAutosaveName:fstr(@"File:%@:HistoryLabelsTableViewColumnPositions", fileName)];
 	
 	[logTableView setTarget:self];
-	[logTableView setDoubleAction:@selector(diffSelectedRevisions:)];	
+	[logTableView setDoubleAction:@selector(diffSelectedRevisions:)];
 	
 	[[myDocument mainWindow] makeFirstResponder:logTableView];
 }
@@ -182,7 +182,7 @@
 - (IBAction) historyMenuAddLabelToChosenRevision:(id)sender
 {
 	[[myDocument toolbarSearchField] setStringValue:@""];	// reset the search term
-	[[myDocument theAddLabelSheetController] openAddLabelSheet:self]; 
+	[[myDocument theAddLabelSheetController] openAddLabelSheet:self];
 }
 
 - (IBAction) historyMenuDiffAllToChosenRevision:(id)sender
@@ -224,7 +224,7 @@
 
 	[myDocument actionSwitchViewToDifferencesView:sender];
 	NSTimeInterval t = [[NSAnimationContext currentContext] duration];
-	[[myDocument theDifferencesView] performSelector:@selector(compareLowHighValue:) withObject:pairAsValue afterDelay:t];	
+	[[myDocument theDifferencesView] performSelector:@selector(compareLowHighValue:) withObject:pairAsValue afterDelay:t];
 }
 
 
@@ -345,12 +345,12 @@
 			{
 				BOOL didUpdateToReversion = [myDocument primaryActionUpdateFilesToVersion:rev withCleanOption:NO];
 				if (!didUpdateToReversion)
-					return;				
+					return;
 			}
 			
 			NSMutableArray* argsTag = [NSMutableArray arrayWithObjects:@"branch", @"--clean", nil];
 			[myDocument executeMercurialWithArgs:argsTag fromRoot:rootPath whileDelayingEvents:YES];
-			break;			
+			break;
 		}
 			
 		default:
