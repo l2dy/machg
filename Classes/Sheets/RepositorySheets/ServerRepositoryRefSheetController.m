@@ -155,6 +155,15 @@
 
 - (IBAction) validateButtons:(id)sender
 {
+	// If we are using ssh then hide all password details since Mercurial can't handle passed in passwords for ssh.
+	BOOL sshConnection = [[self baseServerURLFieldValue] isMatchedByRegex:@"^ssh://"];
+	[passwordBoxDisclosureController setToOpenState:!sshConnection withAnimation:YES];
+	if (sshConnection && IsNotEmpty(password_))
+	{
+		[self setPassword:@""];
+		[self passwordChanged];
+	}
+
 	BOOL valid = ([[self baseServerURLFieldValue] length] > 0) && ([[self shortNameFieldValue] length] > 0);
 	[okButton setEnabled:valid];
 	if (sender == theBaseServerTextField || sender == self || sender == theUsernameTextField || sender == theSecurePasswordTextField || sender == theUnsecurePasswordTextField)

@@ -17,6 +17,7 @@
 	IBOutlet NSButton*							okButton;
 	IBOutlet NSButton*							showPasswordButton;
 	IBOutlet NSBox*								connectionStatusBox;
+	IBOutlet NSBox*								passwordBox;
 	IBOutlet NSTextField*						theTitleText;
 	IBOutlet NSTextField*						theBaseServerTextField;
 	IBOutlet NSTextField*						theUsernameTextField;
@@ -25,6 +26,7 @@
 	IBOutlet NSTextField*						theFullServerTextField;
 	IBOutlet ConnectionValidationController*	theConnectionValidationController;
 	IBOutlet DisclosureBoxController*			advancedOptionsDisclosureController;		// The disclosure box for the advanced options
+	IBOutlet DisclosureBoxController*			passwordBoxDisclosureController;			// The disclosure box for the password options
 
 	
 	MacHgDocument*		myDocument;
