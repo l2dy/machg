@@ -241,7 +241,9 @@
 	[coder encodeObject:recentPushConnection forKey:@"recentPushConnection"];
 	[coder encodeObject:recentPullConnection forKey:@"recentPullConnection"];
 
-	NSString* repositoryIdentity = [self repositoryIdentity];
+	NSString* repositoryIdentity = [[[AppController sharedAppController] repositoryIdentityForPath] synchronizedObjectForKey:path];
+	if (IsEmpty(repositoryIdentity))
+		repositoryIdentity = [self repositoryIdentity];
 	if (repositoryIdentity)
 		[coder encodeObject:repositoryIdentity forKey:@"repositoryIdentity"];
 }

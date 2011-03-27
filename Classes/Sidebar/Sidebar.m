@@ -265,6 +265,7 @@
 		}
 		[repositoryPathControl_ setURL:[NSURL fileURLWithPath:[selectedNode path]]];
 		[[myDocument mainWindow] setRepresentedFilename:dotHgPath];
+		[[AppController sharedAppController] computeRepositoryIdentityForPath:[selectedNode path]];
 		[self computeIncomingOutgoingToCompatibleRepositories];
 	}
 
