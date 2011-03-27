@@ -390,7 +390,7 @@
 {
 	NSArray* versionArgs = [NSArray arrayWithObject:@"version"];
 	NSString* hgBinary = executableLocationHG();
-	ExecutionResult* results = [ShellTask execute:hgBinary withArgs:versionArgs];
+	ExecutionResult* results = [ShellTask execute:hgBinary withArgs:versionArgs withEnvironment:[TaskExecutions environmentForHg]];
 	if ([results hasWarnings] && WarnAboutBadMercurialConfigurationFromDefaults())
 	{
 		NSString* mainMessage = fstr(@"The version of Mercurial included with MacHg is producing the following warnings:\n\n%@\n\nMacHg might not function as intended. To resolve this check your configuration settings in your .hgrc file.", results.errStr);

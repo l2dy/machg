@@ -135,13 +135,14 @@
 }
 
 
-- (id) initWithCommand:(NSString*)cmd andArgs:(NSArray*)args withDelegate:(id <ShellTaskDelegate>)delegate;
+- (id) initWithCommand:(NSString*)cmd andArgs:(NSArray*)args withEnvironment:(NSDictionary*)env withDelegate:(id <ShellTaskDelegate>)delegate
 {	
 	generatingCmd_ = cmd;
 	generatingArgs_ = args;
 	delegate_ = delegate;
 	task_ = [[NSTask alloc] init];
-	[task_ setEnvironment:[TaskExecutions environmentForHg]];
+	if (env)
+		[task_ setEnvironment:env];
 
 	
 	NSPipe* outPipe    = [[NSPipe alloc] init];     // Create the pipe to write standard out to
@@ -166,10 +167,11 @@
 	return self;
 }
 
-+ (ExecutionResult*) execute:(NSString*)cmd withArgs:(NSArray*)args	{ return [self execute:cmd withArgs:args withDelegate:nil]; }
-+ (ExecutionResult*) execute:(NSString*)cmd withArgs:(NSArray*)args withDelegate:(id <ShellTaskDelegate>)delegate;
++ (ExecutionResult*) execute:(NSString*)cmd withArgs:(NSArray*)args										{ return [self execute:cmd withArgs:args withEnvironment:nil withDelegate:nil]; }
++ (ExecutionResult*) execute:(NSString*)cmd withArgs:(NSArray*)args	withEnvironment:(NSDictionary*)env	{ return [self execute:cmd withArgs:args withEnvironment:env withDelegate:nil]; }
++ (ExecutionResult*) execute:(NSString*)cmd withArgs:(NSArray*)args withEnvironment:(NSDictionary*)env withDelegate:(id <ShellTaskDelegate>)delegate
 {
-	ShellTask* shellTask = [[ShellTask alloc] initWithCommand:cmd andArgs:args withDelegate:delegate];
+	ShellTask* shellTask = [[ShellTask alloc] initWithCommand:cmd andArgs:args withEnvironment:env withDelegate:delegate];
 	if ([delegate respondsToSelector:@selector(shellTaskCreated:)])
 		[delegate shellTaskCreated:shellTask];
 	
@@ -282,7 +284,7 @@
 		return;
 
 	NSString* scriptPath = fstr(@"%@/%@",[[NSBundle mainBundle] resourcePath], @"getHTTPSfingerprint.py");
-	ExecutionResult* results = [ShellTask execute:scriptPath withArgs:[NSArray arrayWithObjects:host, port ? numberAsString(port) : @"443", nil]];
+	ExecutionResult* results = [ShellTask execute:scriptPath withArgs:[NSArray arrayWithObjects:host, port ? numberAsString(port) : @"443", nil] withEnvironment:[TaskExecutions environmentForHg]];
 	if ([results hasNoErrors])
 		fingerPrint = trimString(results.outStr);
 
@@ -537,7 +539,7 @@ static NSString* processedPathEnv(NSDictionary* processEnv)
 
 	NSMutableArray* newArgs = [self preProcessMercurialCommandArgs:args fromRoot:rootPath];
 	NSString* hgBinary = executableLocationHG();
-	ExecutionResult* results = [ShellTask  execute:hgBinary  withArgs:newArgs  withDelegate:delegate];
+	ExecutionResult* results = [ShellTask  execute:hgBinary  withArgs:newArgs  withEnvironment:[TaskExecutions environmentForHg]  withDelegate:delegate];
 	[results pruneMissingExtensionsErrors];
 	[results logAndReportAnyErrors:log];
 	return results;
