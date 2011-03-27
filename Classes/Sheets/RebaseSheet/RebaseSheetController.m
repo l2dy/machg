@@ -14,6 +14,7 @@
 #import "RepositoryData.h"
 #import "LogTableView.h"
 #import "HistoryViewController.h"
+#import "AppController.h"
 #import "Sidebar.h"
 #import "SidebarNode.h"
 
@@ -216,6 +217,8 @@
 	NSString* rebaseDescription = fstr(@"rebasing %d-%d in “%@”", pair.lowRevision, pair.highRevision, repositoryName);
 	NSMutableArray* argsRebase = [NSMutableArray arrayWithObjects:@"rebase", @"--config", @"extensions.rebase=", nil];	// We are using MacHgs rebase command so we need to specify that it is
 																														// in the extensions folder of the included Mercurial
+	NSString* mergeToolName = [[AppController sharedAppController] scriptNameForMergeTool:UseWhichToolForMergingFromDefaults()];
+	[argsRebase addObject:@"--config" followedBy:fstr(@"merge-tools.%@.priority=100", mergeToolName)];	// Unfortunately rebase doesn't take a --tool option yet
 	[argsRebase addObject:@"--detach"];
 	[argsRebase addObject:@"--source" followedBy:intAsString(pair.lowRevision)];
 	[argsRebase addObject:@"--dest" followedBy:numberAsString(destinationRev)];
