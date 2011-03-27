@@ -1,0 +1,73 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>About Repository Identities</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+<meta name="hatver" content="v2 R6" />
+<meta name="builddefid" content="4105" />
+<meta name="topicid" content="26296" />
+<meta name="Keywords" content="compatible respositories, local respository, server repository, push, pull, drag and drop" />
+<!-- do not translate -->
+<meta name="Keywords" content="MacHg, Mercurial, .hg" />
+<!-- end do not translate -->
+<meta name="description" content="Describes repository identities." />
+<meta name="template" content="2029" />
+<meta name="pagetype" content="Task" />
+<meta name="project" content="SafariHelp" />
+<meta name="release" content="" />
+<meta name="projectcomponent" content="SafariSnow" />
+<link href="../sty/task.css" rel="stylesheet" type="text/css" media="all" />
+</head>
+
+<body id="apple-pd">
+<!--top navigation area-->
+
+<div id="navbox" class="gradient"> <a name="AboutRepositoryIdentities"></a>
+
+   <div id="navleftbox"> <a class="navlink_left" href="help:anchor='access' bookID=MacHg Help">Home</a> </div>
+
+   <div id="navrightbox"> <a class="navlink_right" href="help:anchor='xall' bookID=MacHg Help">Index</a> </div>
+</div>
+<!--page head-->
+
+<div id="headerbox">
+
+   <div id="iconbox"> <img id="iconimg" src="../gfx/hgicon.png" alt="MacHg icon" height="32" width="32" /> </div>
+
+   <div id="pagetitle">
+      <h1>MacHg Repository Identities</h1>
+   </div>
+</div>
+
+<p>MacHg uses <strong>repository identities</strong> to determine which repositories are "compatible" to other repositories. What we desire is some basic unique ID or hash which is the same for repositories that start off from the same root. Ie, if two repositories had some common point in the past where they where the same, then these repositories should share the same "identity", and if they where never the same at any time in the past then they should have different "identities". Repositories with the same "identity" are said to be <em>compatible</em>.
+</p>
+<p> Happily, in MacHg we can use the changeset hash of the very first commit to a Mercurial repository as the identity of the repository. To obtain the changeset hash of the very first commit one can issue the Mercurial command:</p>
+
+<code>hg identify --rev 0 </code><em>repository</em>
+
+<p>The answer returned will be the short form  hash (12 hexdigit) of the very first commit to the repository. Eg for the MacHg repository itself the identity is 2f65baedb090. This identify command works on local repositories as well as on repositories stored on servers.</p>
+
+<p>Unfortunately one problem is that repositories resident on <a href="http://code.google.com/">google code</a> servers or subversion servers accessed through the <a href="https://bitbucket.org/durin42/hgsubversion/wiki/Home">hgsubversion</a> extension don't respond correctly to this identify command. To work around this you can clone the repository on the server to a local repository and then simply issue the identify command locally to determine the repositories identity, and then enter this identity in the advanced options of the server configuration.</p>
+
+<div id="rule">
+   <hr />
+</div>
+<!-- closes rule-->
+
+<div id="linkinternalbox">
+   <h3>Related Topics</h3>
+
+   <p class="linkinternal"><a href="help:anchor=AboutRepositoryLists bookID=MacHg Help">About Repository Lists</a></p>
+
+   <p class="linkinternal"><a href="help:anchor=AddingServerRepository bookID=MacHg Help">Adding Server Repository</a></p>
+
+   <p class="linkinternal"><a href="help:anchor=AddingExistingLocalRepository bookID=MacHg Help">Manage an existing Repository</a></p>
+
+   <p class="linkinternal"><a href="help:anchor=CloningARepository bookID=MacHg Help">Clone a Repository</a></p>
+
+   <p class="linkinternal"><a href="help:anchor=PullingChanges bookID=MacHg Help">Pull changes from other Repositories into your Repository</a></p>
+
+   <p class="linkinternal"><a href="help:anchor=PushingChanges bookID=MacHg Help">Push changes in your Repository to other Repositories</a></p>
+</div>
+</body>
+</html>

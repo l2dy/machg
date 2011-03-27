@@ -53,41 +53,49 @@
             <p>Choose Repository &gt; &quot;Add Server Repository...&quot;, or right-click in the left <a href="help:anchor=AboutRepositoryLists bookID=MacHg Help">sidebar</a> and choose &quot;Add Server Repository...&quot;</p>
          </li>
          <li>
+            <p>In the dialog that appears, enter a short name of your choosing to help you identify the external repository. This short name will be used in the left <a href="help:anchor=AboutRepositoryLists bookID=MacHg Help">sidebar</a> and in other places to refer to this external repository.</p>
+         </li>
+         <li>
             <p>In the dialog that appears, enter the URL for the desired server into the field &quot;Server URL&quot;. Here are some examples of standard URLs</p>
             <ul id="taskauxlistbulletedplain">
                <li>
-                  <p class="listparagraph"> ssh://hg@bitbucket.org/durin42/hgsubversion/</p>
+                  <p class="listparagraph"> ssh://bitbucket.org/durin42/hgsubversion/</p>
                </li>
                <li>
                   <p class="listparagraph"> http://selenic.com/repo/hello</p>
                </li>
                <li>
-                  <p class="listparagraph"> https://user@somehost/somefolder/</p>
-               </li>
-               <li>
-                  <p class="listparagraph"> https://user:pass@somehost/somefolder/</p>
+                  <p class="listparagraph"> https://somehost/somefolder/</p>
                </li>
             </ul>
          </li>
          <li>
-            <p>In the dialog that appears, enter a short name of your choosing to help you identify the external repository. This short name will be used in the left <a href="help:anchor=AboutRepositoryLists bookID=MacHg Help">sidebar</a> and in other places to refer to this external repository.</p>
+            <p>In the username field enter the user name for the server</p>
          </li>
          <li>
-            <p>If your server requires a password then your can either store the password directly in the &quot;Server URL&quot; field, or you can use the system keychain to store the password by checking the "Use Password" checkbox and entering the password in the field which becomes visible titled "Password". (For more details see: <a href="help:anchor=AboutSecurityAndPasswords bookID=MacHg Help">About Security And Passwords</a>) </p>
-         </li>
+            <p>In the password field enter the password for the user and server. (Note for ssh connections you cannot enter a password directly here. See: <a href="help:anchor=AboutSecurityAndPasswords bookID=MacHg Help">About Security And Passwords</a>)</p>
+         </li> 
          <li>
-            <p>Once you have entered a shortname and Server URL the connection will be automatically tested. You can however click the small button labeled 'test' to test the connection to the server in the <a href="help:anchor=AboutTheCommandLine bookID=MacHg Help">terminal</a>. This is sometimes useful to diagnose problems.</p>
+            <p> You can view the complete URL which MacHg will send to Mercurial in the field 'Full Server URL:'</p>
+         </li> 
+         <li>
+            <p>Once you have entered a shortname and Server URL the connection will be automatically tested. You can click the details button to see the connection attempt. If you are experiencing connection problems you can test the connection directly in the <a href="help:anchor=AboutTheCommandLine bookID=MacHg Help">terminal</a> by clicking the button labeled 'Test in Terminal'. This is sometimes useful to diagnose problems.</p>
          </li>
       </ol>
    </div>
 </div>
 <div class="important">
 
+   <p> <span class="important-prefix">Important:</span>Any connection you set up needs to be <strong>non-interactive</strong>. If you are prompted for your password while testing the connection in the terminal then this is an "interactive" login and such a connection will not function with MacHg. If you are using ssh, you need to transfer your public ssh keys onto the server so that authentication is non-interactive, ie a password is never interactively requested each time a connection is established. (You can use passwordless ssh keys or an ssh-agent will do a one time authentication, which is not interactive at the low level.)</p>
+</div>
+
+<div class="important">
+
    <p> <span class="important-prefix">Important:</span> Removing a repository just removes the <strong>reference</strong> to the repository. It doesn't actually move the folder of files to the trash, or remove the repository from the server. However, when deleting a local repository, you are given the option of moving the actual repository (the folder of files on your machine) to the trash. Choose this option with care.</p>
 </div>
 <div class="important">
 
-   <p> <span class="important-prefix">Note:</span>If you store the password directly in the "Server URL" field, the password will be stored in cleartext in your MacHg document. The password will still <strong>always</strong> be sent in an encrypted form if you are using https or ssh since this is part of the protocol. You can, if desired, store your password in the system keychain by checking the option 'Use Password:'.</p>
+   <p> <span class="important-prefix">Note:</span>Any password you enter will be stored securely in the system keychain.</p>
 </div>
 
 <div id="rule">
@@ -101,10 +109,16 @@
 
    <p class="linkinternal"><a href="help:anchor=AboutServerIdentitySecurity bookID=MacHg Help">About Server Identity Security</a></p>
 
+   <p class="linkinternal"><a href="help:anchor=AboutRepositoryIdentities bookID=MacHg Help">About Repository Identities</a></p>
+
    <p class="linkinternal"><a href="help:anchor=AboutTheCommandLine bookID=MacHg Help">About The Command Line</a></p>
    
 </div>
+<div id="linkexternalbox">
+   <h3>External Links</h3>
 
+   <p class="linkexternal"><a href="http://developer.apple.com/library/mac/#documentation/MacOSXServer/Conceptual/XServer_ProgrammingGuide/Articles/SSH.html">Apple : SSH Keys</a></p>
+</div>
 
 </body>
 </html>
