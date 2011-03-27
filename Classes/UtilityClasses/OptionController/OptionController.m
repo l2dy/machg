@@ -65,17 +65,27 @@
 	if (state == YES)
 	{
 		[optionSwitchButton setState:NSOnState];
-		NSRect fullFrame = [optionValueField frame];
-		NSRect squishedFrame = fullFrame;
-		squishedFrame.size.width = 0;
+		[optionValueField setAlphaValue:0.0];
 		[optionValueField setHidden:NO];
-		[optionValueField setFrame:squishedFrame];
-		[[optionValueField animator] setFrame:fullFrame];
+		[NSAnimationContext beginGrouping];
+		[[NSAnimationContext currentContext] setDuration:0.2];
+		[[optionValueField animator] setAlphaValue:1.0];
+		[NSAnimationContext endGrouping];
+		[optionValueField setSelectable:YES];
+		[optionValueField setEditable:YES];
 	}
 	else
 	{
 		[optionSwitchButton setState:NSOffState];
-		[optionValueField   setHidden:YES];
+		[optionValueField setSelectable:NO];
+		[optionValueField setEditable:NO];
+		[NSAnimationContext beginGrouping];
+		[[NSAnimationContext currentContext] setDuration:0.2];
+		[[optionValueField animator] setAlphaValue:0.0];
+		[NSAnimationContext endGrouping];
+		[optionValueField performSelector:@selector(setHidden:) withObject:YESasNumber afterDelay:0.2];
+		NSWindow* parentWindow = [optionValueField window];
+		[parentWindow performSelector:@selector(makeFirstResponder:) withObject:parentWindow afterDelay:0.2];
 	}
 }
 
