@@ -339,11 +339,6 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 		}
 		
 		
-		if (!newTipRevision)
-		{
-			int dummyForDebugging = 3;	// Set a breakpoint here for debugging to see when the NSTask has failed.
-		}
-		
 		//
 		// compute tipChanged, parentsChanged, labelsChanged
 		//

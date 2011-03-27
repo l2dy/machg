@@ -36,18 +36,10 @@ typedef enum
 	NSArray*		generatingArgs_;	// The arguments used to the command
 	int				result_;			// The result of executing the command
 	NSTask*			task_;				// The NSTask we are trying to perform
-	NSPipe*			outPipe_;			// We keep this around so garbage collection can't clean the pipe up prematurely.
-	NSPipe*			errPipe_;			// We keep this around so garbage collection can't clean the pipe up prematurely.
 	NSFileHandle*	outHandle_;
 	NSFileHandle*	errHandle_;
     NSMutableData*	outputData_;
 	NSMutableData*	errorData_;
-	BOOL			taskComplete_;		// Have we recieved the NSTaskDidTerminateNotification from the task
-	BOOL			taskOutputClosed_;	// Has the stdOut of the task recieved the final NULL from NSFileHandleReadCompletionNotification
-	BOOL			taskErrorClosed_;	// Has the stdOut of the task recieved the final NULL from NSFileHandleReadCompletionNotification
-	BOOL			isFinished_;		// Has the finishing code been run? (we don't want to run it twice)
-	BOOL			pendingTermination_;// Is this task somehow stuck and we have detected this and will close the task in a
-										// little bit if nothing else happens.	
 }
 
 + (ExecutionResult*) execute:(NSString*)cmd withArgs:(NSArray*)args onTask:(NSTask*)task;
