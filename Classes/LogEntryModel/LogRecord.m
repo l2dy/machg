@@ -320,21 +320,57 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 	
 	if (self == [LogRecord unfinishedRecord])
 		return @"now";
-	
-	NSDate* now = [NSDate dateWithTimeIntervalSinceNow:0];
+
 	NSTimeInterval delta = ABS([date_ timeIntervalSinceNow]);
-	
-	NSString* description;
-	BOOL inPast = [date_ isBefore:now];
-	NSString* relation = inPast ? @"ago" : @"in the future";
-	if      (delta >= 2 * kYear)	description = fstr(@"%d years %@",   lround(floor(delta / kYear)),   relation);
-	else if (delta >= 2 * kMonth)	description = fstr(@"%d months %@",  lround(floor(delta / kMonth)),  relation);
-	else if (delta >= 2 * kWeek)	description = fstr(@"%d weeks %@",   lround(floor(delta / kWeek)),   relation);
-	else if (delta >= 2 * kDay)		description = fstr(@"%d days %@",    lround(floor(delta / kDay)),    relation);
-	else if (delta >= 2 * kHour)	description = fstr(@"%d hours %@",   lround(floor(delta / kHour)),   relation);
-	else if (delta >= 2 * kMinute)	description = fstr(@"%d minutes %@", lround(floor(delta / kMinute)), relation);
-	else							description = fstr(@"%d seconds %@", lround(floor(delta / kSecond)), relation);
-	return description;
+	NSDate* now = [NSDate dateWithTimeIntervalSinceNow:0];
+	if (DateAndTimeFormatFromDefaults() == eDateRelative)
+	{		
+		NSString* description;
+		BOOL inPast = [date_ isBefore:now];
+		NSString* relation = inPast ? @"ago" : @"in the future";
+		if      (delta >= 2 * kYear)	description = fstr(@"%d years %@",   lround(floor(delta / kYear)),   relation);
+		else if (delta >= 2 * kMonth)	description = fstr(@"%d months %@",  lround(floor(delta / kMonth)),  relation);
+		else if (delta >= 2 * kWeek)	description = fstr(@"%d weeks %@",   lround(floor(delta / kWeek)),   relation);
+		else if (delta >= 2 * kDay)		description = fstr(@"%d days %@",    lround(floor(delta / kDay)),    relation);
+		else if (delta >= 2 * kHour)	description = fstr(@"%d hours %@",   lround(floor(delta / kHour)),   relation);
+		else if (delta >= 2 * kMinute)	description = fstr(@"%d minutes %@", lround(floor(delta / kMinute)), relation);
+		else							description = fstr(@"%d seconds %@", lround(floor(delta / kSecond)), relation);
+		return description;
+	}
+	else
+	{
+		NSCalendar* gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
+		NSDateComponents* dateComponents = [gregorian components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit fromDate:date_];
+		NSInteger year   = [dateComponents year];
+		NSInteger month  = [dateComponents month];
+		NSInteger day    = [dateComponents day];
+		NSInteger hour   = [dateComponents hour];
+		NSInteger minute = [dateComponents minute];
+		
+
+		NSString* monthString = nil;
+		switch (month)
+		{
+			case 1:  monthString = @"Jan"; break;
+			case 2:  monthString = @"Feb"; break;
+			case 3:  monthString = @"Mar"; break;
+			case 4:  monthString = @"Apr"; break;
+			case 5:  monthString = @"May"; break;
+			case 6:  monthString = @"Jun"; break;
+			case 7:  monthString = @"Jul"; break;
+			case 8:  monthString = @"Aug"; break;
+			case 9:  monthString = @"Sep"; break;
+			case 10: monthString = @"Oct"; break;
+			case 11: monthString = @"Nov"; break;
+			case 12: monthString = @"Dec"; break;
+			default: monthString = @"-";   break;
+		}
+		NSDateComponents* nowComponents = [gregorian components:NSYearCalendarUnit fromDate:now];
+		if (year < [nowComponents year])
+			return fstr(@"%2d %@ %d", day, monthString, year);
+		return fstr(@"%2d %@ %02d:%02d", day, monthString, hour, minute);		
+	}
+
 }
 
 - (NSString*) fullDate

@@ -70,6 +70,7 @@ NSString* const MHGBrowserBehaviourCommandDoubleClick	= @"BrowserBehaviourComman
 NSString* const MHGBrowserBehaviourCommandOptionDoubleClick	= @"BrowserBehaviourCommandOptionDoubleClick";
 NSString* const MHGBrowserBehaviourDoubleClick			= @"BrowserBehaviourDoubleClick";
 NSString* const MHGBrowserBehaviourOptionDoubleClick	= @"BrowserBehaviourOptionDoubleClick";
+NSString* const MHGDateAndTimeFormat					= @"DateAndTimeFormat";
 NSString* const MHGDefaultAnnotationOptionChangeset		= @"DefaultAnnotationOptionChangeset";
 NSString* const MHGDefaultAnnotationOptionDate			= @"DefaultAnnotationOptionDate";
 NSString* const MHGDefaultAnnotationOptionFollow		= @"DefaultAnnotationOptionFollow";
@@ -222,6 +223,7 @@ BrowserDoubleClickAction browserBehaviourDoubleClick()				{ return enumFromDefau
 BrowserDoubleClickAction browserBehaviourOptionDoubleClick()		{ return enumFromDefaultsForKey(MHGBrowserBehaviourOptionDoubleClick); }
 AfterMergeDoOption			AfterMergeDoFromDefaults()				{ return enumFromDefaultsForKey(MHGAfterMergeDo); }
 AfterMergeSwitchToOption	AfterMergeSwitchToFromDefaults()		{ return enumFromDefaultsForKey(MHGAfterMergeSwitchTo); }
+DateAndTimeFormatOption		DateAndTimeFormatFromDefaults()			{ return enumFromDefaultsForKey(MHGDateAndTimeFormat); }
 RevisionSortOrderOption		RevisionSortOrderFromDefaults()			{ return enumFromDefaultsForKey(MHGRevisionSortOrder); }
 HandleOrigFilesOption		HandleGeneratedOrigFilesFromDefaults()	{ return enumFromDefaultsForKey(MHGHandleGeneratedOrigFiles); }
 OnActivationOpenWhatOption	OnActivationOpenFromDefaults()			{ return enumFromDefaultsForKey(MHGOnActivationOpen); }

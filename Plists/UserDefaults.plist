@@ -20,6 +20,8 @@
 	<integer>2</integer>
 	<key>BrowserBehaviourOptionDoubleClick</key>
 	<integer>1</integer>
+	<key>DateAndTimeFormat</key>
+	<integer>1</integer>
 	<key>DefaultAnnotationOptionChangeset</key>
 	<false/>
 	<key>DefaultAnnotationOptionDate</key>

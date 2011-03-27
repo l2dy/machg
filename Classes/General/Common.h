@@ -163,6 +163,12 @@ typedef enum
 
 typedef enum
 {
+	eDateAbsolute = 0,
+	eDateRelative = 1,
+} DateAndTimeFormatOption;
+
+typedef enum
+{
 	eUseNothingForDiffs		 = -1,
 	eUseFileMergeForDiffs	 = 0,
 	eUseAraxisMergeForDiffs  = 1,
@@ -400,6 +406,7 @@ extern NSString* const MHGBrowserBehaviourCommandDoubleClick;
 extern NSString* const MHGBrowserBehaviourCommandOptionDoubleClick;
 extern NSString* const MHGBrowserBehaviourDoubleClick;
 extern NSString* const MHGBrowserBehaviourOptionDoubleClick;
+extern NSString* const MHGDateAndTimeFormat;
 extern NSString* const MHGDefaultAnnotationOptionChangeset;
 extern NSString* const MHGDefaultAnnotationOptionDate;
 extern NSString* const MHGDefaultAnnotationOptionFollow;
@@ -541,6 +548,7 @@ NSColor*	LogEntryTableBookmarkHighlightColor();
 AfterMergeDoOption				AfterMergeDoFromDefaults();
 AfterMergeSwitchToOption		AfterMergeSwitchToFromDefaults();
 RevisionSortOrderOption			RevisionSortOrderFromDefaults();
+DateAndTimeFormatOption			DateAndTimeFormatFromDefaults();
 HandleOrigFilesOption			HandleGeneratedOrigFilesFromDefaults();
 OnActivationOpenWhatOption		OnActivationOpenFromDefaults();
 ToolForDiffing					UseWhichToolForDiffingFromDefaults();

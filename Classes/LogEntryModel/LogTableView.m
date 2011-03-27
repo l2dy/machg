@@ -27,6 +27,7 @@ NSString* kKeyPathBranchHighColor			= @"values.LogEntryTableBranchHighlightColor
 NSString* kKeyPathBookmarkHighColor			= @"values.LogEntryTableBookmarkHighlightColor";
 NSString* kKeyPathDisplayBranchColumn	    = @"values.LogEntryTableDisplayBranchColumn";
 NSString* kKeyPathDisplayChangesetColumn	= @"values.LogEntryTableDisplayChangesetColumn";
+NSString* kKeyPathDateAndTimeFormat			= @"values.DateAndTimeFormat";
 NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 
 
@@ -94,6 +95,7 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 	[defaults  addObserver:self  forKeyPath:kKeyPathBranchHighColor		options:NSKeyValueObservingOptionNew  context:NULL];
 	[defaults  addObserver:self  forKeyPath:kKeyPathBookmarkHighColor	options:NSKeyValueObservingOptionNew  context:NULL];
 	[defaults  addObserver:self  forKeyPath:kKeyPathRevisionSortOrder	options:NSKeyValueObservingOptionNew  context:NULL];
+	[defaults  addObserver:self  forKeyPath:kKeyPathDateAndTimeFormat	options:NSKeyValueObservingOptionNew  context:NULL];
 
 	[self setDataSource:self];
 	[self setDelegate:self];		// This table handles its own delegate methods
@@ -137,7 +139,9 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 {
     if ([keyPath isEqualToString:kKeyPathTagHighColor] || [keyPath isEqualToString:kKeyPathParentHighColor] || [keyPath isEqualToString:kKeyPathBranchHighColor] || [keyPath isEqualToString:kKeyPathBookmarkHighColor])
 		[self refreshTable:self];
-	if ([keyPath isEqualToString:kKeyPathRevisionSortOrder])
+	else if ([keyPath isEqualToString:kKeyPathDateAndTimeFormat])
+		[self refreshTable:self];
+	else if ([keyPath isEqualToString:kKeyPathRevisionSortOrder])
 		[self resortTable];
 }
 
