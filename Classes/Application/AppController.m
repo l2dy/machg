@@ -299,10 +299,11 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	NSString* mostModernMacHgVersionExecuted = [[NSUserDefaults standardUserDefaults] stringForKey:@"MostModernMacHgVersionExecuted"];
 	if ([self bundleVersion:mostModernMacHgVersionExecuted comparedTo:@"0.9.17"] == NSOrderedAscending)
 	{
-		if (pathIsExistentDirectory(applicationSupportFolder()))
+		NSString* macHgHGRCFilePath = fstr(@"%@/hgrc",applicationSupportFolder());
+		if (pathIsExistent(macHgHGRCFilePath))
 		{
-			moveFilesToTheTrash([NSArray arrayWithObject:applicationSupportFolder()]);
-			NSRunCriticalAlertPanel(@"Updated Configuration Files", fstr(@"MacHg's support folder %@ has been updated. Current improvements to the configuration files include necessary improvements for external diffing and merging tools.\n\nThe old application support folder has been moved to the trash. If you made any personal modifications to these support files for specific tools or extensions outside MacHg then you may need to make similar changes to the new support files.", applicationSupportFolder()), @"OK", @"", @"");
+			moveFilesToTheTrash([NSArray arrayWithObject:macHgHGRCFilePath]);
+			NSRunCriticalAlertPanel(@"Updated Configuration Files", fstr(@"MacHg's configuration file %@ has been updated. Current improvements to the configuration file include necessary improvements for external diffing and merging tools.\n\nThe old hgrc configuration has been moved to the trash. If you made any personal modifications to this support files for specific tools or extensions outside MacHg then you may need to make similar changes to the new hgrc file.", macHgHGRCFilePath), @"OK", @"", @"");
 		}
 		[[NSUserDefaults standardUserDefaults] setObject:currentBundleString forKey:@"MostModernMacHgVersionExecuted"];
 	}	
