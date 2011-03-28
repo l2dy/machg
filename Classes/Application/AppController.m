@@ -364,35 +364,6 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		[[self theInitilizationWizardController] showWizard];
 }
 
-
-- (void) checkConfigFileForExtensions:(BOOL)onStartup;
-{
-	[self includeHomeHGRC:NO inProcess:^{
-		
-		// Find out which extensions are enabled within our ~/Application Support/MacHg/hgrc file
-		NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"extensions", nil];
-		ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
-		
-		BOOL addExtBookmarks    = ![result.outStr isMatchedByRegex:@"^extensions\\.hgext\\.bookmarks\\s*="    options:RKLMultiline];
-		
-		if (addExtBookmarks)
-		{
-			NSFileManager* fileManager = [NSFileManager defaultManager];
-			NSString* macHgHGRCPath = fstr(@"%@/hgrc",applicationSupportFolder());
-			
-			[fileManager appendString:@"\n[extensions]\n" toFilePath:macHgHGRCPath];
-			if (addExtBookmarks)	[fileManager appendString:@"hgext.bookmarks=\n"    toFilePath:macHgHGRCPath];
-		}
-		
-	}];
-	
-	if (!onStartup)
-		NSRunAlertPanel(@"Editing Extensions Enabled", @"The history editing extensions are enabled.", @"OK", nil, nil);
-}
-
-
-
-
 - (void) checkForFileMerge
 {
 	if (UseWhichToolForDiffingFromDefaults() != eUseFileMergeForDiffs && UseWhichToolForMergingFromDefaults() != eUseFileMergeForMerges)
@@ -816,7 +787,6 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 
 	[self checkForSupportDirectory];
 	[self checkForConfigFile];
-	[self checkConfigFileForExtensions:YES];
 	[self checkForIgnoreFile];
 	[self checkForTrustedCertificates];
 	[self checkConfigFileForUserName];

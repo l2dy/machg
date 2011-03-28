@@ -11,8 +11,6 @@ git = True
 
 [extensions]
 # MacHg uses many extensions like: rebase, mq, strip, histedit, combinedinfo, extdiff
-hgext.bookmarks =
-
 
 
 [extdiff]
