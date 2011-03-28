@@ -213,7 +213,46 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	return version;
 }
 
-
+- (NSComparisonResult) bundleVersion:(NSString*)vOne comparedTo:(NSString*)vTwo
+{
+	if (!vOne && !vTwo)
+		return NSOrderedSame;
+	if (!vOne && vTwo)
+		return NSOrderedAscending;
+	if (!vTwo && vOne)
+		return NSOrderedDescending;
+	
+	NSString* majorOneStr = nil;
+	NSString* minorOneStr = nil;
+	NSString* pointOneStr = nil;
+	BOOL parsedOneStr = [vOne getCapturesWithRegexAndTrimedComponents:@"^\\s*(\\d+)\\.(\\d+)\\.(\\d+)" firstComponent:&majorOneStr  secondComponent:&minorOneStr  thirdComponent:&pointOneStr];
+	if (!parsedOneStr)
+		return NSOrderedAscending;
+	
+	NSString* majorTwoStr = nil;
+	NSString* minorTwoStr = nil;
+	NSString* pointTwoStr = nil;	
+	BOOL parsedTwoStr = [vTwo getCapturesWithRegexAndTrimedComponents:@"^\\s*(\\d+)\\.(\\d+)\\.(\\d+)" firstComponent:&majorTwoStr  secondComponent:&minorTwoStr  thirdComponent:&pointTwoStr];
+	if (!parsedTwoStr)
+		return NSOrderedDescending;
+	
+	if ([majorOneStr intValue] < [majorOneStr intValue])
+		return NSOrderedAscending;
+	if ([majorOneStr intValue] > [majorOneStr intValue])
+		return NSOrderedDescending;
+	
+	if ([minorOneStr intValue] < [minorOneStr intValue])
+		return NSOrderedAscending;
+	if ([minorOneStr intValue] > [minorOneStr intValue])
+		return NSOrderedDescending;
+	
+	if ([pointOneStr intValue] < [pointOneStr intValue])
+		return NSOrderedAscending;
+	if ([pointOneStr intValue] > [pointOneStr intValue])
+		return NSOrderedDescending;
+	
+	return NSOrderedSame;
+}
 
 
 
@@ -254,6 +293,20 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 }
 
 
+- (void) checkForOutdatedSupportFiles
+{
+	NSString* currentBundleString = [self shortVersionNumberString];
+	NSString* mostModernMacHgVersionExecuted = [[NSUserDefaults standardUserDefaults] stringForKey:@"MostModernMacHgVersionExecuted"];
+	if ([self bundleVersion:mostModernMacHgVersionExecuted comparedTo:@"0.9.17"] == NSOrderedAscending)
+	{
+		if (pathIsExistentDirectory(applicationSupportFolder()))
+		{
+			moveFilesToTheTrash([NSArray arrayWithObject:applicationSupportFolder()]);
+			NSRunCriticalAlertPanel(@"Updated Configuration Files", fstr(@"MacHg's support folder %@ has been updated. Current improvements to the configuration files include necessary improvements for external diffing and merging tools.\n\nThe old application support folder has been moved to the trash. If you made any personal modifications to these support files for specific tools or extensions outside MacHg then you may need to make similar changes to the new support files.", applicationSupportFolder()), @"OK", @"", @"");
+		}
+		[[NSUserDefaults standardUserDefaults] setObject:currentBundleString forKey:@"MostModernMacHgVersionExecuted"];
+	}	
+}
 
 - (void) checkForSupportDirectory
 {
@@ -785,6 +838,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	NSInteger launchCount = [[NSUserDefaults standardUserDefaults] integerForKey:MHGLaunchCount];
 	[[NSUserDefaults standardUserDefaults] setInteger:launchCount +1 forKey:MHGLaunchCount];
 
+	[self checkForOutdatedSupportFiles];
 	[self checkForSupportDirectory];
 	[self checkForConfigFile];
 	[self checkForIgnoreFile];
