@@ -505,7 +505,7 @@ NSString* kAmendOption	 = @"amendOption";
 	}	
 	
 	NSString* parent1RevisionStr = numberAsString([myDocument getHGParent1Revision]);
-	NSMutableArray*  qimportArgs   = [NSMutableArray arrayWithObjects:@"qimport", @"--rev", parent1RevisionStr, @"--name", @"macHgAmendPatch", nil];
+	NSMutableArray*  qimportArgs   = [NSMutableArray arrayWithObjects:@"qimport", @"--config", @"extensions.mq=", @"--rev", parent1RevisionStr, @"--name", @"macHgAmendPatch", nil];
 	ExecutionResult* qimportResult = [myDocument executeMercurialWithArgs:qimportArgs  fromRoot:rootPath  whileDelayingEvents:YES];
 	if ([qimportResult hasErrors])
 	{
@@ -518,7 +518,7 @@ NSString* kAmendOption	 = @"amendOption";
 
 		[myDocument registerPendingRefresh:pathsToCommit];
 
-		NSMutableArray* qrefreshArgs = [NSMutableArray arrayWithObjects:@"qrefresh", @"--short", nil];
+		NSMutableArray* qrefreshArgs = [NSMutableArray arrayWithObjects:@"qrefresh", @"--config", @"extensions.mq=", @"--short", nil];
 		if (IsNotEmpty(excludedPaths))
 		if ([self committerOption] && IsNotEmpty([self committer]))
 			[qrefreshArgs addObject:@"--user" followedBy:[self committer]];
@@ -534,7 +534,7 @@ NSString* kAmendOption	 = @"amendOption";
 			return;
 		}
 		
-		NSMutableArray*  qfinishArgs   = [NSMutableArray arrayWithObjects:@"qfinish", @"macHgAmendPatch", nil];
+		NSMutableArray*  qfinishArgs   = [NSMutableArray arrayWithObjects:@"qfinish", @"--config", @"extensions.mq=", @"macHgAmendPatch", nil];
 		ExecutionResult* qfinishResult = [myDocument executeMercurialWithArgs:qfinishArgs  fromRoot:rootPath  whileDelayingEvents:YES];
 		if ([qfinishResult hasErrors])
 		{
