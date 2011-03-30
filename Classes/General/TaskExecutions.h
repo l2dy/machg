@@ -61,6 +61,9 @@ typedef enum
 	NSFileHandle*	errHandle_;
     NSMutableData*	outputData_;
 	NSMutableData*	errorData_;
+	BOOL			taskComplete;
+	BOOL			outputClosed;
+	BOOL			errorClosed;
 	id <ShellTaskDelegate> delegate_;
 }
 

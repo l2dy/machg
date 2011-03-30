@@ -64,7 +64,7 @@
 		else
 		{
 			DebugLog(@"...got NULL standard Output for %@ ...", [self commandLineString]);
-            outHandle_ = nil;
+            outputClosed = YES;
         }
     }
 }
@@ -85,13 +85,17 @@
 		else
 		{
 			DebugLog(@"...got NULL Error Output for %@ ...", [self commandLineString]);
-            errHandle_ = nil;
+            errorClosed = YES;
         }
     }
 }
 
 
-
+- (void) gotExit:(NSNotification*)notification
+{
+	taskComplete = YES;
+	DebugLog(@"...got Exit for %@ ...", [self commandLineString]);
+}
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -118,15 +122,22 @@
 
 - (BOOL) waitTillFinished
 {
+	BOOL isRunning = YES;
+	while (isRunning && (!taskComplete || !outputClosed || !errorClosed))
+	{
+		isRunning = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+	}
+	
     // wait for task to exit:
 	[task_ waitUntilExit];
+
+	[self stopObserving:NSFileHandleReadCompletionNotification from:nil];
+	[task_ terminate];
+	result_ = [task_ terminationStatus];
+
 	if ([delegate_ respondsToSelector:@selector(taskFinished)])
 		[delegate_ taskFinished];
 	
-	[self stopObserving:NSFileHandleReadCompletionNotification from:nil];
-
-	[task_ terminate];
-	result_ = [task_ terminationStatus];
 	outHandle_ = nil;
 	errHandle_ = nil;
 
@@ -160,6 +171,7 @@
 	
 	[self observe:NSFileHandleReadCompletionNotification from:outHandle_	byCalling:@selector(gotOutput:)];
 	[self observe:NSFileHandleReadCompletionNotification from:errHandle_	byCalling:@selector(gotError:)];
+	[self observe:NSTaskDidTerminateNotification		 from:task_			byCalling:@selector(gotExit:)];
 	
 	[outHandle_ readInBackgroundAndNotify];
 	[errHandle_ readInBackgroundAndNotify];
