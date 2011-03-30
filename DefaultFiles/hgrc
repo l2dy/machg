@@ -96,3 +96,7 @@ deltawalker.executable = /Applications/DeltaWalker.app/Contents/MacOS/hg
 deltawalker.args = $local $other $base -merged=$output
 deltawalker.gui = True
 
+# Changes
+changes.executable = /Applications/Changes.app/Contents/Resources/chdiff
+changes.args = --wait $local $other
+changes.gui = True

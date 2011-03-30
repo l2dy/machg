@@ -720,6 +720,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		case eUseDiffMergeForMerges:		return @"com.sourcegear.DiffMerge";
 		case eUseKDiff3ForMerges:			return @"com.yourcompany.kdiff3";
 		case eUseDelatWalkerForMerges:		return @"com.deltopia.deltawalker";
+		case eUseChangesForMerges:			return @"com.skorpiostech.Changes";
 		default:							return nil;
 	}
 	return nil;
@@ -736,6 +737,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		case eUseDiffMergeForMerges:		return @"diffmerge";
 		case eUseKDiff3ForMerges:			return @"kdiff3";
 		case eUseDelatWalkerForMerges:		return @"deltawalker";
+		case eUseChangesForMerges:			return @"changes";
 		case eUseOtherForMerges:			return ToolNameForMergingFromDefaults();
 		default:							return nil;
 	}
@@ -751,6 +753,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		case eUseP4MergeForMerges:			return @"p4merge";
 		case eUseDiffMergeForMerges:		return @"DiffMerge";
 		case eUseKDiff3ForMerges:			return @"kdiff3";
+		case eUseChangesForMerges:			return @"Changes";
 		case eUseDelatWalkerForMerges:		return @"DeltaWalker";
 		default:							return nil;
 	}
@@ -766,6 +769,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		case eUseP4MergeForMerges:			return YES;
 		case eUseDiffMergeForMerges:		return NO;
 		case eUseKDiff3ForMerges:			return NO;
+		case eUseChangesForMerges:			return NO;
 		case eUseDelatWalkerForMerges:		return NO;
 		default:							return NO;
 	}
@@ -781,6 +785,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		case eUseP4MergeForMerges:			return NO;
 		case eUseDiffMergeForMerges:		return NO;
 		case eUseKDiff3ForMerges:			return NO;
+		case eUseChangesForMerges:			return NO;
 		case eUseDelatWalkerForMerges:		return NO;
 		default:							return NO;
 	}
@@ -811,7 +816,8 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		case eUseDiffMergeForMerges:	[self checkAvailbilityOfMergeTool:tool];	[self installExtMergeToolConfiguration:@"merge-tools.diffmerge.executable = TOOL_PATH/Contents/MacOS/DiffMerge"			forTool:tool];		break;
 		case eUseKDiff3ForMerges:		[self checkAvailbilityOfMergeTool:tool];	[self installExtMergeToolConfiguration:@"merge-tools.kdiff3.executable = TOOL_PATH/Contents/MacOS/kdiff3"				forTool:tool];		break;
 		case eUseDelatWalkerForMerges:	[self checkAvailbilityOfMergeTool:tool];	[self installExtMergeToolConfiguration:@"merge-tools.deltawalker.executable = TOOL_PATH/Contents/MacOS/hg"				forTool:tool];		break;
-		default:							break;
+		case eUseChangesForMerges:		[self checkAvailbilityOfMergeTool:tool];	[self installExtMergeToolConfiguration:@"merge-tools.changes.executable = TOOL_PATH/Contents/Resources/chdiff"			forTool:tool];		break;
+		default:						break;
 	}
 }
 

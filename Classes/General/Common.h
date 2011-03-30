@@ -193,7 +193,8 @@ typedef enum
 	eUseDiffMergeForMerges		= 3,
 	eUseKDiff3ForMerges			= 4,
 	eUseDelatWalkerForMerges	= 5,
-	eUseOtherForMerges			= 6
+	eUseChangesForMerges		= 6,
+	eUseOtherForMerges			= 7
 } ToolForMerging;
 
 
