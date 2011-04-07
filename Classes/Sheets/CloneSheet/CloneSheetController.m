@@ -111,8 +111,8 @@
 		return;
 	}
 	
-	BOOL exists1 = repositoryExistsAtPath([self pathFieldValue]);
-	if (exists1)
+	BOOL repoExists = repositoryExistsAtPath([self pathFieldValue]);
+	if (repoExists)
 	{
 		[errorMessageTextField setStringValue:@"A Mercurial repository already exists at the chosen local destination."];
 		[errorDisclosureController ensureDisclosureBoxIsOpen:YES];
@@ -120,11 +120,23 @@
 		return;
 	}
 	
-	BOOL dir2;
-	BOOL exists2 = [[NSFileManager defaultManager] fileExistsAtPath:[self pathFieldValue] isDirectory:&dir2];
-	if (exists2)
+	BOOL dir;
+	BOOL pathExists = [[NSFileManager defaultManager] fileExistsAtPath:[self pathFieldValue] isDirectory:&dir];
+	BOOL fileExists = pathExists && !dir;
+	BOOL dirExists  = pathExists && dir;
+    if (dirExists) 
+    {
+        NSArray* fileInfo = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[self pathFieldValue] error:NULL];
+        if (IsEmpty(fileInfo))
+			dirExists = NO;
+        
+        //SG: This can be removed if core mecurial allows cloning into essentially empty directories (ie containing only .DS_Store).
+        if (dirExists && [fileInfo count] == 1 && [[fileInfo firstObject] isEqualToString:@".DS_Store"]) 
+            dirExists = ![[NSFileManager defaultManager] removeItemAtPath:[[self pathFieldValue] stringByAppendingPathComponent:@".DS_Store"] error:NULL];
+    }
+	if (fileExists || dirExists)
 	{
-		[errorMessageTextField setStringValue:fstr(@"A %@ already exists at the chosen local destination.", dir2 ? @"directory" : @"file")];
+		[errorMessageTextField setStringValue:fstr(@"A %@ already exists at the chosen local destination.", dirExists ? @"directory" : @"file")];
 		[errorDisclosureController ensureDisclosureBoxIsOpen:YES];
 		[okButton setEnabled:NO];
 		return;
