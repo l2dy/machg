@@ -95,12 +95,17 @@
 		[menuOfOpenHeads addItem:[self menuItemForLabel:label]];
 	[menuItemScrollToOpenHead setSubmenu:menuOfOpenHeads];
 
-
+	NSMenuItem* scrollToChangesetItem = [[NSMenuItem alloc] initWithTitle:@"Scroll to Changeset…" action:@selector(getAndScrollToChangeset:) keyEquivalent:@"l"];
+	[scrollToChangesetItem setTarget:logTable];
+		
+	
 	NSMenu* newMenu = [[NSMenu alloc]init];
 	[newMenu addItem:menuItemScrollToTag];
 	[newMenu addItem:menuItemScrollToBookmark];
 	[newMenu addItem:menuItemScrollToBranch];
 	[newMenu addItem:menuItemScrollToOpenHead];
+	[newMenu addItem:[NSMenuItem separatorItem]];
+	[newMenu addItem:scrollToChangesetItem];
 	thePopUpMenu = newMenu;
 	[thePopUpMenu setDelegate:self];
 }

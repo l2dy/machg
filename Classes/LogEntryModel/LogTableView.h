@@ -30,7 +30,7 @@
 
 // This class is a subclass of NSTableView which is its own data source and own delegate. It turned out it's easier this way. And
 // thus in the one class we wrap up all the behavior of managing a list of revisions. It only needs the two outlets below connected up.
-@interface LogTableView : NSTableView <NSTableViewDelegate, NSTableViewDataSource>
+@interface LogTableView : NSTableView <NSTableViewDelegate, NSTableViewDataSource, NSUserInterfaceValidations>
 {
 	IBOutlet id	<ControllerForLogTableView> parentController; // Controlling class should be an object which is controlling a sheet or a
 															// window controller.
@@ -116,6 +116,10 @@
 - (void)		selectAndScrollToRevision:(NSNumber*)revision;
 - (void)		selectAndScrollToRevisions:(NSArray*)revisions;
 - (void)		selectAndScrollToIndexSet:(NSIndexSet*)indexSet;
+
+
+// Goto
+- (IBAction)	getAndScrollToChangeset:(id)sender;
 
 
 // Drawing methods

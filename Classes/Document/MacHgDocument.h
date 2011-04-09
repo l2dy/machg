@@ -276,6 +276,7 @@
 
 // Repository Menu Actions
 - (IBAction)	mainMenuManifestOfCurrentVersion:(id)sender;
+- (IBAction)	mainMenuGotoChangeset:(id)sender;
 - (IBAction)	mainMenuCloneRepository:(id)sender;
 - (IBAction)	mainMenuPushToRepository:(id)sender;
 - (IBAction)	mainMenuPullFromRepository:(id)sender;

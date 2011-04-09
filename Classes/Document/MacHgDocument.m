@@ -944,6 +944,7 @@
 	if (theAction == @selector(mainMenuUpdateRepository:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView];
 	if (theAction == @selector(mainMenuUpdateRepositoryToVersion:))		return [self repositoryIsSelectedAndReady];
 	if (theAction == @selector(toolbarUpdate:))							return [self repositoryIsSelectedAndReady];
+	if (theAction == @selector(mainMenuGotoChangeset:))					return [self repositoryIsSelectedAndReady];
 	if (theAction == @selector(mainMenuMergeWith:))						return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [[self repositoryData]hasMultipleOpenHeads] && ![self repositoryHasFilesWhichContainStatus:eHGStatusSecondary];
 	// ------
 	// ------
@@ -1001,6 +1002,15 @@
 		return;
 	
 	[[self theCloneSheetController] openCloneSheetWithSource:node];
+}
+
+- (IBAction) mainMenuGotoChangeset:(id)sender
+{
+	if (![self repositoryIsSelectedAndReady])
+		return;
+	if (![self showingHistoryView])
+		[self actionSwitchViewToHistoryView:sender];
+	[[self theHistoryView] historyMenuGotoChangeset:sender];
 }
 
 

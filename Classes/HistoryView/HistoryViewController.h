@@ -99,6 +99,7 @@
 - (IBAction) historyMenuAddLabelToChosenRevision:(id)sender;
 - (IBAction) historyMenuDiffAllToChosenRevision:(id)sender;
 - (IBAction) historyMenuUpdateRepositoryToChosenRevision:(id)sender;
+- (IBAction) historyMenuGotoChangeset:(id)sender;
 - (IBAction) historyMenuMergeRevision:(id)sender;
 - (IBAction) historyMenuManifestOfChosenRevision:(id)sender;
 // -------

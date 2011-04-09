@@ -199,6 +199,11 @@
 	[myDocument primaryActionUpdateFilesToVersion:theSelectedRevision withCleanOption:NO];
 }
 
+- (IBAction) historyMenuGotoChangeset:(id)sender
+{
+	[logTableView getAndScrollToChangeset:self];
+}
+
 - (IBAction) historyMenuMergeRevision:(id)sender
 {
 	NSNumber* theSelectedRevision = [[logTableView chosenEntry] revision];
@@ -420,6 +425,7 @@
 	if (theAction == @selector(historyMenuAddLabelToChosenRevision:))			return [myDocument repositoryIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
 	if (theAction == @selector(historyMenuDiffAllToChosenRevision:))			return [myDocument repositoryIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
 	if (theAction == @selector(historyMenuUpdateRepositoryToChosenRevision:))	return [myDocument repositoryIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuGotoChangeset:))						return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryView];
 	if (theAction == @selector(historyMenuMergeRevision:))						return [myDocument repositoryIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
 	if (theAction == @selector(historyMenuManifestOfChosenRevision:))			return [myDocument repositoryIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
 	// -------

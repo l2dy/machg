@@ -17,6 +17,7 @@
 #import "LogGraphCell.h"
 #import "LogGraph.h"
 #import "SingleTimedQueue.h"
+#import "ScrollToChangesetPanelController.h"
 
 
 #define MMAX(A,B)	(((A) > (B)) ? (A) : (B))
@@ -443,6 +444,63 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	NSInteger lowTableRow  = [self tableRowForIntegerRevision:limits.lowRevision];
 	NSInteger highTableRow = [self tableRowForIntegerRevision:limits.highRevision];
 	[self  scrollToRangeOfRowsLow:lowTableRow high:highTableRow];
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: GoTo
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (IBAction) mainMenuGotoChangeset:(id)sender
+{
+	[self getAndScrollToChangeset:sender];
+}
+
+- (IBAction) getAndScrollToChangeset:(id)sender;
+{
+	NSString* changestRevOrLabel = [[ScrollToChangesetPanelController sharedScrollToChangesetPanelController] getChangesetToScrollTo];
+	if (!changestRevOrLabel)
+		return;
+	
+	NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log", @"--rev", changestRevOrLabel, @"--template", @"{rev}\n", nil];
+	NSString* rootPath = [[self repositoryData] rootPath];
+	ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:rootPath  logging:eLoggingNone];
+	if ([hgLogResults hasErrors])
+	{
+		PlayBeep();
+		return;
+	}
+	
+	NSString* revString = [[hgLogResults.outStr componentsSeparatedByString:@"\n"] firstObject];
+	NSNumber* revNum = stringAsNumber(revString);
+	if (!revNum)
+	{
+		PlayBeep();
+		return;
+	}
+
+	[self scrollToRevision:revNum];
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Validation
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (BOOL) validateUserInterfaceItem:(id < NSValidatedUserInterfaceItem, NSObject >)anItem
+{
+	SEL theAction = [anItem action];
+	if (theAction == @selector(mainMenuGotoChangeset:))							return YES;
+	if (theAction == @selector(getAndScrollToChangeset:))						return YES;
+	return NO;
 }
 
 
