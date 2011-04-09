@@ -206,7 +206,7 @@
 	[self observe:kRepositoryRootChanged		from:self		  byCalling:@selector(repositoryRootDidChange)];
 	[self observe:NSWindowDidMoveNotification	from:mainWindow_  byCalling:@selector(recordWindowFrameToDefaults)];
 	[self observe:NSWindowDidResizeNotification	from:mainWindow_  byCalling:@selector(recordWindowFrameToDefaults)];
-	//[self observe:nil from:self byCalling:@selector(LogNotification:)];
+	[self observe:kRepositoryIdentityChanged	from:[AppController sharedAppController]  byCalling:@selector(saveDocumentIfNamed)];
 	
 	currentPane_ = -1;
 	[informationAndActivityBox_ setContentView:informationBox_];

@@ -1130,7 +1130,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 
 			NSString* oldRepositoryIdentity = [repositoryIdentityForPath_ synchronizedObjectForKey:nodePath];
 			[repositoryIdentityForPath_ synchronizedSetObject:newRepositoryIdentity forKey:nodePath];
-			if ([oldRepositoryIdentity isNotEqualToString:newRepositoryIdentity])
+			if (!oldRepositoryIdentity || [oldRepositoryIdentity isNotEqualToString:newRepositoryIdentity])
 			{
 				NSDictionary* info = [NSDictionary dictionaryWithObjectsAndKeys:nodePath, @"path", newRepositoryIdentity, @"repositoryIdentity", nil];
 				[self postNotificationWithName:kRepositoryIdentityChanged userInfo:info];
