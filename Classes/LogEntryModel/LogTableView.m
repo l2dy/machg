@@ -160,6 +160,7 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 	if (repositoryData_)
 		return repositoryData_;
 	repositoryData_ = [[parentController myDocument] repositoryData];
+	rootPath_ = [repositoryData_ rootPath];
 	return repositoryData_;
 }
 
