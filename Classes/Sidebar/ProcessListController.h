@@ -21,22 +21,29 @@
 	IBOutlet NSBox*			activityBox;
 	
   @private
-	NSMutableDictionary*	progressIndicators_;	// A storage dictionary of number key -> progress indicators
-	NSMutableDictionary*	processList_;			// This is the dictionary of number key -> process description
-	NSInteger				processNumber_;			// Unique number used to identify the next process in the process list
+	NSMutableDictionary*	progressIndicators_;		// A storage dictionary of number key -> progress indicators
+	NSMutableDictionary*	processDescriptions_;		// This is the dictionary of number key -> process description
+	NSMutableDictionary*	processProgressStrings_;	// This is the dictionary of number key -> process progress of the form '45/674'
+	NSInteger				processNumber_;				// Unique number used to identify the next process in the process list
 }
 
 // Add/ remove process indicators
-- (NSNumber*)				addProcessIndicator:(NSString*)processDescription;
-- (void)					removeProcessIndicator:(NSNumber*)processNum;
 - (NSProgressIndicator*)	indicatorForRow:(NSInteger)requestedRow;
+- (NSNumber*)	addProcessIndicator:(NSString*)processDescription;
+- (void)		removeProcessIndicator:(NSNumber*)processNum;
 
 
 // Table Delegate Methods
-- (NSInteger)				numberOfRowsInTableView:(NSTableView*)aTableView;
-- (id)						tableView:(NSTableView*)aTableView  objectValueForTableColumn:(NSTableColumn*)aTableColumn  row:(NSInteger)requestedRow;
+- (NSInteger)	numberOfRowsInTableView:(NSTableView*)aTableView;
+- (id)			tableView:(NSTableView*)aTableView  objectValueForTableColumn:(NSTableColumn*)aTableColumn  row:(NSInteger)requestedRow;
 
+
+// Setting progress
+- (void)		setProgress:(NSString*)progress forKey:(NSNumber*)key;
 @end
+
+
+
 
 
 @interface ProcessListCell : NSTextFieldCell
@@ -47,8 +54,20 @@
 @end
 
 
+
+
+
 @interface ProcessController : ShellTaskController
 {
+	ProcessListController* processList_;
+	NSNumber* processNumber_;
+	NSString* baseMessage_;
 }
+@property (nonatomic, assign) NSNumber*	processNumber;
+@property (nonatomic, assign) NSString*	baseMessage;
+@property (nonatomic, assign) ProcessListController* processList;
+
++ (ProcessController*) processControllerWithMessage:(NSString*)message forList:(ProcessListController*)list;
+- (void) terminateController;
 @end
 

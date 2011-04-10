@@ -52,6 +52,7 @@
 
 // Processes
 @class ProcessListController;
+@class ProcessController;
 @class TaskExecutions;
 @class ShellTask;
 @class ExecutionResult;
@@ -574,6 +575,7 @@ extern NSMutableDictionary* changesetHashToLogRecord;	// Global dictionary of Lo
 extern NSNumber*		NOasNumber;
 extern NSNumber*		YESasNumber;
 extern NSNumber*		SlotNumber;
+extern NSArray*			configurationForProgress;
 
 
 // Font Attributes

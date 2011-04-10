@@ -549,6 +549,7 @@ NSArray* getListOfFilePathsFromOpenPanel(NSString* startingPath)
 NSNumber*		NOasNumber  = nil;
 NSNumber*		YESasNumber = nil;
 NSNumber*		SlotNumber  = nil;
+NSArray*		configurationForProgress = nil;
 
 // Font attributes
 NSDictionary*	boldSystemFontAttributes		      = nil;

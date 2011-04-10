@@ -15,6 +15,7 @@
 #import "DisclosureBoxController.h"
 #import "OptionController.h"
 #import "AppController.h"
+#import "ProcessListController.h"
 
 
 
@@ -119,6 +120,7 @@
 	// Construct the push args
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	NSMutableArray* argsPush = [NSMutableArray arrayWithObjects:@"push", @"--noninteractive", nil];
+	[argsPush addObjectsFromArray:configurationForProgress];
 	for (OptionController* opt in cmdOptions)
 		[opt addOptionToArgs:argsPush];
 	if (allowOperationWithAnyRepository_ || [forceOption optionIsSet])
@@ -128,8 +130,10 @@
 	[argsPush addObject:[pushDestination fullURLPath]];
 	
 	// Execute the push command
-	[myDocument dispatchToMercurialQueuedWithDescription:@"Pushing Changesets" process:^{
-		ExecutionResult* results = [myDocument executeMercurialWithArgs:argsPush  fromRoot:rootPath  whileDelayingEvents:YES];
+	ProcessController* processController = [ProcessController processControllerWithMessage:@"Pushing Changesets" forList:[myDocument theProcessListController]];
+	dispatch_async([myDocument mercurialTaskSerialQueue], ^{
+		ExecutionResult* results = [myDocument executeMercurialWithArgs:argsPush  fromRoot:rootPath  withDelegate:processController  whileDelayingEvents:YES];
+		[processController terminateController];
 		[myDocument postNotificationWithName:kCompatibleRepositoryChanged];
 		if (DisplayResultsOfPushingFromDefaults())
 		{
@@ -139,7 +143,7 @@
 		}
 		if ([pushDestination isVirginRepository])
 			[[AppController sharedAppController] computeRepositoryIdentityForPath:[pushDestination path]];
-	}];
+	});
 	
 	// Cache the connection parameters
 	[self setConnectionFromFieldsForSource:pushSource andDestination:pushDestination];

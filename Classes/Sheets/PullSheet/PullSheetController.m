@@ -14,6 +14,7 @@
 #import "SidebarNode.h"
 #import "DisclosureBoxController.h"
 #import "OptionController.h"
+#import "ProcessListController.h"
 
 
 
@@ -117,6 +118,7 @@
 	// Construct the pull args
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	NSMutableArray* argsPull = [NSMutableArray arrayWithObjects:@"pull", @"--noninteractive", nil];
+	[argsPull addObjectsFromArray:configurationForProgress];
 	for (OptionController* opt in cmdOptions)
 		[opt addOptionToArgs:argsPull];
 	if (allowOperationWithAnyRepository_ || [forceOption optionIsSet])
@@ -126,8 +128,10 @@
 	[argsPull addObject:[pullSource fullURLPath]];
 	
 	// Execute the pull command
-	[myDocument dispatchToMercurialQueuedWithDescription:@"Pulling Changesets" process:^{
-		ExecutionResult* results = [myDocument executeMercurialWithArgs:argsPull  fromRoot:rootPath  whileDelayingEvents:YES];
+	ProcessController* processController = [ProcessController processControllerWithMessage:@"Pulling Changesets" forList:[myDocument theProcessListController]];
+	dispatch_async([myDocument mercurialTaskSerialQueue], ^{
+		ExecutionResult* results = [myDocument executeMercurialWithArgs:argsPull  fromRoot:rootPath  withDelegate:processController  whileDelayingEvents:YES];
+		[processController terminateController];
 		if (DisplayResultsOfPullingFromDefaults())
 		{
 			NSString* messageString = fstr(@"Results of Pulling “%@” into “%@”", pullSourceName, pullDestinationName);
@@ -135,7 +139,7 @@
 			NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(mainMessage);
 			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"Pull Results - %@", pullDestinationName)];
 		}
-	}];
+	});
 	
 	// Cache the connection parameters
 	[self setConnectionFromFieldsForSource:pullSource andDestination:pullDestination];

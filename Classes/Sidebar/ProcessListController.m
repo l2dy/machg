@@ -14,8 +14,9 @@
 
 - (void) awakeFromNib
 {
-	processList_ = [[NSMutableDictionary alloc]init];
-	progressIndicators_ = [[NSMutableDictionary alloc]init];
+	processDescriptions_    = [[NSMutableDictionary alloc]init];
+	progressIndicators_     = [[NSMutableDictionary alloc]init];
+	processProgressStrings_ = [[NSMutableDictionary alloc]init];
 	processNumber_ = 0;
 }
 
@@ -42,7 +43,7 @@
 		processNum = [NSNumber numberWithInt:(processNumber_++)];
 		if ([progressIndicators_ synchronizedCount] == 0)
 			[[informationAndActivityBox animator] setContentView:activityBox];
-		[processList_ synchronizedSetObject:processDescription forKey:processNum];
+		[processDescriptions_ synchronizedSetObject:processDescription forKey:processNum];
 		[progressIndicators_ synchronizedSetObject:indicator forKey:processNum];
 		dispatch_async(mainQueue(), ^{
 			[processListTableView addSubview:indicator];
@@ -57,7 +58,7 @@
 	@synchronized(self)
 	{
 		NSProgressIndicator* indicator = [progressIndicators_ synchronizedObjectForKey:processNum];
-		[processList_ synchronizedRemoveObjectForKey:processNum];
+		[processDescriptions_ synchronizedRemoveObjectForKey:processNum];
 		[progressIndicators_ synchronizedRemoveObjectForKey:processNum];
 		dispatch_async(mainQueue(), ^{
 			[indicator setHidden:YES];
@@ -83,7 +84,7 @@
 
 - (NSNumber*) keyForRow:(NSInteger)requestedRow
 {
-	NSArray* allKeys = [processList_ synchronizedAllKeys];
+	NSArray* allKeys = [processDescriptions_ synchronizedAllKeys];
 	NSArray* sortedKeys = [allKeys sortedArrayUsingComparator: ^(id obj1, id obj2) {
 		if ([obj1 integerValue] > [obj2 integerValue])
 			return (NSComparisonResult)NSOrderedDescending;
@@ -111,13 +112,16 @@
 
 - (NSInteger) numberOfRowsInTableView:(NSTableView*)aTableView
 {
-	return [processList_ synchronizedCount];
+	return [processDescriptions_ synchronizedCount];
 }
 
 - (id) tableView:(NSTableView*)aTableView objectValueForTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)requestedRow
 {
 	NSNumber* key = [self keyForRow:requestedRow];
-	NSString* processDescription = key ? [processList_ synchronizedObjectForKey:key] : @"finishing";
+	NSString* processDescription = key ? [processDescriptions_ synchronizedObjectForKey:key] : @"finishing";
+	NSString* processProgress = key ? [processProgressStrings_ synchronizedObjectForKey:key] : @"";
+	if (processDescription && processProgress)
+		return fstr(@"%@ %@", processDescription, processProgress);
 	return processDescription;
 }
 
@@ -126,6 +130,22 @@
 	if ([aCell isKindOfClass:[ProcessListCell class]])
 		[aCell setIndicator:[self indicatorForRow:rowIndex]];
 }
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Setting progress
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (void) setProgress:(NSString*)progress forKey:(NSNumber*)key
+{
+	[processProgressStrings_ setObject:progress forKey:key];
+	[processListTableView reloadData];
+}
+
 
 @end
 
@@ -149,3 +169,43 @@
 }
 
 @end
+
+
+@implementation ProcessController
+
+@synthesize processNumber = processNumber_;
+@synthesize baseMessage   = baseMessage_;
+@synthesize processList   = processList_;
+
++ (ProcessController*) processControllerWithMessage:(NSString*)message forList:(ProcessListController*)list
+{
+	ProcessController* newProcess = [[ProcessController alloc]init];
+	NSNumber* processNum = [list addProcessIndicator:message];
+	[newProcess setProcessList:list];
+	[newProcess setBaseMessage:message];
+	[newProcess setProcessNumber:processNum];
+	return newProcess;
+}
+
+- (void) terminateController
+{
+	[processList_ removeProcessIndicator:processNumber_];
+}
+
+// The progress updates come in on the standard error pipe
+- (void) gotError:(NSString*)errorString
+{
+	NSString* part = nil;
+	NSString* total = nil;
+	if ([errorString getCapturesWithRegexAndTrimedComponents:@".*?(\\d+)/(\\d+)\\s*$" firstComponent:&part  secondComponent:&total])
+	{
+		NSString* combined = fstr(@"%@/%@", part, total);
+		[processList_ setProgress:combined forKey:processNumber_];
+	}
+	else if ([errorString getCapturesWithRegexAndTrimedComponents:@".*?(\\d+)\\s*$" firstComponent:&total])
+		[processList_ setProgress:total forKey:processNumber_];
+}
+
+@end
+
+

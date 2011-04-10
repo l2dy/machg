@@ -14,6 +14,7 @@
 #import "SidebarNode.h"
 #import "DisclosureBoxController.h"
 #import "OptionController.h"
+#import "ProcessListController.h"
 
 
 
@@ -113,6 +114,7 @@
 	// Construct the incoming args
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	NSMutableArray* argsIncoming = [NSMutableArray arrayWithObjects:@"incoming", @"--noninteractive", nil];
+	[argsIncoming addObjectsFromArray:configurationForProgress];
 	for (OptionController* opt in cmdOptions)
 		[opt addOptionToArgs:argsIncoming];
 	if (allowOperationWithAnyRepository_ || [forceOption optionIsSet])
@@ -122,12 +124,14 @@
 	[argsIncoming addObject:[incomingSource fullURLPath]];
 	
 	// Execute the incoming command
-	[myDocument dispatchToMercurialQueuedWithDescription:@"Incoming Changesets" process:^{
-		ExecutionResult* results = [myDocument executeMercurialWithArgs:argsIncoming  fromRoot:rootPath  whileDelayingEvents:YES];
+	ProcessController* processController = [ProcessController processControllerWithMessage:@"Incoming Changesets" forList:[myDocument theProcessListController]];
+	dispatch_async([myDocument mercurialTaskSerialQueue], ^{
+		ExecutionResult* results = [myDocument executeMercurialWithArgs:argsIncoming  fromRoot:rootPath  withDelegate:processController  whileDelayingEvents:YES];
+		[processController terminateController];
 		NSString* messageString = fstr(@"Results of Incoming “%@” into “%@”", incomingSourceName, incomingDestinationName);
 		NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
 		[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"Incoming Results - %@", incomingDestinationName)];
-	}];
+	});
 	
 	// Cache the connection parameters
 	[self setConnectionFromFieldsForSource:incomingSource andDestination:incomingDestination];

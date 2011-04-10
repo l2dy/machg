@@ -16,6 +16,7 @@
 #import "DisclosureBoxController.h"
 #import "OptionController.h"
 #import "AppController.h"
+#import "ProcessListController.h"
 
 @implementation CloneSheetController
 
@@ -203,6 +204,7 @@
 	NSString* cloneDescription = fstr(@"Cloning “%@”", sourceName);
 
 	NSMutableArray* argsClone = [NSMutableArray arrayWithObjects:@"clone", @"--noninteractive", nil];
+	[argsClone addObjectsFromArray:configurationForProgress];
 	for (OptionController* opt in cmdOptions)
 		[opt addOptionToArgs:argsClone];
 	if ([revOption optionIsSet])
@@ -217,8 +219,9 @@
 	
 	[self setConnectionFromFieldsForSource:sourceNode_];		// Cache advanced option settings for this source.
 
-	[myDocument dispatchToMercurialQueuedWithDescription:cloneDescription  process:^{
-		ExecutionResult* results = [TaskExecutions  executeMercurialWithArgs:argsClone  fromRoot:@"/tmp"];
+	ProcessController* processController = [ProcessController processControllerWithMessage:cloneDescription forList:[myDocument theProcessListController]];
+	dispatch_async([myDocument mercurialTaskSerialQueue], ^{
+		ExecutionResult* results = [TaskExecutions  executeMercurialWithArgs:argsClone  fromRoot:@"/tmp"  logging:eLogAllIssueErrors  withDelegate:processController];
 		if ([results hasNoErrors])
 			dispatch_async(mainQueue(), ^{
 				SidebarNode* newNode = [SidebarNode nodeWithCaption:destinationName  forLocalPath:destinationPath];
@@ -231,7 +234,8 @@
 				[myDocument refreshBrowserContent:self];
 				[myDocument saveDocumentIfNamed];
 			});
-	}];
+		[processController terminateController];
+	});
 	
 }
 

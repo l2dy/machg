@@ -1201,14 +1201,20 @@
 		{ [changedPathsDuringSuspension_ addObjectsFromArray:paths]; }
 }
 
+
 - (ExecutionResult*) executeMercurialWithArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath whileDelayingEvents:(BOOL)delay
 {
-	if (!delay)
-		return [TaskExecutions  executeMercurialWithArgs:args  fromRoot:rootPath];
+	return [self  executeMercurialWithArgs:args  fromRoot:rootPath  withDelegate: nil  whileDelayingEvents:delay];
+}
 
+- (ExecutionResult*) executeMercurialWithArgs:(NSMutableArray*)args  fromRoot:(NSString*)rootPath  withDelegate:(id <ShellTaskDelegate>)delegate  whileDelayingEvents:(BOOL)delay
+{
+	if (!delay)
+		return [TaskExecutions  executeMercurialWithArgs:args  fromRoot:rootPath  logging:eLogAllIssueErrors  withDelegate:delegate];
+	
 	__block ExecutionResult* results;
 	[self delayEventsUntilFinishBlock:^{
-		results = [TaskExecutions  executeMercurialWithArgs:args  fromRoot:rootPath];
+		results = [TaskExecutions  executeMercurialWithArgs:args  fromRoot:rootPath  logging:eLogAllIssueErrors  withDelegate:delegate];
 	}];
 	return results;
 }

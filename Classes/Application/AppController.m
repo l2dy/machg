@@ -51,6 +51,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	YESasNumber = [NSNumber numberWithBool:YES];
 	SlotNumber  = [NSNumber numberWithInteger:(NSNotFound -1)];	
 
+	configurationForProgress = [NSArray arrayWithObjects:@"--config", @"extensions.progress=", @"--config", @"progress.delay=0.5", @"--config", @"progress.format=number", @"--config", @"progress.assume-tty=True", @"--config", @"progress.refresh=0.25", nil];
 	setupGlobalsForLogEntryPartsAndTemplate();
 	setupGlobalsForLogRecordPartsAndTemplate();
 	
