@@ -437,7 +437,7 @@ def backout(ui, repo, node=None, rev=None, **opts):
     if not commit_opts['message'] and not commit_opts['logfile']:
         # we don't translate commit messages
         commit_opts['message'] = "Backed out changeset %s" % short(node)
-        commit_opts['force_editor'] = True
+        commit_opts['force_editor'] = (ui.config('ui', 'interactive') != 'off')
     commit(ui, repo, **commit_opts)
     def nice(node):
         return '%d:%s' % (repo.changelog.rev(node), short(node))
