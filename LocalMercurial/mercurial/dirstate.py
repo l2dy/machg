@@ -115,27 +115,11 @@ class dirstate(object):
 
     @propertycache
     def _checklink(self):
-         d = os.path.join(self._root, '.hg', 'fschecks')
-         try:
-             if not os.path.isdir(d):
-                 os.mkdir(d)
-             return util.checklink(d)
-         except (IOError, OSError):
-             # we don't care, the user probably won't be able to commit
-             # anyway
-             return False
+        return util.checklink(self._root)
 
     @propertycache
     def _checkexec(self):
-         d = os.path.join(self._root, '.hg', 'fschecks')
-         try:
-             if not os.path.isdir(d):
-                 os.mkdir(d)
-             return util.checkexec(d)
-         except (IOError, OSError):
-             # we don't care, the user probably won't be able to commit
-             # anyway
-             return False
+        return util.checkexec(self._root)
 
     @propertycache
     def _checkcase(self):
@@ -378,16 +362,34 @@ class dirstate(object):
         except KeyError:
             self._ui.warn(_("not in dirstate: %s\n") % f)
 
-    def _normalize(self, path, knownpath):
-        norm_path = os.path.normcase(path)
-        fold_path = self._foldmap.get(norm_path, None)
-        if fold_path is None:
-            if knownpath or not os.path.lexists(os.path.join(self._root, path)):
-                fold_path = path
+    def _normalize(self, path, isknown):
+        normed = os.path.normcase(path)
+        folded = self._foldmap.get(normed, None)
+        if folded is None:
+            if isknown or not os.path.lexists(os.path.join(self._root, path)):
+                folded = path
             else:
-                fold_path = self._foldmap.setdefault(norm_path,
+                folded = self._foldmap.setdefault(normed,
                                 util.fspath(path, self._root))
-        return fold_path
+        return folded
+
+    def normalize(self, path, isknown=False):
+        '''
+        normalize the case of a pathname when on a casefolding filesystem
+
+        isknown specifies whether the filename came from walking the
+        disk, to avoid extra filesystem access
+
+        The normalized case is determined based on the following precedence:
+
+        - version of name already stored in the dirstate
+        - version of name stored on disk
+        - version provided via command arguments
+        '''
+
+        if self._checkcase:
+            return self._normalize(path, isknown)
+        return path
 
     def clear(self):
         self._map = {}

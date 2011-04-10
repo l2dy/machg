@@ -285,7 +285,7 @@ def backout(ui, repo, node=None, rev=None, **opts):
     if not commit_opts['message'] and not commit_opts['logfile']:
         # we don't translate commit messages
         commit_opts['message'] = "Backed out changeset %s" % short(node)
-        commit_opts['force_editor'] = (ui.config('ui', 'interactive') != 'off')
+        commit_opts['force_editor'] = True
     commit(ui, repo, **commit_opts)
     def nice(node):
         return '%d:%s' % (repo.changelog.rev(node), short(node))
@@ -487,9 +487,9 @@ def bookmark(ui, repo, mark=None, rev=None, force=False, delete=False, rename=No
         if mark is None:
             raise util.Abort(_("new bookmark name required"))
         marks[mark] = marks[rename]
-        del marks[rename]
         if repo._bookmarkcurrent == rename:
             bookmarks.setcurrent(repo, mark)
+        del marks[rename]
         bookmarks.write(repo)
         return
 
@@ -2241,7 +2241,7 @@ def help_(ui, name=None, with_version=False, unknowncmd=False):
                 ui.write("%s\n" % opt)
 
 def identify(ui, repo, source=None, rev=None,
-             num=None, id=None, branch=None, tags=None, bookmarks=None, **opts):
+             num=None, id=None, branch=None, tags=None, bookmarks=None):
     """identify the working copy or specified revision
 
     With no revision, print a summary of the current state of the
@@ -2999,9 +2999,9 @@ def push(ui, repo, dest=None, **opts):
 
     dest = ui.expandpath(dest or 'default-push', dest or 'default')
     dest, branches = hg.parseurl(dest, opts.get('branch'))
+    ui.status(_('pushing to %s\n') % url.hidepassword(dest))
     revs, checkout = hg.addbranchrevs(repo, repo, branches, opts.get('rev'))
     other = hg.repository(hg.remoteui(repo, opts), dest)
-    ui.status(_('pushing to %s\n') % url.hidepassword(dest))
     if revs:
         revs = [repo.lookup(rev) for rev in revs]
 
@@ -4466,7 +4466,6 @@ table = {
          [('r', 'rev', '',
            _('identify the specified revision'), _('REV')),
           ('n', 'num', None, _('show local revision number')),
-          ('', 'insecure', None, _('do not verify server certificate (ignoring web.cacerts config)')),
           ('i', 'id', None, _('show global revision id')),
           ('b', 'branch', None, _('show branch')),
           ('t', 'tags', None, _('show tags')),
