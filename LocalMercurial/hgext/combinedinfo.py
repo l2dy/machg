@@ -38,12 +38,15 @@ def printFullCombinedInfo(ui, repo, **opts):
     # write out localtags, globaltags, and bookmarks
     #
     for t, n in reversed(repo.tagslist()):
-        hn = hex(n) 
-        if repo.tagtype(t) == 'local':
-            tagtype = "localtag"
-        else:
-            tagtype = "globaltag"
-        ui.write("%s %d:%s %s\n" % (tagtype, repo.changelog.rev(n), hn, t))
+        try:
+            hn = hex(n) 
+            if repo.tagtype(t) == 'local':
+                tagtype = "localtag"
+            else:
+                tagtype = "globaltag"
+            ui.write("%s %d:%s %s\n" % (tagtype, repo.changelog.rev(n), hn, t))
+        except:
+            pass
 
 
     #
@@ -75,25 +78,33 @@ def printFullCombinedInfo(ui, repo, **opts):
 
     closedBranches = set([])
     for isactive, node, tag in branches:
-        hn = repo.lookup(node)
-        if isactive:
-            label = 'activebranch'
-        elif hn not in repo.branchheads(tag, closed=False):
-            closedBranches.add(node)
-            label = 'closedbranch'
-        else:
-            label = 'inactivebranch'
-        ui.write("%s %s:%s %s\n" % (label, str(node), hex(hn), tag))
+        try:
+            hn = repo.lookup(node)
+            if isactive:
+                label = 'activebranch'
+            elif hn not in repo.branchheads(tag, closed=False):
+                closedBranches.add(node)
+                label = 'closedbranch'
+            else:
+                label = 'inactivebranch'
+            ui.write("%s %s:%s %s\n" % (label, str(node), hex(hn), tag))
+        except:
+            pass
+
 
 
     #
     # write out the open heads
     #
     for h in heads:
-        node = repo[h].hex()
-        rev = repo[h].rev()
-        if (rev not in closedBranches):
-            ui.write("%s %s:%s\n" % ('openhead', rev, node))
+        try:
+            node = repo[h].hex()
+            rev = repo[h].rev()
+            if (rev not in closedBranches):
+                ui.write("%s %s:%s\n" % ('openhead', rev, node))        
+        except:
+            pass
+
         
 
 cmdtable = {
