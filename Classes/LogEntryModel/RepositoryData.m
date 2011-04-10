@@ -17,6 +17,7 @@
 #import "LabelData.h"
 #import "FSNodeInfo.h"
 #import "SingleTimedQueue.h"
+#import "ProcessListController.h"
 
 @interface RepositoryData (PrivateAPI)
 - (void) loadCombinedInformationAndNotify:(BOOL)initializing;
@@ -269,7 +270,8 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 - (void) loadCombinedInformationAndNotify:(BOOL)initializing
 {
 	dispatch_async(globalQueue(), ^{
-
+		ProcessListController* theProcessListController = [myDocument theProcessListController];
+		NSNumber* processNum = [theProcessListController addProcessIndicator:@"Loading Repository Information"];
 		NSMutableDictionary* newRevisionToLabels = [[NSMutableDictionary alloc] init];
 		
 		NSNumber* oldParent1Revision  = parent1Revision_;
@@ -292,7 +294,10 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 		NSMutableArray* fullLabelArgs = [NSMutableArray arrayWithObjects:@"combinedinfo",  @"--config", @"extensions.combinedinfo=", nil];
 		ExecutionResult* fullLabelResults = [TaskExecutions executeMercurialWithArgs:fullLabelArgs fromRoot: rootPath_ logging:eLoggingNone];
 		if (discarded_)
+		{
 			return;
+			[theProcessListController removeProcessIndicator:processNum];
+		}
 		NSString* rawfullLabel = trimString(fullLabelResults.outStr);
 		NSArray* fullLabelLines = [rawfullLabel componentsSeparatedByString:@"\n"];
 		NSInteger headCount = 0;
@@ -365,6 +370,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 				incompleteRevisionChanged = [self shouldChangeIncompleteRevisionInformation];
 				[self resetEntriesAndLogGraph];
 			}
+			[theProcessListController removeProcessIndicator:processNum];
 
 			if (!tipRevision_)
 			{
