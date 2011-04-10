@@ -2241,7 +2241,7 @@ def help_(ui, name=None, with_version=False, unknowncmd=False):
                 ui.write("%s\n" % opt)
 
 def identify(ui, repo, source=None, rev=None,
-             num=None, id=None, branch=None, tags=None, bookmarks=None):
+             num=None, id=None, branch=None, tags=None, bookmarks=None, **opts):
     """identify the working copy or specified revision
 
     With no revision, print a summary of the current state of the
@@ -4466,6 +4466,7 @@ table = {
          [('r', 'rev', '',
            _('identify the specified revision'), _('REV')),
           ('n', 'num', None, _('show local revision number')),
+          ('', 'insecure', None, _('do not verify server certificate (ignoring web.cacerts config)')),
           ('i', 'id', None, _('show global revision id')),
           ('b', 'branch', None, _('show branch')),
           ('t', 'tags', None, _('show tags')),
