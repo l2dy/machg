@@ -49,12 +49,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	periodicCheckingForRepositoryIdentity = [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(checkRepositoryIdentities:) userInfo:nil repeats:YES];
 	NOasNumber  = [NSNumber numberWithBool:NO];
 	YESasNumber = [NSNumber numberWithBool:YES];
-	SlotNumber  = [NSNumber numberWithInteger:(NSNotFound -1)];
-	FullDateFormatter = [[NSDateFormatter alloc] init];
-	[FullDateFormatter setDateStyle:NSDateFormatterLongStyle];
-	[FullDateFormatter setTimeStyle:NSDateFormatterShortStyle];
-	[FullDateFormatter setDoesRelativeDateFormatting:YES];
-	
+	SlotNumber  = [NSNumber numberWithInteger:(NSNotFound -1)];	
 
 	setupGlobalsForLogEntryPartsAndTemplate();
 	setupGlobalsForLogRecordPartsAndTemplate();

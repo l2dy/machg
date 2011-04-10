@@ -574,7 +574,6 @@ extern NSMutableDictionary* changesetHashToLogRecord;	// Global dictionary of Lo
 extern NSNumber*		NOasNumber;
 extern NSNumber*		YESasNumber;
 extern NSNumber*		SlotNumber;
-extern NSDateFormatter*	FullDateFormatter;
 
 
 // Font Attributes
@@ -632,6 +631,11 @@ static inline void NoAnimationBlock(BlockProcess theBlock)
 	[NSAnimationContext endGrouping];
 }
 
+#define exectueOnlyOnce(block)	\
+{								\
+static dispatch_once_t doOnce;	\
+dispatch_once(&doOnce, (block));\
+}
 
 
 

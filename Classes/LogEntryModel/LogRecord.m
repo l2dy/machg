@@ -41,9 +41,9 @@ NSMutableDictionary* changesetHashToLogRecord = nil;				// changset (full) -> Lo
 
 void setupGlobalsForLogRecordPartsAndTemplate()
 {
-	NSArray* templateParts         = [NSArray arrayWithObjects: @"{node}",    @"{author|person}", @"{author}",     @"{date}",   @"{branches}", @"{desc|firstline}", @"{desc}",      nil];
-	namesOfLogRecordDetailsParts   = [NSArray arrayWithObjects: @"changeset", @"author",          @"fullAuthor"  , @"date",     @"branch",     @"shortComment",     @"fullComment", nil];
-	templateLogRecordString = [[templateParts componentsJoinedByString:LogRecordDetailsPartSeparator] stringByAppendingString:LogRecordSeparator];
+	NSArray* templateParts       = [NSArray arrayWithObjects: @"{node}",    @"{author|person}", @"{author}",     @"{date}",   @"{branches}", @"{desc|firstline}", @"{desc}",      nil];
+	namesOfLogRecordDetailsParts = [NSArray arrayWithObjects: @"changeset", @"author",          @"fullAuthor"  , @"date",     @"branch",     @"shortComment",     @"fullComment", nil];
+	templateLogRecordString		 = [[templateParts componentsJoinedByString:LogRecordDetailsPartSeparator] stringByAppendingString:LogRecordSeparator];
 }
 
 
@@ -110,13 +110,8 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 
 + (LogRecord*) unfinishedRecord
 {
-	static LogRecord* unfinishedRecord = nil;
-	if (unfinishedRecord)
-		return unfinishedRecord;
-	@synchronized(changesetHashToLogRecord)
-	{
-		if (unfinishedRecord)
-			return unfinishedRecord;
+	static LogRecord* unfinishedRecord = nil;	
+    exectueOnlyOnce(^{
 		unfinishedRecord = [[LogRecord alloc] init];
 		[unfinishedRecord setChangeset:incompleteChangeset];
 		[unfinishedRecord setShortComment:@" - current modifications - "];
@@ -124,7 +119,8 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 		[unfinishedRecord setAuthor:@" - "];
 		[unfinishedRecord setLoadStatus:eLogRecordDetailsAndFilesLoaded];
 		[changesetHashToLogRecord setObject:unfinishedRecord forKey:incompleteChangeset];
-	}
+    });
+
 	return unfinishedRecord;
 }
 
@@ -378,7 +374,15 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 	if (self == [LogRecord unfinishedRecord])
 		return @"now";
 
-	return [FullDateFormatter stringFromDate:date_];
+	static NSDateFormatter* fullDateFormatter = nil;
+    exectueOnlyOnce( ^{
+		fullDateFormatter = [[NSDateFormatter alloc] init];
+		[fullDateFormatter setDateStyle:NSDateFormatterLongStyle];
+		[fullDateFormatter setTimeStyle:NSDateFormatterShortStyle];
+		[fullDateFormatter setDoesRelativeDateFormatting:YES];
+    });
+
+	return [fullDateFormatter stringFromDate:date_];
 }
 
 - (NSDate*) rawDate { return date_; }

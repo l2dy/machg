@@ -8,8 +8,6 @@
 
 #import "ScrollToChangesetPanelController.h"
 
-static ScrollToChangesetPanelController* sharedScrollToChangesetPanelController_ = nil;
-
 @implementation ScrollToChangesetPanelController
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -19,12 +17,14 @@ static ScrollToChangesetPanelController* sharedScrollToChangesetPanelController_
 
 + (ScrollToChangesetPanelController*) sharedScrollToChangesetPanelController
 {
-	if (!sharedScrollToChangesetPanelController_)
-	{
+	static ScrollToChangesetPanelController* sharedScrollToChangesetPanelController_ = nil;
+
+    exectueOnlyOnce( ^{
 		sharedScrollToChangesetPanelController_ = [[ScrollToChangesetPanelController alloc]init];
 		[NSBundle loadNibNamed:@"ScrollToChangesetPanel" owner:sharedScrollToChangesetPanelController_];		
 		[sharedScrollToChangesetPanelController_->scrollToChangesetPanel center];
-	}
+    });
+	
 	return sharedScrollToChangesetPanelController_;
 }
 
