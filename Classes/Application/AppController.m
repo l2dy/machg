@@ -236,19 +236,19 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	if (!parsedTwoStr)
 		return NSOrderedDescending;
 	
-	if ([majorOneStr intValue] < [majorOneStr intValue])
+	if ([majorOneStr intValue] < [majorTwoStr intValue])
 		return NSOrderedAscending;
-	if ([majorOneStr intValue] > [majorOneStr intValue])
+	if ([majorOneStr intValue] > [majorTwoStr intValue])
 		return NSOrderedDescending;
 	
-	if ([minorOneStr intValue] < [minorOneStr intValue])
+	if ([minorOneStr intValue] < [minorTwoStr intValue])
 		return NSOrderedAscending;
-	if ([minorOneStr intValue] > [minorOneStr intValue])
+	if ([minorOneStr intValue] > [minorTwoStr intValue])
 		return NSOrderedDescending;
 	
-	if ([pointOneStr intValue] < [pointOneStr intValue])
+	if ([pointOneStr intValue] < [pointTwoStr intValue])
 		return NSOrderedAscending;
-	if ([pointOneStr intValue] > [pointOneStr intValue])
+	if ([pointOneStr intValue] > [pointTwoStr intValue])
 		return NSOrderedDescending;
 	
 	return NSOrderedSame;
@@ -297,16 +297,45 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 {
 	NSString* currentBundleString = [self shortVersionNumberString];
 	NSString* mostModernMacHgVersionExecuted = [[NSUserDefaults standardUserDefaults] stringForKey:@"MostModernMacHgVersionExecuted"];
-	if ([self bundleVersion:mostModernMacHgVersionExecuted comparedTo:@"0.9.17"] == NSOrderedAscending)
+	BOOL replacedHgrc = NO;
+	BOOL replacedHgignore = NO;
+	BOOL olderVersionThan_0_9_20 = ([self bundleVersion:mostModernMacHgVersionExecuted comparedTo:@"0.9.20"] == NSOrderedAscending);
+	BOOL olderThanCurent = ([self bundleVersion:mostModernMacHgVersionExecuted comparedTo:currentBundleString] == NSOrderedAscending);
+	if (olderVersionThan_0_9_20)
 	{
 		NSString* macHgHGRCFilePath = fstr(@"%@/hgrc",applicationSupportFolder());
 		if (pathIsExistent(macHgHGRCFilePath))
 		{
 			moveFilesToTheTrash([NSArray arrayWithObject:macHgHGRCFilePath]);
-			NSRunCriticalAlertPanel(@"Updated Configuration Files", fstr(@"MacHg's configuration file %@ has been updated. Current improvements to the configuration file include necessary improvements for external diffing and merging tools.\n\nThe old hgrc configuration has been moved to the trash. If you made any personal modifications to this support files for specific tools or extensions outside MacHg then you may need to make similar changes to the new hgrc file.", macHgHGRCFilePath), @"OK", @"", @"");
+			replacedHgrc = YES;
 		}
-		[[NSUserDefaults standardUserDefaults] setObject:currentBundleString forKey:@"MostModernMacHgVersionExecuted"];
 	}	
+	if (olderVersionThan_0_9_20)
+	{
+		NSString* macHgIgnoreFilePath = fstr(@"%@/hgignore",applicationSupportFolder());
+		if (pathIsExistent(macHgIgnoreFilePath))
+		{
+			moveFilesToTheTrash([NSArray arrayWithObject:macHgIgnoreFilePath]);
+			replacedHgignore = YES;
+		}
+	}
+
+	if (olderThanCurent)
+		[[NSUserDefaults standardUserDefaults] setObject:currentBundleString forKey:@"MostModernMacHgVersionExecuted"];
+
+	if (replacedHgrc || replacedHgignore)
+	{
+		NSString* titleMessage = replacedHgrc ? @"Updated Configuration Files" : @"Updated Ignore File";
+		NSString* bodyMessage = nil;
+		if (replacedHgrc && replacedHgignore)
+			bodyMessage = fstr(@"MacHg's configuration files 'hgrc' and 'hgignore' located in %@ have been updated.\n\nThe old configuration files have been moved to the trash. If you made any personal modifications to these support files for specific tools or extensions outside MacHg then you may need to replicate these changes in the updated files.", applicationSupportFolder());
+		else if (replacedHgrc)
+			bodyMessage = fstr(@"MacHg's configuration file 'hgrc' located in %@ has been updated.\n\nThe old configuration file has been moved to the trash. If you made any personal modifications to this support file for specific tools or extensions outside MacHg then you may need to replicate these changes in the updated file.", applicationSupportFolder());
+		else if (replacedHgignore)
+			bodyMessage = fstr(@"MacHg's ignore file 'hgignore' located in %@ has been updated.\n\nThe old ignore file has been moved to the trash. If you made any personal modifications to this support file for specific tools or extensions outside MacHg then you may need to replicate these changes in the updated file.", applicationSupportFolder());
+		NSRunCriticalAlertPanel(titleMessage, bodyMessage, @"OK", @"", @"");
+	}
+
 }
 
 - (void) checkForSupportDirectory
