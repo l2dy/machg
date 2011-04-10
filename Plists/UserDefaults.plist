@@ -122,7 +122,7 @@
 	<key>PreferencesShiftSlowsAnimation</key>
 	<true/>
 	<key>RequireVerifiedServerCertificates</key>
-	<false/>
+	<true/>
 	<key>RevisionSortOrder</key>
 	<integer>1</integer>
 	<key>ShowAddedFilesInBrowser</key>
