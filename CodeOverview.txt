@@ -81,6 +81,16 @@
 //	}
 
 
+// If statements
+// ------------------------------------------------------------------------------------------------------------------------------
+// If statements have a space between the if and the argument. Eg use
+//	if (x == y)
+//		doSomething();
+// instead of
+//	if(x == y)
+//		doSomething();
+
+
 // Spacing and Tab conventions
 // ------------------------------------------------------------------------------------------------------------------------------
 // Use tabs to indent and tend to line up similar bits of code with tabs followed by spaces so things visually line up in blocks.
@@ -359,6 +369,7 @@ diff --git a/LocalMercurial/mercurial/dirstate.py b/LocalMercurial/mercurial/dir
 // General Category Extensions
 // ------------------------------------------------------------------------------------------------------------------------------
 // The general category extensions are collected in Common.h. Most of these should be applicable to basically any Cocoa program.
+// If you are contributing code to MacHg ty and copy the style of the MacHg code and its usage of the functions in Common.h
 
 
 // Notifications
