@@ -1631,7 +1631,7 @@
 					</object>
 					<object class="NSMenuItem" id="747438026">
 						<reference key="NSMenu" ref="886653824"/>
-						<string key="NSTitle">Diff All Files to Revision</string>
+						<string key="NSTitle">Diff Selected Revisions</string>
 						<string key="NSKeyEquiv"/>
 						<int key="NSMnemonicLoc">2147483647</int>
 						<reference key="NSOnImage" ref="591860921"/>
@@ -2139,14 +2139,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
-						<string key="label">historyMenuDiffAllToChosenRevision:</string>
-						<reference key="source" ref="945562250"/>
-						<reference key="destination" ref="747438026"/>
-					</object>
-					<int key="connectionID">991</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBActionConnection" key="connection">
 						<string key="label">historyMenuUpdateRepositoryToChosenRevision:</string>
 						<reference key="source" ref="945562250"/>
 						<reference key="destination" ref="267544846"/>
@@ -2288,6 +2280,14 @@
 						<reference key="destination" ref="523666229"/>
 					</object>
 					<int key="connectionID">1021</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBActionConnection" key="connection">
+						<string key="label">diffSelectedRevisions:</string>
+						<reference key="source" ref="1003"/>
+						<reference key="destination" ref="747438026"/>
+					</object>
+					<int key="connectionID">1022</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -3307,7 +3307,7 @@
 					<string>LogTableTextFieldCell</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-					<string>{{472, 710}, {256, 293}}</string>
+					<string>{{1057, 354}, {256, 293}}</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 					<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3460,7 +3460,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">1021</int>
+			<int key="maxID">1022</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3475,6 +3475,7 @@
 							<string>diffSelectedRevisions:</string>
 							<string>historyMenuAddLabelToChosenRevision:</string>
 							<string>historyMenuDiffAllToChosenRevision:</string>
+							<string>historyMenuGotoChangeset:</string>
 							<string>historyMenuManifestOfChosenRevision:</string>
 							<string>historyMenuMergeRevision:</string>
 							<string>historyMenuUpdateRepositoryToChosenRevision:</string>
@@ -3498,6 +3499,7 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -3730,6 +3732,7 @@
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>getAndScrollToChangeset:</string>
 							<string>refreshTable:</string>
 							<string>resetTable:</string>
 							<string>scrollToBeginning:</string>
@@ -3739,6 +3742,7 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
@@ -3779,6 +3783,7 @@
 							<string>mainMenuAddLabelToCurrentRevision:</string>
 							<string>mainMenuCloneRepository:</string>
 							<string>mainMenuExportPatches:</string>
+							<string>mainMenuGotoChangeset:</string>
 							<string>mainMenuImportPatches:</string>
 							<string>mainMenuIncomingFromRepository:</string>
 							<string>mainMenuManifestOfCurrentVersion:</string>
@@ -3810,6 +3815,7 @@
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
+							<string>id</string>
 							<string>id</string>
 							<string>id</string>
 							<string>id</string>
