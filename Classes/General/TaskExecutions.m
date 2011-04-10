@@ -125,11 +125,8 @@
 	BOOL isRunning = YES;
 	while (isRunning && (!taskComplete || !outputClosed || !errorClosed))
 	{
-		isRunning = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate distantFuture]];
+		isRunning = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow: 10.0]];
 	}
-	
-    // wait for task to exit:
-	[task_ waitUntilExit];
 
 	[self stopObserving:NSFileHandleReadCompletionNotification from:nil];
 	[task_ terminate];
