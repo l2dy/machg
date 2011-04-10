@@ -758,14 +758,26 @@ static inline NSNumber* minimumNumber(NSNumber* a, NSNumber* b)
 
 
 
+
+
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK: Common Functions
+// MARK:  Open Panel
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 NSString*			getSingleDirectoryPathFromOpenPanel();
 NSString*			getSingleFilePathFromOpenPanel();
+NSString*			getSingleApplicationPathFromOpenPanel(NSString* forDocument);
 NSArray*			getListOfFilePathsFromOpenPanel(NSString* startingPath);
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Common Functions
+// -----------------------------------------------------------------------------------------------------------------------------------------
 
 static inline BOOL IsEmpty(id thing)
 {
@@ -998,7 +1010,9 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 // MARK: -
 @interface NSApplication ( NSApplicationPlusExtensions )
-- (void)	presentAnyErrorsAndClear:(NSError**)err;
+- (void)	 presentAnyErrorsAndClear:(NSError**)err;
++ (NSArray*) applicationsForURL:(NSURL*)url;
++ (NSURL*)	 applicationForURL:(NSURL*)url;
 @end
 
 

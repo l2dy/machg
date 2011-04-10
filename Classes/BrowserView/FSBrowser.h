@@ -97,8 +97,8 @@
 
 
 // Path and Selection Operations
-- (BOOL)		singleFileIsChosenInBrowser;
-- (BOOL)		singleItemIsChosenInBrowser;
+- (BOOL)		singleFileIsChosenInBrowser;		// Not debugged
+- (BOOL)		singleItemIsChosenInBrowser;		// Not debugged
 - (HGStatus)	statusOfChosenPathsInBrowser;
 - (BOOL)		statusOfChosenPathsInBrowserContain:(HGStatus)status;
 - (BOOL)		repositoryHasFilesWhichContainStatus:(HGStatus)status;

@@ -440,6 +440,41 @@ NSArray* pruneContainedPaths(NSArray* paths)
 }
 
 
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Open Panel
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+
+@interface OpenApplicationPanelDelegate : NSObject <NSOpenSavePanelDelegate> 
+{
+}
++ (OpenApplicationPanelDelegate*)	sharedOpenApplicationPanelDelegate;
+@end
+
+static OpenApplicationPanelDelegate* sharedOpenApplicationPanelDelegate_ = nil;
+
+@implementation OpenApplicationPanelDelegate
++ (OpenApplicationPanelDelegate*) sharedOpenApplicationPanelDelegate
+{
+	if (!sharedOpenApplicationPanelDelegate_)
+		sharedOpenApplicationPanelDelegate_ = [[self alloc] init];
+	return sharedOpenApplicationPanelDelegate_;
+}
+
+- (BOOL)panel:(id)sender shouldEnableURL:(NSURL*)url
+{
+	return [[[url path] pathExtension] isEqualToString:@"app"] || pathIsExistentDirectory([url path]);
+}
+@end
+
+
+
+
+
 NSString* getSingleDirectoryPathFromOpenPanel()
 {
 	NSOpenPanel* panel = [NSOpenPanel openPanel];
@@ -468,6 +503,26 @@ NSString* getSingleFilePathFromOpenPanel()
 	id filename = [filenames lastObject];
 	return DynamicCast(NSString,filename);
 }
+
+
+NSString* getSingleApplicationPathFromOpenPanel(NSString* forDocument)
+{
+	NSOpenPanel* panel = [NSOpenPanel openPanel];
+	[panel setCanChooseFiles:YES];
+	[panel setCanChooseDirectories:NO];
+	[panel setAllowsMultipleSelection:NO];
+	NSString* message =  forDocument ? fstr(@"Choose an application to open the document “%@”", forDocument) : @"Choose an application";
+	[panel setMessage:message];
+	[panel setTitle:@"Choose Application."];
+	[panel setDelegate:[OpenApplicationPanelDelegate sharedOpenApplicationPanelDelegate]];
+	NSInteger result = [panel runModal];
+	if (result == NSAlertAlternateReturn)
+		return nil;
+	NSArray* filenames = [panel filenames];
+	id filename = [filenames lastObject];
+	return DynamicCast(NSString,filename);
+}
+
 
 NSArray* getListOfFilePathsFromOpenPanel(NSString* startingPath)
 {
@@ -1308,6 +1363,18 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 		[self presentError:*err];
 		*err = nil;
 	}
+}
+
++ (NSArray*) applicationsForURL:(NSURL*)url
+{
+	return [NSMakeCollectable(LSCopyApplicationURLsForURL((CFURLRef)url, kLSRolesEditor | kLSRolesViewer)) autorelease];
+}
+
++ (NSURL*) applicationForURL:(NSURL*)url
+{
+	NSURL* appURL;
+	LSGetApplicationForURL ( (CFURLRef)url, kLSRolesEditor | kLSRolesViewer, NULL, (CFURLRef*) &appURL);
+	return appURL;
 }
 @end
 

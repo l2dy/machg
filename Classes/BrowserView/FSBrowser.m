@@ -387,6 +387,131 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
+// MARK:  'Open With...' support
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (IBAction) browserOpenChosenNodesWithApplication:(id)sender
+{
+	//- (BOOL)openFile:(NSString *)fullPath withApplication:(NSString *)appName
+	NSMenuItem* item = DynamicCast(NSMenuItem, sender);
+	if (!item)
+		return;
+
+	NSString* applicationPath = [[item representedObject] path];
+	NSArray* paths = [self absolutePathsOfChosenFilesInBrowser];
+	for (NSString* path in paths)
+		[[NSWorkspace sharedWorkspace] openFile:path withApplication:applicationPath];
+}
+
+- (IBAction) browserOpenChosenNodesWithABrowserToChoose:(id)sender
+{
+	NSString* applicationPath = getSingleApplicationPathFromOpenPanel([[[self clickedNode] absolutePath] lastPathComponent]);
+	NSArray* paths = [self absolutePathsOfChosenFilesInBrowser];
+	for (NSString* path in paths)
+		[[NSWorkspace sharedWorkspace] openFile:path withApplication:applicationPath];
+}
+
+
+- (NSMenuItem*) menuItemForOpenWith:(NSURL*)appURL usedDictionary:(NSMutableDictionary*)dict
+{
+	NSMenuItem* item = [[NSMenuItem alloc]init];
+	NSString* appName = [[appURL path] lastPathComponent];
+	if ([dict objectForKey:appName])
+		return nil;
+	[dict setObject:appURL forKey:appName];
+	[item setTitle:[appName stringByDeletingPathExtension]];
+	[item setRepresentedObject:appURL];
+	[item setAction:@selector(browserOpenChosenNodesWithApplication:)];
+	[item setKeyEquivalent:@""];
+	NSSize imageSize = NSMakeSize(ICON_SIZE, ICON_SIZE);
+	NSImage* theFileIcon = [NSWorkspace iconImageOfSize:imageSize forPath:[appURL path]];
+	[item setImage:theFileIcon];
+
+	return item;
+}
+
+- (void) menuNeedsUpdate:(NSMenu*)theMenu
+{
+	static NSArray* nsurlSortDescriptors = nil;
+	
+	if (!nsurlSortDescriptors)
+		nsurlSortDescriptors = [NSArray arrayWithObject:[[NSSortDescriptor alloc] initWithKey:@"absoluteString" ascending:YES]];
+
+	NSMenuItem* openWithItem = [theMenu itemWithTitle:@"Open With…"];
+	if (openWithItem)
+		[theMenu removeItem:openWithItem];
+
+	if (isMainFSBrowser_ && [self singleFileIsChosenInBrowser])
+	{
+		FSNodeInfo* clickedNode = [self clickedNode];
+		NSString* path = [clickedNode absolutePath];
+		NSURL* pathURL = [NSURL fileURLWithPath:path];
+		NSArray* apps = [NSApplication applicationsForURL:pathURL];
+		NSArray* appsSorted = [apps sortedArrayUsingDescriptors:nsurlSortDescriptors];
+		NSMutableDictionary* dict = [[NSMutableDictionary alloc] init];
+		NSMenu* subMenu = [[[NSMenu alloc] initWithTitle:@"Open With…"] autorelease];
+		NSURL* preferedApp = [NSApplication applicationForURL:pathURL];
+		int index = 0;
+		
+		// Add the prefered application
+		if (preferedApp)
+		{
+			NSMenuItem* newItem = [self menuItemForOpenWith:preferedApp usedDictionary:dict];
+			if (newItem)
+			{
+				[subMenu insertItem:newItem atIndex:index++];
+				[subMenu insertItem:[NSMenuItem separatorItem] atIndex:index++];
+			}
+		}
+
+		// Add each application
+		for (NSURL* appUrl in appsSorted)
+		{
+			NSMenuItem* newItem = [self menuItemForOpenWith:appUrl usedDictionary:dict];
+			if (newItem)
+				[subMenu insertItem:newItem atIndex:index++];
+		}
+		
+		// Add the Other... item
+		[subMenu insertItem:[NSMenuItem separatorItem] atIndex:index++];		
+		[subMenu insertItemWithTitle:@"Other…" action:@selector(browserOpenChosenNodesWithABrowserToChoose:) keyEquivalent:@"" atIndex:index++];
+
+		// Create an item for the submenu and add the submenu to the menu.
+		NSMenuItem* newOpenWithItem = [[NSMenuItem alloc] init];		
+		[newOpenWithItem setTitle:@"Open With…"];
+		[newOpenWithItem setSubmenu:subMenu];
+		[theMenu insertItem:newOpenWithItem atIndex:1];
+	}
+}
+
+//- (NSMenu *)menu
+//{
+//	NSMenu* supermenu = [super menu];
+//	return supermenu;
+//}
+//
+//+ (NSMenu *)defaultMenu {
+//    NSMenu *theMenu = [[[NSMenu alloc] initWithTitle:@"Contextual Menu"] autorelease];
+//    [theMenu insertItemWithTitle:@"Beep" action:@selector(browserMenuOpenSelectedFilesInFinder:) keyEquivalent:@"" atIndex:0];
+//    [theMenu insertItemWithTitle:@"Honk" action:@selector(browserMenuRevealSelectedFilesInFinder:) keyEquivalent:@"" atIndex:1];
+//    return theMenu;
+//}
+//
+//- (NSMenu *)menuForEvent:(NSEvent *)theEvent
+//{
+////    NSPoint curLoc = [self convertPoint:[theEvent locationInWindow] fromView:nil];
+////    NSRect magic_square = NSMakeRect(0.0, 0.0, 10.0, 10.0);
+////	
+////    if ([self mouse:curLoc inRect:magic_square]) {
+////        NSMenu *theMenu = [[self class] defaultMenu];
+////        [theMenu insertItemWithTitle:@"Wail" action:@selector(wail:) keyEquivalent:@"" atIndex:[theMenu numberOfItems]-1];
+////        return theMenu;
+////    }
+//    return [[self class] defaultMenu];
+//}
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
 // MARK: Action Utilities
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
