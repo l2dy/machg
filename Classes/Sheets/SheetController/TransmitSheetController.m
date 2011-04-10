@@ -71,6 +71,30 @@
 	[advancedOptionsBox setNeedsDisplay:YES];
 }
 
+// When we are about to display the menu, add icons to all the menu items.
+- (void)menuNeedsUpdate:(NSMenu*)menu
+{
+	if (menu == [compatibleRepositoriesPopup menu])		
+		for (NSMenuItem* item in [menu itemArray])
+		{
+			SidebarNode* node = DynamicCast(SidebarNode, [item representedObject]);
+			if ([node isRepositoryRef])
+				[item setImage:[node icon]];
+		}	
+}
+
+// We have finished displaying the menu, hide the icons in the menu.
+- (void)menuDidClose:(NSMenu*)menu
+{
+	if (menu == [compatibleRepositoriesPopup menu])
+		for (NSMenuItem* item in [menu itemArray])
+		{
+			SidebarNode* node = DynamicCast(SidebarNode, [item representedObject]);
+			if ([node isRepositoryRef])
+				[item setImage:nil];
+		}		
+}
+
 
 
 
