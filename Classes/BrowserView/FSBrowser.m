@@ -604,7 +604,7 @@
 
 
 
-- (void) markPathsDirty:(RepositoryPaths*)dirtyPaths;
+- (void) markPathsDirty:(RepositoryPaths*)dirtyPaths
 {
 	dispatch_async([[self myDocument] refreshBrowserSerialQueue], ^{
 		NSArray* absoluteDirtyPaths = [dirtyPaths absolutePaths];

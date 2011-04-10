@@ -250,7 +250,7 @@
 	[myDocument viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:revisionNumbers];
 }
 
-- (void) logTableViewSelectionDidChange:(LogTableView*)theLogTable;
+- (void) logTableViewSelectionDidChange:(LogTableView*)theLogTable
 {
 	if ([myDocument quicklookPreviewIsVisible])
 		[[QLPreviewPanel sharedPreviewPanel] reloadData];

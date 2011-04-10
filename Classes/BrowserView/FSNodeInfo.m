@@ -178,7 +178,7 @@
 
 
 // This method must be called on theRoot node.
-- (FSNodeInfo*) nodeForPathFromRoot:(NSString*)thePath;
+- (FSNodeInfo*) nodeForPathFromRoot:(NSString*)thePath
 {
 	NSString* theRelativePath = pathDifference([self absolutePath], thePath);
 	NSArray* thePathComponents = [theRelativePath pathComponents];

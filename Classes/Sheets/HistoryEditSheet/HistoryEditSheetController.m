@@ -186,14 +186,14 @@
 }
 
 
-- (IBAction) sheetButtonOkForHistoryEditSheet:(id)sender;
+- (IBAction) sheetButtonOkForHistoryEditSheet:(id)sender
 {
 	[NSApp endSheet:theHistoryEditSheet];
 	[theHistoryEditSheet orderOut:sender];
 	[self openHistoryEditConfirmationSheet:self];
 }
 
-- (IBAction) sheetButtonCancelForHistoryEditSheet:(id)sender;
+- (IBAction) sheetButtonCancelForHistoryEditSheet:(id)sender
 {
 	[NSApp endSheet:theHistoryEditSheet];
 	[theHistoryEditSheet orderOut:sender];
@@ -262,7 +262,7 @@
 // MARK: Table Delegate Methods
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) logTableViewSelectionDidChange:(LogTableView*)theLogTable;
+- (void) logTableViewSelectionDidChange:(LogTableView*)theLogTable
 {
 	[self validateButtons:self];
 	if ([okButton isEnabled])

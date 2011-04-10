@@ -140,7 +140,7 @@
 // MARK: Table Delegate Methods
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) logTableViewSelectionDidChange:(LogTableView*)theLogTable;
+- (void) logTableViewSelectionDidChange:(LogTableView*)theLogTable
 {
 	[self validate:self];
 }

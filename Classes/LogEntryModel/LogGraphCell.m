@@ -242,7 +242,7 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 }
 
 
-- (void) drawGraphDot:(NSPoint) dotCenter;
+- (void) drawGraphDot:(NSPoint) dotCenter
 {
 	//
 	// Calculate the fillColor and strokeColor

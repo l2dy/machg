@@ -95,7 +95,7 @@
 }
 
 
-- (IBAction) sheetButtonOk:(id)sender;
+- (IBAction) sheetButtonOk:(id)sender
 {
 	NSNumber* versionToRevertTo = [logTableView selectedRevision];
 	BOOL didReversion = [myDocument primaryActionRevertFiles:absolutePathsOfFilesToRevert toVersion:versionToRevertTo];
@@ -106,7 +106,7 @@
 	[theRevertSheet orderOut:sender];
 }
 
-- (IBAction) sheetButtonCancel:(id)sender;
+- (IBAction) sheetButtonCancel:(id)sender
 {
 	[NSApp endSheet:theRevertSheet];
 	[theRevertSheet orderOut:sender];
@@ -128,7 +128,7 @@
 // MARK: Table Delegate Methods
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) logTableViewSelectionDidChange:(LogTableView*)theLogTable;
+- (void) logTableViewSelectionDidChange:(LogTableView*)theLogTable
 {
 	[sheetInformativeMessageTextField setAttributedStringValue: [self formattedSheetMessage]];
 }

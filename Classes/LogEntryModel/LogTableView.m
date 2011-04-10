@@ -460,7 +460,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	[self getAndScrollToChangeset:sender];
 }
 
-- (IBAction) getAndScrollToChangeset:(id)sender;
+- (IBAction) getAndScrollToChangeset:(id)sender
 {
 	NSString* changestRevOrLabel = [[ScrollToChangesetPanelController sharedScrollToChangesetPanelController] getChangesetToScrollTo];
 	if (!changestRevOrLabel)

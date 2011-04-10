@@ -101,7 +101,7 @@
 		[self openSheetForNewRepositoryRefNamed:@"" atPath:@"" addNewRepositoryRefTo:nil atIndex:0];
 }
 
-- (void) openSheetForNewRepositoryRefNamed:(NSString*)name atPath:(NSString*)path addNewRepositoryRefTo:(SidebarNode*)parent atIndex:(NSInteger)index;
+- (void) openSheetForNewRepositoryRefNamed:(NSString*)name atPath:(NSString*)path addNewRepositoryRefTo:(SidebarNode*)parent atIndex:(NSInteger)index
 {
 	[self clearSheetFieldValues];
 	[self setShortNameFieldValue:name];
@@ -139,7 +139,7 @@
 }
 
 
-- (IBAction) sheetButtonOk:(id)sender;
+- (IBAction) sheetButtonOk:(id)sender
 {
 	[theWindow makeFirstResponder:theWindow];	// Make the text fields of the sheet commit any changes they currently have
 
@@ -228,7 +228,7 @@
 
 }
 
-- (IBAction) sheetButtonCancel:(id)sender;
+- (IBAction) sheetButtonCancel:(id)sender
 {
 	[theWindow makeFirstResponder:theWindow];	// Make the text fields of the sheet commit any changes they currently have
 	[NSApp endSheet:theWindow];

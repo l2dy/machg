@@ -86,7 +86,7 @@ const NSInteger maxRevDistance = 72;
 @synthesize revisionNumberToLineSegments = revisionNumberToLineSegments_;
 
 
-- (LogGraph*) initWithRepositoryData:(RepositoryData*)collection;
+- (LogGraph*) initWithRepositoryData:(RepositoryData*)collection
 {
 	repositoryData = collection;
 	revisionNumberToLineSegments_ = [[NSMutableDictionary alloc] init];

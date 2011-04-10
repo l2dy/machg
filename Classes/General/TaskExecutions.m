@@ -235,7 +235,7 @@
 @synthesize errStr = errStr_;
 @synthesize loggedToAlertOrWindow = loggedToAlertOrWindow_;
 
-+ (ExecutionResult*) resultWithCmd:(NSString*)cmd args:(NSArray*)args result:(int)result outStr:(NSString*)outStr errStr:(NSString*)errStr;
++ (ExecutionResult*) resultWithCmd:(NSString*)cmd args:(NSArray*)args result:(int)result outStr:(NSString*)outStr errStr:(NSString*)errStr
 {
 	ExecutionResult* newResult = [[ExecutionResult alloc]init];
 	newResult->generatingCmd_ = cmd;

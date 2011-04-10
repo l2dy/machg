@@ -116,7 +116,7 @@
 // MARK: Connections
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) setConnections:(NSMutableDictionary*)connections fromOptionWithKey:(NSString*)key;
+- (void) setConnections:(NSMutableDictionary*)connections fromOptionWithKey:(NSString*)key
 {
 	NSString* fullKey = [key stringByAppendingString:optionName];
 	if ([self optionIsSet])

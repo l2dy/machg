@@ -169,14 +169,14 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 }
 
 
-- (IBAction) sheetButtonOkForCollapseSheet:(id)sender;
+- (IBAction) sheetButtonOkForCollapseSheet:(id)sender
 {
 	[NSApp endSheet:theCollapseSheet];
 	[theCollapseSheet orderOut:sender];
 	[self openCollapseSheetWithCombinedCommitMessage:self];
 }
 
-- (IBAction) sheetButtonCancelForCollapseSheet:(id)sender;
+- (IBAction) sheetButtonCancelForCollapseSheet:(id)sender
 {
 	[NSApp endSheet:theCollapseSheet];
 	[theCollapseSheet orderOut:sender];
@@ -237,7 +237,7 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 // MARK: Table Delegate Methods
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) logTableViewSelectionDidChange:(LogTableView*)theLogTable;
+- (void) logTableViewSelectionDidChange:(LogTableView*)theLogTable
 {
 	[self validateButtons:self];
 	if ([okButton isEnabled])

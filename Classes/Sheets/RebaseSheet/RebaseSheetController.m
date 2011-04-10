@@ -205,7 +205,7 @@
 }
 
 
-- (IBAction) sheetButtonOk:(id)sender;
+- (IBAction) sheetButtonOk:(id)sender
 {
 	[NSApp endSheet:theRebaseSheet];
 	[theRebaseSheet orderOut:sender];
@@ -232,7 +232,7 @@
 	}];	
 }
 
-- (IBAction) sheetButtonCancel:(id)sender;
+- (IBAction) sheetButtonCancel:(id)sender
 {
 	[NSApp endSheet:theRebaseSheet];
 	[theRebaseSheet orderOut:sender];
@@ -247,7 +247,7 @@
 // MARK: Table Delegate Methods
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) logTableViewSelectionDidChange:(LogTableView*)theLogTable;
+- (void) logTableViewSelectionDidChange:(LogTableView*)theLogTable
 {
 	[self validateButtons:self];
 	if ([okButton isEnabled])

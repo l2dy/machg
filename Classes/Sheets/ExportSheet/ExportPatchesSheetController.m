@@ -279,7 +279,7 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 // MARK: Table Delegate Methods
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) logTableViewSelectionDidChange:(LogTableView*)theLogTable;
+- (void) logTableViewSelectionDidChange:(LogTableView*)theLogTable
 {
 	[self validate:self];
 }

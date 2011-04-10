@@ -267,7 +267,7 @@
 }
 
 - (void) updateIncomingOutgoingCount	{ [self updateIncomingOutgoingCountForSource:[self sourceRepository] andDestination:[self destinationRepository]]; }
-- (void) updateIncomingOutgoingCountForSource:(SidebarNode*)source andDestination:(SidebarNode*)destination;
+- (void) updateIncomingOutgoingCountForSource:(SidebarNode*)source andDestination:(SidebarNode*)destination
 {
 	NSString* theCount;
 	if ([[self operationName] isMatchedByRegex:@"Push|Outgoing"])
@@ -299,7 +299,7 @@
 // MARK: Sheet Handling
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (IBAction) openSheet:(id)sender;
+- (IBAction) openSheet:(id)sender
 {
 	// Compute the root of this repository for later comparison.
 	SidebarNode* selectedNode = [[myDocument sidebar] selectedNode];

@@ -939,7 +939,7 @@
 	return arr;
 }
 
-- (NSArray*) allCompatibleRepositories:(SidebarNode*)selectedNode;
+- (NSArray*) allCompatibleRepositories:(SidebarNode*)selectedNode
 {
 	NSMutableArray* compatibleRepositories = [[NSMutableArray alloc] init];
 	NSArray* allRepositories = [self allRepositories];

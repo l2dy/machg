@@ -70,7 +70,7 @@
 }
 
 
-- (void) openMoveLabelSheetForMoveLabel:(LabelData*)label;
+- (void) openMoveLabelSheetForMoveLabel:(LabelData*)label
 {
 	labelToMove_ = label;
 
@@ -146,7 +146,7 @@
 
 
 
-- (IBAction) sheetButtonCancel:(id)sender;
+- (IBAction) sheetButtonCancel:(id)sender
 {
 	[NSApp endSheet:theMoveLabelSheet];
 	[theMoveLabelSheet orderOut:sender];
@@ -161,7 +161,7 @@
 // MARK: Table Delegate Methods
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) logTableViewSelectionDidChange:(LogTableView*)theLogTable;
+- (void) logTableViewSelectionDidChange:(LogTableView*)theLogTable
 {
 	[self validate:self];
 }

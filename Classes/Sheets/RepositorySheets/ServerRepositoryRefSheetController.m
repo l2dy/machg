@@ -94,7 +94,7 @@
 }
 
 
-- (BOOL) authorizeForShowingPassword;
+- (BOOL) authorizeForShowingPassword
 {
 	const char* macHgAuth = "com.jasonfharris.machg.viewpasswords";
 	

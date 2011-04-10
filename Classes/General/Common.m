@@ -1141,7 +1141,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 // MARK: -
 @implementation NSMutableAttributedString ( NSMutableAttributedStringPlusInitilizers )
-+ (NSMutableAttributedString*) string:(NSString*)string withAttributes:(NSDictionary*)theAttributes;
++ (NSMutableAttributedString*) string:(NSString*)string withAttributes:(NSDictionary*)theAttributes
 {
 	return [[NSMutableAttributedString alloc] initWithString:string attributes:theAttributes];
 }
@@ -1355,7 +1355,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 // MARK: -
 @implementation NSApplication ( NSApplicationPlusExtensions )
-- (void) presentAnyErrorsAndClear:(NSError**)err;
+- (void) presentAnyErrorsAndClear:(NSError**)err
 {
 	if (err && *err)
 	{

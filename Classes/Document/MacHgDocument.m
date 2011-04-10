@@ -78,7 +78,7 @@
 	[repositoryPaths setRootPath:theRootPath];
 	return repositoryPaths;
 }
-+ (RepositoryPaths*) fromPath:(NSString*)absolutePath  withRootPath:(NSString*)theRootPath;
++ (RepositoryPaths*) fromPath:(NSString*)absolutePath  withRootPath:(NSString*)theRootPath
 {
 	RepositoryPaths* repositoryPaths = [RepositoryPaths alloc];
 	[repositoryPaths setAbsolutePaths:[NSArray arrayWithObject:absolutePath]];
@@ -123,7 +123,7 @@
 // MARK: ForcedTesting
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (IBAction) testBrowserLoad:(id)sender;
+- (IBAction) testBrowserLoad:(id)sender
 {
 	if ([sidebar_ selectedNodeIsLocalRepositoryRef])
 	{

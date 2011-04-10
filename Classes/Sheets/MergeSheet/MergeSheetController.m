@@ -130,7 +130,7 @@
 }
 
 
-- (IBAction) openMergeSheet:(id)sender;
+- (IBAction) openMergeSheet:(id)sender
 {
 	[NSApp beginSheet:mergeSheetWindow modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
 	[self validateButtons:self];
@@ -138,7 +138,7 @@
 }
 
 
-- (IBAction) sheetButtonOk:(id)sender;
+- (IBAction) sheetButtonOk:(id)sender
 {
 	[mergeSheetWindow makeFirstResponder:mergeSheetWindow]; // Make the text fields of the sheet commit any changes they currently have
 	[NSApp endSheet:mergeSheetWindow];
@@ -149,7 +149,7 @@
 }
 
 
-- (IBAction) sheetButtonCancel:(id)sender;
+- (IBAction) sheetButtonCancel:(id)sender
 {
 	[mergeSheetWindow makeFirstResponder:mergeSheetWindow]; // Make the text fields of the sheet commit any changes they currently have
 	[NSApp endSheet:mergeSheetWindow];
@@ -173,7 +173,7 @@
 // MARK: Table Delegate Methods
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) logTableViewSelectionDidChange:(LogTableView*)theLogTable;
+- (void) logTableViewSelectionDidChange:(LogTableView*)theLogTable
 {
 	[self validateButtons:self];
 }
