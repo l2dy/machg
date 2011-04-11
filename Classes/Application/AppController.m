@@ -652,7 +652,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		case eUseP4MergeForDiffs:			return NO;
 		case eUseDiffMergeForDiffs:			return NO;
 		case eUseKDiff3ForDiffs:			return NO;
-		case eUseDelatWalkerForDiffs:		return NO;
+		case eUseDelatWalkerForDiffs:		return YES;
 		case eUseKaleidoscopeForDiffs:		return YES;
 		case eUseChangesForDiffs:			return NO;
 		case eUseDiffForkForDiffs:			return NO;
