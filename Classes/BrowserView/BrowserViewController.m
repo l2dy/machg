@@ -341,7 +341,7 @@
 }
 
 
-- (IBAction) mainMenuDiffSelectedFiles:(id)sender				{ [myDocument viewDifferencesInCurrentRevisionFor:[theBrowser absolutePathsOfChosenFilesInBrowser] toRevision:nil]; }		// nil indicates the current revision
+- (IBAction) mainMenuDiffSelectedFiles:(id)sender				{ [myDocument viewDifferencesInCurrentRevisionFor:[theBrowser absolutePathsOfChosenFilesInBrowser] toRevision:nil]; }	// nil indicates the current revision
 - (IBAction) mainMenuDiffAllFiles:(id)sender					{ [myDocument viewDifferencesInCurrentRevisionFor:[myDocument absolutePathOfRepositoryRootAsArray] toRevision:nil]; }	// nil indicates the current revision
 - (IBAction) toolbarDiffFiles:(id)sender
 {
