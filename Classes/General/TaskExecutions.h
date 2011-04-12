@@ -9,6 +9,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "Common.h"
+#import "TLMTask.h"
 
 @class AppController;
 @class MonitorFSEvents;
@@ -39,7 +40,6 @@ typedef enum
 @property (nonatomic, assign) ShellTask* shellTask;
 
 - (void)	shellTaskCreated:(ShellTask*)shellTask;
-- (NSTask*) task;
 @end
 
 
@@ -51,23 +51,11 @@ typedef enum
 // MARK: ShellTask
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-@interface ShellTask : NSObject
+@interface ShellTask : TLMTask
 {
-	NSString*		generatingCmd_;		// The command that was executed
-	NSArray*		generatingArgs_;	// The arguments used to the command
 	int				result_;			// The result of executing the command
-	NSTask*			task_;				// The NSTask we are trying to perform
-	NSFileHandle*	outHandle_;
-	NSFileHandle*	errHandle_;
-    NSMutableData*	outputData_;
-	NSMutableData*	errorData_;
-	BOOL			taskComplete;
-	BOOL			outputClosed;
-	BOOL			errorClosed;
 	id <ShellTaskDelegate> delegate_;
 }
-
-@property (nonatomic, assign) NSTask* task;
 
 + (ExecutionResult*) execute:(NSString*)cmd withArgs:(NSArray*)args;
 + (ExecutionResult*) execute:(NSString*)cmd withArgs:(NSArray*)args withEnvironment:(NSDictionary*)env;

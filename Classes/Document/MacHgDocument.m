@@ -2360,7 +2360,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 					[diffArgs addObject:@"--rev" followedBy:versionToCompareTo];
 				[diffArgs addObjectsFromArray:filesWhichHaveDifferences];
 				
-				NSTask* task     = [[NSTask alloc] init];
+				TLMTask* task     = [[TLMTask alloc] init];
 				NSString* hgPath = executableLocationHG();
 				[task setLaunchPath: hgPath];
 				[task setEnvironment:[TaskExecutions environmentForHg]];
@@ -2377,7 +2377,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 						[diffArgs addObject:@"--rev" followedBy:versionToCompareTo];
 					[diffArgs addObject:file];
 					
-					NSTask* task     = [[NSTask alloc] init];
+					TLMTask* task     = [[TLMTask alloc] init];
 					NSString* hgPath = executableLocationHG();
 					[task setLaunchPath: hgPath];
 					[task setEnvironment:[TaskExecutions environmentForHg]];

@@ -8,7 +8,6 @@
 //
 
 #import "TaskExecutions.h"
-#import "Common.h"
 
 
 
@@ -21,7 +20,6 @@
 @implementation ShellTaskController
 @synthesize shellTask = shellTask_;
 - (void)	shellTaskCreated:(ShellTask*)shellTask	{ shellTask_ = shellTask; }
-- (NSTask*) task									{ return [shellTask_ task]; }
 @end
 
 
@@ -41,62 +39,6 @@
 
 @implementation ShellTask
 
-@synthesize task = task_;
-
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
-// MARK:  Notification Handling
-// -----------------------------------------------------------------------------------------------------------------------------------------
-
-- (void) gotOutput:(NSNotification*)notification
-{
-    NSData* data = [notification.userInfo objectForKey:NSFileHandleNotificationDataItem];
-    if (notification.object == outHandle_)
-	{
-        if (data.length > 0)
-		{
-			DebugLog(@"...got Output for %@ ...", [self commandLineString]);
-			[outputData_ appendData:data];
-			if ([delegate_ respondsToSelector:@selector(gotOutput:)])
-				[delegate_ gotOutput:[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]];
-            [outHandle_ readInBackgroundAndNotify];
-        }
-		else
-		{
-			DebugLog(@"...got NULL standard Output for %@ ...", [self commandLineString]);
-            outputClosed = YES;
-        }
-    }
-}
-
-- (void) gotError:(NSNotification*)notification
-{
-    if (notification.object == errHandle_)
-	{
-        NSData* data = [notification.userInfo objectForKey:NSFileHandleNotificationDataItem];
-        if (data.length > 0)
-		{
-			DebugLog(@"...got Error for %@ ...", [self commandLineString]);
-            [errorData_ appendData:data];
-			if ([delegate_ respondsToSelector:@selector(gotError:)])
-				[delegate_ gotError:[[NSString alloc] initWithData:data encoding:NSUTF8StringEncoding]];
-            [errHandle_ readInBackgroundAndNotify];
-        }
-		else
-		{
-			DebugLog(@"...got NULL Error Output for %@ ...", [self commandLineString]);
-            errorClosed = YES;
-        }
-    }
-}
-
-
-- (void) gotExit:(NSNotification*)notification
-{
-	taskComplete = YES;
-	DebugLog(@"...got Exit for %@ ...", [self commandLineString]);
-}
-
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
@@ -105,8 +47,8 @@
 
 - (NSString*) commandLineString
 {
-    NSMutableString* desc = [NSMutableString stringWithString:[generatingCmd_ lastPathComponent]];
-    for (NSString* arg in generatingArgs_)
+    NSMutableString* desc = [NSMutableString stringWithString:[[self launchPath] lastPathComponent]];
+    for (NSString* arg in [self arguments])
 	{
         [desc appendString:@" "];
         [desc appendString:arg];
@@ -120,59 +62,31 @@
 // MARK:  Execution
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BOOL) waitTillFinished
+- (void) gotOutputBytes:(char*)bytes ofLength:(size_t)len
 {
-	BOOL isRunning = YES;
-	while (isRunning && (!taskComplete || !outputClosed || !errorClosed))
-	{
-		isRunning = [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:[NSDate dateWithTimeIntervalSinceNow: 10.0]];
-	}
+	//DebugLog(@"got output %@ ", [[NSString alloc] initWithBytes:bytes length:len encoding:NSUTF8StringEncoding]);
+	if ([delegate_ respondsToSelector:@selector(gotOutput:)])
+		[delegate_ gotOutput:[[NSString alloc] initWithBytes:bytes length:len encoding:NSUTF8StringEncoding]];
+}
 
-	[self stopObserving:NSFileHandleReadCompletionNotification from:nil];
-	[task_ terminate];
-	result_ = [task_ terminationStatus];
-
-	if ([delegate_ respondsToSelector:@selector(taskFinished)])
-		[delegate_ taskFinished];
-	
-	outHandle_ = nil;
-	errHandle_ = nil;
-
-	DebugLog(@"...Exiting waitTillFinished for %@ ...", [self commandLineString]);
-    return (result_ == 0);
+- (void) gotErrorBytes:(char*)bytes ofLength:(size_t)len
+{
+	//DebugLog(@"got error '%@' with length %d", [[NSString alloc] initWithBytes:bytes length:len encoding:NSUTF8StringEncoding], len);
+	if ([delegate_ respondsToSelector:@selector(gotError:)])
+		[delegate_ gotError:[[NSString alloc] initWithBytes:bytes length:len encoding:NSUTF8StringEncoding]];
 }
 
 
 - (id) initWithCommand:(NSString*)cmd andArgs:(NSArray*)args withEnvironment:(NSDictionary*)env withDelegate:(id <ShellTaskDelegate>)delegate
-{	
-	generatingCmd_ = cmd;
-	generatingArgs_ = args;
-	delegate_ = delegate;
-	task_ = [[NSTask alloc] init];
-	if (env)
-		[task_ setEnvironment:env];
-
-	
-	NSPipe* outPipe    = [[NSPipe alloc] init];     // Create the pipe to write standard out to
-	NSPipe* errPipe    = [[NSPipe alloc] init];     // Create the pipe to write standard error to
-	outHandle_  = [outPipe fileHandleForReading];
-	errHandle_  = [errPipe fileHandleForReading];
-	outputData_ = [[NSMutableData alloc] init];
-	errorData_  = [[NSMutableData alloc] init];
-
-	[task_ setLaunchPath:cmd];
-	[task_ setArguments:args];
-	[task_ setStandardInput:[NSPipe pipe]];
-	[task_ setStandardOutput:outPipe];
-	[task_ setStandardError:errPipe];
-	
-	[self observe:NSFileHandleReadCompletionNotification from:outHandle_	byCalling:@selector(gotOutput:)];
-	[self observe:NSFileHandleReadCompletionNotification from:errHandle_	byCalling:@selector(gotError:)];
-	[self observe:NSTaskDidTerminateNotification		 from:task_			byCalling:@selector(gotExit:)];
-	
-	[outHandle_ readInBackgroundAndNotify];
-	[errHandle_ readInBackgroundAndNotify];
-	
+{
+	if ((self = [super init]))
+	{
+		delegate_ = delegate;
+		if (env)
+			[self setEnvironment:env];
+		[self setLaunchPath:cmd];
+		[self setArguments:args];
+	}
 	return self;
 }
 
@@ -184,7 +98,7 @@
 	if ([delegate respondsToSelector:@selector(shellTaskCreated:)])
 		[delegate shellTaskCreated:shellTask];
 	
-	[shellTask->task_ launch];			// Start the process
+	[shellTask launch];			// Start the process
 	DebugLog(@"launched %@", [shellTask commandLineString]);
 
 	// Move the process into our group if we can so when we quit all child processes are killed. See http:
@@ -192,24 +106,24 @@
 	pid_t group = setsid();
 	if (group == -1)
 		group = getpgrp();
-	setpgid([shellTask->task_  processIdentifier], group);
+	setpgid([shellTask  processIdentifier], group);
 
-	NSAssert(shellTask->task_.isRunning, @"The task must be running after launching it");
+	NSAssert(shellTask.isRunning, @"The task must be running after launching it");
 	
-	[shellTask waitTillFinished];
+	[shellTask waitUntilExit];
 
 	DebugLog(@"Finished execute cmd for %@", [shellTask commandLineString]);
 	
-	if (IsEmpty(shellTask->outputData_) && IsEmpty(shellTask->errorData_) && [[shellTask->generatingArgs_ firstObject] isNotEqualToString:@"combinedinfo"])
-		DebugLog(@"Null result posted for operation %@", [shellTask commandLineString]);
+	NSString* outStr = [shellTask outputString];
+	NSString* errStr = [shellTask errorString];
 
-	NSString* outStr = [[NSString alloc] initWithData:shellTask->outputData_ encoding:NSUTF8StringEncoding];
-	NSString* errStr = [[NSString alloc] initWithData:shellTask->errorData_  encoding:NSUTF8StringEncoding];
+	if (IsEmpty(outStr) && IsEmpty(errStr) && [[[shellTask arguments] firstObject] isNotEqualToString:@"combinedinfo"])
+		DebugLog(@"Null result posted for operation %@", [shellTask commandLineString]);
 
 	if (IsNotEmpty(errStr))
 		DebugLog(@"err string for cmd %@ is %@", [shellTask commandLineString], nonNil(errStr));
 
-	ExecutionResult* result = [ExecutionResult resultWithCmd:cmd args:args result:shellTask->result_ outStr:outStr errStr:errStr];
+	ExecutionResult* result = [ExecutionResult resultWithCmd:cmd args:args result:[shellTask terminationStatus] outStr:outStr errStr:errStr];
 	result->theShellTask_ = shellTask;
 	return result;
 }

@@ -11,6 +11,8 @@
 		44D3658012770D10007D631D /* ParentTextButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 44D3657F12770D10007D631D /* ParentTextButtonCell.m */; };
 		8D15AC2F0486D014006FF6A4 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 089C165FFE840EACC02AAC07 /* InfoPlist.strings */; };
 		8D15AC340486D014006FF6A4 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1058C7A7FEA54F5311CA2CBB /* Cocoa.framework */; };
+		96000A551353E4E7005FD1BC /* BDSKTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 96000A521353E4E7005FD1BC /* BDSKTask.m */; };
+		96000A561353E4E7005FD1BC /* TLMTask.m in Sources */ = {isa = PBXBuildFile; fileRef = 96000A541353E4E7005FD1BC /* TLMTask.m */; };
 		9600C2C410CD3D9F00CD8D28 /* APPL.icns in Resources */ = {isa = PBXBuildFile; fileRef = 9600C28510CD3D9F00CD8D28 /* APPL.icns */; };
 		9600C2C510CD3D9F00CD8D28 /* BadNetwork.png in Resources */ = {isa = PBXBuildFile; fileRef = 9600C28610CD3D9F00CD8D28 /* BadNetwork.png */; };
 		9600C2CB10CD3D9F00CD8D28 /* Blank.png in Resources */ = {isa = PBXBuildFile; fileRef = 9600C28C10CD3D9F00CD8D28 /* Blank.png */; };
@@ -255,6 +257,10 @@
 		44D3657F12770D10007D631D /* ParentTextButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ParentTextButtonCell.m; sourceTree = "<group>"; };
 		8D15AC360486D014006FF6A4 /* MacHg-Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = "MacHg-Info.plist"; sourceTree = "<group>"; };
 		8D15AC370486D014006FF6A4 /* MacHg.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = MacHg.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		96000A511353E4E7005FD1BC /* BDSKTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = BDSKTask.h; sourceTree = "<group>"; };
+		96000A521353E4E7005FD1BC /* BDSKTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = BDSKTask.m; sourceTree = "<group>"; };
+		96000A531353E4E7005FD1BC /* TLMTask.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TLMTask.h; sourceTree = "<group>"; };
+		96000A541353E4E7005FD1BC /* TLMTask.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TLMTask.m; sourceTree = "<group>"; };
 		9600C28510CD3D9F00CD8D28 /* APPL.icns */ = {isa = PBXFileReference; lastKnownFileType = image.icns; name = APPL.icns; path = ApplicationIcons/APPL.icns; sourceTree = "<group>"; };
 		9600C28610CD3D9F00CD8D28 /* BadNetwork.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = BadNetwork.png; path = NetworkStatus/BadNetwork.png; sourceTree = "<group>"; };
 		9600C28C10CD3D9F00CD8D28 /* Blank.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Blank.png; path = Images/Blank.png; sourceTree = SOURCE_ROOT; };
@@ -658,6 +664,17 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
+		96000A501353E4E7005FD1BC /* TMLTask */ = {
+			isa = PBXGroup;
+			children = (
+				96000A511353E4E7005FD1BC /* BDSKTask.h */,
+				96000A521353E4E7005FD1BC /* BDSKTask.m */,
+				96000A531353E4E7005FD1BC /* TLMTask.h */,
+				96000A541353E4E7005FD1BC /* TLMTask.m */,
+			);
+			path = TMLTask;
+			sourceTree = "<group>";
+		};
 		9600C28410CD3D9F00CD8D28 /* Images */ = {
 			isa = PBXGroup;
 			children = (
@@ -1004,6 +1021,7 @@
 				969064E811601E2400F30915 /* MonitorFSEvents */,
 				9637C8C6118E9C5A0000C14B /* NSString+SymlinksAndAliases */,
 				9698090C13170E0D006088CA /* NSURL+Parameters */,
+				96000A501353E4E7005FD1BC /* TMLTask */,
 				9631D0681107A7E90007FDF2 /* RegexKitLite */,
 				9621CFE412D5FC1F009C192C /* RSVerticallyCenteredTextFieldCell */,
 				969BDDF11196B0C0007AA6D9 /* ShellHere */,
@@ -1816,6 +1834,8 @@
 				9621CFE912D5FC1F009C192C /* RSVerticallyCenteredTextFieldCell.m in Sources */,
 				9698090F13170E0D006088CA /* NSURL+Parameters.m in Sources */,
 				9618B3531349B6CA00C38570 /* ScrollToChangesetPanelController.m in Sources */,
+				96000A551353E4E7005FD1BC /* BDSKTask.m in Sources */,
+				96000A561353E4E7005FD1BC /* TLMTask.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

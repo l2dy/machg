@@ -1144,7 +1144,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 
 		[computingRepositoryIdentityForPath_ synchronizedRemoveObjectForKey:nodePath];
 	
-		if (![[theTaskController task] isRunning] && results.result == 0 && IsEmpty(results.errStr) && IsNotEmpty(results.outStr))
+		if (![[theTaskController shellTask] isRunning] && results.result == 0 && IsEmpty(results.errStr) && IsNotEmpty(results.outStr))
 		{
 			// We look for the 12 digit hashKey which is optionally seperated from other bits by whitespace.
 			static NSString* pickOutHashKeyRegex = @"^(.*\\s+)?([0-9abcdefABCDEF]{12})(\\s+.*)?$";
@@ -1170,7 +1170,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		//else
 		//	DebugLog(@"Unable to determine root changeset for the repository at %@ on attempt %d", path, attempts);
 		
-		[[theTaskController task] cancelTask];
+		[[theTaskController shellTask] cancelTask];
 	});
 }
 

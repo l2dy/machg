@@ -1009,7 +1009,7 @@
 									 
 									 // Timeout Block
 									 ^{
-										 [[[theOutgoingController shellTask] task] cancelTask];	// We timed out so kill the task which timed out...
+										 [[theOutgoingController shellTask] cancelTask];	// We timed out so kill the task which timed out...
 										 dispatch_async(mainQueue(), ^{
 											 if (![rootPath isEqualTo:[[self selectedNode] path]])
 												 return;
@@ -1045,7 +1045,7 @@
 									 
 									 // Timeout Block
 									 ^{
-										 [[[theIncomingController shellTask] task] cancelTask];	// We timed out so kill the task which timed out...
+										 [[theIncomingController shellTask] cancelTask];	// We timed out so kill the task which timed out...
 										 dispatch_async(mainQueue(), ^{
 											 if (![rootPath isEqualTo:[[self selectedNode] path]])
 												 return;
