@@ -419,7 +419,9 @@
 	if ([dict objectForKey:appName])
 		return nil;
 	[dict setObject:appURL forKey:appName];
-	[item setTitle:[appName stringByDeletingPathExtension]];
+	NSString* version = [[[NSBundle bundleWithPath:[appURL path]] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+	NSString* title = [appName stringByDeletingPathExtension];
+	[item setTitle:version ? fstr(@"%@ (%@)",title, version) : title];
 	[item setRepresentedObject:appURL];
 	[item setAction:@selector(browserOpenChosenNodesWithApplication:)];
 	[item setKeyEquivalent:@""];
