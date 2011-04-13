@@ -1372,7 +1372,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 + (NSURL*) applicationForURL:(NSURL*)url
 {
-	NSURL* appURL;
+	NSURL* appURL = nil;
 	LSGetApplicationForURL ( (CFURLRef)url, kLSRolesEditor | kLSRolesViewer, NULL, (CFURLRef*) &appURL);
 	return appURL;
 }
