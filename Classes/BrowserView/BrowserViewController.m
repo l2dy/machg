@@ -172,7 +172,8 @@
 		if ([results hasErrors])
 			return  nil;
 	}
-	return [results.outStr componentsSeparatedByString:@"\n"];
+	NSArray* lines = [results.outStr componentsSeparatedByString:@"\n"];
+	return IsNotEmpty(lines) ? lines : [NSArray array];
 }
 
 
