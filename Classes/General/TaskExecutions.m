@@ -114,14 +114,14 @@
 
 	DebugLog(@"Finished execute cmd for %@", [shellTask commandLineString]);
 	
-	NSString* outStr = [shellTask outputString];
-	NSString* errStr = [shellTask errorString];
+	NSString* outStr = nonNil([shellTask outputString]);
+	NSString* errStr = nonNil([shellTask errorString]);
 
 	if (IsEmpty(outStr) && IsEmpty(errStr) && [[[shellTask arguments] firstObject] isNotEqualToString:@"combinedinfo"])
 		DebugLog(@"Null result posted for operation %@", [shellTask commandLineString]);
 
 	if (IsNotEmpty(errStr))
-		DebugLog(@"err string for cmd %@ is %@", [shellTask commandLineString], nonNil(errStr));
+		DebugLog(@"err string for cmd %@ is %@", [shellTask commandLineString], errStr);
 
 	ExecutionResult* result = [ExecutionResult resultWithCmd:cmd args:args result:[shellTask terminationStatus] outStr:outStr errStr:errStr];
 	result->theShellTask_ = shellTask;
