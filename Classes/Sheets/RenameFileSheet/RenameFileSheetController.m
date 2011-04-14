@@ -163,7 +163,11 @@
 		if ([theAlreadyMovedButtonValue_ boolValue])
 			[argsRename addObject:@"--after"];
 		[argsRename addObject:theCurrentNameFieldValue_ followedBy:theNewNameFieldValue_];
-		[myDocument executeMercurialWithArgs:argsRename  fromRoot:rootPath  whileDelayingEvents:YES];
+
+		[myDocument delayEventsUntilFinishBlock:^{
+			[TaskExecutions executeMercurialWithArgs:argsRename  fromRoot:rootPath];
+			[myDocument addToChangedPathsDuringSuspension:paths];
+		}];		
 	}];
 
 	[NSApp endSheet:theRenameFileSheet];
