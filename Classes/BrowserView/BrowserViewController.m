@@ -165,6 +165,12 @@
 	
 	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:rootPath  logging:eLoggingNone];
 	
+	if ([results hasErrors])
+	{
+		// Try a second time
+		sleep(0.5);
+		results = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:rootPath  logging:eLoggingNone];
+	}
 	if ([results.errStr length] > 0)
 	{
 		[results logMercurialResult];
