@@ -14,6 +14,8 @@
 #import "MacHgDocument.h"
 #import "Sidebar.h"
 
+#define ICON_SIZE			16.0	// Our Icons are ICON_SIZE x ICON_SIZE
+
 
 @interface TransmitSheetController (PrivateAPI)
 - (void) recenterMainGroupingBox;
@@ -79,7 +81,15 @@
 		{
 			SidebarNode* node = DynamicCast(SidebarNode, [item representedObject]);
 			if ([node isRepositoryRef])
-				[item setImage:[node icon]];
+			{
+				NSImage* image = [node icon];
+				if ([image size].width != ICON_SIZE || [image size].height != ICON_SIZE)
+				{
+					image = [image copy];
+					[image setSize:NSMakeSize(ICON_SIZE, ICON_SIZE)];
+				}
+				[item setImage:image];
+			}
 		}	
 }
 
