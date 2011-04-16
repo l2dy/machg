@@ -91,7 +91,36 @@
 	StripSheetController*				theStripSheetController_;
 	UpdateSheetController*				theUpdateSheetController_;
 
-	QLPreviewPanel*						quickLookPreviewPanel;
+	
+	// Initilizers for Pane and Sheet Controllers
+	dispatch_once_t						theBrowserViewControllerInitilizer_;
+	dispatch_once_t						theHistoryViewControllerInitilizer_;
+	dispatch_once_t						theDifferencesViewControllerInitilizer_;
+	dispatch_once_t						theBackingViewControllerInitilizer_;
+	dispatch_once_t						theAddLabelSheetControllerInitilizer_;
+	dispatch_once_t						theBackoutSheetControllerInitilizer_;
+	dispatch_once_t						theCloneSheetControllerInitilizer_;
+	dispatch_once_t						theCollapseSheetControllerInitilizer_;
+	dispatch_once_t						theCommitSheetControllerInitilizer_;
+	dispatch_once_t						theExportPatchesSheetControllerInitilizer_;
+	dispatch_once_t						theHistoryEditSheetControllerInitilizer_;
+	dispatch_once_t						theImportPatchesSheetControllerInitilizer_;
+	dispatch_once_t						theIncomingSheetControllerInitilizer_;
+	dispatch_once_t						theLocalRepositoryRefSheetControllerInitilizer_;
+	dispatch_once_t						theMergeSheetControllerInitilizer_;
+	dispatch_once_t						theMoveLabelSheetControllerInitilizer_;
+	dispatch_once_t						theOutgoingSheetControllerInitilizer_;
+	dispatch_once_t						thePullSheetControllerInitilizer_;
+	dispatch_once_t						thePushSheetControllerInitilizer_;
+	dispatch_once_t						theRebaseSheetControllerInitilizer_;
+	dispatch_once_t						theRenameFileSheetControllerInitilizer_;
+	dispatch_once_t						theRevertSheetControllerInitilizer_;
+	dispatch_once_t						theServerRepositoryRefSheetControllerInitilizer_;
+	dispatch_once_t						theStripSheetControllerInitilizer_;
+	dispatch_once_t						theUpdateSheetControllerInitilizer_;
+	
+	
+	QLPreviewPanel*				quickLookPreviewPanel;
 
 	
 	// Queues and Events

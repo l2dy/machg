@@ -251,302 +251,177 @@
 
 - (BrowserViewController*) theBrowserViewController
 {
-	if (theBrowserViewController_)
-		return theBrowserViewController_;
-	@synchronized(self)
-	{
-		if (!theBrowserViewController_)
-			theBrowserViewController_ = [[BrowserViewController alloc] initBrowserViewControllerWithDocument:self];
-	}
+	dispatch_once(&theBrowserViewControllerInitilizer_, ^{
+		theBrowserViewController_ = [[BrowserViewController alloc] initBrowserViewControllerWithDocument:self]; });
 	return theBrowserViewController_;
 }
 
 - (HistoryViewController*) theHistoryViewController
 {
-	if (theHistoryViewController_)
-		return theHistoryViewController_;
-	@synchronized(self)
-	{
-		if (!theHistoryViewController_)
-			theHistoryViewController_ = [[HistoryViewController alloc] initHistoryViewControllerWithDocument:self];
-	}
+	dispatch_once(&theHistoryViewControllerInitilizer_, ^{
+		theHistoryViewController_ = [[HistoryViewController alloc] initHistoryViewControllerWithDocument:self]; });
 	return theHistoryViewController_;
 }
 
 - (DifferencesViewController*) theDifferencesViewController
 {
-	if (theDifferencesViewController_)
-		return theDifferencesViewController_;
-	@synchronized(self)
-	{
-		if (!theDifferencesViewController_)
-			theDifferencesViewController_ = [[DifferencesViewController alloc] initDifferencesViewControllerWithDocument:self];
-	}
+	dispatch_once(&theDifferencesViewControllerInitilizer_, ^{
+		theDifferencesViewController_ = [[DifferencesViewController alloc] initDifferencesViewControllerWithDocument:self]; });
 	return theDifferencesViewController_;
 }
 
 - (BackingViewController*) theBackingViewController
 {
-	if (theBackingViewController_)
-		return theBackingViewController_;
-	@synchronized(self)
-	{
-		if (!theBackingViewController_)
-			theBackingViewController_ = [[BackingViewController alloc] initBackingViewControllerWithDocument:self];
-	}
+	dispatch_once(&theBackingViewControllerInitilizer_, ^{
+		theBackingViewController_ = [[BackingViewController alloc] initBackingViewControllerWithDocument:self]; });
 	return theBackingViewController_;
 }
 
 
 - (AddLabelSheetController*) theAddLabelSheetController
 {
-	if (theAddLabelSheetController_)
-		return theAddLabelSheetController_;
-	@synchronized(self)
-	{
-		if (!theAddLabelSheetController_)
-			theAddLabelSheetController_ = [[AddLabelSheetController alloc] initAddLabelSheetControllerWithDocument:self];
-	}
+	dispatch_once(&theAddLabelSheetControllerInitilizer_, ^{
+		theAddLabelSheetController_ = [[AddLabelSheetController alloc] initAddLabelSheetControllerWithDocument:self]; });
 	return theAddLabelSheetController_;
 }
 
 - (BackoutSheetController*) theBackoutSheetController
 {
-	if (theBackoutSheetController_)
-		return theBackoutSheetController_;
-	@synchronized(self)
-	{
-		if (!theBackoutSheetController_)
-			theBackoutSheetController_ = [[BackoutSheetController alloc] initBackoutSheetControllerWithDocument:self];
-	}
+	dispatch_once(&theBackoutSheetControllerInitilizer_, ^{
+		theBackoutSheetController_ = [[BackoutSheetController alloc] initBackoutSheetControllerWithDocument:self]; });
 	return theBackoutSheetController_;
 }
 
 - (CloneSheetController*) theCloneSheetController
 {
-	if (theCloneSheetController_)
-		return theCloneSheetController_;
-	@synchronized(self)
-	{
-		if (!theCloneSheetController_)
-			theCloneSheetController_ = [[CloneSheetController alloc] initCloneSheetControllerWithDocument:self];
-	}
+	dispatch_once(&theCloneSheetControllerInitilizer_, ^{
+		theCloneSheetController_ = [[CloneSheetController alloc] initCloneSheetControllerWithDocument:self]; });
 	return theCloneSheetController_;
 }
 
 - (CollapseSheetController*) theCollapseSheetController
 {
-	if (theCollapseSheetController_)
-		return theCollapseSheetController_;
-	@synchronized(self)
-	{
-		if (!theCollapseSheetController_)
-			theCollapseSheetController_ = [[CollapseSheetController alloc] initCollapseSheetControllerWithDocument:self];
-	}
+	dispatch_once(&theCollapseSheetControllerInitilizer_, ^{
+		theCollapseSheetController_ = [[CollapseSheetController alloc] initCollapseSheetControllerWithDocument:self]; });
 	return theCollapseSheetController_;
 }
 
 - (CommitSheetController*) theCommitSheetController
 {
-	if (theCommitSheetController_)
-		return theCommitSheetController_;
-	@synchronized(self)
-	{
-		if (!theCommitSheetController_)
-			theCommitSheetController_ = [[CommitSheetController alloc] initCommitSheetControllerWithDocument:self];
-	}
+	dispatch_once(&theCommitSheetControllerInitilizer_, ^{
+		theCommitSheetController_ = [[CommitSheetController alloc] initCommitSheetControllerWithDocument:self]; });
 	return theCommitSheetController_;
 }
 
 - (ExportPatchesSheetController*) theExportPatchesSheetController
 {
-	if (theExportPatchesSheetController_)
-		return theExportPatchesSheetController_;
-	@synchronized(self)
-	{
-		if (!theExportPatchesSheetController_)
-			theExportPatchesSheetController_ = [[ExportPatchesSheetController alloc] initExportPatchesSheetControllerWithDocument:self];
-	}
+	dispatch_once(&theExportPatchesSheetControllerInitilizer_, ^{
+		theExportPatchesSheetController_ = [[ExportPatchesSheetController alloc] initExportPatchesSheetControllerWithDocument:self]; });
 	return theExportPatchesSheetController_;
 }
 
 - (HistoryEditSheetController*) theHistoryEditSheetController
 {
-	if (theHistoryEditSheetController_)
-		return theHistoryEditSheetController_;
-	@synchronized(self)
-	{
-		if (!theHistoryEditSheetController_)
-			theHistoryEditSheetController_ = [[HistoryEditSheetController alloc] initHistoryEditSheetControllerWithDocument:self];
-	}
+	dispatch_once(&theHistoryEditSheetControllerInitilizer_, ^{
+		theHistoryEditSheetController_ = [[HistoryEditSheetController alloc] initHistoryEditSheetControllerWithDocument:self]; });
 	return theHistoryEditSheetController_;
 }
 
 - (ImportPatchesSheetController*) theImportPatchesSheetController
 {
-	if (theImportPatchesSheetController_)
-		return theImportPatchesSheetController_;
-	@synchronized(self)
-	{
-		if (!theImportPatchesSheetController_)
-			theImportPatchesSheetController_ = [[ImportPatchesSheetController alloc] initImportPatchesSheetControllerWithDocument:self];
-	}
+	dispatch_once(&theImportPatchesSheetControllerInitilizer_, ^{
+		theImportPatchesSheetController_ = [[ImportPatchesSheetController alloc] initImportPatchesSheetControllerWithDocument:self]; });
 	return theImportPatchesSheetController_;
 }
 
 - (IncomingSheetController*) theIncomingSheetController
 {
-	if (theIncomingSheetController_)
-		return theIncomingSheetController_;
-	@synchronized(self)
-	{
-		if (!theIncomingSheetController_)
-			theIncomingSheetController_ = [[IncomingSheetController alloc] initIncomingSheetControllerWithDocument:self];
-	}
+	dispatch_once(&theIncomingSheetControllerInitilizer_, ^{
+		theIncomingSheetController_ = [[IncomingSheetController alloc] initIncomingSheetControllerWithDocument:self]; });
 	return theIncomingSheetController_;
 }
 
 - (LocalRepositoryRefSheetController*) theLocalRepositoryRefSheetController
 {
-	if (theLocalRepositoryRefSheetController_)
-		return theLocalRepositoryRefSheetController_;
-	@synchronized(self)
-	{
-		if (!theLocalRepositoryRefSheetController_)
-			theLocalRepositoryRefSheetController_ = [[LocalRepositoryRefSheetController alloc] initLocalRepositoryRefSheetControllerWithDocument:self];
-	}
+	dispatch_once(&theLocalRepositoryRefSheetControllerInitilizer_, ^{
+		theLocalRepositoryRefSheetController_ = [[LocalRepositoryRefSheetController alloc] initLocalRepositoryRefSheetControllerWithDocument:self]; });
 	return theLocalRepositoryRefSheetController_;
 }
 
 - (MergeSheetController*) theMergeSheetController
 {
-	if (theMergeSheetController_)
-		return theMergeSheetController_;
-	@synchronized(self)
-	{
-		if (!theMergeSheetController_)
-			theMergeSheetController_ = [[MergeSheetController alloc] initMergeSheetControllerWithDocument:self];
-	}
+	dispatch_once(&theMergeSheetControllerInitilizer_, ^{
+		theMergeSheetController_ = [[MergeSheetController alloc] initMergeSheetControllerWithDocument:self]; });
 	return theMergeSheetController_;
 }
 
 - (MoveLabelSheetController*) theMoveLabelSheetController
 {
-	if (theMoveLabelSheetController_)
-		return theMoveLabelSheetController_;
-	@synchronized(self)
-	{
-		if (!theMoveLabelSheetController_)
-			theMoveLabelSheetController_ = [[MoveLabelSheetController alloc] initMoveLabelSheetControllerWithDocument:self];
-	}
+	dispatch_once(&theMoveLabelSheetControllerInitilizer_, ^{
+		theMoveLabelSheetController_ = [[MoveLabelSheetController alloc] initMoveLabelSheetControllerWithDocument:self]; });
 	return theMoveLabelSheetController_;
 }
 
 - (OutgoingSheetController*) theOutgoingSheetController
 {
-	if (theOutgoingSheetController_)
-		return theOutgoingSheetController_;
-	@synchronized(self)
-	{
-		if (!theOutgoingSheetController_)
-			theOutgoingSheetController_ = [[OutgoingSheetController alloc] initOutgoingSheetControllerWithDocument:self];
-	}
+	dispatch_once(&theOutgoingSheetControllerInitilizer_, ^{
+		theOutgoingSheetController_ = [[OutgoingSheetController alloc] initOutgoingSheetControllerWithDocument:self]; });
 	return theOutgoingSheetController_;
 }
 
 - (PullSheetController*) thePullSheetController
 {
-	if (thePullSheetController_)
-		return thePullSheetController_;
-	@synchronized(self)
-	{
-		if (!thePullSheetController_)
-			thePullSheetController_ = [[PullSheetController alloc] initPullSheetControllerWithDocument:self];
-	}
+	dispatch_once(&thePullSheetControllerInitilizer_, ^{
+		thePullSheetController_ = [[PullSheetController alloc] initPullSheetControllerWithDocument:self]; });
 	return thePullSheetController_;
 }
 
 - (PushSheetController*) thePushSheetController
 {
-	if (thePushSheetController_)
-		return thePushSheetController_;
-	@synchronized(self)
-	{
-		if (!thePushSheetController_)
-			thePushSheetController_ = [[PushSheetController alloc] initPushSheetControllerWithDocument:self];
-	}
+	dispatch_once(&thePushSheetControllerInitilizer_, ^{
+		thePushSheetController_ = [[PushSheetController alloc] initPushSheetControllerWithDocument:self]; });
 	return thePushSheetController_;
 }
 
 - (RebaseSheetController*) theRebaseSheetController
 {
-	if (theRebaseSheetController_)
-		return theRebaseSheetController_;
-	@synchronized(self)
-	{
-		if (!theRebaseSheetController_)
-			theRebaseSheetController_ = [[RebaseSheetController alloc] initRebaseSheetControllerWithDocument:self];
-	}
+	dispatch_once(&theRebaseSheetControllerInitilizer_, ^{
+		theRebaseSheetController_ = [[RebaseSheetController alloc] initRebaseSheetControllerWithDocument:self]; });
 	return theRebaseSheetController_;
 }
 
 - (RenameFileSheetController*) theRenameFileSheetController
 {
-	if (theRenameFileSheetController_)
-		return theRenameFileSheetController_;
-	@synchronized(self)
-	{
-		if (!theRenameFileSheetController_)
-			theRenameFileSheetController_ = [[RenameFileSheetController alloc] initRenameFileSheetControllerWithDocument:self];
-	}
+	dispatch_once(&theRenameFileSheetControllerInitilizer_, ^{
+		theRenameFileSheetController_ = [[RenameFileSheetController alloc] initRenameFileSheetControllerWithDocument:self]; });
 	return theRenameFileSheetController_;
 }
 
 - (RevertSheetController*) theRevertSheetController
 {
-	if (theRevertSheetController_)
-		return theRevertSheetController_;
-	@synchronized(self)
-	{
-		if (!theRevertSheetController_)
-			theRevertSheetController_ = [[RevertSheetController alloc] initRevertSheetControllerWithDocument:self];
-	}
+	dispatch_once(&theRevertSheetControllerInitilizer_, ^{
+		theRevertSheetController_ = [[RevertSheetController alloc] initRevertSheetControllerWithDocument:self]; });
 	return theRevertSheetController_;
 }
 
 - (ServerRepositoryRefSheetController*) theServerRepositoryRefSheetController
 {
-	if (theServerRepositoryRefSheetController_)
-		return theServerRepositoryRefSheetController_;
-	@synchronized(self)
-	{
-		if (!theServerRepositoryRefSheetController_)
-			theServerRepositoryRefSheetController_ = [[ServerRepositoryRefSheetController alloc] initServerRepositoryRefSheetControllerWithDocument:self];
-	}
+	dispatch_once(&theServerRepositoryRefSheetControllerInitilizer_, ^{
+		theServerRepositoryRefSheetController_ = [[ServerRepositoryRefSheetController alloc] initServerRepositoryRefSheetControllerWithDocument:self]; });
 	return theServerRepositoryRefSheetController_;
 }
 
 - (StripSheetController*) theStripSheetController
 {
-	if (theStripSheetController_)
-		return theStripSheetController_;
-	@synchronized(self)
-	{
-		if (!theStripSheetController_)
-			theStripSheetController_ = [[StripSheetController alloc] initStripSheetControllerWithDocument:self];
-	}
+	dispatch_once(&theStripSheetControllerInitilizer_, ^{
+		theStripSheetController_ = [[StripSheetController alloc] initStripSheetControllerWithDocument:self]; });
 	return theStripSheetController_;
 }
 
 - (UpdateSheetController*) theUpdateSheetController
 {
-	if (theUpdateSheetController_)
-		return theUpdateSheetController_;
-	@synchronized(self)
-	{
-		if (!theUpdateSheetController_)
-			theUpdateSheetController_ = [[UpdateSheetController alloc] initUpdateSheetControllerWithDocument:self];
-	}
+	dispatch_once(&theUpdateSheetControllerInitilizer_, ^{
+		theUpdateSheetController_ = [[UpdateSheetController alloc] initUpdateSheetControllerWithDocument:self]; });
 	return theUpdateSheetController_;
 }
 
