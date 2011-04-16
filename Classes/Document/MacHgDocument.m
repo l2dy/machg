@@ -2246,19 +2246,20 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 		else
 		{
 			for (NSString* file in filesWhichHaveDifferences)
-				dispatch_group_async(group, globalQueue(), ^{
-					NSMutableArray* diffArgs = [NSMutableArray arrayWithObjects: cmd, @"--config", @"extensions.extdiff=", @"--cwd", rootPath, nil];
-					if (versionToCompareTo)
-						[diffArgs addObject:@"--rev" followedBy:versionToCompareTo];
-					[diffArgs addObject:file];
-					
-					TLMTask* task     = [[TLMTask alloc] init];
-					NSString* hgPath = executableLocationHG();
-					[task setLaunchPath: hgPath];
-					[task setEnvironment:[TaskExecutions environmentForHg]];
-					[task setArguments:diffArgs];
-					[task launch];			// Start the process
-				});
+				if (IsNotEmpty(file))
+					dispatch_group_async(group, globalQueue(), ^{
+						NSMutableArray* diffArgs = [NSMutableArray arrayWithObjects: cmd, @"--config", @"extensions.extdiff=", @"--cwd", rootPath, nil];
+						if (versionToCompareTo)
+							[diffArgs addObject:@"--rev" followedBy:versionToCompareTo];
+						[diffArgs addObject:file];
+						
+						TLMTask* task     = [[TLMTask alloc] init];
+						NSString* hgPath = executableLocationHG();
+						[task setLaunchPath: hgPath];
+						[task setEnvironment:[TaskExecutions environmentForHg]];
+						[task setArguments:diffArgs];
+						[task launch];			// Start the process
+					});
 		}
 		dispatchGroupWaitAndFinish(group);
 	}];
