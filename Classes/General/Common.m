@@ -1531,6 +1531,41 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 @end
 
+// MARK: -
+@implementation NSWindow ( NSWindowPlusExtensions )
+
+// Given controls which resize with the window, look at the controls contents and if they don't fit in the given control resize
+// the window appropriately.
+- (void) resizeSoContentsFitInFields: (NSControl*)arg, ...
+{
+	NSMutableArray* arrayOfControls = [[NSMutableArray alloc]init];
+    va_list args;
+    va_start(args, arg);
+    while( arg ) {
+        [arrayOfControls addObject: arg];
+        arg = va_arg(args, NSControl*);
+    }
+    va_end(args);
+	
+	CGFloat maxWidth = 0;
+	CGFloat delta = 100000;
+	for (NSControl* control in arrayOfControls)
+		if ([control autoresizingMask] | NSViewWidthSizable)
+			maxWidth = MAX(maxWidth, [[control attributedStringValue] size].width);
+	for (NSControl* control in arrayOfControls)
+		if ([control autoresizingMask] | NSViewWidthSizable)
+			delta = MIN(delta, [control bounds].size.width - maxWidth);
+	if (delta < 50 || delta > 300)
+	{
+		NSRect frame = [self frame];
+		frame.size.width -= delta - 100;
+		frame.size.width = MAX(frame.size.width, [self minSize].width);
+		frame.size.width = MIN(frame.size.width, [self maxSize].width);
+		[self setFrame:frame display:YES animate:NO];
+	}
+}
+
+@end
 
 
 // MARK: -

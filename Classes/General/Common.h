@@ -1061,6 +1061,12 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 
 // MARK: -
+@interface NSWindow ( NSWindowPlusExtensions )
+- (void)	resizeSoContentsFitInFields:(NSControl*)ctrl1, ... NS_REQUIRES_NIL_TERMINATION;
+@end
+
+
+// MARK: -
 @interface NSBox ( NSBoxPlusExtensions )
 - (void)	growToFit;
 @end
