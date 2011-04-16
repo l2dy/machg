@@ -110,6 +110,7 @@
 	addNewRepositoryRefTo = parent;
 	addNewRepositoryRefAtIndex = index;
 	[theTitleText setStringValue:@"Create Repository"];
+	[theLocalRepositoryRefSheet resizeSoContentsFitInFields: shortNameField, pathField, nil];
 	[self validateButtons:self];
 	[NSApp beginSheet:theLocalRepositoryRefSheet modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
 }
@@ -134,6 +135,7 @@
 	else
 		[self clearSheetFieldValues];
 
+	[theLocalRepositoryRefSheet resizeSoContentsFitInFields: shortNameField, pathField, nil];
 	[self validateButtons:self];
 	[NSApp beginSheet:theLocalRepositoryRefSheet modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
 }
