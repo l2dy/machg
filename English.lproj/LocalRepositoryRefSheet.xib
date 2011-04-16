@@ -2,8 +2,8 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.10">
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
-		<string key="IBDocument.SystemVersion">10H574</string>
-		<string key="IBDocument.InterfaceBuilderVersion">823</string>
+		<string key="IBDocument.SystemVersion">10J869</string>
+		<string key="IBDocument.InterfaceBuilderVersion">851</string>
 		<string key="IBDocument.AppKitVersion">1038.35</string>
 		<string key="IBDocument.HIToolboxVersion">461.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
@@ -15,13 +15,12 @@
 			</object>
 			<object class="NSMutableArray" key="dict.values">
 				<bool key="EncodedWithXMLCoder">YES</bool>
-				<string>823</string>
+				<string>851</string>
 				<string>1.2.2</string>
 			</object>
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="301"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -59,7 +58,7 @@
 				<string key="NSWindowContentMaxSize">{1500, 241}</string>
 				<string key="NSWindowContentMinSize">{680, 241}</string>
 				<object class="NSView" key="NSWindowView" id="250803238">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<object class="NSMutableArray" key="NSSubviews">
 						<bool key="EncodedWithXMLCoder">YES</bool>
@@ -423,7 +422,6 @@
 						</object>
 					</object>
 					<string key="NSFrameSize">{681, 241}</string>
-					<reference key="NSSuperview"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
 				<string key="NSMinSize">{680, 263}</string>
@@ -459,14 +457,6 @@
 						<reference key="destination" ref="565053986"/>
 					</object>
 					<int key="connectionID">368</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">theWindow</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="530833982"/>
-					</object>
-					<int key="connectionID">369</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
@@ -581,6 +571,30 @@
 						<reference key="destination" ref="23777862"/>
 					</object>
 					<int key="connectionID">415</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">pathField</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="62166892"/>
+					</object>
+					<int key="connectionID">416</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">shortNameField</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="543452023"/>
+					</object>
+					<int key="connectionID">417</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">theLocalRepositoryRefSheet</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="530833982"/>
+					</object>
+					<int key="connectionID">418</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -973,7 +987,7 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">415</int>
+			<int key="maxID">418</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1048,16 +1062,20 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>okButton</string>
+							<string>pathField</string>
 							<string>repositoryPathBox</string>
+							<string>shortNameField</string>
+							<string>theLocalRepositoryRefSheet</string>
 							<string>theTitleText</string>
-							<string>theWindow</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>NSButton</string>
+							<string>NSTextField</string>
 							<string>NSBox</string>
 							<string>NSTextField</string>
 							<string>NSWindow</string>
+							<string>NSTextField</string>
 						</object>
 					</object>
 					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
@@ -1065,9 +1083,11 @@
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
 							<string>okButton</string>
+							<string>pathField</string>
 							<string>repositoryPathBox</string>
+							<string>shortNameField</string>
+							<string>theLocalRepositoryRefSheet</string>
 							<string>theTitleText</string>
-							<string>theWindow</string>
 						</object>
 						<object class="NSMutableArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
@@ -1076,16 +1096,24 @@
 								<string key="candidateClassName">NSButton</string>
 							</object>
 							<object class="IBToOneOutletInfo">
+								<string key="name">pathField</string>
+								<string key="candidateClassName">NSTextField</string>
+							</object>
+							<object class="IBToOneOutletInfo">
 								<string key="name">repositoryPathBox</string>
 								<string key="candidateClassName">NSBox</string>
 							</object>
 							<object class="IBToOneOutletInfo">
-								<string key="name">theTitleText</string>
+								<string key="name">shortNameField</string>
 								<string key="candidateClassName">NSTextField</string>
 							</object>
 							<object class="IBToOneOutletInfo">
-								<string key="name">theWindow</string>
+								<string key="name">theLocalRepositoryRefSheet</string>
 								<string key="candidateClassName">NSWindow</string>
+							</object>
+							<object class="IBToOneOutletInfo">
+								<string key="name">theTitleText</string>
+								<string key="candidateClassName">NSTextField</string>
 							</object>
 						</object>
 					</object>
@@ -1103,14 +1131,26 @@
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
+					<string key="className">NSApplication</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="369712638">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/General/Common.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
+					<string key="className">NSBox</string>
+					<reference key="sourceIdentifier" ref="369712638"/>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<reference key="sourceIdentifier" ref="369712638"/>
+				</object>
+				<object class="IBPartialClassDescription">
 					<string key="className">NSView</string>
+					<reference key="sourceIdentifier" ref="369712638"/>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSWindow</string>
 					<reference key="sourceIdentifier" ref="369712638"/>
 				</object>
 			</object>

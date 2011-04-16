@@ -111,7 +111,7 @@
 	addNewRepositoryRefAtIndex = index;
 	[theTitleText setStringValue:@"Create Repository"];
 	[self validateButtons:self];
-	[NSApp beginSheet:theWindow modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[NSApp beginSheet:theLocalRepositoryRefSheet modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
 }
 
 
@@ -135,13 +135,13 @@
 		[self clearSheetFieldValues];
 
 	[self validateButtons:self];
-	[NSApp beginSheet:theWindow modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[NSApp beginSheet:theLocalRepositoryRefSheet modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
 }
 
 
 - (IBAction) sheetButtonOk:(id)sender
 {
-	[theWindow makeFirstResponder:theWindow];	// Make the text fields of the sheet commit any changes they currently have
+	[theLocalRepositoryRefSheet makeFirstResponder:theLocalRepositoryRefSheet];	// Make the text fields of the sheet commit any changes they currently have
 
 	Sidebar* theSidebar = [myDocument sidebar];
 	[[theSidebar prepareUndoWithTarget:theSidebar] setRootAndUpdate:[[theSidebar root] copyNodeTree]];
@@ -216,8 +216,8 @@
 	}
 	@finally
 	{
-		[NSApp endSheet:theWindow];
-		[theWindow orderOut:sender];
+		[NSApp endSheet:theLocalRepositoryRefSheet];
+		[theLocalRepositoryRefSheet orderOut:sender];
 		[[myDocument sidebar] reloadData];
 		[myDocument saveDocumentIfNamed];
 		[myDocument postNotificationWithName:kSidebarSelectionDidChange];
@@ -230,9 +230,9 @@
 
 - (IBAction) sheetButtonCancel:(id)sender
 {
-	[theWindow makeFirstResponder:theWindow];	// Make the text fields of the sheet commit any changes they currently have
-	[NSApp endSheet:theWindow];
-	[theWindow orderOut:sender];
+	[theLocalRepositoryRefSheet makeFirstResponder:theLocalRepositoryRefSheet];	// Make the text fields of the sheet commit any changes they currently have
+	[NSApp endSheet:theLocalRepositoryRefSheet];
+	[theLocalRepositoryRefSheet orderOut:sender];
 }
 
 

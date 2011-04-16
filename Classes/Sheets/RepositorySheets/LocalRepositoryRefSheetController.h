@@ -12,10 +12,12 @@
 
 @interface LocalRepositoryRefSheetController : BaseSheetWindowController
 {
-	IBOutlet NSWindow*					theWindow;
+	IBOutlet NSWindow*					theLocalRepositoryRefSheet;
 	IBOutlet NSButton*					okButton;
 	IBOutlet NSBox*						repositoryPathBox;
 	IBOutlet NSTextField*				theTitleText;
+	IBOutlet NSTextField*				shortNameField;
+	IBOutlet NSTextField*				pathField;
 
 	MacHgDocument*		myDocument;
 	
