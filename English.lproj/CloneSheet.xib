@@ -2,17 +2,15 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1060</int>
-		<string key="IBDocument.SystemVersion">10H574</string>
-		<string key="IBDocument.InterfaceBuilderVersion">823</string>
+		<string key="IBDocument.SystemVersion">10J869</string>
+		<string key="IBDocument.InterfaceBuilderVersion">851</string>
 		<string key="IBDocument.AppKitVersion">1038.35</string>
 		<string key="IBDocument.HIToolboxVersion">461.00</string>
 		<dictionary class="NSMutableDictionary" key="IBDocument.PluginVersions">
-			<string key="com.apple.InterfaceBuilder.CocoaPlugin">823</string>
+			<string key="com.apple.InterfaceBuilder.CocoaPlugin">851</string>
 			<string key="com.brandonwalkin.BWToolkit">1.2.2</string>
 		</dictionary>
-		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-			<integer value="421"/>
-		</array>
+		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs"/>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 			<string>com.brandonwalkin.BWToolkit</string>
@@ -42,7 +40,7 @@
 				<string key="NSWindowContentMaxSize">{1500, 523}</string>
 				<string key="NSWindowContentMinSize">{680, 523}</string>
 				<object class="NSView" key="NSWindowView" id="250803238">
-					<reference key="NSNextResponder"/>
+					<nil key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<array class="NSMutableArray" key="NSSubviews">
 						<object class="NSButton" id="432104545">
@@ -883,7 +881,6 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 						</object>
 					</array>
 					<string key="NSFrameSize">{827, 523}</string>
-					<reference key="NSSuperview"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
 				<string key="NSMinSize">{680, 545}</string>
@@ -935,14 +932,6 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 						<reference key="destination" ref="565053986"/>
 					</object>
 					<int key="connectionID">368</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">theWindow</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="530833982"/>
-					</object>
-					<int key="connectionID">369</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBActionConnection" key="connection">
@@ -1003,22 +992,6 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 						<reference key="destination" ref="62166892"/>
 					</object>
 					<int key="connectionID">403</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">pullSourceLabel</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="889403987"/>
-					</object>
-					<int key="connectionID">414</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
-						<string key="label">pullSourceStaticText</string>
-						<reference key="source" ref="1001"/>
-						<reference key="destination" ref="1048200226"/>
-					</object>
-					<int key="connectionID">415</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -1287,6 +1260,46 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 						<reference key="destination" ref="101420037"/>
 					</object>
 					<int key="connectionID">551</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">cloneSourceLabel</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="889403987"/>
+					</object>
+					<int key="connectionID">553</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">cloneSourceStaticText</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="1048200226"/>
+					</object>
+					<int key="connectionID">554</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">localPathField</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="62166892"/>
+					</object>
+					<int key="connectionID">555</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">shortNameField</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="543452023"/>
+					</object>
+					<int key="connectionID">556</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">theCloneSheet</string>
+						<reference key="source" ref="1001"/>
+						<reference key="destination" ref="530833982"/>
+					</object>
+					<int key="connectionID">557</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -2052,7 +2065,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">552</int>
+			<int key="maxID">557</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2097,24 +2110,34 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 						</object>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="cloneSourceLabel">NSTextField</string>
+						<string key="cloneSourceStaticText">NSTextField</string>
 						<string key="disclosureController">DisclosureBoxController</string>
 						<string key="errorDisclosureController">DisclosureBoxController</string>
 						<string key="errorMessageTextField">NSTextField</string>
+						<string key="localPathField">NSTextField</string>
 						<string key="noupdateOption">OptionController</string>
 						<string key="okButton">NSButton</string>
 						<string key="pullOption">OptionController</string>
-						<string key="pullSourceLabel">NSTextField</string>
-						<string key="pullSourceStaticText">NSTextField</string>
 						<string key="remotecmdOption">OptionController</string>
 						<string key="revOption">OptionController</string>
+						<string key="shortNameField">NSTextField</string>
 						<string key="sourceIconWell">NSImageView</string>
 						<string key="sshOption">OptionController</string>
+						<string key="theCloneSheet">NSWindow</string>
 						<string key="theTitleText">NSTextField</string>
-						<string key="theWindow">NSWindow</string>
 						<string key="uncompressedOption">OptionController</string>
 						<string key="updaterevOption">OptionController</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="cloneSourceLabel">
+							<string key="name">cloneSourceLabel</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="cloneSourceStaticText">
+							<string key="name">cloneSourceStaticText</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="disclosureController">
 							<string key="name">disclosureController</string>
 							<string key="candidateClassName">DisclosureBoxController</string>
@@ -2125,6 +2148,10 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 						</object>
 						<object class="IBToOneOutletInfo" key="errorMessageTextField">
 							<string key="name">errorMessageTextField</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="localPathField">
+							<string key="name">localPathField</string>
 							<string key="candidateClassName">NSTextField</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="noupdateOption">
@@ -2139,14 +2166,6 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 							<string key="name">pullOption</string>
 							<string key="candidateClassName">OptionController</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="pullSourceLabel">
-							<string key="name">pullSourceLabel</string>
-							<string key="candidateClassName">NSTextField</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="pullSourceStaticText">
-							<string key="name">pullSourceStaticText</string>
-							<string key="candidateClassName">NSTextField</string>
-						</object>
 						<object class="IBToOneOutletInfo" key="remotecmdOption">
 							<string key="name">remotecmdOption</string>
 							<string key="candidateClassName">OptionController</string>
@@ -2154,6 +2173,10 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 						<object class="IBToOneOutletInfo" key="revOption">
 							<string key="name">revOption</string>
 							<string key="candidateClassName">OptionController</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="shortNameField">
+							<string key="name">shortNameField</string>
+							<string key="candidateClassName">NSTextField</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="sourceIconWell">
 							<string key="name">sourceIconWell</string>
@@ -2163,13 +2186,13 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 							<string key="name">sshOption</string>
 							<string key="candidateClassName">OptionController</string>
 						</object>
+						<object class="IBToOneOutletInfo" key="theCloneSheet">
+							<string key="name">theCloneSheet</string>
+							<string key="candidateClassName">NSWindow</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="theTitleText">
 							<string key="name">theTitleText</string>
 							<string key="candidateClassName">NSTextField</string>
-						</object>
-						<object class="IBToOneOutletInfo" key="theWindow">
-							<string key="name">theWindow</string>
-							<string key="candidateClassName">NSWindow</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="uncompressedOption">
 							<string key="name">uncompressedOption</string>
@@ -2240,11 +2263,19 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
+					<string key="className">NSApplication</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="1060448865">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/General/Common.h</string>
 					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSBox</string>
+					<reference key="sourceIdentifier" ref="1060448865"/>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<reference key="sourceIdentifier" ref="1060448865"/>
 				</object>
 				<object class="IBPartialClassDescription">
 					<string key="className">NSView</string>

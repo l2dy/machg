@@ -79,6 +79,27 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
+// MARK: Local Methods
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (void) chooseAppropriateSheetSize
+{
+	NSSize MaxSize = UnionSizeWIthSize([[theCurrentNameField attributedStringValue] size], [[theNewNameField attributedStringValue] size]);
+	CGFloat delta = [theCurrentNameField bounds].size.width - MaxSize.width;
+	if (delta < 50 || delta > 300)
+	{
+		NSRect frame = [theRenameFileSheet frame];
+		frame.size.width -= delta - 100;
+		[theRenameFileSheet setFrame:frame display:YES];
+	}	
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
 // MARK:  Actions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -135,7 +156,8 @@
 	NSNumber* newButtonState =[NSNumber numberWithBool:bitsInCommon([theNode hgStatus],eHGStatusMissing)];
 
 	[self setTheCurrentNameFieldValue:filePath];
-	[self setTheNewNameFieldValue:newPathName];
+	[self setTheNewNameFieldValue:newPathName];	
+	[self chooseAppropriateSheetSize];
 	[self setTheAlreadyMovedButtonValue:newButtonState];
 	[self validateButtons:self];
 	[NSApp beginSheet:theRenameFileSheet modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];

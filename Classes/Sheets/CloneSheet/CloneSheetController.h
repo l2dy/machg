@@ -12,11 +12,13 @@
 
 @interface CloneSheetController : BaseSheetWindowController
 {
-	IBOutlet NSWindow*					theWindow;
+	IBOutlet NSWindow*					theCloneSheet;
 	IBOutlet NSButton*					okButton;
 	IBOutlet NSTextField*				theTitleText;
-	IBOutlet NSTextField*				pullSourceLabel;			// The short name of the source repository
-	IBOutlet NSTextField*				pullSourceStaticText;		// static text "Source" (used in layout calculations)
+	IBOutlet NSTextField*				cloneSourceLabel;			// The short name of the source repository
+	IBOutlet NSTextField*				cloneSourceStaticText;		// static text "Source" (used in layout calculations)
+	IBOutlet NSTextField*				shortNameField;				// The short name for the new local repository
+	IBOutlet NSTextField*				localPathField;				// The path for the new local repository
 	IBOutlet NSImageView*				sourceIconWell;				// Image well showing an icon of the source.
 	IBOutlet DisclosureBoxController*	disclosureController;		// The disclosure box for the advanced options
 	IBOutlet DisclosureBoxController*	errorDisclosureController;	// The disclosure box for any error messages

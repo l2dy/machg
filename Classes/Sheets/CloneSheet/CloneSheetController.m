@@ -173,7 +173,7 @@
 		[self setShortNameFieldValue:cloneName];
 		[self setPathFieldValue:clonePath];
 		[sourceIconWell setImage:sourceIconImage];
-		[pullSourceLabel setStringValue:sourceName];
+		[cloneSourceLabel setStringValue:sourceName];
 		[theTitleText setStringValue:fstr(@"Clone “%@”", sourceName)];
 		[self setFieldsFromConnectionForSource:source];
 		BOOL showAdvancedOptions = [OptionController containsOptionWhichIsSet:cmdOptions];
@@ -182,7 +182,7 @@
 		[self validateButtons:self];
 	});
 	
-	[NSApp beginSheet:theWindow modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[NSApp beginSheet:theCloneSheet modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
 }
 
 
@@ -190,9 +190,9 @@
 
 - (IBAction) sheetButtonOk:(id)sender
 {
-	[theWindow makeFirstResponder:theWindow];	// Make the text fields of the sheet commit any changes they currently have
-	[NSApp endSheet:theWindow];
-	[theWindow orderOut:sender];
+	[theCloneSheet makeFirstResponder:theCloneSheet];	// Make the text fields of the sheet commit any changes they currently have
+	[NSApp endSheet:theCloneSheet];
+	[theCloneSheet orderOut:sender];
 
 	Sidebar* theSidebar = [myDocument sidebar];
 	[[theSidebar prepareUndoWithTarget:theSidebar] setRootAndUpdate:[[theSidebar root] copyNodeTree]];
@@ -241,9 +241,9 @@
 
 - (IBAction) sheetButtonCancel:(id)sender
 {
-	[theWindow makeFirstResponder:theWindow];				// Make the text fields of the sheet commit any changes they currently have
-	[NSApp endSheet:theWindow];
-	[theWindow orderOut:sender];
+	[theCloneSheet makeFirstResponder:theCloneSheet];				// Make the text fields of the sheet commit any changes they currently have
+	[NSApp endSheet:theCloneSheet];
+	[theCloneSheet orderOut:sender];
 	[self setConnectionFromFieldsForSource:sourceNode_];	// Cache advanced option settings for this source.
 }
 
