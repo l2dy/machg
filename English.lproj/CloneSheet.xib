@@ -10,7 +10,9 @@
 			<string key="com.apple.InterfaceBuilder.CocoaPlugin">851</string>
 			<string key="com.brandonwalkin.BWToolkit">1.2.2</string>
 		</dictionary>
-		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs"/>
+		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
+			<integer value="301"/>
+		</array>
 		<array key="IBDocument.PluginDependencies">
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
 			<string>com.brandonwalkin.BWToolkit</string>
@@ -40,7 +42,7 @@
 				<string key="NSWindowContentMaxSize">{1500, 523}</string>
 				<string key="NSWindowContentMinSize">{680, 523}</string>
 				<object class="NSView" key="NSWindowView" id="250803238">
-					<nil key="NSNextResponder"/>
+					<reference key="NSNextResponder"/>
 					<int key="NSvFlags">256</int>
 					<array class="NSMutableArray" key="NSSubviews">
 						<object class="NSButton" id="432104545">
@@ -258,7 +260,7 @@
 								<int key="NSCellFlags2">33554432</int>
 								<object class="NSCustomResource" key="NSContents">
 									<string key="NSClassName">NSImage</string>
-									<string key="NSResourceName">push_32h</string>
+									<string key="NSResourceName">CloneArrow</string>
 								</object>
 								<int key="NSAlign">0</int>
 								<int key="NSScale">2</int>
@@ -881,6 +883,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 						</object>
 					</array>
 					<string key="NSFrameSize">{827, 523}</string>
+					<reference key="NSSuperview"/>
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
 				<string key="NSMinSize">{680, 545}</string>
@@ -3004,8 +3007,8 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
 		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
 			<string key="AlertPreferences">{32, 32}</string>
+			<string key="CloneArrow">{32, 32}</string>
 			<string key="NSSwitch">{15, 15}</string>
-			<string key="push_32h">{32, 32}</string>
 		</dictionary>
 	</data>
 </archive>

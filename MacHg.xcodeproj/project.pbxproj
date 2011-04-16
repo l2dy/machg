@@ -67,6 +67,7 @@
 		9618B3601349B6E000C38570 /* ScrollToChangesetPanel.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9618B35E1349B6E000C38570 /* ScrollToChangesetPanel.xib */; };
 		961CB6AB1139BC730071F9F6 /* BrowserPreviewView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 961CB6A91139BC730071F9F6 /* BrowserPreviewView.xib */; };
 		961D5A09115DBD9E0064A4DA /* CommandKeyTextField.m in Sources */ = {isa = PBXBuildFile; fileRef = 961D5A08115DBD9E0064A4DA /* CommandKeyTextField.m */; };
+		961E283A13586C4900FDD502 /* CloneArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 961E283913586C4900FDD502 /* CloneArrow.png */; };
 		9621CFE912D5FC1F009C192C /* RSVerticallyCenteredTextFieldCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 9621CFE712D5FC1F009C192C /* RSVerticallyCenteredTextFieldCell.m */; };
 		9624175E1180A3570077F655 /* QuartzCore.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9624175D1180A3570077F655 /* QuartzCore.framework */; };
 		962ED03B11875ABC0072211F /* LabelData.m in Sources */ = {isa = PBXBuildFile; fileRef = 962ED03811875ABC0072211F /* LabelData.m */; };
@@ -320,6 +321,7 @@
 		961CB6AA1139BC730071F9F6 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/BrowserPreviewView.xib; sourceTree = "<group>"; };
 		961D5A07115DBD9E0064A4DA /* CommandKeyTextField.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = CommandKeyTextField.h; path = CommandKeyTextField/CommandKeyTextField.h; sourceTree = "<group>"; };
 		961D5A08115DBD9E0064A4DA /* CommandKeyTextField.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = CommandKeyTextField.m; path = CommandKeyTextField/CommandKeyTextField.m; sourceTree = "<group>"; };
+		961E283913586C4900FDD502 /* CloneArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = CloneArrow.png; path = SheetIcons/CloneArrow.png; sourceTree = "<group>"; };
 		9621CFE612D5FC1F009C192C /* RSVerticallyCenteredTextFieldCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RSVerticallyCenteredTextFieldCell.h; sourceTree = "<group>"; };
 		9621CFE712D5FC1F009C192C /* RSVerticallyCenteredTextFieldCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RSVerticallyCenteredTextFieldCell.m; sourceTree = "<group>"; };
 		9624175D1180A3570077F655 /* QuartzCore.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuartzCore.framework; path = System/Library/Frameworks/QuartzCore.framework; sourceTree = SDKROOT; };
@@ -842,6 +844,7 @@
 			children = (
 				96C3C4C413079EFE009BB242 /* DownArrow.png */,
 				96C3C4C513079EFE009BB242 /* UpArrow.png */,
+				961E283913586C4900FDD502 /* CloneArrow.png */,
 			);
 			name = SheetIcons;
 			sourceTree = "<group>";
@@ -1722,6 +1725,7 @@
 				9618961D133BC56F00C38570 /* p4merge.png in Resources */,
 				9618961E133BC56F00C38570 /* TextWrangler.png in Resources */,
 				9618B3601349B6E000C38570 /* ScrollToChangesetPanel.xib in Resources */,
+				961E283A13586C4900FDD502 /* CloneArrow.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
