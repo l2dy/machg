@@ -344,15 +344,10 @@ NSArray* parentPaths(NSArray* filteredPaths, NSString* rootPath)
 
 void moveFilesToTheTrash(NSArray* absolutePaths)
 {
+	NSMutableArray* urls = [[NSMutableArray alloc]init];
 	for (NSString* path in absolutePaths)
-	{
-		FSRef outRef;
-		OSStatus err = FSPathMakeRef((const UInt8*)[path fileSystemRepresentation], &outRef, NULL);
-		if (err == noErr)
-			dispatch_async(globalQueue(), ^{
-				FSMoveObjectToTrashSync (&outRef, NULL, kFSFileOperationSkipSourcePermissionErrors);
-			});
-	}
+		[urls addObject:[NSURL fileURLWithPath:path]];
+	[[NSWorkspace sharedWorkspace] recycleURLs:urls completionHandler:nil];
 }
 
 
