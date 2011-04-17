@@ -76,7 +76,7 @@
 		[self loadCombinedInformationAndNotify:YES];
 	}
     	
-	[self observe:kUnderlyingRepositoryChanged	from:myDocument  byCalling:@selector(underlyingRepositoryDidChange)];
+	[self observe:kUnderlyingRepositoryChanged	from:doc  byCalling:@selector(underlyingRepositoryDidChange)];
 	return self;
 }
 
