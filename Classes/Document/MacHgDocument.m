@@ -586,6 +586,7 @@
 		case eBrowserView:			[[self theBrowserView] openBrowserView:self];				break;
 		case eHistoryView:			[[self theHistoryView] openHistoryView:self];				break;
 		case eDifferencesView:		[[self theDifferencesView] openDifferencesView:self];		break;
+		default:                      break;
 	}	
 	
 	NSString* searchTerm    = theHistoryViewController_ ? [[[self theHistoryView] logTableView] theSearchFilter] : @"";
@@ -612,8 +613,9 @@
 	// resizing of the frame. Thus at the end of the animation make sure you can see the current selection.
 	switch (newPaneNum)
 	{
-		case eDifferencesView:	[NSTimer scheduledTimerWithTimeInterval:[[NSAnimationContext currentContext] duration] target:[self theDifferencesView]	selector:@selector(scrollToSelected) userInfo:nil repeats:NO]; break;
-		case eHistoryView:		[NSTimer scheduledTimerWithTimeInterval:[[NSAnimationContext currentContext] duration] target:[self theHistoryView]		selector:@selector(scrollToSelected) userInfo:nil repeats:NO]; break;
+        case eDifferencesView:  [NSTimer scheduledTimerWithTimeInterval:[[NSAnimationContext currentContext] duration] target:[self theDifferencesView]	selector:@selector(scrollToSelected) userInfo:nil repeats:NO]; break;
+        case eHistoryView:      [NSTimer scheduledTimerWithTimeInterval:[[NSAnimationContext currentContext] duration] target:[self theHistoryView]		selector:@selector(scrollToSelected) userInfo:nil repeats:NO]; break;
+        default:                break;
 	}
 
 	[NSAnimationContext endGrouping];
