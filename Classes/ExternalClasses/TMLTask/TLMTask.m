@@ -200,7 +200,7 @@
     _errorData = [errBuffer copy];
     [_lock unlockWithCondition:TLM_KQ_FINISHED];
     
-    [pool release];
+    [pool drain];
 }
 
 - (void)launch
