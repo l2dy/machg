@@ -99,8 +99,7 @@
 	const char* macHgAuth = "com.jasonfharris.machg.viewpasswords";
 	
 	AuthorizationRef myAuthorizationRef;
-	OSStatus myStatus;
-	myStatus = AuthorizationCreate (NULL, kAuthorizationEmptyEnvironment, kAuthorizationFlagDefaults, &myAuthorizationRef);
+	AuthorizationCreate (NULL, kAuthorizationEmptyEnvironment, kAuthorizationFlagDefaults, &myAuthorizationRef);
 	
 	AuthorizationItem myItems[1];
 	myItems[0].name = macHgAuth;
@@ -122,7 +121,7 @@
 	
 	AuthorizationFlags myFlags = kAuthorizationFlagDefaults | kAuthorizationFlagInteractionAllowed | kAuthorizationFlagExtendRights;
 	
-	myStatus = AuthorizationCopyRights (myAuthorizationRef, &myRights, &environment, myFlags, NULL);
+	OSStatus myStatus = AuthorizationCopyRights (myAuthorizationRef, &myRights, &environment, myFlags, NULL);
 
 	// We timeout after 60 seconds if we don't use show the password again
 	[timeoutQueueForSecurity_ addBlockOperation:^{
