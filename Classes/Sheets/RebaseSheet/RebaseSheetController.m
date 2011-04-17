@@ -17,6 +17,7 @@
 #import "AppController.h"
 #import "Sidebar.h"
 #import "SidebarNode.h"
+#import "ProcessListController.h"
 
 
 @interface RebaseSheetController (PrivateAPI)
@@ -217,6 +218,7 @@
 	NSString* rebaseDescription = fstr(@"rebasing %d-%d in “%@”", pair.lowRevision, pair.highRevision, repositoryName);
 	NSMutableArray* argsRebase = [NSMutableArray arrayWithObjects:@"rebase", @"--config", @"extensions.rebase=", nil];	// We are using MacHgs rebase command so we need to specify that it is
 																														// in the extensions folder of the included Mercurial
+	[argsRebase addObjectsFromArray:configurationForProgress];
 	NSString* mergeToolName = [[AppController sharedAppController] scriptNameForMergeTool:UseWhichToolForMergingFromDefaults()];
 	[argsRebase addObject:@"--config" followedBy:fstr(@"merge-tools.%@.priority=100", mergeToolName)];	// Unfortunately rebase doesn't take a --tool option yet
 	[argsRebase addObject:@"--detach"];
@@ -226,10 +228,12 @@
 		[argsRebase addObject:@"--keep"];
 	if ([self keepOriginalBranchNames])
 		[argsRebase addObject:@"--keepbranches"];
-	
-	[myDocument dispatchToMercurialQueuedWithDescription:rebaseDescription  process:^{
-		[myDocument executeMercurialWithArgs:argsRebase  fromRoot:rootPath  whileDelayingEvents:YES];
-	}];	
+
+	ProcessController* processController = [ProcessController processControllerWithMessage:rebaseDescription forList:[myDocument theProcessListController]];
+	dispatch_async([myDocument mercurialTaskSerialQueue], ^{
+		[myDocument executeMercurialWithArgs:argsRebase  fromRoot:rootPath  withDelegate:processController  whileDelayingEvents:YES];
+		[processController terminateController];
+	});		
 }
 
 - (IBAction) sheetButtonCancel:(id)sender
