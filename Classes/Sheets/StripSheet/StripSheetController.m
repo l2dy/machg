@@ -7,15 +7,19 @@
 //  This software is licensed under the "New BSD License". The full license text is given in the file License.txt
 //
 
-#import "StripSheetController.h"
-#import "MacHgDocument.h"
-#import "TaskExecutions.h"
-#import "LogEntry.h"
-#import "RepositoryData.h"
-#import "LogTableView.h"
 #import "HistoryViewController.h"
+#import "LogEntry.h"
+#import "LogTableView.h"
+#import "MacHgDocument.h"
+#import "ProcessListController.h"
+#import "RepositoryData.h"
 #import "Sidebar.h"
 #import "SidebarNode.h"
+#import "StripSheetController.h"
+#import "TaskExecutions.h"
+
+
+
 
 
 @interface StripSheetController (PrivateAPI)
@@ -155,15 +159,16 @@
 	NSString* stripDescription = fstr(@"Stripping %d in “%@”", pair.lowRevision, repositoryName);
 	NSMutableArray* argsStrip = [NSMutableArray arrayWithObjects:@"strip",  @"--config", @"extensions.mq=", nil];	// We are using MacHgs strip so command we need to specify that it is
 																													// in the extensions folder of the included Mercurial
+    [argsStrip addObjectsFromArray:configurationForProgress];
 	[argsStrip addObject:@"--backup"];
 	NSString* revisionNumber = fstr(@"%d", pair.lowRevision);
 	[argsStrip addObject:revisionNumber];
 
-	[myDocument dispatchToMercurialQueuedWithDescription:stripDescription  process:^{
-		[myDocument delayEventsUntilFinishBlock:^{
-			[TaskExecutions executeMercurialWithArgs:argsStrip  fromRoot:rootPath];
-		}];			
-	}];	
+	ProcessController* processController = [ProcessController processControllerWithMessage:stripDescription forList:[myDocument theProcessListController]];
+	dispatch_async([myDocument mercurialTaskSerialQueue], ^{
+		[myDocument executeMercurialWithArgs:argsStrip  fromRoot:rootPath  withDelegate:processController  whileDelayingEvents:YES];
+		[processController terminateController];
+	});		
 }
 
 - (IBAction) sheetButtonCancel:(id)sender
