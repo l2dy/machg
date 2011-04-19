@@ -2,20 +2,20 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
 	<data>
 		<int key="IBDocument.SystemTarget">1060</int>
-		<string key="IBDocument.SystemVersion">10C540</string>
-		<string key="IBDocument.InterfaceBuilderVersion">740</string>
-		<string key="IBDocument.AppKitVersion">1038.25</string>
-		<string key="IBDocument.HIToolboxVersion">458.00</string>
+		<string key="IBDocument.SystemVersion">10J869</string>
+		<string key="IBDocument.InterfaceBuilderVersion">851</string>
+		<string key="IBDocument.AppKitVersion">1038.35</string>
+		<string key="IBDocument.HIToolboxVersion">461.00</string>
 		<dictionary class="NSMutableDictionary" key="IBDocument.PluginVersions">
-			<string key="com.apple.InterfaceBuilder.CocoaPlugin">740</string>
+			<string key="com.apple.InterfaceBuilder.CocoaPlugin">851</string>
 			<string key="com.brandonwalkin.BWToolkit">1.2.2</string>
 		</dictionary>
 		<array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<integer value="149"/>
 		</array>
 		<array key="IBDocument.PluginDependencies">
-			<string>com.brandonwalkin.BWToolkit</string>
 			<string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+			<string>com.brandonwalkin.BWToolkit</string>
 		</array>
 		<dictionary class="NSMutableDictionary" key="IBDocument.Metadata"/>
 		<array class="NSMutableArray" key="IBDocument.RootObjects" id="1000">
@@ -36,7 +36,7 @@
 				<string key="NSWindowTitle">Window</string>
 				<string key="NSWindowClass">NSWindow</string>
 				<nil key="NSViewClass"/>
-				<string key="NSWindowContentMaxSize">{3.40282e+38, 3.40282e+38}</string>
+				<string key="NSWindowContentMaxSize">{1.79769e+308, 1.79769e+308}</string>
 				<string key="NSWindowContentMinSize">{700, 500}</string>
 				<object class="NSView" key="NSWindowView" id="175589374">
 					<reference key="NSNextResponder"/>
@@ -118,7 +118,7 @@
 																			<string key="NSColorName">controlBackgroundColor</string>
 																			<object class="NSColor" key="NSColor" id="443614147">
 																				<int key="NSColorSpace">3</int>
-																				<bytes key="NSWhite">MC42NjY2NjY2ODY1AA</bytes>
+																				<bytes key="NSWhite">MC42NjY2NjY2NjY3AA</bytes>
 																			</object>
 																		</object>
 																		<object class="NSColor" key="NSTextColor" id="291829360">
@@ -847,7 +847,10 @@
 				</object>
 				<string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
 				<string key="NSMinSize">{700, 522}</string>
-				<string key="NSMaxSize">{3.40282e+38, 3.40282e+38}</string>
+				<string key="NSMaxSize">{1.79769e+308, 1.79769e+308}</string>
+			</object>
+			<object class="NSUserDefaultsController" id="1041158162">
+				<bool key="NSSharedInstance">YES</bool>
 			</object>
 		</array>
 		<object class="IBObjectContainer" key="IBDocument.Objects">
@@ -963,6 +966,22 @@
 						<reference key="destination" ref="674633371"/>
 					</object>
 					<int key="connectionID">238</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: forceTheMerge</string>
+						<reference key="source" ref="235547652"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="235547652"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">value: forceTheMerge</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">forceTheMerge</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">246</int>
 				</object>
 			</array>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1379,6 +1398,11 @@
 						<reference key="object" ref="528750157"/>
 						<reference key="parent" ref="907686805"/>
 					</object>
+					<object class="IBObjectRecord">
+						<int key="objectID">243</int>
+						<reference key="object" ref="1041158162"/>
+						<reference key="parent" ref="0"/>
+					</object>
 				</array>
 			</object>
 			<dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -1474,7 +1498,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">242</int>
+			<int key="maxID">246</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1534,9 +1558,45 @@
 						<string key="scrollToEnd:">id</string>
 						<string key="scrollToSelected:">id</string>
 					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="refreshTable:">
+							<string key="name">refreshTable:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="resetTable:">
+							<string key="name">resetTable:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="scrollToBeginning:">
+							<string key="name">scrollToBeginning:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="scrollToCurrentRevision:">
+							<string key="name">scrollToCurrentRevision:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="scrollToEnd:">
+							<string key="name">scrollToEnd:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="scrollToSelected:">
+							<string key="name">scrollToSelected:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="detailedEntryTextView">LogTableTextView</string>
 						<string key="parentController">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="detailedEntryTextView">
+							<string key="name">detailedEntryTextView</string>
+							<string key="candidateClassName">LogTableTextView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="parentController">
+							<string key="name">parentController</string>
+							<string key="candidateClassName">id</string>
+						</object>
 					</dictionary>
 					<reference key="sourceIdentifier" ref="207100955"/>
 				</object>
@@ -1550,6 +1610,28 @@
 						<string key="sheetButtonViewDifferencesForMergeSheet:">id</string>
 						<string key="validateButtons:">id</string>
 					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="openMergeSheet:">
+							<string key="name">openMergeSheet:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="sheetButtonCancel:">
+							<string key="name">sheetButtonCancel:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="sheetButtonOk:">
+							<string key="name">sheetButtonOk:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="sheetButtonViewDifferencesForMergeSheet:">
+							<string key="name">sheetButtonViewDifferencesForMergeSheet:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="validateButtons:">
+							<string key="name">validateButtons:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="inspectorSplitView">NSSplitView</string>
 						<string key="logTableView">LogTableView</string>
@@ -1558,6 +1640,36 @@
 						<string key="sheetButtonCancelForMergeSheet">NSButton</string>
 						<string key="sheetButtonOkForMergeSheet">NSButton</string>
 						<string key="sheetInformativeMessageTextField">NSTextField</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="inspectorSplitView">
+							<string key="name">inspectorSplitView</string>
+							<string key="candidateClassName">NSSplitView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="logTableView">
+							<string key="name">logTableView</string>
+							<string key="candidateClassName">LogTableView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="mergeSheetTitle">
+							<string key="name">mergeSheetTitle</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="mergeSheetWindow">
+							<string key="name">mergeSheetWindow</string>
+							<string key="candidateClassName">NSWindow</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="sheetButtonCancelForMergeSheet">
+							<string key="name">sheetButtonCancelForMergeSheet</string>
+							<string key="candidateClassName">NSButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="sheetButtonOkForMergeSheet">
+							<string key="name">sheetButtonOkForMergeSheet</string>
+							<string key="candidateClassName">NSButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="sheetInformativeMessageTextField">
+							<string key="name">sheetInformativeMessageTextField</string>
+							<string key="candidateClassName">NSTextField</string>
+						</object>
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
@@ -1590,9 +1702,23 @@
 						<string key="NS.key.0">scrollToLabel:</string>
 						<string key="NS.object.0">id</string>
 					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">scrollToLabel:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">scrollToLabel:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</object>
 					<object class="NSMutableDictionary" key="outlets">
 						<string key="NS.key.0">logTable</string>
 						<string key="NS.object.0">LogTableView</string>
+					</object>
+					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<string key="NS.key.0">logTable</string>
+						<object class="IBToOneOutletInfo" key="NS.object.0">
+							<string key="name">logTable</string>
+							<string key="candidateClassName">LogTableView</string>
+						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
@@ -1615,6 +1741,13 @@
 					<object class="NSMutableDictionary" key="actions">
 						<string key="NS.key.0">toggleCollapse:</string>
 						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">toggleCollapse:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">toggleCollapse:</string>
+							<string key="candidateClassName">id</string>
+						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
@@ -2308,6 +2441,13 @@
 						<string key="NS.key.0">showWindow:</string>
 						<string key="NS.object.0">id</string>
 					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">showWindow:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">showWindow:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">AppKit.framework/Headers/NSWindowController.h</string>
@@ -2316,6 +2456,7 @@
 			</array>
 		</object>
 		<int key="IBDocument.localizationMode">0</int>
+		<string key="IBDocument.TargetRuntimeIdentifier">IBCocoaFramework</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginDeclaredDependencyDefaults">
 			<string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin.macosx</string>
 			<integer value="1060" key="NS.object.0"/>
@@ -2323,5 +2464,9 @@
 		<bool key="IBDocument.PluginDeclaredDependenciesTrackSystemTargetVersion">YES</bool>
 		<string key="IBDocument.LastKnownRelativeProjectPath">../MacHg.xcodeproj</string>
 		<int key="IBDocument.defaultPropertyAccessControl">3</int>
+		<dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
+			<string key="ActionDrop">{128, 128}</string>
+			<string key="NSSwitch">{15, 15}</string>
+		</dictionary>
 	</data>
 </archive>
