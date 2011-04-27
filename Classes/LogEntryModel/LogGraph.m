@@ -305,6 +305,8 @@ static NSInteger closestFreeIndex2(NSIndexSet* indexes1, NSIndexSet* indexes2, N
 
 - (void) addLineSegment:(LineSegment*)line
 {
+	if ([line lowRev] < 0)
+		[line setLowRev:0]; 
 	// DebugLog(@"adding :%@", line);
 	NSInteger maxCol = maxColumn;
 	maxCol = MAX(maxCol, [line highCol]);
