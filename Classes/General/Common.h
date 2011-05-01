@@ -89,6 +89,7 @@
 
 @class PreferenceController;
 @class InitializationWizardController;
+@class AboutWindowController;
 @class BaseSheetWindowController;
 
 // Utilities

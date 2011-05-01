@@ -11,9 +11,9 @@
 #import "TaskExecutions.h"
 #import "PreferenceController.h"
 #import "InitializationWizardController.h"
+#import "AboutWindowController.h"
 #import "LogEntry.h"
 #import "LogRecord.h"
-#import "RadialGradiantBox.h"
 #import "EMKeychainItem.h"
 #import "NSURL+Parameters.h"
 
@@ -146,6 +146,12 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	return theInitilizationWizardController_;
 }
 
+- (AboutWindowController*) theAboutWindowController
+{
+	if (!theAboutWindowController_)
+		theAboutWindowController_ = [[AboutWindowController alloc] initAboutWindowController];
+	return theAboutWindowController_;
+}
 
 
 
@@ -157,7 +163,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 
 - (NSString*) shortVersionNumberString	{ return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]; }
 - (NSString*) shortVersionString		{ return fstr(@"Version:%@", [self shortVersionNumberString]); }
-- (NSString*) macHgShortVersionString	{ return fstr(@"MacHg %@", [self shortVersionNumberString]); }
+- (NSString*) shortMacHgVersionString	{ return fstr(@"MacHg %@", [self shortVersionNumberString]); }
 
 - (NSString*) macHgBuildHashKeyString
 {
@@ -1013,41 +1019,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 // MARK: About Box
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (IBAction) showAboutBox:(id)sender
-{
-	if (aboutWindow == NULL)
-	{
-		[NSBundle loadNibNamed:@"About" owner:self];
-		[backingBox setRadius:[NSNumber numberWithFloat:190.0]];
-		[backingBox setOffsetFromCenter:NSMakePoint(0.0, -40.0)];
-		[backingBox setNeedsDisplay:YES];
-		NSURL* creditsURL = [NSURL fileURLWithPath:fstr(@"%@/MacHGHelp/%@",[[NSBundle mainBundle] resourcePath], @"Credits.html")];
-		[[creditsWebview mainFrame] loadRequest:[NSURLRequest requestWithURL:creditsURL]];
-	}
-	
-	[aboutWindow makeKeyAndOrderFront:nil];
-}
-
-
-- (void) webView:(WebView*)webView decidePolicyForNavigationAction:(NSDictionary*)actionInformation request:(NSURLRequest*)request frame:(WebFrame*)frame decisionListener:(id < WebPolicyDecisionListener >)listener
-{
-	// Any non file URL gets opened externally to MacHg. Ie in Safari, etc.
-	if (![[request URL] isFileURL])
-	{
-		NSURL* paypalURL = [NSURL URLWithString:@"https://www.paypal.com/cgi-bin/webscr?cmd=_s-xclick&hosted_button_id=VUKBMKTKZMPV2"];
-		
-		// Strangely due to http: www.cocoabuilder.com/archive/cocoa/165312-open-safari-and-send-post-variables.html#165322 it
-		// appears that you can't open safari with a post NSURLRequest. This appears to be a limitation. Anyway, because of this
-		// specially intercept the method we would send out to paypal and change it to the link above.
-		if ([[[request URL] absoluteString] isEqualToString:@"https://www.paypal.com/cgi-bin/webscr"])
-			[[NSWorkspace sharedWorkspace] openURL:paypalURL];
-		else
-			[[NSWorkspace sharedWorkspace] openURL:[request URL]];
-		[listener ignore];
-	}
-	else
-		[listener use];
-}
+- (IBAction) showAboutBox:(id)sender	{ [[self theAboutWindowController] showAboutWindow]; }
 
 
 

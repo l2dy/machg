@@ -2,8 +2,8 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="7.10">
 	<data>
 		<int key="IBDocument.SystemTarget">1050</int>
-		<string key="IBDocument.SystemVersion">10H574</string>
-		<string key="IBDocument.InterfaceBuilderVersion">823</string>
+		<string key="IBDocument.SystemVersion">10J869</string>
+		<string key="IBDocument.InterfaceBuilderVersion">851</string>
 		<string key="IBDocument.AppKitVersion">1038.35</string>
 		<string key="IBDocument.HIToolboxVersion">461.00</string>
 		<object class="NSMutableDictionary" key="IBDocument.PluginVersions">
@@ -16,14 +16,14 @@
 			</object>
 			<object class="NSMutableArray" key="dict.values">
 				<bool key="EncodedWithXMLCoder">YES</bool>
-				<string>823</string>
-				<string>823</string>
+				<string>851</string>
+				<string>851</string>
 				<string>1.2.2</string>
 			</object>
 		</object>
 		<object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
 			<bool key="EncodedWithXMLCoder">YES</bool>
-			<integer value="1"/>
+			<integer value="71"/>
 		</object>
 		<object class="NSArray" key="IBDocument.PluginDependencies">
 			<bool key="EncodedWithXMLCoder">YES</bool>
@@ -43,7 +43,7 @@
 		<object class="NSMutableArray" key="IBDocument.RootObjects" id="1000">
 			<bool key="EncodedWithXMLCoder">YES</bool>
 			<object class="NSCustomObject" id="1001">
-				<string key="NSClassName">AppController</string>
+				<string key="NSClassName">AboutWindowController</string>
 			</object>
 			<object class="NSCustomObject" id="1003">
 				<string key="NSClassName">FirstResponder</string>
@@ -171,7 +171,7 @@
 											<object class="NSTextFieldCell" key="NSCell" id="421654820">
 												<int key="NSCellFlags">67239424</int>
 												<int key="NSCellFlags2">138412032</int>
-												<string key="NSContents">Copyright © 2010 Jason F Harris. All rights reserved.</string>
+												<string key="NSContents">Copyright © Jason F Harris. All rights reserved.</string>
 												<object class="NSFont" key="NSSupport" id="784331753">
 													<string key="NSName">LucidaGrande</string>
 													<double key="NSSize">13</double>
@@ -203,7 +203,7 @@
 											<object class="NSTextFieldCell" key="NSCell" id="881550052">
 												<int key="NSCellFlags">67239424</int>
 												<int key="NSCellFlags2">138412032</int>
-												<string key="NSContents">Copyright © 2010 Jason F Harris. All rights reserved.</string>
+												<string key="NSContents">Copyright © Jason F Harris. All rights reserved.</string>
 												<reference key="NSSupport" ref="784331753"/>
 												<reference key="NSControlView" ref="190614603"/>
 												<reference key="NSBackgroundColor" ref="1034104851"/>
@@ -638,38 +638,6 @@
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: macHgShortVersionString</string>
-						<reference key="source" ref="799806685"/>
-						<reference key="destination" ref="1001"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="799806685"/>
-							<reference key="NSDestination" ref="1001"/>
-							<string key="NSLabel">value: macHgShortVersionString</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">macHgShortVersionString</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">119</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
-						<string key="label">value: macHgShortVersionString</string>
-						<reference key="source" ref="296748643"/>
-						<reference key="destination" ref="1001"/>
-						<object class="NSNibBindingConnector" key="connector">
-							<reference key="NSSource" ref="296748643"/>
-							<reference key="NSDestination" ref="1001"/>
-							<string key="NSLabel">value: macHgShortVersionString</string>
-							<string key="NSBinding">value</string>
-							<string key="NSKeyPath">macHgShortVersionString</string>
-							<int key="NSNibBindingConnectorVersion">2</int>
-						</object>
-					</object>
-					<int key="connectionID">122</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBBindingConnection" key="connection">
 						<string key="label">value: shortMercurialVersionString</string>
 						<reference key="source" ref="375478654"/>
 						<reference key="destination" ref="1001"/>
@@ -723,6 +691,38 @@
 						<reference key="destination" ref="723908057"/>
 					</object>
 					<int key="connectionID">134</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: shortMacHgVersionString</string>
+						<reference key="source" ref="799806685"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="799806685"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">value: shortMacHgVersionString</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">shortMacHgVersionString</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">135</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBBindingConnection" key="connection">
+						<string key="label">value: shortMacHgVersionString</string>
+						<reference key="source" ref="296748643"/>
+						<reference key="destination" ref="1001"/>
+						<object class="NSNibBindingConnector" key="connector">
+							<reference key="NSSource" ref="296748643"/>
+							<reference key="NSDestination" ref="1001"/>
+							<string key="NSLabel">value: shortMacHgVersionString</string>
+							<string key="NSBinding">value</string>
+							<string key="NSKeyPath">shortMacHgVersionString</string>
+							<int key="NSNibBindingConnectorVersion">2</int>
+						</object>
+					</object>
+					<int key="connectionID">136</int>
 				</object>
 			</object>
 			<object class="IBMutableOrderedSet" key="objectRecords">
@@ -1123,81 +1123,14 @@
 				</object>
 			</object>
 			<nil key="sourceID"/>
-			<int key="maxID">134</int>
+			<int key="maxID">136</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<object class="NSMutableArray" key="referencedPartialClassDescriptions">
 				<bool key="EncodedWithXMLCoder">YES</bool>
 				<object class="IBPartialClassDescription">
-					<string key="className">AppController</string>
-					<string key="superclassName">NSObject</string>
-					<object class="NSMutableDictionary" key="actions">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>openBugReportPage:</string>
-							<string>openQuickStartPage:</string>
-							<string>openReleaseNotes:</string>
-							<string>openWebsite:</string>
-							<string>resetPreferences:</string>
-							<string>showAboutBox:</string>
-							<string>showPreferences:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-							<string>id</string>
-						</object>
-					</object>
-					<object class="NSMutableDictionary" key="actionInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>openBugReportPage:</string>
-							<string>openQuickStartPage:</string>
-							<string>openReleaseNotes:</string>
-							<string>openWebsite:</string>
-							<string>resetPreferences:</string>
-							<string>showAboutBox:</string>
-							<string>showPreferences:</string>
-						</object>
-						<object class="NSMutableArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBActionInfo">
-								<string key="name">openBugReportPage:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">openQuickStartPage:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">openReleaseNotes:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">openWebsite:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">resetPreferences:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">showAboutBox:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-							<object class="IBActionInfo">
-								<string key="name">showPreferences:</string>
-								<string key="candidateClassName">id</string>
-							</object>
-						</object>
-					</object>
+					<string key="className">AboutWindowController</string>
+					<string key="superclassName">NSWindowController</string>
 					<object class="NSMutableDictionary" key="outlets">
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
@@ -1239,18 +1172,30 @@
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
-						<string key="minorKey">Classes/Application/AppController.h</string>
+						<string key="minorKey">Classes/About/AboutWindowController.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
-					<string key="className">NSObject</string>
+					<string key="className">NSApplication</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier" id="977929801">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">Classes/General/Common.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
+					<string key="className">NSBox</string>
+					<reference key="sourceIdentifier" ref="977929801"/>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSObject</string>
+					<reference key="sourceIdentifier" ref="977929801"/>
+				</object>
+				<object class="IBPartialClassDescription">
 					<string key="className">NSView</string>
+					<reference key="sourceIdentifier" ref="977929801"/>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSWindow</string>
 					<reference key="sourceIdentifier" ref="977929801"/>
 				</object>
 				<object class="IBPartialClassDescription">
@@ -1919,6 +1864,25 @@
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBFrameworkSource</string>
 						<string key="minorKey">BWToolkitFramework.framework/Headers/NSWindow+BWAdditions.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">NSWindowController</string>
+					<string key="superclassName">NSResponder</string>
+					<object class="NSMutableDictionary" key="actions">
+						<string key="NS.key.0">showWindow:</string>
+						<string key="NS.object.0">id</string>
+					</object>
+					<object class="NSMutableDictionary" key="actionInfosByName">
+						<string key="NS.key.0">showWindow:</string>
+						<object class="IBActionInfo" key="NS.object.0">
+							<string key="name">showWindow:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</object>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBFrameworkSource</string>
+						<string key="minorKey">AppKit.framework/Headers/NSWindowController.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">

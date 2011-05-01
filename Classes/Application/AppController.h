@@ -24,25 +24,23 @@
 {
 	BOOL applicationHasStarted;
 	InitializationWizardController* theInitilizationWizardController_;
-
-	IBOutlet NSWindow*			aboutWindow;
-	IBOutlet WebView*			creditsWebview;
-	IBOutlet RadialGradiantBox*	backingBox;
+	AboutWindowController*			theAboutWindowController_;
 	
-	NSMutableDictionary*		repositoryIdentityForPath_;				// This dictionary contains the collection of root changesets for a given path.
-																		// Ie for /Users/jason/Development/MyProject the value might be 2e7ba9cebde9
-	NSMutableDictionary*		dirtyRepositoryIdentityForPath_;		// This dictionary contains the paths of repositories where we need to recompute
-																		// the root changesets
-	NSMutableDictionary*		computingRepositoryIdentityForPath_;	// This dictionary contains the paths of the repositories we are
-																		// currently computing the changesets of.
-	NSTimer*					periodicCheckingForRepositoryIdentity;
+	NSMutableDictionary*			repositoryIdentityForPath_;				// This dictionary contains the collection of root changesets for a given path.
+																			// Ie for /Users/jason/Development/MyProject the value might be 2e7ba9cebde9
+	NSMutableDictionary*			dirtyRepositoryIdentityForPath_;		// This dictionary contains the paths of repositories where we need to recompute
+																			// the root changesets
+	NSMutableDictionary*			computingRepositoryIdentityForPath_;	// This dictionary contains the paths of the repositories we are
+																			// currently computing the changesets of.
+	NSTimer*						periodicCheckingForRepositoryIdentity;
 }
 
 @property (readwrite, assign) NSMutableDictionary* repositoryIdentityForPath;
 
 
-+ (AppController*)				sharedAppController;
++ (AppController*)					sharedAppController;
 - (InitializationWizardController*) theInitilizationWizardController;
+- (AboutWindowController*)			theAboutWindowController;
 
 // Initialization
 - (void)	  applicationDidFinishLaunching:(NSNotification*)aNotification;
@@ -58,15 +56,14 @@
 
 // About Box
 - (IBAction)  showAboutBox:(id)sender;
-- (void)	  webView:(WebView*)webView decidePolicyForNavigationAction:(NSDictionary*)actionInformation request:(NSURLRequest*)request frame:(WebFrame*)frame decisionListener:(id < WebPolicyDecisionListener >)listener;
 
 // Version Utilities
 - (NSString*) shortVersionString;					// Eg "Version:0.9.5"
 - (NSString*) shortVersionNumberString;				// Eg "0.9.5"
-- (NSString*) macHgShortVersionString;				// Eg "MacHg 0.9.5"
-- (NSString*) macHgBuildHashKeyString;				// Eg "df3754a23dd7"
+- (NSString*) shortMacHgVersionString;				// Eg "MacHg 0.9.5"
 - (NSString*) shortMercurialVersionNumberString;	// Eg "1.5.3"
 - (NSString*) shortMercurialVersionString;			// Eg "Mercurial SCM 1.5.3"
+- (NSString*) macHgBuildHashKeyString;				// Eg "df3754a23dd7"
 - (NSString*) mercurialBuildHashKeyString;			// Eg "20100514"
 - (NSAttributedString*) fullVersionString;
 

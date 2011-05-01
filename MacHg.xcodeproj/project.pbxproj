@@ -136,6 +136,7 @@
 		9658DCF912FF9B5F00FF18B3 /* Reveal.png in Resources */ = {isa = PBXBuildFile; fileRef = 9658DCF812FF9B5F00FF18B3 /* Reveal.png */; };
 		965FA57D116424A40074E4AA /* FinderIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 965FA57C116424A40074E4AA /* FinderIcon.png */; };
 		96602188131FFAEC0051F426 /* MissingRepository.png in Resources */ = {isa = PBXBuildFile; fileRef = 96602187131FFAEC0051F426 /* MissingRepository.png */; };
+		96631773136DF9A600A72689 /* AboutWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96631772136DF9A600A72689 /* AboutWindowController.m */; };
 		966E8E1811CB732E0052FF42 /* identity.png in Resources */ = {isa = PBXBuildFile; fileRef = 966E8E1711CB732E0052FF42 /* identity.png */; };
 		966E8E5011CB86160052FF42 /* HistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E8E4D11CB86160052FF42 /* HistoryViewController.m */; };
 		966E8E5111CB86160052FF42 /* JHAccordionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E8E4F11CB86160052FF42 /* JHAccordionView.m */; };
@@ -423,6 +424,8 @@
 		9658DCF812FF9B5F00FF18B3 /* Reveal.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Reveal.png; sourceTree = "<group>"; };
 		965FA57C116424A40074E4AA /* FinderIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FinderIcon.png; sourceTree = "<group>"; };
 		96602187131FFAEC0051F426 /* MissingRepository.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = MissingRepository.png; sourceTree = "<group>"; };
+		96631771136DF9A600A72689 /* AboutWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AboutWindowController.h; sourceTree = "<group>"; };
+		96631772136DF9A600A72689 /* AboutWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AboutWindowController.m; sourceTree = "<group>"; };
 		966E8E1711CB732E0052FF42 /* identity.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = identity.png; sourceTree = "<group>"; };
 		966E8E4C11CB86160052FF42 /* HistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HistoryViewController.h; sourceTree = "<group>"; };
 		966E8E4D11CB86160052FF42 /* HistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HistoryViewController.m; sourceTree = "<group>"; };
@@ -1201,6 +1204,17 @@
 			path = SidebarItems;
 			sourceTree = "<group>";
 		};
+		96631770136DF9A600A72689 /* About */ = {
+			isa = PBXGroup;
+			children = (
+				96631771136DF9A600A72689 /* AboutWindowController.h */,
+				96631772136DF9A600A72689 /* AboutWindowController.m */,
+				96A377D710C8EC5400FA190A /* About.xib */,
+			);
+			name = About;
+			path = ../About;
+			sourceTree = "<group>";
+		};
 		966E8E1611CB732E0052FF42 /* WizardIcons */ = {
 			isa = PBXGroup;
 			children = (
@@ -1482,11 +1496,11 @@
 		96A377CD10C8EC2800FA190A /* Application */ = {
 			isa = PBXGroup;
 			children = (
+				96631770136DF9A600A72689 /* About */,
 				96024ED310CD30A4000E1790 /* Preferences */,
 				9637C86C118E9A3E0000C14B /* InitializationWizard */,
 				96A377CF10C8EC2800FA190A /* AppController.h */,
 				96A377D010C8EC2800FA190A /* AppController.m */,
-				96A377D710C8EC5400FA190A /* About.xib */,
 				96A377D910C8EC5400FA190A /* MainMenu.xib */,
 			);
 			name = Application;
@@ -1840,6 +1854,7 @@
 				9618B3531349B6CA00C38570 /* ScrollToChangesetPanelController.m in Sources */,
 				96000A551353E4E7005FD1BC /* BDSKTask.m in Sources */,
 				96000A561353E4E7005FD1BC /* TLMTask.m in Sources */,
+				96631773136DF9A600A72689 /* AboutWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2094,6 +2109,7 @@
 				96A377D810C8EC5400FA190A /* English */,
 			);
 			name = About.xib;
+			path = ../Application;
 			sourceTree = "<group>";
 		};
 		96A377D910C8EC5400FA190A /* MainMenu.xib */ = {
