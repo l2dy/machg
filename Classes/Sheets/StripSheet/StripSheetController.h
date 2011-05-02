@@ -21,9 +21,12 @@
 	IBOutlet NSTextField*	stripSheetTitle;
 
 	MacHgDocument*			myDocument;
+	
+	BOOL					forceOption_;
 }
 
 @property (readwrite,assign) MacHgDocument*  myDocument;
+@property BOOL forceOption;
 
 
 // Initialization
@@ -34,6 +37,7 @@
 - (IBAction) openStripSheetWithSelectedRevisions:(id)sender;
 - (IBAction) sheetButtonOk:(id)sender;
 - (IBAction) sheetButtonCancel:(id)sender;
+- (IBAction) validateButtons:(id)sender;
 
 
 // Table delegate methods

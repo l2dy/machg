@@ -29,6 +29,7 @@
 
 @implementation StripSheetController
 @synthesize myDocument;
+@synthesize forceOption = forceOption_;
 
 
 
@@ -82,7 +83,10 @@
 	NSArray* entries = [logTableView selectedEntries];
 
 	if ([entries count] < 1)
-		return @"Unable to perform strip because no revisions are selected to strip. Select two or more consecutive revisions to strip.";
+		return @"Unable to perform the strip because no revisions are selected to strip. Select two or more consecutive revisions to strip.";
+
+	if ([myDocument repositoryHasFilesWhichContainStatus:eHGStatusCommittable] && ![self forceOption])
+		return @"Unable to perform the strip because there are uncommitted changes. Enable the checkbox 'Force' option to ignore the uncommitted changes.";
 
 	return nil;
 }
@@ -110,18 +114,13 @@
 
 - (IBAction) openStripSheetWithSelectedRevisions:(id)sender
 {
-	if ([myDocument repositoryHasFilesWhichContainStatus:eHGStatusCommittable])
-	{
-		NSRunAlertPanel(@"Outstanding Changes", @"Stripping is only allowed in repositories with no outstanding uncommitted changes.", @"OK", nil, nil);
-		return;
-	}	
-		
 	// Retarget a single click to select that entry and all descendants.
 	[logTableView setAction:@selector(handleLogTableViewClick:)];
 	[logTableView setTarget:self];
 	
 	NSString* newTitle = fstr(@"Stripping Selected Revisions in “%@”", [myDocument selectedRepositoryShortName]);
 	[stripSheetTitle setStringValue:newTitle];
+	[self setForceOption:NO];
 
 	[logTableView resetTable:self];
 	
@@ -161,6 +160,8 @@
 																													// in the extensions folder of the included Mercurial
     [argsStrip addObjectsFromArray:configurationForProgress];
 	[argsStrip addObject:@"--backup"];
+	if ([self forceOption])
+		[argsStrip addObject:@"--force"];		
 	NSString* revisionNumber = fstr(@"%d", pair.lowRevision);
 	[argsStrip addObject:revisionNumber];
 
