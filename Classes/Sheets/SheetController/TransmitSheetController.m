@@ -219,6 +219,10 @@
 	SidebarNode* selectedNode = [theSidebar selectedNode];
 	NSArray* missingServers   = [theSidebar serversIfAvailable:[selectedNode path] includingAlreadyPresent:NO];
 
+	for (SidebarNode* r in [root children])
+		[self populateNewAndSetupPopupMenu:popup withSubtree:r atLevel:0];
+	[popup sizeToFit];
+
 	// If there are some servers in the [paths] section of the config file then add these
 	if (IsNotEmpty(missingServers))
 	{
@@ -226,10 +230,6 @@
 		[serverGroup setChildren:[NSMutableArray arrayWithArray:missingServers]];
 		[self populateNewAndSetupPopupMenu:popup withSubtree:serverGroup atLevel:0];
 	}
-	
-	for (SidebarNode* r in [root children])
-		[self populateNewAndSetupPopupMenu:popup withSubtree:r atLevel:0];
-	[popup sizeToFit];
 	
 	[self chooseInitialPopupItem:popup];
 }
