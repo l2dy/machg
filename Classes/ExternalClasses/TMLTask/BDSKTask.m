@@ -65,6 +65,14 @@ struct BDSKTaskInternal {
     pthread_mutex_t    _lock;
 };
 
+static inline BOOL IsEmpty(id thing)
+{
+    return
+		thing == nil ||
+		([thing respondsToSelector:@selector(length)] && [(NSData*)thing length] == 0) ||
+		([thing respondsToSelector:@selector(count)]  && [(NSArray*)thing count] == 0);
+}
+
 @implementation BDSKTask
 
 static int _kqueue = -1;
@@ -234,7 +242,8 @@ static void __BDSKTaskNotify(void *info)
     NSUInteger i, iMax = argCount;
     args[0] = (char *)[_launchPath fileSystemRepresentation];
     for (i = 0; i < iMax; i++) {
-        args[i + 1] = (char *)[[_arguments objectAtIndex:i] fileSystemRepresentation];
+		NSString* arg = [_arguments objectAtIndex:i];
+		args[i + 1] = IsEmpty(arg) ? "" : (char *)[arg fileSystemRepresentation];
     }
     args[argCount + 1] = NULL;
     
