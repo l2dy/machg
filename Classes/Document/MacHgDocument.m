@@ -2214,6 +2214,8 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 			[statusArgs addObject:@"--rev" followedBy:versionToCompareTo];
 		[statusArgs addObjectsFromArray:absolutePaths];
 		ExecutionResult* statusResults = [TaskExecutions executeMercurialWithArgs:statusArgs fromRoot:rootPath  logging:eLoggingNone];
+		if (IsEmpty(statusResults.outStr))
+			return;
 		NSArray* filesWhichHaveDifferences = [trimTrailingString(statusResults.outStr) componentsSeparatedByString:@"\n"];
 		
 		int numberOfFilesToDiff = [filesWhichHaveDifferences count];
