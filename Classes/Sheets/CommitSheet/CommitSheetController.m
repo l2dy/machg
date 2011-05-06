@@ -265,7 +265,7 @@ NSString* kAmendOption	 = @"amendOption";
 	BOOL pathsCanBeExcluded = pathsAreSelected && ![excludedItems containsIndexes:selectedIndexes] && ![myDocument inMergeState];
 	BOOL pathsCanBeIncluded = pathsAreSelected && [excludedItems intersectsIndexes:selectedIndexes];
 	BOOL canAllowAmend = AllowHistoryEditingOfRepositoryFromDefaults() && [myDocument isCurrentRevisionTip] && ![myDocument inMergeState];
-	BOOL okToCommit = ([filesToCommitTableSourceData count] > 0) && ([excludedItems count] < [filesToCommitTableSourceData count]);
+	BOOL okToCommit = ([filesToCommitTableSourceData count] > 0) && ([excludedItems count] < [filesToCommitTableSourceData count]) && IsNotEmpty([commitMessageTextView string]);
 	NSString* diffButtonMessage = pathsAreSelected ? @"Diff Selected" : @"Diff All";
 	
 	dispatch_async(mainQueue(), ^{
@@ -593,5 +593,10 @@ NSString* kAmendOption	 = @"amendOption";
 	[theCommitSheet orderOut:sender];
 }
 
+
+- (void)textDidChange:(NSNotification*) aNotification
+{
+	[self validateButtons:[aNotification object]];
+}
 
 @end
