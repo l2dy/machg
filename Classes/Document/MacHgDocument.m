@@ -1818,7 +1818,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 			[TaskExecutions  executeMercurialWithArgs:argsRevert  fromRoot:rootPath];
 			if (HandleGeneratedOrigFilesFromDefaults() == eMoveOrigFilesToTrash)
 				[self pruneDotOrigFiles:theParentPaths];
-			[self addToChangedPathsDuringSuspension:parentPaths(theParentPaths,rootPath)];
+			[self addToChangedPathsDuringSuspension:theParentPaths];
 		}];
 		
 	}];
