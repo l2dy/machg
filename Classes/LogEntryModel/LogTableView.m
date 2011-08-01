@@ -68,7 +68,7 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 		canSelectIncompleteRevision_ = NO;
 		rootPath_ = nil;
 		awake_ = NO;
-	}
+    }
     
 	return self;
 }
@@ -102,6 +102,10 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 	[self setDelegate:self];		// This table handles its own delegate methods
 	awake_ = YES;
 	[self resetTable:self];
+    
+    NSView* superview = [self superview];
+    if([superview isKindOfClass:[NSClipView class]])
+        [superview setCopiesOnScroll:NO];
 }
 
 - (void) unload
