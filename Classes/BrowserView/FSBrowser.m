@@ -365,7 +365,7 @@
 	NSMutableArray* urls = [[NSMutableArray alloc] init];
 	for (NSString* path in [self absolutePathsOfChosenFilesInBrowser])
 	{
-		NSURL* newURL = [NSURL URLWithString:[path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
+		NSURL* newURL = [NSURL fileURLWithPath:[path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 		[urls addObject:newURL];
 	}
 	[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:urls];
