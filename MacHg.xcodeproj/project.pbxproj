@@ -94,7 +94,7 @@
 		9631D0731107A7E90007FDF2 /* LNCStopwatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 9631D0621107A7E90007FDF2 /* LNCStopwatch.m */; };
 		9631D0741107A7E90007FDF2 /* AttachedWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9631D0651107A7E90007FDF2 /* AttachedWindowController.m */; };
 		9631D0751107A7E90007FDF2 /* MAAttachedWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 9631D0671107A7E90007FDF2 /* MAAttachedWindow.m */; };
-		9631D0761107A7E90007FDF2 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 9631D06A1107A7E90007FDF2 /* RegexKitLite.m */; };
+		9631D0761107A7E90007FDF2 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 9631D06A1107A7E90007FDF2 /* RegexKitLite.m */; settings = {COMPILER_FLAGS = "-w"; }; };
 		9631D2E01107A8380007FDF2 /* CloneSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9631D2DE1107A8380007FDF2 /* CloneSheet.xib */; };
 		9631D2E31107A84A0007FDF2 /* CommitSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9631D2E11107A84A0007FDF2 /* CommitSheet.xib */; };
 		9631D2E61107A8530007FDF2 /* MergeSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9631D2E41107A8530007FDF2 /* MergeSheet.xib */; };
