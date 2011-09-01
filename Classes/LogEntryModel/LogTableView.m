@@ -401,6 +401,8 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 - (IBAction) scrollToSelected:(id)sender
 {
 	NSIndexSet* rows = [self selectedRowIndexes];
+	if (IsEmpty(rows))
+		return;
 	dispatch_async(mainQueue(), ^{
 		[self  scrollToRangeOfRowsLow:[rows firstIndex] high:[rows lastIndex]];
 	});
