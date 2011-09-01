@@ -231,6 +231,7 @@
 				[[myDocument sidebar] selectNode:newNode];
 				[[myDocument sidebar] reloadData];
 				[myDocument postNotificationWithName:kRepositoryRootChanged];
+				[[NSUserDefaults standardUserDefaults] setBool:YES forKey:MHGShowCleanFilesInBrowser];	// Show all files after we have cloned
 				[myDocument refreshBrowserContent:self];
 				[myDocument saveDocumentIfNamed];
 			});
