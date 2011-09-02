@@ -66,7 +66,8 @@ def printFullCombinedInfo(ui, repo, **opts):
     # write out the ActiveBranch, InactiveBranch, ClosedBranch
     #
     heads = repo.heads()
-    activebranches = [repo[n].branch() for n in heads]
+    activebranches = set(repo[head].branch() for head in heads)
+
     def testactive(tag, node):
         realhead = tag in activebranches
         open = node in repo.branchheads(tag, closed=False)
@@ -76,14 +77,14 @@ def printFullCombinedInfo(ui, repo, **opts):
                           for tag, node in repo.branchtags().items()],
                       reverse=True)
 
-    closedBranches = set([])
+    closedbranches = set()
     for isactive, node, tag in branches:
         try:
             hn = repo.lookup(node)
             if isactive:
                 label = 'activebranch'
             elif hn not in repo.branchheads(tag, closed=False):
-                closedBranches.add(node)
+                closedbranches.add(node)
                 label = 'closedbranch'
             else:
                 label = 'inactivebranch'
@@ -98,10 +99,15 @@ def printFullCombinedInfo(ui, repo, **opts):
     #
     for h in heads:
         try:
-            node = repo[h].hex()
-            rev = repo[h].rev()
-            if (rev not in closedBranches):
-                ui.write("%s %s:%s\n" % ('openhead', rev, node))        
+            changeset = repo[h]
+            node = changeset.hex()
+            rev = changeset.rev()
+            if rev not in closedbranches:
+                if changeset.extra().get('close'):
+                    label = 'closedbranch'
+                else:
+                    label = 'openhead'
+                ui.write("%s %s:%s\n" % (label, rev, node))
         except:
             pass
 
