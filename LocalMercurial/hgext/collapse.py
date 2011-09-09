@@ -22,7 +22,12 @@ def collapse(ui, repo, **opts):
     collapse is completed.
     """
 
-    rng = cmdutil.revrange(repo, opts['rev'])
+    try:
+        from mercurial import scmutil
+        rng = scmutil.revrange(repo, opts['rev'])
+    except ImportError:
+        rng = cmdutil.revrange(repo, opts['rev'])
+
     if not rng:
         raise util.Abort(_('no revisions specified'))
 
@@ -61,7 +66,10 @@ def collapse(ui, repo, **opts):
         raise util.Abort(_('start revision %s has multiple parents, '
             'won\'t collapse.') % first)
 
-    cmdutil.bail_if_changed(repo)
+    try:
+        cmdutil.bailifchanged(repo)
+    except AttributeError:
+        cmdutil.bail_if_changed(repo)
 
     parent = repo[first].parents()[0]
     tomove = list(repo.changelog.descendants(last))
@@ -72,7 +80,8 @@ def collapse(ui, repo, **opts):
     collapsed = None
 
     try:
-        collapsed = makecollapsed(ui, repo, parent, revs, opts)
+        branch = repo[last].branch()
+        collapsed = makecollapsed(ui, repo, parent, revs, branch, opts)
         movemap[max(revs)] = collapsed
         movedescendants(ui, repo, collapsed, tomove, movemap)
     except:
@@ -87,14 +96,15 @@ def collapse(ui, repo, **opts):
 
     ui.status(_('collapse completed\n'))
 
-def makecollapsed(ui, repo, parent, revs, opts):
+def makecollapsed(ui, repo, parent, revs, branch, opts):
     'Creates the collapsed revision on top of parent'
 
     last = max(revs)
     ui.debug(_('updating to revision %d\n') % parent)
     merge.update(repo, parent.node(), False, False, False)
     ui.debug(_('reverting to revision %d\n') % last)
-    commands.revert(ui, repo, rev=last, all=True, date=None)
+    recreaterev(ui, repo, last)
+    repo.dirstate.setbranch(branch)
     msg = ''
     if opts['message'] != "" :
         msg = opts['message']
@@ -146,11 +156,24 @@ def movedescendants(ui, repo, collapsed, tomove, movemap):
         repo.dirstate.write()
 
         ui.debug(_('reverting to revision %d\n') % r)
-        commands.revert(ui, repo, rev=r, all=True, date=None)
+        recreaterev(ui, repo, r)
         newrev = repo.commit(text=repo[r].description(), user=repo[r].user(),
                             date=repo[r].date())
         ctx = repo[newrev]
         movemap[r] = ctx
+
+def recreaterev(ui, repo, rev):
+    ui.debug(_('reverting to revision %d\n') % rev)
+    commands.revert(ui, repo, rev=rev, all=True, date=None)
+
+    wctx = repo[None]
+    node = repo[rev]
+
+    ss = node.substate
+
+    for path, info in ss.items():
+        ui.debug(_('updating subrepo %s to revision %s\n') % (path, info[1]))
+        wctx.sub(path).get(info)
 
 def inbetween(repo, first, last):
     'Return all revisions between first and last, inclusive'
