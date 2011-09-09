@@ -94,21 +94,29 @@
 + (ExecutionResult*) execute:(NSString*)cmd withArgs:(NSArray*)args	withEnvironment:(NSDictionary*)env	{ return [self execute:cmd withArgs:args withEnvironment:env withDelegate:nil]; }
 + (ExecutionResult*) execute:(NSString*)cmd withArgs:(NSArray*)args withEnvironment:(NSDictionary*)env withDelegate:(id <ShellTaskDelegate>)delegate
 {
-	ShellTask* shellTask = [[ShellTask alloc] initWithCommand:cmd andArgs:args withEnvironment:env withDelegate:delegate];
-	if ([delegate respondsToSelector:@selector(shellTaskCreated:)])
-		[delegate shellTaskCreated:shellTask];
-	
-	[shellTask launch];			// Start the process
-	DebugLog(@"launched %@", [shellTask commandLineString]);
+	ShellTask* shellTask;
+	int repeats = 0;
+	do {
+		shellTask = [[ShellTask alloc] initWithCommand:cmd andArgs:args withEnvironment:env withDelegate:delegate];
+		if ([delegate respondsToSelector:@selector(shellTaskCreated:)])
+			[delegate shellTaskCreated:shellTask];
+		
+		[shellTask launch];			// Start the process
+		DebugLog(@"launched %@", [shellTask commandLineString]);
 
-	// Move the process into our group if we can so when we quit all child processes are killed. See http:
-	// www.cocoadev.com/index.pl?NSTaskTermination. Maybe there is a better way to do this in which case I would like to know.
-	pid_t group = setsid();
-	if (group == -1)
-		group = getpgrp();
-	setpgid([shellTask  processIdentifier], group);
+		// Move the process into our group if we can so when we quit all child processes are killed. See http:
+		// www.cocoadev.com/index.pl?NSTaskTermination. Maybe there is a better way to do this in which case I would like to know.
+		pid_t group = setsid();
+		if (group == -1)
+			group = getpgrp();
+		setpgid([shellTask  processIdentifier], group);
 
-	NSAssert(shellTask.isRunning, @"The task must be running after launching it");
+		if (shellTask.isRunning)
+			break;
+		DebugLog(@"Task quit before launch %@", [shellTask commandLineString]);
+		repeats++;
+		sleep(repeats * 0.1);
+	} while (repeats < 4);
 	
 	[shellTask waitUntilExit];
 
