@@ -8,7 +8,7 @@
 <body>
 
 <div class="page_header">
-<a href="http://mercurial.selenic.com/" title="Mercurial" style="float: right;">Mercurial</a><a href="{url}summary{sessionvars%urlparameter}">{repo|escape}</a> / changeset
+<a href="{logourl}" title="Mercurial" style="float: right;">Mercurial</a><a href="{url}summary{sessionvars%urlparameter}">{repo|escape}</a> / changeset
 </div>
 
 <div class="page_nav">
@@ -17,6 +17,7 @@
 <a href="{url}log/{rev}{sessionvars%urlparameter}">changelog</a> |
 <a href="{url}graph{sessionvars%urlparameter}">graph</a> |
 <a href="{url}tags{sessionvars%urlparameter}">tags</a> |
+<a href="{url}bookmarks{sessionvars%urlparameter}">bookmarks</a> |
 <a href="{url}branches{sessionvars%urlparameter}">branches</a> |
 <a href="{url}file/{node|short}{sessionvars%urlparameter}">files</a> |
 changeset |
@@ -26,12 +27,12 @@ changeset |
 </div>
 
 <div>
-<a class="title" href="{url}raw-rev/{node|short}">{desc|strip|escape|firstline|nonempty} <span class="logtags">{inbranch%inbranchtag}{branches%branchtag}{tags%tagtag}</span></a>
+<a class="title" href="{url}raw-rev/{node|short}">{desc|strip|escape|firstline|nonempty} <span class="logtags">{inbranch%inbranchtag}{branches%branchtag}{tags%tagtag}{bookmarks%bookmarktag}</span></a>
 </div>
 <div class="title_text">
 <table cellspacing="0">
 <tr><td>author</td><td>{author|obfuscate}</td></tr>
-<tr><td></td><td>{date|date} ({date|age})</td></tr>
+<tr><td></td><td class="date age">{date|date}</td></tr>
 {branch%changesetbranch}
 <tr><td>changeset {rev}</td><td style="font-family:monospace">{node|short}</td></tr>
 {parent%changesetparent}

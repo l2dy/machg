@@ -23,6 +23,8 @@ filedifflink = '<a href="{url}diff/{node|short}/{file|urlescape}{sessionvars%url
 filenodelink = '<a href="{url}file/{node|short}/{file|urlescape}{sessionvars%urlparameter}">{file|escape}</a> '
 filenolink = '{file|escape} '
 fileellipses = '...'
+diffstatlink = ../paper/diffstat.tmpl
+diffstatnolink = ../paper/diffstat.tmpl
 changelogentry = ../paper/shortlogentry.tmpl
 searchentry = ../paper/shortlogentry.tmpl
 changeset = ../paper/changeset.tmpl
@@ -94,14 +96,12 @@ filerevchild = '<a href="{url}file/{node|short}/{file|urlescape}{sessionvars%url
 
 filerename = '{file|escape}@'
 filelogrename = '
-  <tr>
-    <th>base:</th>
-    <td>
-      <a href="{url}file/{node|short}/{file|urlescape}{sessionvars%urlparameter}">
-        {file|escape}@{node|short}
-      </a>
-    </td>
-  </tr>'
+  <span class="base">
+    base
+    <a href="{url}file/{node|short}/{file|urlescape}{sessionvars%urlparameter}">
+      {file|escape}@{node|short}
+    </a>
+  </span>'
 fileannotateparent = '
   <tr>
     <td class="metatag">parent:</td>
@@ -142,6 +142,18 @@ tagentry = '
       {node|short}
     </td>
   </tr>'
+bookmarks = ../paper/bookmarks.tmpl
+bookmarkentry = '
+  <tr class="tagEntry parity{parity}">
+    <td>
+      <a href="{url}rev/{node|short}{sessionvars%urlparameter}">
+        {bookmark|escape}
+      </a>
+    </td>
+    <td class="node">
+      {node|short}
+    </td>
+  </tr>'
 branches = ../paper/branches.tmpl
 branchentry = '
   <tr class="tagEntry parity{parity}">
@@ -156,6 +168,7 @@ branchentry = '
   </tr>'
 changelogtag = '<span class="tag">{name|escape}</span> '
 changesettag = '<span class="tag">{tag|escape}</span> '
+changesetbookmark = '<span class="tag">{bookmark|escape}</span> '
 changelogbranchhead = '<span class="branchhead">{name|escape}</span> '
 changelogbranchname = '<span class="branchname">{name|escape}</span> '
 
@@ -186,7 +199,7 @@ indexentry = '
     <td><a href="{url}{sessionvars%urlparameter}">{name|escape}</a></td>
     <td>{description}</td>
     <td>{contact|obfuscate}</td>
-    <td class="age">{lastchange|age}</td>
+    <td class="age">{lastchange|date}</td>
     <td class="indexlinks">{archives%indexarchiveentry}</td>
   </tr>\n'
 indexarchiveentry = '<a href="{url}archive/{node|short}{extension|urlescape}">&nbsp;&darr;{type|escape}</a>'

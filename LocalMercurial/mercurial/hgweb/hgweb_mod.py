@@ -8,7 +8,7 @@
 
 import os
 from mercurial import ui, hg, hook, error, encoding, templater
-from common import get_mtime, ErrorResponse, permhooks, caching
+from common import get_stat, ErrorResponse, permhooks, caching
 from common import HTTP_OK, HTTP_NOT_MODIFIED, HTTP_BAD_REQUEST
 from common import HTTP_NOT_FOUND, HTTP_SERVER_ERROR
 from request import wsgirequest
@@ -17,6 +17,7 @@ import webcommands, protocol, webutil
 perms = {
     'changegroup': 'pull',
     'changegroupsubset': 'pull',
+    'getbundle': 'pull',
     'stream_out': 'pull',
     'listkeys': 'pull',
     'unbundle': 'push',
@@ -38,6 +39,7 @@ class hgweb(object):
         self.repo.ui.setconfig('ui', 'interactive', 'off')
         hook.redirect(True)
         self.mtime = -1
+        self.size = -1
         self.reponame = name
         self.archives = 'zip', 'gz', 'bz2'
         self.stripecount = 1
@@ -62,9 +64,12 @@ class hgweb(object):
     def refresh(self, request=None):
         if request:
             self.repo.ui.environ = request.env
-        mtime = get_mtime(self.repo.spath)
-        if mtime != self.mtime:
-            self.mtime = mtime
+        st = get_stat(self.repo.spath)
+        # compare changelog size in addition to mtime to catch
+        # rollbacks made less than a second ago
+        if st.st_mtime != self.mtime or st.st_size != self.size:
+            self.mtime = st.st_mtime
+            self.size = st.st_size
             self.repo = hg.repository(self.repo.ui, self.repo.root)
             self.maxchanges = int(self.config("web", "maxchanges", 10))
             self.stripecount = int(self.config("web", "stripes", 1))
@@ -121,7 +126,12 @@ class hgweb(object):
                     self.check_perm(req, perms[cmd])
                 return protocol.call(self.repo, req, cmd)
             except ErrorResponse, inst:
-                if cmd == 'unbundle':
+                # A client that sends unbundle without 100-continue will
+                # break if we respond early.
+                if (cmd == 'unbundle' and
+                    (req.env.get('HTTP_EXPECT',
+                                 '').lower() != '100-continue') or
+                    req.env.get('X-HgHttp2', '')):
                     req.drain()
                 req.respond(inst, protocol.HGTYPE)
                 return '0\n%s\n' % inst.message
@@ -179,7 +189,8 @@ class hgweb(object):
                 req.form['cmd'] = [tmpl.cache['default']]
                 cmd = req.form['cmd'][0]
 
-            caching(self, req) # sets ETag header or raises NOT_MODIFIED
+            if self.configbool('web', 'cache', True):
+                caching(self, req) # sets ETag header or raises NOT_MODIFIED
             if cmd not in webcommands.__all__:
                 msg = 'no such method: %s' % cmd
                 raise ErrorResponse(HTTP_BAD_REQUEST, msg)
@@ -224,6 +235,7 @@ class hgweb(object):
         port = req.env["SERVER_PORT"]
         port = port != default_port and (":" + port) or ""
         urlbase = '%s://%s%s' % (proto, req.env['SERVER_NAME'], port)
+        logourl = self.config("web", "logourl", "http://mercurial.selenic.com/")
         staticurl = self.config("web", "staticurl") or req.url + 'static/'
         if not staticurl.endswith('/'):
             staticurl += '/'
@@ -263,6 +275,7 @@ class hgweb(object):
 
         tmpl = templater.templater(mapfile,
                                    defaults={"url": req.url,
+                                             "logourl": logourl,
                                              "staticurl": staticurl,
                                              "urlbase": urlbase,
                                              "repo": self.reponame,
