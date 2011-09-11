@@ -237,26 +237,27 @@
 	NSString* errorMessage = @"Unsecured Host Encountered";
 	NSString* fullErrorMessage = fstr(@"The authenticity of host '%@' cannot be established from stored certificates or host keys.\n\nThe host is reporting the key fingerprint:\n  %@\n\nIf you trust that this key fingerprint really represents '%@', you can permanently add this fingerprint to the accepted hosts.", host, fingerPrint, host);
 
-	dispatch_async(mainQueue(), ^{
-		NSAlert* alert = NewAlertPanel(errorMessage, fullErrorMessage, @"Decline", @"Add", nil);
-		[alert setShowsHelp:YES];
-		[alert setHelpAnchor:@"AboutServerIdentitySecurity"];
-		int response = [alert runModal];
-		if (response != NSAlertSecondButtonReturn)
-			return;
-		
-		NSString* macHgHGRCFilePath = fstr(@"%@/hgrc",applicationSupportFolder());
-		if (!pathIsExistent(macHgHGRCFilePath))
-		{
-			NSRunCriticalAlertPanel(@"Missing Configuration File", fstr(@"MacHg's configuration file %@ is missing. Please restart MacHg to recreate this file.", macHgHGRCFilePath), @"OK", @"", @"");
-			return;
-		}					
-		NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"extensions.cedit=", @"--add", fstr(@"hostfingerprints.%@ = %@", host, fingerPrint), @"--file", macHgHGRCFilePath, nil];
-		[TaskExecutions executeMercurialWithArgs:argsCedit  fromRoot:@"/tmp"];
-		
-		NSString* successMessage = fstr(@"Permanently recorded for host '%@' the fingerprint:\n\n%@\n\nso it can be verifiably recognized in the future.", host, fingerPrint);
-		NSRunAlertPanel(@"Fingerprint Added", successMessage, @"Ok", @"", @"");
-	});	
+	if (RequireVerifiedServerCertificatesFromDefaults())
+		dispatch_async(mainQueue(), ^{
+			NSAlert* alert = NewAlertPanel(errorMessage, fullErrorMessage, @"Decline", @"Add", nil);
+			[alert setShowsHelp:YES];
+			[alert setHelpAnchor:@"AboutServerIdentitySecurity"];
+			int response = [alert runModal];
+			if (response != NSAlertSecondButtonReturn)
+				return;
+			
+			NSString* macHgHGRCFilePath = fstr(@"%@/hgrc",applicationSupportFolder());
+			if (!pathIsExistent(macHgHGRCFilePath))
+			{
+				NSRunCriticalAlertPanel(@"Missing Configuration File", fstr(@"MacHg's configuration file %@ is missing. Please restart MacHg to recreate this file.", macHgHGRCFilePath), @"OK", @"", @"");
+				return;
+			}					
+			NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"extensions.cedit=", @"--add", fstr(@"hostfingerprints.%@ = %@", host, fingerPrint), @"--file", macHgHGRCFilePath, nil];
+			[TaskExecutions executeMercurialWithArgs:argsCedit  fromRoot:@"/tmp"];
+			
+			NSString* successMessage = fstr(@"Permanently recorded for host '%@' the fingerprint:\n\n%@\n\nso it can be verifiably recognized in the future.", host, fingerPrint);
+			NSRunAlertPanel(@"Fingerprint Added", successMessage, @"Ok", @"", @"");
+		});	
 }
 
 - (void) logMercurialResult
