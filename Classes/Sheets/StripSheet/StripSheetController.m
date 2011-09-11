@@ -30,6 +30,7 @@
 @implementation StripSheetController
 @synthesize myDocument;
 @synthesize forceOption = forceOption_;
+@synthesize backupOption = backupOption_;
 
 
 
@@ -95,7 +96,10 @@
 {
 	NSString* reasonForNonValid = [self reasonForInvalidityOfSelectedEntries];
 	if (!reasonForNonValid)
+	{
 		[okButton setEnabled:YES];
+		[sheetInformativeMessageTextField setAttributedStringValue: [self formattedSheetMessage]];
+	}
 	else
 	{
 		[okButton setEnabled:NO];
@@ -121,6 +125,7 @@
 	NSString* newTitle = fstr(@"Stripping Selected Revisions in “%@”", [myDocument selectedRepositoryShortName]);
 	[stripSheetTitle setStringValue:newTitle];
 	[self setForceOption:NO];
+	[self setBackupOption:YES];
 
 	[logTableView resetTable:self];
 	
@@ -159,9 +164,10 @@
 	NSMutableArray* argsStrip = [NSMutableArray arrayWithObjects:@"strip",  @"--config", @"extensions.mq=", nil];	// We are using MacHgs strip so command we need to specify that it is
 																													// in the extensions folder of the included Mercurial
     [argsStrip addObjectsFromArray:configurationForProgress];
-	[argsStrip addObject:@"--backup"];
 	if ([self forceOption])
 		[argsStrip addObject:@"--force"];		
+	if (![self backupOption])
+		[argsStrip addObject:@"--no-backup"];		
 	NSString* revisionNumber = fstr(@"%d", pair.lowRevision);
 	[argsStrip addObject:revisionNumber];
 
@@ -221,10 +227,26 @@
 {
 	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
 	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
-	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"The selected revisions within ")];
-	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(intAsString(pair.lowRevision))];
-	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" through to ")];
-	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(intAsString(pair.highRevision))];
+	BOOL migthEraseUncommitted = [myDocument repositoryHasFilesWhichContainStatus:eHGStatusCommittable];
+	BOOL singleRevision = pair.lowRevision == pair.highRevision;
+	if (singleRevision)
+	{
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"The selected revision ")];
+		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(intAsString(pair.lowRevision))];
+	}
+	else
+	{
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"The selected revisions within ")];
+		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(intAsString(pair.lowRevision))];
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" through to ")];
+		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(intAsString(pair.highRevision))];
+	}
+	if (migthEraseUncommitted)
+	{
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" (and any ")];
+		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(@"uncommitted changes")];
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(fstr(@" deriving from %@)", singleRevision ? @"this revision": @"these revisions"))];
+	}
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" will be removed from the repository. This strip operation is destructive; it rewrites history. Therefore you should never strip any revisions that have already been pushed to other repositories, unless you really know what you are doing.")];
 	return newSheetMessage;
 }

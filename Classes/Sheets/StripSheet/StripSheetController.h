@@ -23,10 +23,12 @@
 	MacHgDocument*			myDocument;
 	
 	BOOL					forceOption_;
+	BOOL					backupOption_;
 }
 
 @property (readwrite,assign) MacHgDocument*  myDocument;
 @property BOOL forceOption;
+@property BOOL backupOption;
 
 
 // Initialization
