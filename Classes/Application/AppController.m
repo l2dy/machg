@@ -302,8 +302,9 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	BOOL replacedHgrc = NO;
 	BOOL replacedHgignore = NO;
 	BOOL olderVersionThan_0_9_20 = ([self bundleVersion:mostModernMacHgVersionExecuted comparedTo:@"0.9.20"] == NSOrderedAscending);
+	BOOL olderVersionThan_0_9_24 = ([self bundleVersion:mostModernMacHgVersionExecuted comparedTo:@"0.9.24"] == NSOrderedAscending);
 	BOOL olderThanCurent = ([self bundleVersion:mostModernMacHgVersionExecuted comparedTo:currentBundleString] == NSOrderedAscending);
-	if (olderVersionThan_0_9_20)
+	if (olderVersionThan_0_9_24)
 	{
 		NSString* macHgHGRCFilePath = fstr(@"%@/hgrc",applicationSupportFolder());
 		if (pathIsExistent(macHgHGRCFilePath))

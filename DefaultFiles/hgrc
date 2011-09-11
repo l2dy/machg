@@ -1,5 +1,5 @@
 [ui]
-editor = /Applications/TextEdit.app/Contents/MacOS/TextEdit
+editor = open -t -n -W
 ssh = ssh -C
 
 
