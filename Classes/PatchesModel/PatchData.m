@@ -228,6 +228,7 @@
 					{
 						// We found a valid header, add to our colorized string and advance through the header
 						currentFile = filePath;
+						currentHunkNumber = 0;
 						[newLines addObject:line followedBy:minusLine followedBy:addLine];
 						i += 2;
 						continue;

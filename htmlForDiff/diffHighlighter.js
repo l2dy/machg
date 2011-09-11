@@ -57,6 +57,7 @@ var highlightDiff = function(diff, element, callbacks)
 	
 	var startFile = function()
 	{
+		hunk_index=0;
 		file_index++;
 	}
 	
