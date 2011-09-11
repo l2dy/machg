@@ -14,7 +14,7 @@ For more information:
 http://mercurial.selenic.com/wiki/RebaseExtension
 '''
 
-from mercurial import hg, util, repair, merge, cmdutil, commands, bookmarks
+from mercurial import hg, util, repair, merge, cmdutil, commands, bookmarks, error
 from mercurial import extensions, copies, patch
 from mercurial.commands import templateopts
 from mercurial.node import nullrev
@@ -144,10 +144,21 @@ def rebase(ui, repo, **opts):
             if opts.get('tool', False):
                 ui.warn(_('tool option will be ignored\n'))
 
-            (originalwd, target, state, skipped, collapsef, keepf,
-                                keepbranchesf, external) = restorestatus(repo)
-            if abortf:
-                return abort(repo, originalwd, target, state)
+            try:
+                (originalwd, target, state, skipped, collapsef, keepf, keepbranchesf, external) = restorestatus(repo)
+            except error.RepoLookupError:
+                if abortf:
+                    # We can't even correctly read the rebasestate so delete it
+                    # and really abort
+                    repo.ui.warn(_('previous rebase aborted\n'))
+                    clearstatus(repo)
+                    return 0
+                else:
+                    raise
+            else:
+                if abortf:
+                    return abort(repo, originalwd, target, state)
+
         else:
             if srcf and basef:
                 raise util.Abort(_('cannot specify both a '
