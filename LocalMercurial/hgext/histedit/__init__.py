@@ -356,8 +356,7 @@ def histedit(ui, repo, *parent, **opts):
     else:
         bailifchanged(repo)
         if os.path.exists(os.path.join(repo.path, 'histedit-state')):
-            raise util.Abort('history edit already in progress, try '
-                             '--continue or --abort')
+            raise util.Abort('history edit already in progress, try --continue or --abort')
 
         tip, empty = repo.dirstate.parents()
 
@@ -371,18 +370,26 @@ def histedit(ui, repo, *parent, **opts):
 
         ctxs = [repo[r] for r in revs]
         existing = [r.node() for r in ctxs]
-        rules = opts.get('commands', '')
-        from pudb import set_trace; set_trace()
-        if not rules:
-            rules = '\n'.join([('pick %s %s' % (
-                c.hex()[:12], c.description().splitlines()[0]))[:80]
-                               for c in ctxs])
-            rules += editcomment % (node.hex(parent)[:12], node.hex(tip)[:12], )
-            rules = ui.edit(rules, ui.username())
-        else:
-            f = open(rules)
+
+        rules = ''
+        defaultRules = '\n'.join([('pick %s %s' % (c.hex()[:12], c.description().splitlines()[0]))[:80] for c in ctxs])
+        if opts.get('rules', ''):
+            rules = ''.join(opts['rules'])
+
+        if not rules and opts.get('commands', ''):
+            f = open(opts['commands'])
             rules = f.read()
             f.close()
+
+        if opts.get('startingrules', False):
+        	ui.write(defaultRules)
+        	return
+
+        if not rules:
+            rules = defaultRules
+            rules += editcomment % (node.hex(parent)[:12], node.hex(tip)[:12], )
+            rules = ui.edit(rules, ui.username())
+
         rules = [l for l in (r.strip() for r in rules.splitlines())
                  if l and not l[0] == '#']
         rules = verifyrules(rules, repo, ctxs)
@@ -395,13 +402,9 @@ def histedit(ui, repo, *parent, **opts):
 
 
     while rules:
-        writestate(repo, parentctx.node(), created, replaced, tmpnodes, existing,
-                   rules, keep, tip)
+        writestate(repo, parentctx.node(), created, replaced, tmpnodes, existing, rules, keep, tip)
         action, ha = rules.pop(0)
-        (parentctx, created_,
-         replaced_, tmpnodes_, ) = actiontable[action](ui, repo,
-                                                       parentctx, ha,
-                                                       opts)
+        (parentctx, created_, replaced_, tmpnodes_, ) = actiontable[action](ui, repo, parentctx, ha, opts)
         created.extend(created_)
         replaced.extend(replaced_)
         tmpnodes.extend(tmpnodes_)
@@ -409,16 +412,14 @@ def histedit(ui, repo, *parent, **opts):
     hg.update(repo, parentctx.node())
 
     if not keep:
-        ui.debug('should strip replaced nodes %s\n' %
-                 ', '.join([node.hex(n)[:12] for n in replaced]))
+        ui.debug('should strip replaced nodes %s\n' % ', '.join([node.hex(n)[:12] for n in replaced]))
         for n in sorted(replaced, lambda x, y: cmp(repo[x].rev(), repo[y].rev())):
             try:
                 repair.strip(ui, repo, n)
             except error.LookupError:
                 pass
 
-    ui.debug('should strip temp nodes %s\n' %
-             ', '.join([node.hex(n)[:12] for n in tmpnodes]))
+    ui.debug('should strip temp nodes %s\n' % ', '.join([node.hex(n)[:12] for n in tmpnodes]))
     for n in reversed(tmpnodes):
         try:
             repair.strip(ui, repo, n)
@@ -427,12 +428,9 @@ def histedit(ui, repo, *parent, **opts):
     os.unlink(os.path.join(repo.path, 'histedit-state'))
 
 
-def writestate(repo, parentctxnode, created, replaced,
-               tmpnodes, existing, rules, keep, oldtip):
+def writestate(repo, parentctxnode, created, replaced, tmpnodes, existing, rules, keep, oldtip):
     fp = open(os.path.join(repo.path, 'histedit-state'), 'w')
-    pickle.dump((parentctxnode, created, replaced,
-                 tmpnodes, existing, rules, keep, oldtip,),
-                fp)
+    pickle.dump((parentctxnode, created, replaced, tmpnodes, existing, rules, keep, oldtip,), fp)
     fp.close()
 
 def readstate(repo):
@@ -474,12 +472,14 @@ def verifyrules(rules, repo, ctxs):
 cmdtable = {
     "histedit":
         (histedit,
-         [('', 'commands', '', 'Read history edits from the specified file.'),
+         [('', 'commands', '', 'read history edits from the specified file.'),
           ('c', 'continue', False, 'continue an edit already in progress', ),
           ('k', 'keep', False, 'don\'t strip old nodes after edit is complete', ),
           ('', 'abort', False, 'abort an edit in progress', ),
           ('o', 'outgoing', False, 'changesets not found in destination'),
           ('f', 'force', False, 'force outgoing even for unrelated repositories'),
+          ('',  'startingrules', False, 'issue the starting rules before editing. Useful for gui clients'),
+          ('',  'rules',  '', 'accept rules specified here instead of interactively edited by the user. Useful for gui clients'),
           ('r', 'rev', [], _('first revision to be edited')),
           ],
          __doc__,
