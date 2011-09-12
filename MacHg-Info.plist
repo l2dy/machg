@@ -44,22 +44,24 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
-	<string>0.9.23</string>
+	<string>0.9.24</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleVersion</key>
-	<string>0.9.23</string>
+	<string>0.9.24</string>
+	<key>LSApplicationCategoryType</key>
+	<string>public.app-category.developer-tools</string>
 	<key>LSMinimumSystemVersion</key>
 	<string>${MACOSX_DEPLOYMENT_TARGET}</string>
 	<key>NSMainNibFile</key>
 	<string>MainMenu</string>
 	<key>NSPrincipalClass</key>
 	<string>NSApplication</string>
-	<key>SUPublicDSAKeyFile</key>
-	<string>macHgPublicKey_dsa.pem</string>
-	<key>SUFeedURL</key>
-	<string>http://jasonfharris.com/machg/machg_appcast.xml</string>
 	<key>SUEnableAutomaticChecks</key>
 	<true/>
+	<key>SUFeedURL</key>
+	<string>http://jasonfharris.com/machg/machg_appcast.xml</string>
+	<key>SUPublicDSAKeyFile</key>
+	<string>macHgPublicKey_dsa.pem</string>
 </dict>
 </plist>
