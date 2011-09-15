@@ -89,6 +89,10 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 	NSTableColumn* branchesCol  = [self tableColumnWithIdentifier:@"branch"];
 	[changesetCol  bind:@"hidden"  toObject:defaults  withKeyPath:kKeyPathDisplayChangesetColumn  options:negateValueTransformer];
 	[branchesCol   bind:@"hidden"  toObject:defaults  withKeyPath:kKeyPathDisplayBranchColumn     options:negateValueTransformer];
+
+	// Make all the columns non-editable for now.
+	for (NSTableColumn* col in [self tableColumns])
+		[col setEditable:NO];
 	
 	// Receive a notification when the tag highlight color changes.
 	[defaults  addObserver:self  forKeyPath:kKeyPathTagHighColor		options:NSKeyValueObservingOptionNew  context:NULL];
