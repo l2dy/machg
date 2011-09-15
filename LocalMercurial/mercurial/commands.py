@@ -2892,10 +2892,11 @@ def help_(ui, name=None, with_version=False, unknowncmd=False, full=True, **opts
     ('i', 'id', None, _('show global revision id')),
     ('b', 'branch', None, _('show branch')),
     ('t', 'tags', None, _('show tags')),
-    ('B', 'bookmarks', None, _('show bookmarks'))],
+    ('B', 'bookmarks', None, _('show bookmarks')),
+    ('', 'insecure', None, _('do not verify server certificate (ignoring web.cacerts config)'))],
     _('[-nibtB] [-r REV] [SOURCE]'))
 def identify(ui, repo, source=None, rev=None,
-             num=None, id=None, branch=None, tags=None, bookmarks=None):
+             num=None, id=None, branch=None, tags=None, bookmarks=None, insecure=None):
     """identify the working copy or specified revision
 
     Print a summary identifying the repository state at REV using one or

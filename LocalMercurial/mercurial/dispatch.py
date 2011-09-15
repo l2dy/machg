@@ -634,6 +634,10 @@ def _dispatch(req):
     if cmdoptions.get('insecure', False):
         for ui_ in uis:
             ui_.setconfig('web', 'cacerts', '')
+            ui_.setconfig('web', 'strictCAverification', 'off')
+    else:
+        for ui_ in uis:
+            ui_.setconfig('web', 'strictCAverification', 'on')
 
     if options['help']:
         return commands.help_(ui, cmd, options['version'])
