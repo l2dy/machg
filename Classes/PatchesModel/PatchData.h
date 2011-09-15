@@ -18,6 +18,9 @@
 	NSString* parent_;
 	NSString* nodeID_;
 	NSString* patchBody_;
+	NSMutableDictionary* excludedPatchHunksForFilePath_;	// Map of (NSString*)sourceCodeFilePath -> (NSMutableSet*)of(NSString*)excludedHunkNumber
+															// Note don't be confused between these file paths (of the source code being patched) and
+															// the path to the actual patch
 	
 	BOOL	  forceOption_;
 	BOOL	  exactOption_;
@@ -35,6 +38,7 @@
 @property (readwrite,assign) NSString*	path;
 @property (readwrite,assign) NSString*	nodeID;
 @property (readwrite,assign) NSString*	patchBody;
+@property (readwrite,assign) NSMutableDictionary* excludedPatchHunksForFilePath;
 @property BOOL forceOption;
 @property BOOL exactOption;
 @property BOOL dontCommitOption;
@@ -63,5 +67,7 @@
 - (BOOL) isModified;
 
 - (NSAttributedString*) patchBodyColorized;
+
+- (NSString*) patchBodyFiltered;
 
 @end

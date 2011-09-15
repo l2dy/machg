@@ -627,6 +627,24 @@ NSArray* aliasesForShell()
 	return cmds;
 }
 
+NSString* tempFilePathWithTemplate(NSString* nameTemplate)
+{
+	NSString* tempFileTemplate = [NSTemporaryDirectory() stringByAppendingPathComponent:nameTemplate];
+	const char* tempFileTemplateCString = [tempFileTemplate fileSystemRepresentation];
+	char* tempFileNameCString = (char*)malloc(strlen(tempFileTemplateCString) + 1);
+	strcpy(tempFileNameCString, tempFileTemplateCString);
+	int fileDescriptor = mkstemp(tempFileNameCString);
+	
+	if (fileDescriptor == -1)
+		return nil;
+	
+	NSString* tempFileName = [[NSFileManager defaultManager] stringWithFileSystemRepresentation:tempFileNameCString length:strlen(tempFileNameCString)];
+	close(fileDescriptor);
+	free(tempFileNameCString);
+	return tempFileName;
+}
+
+
 
 
 

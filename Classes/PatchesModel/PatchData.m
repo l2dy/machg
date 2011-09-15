@@ -27,6 +27,7 @@
 @synthesize path = path_;
 @synthesize nodeID = nodeID_;
 @synthesize patchBody = patchBody_;
+@synthesize excludedPatchHunksForFilePath = excludedPatchHunksForFilePath_;
 @synthesize forceOption = forceOption_;
 @synthesize exactOption = exactOption_;
 @synthesize dontCommitOption = dontCommitOption_;
@@ -184,6 +185,91 @@
 	return colorized;
 }
 
+
+- (BOOL) hunkIsExcludedForFile:(NSString*)currentFIle andHunk:(NSInteger)currentHunk
+{
+	if (!currentFIle)
+		return NO;
+	NSSet* hunkSet = [excludedPatchHunksForFilePath_ objectForKey:currentFIle];
+	return hunkSet ? [hunkSet containsObject:intAsString(currentHunk)] : NO;
+}
+
+- (NSString*) patchBodyFiltered
+{
+	if (!patchBody_)
+		return nil;
+	
+	NSString* currentFile = nil;
+	NSInteger currentHunkNumber = 0;
+		
+	NSMutableArray* newLines = [[NSMutableArray alloc]init];
+	NSMutableArray* lines = [[NSMutableArray alloc]init];
+	NSInteger start = 0;
+	while (start < [patchBody_ length])
+	{
+		NSRange nextLine = [patchBody_ lineRangeForRange:NSMakeRange(start, 1)];
+		[lines addObject:[patchBody_ substringWithRange:nextLine]];
+		start = nextLine.location + nextLine.length;
+	}
+	
+	for (NSInteger i = 0; i < [lines count] ; i++)
+	{
+		NSString* line = [lines objectAtIndex:i];
+
+		// If we hit the diff header of a new file set the 'currentFile' and copy the header lines over to the result.
+		if ([line isMatchedByRegex:@"^diff.*"] && i+2< [lines count])
+		{
+			NSString* minusLine = [lines objectAtIndex:i+1];
+			NSString* addLine   = [lines objectAtIndex:i+2];
+			NSString* filePath = nil;
+			if ([minusLine isMatchedByRegex:@"^---.*"])
+				if ([addLine getCapturesWithRegexAndTrimedComponents:@"^\\+\\+\\+\\s*b/(.*)"  firstComponent:&filePath])
+					if (IsNotEmpty(filePath))
+					{
+						// We found a valid header, add to our colorized string and advance through the header
+						currentFile = filePath;
+						[newLines addObject:line followedBy:minusLine followedBy:addLine];
+						i += 2;
+						continue;
+					}
+		}
+
+		if ([line isMatchedByRegex:@"^@@.*"])
+			currentHunkNumber++;
+
+		if (![self hunkIsExcludedForFile:currentFile andHunk:currentHunkNumber])
+			[newLines addObject:line];
+	}
+	
+	// Prune diffs which have no hunks
+	NSMutableString* finalString = [[NSMutableString alloc] init];
+	for (NSInteger i = 0; i < [newLines count] ; i++)
+	{
+		NSString* line = [newLines objectAtIndex:i];
+
+		if ([line isMatchedByRegex:@"^diff.*"])
+		{
+			if (i+3 >= [newLines count])
+				return finalString;
+			NSString* minusLine = [newLines objectAtIndex:i+1];
+			NSString* addLine   = [newLines objectAtIndex:i+2];
+			NSString* diffLine  = [newLines objectAtIndex:i+3];
+			if ([minusLine isMatchedByRegex:@"^---.*"] && [addLine isMatchedByRegex:@"^\\+\\+\\+.*"] && [diffLine isMatchedByRegex:@"^diff.*"])
+			{
+				i += 2;
+				continue;
+			}
+		}
+		[finalString appendString:line];
+	}
+	
+	return finalString;
+}
+
+
+
+
+
 // Parse something like (without the indent):
 //	# HG changeset patch
 //	# User jfh <jason@unifiedthought.com>
@@ -207,6 +293,7 @@
 	dontCommitOption_ = NO;
 	importBranchOption_ = YES;
 	guessRenames_ = YES;
+	excludedPatchHunksForFilePath_ = [[NSMutableDictionary alloc]init];
 	
 	static NSString* linebreak = nil;
 	static NSString* headerRegEx = nil;

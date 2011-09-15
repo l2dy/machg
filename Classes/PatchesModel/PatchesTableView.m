@@ -66,7 +66,7 @@
 {
 //	[self observe:kRepositoryDataIsNew		from:[self myDocument]  byCalling:@selector(repositoryDataIsNew)];
 //	[self observe:kRepositoryDataDidChange	from:[self myDocument]  byCalling:@selector(logEntriesDidChange:)];
-//	[self observe:kLogEntriesDidChange			from:[self myDocument]  byCalling:@selector(logEntriesDidChange:)];
+//	[self observe:kLogEntriesDidChange		from:[self myDocument]  byCalling:@selector(logEntriesDidChange:)];
 	
 	// Tell the browser to send us messages when it is clicked.
 	[self setTarget:self];
@@ -77,6 +77,11 @@
 
 	// drag and drop support
 	[self registerForDraggedTypes:[NSArray arrayWithObjects:kPatchesTablePBoardType, NSFilenamesPboardType, nil]];
+	
+	NSURL* patchDetailURL = [NSURL fileURLWithPath:fstr(@"%@/htmlForDiff/%@",[[NSBundle mainBundle] resourcePath], @"index.html")];
+	[[detailedPatchWebView mainFrame] loadRequest:[NSURLRequest requestWithURL:patchDetailURL]];
+
+	[[detailedPatchWebView windowScriptObject] setValue:self forKey:@"macHgPatchesTableView"];
 	
 	[self setRowHeight:30];
 }
@@ -254,18 +259,21 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 
 - (void) tableViewSelectionDidChange:(NSNotification*)aNotification
 {
+	WebScriptObject* script = [detailedPatchWebView windowScriptObject];
+	[script setValue:self forKey:@"macHgPatchesTableView"];
 	NSInteger selectedRowCount = [[self selectedRowIndexes] count];
 	if (selectedRowCount == 0)
 	{
-		[[detailedPatchTextView textStorage] setAttributedString:grayedAttributedString(@"No Patch Selected")];
+		[script callWebScriptMethod:@"showMessage" withArguments:[NSArray arrayWithObject:@"No Patch Selected"]];
 	}
 	else if (selectedRowCount > 1)
 	{
-		[[detailedPatchTextView textStorage] setAttributedString:grayedAttributedString(@"Multiple Patches Selected")];
+		[script callWebScriptMethod:@"showMessage" withArguments:[NSArray arrayWithObject:@"Multiple Patches Selected"]];
 	}
 	else
 	{
-		[[detailedPatchTextView textStorage] setAttributedString:[[self selectedPatch] patchBodyColorized]];
+		NSArray* showDiffArgs = [NSArray arrayWithObject:[[self selectedPatch] patchBody]];
+		[script callWebScriptMethod:@"showDiff" withArguments:showDiffArgs];
 	}
 }
 
@@ -394,6 +402,62 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 	return NO;
 }
 
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Callback Methods from Javascript
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (void) disableHunk:(NSString*)hunkNumber forFile:(NSString*)fileName 
+{
+	NSMutableDictionary* dict = [[self selectedPatch] excludedPatchHunksForFilePath];
+	NSMutableSet* set = [dict valueForKey:fileName];
+	if (!set)
+	{
+		set = [[NSMutableSet alloc]init];
+		[dict setValue:set forKey:fileName];
+	}
+	[set addObject:hunkNumber];
+}
+
+- (void) enableHunk:(NSString*)hunkNumber forFile:(NSString*)fileName 
+{
+	NSMutableDictionary* dict = [[self selectedPatch] excludedPatchHunksForFilePath];
+	NSMutableSet* set = [dict valueForKey:fileName];
+	if (!set)
+		return;
+	[set removeObject:hunkNumber];
+}
+
+- (void) excludeHunksAccordingToModel
+{
+	WebScriptObject* script = [detailedPatchWebView windowScriptObject];
+	NSMutableDictionary* dict = [[self selectedPatch] excludedPatchHunksForFilePath];
+	for (NSString* file in [dict allKeys])
+		for (NSString* hunkNumber in [dict valueForKey:file])
+		{
+			NSArray* excludeViewHunkStatusArgs = [NSArray arrayWithObjects:file, hunkNumber, nil];
+			[script callWebScriptMethod:@"excludeViewHunkStatus" withArguments:excludeViewHunkStatusArgs];
+		}
+}
+
+
++ (NSString *)webScriptNameForSelector:(SEL)sel
+{
+    // change the javascript name from 'disableHunk_forFile' to 'disableHunkForFile' etc...
+	if (sel == @selector(disableHunk:forFile:))			return @"disableHunkForFileName";
+	if (sel == @selector(enableHunk:forFile:))			return @"enableHunkForFileName";
+	if (sel == @selector(excludeHunksAccordingToModel))	return @"excludeHunksAccordingToModel";
+	
+	return nil;
+}
+
++ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector { return NO; }
++ (BOOL)isKeyExcludedFromWebScript:(const char *)name { return NO; }
+
 @end
 
 
@@ -490,6 +554,8 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 
 
 @end
+
+
 
 
 

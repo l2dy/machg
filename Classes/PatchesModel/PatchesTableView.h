@@ -7,6 +7,7 @@
 //  This software is licensed under the "New BSD License". The full license text is given in the file License.txt
 //
 
+#import <WebKit/WebKit.h>
 #import <Cocoa/Cocoa.h>
 #import "Common.h"
 
@@ -22,7 +23,8 @@
 {
 	IBOutlet id	<ControllerForPatchesTableView> parentController;	// Controlling class should be an object which is controlling a sheet or a
 																	// window controller.
-	IBOutlet NSTextView*	detailedPatchTextView;					// This is the field where the details of the patch are displayed.
+	
+	IBOutlet WebView*		detailedPatchWebView;					// This is the field where the details of the patch are displayed.
 
 	NSArray*				patchesTableData_;						// The array of ordered patches (tags, branches, bookmarks) which
 																	// backs the PatchesTableView

@@ -1,0 +1,113 @@
+body {
+	margin: 0;
+	margin-top: 5px;
+	width: 100%;
+	font: small 'Lucida Grande', Arial;
+}
+
+.diff .file {
+	margin: 13px 10px;
+	padding: 10px;
+	-webkit-border-radius: 10px;
+	border: 1px solid #CCC;
+	-webkit-box-shadow: 1px 1px 2px #DDD;
+}
+
+.includehunk {
+	float: right;
+}
+
+.diff .file .fileHeader {
+	margin-top: -5px;
+	padding-bottom: 1px;
+	font-weight: bold;
+}
+
+.diff .file .diffcontent {
+	white-space: pre;
+	font-family: Monaco;
+}
+
+.diff .file .diffcontent .lineno {
+	float: left;
+	padding-left: 2px;
+	padding-right: 2px;
+	background-color: #ECECEC;
+	color: #A9A9A9;
+	border: 1px solid #DDDDDD;
+	text-align: right;
+}
+
+.diff .file .diffcontent .lines {
+	overflow: auto;
+}
+
+/* @group Hunk */
+
+.hunk > .hunkheader {
+  background-color: #f7f7f7;
+  color: #bbb;
+}
+
+
+.hunk > .delline {
+  background-color: #FEE;
+  color: #B00;
+}
+
+.hunk > .addline {
+  background-color: #DFD;
+  color: #080;
+}
+
+.hunk > .noopline {
+  background-color: #f4f8fc;
+}
+
+.hunk > .whitespace {
+	background-color: rgba(255,0,0,0.5);
+}
+
+/* @end */
+
+
+/* @group DisabledHunk */
+
+.disabledhunk > .hunkheader {
+  background-color: #f7f7f7;
+  color: #a1a1a1;
+}
+
+
+.disabledhunk > .delline {
+  background-color: #e5e5e5;
+  color: #7c7c7c;
+}
+
+.disabledhunk > .addline {
+  background-color: #e5e5e5;
+  color: #7c7c7c;
+}
+
+.disabledhunk > .noopline {
+  background-color: #f1f1f1;
+  color: #7c7c7c;
+
+}
+
+.disabledhunk > .whitespace {
+  background-color: #f1f1f1;
+}
+
+/* @end */
+
+#CurrentHunk {
+	border-left: 5px solid black;
+}
+
+.message {
+	color: #b3b3b3;
+	font: large "Lucida Grande", Lucida, Verdana, sans-serif;
+	padding-top: 3em;
+	padding-left: 2em;
+}

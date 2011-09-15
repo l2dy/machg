@@ -160,6 +160,7 @@
 		9673CD4412D148AE0043929D /* QuickLook.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9673CD4312D148AE0043929D /* QuickLook.framework */; };
 		9673CD4A12D148C70043929D /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9673CD4912D148C70043929D /* Quartz.framework */; };
 		9673D08012D1C99A0043929D /* Quicklook.png in Resources */ = {isa = PBXBuildFile; fileRef = 9673D07F12D1C99A0043929D /* Quicklook.png */; };
+		967B251C137677D800EB102C /* htmlForDiff in Resources */ = {isa = PBXBuildFile; fileRef = 967B2516137677D800EB102C /* htmlForDiff */; };
 		969064EC11601E2400F30915 /* MonitorFSEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 969064EB11601E2400F30915 /* MonitorFSEvents.m */; };
 		9693CFC1129D82DF0064DAB9 /* LogRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 9693CFC0129D82DF0064DAB9 /* LogRecord.m */; };
 		9695007410CBE3E100548D1C /* BrowserView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9695007210CBE3E100548D1C /* BrowserView.xib */; };
@@ -465,6 +466,7 @@
 		9673CD4312D148AE0043929D /* QuickLook.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = QuickLook.framework; path = System/Library/Frameworks/QuickLook.framework; sourceTree = SDKROOT; };
 		9673CD4912D148C70043929D /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		9673D07F12D1C99A0043929D /* Quicklook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Quicklook.png; path = Images/ToolbarItems/Quicklook.png; sourceTree = SOURCE_ROOT; };
+		967B2516137677D800EB102C /* htmlForDiff */ = {isa = PBXFileReference; lastKnownFileType = folder; path = htmlForDiff; sourceTree = "<group>"; };
 		969064EA11601E2400F30915 /* MonitorFSEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MonitorFSEvents.h; sourceTree = "<group>"; };
 		969064EB11601E2400F30915 /* MonitorFSEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MonitorFSEvents.m; sourceTree = "<group>"; };
 		9693CFBF129D82DF0064DAB9 /* LogRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogRecord.h; sourceTree = "<group>"; };
@@ -650,6 +652,7 @@
 			children = (
 				962ED0BB11878A120072211F /* macHgPublicKey_dsa.pem */,
 				96AD9C0811C468CF00F5C82E /* MacHgHelp */,
+				967B2516137677D800EB102C /* htmlForDiff */,
 				96BEAA8D12891CF0005198B5 /* DefaultFiles */,
 				96DCCC1A10CD41B100C843C9 /* scripts */,
 				9600C28410CD3D9F00CD8D28 /* Images */,
@@ -1740,6 +1743,7 @@
 				9618961E133BC56F00C38570 /* TextWrangler.png in Resources */,
 				9618B3601349B6E000C38570 /* ScrollToChangesetPanel.xib in Resources */,
 				961E283A13586C4900FDD502 /* CloneArrow.png in Resources */,
+				967B251C137677D800EB102C /* htmlForDiff in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

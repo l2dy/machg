@@ -149,10 +149,29 @@
 }
 
 
+- (NSString*) filteredPatch:(PatchData*)patch
+{
+	NSString* filteredPatchString = trimString([patch patchBodyFiltered]);
+	
+	// Create a temporary file
+	NSString* tempFilePath = tempFilePathWithTemplate(@"MacHgFilteredPatch.XXXXXX");
+	if (!tempFilePath)
+	{
+		NSRunAlertPanel(@"Temporary File", @"MacHg could not create a temporary file for the filtered patch. Falling back to importing the original patch.", @"OK", nil, nil);
+		return [patch path];
+	}
+	
+	NSError* err = nil;
+	[filteredPatchString writeToFile:tempFilePath atomically:YES encoding:NSUTF8StringEncoding error:&err];
+	return tempFilePath;
+}
+
+
 - (IBAction) sheetButtonOk:(id)sender
 {
 	
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+	NSMutableString* cumulativeMessages = [[NSMutableString alloc] init];
 	BOOL canClose = NO;
 
 	while (true)
@@ -167,21 +186,32 @@
 		if (!patch)
 			break;
 
-		if ([patch authorIsModified])			[argsImport addObject:@"--user"    followedBy:[patch author]];
-		if ([patch dateIsModified])				[argsImport addObject:@"--date"    followedBy:[patch date]];
-		if ([patch commitMessageIsModified])	[argsImport addObject:@"--message" followedBy:[patch commitMessage]];
-		if ([patch forceOption])				[argsImport addObject:@"--force"];
-		if ([patch exactOption])				[argsImport addObject:@"--exact"];
-		if ([patch importBranchOption])			[argsImport addObject:@"--import-branch"];
-		if ([patch dontCommitOption])			[argsImport addObject:@"--no-commit"];
-		if (guessRenames_)						[argsImport addObject:@"--similarity" followedBy:intAsString(constrainInteger((int)round(100 * guessSimilarityFactor_), 0, 100))];
-		[argsImport addObject:[patch path]];
+		BOOL willFilterPatch = IsNotEmpty([patch excludedPatchHunksForFilePath]);
+		if ([patch authorIsModified]        || willFilterPatch)		[argsImport addObject:@"--user"    followedBy:[patch author]];
+		if ([patch dateIsModified]          || willFilterPatch)		[argsImport addObject:@"--date"    followedBy:[patch date]];
+		if ([patch commitMessageIsModified] || willFilterPatch)		[argsImport addObject:@"--message" followedBy:[patch commitMessage]];
+		if ([patch forceOption])									[argsImport addObject:@"--force"];
+		if ([patch exactOption])									[argsImport addObject:@"--exact"];
+		if ([patch importBranchOption])								[argsImport addObject:@"--import-branch"];
+		if ([patch dontCommitOption])								[argsImport addObject:@"--no-commit"];
+		if (guessRenames_)											[argsImport addObject:@"--similarity" followedBy:intAsString(constrainInteger((int)round(100 * guessSimilarityFactor_), 0, 100))];
+		NSString* patchPath = [patch path];
+		if (willFilterPatch)
+			patchPath = [self filteredPatch:patch];
+		[argsImport addObject:patchPath];
 		ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsImport  fromRoot:rootPath];
-		if ([result hasErrors] || [result hasWarnings])
+		if ([result hasWarnings])
+			NSRunAlertPanel(@"Results of Import", [result errStr], @"OK", nil, nil);
+
+//		if ([result hasWarnings])
+//			[cumulativeMessages appendString:[result errStr]];
+		if ([result hasErrors])
 			break;
 		[patchesTable removePatchAtIndex:0];
 	}
 
+	if (IsNotEmpty(cumulativeMessages))
+		NSRunAlertPanel(@"Results of Import", cumulativeMessages, @"OK", nil, nil);
 	if (!canClose)
 		return;
 	[theImportPatchesSheet makeFirstResponder:theImportPatchesSheet];	// Make the text fields of the sheet commit any changes they currently have
