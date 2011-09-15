@@ -68,7 +68,7 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 		canSelectIncompleteRevision_ = NO;
 		rootPath_ = nil;
 		awake_ = NO;
-    }
+	}
     
 	return self;
 }
@@ -103,9 +103,9 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 	awake_ = YES;
 	[self resetTable:self];
     
-    NSView* superview = [self superview];
-    if([superview isKindOfClass:[NSClipView class]])
-        [superview setCopiesOnScroll:NO];
+	// Stop garbage littering on Lion see issue #273
+	[DynamicCast(NSClipView, [self superview]) setCopiesOnScroll:NO];
+	[DynamicCast(NSClipView, [detailedEntryTextView superview]) setCopiesOnScroll:NO];
 }
 
 - (void) unload

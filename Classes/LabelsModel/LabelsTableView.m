@@ -77,6 +77,9 @@
 	[self setDoubleAction:@selector(labelTableDoubleClick:)];
 	[self setDelegate:self];
 	[self setDataSource:self];
+	
+	// Stop garbage littering on Lion see issue #273
+	[DynamicCast(NSClipView, [self superview]) setCopiesOnScroll:NO];
 }
 
 - (MacHgDocument*)		myDocument			{ return [parentController myDocument]; }
