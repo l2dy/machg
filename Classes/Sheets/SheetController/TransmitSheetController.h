@@ -43,10 +43,11 @@
 
 // These methods *must* be re-implemented in the children. What I would like to do here is say these methods are pure like in C++
 // I would say = 0 here, but I don't think this is possible in Objective-C. If you know and it is then email me!
-- (SidebarNode*)	sourceRepository;
-- (SidebarNode*)	destinationRepository;
-- (NSString*)		operationName;
-- (MacHgDocument*)	myDocument;
+- (SidebarNode*)		sourceRepository;
+- (SidebarNode*)		destinationRepository;
+- (NSString*)			operationName;
+- (OptionController*)	commonRevOption;
+- (MacHgDocument*)		myDocument;
 
 
 // Utilities

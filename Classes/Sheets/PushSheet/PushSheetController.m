@@ -64,9 +64,10 @@
 // MARK: Accessors
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (SidebarNode*) sourceRepository		{ return [myDocument selectedRepositoryRepositoryRef]; }
-- (SidebarNode*) destinationRepository	{ return [[compatibleRepositoriesPopup selectedItem] representedObject]; }
-- (NSString*)    operationName			{ return @"Push"; }
+- (SidebarNode*)		sourceRepository		{ return [myDocument selectedRepositoryRepositoryRef]; }
+- (SidebarNode*)		destinationRepository	{ return [[compatibleRepositoriesPopup selectedItem] representedObject]; }
+- (NSString*)			operationName			{ return @"Push"; }
+- (OptionController*)	commonRevOption			{ return revOption; }
 
 
 

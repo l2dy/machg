@@ -42,9 +42,10 @@
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // These *MUST* be overridden in the child class
 
-- (SidebarNode*)	sourceRepository		{ NSAssert(NO, @"Must Override sourceRepository method");		return nil; }
-- (SidebarNode*)	destinationRepository	{ NSAssert(NO, @"Must Override destinationRepository method");	return nil; }
-- (NSString*)		operationName			{ NSAssert(NO, @"Must Override operationName method");			return nil; }
+- (SidebarNode*)		sourceRepository		{ NSAssert(NO, @"Must Override sourceRepository method");		return nil; }
+- (SidebarNode*)		destinationRepository	{ NSAssert(NO, @"Must Override destinationRepository method");	return nil; }
+- (NSString*)			operationName			{ NSAssert(NO, @"Must Override operationName method");			return nil; }
+- (OptionController*)	commonRevOption			{ NSAssert(NO, @"Must Override commonRevOption method");		return nil; }
 
 
 
