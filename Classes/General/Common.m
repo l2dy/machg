@@ -621,8 +621,8 @@ NSString* hgrcPath()
 
 NSArray* aliasesForShell()
 {
-	NSString* mhgAlias  = fstr(@"alias %@='%@'", LocalHGShellAliasNameFromDefaults(), executableLocationHG());
-	NSString* ehgAlias  = fstr(@"alias %@='HGPLAIN=1 HGENCODING=UTF-8 HGRCPATH=\"%@\" %@'", LocalWhitelistedHGShellAliasNameFromDefaults(), hgrcPath(), executableLocationHG());
+	NSString* mhgAlias  = fstr(@"alias %@='\"%@\"'", LocalHGShellAliasNameFromDefaults(), executableLocationHG());
+	NSString* ehgAlias  = fstr(@"alias %@='HGPLAIN=1 HGENCODING=UTF-8 HGRCPATH=\"%@\" \"%@\"'", LocalWhitelistedHGShellAliasNameFromDefaults(), hgrcPath(), executableLocationHG());
 	NSArray* cmds = [NSArray arrayWithObjects:mhgAlias, ehgAlias, nil];
 	return cmds;
 }
