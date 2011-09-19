@@ -15,7 +15,7 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 
 @implementation ResultsWindowController
 
-- (ResultsWindowController*) initWithMessage:(NSString*)message andResults:(NSAttributedString*)results andWindowTitle:(NSString*)windowTitle
+- (ResultsWindowController*) initWithMessage:(NSString*)message andResults:(NSAttributedString*)results andWindowTitle:(NSString*)windowTitle onScreen:(NSScreen*)screen
 {
 	[NSBundle loadNibNamed:@"ResultsWindow" owner:self];
 	[titleMessageTextField setStringValue:message];
@@ -25,7 +25,7 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 	NSSize resultsSize = [results size];
 	NSSize newSize;
 	
-	NSRect visibleFrame = [[resultsWindow screen] visibleFrame];
+	NSRect visibleFrame = [screen visibleFrame];
 	NSSize currentSize = [resultsMessageTextView frame].size;
 	NSRect f = [resultsWindow frame];
 	
@@ -49,9 +49,9 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 	return self;
 }
 
-+ (ResultsWindowController*) createWithMessage:(NSString*)message andResults:(NSAttributedString*)results andWindowTitle:(NSString*)windowTitle
++ (ResultsWindowController*) createWithMessage:(NSString*)message andResults:(NSAttributedString*)results andWindowTitle:(NSString*)windowTitle onScreen:(NSScreen*)screen
 {
-	return [[ResultsWindowController alloc] initWithMessage:message andResults:results andWindowTitle:windowTitle];
+	return [[ResultsWindowController alloc] initWithMessage:message andResults:results andWindowTitle:windowTitle onScreen:screen];
 }
 
 

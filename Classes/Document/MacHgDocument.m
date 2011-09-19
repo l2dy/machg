@@ -1891,7 +1891,8 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 		{
 			NSString* messageString = fstr(@"Results of Add Remove Files in “%@”", [self selectedRepositoryShortName]);
 			NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
-			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"AddRemove Results - %@", [self selectedRepositoryShortName])];
+			NSString* windowTitle = fstr(@"AddRemove Results - %@", [self selectedRepositoryShortName]);
+			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:windowTitle onScreen:[[self mainWindow] screen]];
 		}		
 	}];
 	return YES;
@@ -1949,7 +1950,8 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 		{
 			NSString* messageString = fstr(@"Results of Updating “%@”",  [self selectedRepositoryShortName]);
 			NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
-			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"Update Results - %@", [self selectedRepositoryShortName])];
+			NSString* windowTitle = fstr(@"Update Results - %@", [self selectedRepositoryShortName]);
+			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:windowTitle onScreen:[[self mainWindow] screen]];
 		}
 	}];
 	return YES;
@@ -1993,7 +1995,8 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 		{
 			NSString* messageString = fstr(@"Results of Backing out “%@” in “%@”",  version, [self selectedRepositoryShortName]);
 			NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
-			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"Backout Results - %@", [self selectedRepositoryShortName])];
+			NSString* windowTitle = fstr(@"Backout Results - %@", [self selectedRepositoryShortName]);
+			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:windowTitle onScreen:[[self mainWindow] screen]];
 		}
 		
 		NSRunAlertPanel(@"Backed out Changeset",
@@ -2053,7 +2056,8 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 	{
 		NSString* messageString = fstr(@"Results of Merging “%@”",  [self selectedRepositoryShortName]);
 		NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
-		[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"Merge Results - %@", [self selectedRepositoryShortName])];
+		NSString* windowTitle = fstr(@"Merge Results - %@", [self selectedRepositoryShortName]);
+		[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:windowTitle onScreen:[[self mainWindow] screen]];
 	}
 	
 	if (DisplayWarningForPostMergeFromDefaults())
@@ -2140,7 +2144,8 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 		ExecutionResult* results = [self executeMercurialWithArgs:argsManifest  fromRoot:rootPath  whileDelayingEvents:YES];
 		NSString* messageString = fstr(@"Manifest of “%@” revision “%@”", thisRepositoryName, version);
 		NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
-		[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"Manifest Results - %@", [self selectedRepositoryShortName])];
+		NSString* windowTitle =	fstr(@"Manifest Results - %@", [self selectedRepositoryShortName]);
+		[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:windowTitle onScreen:[[self mainWindow] screen]];
 	}];
 }
 
@@ -2198,7 +2203,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 				NSString* messageString = fstr(@"Annotations of “%@” for revision “%@”", fileName, version);
 				NSString* windowTitle   = fstr(@"%@ : %@ Annotations", fileName, version);
 				NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(nonNil(results.outStr));
-				[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:windowTitle];
+				[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:windowTitle onScreen:[[self mainWindow] screen]];
 			});
 		dispatchGroupWaitAndFinish(group);
 	}];

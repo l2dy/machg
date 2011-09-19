@@ -134,7 +134,7 @@
 		[processController terminateController];
 		NSString* messageString = fstr(@"Results of Outgoing “%@” into “%@”", outgoingSourceName, outgoingDestinationName);
 		NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
-		[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"Outgoing Results - %@", outgoingSourceName)];
+		[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"Outgoing Results - %@", outgoingSourceName) onScreen:[sheetWindow screen]];
 	});
 	
 	// Cache the connection parameters
