@@ -169,7 +169,7 @@
 
 - (IBAction) sheetButtonOk:(id)sender
 {
-	
+	[theImportPatchesSheet makeFirstResponder:theImportPatchesSheet];	// Make the fields of the sheet commit any changes they currently have
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	NSMutableString* cumulativeMessages = [[NSMutableString alloc] init];
 	BOOL canClose = NO;
