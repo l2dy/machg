@@ -462,7 +462,7 @@ NSString* kAmendOption	 = @"amendOption";
 
 
 
-- (void) primaryActionCommit:(NSArray*)pathsToCommit excluding:(NSArray*)excludedPaths
+- (void) sheetActionCommit:(NSArray*)pathsToCommit excluding:(NSArray*)excludedPaths
 {
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	[myDocument dispatchToMercurialQueuedWithDescription:@"Committing Files" process:^{
@@ -488,7 +488,7 @@ NSString* kAmendOption	 = @"amendOption";
 }
 
 
-- (void) primaryActionAmend:(NSArray*)pathsToCommit excluding:(NSArray*)excludedPaths
+- (void) sheetActionAmend:(NSArray*)pathsToCommit excluding:(NSArray*)excludedPaths
 {
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	
@@ -571,9 +571,9 @@ NSString* kAmendOption	 = @"amendOption";
 	[myDocument removeAllUndoActionsForDocument];
 	
 	if ([amendButton state] == NSOffState)
-		[self primaryActionCommit:filteredAbsolutePathsOfFilesToCommit excluding:excludedPaths];
+		[self sheetActionCommit:filteredAbsolutePathsOfFilesToCommit excluding:excludedPaths];
 	else if ([amendButton state] == NSOnState)
-		[self primaryActionAmend:filteredAbsolutePathsOfFilesToCommit excluding:excludedPaths];
+		[self sheetActionAmend:filteredAbsolutePathsOfFilesToCommit excluding:excludedPaths];
 
 	[NSApp endSheet:theCommitSheet];
 	[theCommitSheet orderOut:sender];
