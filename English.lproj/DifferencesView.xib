@@ -12,6 +12,7 @@
     </dictionary>
     <array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
       <integer value="416"/>
+      <integer value="251"/>
     </array>
     <array key="IBDocument.PluginDependencies">
       <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -32,7 +33,7 @@
         <string key="NSClassName">NSApplication</string>
       </object>
       <object class="NSCustomView" id="554596880">
-        <nil key="NSNextResponder"/>
+        <reference key="NSNextResponder"/>
         <int key="NSvFlags">268</int>
         <array class="NSMutableArray" key="NSSubviews">
           <object class="BWSplitView" id="174023107">
@@ -261,7 +262,6 @@
                                                 </object>
                                                 <int key="NSResizingMask">2</int>
                                                 <bool key="NSIsResizeable">YES</bool>
-                                                <bool key="NSIsEditable">YES</bool>
                                                 <reference key="NSTableView" ref="881988333"/>
                                                 <object class="NSSortDescriptor" key="NSSortDescriptorPrototype">
                                                   <string key="NSKey">revision</string>
@@ -298,7 +298,6 @@
                                                 </object>
                                                 <int key="NSResizingMask">2</int>
                                                 <bool key="NSIsResizeable">YES</bool>
-                                                <bool key="NSIsEditable">YES</bool>
                                                 <reference key="NSTableView" ref="881988333"/>
                                               </object>
                                               <object class="NSTableColumn" id="350267026">
@@ -325,7 +324,6 @@
                                                 </object>
                                                 <int key="NSResizingMask">2</int>
                                                 <bool key="NSIsResizeable">YES</bool>
-                                                <bool key="NSIsEditable">YES</bool>
                                                 <reference key="NSTableView" ref="881988333"/>
                                               </object>
                                               <object class="NSTableColumn" id="583077157">
@@ -352,7 +350,6 @@
                                                 </object>
                                                 <int key="NSResizingMask">2</int>
                                                 <bool key="NSIsResizeable">YES</bool>
-                                                <bool key="NSIsEditable">YES</bool>
                                                 <reference key="NSTableView" ref="881988333"/>
                                               </object>
                                               <object class="NSTableColumn" id="1053904416">
@@ -379,7 +376,6 @@
                                                 </object>
                                                 <int key="NSResizingMask">3</int>
                                                 <bool key="NSIsResizeable">YES</bool>
-                                                <bool key="NSIsEditable">YES</bool>
                                                 <reference key="NSTableView" ref="881988333"/>
                                               </object>
                                             </array>
@@ -456,6 +452,7 @@
                                     <reference key="NSHScroller" ref="121468575"/>
                                     <reference key="NSContentView" ref="808912985"/>
                                     <reference key="NSHeaderClipView" ref="445165096"/>
+                                    <reference key="NSCornerView" ref="728050070"/>
                                     <bytes key="NSScrollAmts">QSAAAEEgAABBmAAAQZgAAA</bytes>
                                   </object>
                                 </array>
@@ -755,7 +752,6 @@
                                                 </object>
                                                 <int key="NSResizingMask">2</int>
                                                 <bool key="NSIsResizeable">YES</bool>
-                                                <bool key="NSIsEditable">YES</bool>
                                                 <reference key="NSTableView" ref="939755695"/>
                                                 <object class="NSSortDescriptor" key="NSSortDescriptorPrototype">
                                                   <string key="NSKey">revision</string>
@@ -787,7 +783,6 @@
                                                 </object>
                                                 <int key="NSResizingMask">2</int>
                                                 <bool key="NSIsResizeable">YES</bool>
-                                                <bool key="NSIsEditable">YES</bool>
                                                 <reference key="NSTableView" ref="939755695"/>
                                               </object>
                                               <object class="NSTableColumn" id="161718336">
@@ -814,7 +809,6 @@
                                                 </object>
                                                 <int key="NSResizingMask">2</int>
                                                 <bool key="NSIsResizeable">YES</bool>
-                                                <bool key="NSIsEditable">YES</bool>
                                                 <reference key="NSTableView" ref="939755695"/>
                                               </object>
                                               <object class="NSTableColumn" id="937132993">
@@ -841,7 +835,6 @@
                                                 </object>
                                                 <int key="NSResizingMask">2</int>
                                                 <bool key="NSIsResizeable">YES</bool>
-                                                <bool key="NSIsEditable">YES</bool>
                                                 <reference key="NSTableView" ref="939755695"/>
                                               </object>
                                               <object class="NSTableColumn" id="973688459">
@@ -868,7 +861,6 @@
                                                 </object>
                                                 <int key="NSResizingMask">3</int>
                                                 <bool key="NSIsResizeable">YES</bool>
-                                                <bool key="NSIsEditable">YES</bool>
                                                 <reference key="NSTableView" ref="939755695"/>
                                               </object>
                                             </array>
@@ -937,6 +929,7 @@
                                     <reference key="NSHScroller" ref="924188148"/>
                                     <reference key="NSContentView" ref="651340939"/>
                                     <reference key="NSHeaderClipView" ref="224424590"/>
+                                    <reference key="NSCornerView" ref="774971613"/>
                                     <bytes key="NSScrollAmts">QSAAAEEgAABBmAAAQZgAAA</bytes>
                                   </object>
                                 </array>
@@ -1266,7 +1259,7 @@
                     </object>
                     <string key="NSFirstColumnTitle">Browser</string>
                     <int key="NSMinColumnWidth">50</int>
-                    <int key="NSNumberOfVisibleColumns">1</int>
+                    <int key="NSNumberOfVisibleColumns">4</int>
                     <int key="NSColumnResizingType">2</int>
                     <double key="NSPreferedColumnWidth">267</double>
                     <bool key="NSAllowsTypeSelect">YES</bool>
@@ -1667,6 +1660,7 @@
           </object>
         </array>
         <string key="NSFrameSize">{1142, 732}</string>
+        <reference key="NSSuperview"/>
         <string key="NSClassName">DifferencesView</string>
       </object>
       <object class="NSUserDefaultsController" id="692698573">

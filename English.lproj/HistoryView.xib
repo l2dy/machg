@@ -11,8 +11,8 @@
       <string key="NS.object.0">851</string>
     </object>
     <array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-      <integer value="344"/>
       <integer value="584"/>
+      <integer value="344"/>
     </array>
     <array key="IBDocument.PluginDependencies">
       <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -131,7 +131,6 @@
                                         </object>
                                         <int key="NSResizingMask">2</int>
                                         <bool key="NSIsResizeable">YES</bool>
-                                        <bool key="NSIsEditable">YES</bool>
                                         <reference key="NSTableView" ref="208783626"/>
                                         <object class="NSSortDescriptor" key="NSSortDescriptorPrototype">
                                           <string key="NSKey">revision</string>
@@ -171,7 +170,6 @@
                                         </object>
                                         <int key="NSResizingMask">2</int>
                                         <bool key="NSIsResizeable">YES</bool>
-                                        <bool key="NSIsEditable">YES</bool>
                                         <reference key="NSTableView" ref="208783626"/>
                                       </object>
                                       <object class="NSTableColumn" id="318220265">
@@ -198,7 +196,6 @@
                                         </object>
                                         <int key="NSResizingMask">2</int>
                                         <bool key="NSIsResizeable">YES</bool>
-                                        <bool key="NSIsEditable">YES</bool>
                                         <reference key="NSTableView" ref="208783626"/>
                                       </object>
                                       <object class="NSTableColumn" id="211063017">
@@ -225,7 +222,6 @@
                                         </object>
                                         <int key="NSResizingMask">2</int>
                                         <bool key="NSIsResizeable">YES</bool>
-                                        <bool key="NSIsEditable">YES</bool>
                                         <reference key="NSTableView" ref="208783626"/>
                                       </object>
                                       <object class="NSTableColumn" id="734330234">
@@ -252,7 +248,6 @@
                                         </object>
                                         <int key="NSResizingMask">3</int>
                                         <bool key="NSIsResizeable">YES</bool>
-                                        <bool key="NSIsEditable">YES</bool>
                                         <reference key="NSTableView" ref="208783626"/>
                                       </object>
                                       <object class="NSTableColumn" id="673533284">
@@ -279,7 +274,6 @@
                                         </object>
                                         <int key="NSResizingMask">2</int>
                                         <bool key="NSIsResizeable">YES</bool>
-                                        <bool key="NSIsEditable">YES</bool>
                                         <reference key="NSTableView" ref="208783626"/>
                                       </object>
                                       <object class="NSTableColumn" id="223281573">
@@ -310,7 +304,6 @@
                                         </object>
                                         <int key="NSResizingMask">2</int>
                                         <bool key="NSIsResizeable">YES</bool>
-                                        <bool key="NSIsEditable">YES</bool>
                                         <reference key="NSTableView" ref="208783626"/>
                                       </object>
                                     </array>
@@ -3037,7 +3030,7 @@
         <string key="1018.CustomClassName">LogTableTextFieldCell</string>
         <string key="1019.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="145.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-        <string key="344.IBEditorWindowLastContentRect">{{1057, 354}, {256, 293}}</string>
+        <string key="344.IBEditorWindowLastContentRect">{{1338, 354}, {256, 293}}</string>
         <string key="344.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="345.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="347.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>

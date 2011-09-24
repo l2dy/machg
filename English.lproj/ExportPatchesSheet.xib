@@ -11,7 +11,7 @@
       <string key="com.brandonwalkin.BWToolkit">1.2.2</string>
     </dictionary>
     <array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-      <integer value="35"/>
+      <integer value="60"/>
     </array>
     <array key="IBDocument.PluginDependencies">
       <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -131,7 +131,6 @@
                                   </object>
                                   <int key="NSResizingMask">2</int>
                                   <bool key="NSIsResizeable">YES</bool>
-                                  <bool key="NSIsEditable">YES</bool>
                                   <reference key="NSTableView" ref="930089966"/>
                                   <object class="NSSortDescriptor" key="NSSortDescriptorPrototype">
                                     <string key="NSKey">revision</string>
@@ -171,7 +170,6 @@
                                   </object>
                                   <int key="NSResizingMask">2</int>
                                   <bool key="NSIsResizeable">YES</bool>
-                                  <bool key="NSIsEditable">YES</bool>
                                   <reference key="NSTableView" ref="930089966"/>
                                 </object>
                                 <object class="NSTableColumn" id="975475950">
@@ -198,7 +196,6 @@
                                   </object>
                                   <int key="NSResizingMask">2</int>
                                   <bool key="NSIsResizeable">YES</bool>
-                                  <bool key="NSIsEditable">YES</bool>
                                   <reference key="NSTableView" ref="930089966"/>
                                 </object>
                                 <object class="NSTableColumn" id="991236853">
@@ -225,7 +222,6 @@
                                   </object>
                                   <int key="NSResizingMask">2</int>
                                   <bool key="NSIsResizeable">YES</bool>
-                                  <bool key="NSIsEditable">YES</bool>
                                   <reference key="NSTableView" ref="930089966"/>
                                 </object>
                                 <object class="NSTableColumn" id="417490312">
@@ -252,7 +248,6 @@
                                   </object>
                                   <int key="NSResizingMask">3</int>
                                   <bool key="NSIsResizeable">YES</bool>
-                                  <bool key="NSIsEditable">YES</bool>
                                   <reference key="NSTableView" ref="930089966"/>
                                 </object>
                                 <object class="NSTableColumn" id="761775646">
@@ -279,7 +274,6 @@
                                   </object>
                                   <int key="NSResizingMask">2</int>
                                   <bool key="NSIsResizeable">YES</bool>
-                                  <bool key="NSIsEditable">YES</bool>
                                   <reference key="NSTableView" ref="930089966"/>
                                 </object>
                                 <object class="NSTableColumn" id="831598051">
@@ -310,7 +304,6 @@
                                   </object>
                                   <int key="NSResizingMask">2</int>
                                   <bool key="NSIsResizeable">YES</bool>
-                                  <bool key="NSIsEditable">YES</bool>
                                   <reference key="NSTableView" ref="930089966"/>
                                 </object>
                               </array>
