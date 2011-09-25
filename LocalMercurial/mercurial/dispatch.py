@@ -48,6 +48,9 @@ def dispatch(req):
             req.ui.fout = req.fout
         if req.ferr:
             req.ui.ferr = req.ferr
+        if '--header' in req.args:
+            sys.stdout.write('MercurialOutput:\n')
+            req.args.remove('--header')
     except util.Abort, inst:
         ferr.write(_("abort: %s\n") % inst)
         if inst.hint:
