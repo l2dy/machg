@@ -270,7 +270,8 @@
 	NSMutableString* theCommandAsString = [[NSMutableString alloc] init];
 	NSArray* args = generatingArgs_;
 	for (id s in args)
-		[theCommandAsString appendFormat:@"%@ ", s];
+		if ([s isNotEqualTo:@"--header"])
+			[theCommandAsString appendFormat:@"%@ ", s];
 	NSString* filteredCommandString = [theCommandAsString stringByReplacingOccurrencesOfRegex:@"((?:ssh|http|https)://.*?):.*?@" withString:@"$1:***@"];
 	NSString* currentTime = [[NSDate date] description];
 	NSString* hgBinary = executableLocationHG();
