@@ -96,6 +96,9 @@
 {
 	ShellTask* shellTask;
 	int repeats = 0;
+	NSString* outStr = nil;
+	NSString* errStr = nil;
+
 	do {
 		shellTask = [[ShellTask alloc] initWithCommand:cmd andArgs:args withEnvironment:env withDelegate:delegate];
 		if ([delegate respondsToSelector:@selector(shellTaskCreated:)])
@@ -111,22 +114,24 @@
 			group = getpgrp();
 		setpgid([shellTask  processIdentifier], group);
 
-		if (shellTask.isRunning)
+		[shellTask waitUntilExit];
+		outStr = nonNil([shellTask outputString]);
+		errStr = nonNil([shellTask errorString]);
+		BOOL isHgCommand = [cmd hasSuffix:@"MacHg.app/Contents/Resources/localhg"];
+		
+		if (!isHgCommand)
 			break;
-		DebugLog(@"Task quit before launch %@", [shellTask commandLineString]);
+		if ([outStr hasPrefix:@"MercurialOutput:\n"])
+		{
+			outStr =[outStr substringFromIndex:17];
+			break;
+		}
+		DebugLog(@"Recieved Null Mercurial Output for: %@", [shellTask commandLineString]);
 		repeats++;
 		sleep(repeats * 0.1);
 	} while (repeats < 4);
-	
-	[shellTask waitUntilExit];
 
 	DebugLog(@"Finished execute cmd for %@", [shellTask commandLineString]);
-	
-	NSString* outStr = nonNil([shellTask outputString]);
-	NSString* errStr = nonNil([shellTask errorString]);
-
-	if (IsEmpty(outStr) && IsEmpty(errStr) && [[[shellTask arguments] firstObject] isNotEqualToString:@"combinedinfo"])
-		DebugLog(@"Null result posted for operation %@", [shellTask commandLineString]);
 
 	if (IsNotEmpty(errStr))
 		DebugLog(@"err string for cmd %@ is %@", [shellTask commandLineString], errStr);
@@ -447,8 +452,8 @@ static NSString* processedPathEnv(NSDictionary* processEnv)
 // 3. It sets the command to be non-interactive since we don't want it to halt in its execution.
 + (NSMutableArray*) preProcessMercurialCommandArgs: (NSMutableArray*)args fromRoot:(NSString*)rootPath
 {
-	NSIndexSet* insertionLocation = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, 2)];
-	NSArray* defaultArguments = [NSArray arrayWithObjects: @"--cwd", rootPath, nil];
+	NSIndexSet* insertionLocation = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, 3)];
+	NSArray* defaultArguments = [NSArray arrayWithObjects: @"--header", @"--cwd", rootPath, nil];
 	NSMutableArray* newArgs = [NSMutableArray arrayWithArray:args];
 	[newArgs insertObjects:defaultArguments  atIndexes:insertionLocation];
 	return newArgs;
