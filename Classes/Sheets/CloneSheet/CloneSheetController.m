@@ -165,8 +165,19 @@
 	
 	NSString* sourcePath   = [sourceNode_ path];
 	NSString* sourceName   = [sourceNode_ shortName];
-	NSString* clonePath    = [sourceNode_ isLocalRepositoryRef] ? fstr(@"%@Clone", sourcePath) : [DefaultWorkspacePathFromDefaults() stringByAppendingPathComponent:collapseWhiteSpace(sourceName)];
-	NSString* cloneName    = [sourceNode_ isLocalRepositoryRef] ? fstr(@"%@Clone", sourceName) : sourceName;
+	NSString* cloneNameSuffix = @"Clone";
+	if ([sourceNode_ isLocalRepositoryRef])
+	{
+		if (repositoryExistsAtPath(fstr(@"%@%@", sourcePath, cloneNameSuffix)))
+		{
+			int i = 1;
+			while (repositoryExistsAtPath(fstr(@"%@%@%d", sourcePath, cloneNameSuffix,i)))
+				i++;
+			cloneNameSuffix = fstr(@"%@%d", cloneNameSuffix, i);
+		}
+	}
+	NSString* clonePath    = [sourceNode_ isLocalRepositoryRef] ? fstr(@"%@%@", sourcePath, cloneNameSuffix) : [DefaultWorkspacePathFromDefaults() stringByAppendingPathComponent:collapseWhiteSpace(sourceName)];
+	NSString* cloneName    = [sourceNode_ isLocalRepositoryRef] ? fstr(@"%@%@", sourceName, cloneNameSuffix) : sourceName;
 	NSImage* sourceIconImage = [sourceNode_ isLocalRepositoryRef] ? [NSWorkspace iconImageOfSize:[sourceIconWell frame].size forPath:sourcePath] : [NSImage imageNamed:NSImageNameNetwork];
 	
 	NoAnimationBlock(^{
