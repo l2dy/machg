@@ -63,4 +63,13 @@ if [ -z "$rightattributes" ] || [ "$rightattributes" != "UTF-8;134217984" ]; the
 fi
 shopt -u nocasematch
 
-exec /usr/bin/opendiff "$leftfile" "$rightfile" -merge "$rightfile"
+OPENDIFF=/usr/bin/opendiff
+if [ ! -f "$OPENDIFF" ]; then
+	OPENDIFF=/Developer/usr/bin/opendiff
+	if [ ! -f "$OPENDIFF" ]; then
+		echo "MacHg can't find either /usr/bin/opendiff or /Developer/usr/bin/opendiff " 1>&2
+		exit 2
+	fi
+fi
+
+exec "$OPENDIFF" "$leftfile" "$rightfile" -merge "$rightfile"
