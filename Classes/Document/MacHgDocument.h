@@ -323,6 +323,7 @@
 // Proxies for SideBar Methods
 - (IBAction)	sidebarMenuAddLocalRepositoryRef:(id)sender;
 - (IBAction)	sidebarMenuAddServerRepositoryRef:(id)sender;
+- (IBAction)	sidebarMenuConfigureRepositoryRef:(id)sender;
 - (IBAction)	sidebarMenuConfigureLocalRepositoryRef:(id)sender;
 - (IBAction)	sidebarMenuConfigureServerRepositoryRef:(id)sender;
 - (IBAction)	sidebarMenuAddNewSidebarGroupItem:(id)sender;

@@ -824,8 +824,8 @@
 // MARK: Action Validation
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BOOL) repositoryIsSelectedAndReady						{ return !showingSheet_ && ([[sidebar_ chosenNode] isLocalRepositoryRef] ? YES : NO); }
-- (BOOL) repositoryOrServerIsSelectedAndReady				{ return !showingSheet_ && ([[sidebar_ chosenNode] isRepositoryRef] ? YES : NO); }
+- (BOOL) repositoryIsSelectedAndReady						{ return !showingSheet_ && [[sidebar_ chosenNode] isLocalRepositoryRef]; }
+- (BOOL) repositoryOrServerIsSelectedAndReady				{ return !showingSheet_ && [[sidebar_ chosenNode] isRepositoryRef]; }
 - (BOOL) toolbarActionAppliesToFilesWith:(HGStatus)status	{ return ([self pathsAreSelectedInBrowserWhichContainStatus:status] || (![self nodesAreChosenInBrowser] && [self repositoryHasFilesWhichContainStatus:status])); }
 - (BOOL) validateAndSwitchMenuForCommitAllFiles:(id)anItem
 {
@@ -882,6 +882,7 @@
 	if (theAction == @selector(sidebarMenuAddServerRepositoryRef:))		return !showingSheet_;
 	if (theAction == @selector(sidebarMenuAddNewSidebarGroupItem:))		return !showingSheet_;
 	if (theAction == @selector(sidebarMenuRemoveSidebarItem:))			return !showingSheet_ && ([sidebar_ chosenNode] ? YES : NO);
+	if (theAction == @selector(sidebarMenuConfigureRepositoryRef:))		return [self repositoryOrServerIsSelectedAndReady];
 	if (theAction == @selector(sidebarMenuConfigureLocalRepositoryRef:))return [self repositoryIsSelectedAndReady];
 	if (theAction == @selector(sidebarMenuConfigureServerRepositoryRef:))return [self repositoryOrServerIsSelectedAndReady];
 	// ------
@@ -1672,6 +1673,7 @@
 
 - (IBAction) sidebarMenuAddLocalRepositoryRef:(id)sender		{ return [sidebar_ sidebarMenuAddLocalRepositoryRef:sender]; }
 - (IBAction) sidebarMenuAddServerRepositoryRef:(id)sender		{ return [sidebar_ sidebarMenuAddServerRepositoryRef:sender]; }
+- (IBAction) sidebarMenuConfigureRepositoryRef:(id)sender		{ return [sidebar_ sidebarMenuConfigureRepositoryRef:sender]; }
 - (IBAction) sidebarMenuConfigureLocalRepositoryRef:(id)sender	{ return [sidebar_ sidebarMenuConfigureLocalRepositoryRef:sender]; }
 - (IBAction) sidebarMenuConfigureServerRepositoryRef:(id)sender	{ return [sidebar_ sidebarMenuConfigureServerRepositoryRef:sender]; }
 - (IBAction) sidebarMenuAddNewSidebarGroupItem:(id)sender		{ return [sidebar_ sidebarMenuAddNewSidebarGroupItem:sender]; }

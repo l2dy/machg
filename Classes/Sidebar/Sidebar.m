@@ -708,6 +708,18 @@
 - (IBAction) sidebarMenuConfigureLocalRepositoryRef:(id)sender		{ [[myDocument  theLocalRepositoryRefSheetController]	openSheetForConfigureRepositoryRef:[self chosenNode]]; }
 - (IBAction) sidebarMenuConfigureServerRepositoryRef:(id)sender		{ [[myDocument theServerRepositoryRefSheetController]	openSheetForConfigureRepositoryRef:[self chosenNode]]; }
 
+- (IBAction) sidebarMenuConfigureRepositoryRef:(id)sender
+{
+	SidebarNode* node = [self chosenNode];
+
+	if ([node isLocalRepositoryRef])
+		[self sidebarMenuConfigureLocalRepositoryRef:sender];
+	else if ([node isServerRepositoryRef])
+		[self sidebarMenuConfigureServerRepositoryRef:sender];
+	else
+		NSBeep();
+}
+
 
 - (IBAction) sidebarMenuAddNewSidebarGroupItem:(id)sender
 {

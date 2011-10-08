@@ -33,6 +33,7 @@
 // Actions
 - (IBAction)	sidebarMenuAddLocalRepositoryRef:(id)sender;
 - (IBAction)	sidebarMenuAddServerRepositoryRef:(id)sender;
+- (IBAction)	sidebarMenuConfigureRepositoryRef:(id)sender;
 - (IBAction)	sidebarMenuConfigureLocalRepositoryRef:(id)sender;
 - (IBAction)	sidebarMenuConfigureServerRepositoryRef:(id)sender;
 - (IBAction)	sidebarMenuAddNewSidebarGroupItem:(id)sender;
