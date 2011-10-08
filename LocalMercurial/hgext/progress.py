@@ -35,6 +35,8 @@ The following settings are available::
   disable = False # if true, don't show a progress bar
   assume-tty = False # if true, ALWAYS show a progress bar, unless
                      # disable is given
+  output-prefix = <none> # if given then any output shown by progress is
+                         # prefixed by the given prefix
 
 Valid entries for the format field are topic, bar, number, unit,
 estimate, speed, and item. item defaults to the last 20 characters of
@@ -117,7 +119,7 @@ class progbar(object):
             return
         termwidth = self.width()
         self.printed = True
-        head = ''
+        head = str(self.ui.config('progress', 'output-prefix', default=''))
         needprogress = False
         tail = ''
         for indicator in self.order:
