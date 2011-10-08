@@ -42,8 +42,8 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 
 @implementation LogTableView
 
-@synthesize theSearchFilter		= theSearchFilter_;
 @synthesize theTableRows		= theTableRows_;
+@synthesize tableIsFiltered		= tableIsFiltered_;
 @synthesize numberOfTableRows	= numberOfTableRows_;
 @synthesize canSelectIncompleteRevision = canSelectIncompleteRevision_;
 
@@ -61,11 +61,11 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 	self = [super init];
 	if (self)
 	{
-		theSearchFilter_ = nil;
 		theTableRows_ = nil;
 		repositoryData_ = nil;
 		numberOfTableRows_ = 0;
 		canSelectIncompleteRevision_ = NO;
+		tableIsFiltered_ = NO;
 		rootPath_ = nil;
 		awake_ = NO;
 	}
@@ -200,7 +200,7 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 		return NSNotFound;
 
 	NSString* revisionStr = numberAsString(revision);
-	if (IsEmpty(theSearchFilter_))
+	if (!tableIsFiltered_)
 	{
 		int tableRowCount = [theTableRows_ count];
 		// We call this often and so we do an optimization where we look at the two most likely places first
@@ -551,7 +551,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	[aCell setEntry:entry];
 	[aCell setLogTableView:DynamicCast(LogTableView,aTableView)];
 	[aCell setLogTableColumn:aTableColumn];
-	if (numberAsInt(theRevision) == numberOfTableRows_ -1 && [[self repositoryData] includeIncompleteRevision])
+	if (theSameNumbers(theRevision, [[self repositoryData] incompleteRevision]) && [[self repositoryData] includeIncompleteRevision])
 	{
 		if ([requestedColumn isEqualToString:@"graph"])
 			return;
@@ -759,6 +759,14 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	[self reloadData];
 }
 
+static inline void addRevisionsToTableRowList(NSString* str, NSMutableArray* tableRows)
+{
+	NSArray* revisions = [str componentsSeparatedByString:@"\n"];
+	for (NSString* revision in revisions)
+		if (IsNotEmpty(revision))
+			[tableRows addObject:revision];
+
+}
 
 - (IBAction) resetTable:(id)sender
 {
@@ -774,22 +782,46 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 
 		NSMutableArray* newTableRows = [[NSMutableArray alloc] init];
 
-		BOOL filtered = IsNotEmpty(theSearchFilter_);
-
+		[[self myDocument] setToolbarSearchFieldQueryIsValid:YES];
+		[[self myDocument] syncronizeSearchFieldTint];
+		NSString* theSearchFilter = [[[self myDocument] toolbarSearchField] stringValue];
+		BOOL filtered = IsNotEmpty(theSearchFilter);
+		BOOL validQuery = YES;
 		if (filtered)
 		{
+			tableIsFiltered_ = YES;
+			SearchFieldCategory	theSearchFieldCategory = [[self myDocument] toolbarSearchFieldCategory];
+
 			NSString* rootPath      = [repositoryData rootPath];
-			NSString* revLimits     = fstr(@"%d:%d", 0, [repositoryData computeNumberOfRealRevisions]);
-			NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log",  @"--rev", revLimits, @"--template", @"{rev}\n", @"--keyword", theSearchFilter_, nil];
-			ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:rootPath  logging:eLoggingNone];
-			
-			NSArray* revisions = [hgLogResults.outStr componentsSeparatedByString:@"\n"];
-			for (NSString* revision in revisions)
-				if (IsNotEmpty(revision))
-					[newTableRows addObject:revision];
+			ExecutionResult* hgLogResults = nil;
+			if (theSearchFieldCategory == eSearchByRevesetQuery)
+			{
+				NSMutableArray* argsRevsetLog = [NSMutableArray arrayWithObjects:@"log",  @"--rev", theSearchFilter, @"--template", @"{rev}\n", nil];
+				hgLogResults = [TaskExecutions executeMercurialWithArgs:argsRevsetLog  fromRoot:rootPath  logging:eLoggingNone];
+			}
+			else if (theSearchFieldCategory == eSearchByKeyword)
+			{
+				NSString* revLimits     = fstr(@"%d:%d", 0, [repositoryData computeNumberOfRealRevisions]);
+				NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log",  @"--rev", revLimits, @"--template", @"{rev}\n", @"--keyword", theSearchFilter, nil];
+				hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:rootPath  logging:eLoggingNone];
+			}
+			else if (theSearchFieldCategory == eSearchByRevisionID)
+			{
+				NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log",  @"--rev", theSearchFilter, @"--template", @"{rev}\n", nil];
+				hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:rootPath  logging:eLoggingNone];
+			}
+
+			validQuery = [hgLogResults hasNoErrors];
+			[[self myDocument] setToolbarSearchFieldQueryIsValid:validQuery];
+			if (validQuery)
+				addRevisionsToTableRowList(hgLogResults.outStr, newTableRows);
+			else
+				[[self myDocument] syncronizeSearchFieldTint];
 		}
-		else
+
+		if (!filtered || !validQuery)
 		{
+			tableIsFiltered_ = NO;
 			int numberOfRevisions	= [repositoryData computeNumberOfRevisions];
 			for (int tableRow = 0; tableRow < numberOfRevisions + 1; tableRow++)  // We go from 0 to numberOfRevisions so need +1 here.
 				[newTableRows addObject:intAsString(tableRow)];

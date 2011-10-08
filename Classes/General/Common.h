@@ -287,6 +287,14 @@ typedef enum
 } LogRecordLoadStatus;
 
 
+// Represents the type of search we do in the search field
+typedef enum
+{
+	eSearchByKeyword		= 0,	// search by a keyword
+	eSearchByRevisionID		= 1,	// search by a revision or changeset id
+	eSearchByRevesetQuery	= 2		// search by a revset query
+} SearchFieldCategory;
+
 typedef enum
 {
 	eBrowserView     = 0x0,

@@ -112,6 +112,8 @@
 @synthesize events      = events_;
 @synthesize connections = connections_;
 @synthesize toolbarSearchField = toolbarSearchField_;
+@synthesize toolbarSearchFieldCategory = toolbarSearchFieldCategory_;
+@synthesize toolbarSearchFieldQueryIsValid = toolbarSearchFieldQueryIsValid_;
 @synthesize toolbarSearchItem  = toolbarSearchItem_;
 
 
@@ -216,6 +218,16 @@
 	[[mainWindow_ windowController] setShouldCascadeWindows: NO];
 	NSString* fileName = [self documentNameForAutosave];
 	[sidebarAndInformation_ setAutosaveName:fstr(@"File:%@:LHSSidebarSplitPosition", fileName)];
+
+	// Set up search field and set size of NSMenuItems (I can't seem to find a way to do this through IB)
+	toolbarSearchFieldCategory_ = eSearchByKeyword;
+	toolbarSearchFieldValue_ = @"";
+	toolbarSearchFieldQueryIsValid_ = YES;
+	
+	NSMenu* theSearchFieldMenu = [[[self toolbarSearchField] cell] searchMenuTemplate];
+	[self setSearchCategory:[theSearchFieldMenu itemWithTag:eSearchByKeyword]];
+	for (NSMenuItem* item in [theSearchFieldMenu itemArray])
+		[item setAttributedTitle:normalSheetMessageAttributedString([item title])];
 	
 	// Test string matching.
 	if (NO)
@@ -557,17 +569,29 @@
 // and restores the search term and label.
 - (void) setSearchFieldEnabled:(BOOL)enabled value:(NSString*)value caption:(NSString*)caption
 {
-	CIFilter* grayFilter = [CIFilter filterWithName:@"CIWhitePointAdjust" keysAndValues:@"inputColor", [CIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:0.6], nil];
-	NSArray* disabledAttributes = [NSArray arrayWithObject:grayFilter];
-	NSArray* noAttributes = [NSArray array];
-	NSString* nonNilValue = value ? value : @"";
-	[toolbarSearchField_ setStringValue:enabled ? nonNilValue : @""];
-	[[toolbarSearchField_ layer] setFilters: (enabled ? noAttributes : disabledAttributes)];
-	[toolbarSearchItem_		setLabel: (enabled && IsNotEmpty(nonNilValue)) ? caption : @"Search"];
-	[toolbarSearchField_	setEnabled:enabled];
-	[toolbarSearchItem_		setEnabled:enabled];
+	[toolbarSearchField_ setStringValue:enabled ? nonNil(value) : @""];
+	[toolbarSearchItem_	 setLabel: (enabled && IsNotEmpty(value)) ? caption : @"Search"];
+	[toolbarSearchField_ setEnabled:enabled];
+	[toolbarSearchItem_  setEnabled:enabled];
 }
 
+- (void) syncronizeSearchFieldTint
+{
+	if ([self currentPane] != eHistoryView)
+	{
+		CIFilter* grayFilter = [CIFilter filterWithName:@"CIWhitePointAdjust" keysAndValues:@"inputColor", [CIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:0.6], nil];
+		[[toolbarSearchField_ layer] setFilters: [NSArray arrayWithObject:grayFilter]];
+		return;
+	}
+	if (!toolbarSearchFieldQueryIsValid_ && IsNotEmpty(toolbarSearchFieldValue_))
+	{
+		CIFilter* pinkErrorFilter = [CIFilter filterWithName:@"CIWhitePointAdjust" keysAndValues:@"inputColor", [CIColor colorWithRed:0.9 green:0.6 blue:0.6 alpha:0.6], nil];
+		[[toolbarSearchField_ layer] setFilters: [NSArray arrayWithObject:pinkErrorFilter]];
+		return;
+	}
+
+	[[toolbarSearchField_ layer] setFilters: [NSArray array]];
+}
 
 - (NSView*) currentPaneView							{ return [self paneView:currentPane_]; }
 - (PaneViewNum) currentPane							{ return currentPane_; }
@@ -589,12 +613,13 @@
 		default:                      break;
 	}	
 	
-	NSString* searchTerm    = theHistoryViewController_ ? [[[self theHistoryView] logTableView] theSearchFilter] : @"";
+	currentPane_ = newPaneNum;
+
+	NSString* searchTerm    = toolbarSearchFieldValue_;
 	NSString* searchCaption = theHistoryViewController_ ? [[self theHistoryView] searchCaption] : @"Search";
 	[self setSearchFieldEnabled:(newPaneNum == eHistoryView) value:searchTerm caption:searchCaption];
-	
-	
-	currentPane_ = newPaneNum;
+	[self syncronizeSearchFieldTint];
+
 	NSView* newView = [self paneView:newPaneNum];
 	NSRect newFrame = [self newWindowFrameWhenSwitchingContentTo:[newView frame]];	// Figure out new frame size
 	[NSAnimationContext beginGrouping];												// Using an animation grouping because we may be changing the duration
@@ -763,6 +788,31 @@
         [[QLPreviewPanel sharedPreviewPanel] orderOut:nil];
 	else
         [[QLPreviewPanel sharedPreviewPanel] makeKeyAndOrderFront:nil];
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Search Field Handling
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+// Called when the user chooses to search on keyword, revset, or revisionID
+- (IBAction)	setSearchCategory:(id)sender
+{
+	NSMenuItem* theChoosenMenuItem = DynamicCast(NSMenuItem, sender);
+	if (!theChoosenMenuItem)
+		return;
+	NSSearchFieldCell* searchCell = [[self toolbarSearchField] cell];
+	NSMenu* searchFieldMenu = [searchCell searchMenuTemplate];
+	[[searchFieldMenu itemWithTag:toolbarSearchFieldCategory_] setState:NSOffState];
+	toolbarSearchFieldCategory_ = [theChoosenMenuItem tag];
+	[[searchFieldMenu itemWithTag:toolbarSearchFieldCategory_] setState:NSOnState];
+	[searchCell setSearchMenuTemplate:searchFieldMenu];
+	[[self toolbarSearchField] setStringValue:@""];
+	[self searchFieldChanged:self];
 }
 
 
@@ -1456,8 +1506,8 @@
 	if ([self showingHistoryView])
 	{
 		HistoryView* hpv = [self theHistoryView];
-		LogTableView* logTableView = [hpv logTableView];
-		[logTableView setTheSearchFilter:[[self toolbarSearchField] stringValue]];
+		LogTableView* logTableView = [hpv logTableView];	
+		toolbarSearchFieldValue_ = [[self toolbarSearchField] stringValue];
 		[logTableView resetTable:hpv];
 		[hpv refreshHistoryView:sender];
 	}

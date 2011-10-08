@@ -121,7 +121,9 @@
 	
 	
 	QLPreviewPanel*				quickLookPreviewPanel;
-
+	SearchFieldCategory			toolbarSearchFieldCategory_;
+	BOOL						toolbarSearchFieldQueryIsValid_;
+	NSString*					toolbarSearchFieldValue_;
 	
 	// Queues and Events
 	dispatch_queue_t			refreshBrowserSerialQueue_;
@@ -158,6 +160,8 @@
 @property (readonly,  assign) dispatch_queue_t		mercurialTaskSerialQueue;
 @property (readonly,  assign) MonitorFSEvents*		events;
 @property (readonly,  assign) NSSearchField*		toolbarSearchField;
+@property (readonly,  assign) SearchFieldCategory	toolbarSearchFieldCategory;
+@property (nonatomic, assign) BOOL					toolbarSearchFieldQueryIsValid;
 @property (readonly,  assign) NSToolbarItem*		toolbarSearchItem;
 
 - (BrowserView*)					theBrowserView;
@@ -262,6 +266,8 @@
 
 // Search Field
 - (IBAction)	searchFieldChanged:(id)sender;
+- (IBAction)	setSearchCategory:(id)sender;
+- (void)		syncronizeSearchFieldTint;
 
 
 // Refresh / Regenrate Browser

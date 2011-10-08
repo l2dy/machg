@@ -42,7 +42,7 @@
 	BOOL					canSelectIncompleteRevision_;	// Are you allowed to select the incomplete revision in this LogTableView
 	int						numberOfTableRows_;
 	NSArray*				theTableRows_;					// Map of table row -> revision number (NSString)
-	NSString*				theSearchFilter_;				// The current search filter if any
+	BOOL					tableIsFiltered_;				// Are the revisions filtered through some keyword, or revset filter
 	SingleTimedQueue*		queueForDetailedEntryDisplay_;	// When we are asked to display the details of an entry or range of
 															// entries we put the request on this queue. This means when eg drag
 															// selecting when the selection is constantly changing we are not
@@ -50,8 +50,8 @@
 	BOOL					awake_;							// Has this nib been awakened yet?
 }
 
-@property (readwrite,assign) NSString*	theSearchFilter;
 @property (readwrite,assign) NSArray*	theTableRows;
+@property (readonly, assign) BOOL		tableIsFiltered;
 @property int							numberOfTableRows;
 @property BOOL							canSelectIncompleteRevision;
 

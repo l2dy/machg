@@ -172,7 +172,7 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 	if (!theLogGraph)
 		return;
 		
-	if (IsNotEmpty([logTableView theSearchFilter]))
+	if ([logTableView tableIsFiltered])
 		return;
 
 	//DebugLog(@"drawingLines for %@", [entry revision]);
