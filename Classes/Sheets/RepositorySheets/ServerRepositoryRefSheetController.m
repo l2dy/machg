@@ -331,18 +331,27 @@
 
 	if (IsNotEmpty(newId) && IsNotEmpty(newPath))
 		[[[AppController sharedAppController] repositoryIdentityForPath] synchronizedSetObject:newId forKey:newPath];
-	[passwordKeyChainItem_ removeFromKeychain];
 
+	if (passwordKeyChainItem_)
+	{
+		if ([newPath isNotEqualToString:passwordKeyChainItem_.username])
+			passwordKeyChainItem_ = nil;
+		else if (IsEmpty(password_))
+		{
+			// JFH_FIXME: This should relly be [passwordKeyChainItem_ removeFromKeychain] but this is causing the keychain to temporarily get corrupted. So instead just leave the empty password for the given user.
+			passwordKeyChainItem_.password = @"";
+			passwordKeyChainItem_ = nil;
+		}
+	}
+	
 	if (IsNotEmpty(password_))
 	{
-		EMGenericKeychainItem* newKeychainItem = [EMGenericKeychainItem genericKeychainItemForService:kMacHgApp withUsername:newPath];
-		if (newKeychainItem)
-		{
-			newKeychainItem.username = newPath;
-			newKeychainItem.password = [self password];
-		}
+		if (!passwordKeyChainItem_)
+			passwordKeyChainItem_ = [EMGenericKeychainItem genericKeychainItemForService:kMacHgApp withUsername:newPath];
+		if (passwordKeyChainItem_)
+			passwordKeyChainItem_.password = password_;
 		else
-			[EMGenericKeychainItem addGenericKeychainItemForService:kMacHgApp withUsername:newPath password:[self password]];
+			passwordKeyChainItem_ = [EMGenericKeychainItem addGenericKeychainItemForService:kMacHgApp withUsername:newPath password:[self password]];
 	}
 
 	[[AppController sharedAppController] computeRepositoryIdentityForPath:newPath];
