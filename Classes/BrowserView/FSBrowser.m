@@ -378,7 +378,7 @@
 	if (!theDir)
 		theDir = [self absolutePathOfRepositoryRoot];
 
-	DoCommandsInTerminalAt(aliasesForShell(), theDir);
+	DoCommandsInTerminalAt(aliasesForShell(theDir), theDir);
 }
 
 

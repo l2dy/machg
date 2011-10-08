@@ -277,9 +277,10 @@
 	[newArgs insertObject:LocalWhitelistedHGShellAliasNameFromDefaults() atIndex:0];
 	NSString* identityCommand = [newArgs componentsJoinedByString:@" "];
 	
-	NSMutableArray* commands = [NSMutableArray arrayWithArray:aliasesForShell()];
+	NSString* testDir = @"/tmp";
+	NSMutableArray* commands = [NSMutableArray arrayWithArray:aliasesForShell(testDir)];
 	[commands addObject:identityCommand];
-	DoCommandsInTerminalAt(commands, @"/tmp");
+	DoCommandsInTerminalAt(commands, testDir);
 }
 
 

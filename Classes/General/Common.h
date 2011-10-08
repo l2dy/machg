@@ -731,7 +731,7 @@ NSString*	executableLocationHG();								// The resolved executable location
 NSString*	applicationSupportFolder();							// the resolved app support dir eg				~/Library/Application Support/MacHg
 NSString*	applicationSupportVersionedFolder();				// the resolved versioned app support dir eg	~/Library/Application Support/MacHg/0.9.5
 NSString*	hgrcPath();											// the search path MacHg will pass to Mercurial to look for hgrc files (Mercurial configuration files.)
-NSArray*	aliasesForShell();									// the aliases for the local hg commands
+NSArray*	aliasesForShell(NSString* path);					// the aliases for the local hg commands
 NSString*	tempFilePathWithTemplate(NSString* nameTemplate);	// return the file name of a temporary file in the temporary directory based on nameTemplate
 
 

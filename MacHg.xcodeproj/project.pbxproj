@@ -193,6 +193,7 @@
 		96A377DB10C8EC5400FA190A /* About.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96A377D710C8EC5400FA190A /* About.xib */; };
 		96A377DC10C8EC5400FA190A /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96A377D910C8EC5400FA190A /* MainMenu.xib */; };
 		96A377EA10C8ECDD00FA190A /* TaskExecutions.m in Sources */ = {isa = PBXBuildFile; fileRef = 96A377E910C8ECDD00FA190A /* TaskExecutions.m */; };
+		96A396061440824F001EEE74 /* terminalinformation.sh in Resources */ = {isa = PBXBuildFile; fileRef = 96A396051440824F001EEE74 /* terminalinformation.sh */; };
 		96AD9C3C11C468CF00F5C82E /* MacHgHelp in Resources */ = {isa = PBXBuildFile; fileRef = 96AD9C0811C468CF00F5C82E /* MacHgHelp */; };
 		96BEAA8F12891CF0005198B5 /* hgrc in Resources */ = {isa = PBXBuildFile; fileRef = 96BEAA8E12891CF0005198B5 /* hgrc */; };
 		96BEAAB812891EF4005198B5 /* hgignore in Resources */ = {isa = PBXBuildFile; fileRef = 96BEAAB712891EF4005198B5 /* hgignore */; };
@@ -523,6 +524,7 @@
 		96A377DA10C8EC5400FA190A /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/MainMenu.xib; sourceTree = SOURCE_ROOT; };
 		96A377E810C8ECDD00FA190A /* TaskExecutions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TaskExecutions.h; sourceTree = "<group>"; };
 		96A377E910C8ECDD00FA190A /* TaskExecutions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TaskExecutions.m; sourceTree = "<group>"; };
+		96A396051440824F001EEE74 /* terminalinformation.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = terminalinformation.sh; sourceTree = "<group>"; };
 		96AD9C0811C468CF00F5C82E /* MacHgHelp */ = {isa = PBXFileReference; lastKnownFileType = folder; path = MacHgHelp; sourceTree = "<group>"; };
 		96BEAA8E12891CF0005198B5 /* hgrc */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = hgrc; sourceTree = "<group>"; };
 		96BEAAB712891EF4005198B5 /* hgignore */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = hgignore; sourceTree = "<group>"; };
@@ -1574,6 +1576,7 @@
 				9606F3441157F1F100968DE8 /* opendiff-w.sh */,
 				96DCCC1C10CD41B100C843C9 /* localhg */,
 				96DCCC1D10CD41B100C843C9 /* spawnshellatpath */,
+				96A396051440824F001EEE74 /* terminalinformation.sh */,
 			);
 			path = scripts;
 			sourceTree = SOURCE_ROOT;
@@ -1792,6 +1795,7 @@
 				9618B3601349B6E000C38570 /* ScrollToChangesetPanel.xib in Resources */,
 				961E283A13586C4900FDD502 /* CloneArrow.png in Resources */,
 				967B251C137677D800EB102C /* htmlForDiff in Resources */,
+				96A396061440824F001EEE74 /* terminalinformation.sh in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -619,11 +619,15 @@ NSString* hgrcPath()
 	return fstr(@"%@:%@", homeHGRCpath, macHgHGRCpath);		// macHgHGRCpath takes precedence
 }
 
-NSArray* aliasesForShell()
+NSArray* aliasesForShell(NSString* path)
 {
-	NSString* mhgAlias  = fstr(@"alias %@='\"%@\"'", LocalHGShellAliasNameFromDefaults(), executableLocationHG());
-	NSString* ehgAlias  = fstr(@"alias %@='HGPLAIN=1 HGENCODING=UTF-8 HGRCPATH=\"%@\" \"%@\"'", LocalWhitelistedHGShellAliasNameFromDefaults(), hgrcPath(), executableLocationHG());
-	NSArray* cmds = [NSArray arrayWithObjects:mhgAlias, ehgAlias, nil];
+	NSString* mhgResources  = fstr(@"mhgResources='%@'", [[NSBundle mainBundle] resourcePath]);
+	NSString* mhgAlias  = fstr(@"alias %@='\"${mhgResources}/localhg\"'", LocalHGShellAliasNameFromDefaults());
+	NSString* ehgAlias  = fstr(@"alias %@='HGPLAIN=1 HGENCODING=UTF-8 HGRCPATH=\"%@\" \"${mhgResources}/localhg\"'", LocalWhitelistedHGShellAliasNameFromDefaults(), hgrcPath());
+	NSString* terminalInfoScriptPath = fstr(@"\"${mhgResources}/terminalinformation.sh\"");
+	NSString* terminalInfo  = fstr(@"%@ %@ %@", terminalInfoScriptPath, LocalHGShellAliasNameFromDefaults(), LocalWhitelistedHGShellAliasNameFromDefaults());
+
+	NSArray* cmds = [NSArray arrayWithObjects:mhgResources, mhgAlias, ehgAlias, terminalInfo, nil];
 	return cmds;
 }
 

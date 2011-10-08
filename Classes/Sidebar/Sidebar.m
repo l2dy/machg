@@ -853,7 +853,8 @@
 		return;
 	}
 
-	DoCommandsInTerminalAt(aliasesForShell(), [node path]);
+	NSString* commandDir = [node path];
+	DoCommandsInTerminalAt(aliasesForShell(commandDir), commandDir);
 }
 
 
