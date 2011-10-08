@@ -40,7 +40,7 @@ void setupGlobalsForLogEntryPartsAndTemplate();
 - (NSArray*)  tags;
 - (NSArray*)  bookmarks;
 - (NSString*) branchHead;
-- (NSString*) closedBranchHead;
+- (BOOL)      isClosedBranchHead;
 - (NSString*) labelsString;
 
 - (id) labelsAndShortComment;

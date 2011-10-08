@@ -281,7 +281,7 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 		strokeColor = defaultRed;
 	}
 
-	if (hasLabels && IsNotEmpty([entry_ closedBranchHead]))
+	if (hasLabels && [entry_ isClosedBranchHead])
 	{
 		entryIsClosed = YES;
 		fillColor   = [NSColor grayColor];
