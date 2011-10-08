@@ -115,9 +115,17 @@ static BOOL _logsErrors;
 	[super dealloc];
 }
 
+#pragma mark -
 #pragma mark General Properties
+@dynamic password;
+- (NSString *)password
+{
+	@synchronized (self)
+	{
+		return [[mPassword copy] autorelease];
+	}
+}
 
-@synthesize password = mPassword;
 - (void)setPassword:(NSString *)newPassword
 {
 	@synchronized (self)
@@ -133,7 +141,16 @@ static BOOL _logsErrors;
 	}
 }
 
-@synthesize username = mUsername;
+#pragma mark -
+@dynamic username;
+- (NSString *)username
+{
+	@synchronized (self)
+	{
+		return [[mUsername copy] autorelease];
+	}
+}
+
 - (void)setUsername:(NSString *)newUsername
 {
 	@synchronized (self)
@@ -149,7 +166,16 @@ static BOOL _logsErrors;
 	}
 }
 
-@synthesize label = mLabel;
+#pragma mark -
+@dynamic label;
+- (NSString *)label
+{
+	@synchronized (self)
+	{
+		return [[mLabel copy] autorelease];
+	}
+}
+
 - (void)setLabel:(NSString *)newLabel
 {
 	@synchronized (self)
@@ -165,6 +191,7 @@ static BOOL _logsErrors;
 	}
 }
 
+#pragma mark -
 #pragma mark Actions
 - (void)removeFromKeychain
 {
@@ -218,8 +245,7 @@ static BOOL _logsErrors;
 }
 
 #pragma mark -
-
-+ (EMGenericKeychainItem *)genericKeychainItemForService:(NSString *)serviceName
++ (EMGenericKeychainItem *)genericKeychainItemForService:(NSString *)serviceName 
 											withUsername:(NSString *)username
 {
 	if (!serviceName || !username)
@@ -236,7 +262,7 @@ static BOOL _logsErrors;
 	if (returnStatus != noErr || !item)
 	{
 		if (_logsErrors)
-			NSLog(@"Error (%@) - %s", NSStringFromSelector(_cmd), GetMacOSStatusErrorString(returnStatus));
+			NSLog(@"Error (%@) - %@", NSStringFromSelector(_cmd), SecCopyErrorMessageString(returnStatus, NULL));
 		return nil;
 	}
 	NSString *passwordString = [[[NSString alloc] initWithData:[NSData dataWithBytes:password length:passwordLength] encoding:NSUTF8StringEncoding] autorelease];
@@ -262,15 +288,23 @@ static BOOL _logsErrors;
 	if (returnStatus != noErr || !item)
 	{
 		if (_logsErrors)
-			NSLog(@"Error (%@) - %s", NSStringFromSelector(_cmd), GetMacOSStatusErrorString(returnStatus));
+			NSLog(@"Error (%@) - %@", NSStringFromSelector(_cmd), SecCopyErrorMessageString(returnStatus, NULL));
 		return nil;
 	}
 	return [EMGenericKeychainItem _genericKeychainItemWithCoreKeychainItem:item forServiceName:serviceName username:username password:password];
 }
 
+#pragma mark -
 #pragma mark Generic Properties
+@dynamic serviceName;
+- (NSString *)serviceName
+{
+	@synchronized (self)
+	{
+		return [[mServiceName copy] autorelease];
+	}
+}
 
-@synthesize serviceName = mServiceName;
 - (void)setServiceName:(NSString *)newServiceName
 {
 	@synchronized (self)
@@ -337,7 +371,6 @@ static BOOL _logsErrors;
 }
 
 #pragma mark -
-
 + (EMInternetKeychainItem *)internetKeychainItemForServer:(NSString *)server
 											 withUsername:(NSString *)username
 													 path:(NSString *)path
@@ -371,7 +404,7 @@ static BOOL _logsErrors;
 	if (returnStatus != noErr || !item)
 	{
 		if (_logsErrors)
-			NSLog(@"Error (%@) - %s", NSStringFromSelector(_cmd), GetMacOSStatusErrorString(returnStatus));
+			NSLog(@"Error (%@) - %@", NSStringFromSelector(_cmd), SecCopyErrorMessageString(returnStatus, NULL));
 		return nil;
 	}
 	NSString *passwordString = [[[NSString alloc] initWithData:[NSData dataWithBytes:password length:passwordLength] encoding:NSUTF8StringEncoding] autorelease];
@@ -404,15 +437,23 @@ static BOOL _logsErrors;
 	if (returnStatus != noErr || !item)
 	{
 		if (_logsErrors)
-			NSLog(@"Error (%@) - %s", NSStringFromSelector(_cmd), GetMacOSStatusErrorString(returnStatus));
+			NSLog(@"Error (%@) - %@", NSStringFromSelector(_cmd), SecCopyErrorMessageString(returnStatus, NULL));
 		return nil;
 	}
 	return [EMInternetKeychainItem _internetKeychainItemWithCoreKeychainItem:item forServer:server username:username password:password path:path port:port protocol:protocol];
 }
 
+#pragma mark -
 #pragma mark Internet Properties
+@dynamic server;
+- (NSString *)server
+{
+	@synchronized (self)
+	{
+		return [[mServer copy] autorelease];
+	}
+}
 
-@synthesize server = mServer;
 - (void)setServer:(NSString *)newServer
 {
 	@synchronized (self)
@@ -428,7 +469,16 @@ static BOOL _logsErrors;
 	}
 }
 
-@synthesize path = mPath;
+#pragma mark -
+@dynamic path;
+- (NSString *)path
+{
+	@synchronized (self)
+	{
+		return [[mPath copy] autorelease];
+	}
+}
+
 - (void)setPath:(NSString *)newPath
 {
 	if (mPath == newPath)
@@ -441,7 +491,16 @@ static BOOL _logsErrors;
 	[self _modifyAttributeWithTag:kSecPathItemAttr toBeValue:(void *)newPathCString ofLength:strlen(newPathCString)];
 }
 
-@synthesize port = mPort;
+#pragma mark -
+@dynamic port;
+- (NSInteger)port
+{
+	@synchronized (self)
+	{
+		return mPort;
+	}
+}
+
 - (void)setPort:(NSInteger)newPort
 {
 	@synchronized (self)
@@ -456,7 +515,16 @@ static BOOL _logsErrors;
 	}
 }
 
-@synthesize protocol = mProtocol;
+#pragma mark -
+@dynamic protocol;
+- (SecProtocolType)protocol
+{
+	@synchronized (self)
+	{
+		return mProtocol;
+	}
+}
+
 - (void)setProtocol:(SecProtocolType)newProtocol
 {
 	@synchronized (self)

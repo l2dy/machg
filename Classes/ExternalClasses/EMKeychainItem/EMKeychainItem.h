@@ -22,7 +22,7 @@
  OTHER DEALINGS IN THE SOFTWARE.
  */
 
-//Version 1.0.1, Last Updated February 1st, 2010.
+//Last Updated February 8th, 2011.
 
 
 #import <Cocoa/Cocoa.h>
@@ -70,7 +70,7 @@
 
 /*!
 	@abstract Removes the receiver from the keychain.
-	@discussion After calling this method, you should generally discard of the receiver. The receiver cannot be "re-added" to the keychain; invoke either addGenericKeychainItemForServer:... or addInternetKeychainItemForServer:... instead.
+	@discussion After calling this method, you should generally discard of the receiver. The receiver cannot be "re-added" to the keychain; invoke either addGenericKeychainItemForService:... or addInternetKeychainItemForServer:... instead.
  */
 - (void)removeFromKeychain;
 
