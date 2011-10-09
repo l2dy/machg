@@ -90,6 +90,12 @@
 	return self;
 }
 
+NSString* filterProgressOutOfErrorString(NSString* rawErrorStr)
+{
+	NSString* replaced = [rawErrorStr stringByReplacingOccurrencesOfRegex:@"(?m-s)^MHGProgress:.*?$" withString:@""];
+	return [replaced stringByReplacingOccurrencesOfRegex:@"(?m)\n\n\n*" withString:@"\n\n"];
+}
+
 + (ExecutionResult*) execute:(NSString*)cmd withArgs:(NSArray*)args										{ return [self execute:cmd withArgs:args withEnvironment:nil withDelegate:nil]; }
 + (ExecutionResult*) execute:(NSString*)cmd withArgs:(NSArray*)args	withEnvironment:(NSDictionary*)env	{ return [self execute:cmd withArgs:args withEnvironment:env withDelegate:nil]; }
 + (ExecutionResult*) execute:(NSString*)cmd withArgs:(NSArray*)args withEnvironment:(NSDictionary*)env withDelegate:(id <ShellTaskDelegate>)delegate
@@ -136,7 +142,7 @@
 	if (IsNotEmpty(errStr))
 		DebugLog(@"err string for cmd %@ is %@", [shellTask commandLineString], errStr);
 
-	ExecutionResult* result = [ExecutionResult resultWithCmd:cmd args:args result:[shellTask terminationStatus] outStr:outStr errStr:errStr];
+	ExecutionResult* result = [ExecutionResult resultWithCmd:cmd args:args result:[shellTask terminationStatus] outStr:outStr errStr:filterProgressOutOfErrorString(errStr)];
 	result->theShellTask_ = shellTask;
 	return result;
 }

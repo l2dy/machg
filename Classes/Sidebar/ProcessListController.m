@@ -197,12 +197,12 @@
 {
 	NSString* part = nil;
 	NSString* total = nil;
-	if ([errorString getCapturesWithRegexAndTrimedComponents:@".*?(\\d+)/(\\d+)\\s*$" firstComponent:&part  secondComponent:&total])
+	if ([errorString getCapturesWithRegexAndTrimedComponents:@".*?MHGProgress:.*?(\\d+)/(\\d+)\\s*$" firstComponent:&part  secondComponent:&total])
 	{
 		NSString* combined = fstr(@"%@/%@", part, total);
 		[processList_ setProgress:combined forKey:processNumber_];
 	}
-	else if ([errorString getCapturesWithRegexAndTrimedComponents:@".*?(\\d+)\\s*$" firstComponent:&total])
+	else if ([errorString getCapturesWithRegexAndTrimedComponents:@".*?MHGProgress:.*?(\\d+)\\s*$" firstComponent:&total])
 		[processList_ setProgress:total forKey:processNumber_];
 }
 
