@@ -168,10 +168,10 @@
 	NSString* cloneNameSuffix = @"Clone";
 	if ([sourceNode_ isLocalRepositoryRef])
 	{
-		if (repositoryExistsAtPath(fstr(@"%@%@", sourcePath, cloneNameSuffix)))
+		if (pathIsExistent(fstr(@"%@%@", sourcePath, cloneNameSuffix)))
 		{
 			int i = 1;
-			while (repositoryExistsAtPath(fstr(@"%@%@%d", sourcePath, cloneNameSuffix,i)))
+			while (pathIsExistent(fstr(@"%@%@%d", sourcePath, cloneNameSuffix,i)))
 				i++;
 			cloneNameSuffix = fstr(@"%@%d", cloneNameSuffix, i);
 		}
