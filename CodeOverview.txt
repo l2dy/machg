@@ -33,7 +33,8 @@
 
 // Pointers
 // ------------------------------------------------------------------------------------------------------------------------------
-// pointer * is associated with the type. (The other convention although more common in Cocoa appears to me much less intuitive),
+// pointer * is associated with the type. (The C++ style of pointers) (The other convention although more common in Cocoa appears
+// to me much less intuitive),
 // eg use
 //		NSString* foo;
 // in place of
@@ -180,8 +181,13 @@ MacHg/LocalMercurial/mercurial
 MacHg/LocalMercurial/hgext
 MacHg/LocalMercurial/mercurial-<version>-py2.6.egg-info
 
-With the new version. Be careful to maintain the extensions in hgext which are not in the new version hgext. Eg histedit, collapse,
-etc. Moreover you will need to re-apply the one patch given in changeset 323 : 23cef03f3f85
+With the new version. Be careful to maintain the extensions in hgext which are not in the new version hgext. Eg histedit,
+collapse, etc. Moreover you will need to re-apply the patches specific to MacHg to the new version. To find all these differences
+you can simply compare MacHg's LocalMercurial with a checked out version of the Mercurial repository updated (to the same version
+but not revision as MacHg is currently using). Eg if MacHg was using version 1.9.2 of Mercurial + MacHg patches, then compare
+MacHg's LocalMercurial to version 1.9.2 of stock Mercurial to find all of the MacHg patches.
+
+One important difference is changeset 323 : 23cef03f3f85
 
 diff --git a/LocalMercurial/mercurial/dirstate.py b/LocalMercurial/mercurial/dirstate.py
 --- a/LocalMercurial/mercurial/dirstate.py
@@ -369,7 +375,7 @@ diff --git a/LocalMercurial/mercurial/dirstate.py b/LocalMercurial/mercurial/dir
 // General Category Extensions
 // ------------------------------------------------------------------------------------------------------------------------------
 // The general category extensions are collected in Common.h. Most of these should be applicable to basically any Cocoa program.
-// If you are contributing code to MacHg ty and copy the style of the MacHg code and its usage of the functions in Common.h
+// If you are contributing code to MacHg try and copy the style of the MacHg code and its usage of the functions in Common.h
 
 
 // Notifications
