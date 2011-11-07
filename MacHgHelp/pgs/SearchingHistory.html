@@ -1,0 +1,785 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+<head>
+<title>About Security And Passwords</title>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+<meta name="hatver" content="v2 R6"/>
+<meta name="builddefid" content="4111"/>
+<meta name="topicid" content="27594"/>
+<meta name="Keywords" content="searching, history, query, revset, keyword, id"/>
+<!-- do not translate -->
+<meta name="Keywords" content="MacHg" />
+<!-- end do not translate -->
+<meta name="Description" content="Searching History"/>
+<meta name="template" content="2031"/>
+<meta name="pagetype" content="Task"/>
+<meta name="project" content="MacHgHelp"/>
+<meta name="release" content=""/>
+<meta name="projectcomponent" content="SafariSnow"/>
+<link href="../sty/task.css" rel="stylesheet" type="text/css" media="all"/>
+<link href="../sty/print.css" rel="stylesheet" type="text/css" media="print"/>
+</head>
+
+<body id="apple-pd">
+<!--top navigation area-->
+
+<div id="navbox" class="gradient"> <a name="SearchingHistory"></a>
+
+   <div id="navleftbox"> <a class="navlink_left" href="help:anchor='access' bookID=MacHg Help">Home</a> </div>
+
+   <div id="navrightbox"> <a class="navlink_right" href="help:anchor='xall' bookID=MacHg Help">Index</a> </div>
+</div>
+<!--page head-->
+
+<div id="headerbox">
+
+   <div id="iconbox"> <img id="iconimg" src="../gfx/hgicon.png" alt="MacHg icon" height="32" width="32"/> </div>
+
+   <div id="pagetitle">
+      <h1>Searching History</h1>
+   </div>
+</div>
+
+It is sometimes necessary or desirable to be able to search the history of the repository for specific keywords or even complicated queries. MacHg exposes Mercurial's underlying functionality of searching by keyword, searching by id, and searching by revset query.
+<p></p>
+Searching by keyword will yield the entire list of revisions which contain the keyword either in the commit message or in the names of the files which are modified by the revision.
+
+<div class="task-box-spacing">
+   <div class="task-box-frame">
+      <h2>To search by Keyword:</h2>
+      <ol>
+         <li>
+            <p>Switch to the <a href="help:anchor=AboutTheHistoryView bookID=MacHg Help">History view</a>.</p>
+         </li>
+         <li>
+            <p>Locate the search field in the upper right corner of the window.</p>
+         </li>
+         <li>
+            <p>Click on the search field icon inside the search field and choose "Search By Keyword" (This is the default).</p>
+         </li>
+         <li>
+            <p>Enter the keyword in the search field.</p>
+         </li>
+      </ol>
+   </div>
+</div>
+
+<p></p>
+Searching by Revision ID will yield the single revision (or the first revision) which has an id matching the id entered in the search field.
+
+<div class="task-box-spacing">
+   <div class="task-box-frame">
+      <h2>To search by Revision ID:</h2>
+      <ol>
+         <li>
+            <p>Switch to the <a href="help:anchor=AboutTheHistoryView bookID=MacHg Help">History view</a>.</p>
+         </li>
+         <li>
+            <p>Locate the search field in the upper right corner of the window.</p>
+         </li>
+         <li>
+            <p>Click on the search field icon inside the search field and choose "Search By Revision ID".</p>
+         </li>
+         <li>
+            <p>Enter the revision id in the search field.</p>
+         </li>
+      </ol>
+   </div>
+</div>
+
+
+<p></p>
+Revset queries are a powerful but somewhat cryptic way to specify very exactly what one is looking for. You might think of them as sort of similar language to grep only applied specifically to specifying revsets. Searching by a revset query will yield a list of revision which match the generalized "revset" query.
+
+<div class="task-box-spacing">
+   <div class="task-box-frame">
+      <h2>To search by Revset Query:</h2>
+      <ol>
+         <li>
+            <p>Switch to the <a href="help:anchor=AboutTheHistoryView bookID=MacHg Help">History view</a>.</p>
+         </li>
+         <li>
+            <p>Locate the search field in the upper right corner of the window.</p>
+         </li>
+         <li>
+            <p>Click on the search field icon inside the search field and choose "Search By Revset Query".</p>
+         </li>
+         <li>
+            <p>Enter the revset query in the search field.</p>
+         </li>
+      </ol>
+   </div>
+</div>
+
+
+<p>&nbsp;</p>
+
+<p></p>
+
+
+<h2>Specifying Revision Sets (Revsets)</h2>
+
+<p>Mercurial supports a functional language for selecting a set of revisions. These revision specifications are called "revsets".</p>
+
+<p>The language supports a number of predicates which are joined by infix operators. Parenthesis can be used for grouping.</p>
+
+<p>Identifiers such as branch names must be quoted with single or double
+    quotes if they contain characters outside of "[._a-zA-Z0-9\x80-\xff]" or
+    if they match one of the predefined predicates.</p>
+
+<p>Special characters can be used in quoted identifiers by escaping them,
+    e.g., "\n" is interpreted as a newline. To prevent them from being
+    interpreted, strings can be prefixed with "r", e.g. "r'...'".</p>
+
+<h3>There is a single prefix operator:</h3>
+
+<div class="two-col-description">
+
+   <div class="two-col-description-header">
+      <!-- note: primary text+text type will never be bulleted -->
+      <div class="two-col-description-header-left"> Operator </div>
+      <div class="two-col-description-header-right"> Meaning </div>
+   </div>
+   
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"not x"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p> Changesets not in x. Short form is "! x".</p>
+      </div>
+   </div>
+</div>
+
+<p>&nbsp;</p>
+
+<h3>These are the supported infix operators:</h3>
+
+<div class="two-col-description">
+
+   <div class="two-col-description-header">
+      <!-- note: primary text+text type will never be bulleted -->
+      <div class="two-col-description-header-left"> Operation </div>
+      <div class="two-col-description-header-right"> Meaning </div>
+   </div>
+   
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"x::y"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+A DAG range, meaning all changesets that are descendants of x and
+ancestors of y, including x and y themselves. If the first endpoint is
+left out, this is equivalent to "ancestors(y)", if the second is left
+out it is equivalent to "descendants(x)".
+An alternative syntax is "x..y".</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"x:y"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+All changesets with revision numbers between x and y, both inclusive.
+Either endpoint can be left out, they default to 0 and tip.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"x and y"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+The intersection of changesets in x and y. Short form is "x & y".</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"x or y"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+The union of changesets in x and y. There are two alternative short
+forms: "x | y" and "x + y".</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"x - y"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Changesets in x but not in y.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"x^n"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+The nth parent of x, n == 0, 1, or 2. For n == 0, x; for n == 1, the
+first parent of each changeset in x; for n == 2, the second parent of
+changeset in x.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"x~n"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+The nth first ancestor of x; "x~0" is x; "x~3" is "x^^^".</p>
+      </div>
+   </div>
+
+</div>
+<p>&nbsp;</p>
+
+<h3>There is a single postfix operator:</h3>
+<div class="two-col-description">
+
+   <div class="two-col-description-header">
+      <!-- note: primary text+text type will never be bulleted -->
+      <div class="two-col-description-header-left"> Operator </div>
+      <div class="two-col-description-header-right"> Meaning </div>
+   </div>
+   
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"x^"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>Equivalent to "x^1", the first parent of each changeset in x.</p>
+      </div>
+   </div>
+</div>
+<p>&nbsp;</p>
+
+
+<h3>The following predicates are supported:</h3>
+
+<div class="two-col-description">
+
+   <div class="two-col-description-header">
+      <!-- note: primary text+text type will never be bulleted -->
+      <div class="two-col-description-header-left"> Predicate </div>
+      <div class="two-col-description-header-right"> Meaning </div>
+   </div>
+   
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"adds(pattern)"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Changesets that add a file matching pattern.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"all()"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+All changesets, the same as "0:tip".</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"ancestor(single, single)"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Greatest common ancestor of the two changesets.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"ancestors(set)"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Changesets that are ancestors of a changeset in set.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"author(string)"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Alias for "user(string)".</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"bisected(string)"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Changesets marked in the specified bisect state (good, bad, skip).</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"bookmark([name])"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+The named bookmark or all bookmarks.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"branch(string or set)"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+All changesets belonging to the given branch or the branches of the
+given changesets.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"children(set)"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Child changesets of changesets in set.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"closed()"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Changeset is closed.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"committer([user])"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Changesets with committer [matching the given user].</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"contains(pattern)"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Revision contains a file matching pattern. See "hg help patterns" for
+information about file patterns.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"date(interval)"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Changesets within the interval, see "hg help dates".</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"desc(string)"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Search commit message for string. The match is case-insensitive.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"descendants(set)"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Changesets which are descendants of changesets in set.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"file(pattern)"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Changesets affecting files matched by pattern.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"filelog(pattern)"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Changesets connected to the specified filelog.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"follow([file])"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+An alias for "::." (ancestors of the working copy's first parent). If a
+filename is specified, the history of the given file is followed,
+including copies.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"grep(regex)"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Like "keyword(string)" but accepts a regex. Use "grep(r'...')" to ensure
+special escape characters are handled correctly. Unlike "keyword(string)", the match is case-sensitive.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"head()"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Changeset is a named branch head.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"heads(set)"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Members of set with no children in set.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"id(string)"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Revision non-ambiguously specified by the given hex string prefix.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"keyword(string)"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Search commit message, user name, and names of changed files for string.
+The match is case-insensitive.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"last(set, n)"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Last n members of set.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"limit(set, n)"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+First n members of set.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"max(set)"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Changeset with highest revision number in set.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"merge()"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Changeset is a merge changeset.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"min(set)"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Changeset with lowest revision number in set.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"modifies(pattern)"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Changesets modifying files matched by pattern.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"mq()"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Changesets managed by MQ.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"outgoing([path])"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Changesets not found in the specified destination repository, or the
+default push location.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"p1([set])"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+First parent of changesets in set, or the working directory.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"p2([set])"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Second parent of changesets in set, or the working directory.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"parents([set])"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+The set of all parents for all changesets in set, or the working
+directory.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"present(set)"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+An empty set, if any revision in set isn't found; otherwise, all
+revisions in set.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"removes(pattern)"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Changesets which remove files matching pattern.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"rev(number)"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Revision with the given numeric identifier.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"reverse(set)"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Reverse order of set.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"roots(set)"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Changesets with no parent changeset in set.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"sort(set[, [-]key...])"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+Sort set by keys. The default sort order is ascending, specify a key as
+"-key" to sort in descending order.</p>
+
+<p>The keys can be:</p>
+
+<p>- "rev" for the revision number,</p>
+<p>- "branch" for the branch name,</p>
+<p>- "desc" for the commit message (description),</p>
+<p>- "user" for user name ("author" can be used as an alias),</p>
+<p>- "date" for the commit date</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"tag([name])"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+The specified tag by name, or all tagged revisions if no name is given.</p>
+      </div>
+   </div>
+
+   <div class="two-col-description-item">
+      <div class="two-col-description-item-left">
+         <p>"user(string)"</p>
+      </div>
+      <div class="two-col-description-item-right">
+         <p>
+User name contains string. The match is case-insensitive.</p>
+      </div>
+   </div>
+</div>
+
+<p>&nbsp;</p>
+
+<h3>Aliases</h3>
+<p>New predicates (known as "aliases") can be defined, using any combination
+    of existing predicates or other aliases. An alias definition looks like:</p>
+
+<pre>
+      <em>alias</em> = <em>definition</em>
+</pre>
+ 
+<p>    in the "revsetalias" section of a Mercurial configuration file. Arguments
+    of the form "$1", "$2", etc. are substituted from the alias into the
+    definition.</p>
+
+<p>    For example,</p>
+
+<pre>
+      [revsetalias]
+      h = heads()
+      d($1) = sort($1, date)
+      rs($1, $2) = reverse(sort($1, $2))
+</pre>
+
+<p>    defines three aliases, "h", "d", and "rs". "rs(0:tip, author)" is exactly
+    equivalent to "reverse(sort(0:tip, author))".</p>
+
+
+<h3>    Some sample queries:</h3>
+
+
+<p>Changesets on the default branch:</p>
+<pre>
+    hg log -r "branch(default)"
+</pre>
+
+<p>Changesets on the default branch since tag 1.5 (excluding merges):</p>
+<pre>
+    hg log -r "branch(default) and 1.5:: and not merge()"
+</pre>
+
+<p>Open branch heads:</p>
+<pre>
+    hg log -r "head() and not closed()"
+</pre>
+
+<p>Changesets between tags 1.3 and 1.5 mentioning "bug" that affect
+      "hgext/*":</p>
+<pre>
+    hg log -r "1.3::1.5 and keyword(bug) and file('hgext/*')"
+</pre>
+
+<p>Changesets committed in May 2008, sorted by user:</p>
+<pre>
+    hg log -r "sort(date('May 2008'), user)"
+</pre>
+
+<p>Changesets mentioning "bug" or "issue" that are not in a tagged release:</p>
+<pre>
+    hg log -r "(keyword(bug) or keyword(issue)) and not ancestors(tagged())"
+</pre>
+
+
+<div id="rule">
+   <hr />
+</div>
+
+</body>
+</html>
