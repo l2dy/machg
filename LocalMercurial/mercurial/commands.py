@@ -458,7 +458,7 @@ def backout(ui, repo, node=None, rev=None, **opts):
     if not commit_opts['message'] and not commit_opts['logfile']:
         # we don't translate commit messages
         commit_opts['message'] = "Backed out changeset %s" % short(node)
-        commit_opts['force_editor'] = True
+        commit_opts['force_editor'] = (ui.config('ui', 'interactive') != 'off')
     commit(ui, repo, **commit_opts)
     def nice(node):
         return '%d:%s' % (repo.changelog.rev(node), short(node))
@@ -3214,10 +3214,11 @@ def help_(ui, name=None, unknowncmd=False, full=True, **opts):
     ('i', 'id', None, _('show global revision id')),
     ('b', 'branch', None, _('show branch')),
     ('t', 'tags', None, _('show tags')),
-    ('B', 'bookmarks', None, _('show bookmarks'))],
+    ('B', 'bookmarks', None, _('show bookmarks')),
+    ('', 'insecure', None, _('do not verify server certificate (ignoring web.cacerts config)'))],
     _('[-nibtB] [-r REV] [SOURCE]'))
 def identify(ui, repo, source=None, rev=None,
-             num=None, id=None, branch=None, tags=None, bookmarks=None):
+             num=None, id=None, branch=None, tags=None, bookmarks=None, insecure=None):
     """identify the working copy or specified revision
 
     Print a summary identifying the repository state at REV using one or
