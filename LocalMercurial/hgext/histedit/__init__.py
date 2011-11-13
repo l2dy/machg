@@ -79,6 +79,7 @@ editcomment = """
 #  e, edit = use commit, but stop for amending
 #  f, fold = use commit, but fold into previous commit
 #  d, drop = remove commit from history
+#  m, mess = edit message without changing commit content
 #
 """
 
@@ -230,6 +231,41 @@ def drop(ui, repo, ctx, ha, opts):
     return ctx, [], [repo[ha].node(), ], []
 
 
+def message(ui, repo, ctx, ha, opts):
+    oldctx = repo[ha]
+    hg.update(repo, ctx.node())
+    fd, patchfile = tempfile.mkstemp(prefix='hg-histedit-')
+    fp = os.fdopen(fd, 'w')
+    diffopts = patch.diffopts(ui, opts)
+    diffopts.git = True
+    diffopts.ignorews = False
+    diffopts.ignorewsamount = False
+    diffopts.ignoreblanklines = False
+    gen = patch.diff(repo, oldctx.parents()[0].node(), ha, opts=diffopts)
+    for chunk in gen:
+        fp.write(chunk)
+    fp.close()
+    try:
+        files = set()
+        try:
+            applypatch(ui, repo, patchfile, files=files, eolmode=None)
+        finally:
+            os.unlink(patchfile)
+    except Exception, inst:
+        raise util.Abort(_('Fix up the change and run '
+                           'hg histedit --continue'))
+    message = oldctx.description()
+    message = ui.edit(message, ui.username())
+    new = repo.commit(text=message, user=oldctx.user(), date=oldctx.date(),
+                      extra=oldctx.extra())
+    newctx = repo[new]
+    if oldctx.node() != newctx.node():
+        return newctx, [new], [oldctx.node()], []
+    # We didn't make an edit, so just indicate no replaced nodes
+    return newctx, [new], [], []
+
+
+
 actiontable = {'p': pick,
                'pick': pick,
                'e': edit,
@@ -238,6 +274,8 @@ actiontable = {'p': pick,
                'fold': fold,
                'd': drop,
                'drop': drop,
+               'm': message,
+               'mess': message,
                }
 def histedit(ui, repo, *parent, **opts):
     """hg histedit <parent>
@@ -305,7 +343,7 @@ def histedit(ui, repo, *parent, **opts):
         m, a, r, d = repo.status()[:4]
         oldctx = repo[currentnode]
         message = oldctx.description()
-        if action in ('e', 'edit', ):
+        if action in ('e', 'edit', 'm', 'mess'):
             message = ui.edit(message, ui.username())
         elif action in ('f', 'fold', ):
             message = 'fold-temp-revision %s' % currentnode
@@ -314,14 +352,7 @@ def histedit(ui, repo, *parent, **opts):
             new = repo.commit(text=message, user=oldctx.user(), date=oldctx.date(),
                               extra=oldctx.extra())
 
-        if action in ('e', 'edit', 'p', 'pick', ):
-            if new != oldctx.node():
-                replaced.append(oldctx.node())
-            if new:
-                if new != oldctx.node():
-                    created.append(new)
-                parentctx = repo[new]
-        else: # fold
+        if action in ('f', 'fold'):
             if new:
                 tmpnodes.append(new)
             else:
@@ -333,6 +364,13 @@ def histedit(ui, repo, *parent, **opts):
             replaced.extend(replaced_)
             created.extend(created_)
             tmpnodes.extend(tmpnodes_)
+        elif action not in ('d', 'drop'):
+            if new != oldctx.node():
+                replaced.append(oldctx.node())
+            if new:
+                if new != oldctx.node():
+                    created.append(new)
+                parentctx = repo[new]
 
     elif opts.get('abort', False):
         if len(parent) != 0:
@@ -356,7 +394,8 @@ def histedit(ui, repo, *parent, **opts):
     else:
         bailifchanged(repo)
         if os.path.exists(os.path.join(repo.path, 'histedit-state')):
-            raise util.Abort('history edit already in progress, try --continue or --abort')
+            raise util.Abort('history edit already in progress, try '
+                             '--continue or --abort')
 
         tip, empty = repo.dirstate.parents()
 
@@ -402,9 +441,13 @@ def histedit(ui, repo, *parent, **opts):
 
 
     while rules:
-        writestate(repo, parentctx.node(), created, replaced, tmpnodes, existing, rules, keep, tip)
+        writestate(repo, parentctx.node(), created, replaced, tmpnodes, existing,
+                   rules, keep, tip)
         action, ha = rules.pop(0)
-        (parentctx, created_, replaced_, tmpnodes_, ) = actiontable[action](ui, repo, parentctx, ha, opts)
+        (parentctx, created_,
+         replaced_, tmpnodes_, ) = actiontable[action](ui, repo,
+                                                       parentctx, ha,
+                                                       opts)
         created.extend(created_)
         replaced.extend(replaced_)
         tmpnodes.extend(tmpnodes_)
@@ -412,14 +455,16 @@ def histedit(ui, repo, *parent, **opts):
     hg.update(repo, parentctx.node())
 
     if not keep:
-        ui.debug('should strip replaced nodes %s\n' % ', '.join([node.hex(n)[:12] for n in replaced]))
+        ui.debug('should strip replaced nodes %s\n' %
+                 ', '.join([node.hex(n)[:12] for n in replaced]))
         for n in sorted(replaced, lambda x, y: cmp(repo[x].rev(), repo[y].rev())):
             try:
                 repair.strip(ui, repo, n)
             except error.LookupError:
                 pass
 
-    ui.debug('should strip temp nodes %s\n' % ', '.join([node.hex(n)[:12] for n in tmpnodes]))
+    ui.debug('should strip temp nodes %s\n' %
+             ', '.join([node.hex(n)[:12] for n in tmpnodes]))
     for n in reversed(tmpnodes):
         try:
             repair.strip(ui, repo, n)
@@ -428,9 +473,12 @@ def histedit(ui, repo, *parent, **opts):
     os.unlink(os.path.join(repo.path, 'histedit-state'))
 
 
-def writestate(repo, parentctxnode, created, replaced, tmpnodes, existing, rules, keep, oldtip):
+def writestate(repo, parentctxnode, created, replaced,
+               tmpnodes, existing, rules, keep, oldtip):
     fp = open(os.path.join(repo.path, 'histedit-state'), 'w')
-    pickle.dump((parentctxnode, created, replaced, tmpnodes, existing, rules, keep, oldtip,), fp)
+    pickle.dump((parentctxnode, created, replaced,
+                 tmpnodes, existing, rules, keep, oldtip,),
+                fp)
     fp.close()
 
 def readstate(repo):
@@ -472,7 +520,7 @@ def verifyrules(rules, repo, ctxs):
 cmdtable = {
     "histedit":
         (histedit,
-         [('', 'commands', '', 'read history edits from the specified file.'),
+         [('', 'commands', '', 'Read history edits from the specified file.'),
           ('c', 'continue', False, 'continue an edit already in progress', ),
           ('k', 'keep', False, 'don\'t strip old nodes after edit is complete', ),
           ('', 'abort', False, 'abort an edit in progress', ),
