@@ -22,6 +22,8 @@ except ImportError:
 
     def ssl_wrap_socket(sock, key_file, cert_file,
                         cert_reqs=CERT_REQUIRED, ca_certs=None):
+        if not util.safehasattr(socket, 'ssl'):
+            raise util.Abort(_('Python SSL support not found'))
         if ca_certs:
             raise util.Abort(_(
                 'certificate checking requires Python 2.6'))
@@ -115,13 +117,11 @@ class validator(object):
                     self.ui.debug('%s certificate matched fingerprint %s\n' %
                                   (host, nicefingerprint))
                 else:
-                    strict = self.ui.config('web', 'strictCAverification') != 'off'
-                    if strict:
-                        self.ui.warn(_('warning: %s certificate '
-                                       'with fingerprint %s not verified '
-                                       '(check hostfingerprints or web.cacerts '
-                                       'config setting)\n') %
-                                     (host, nicefingerprint))
+                    self.ui.warn(_('warning: %s certificate '
+                                   'with fingerprint %s not verified '
+                                   '(check hostfingerprints or web.cacerts '
+                                   'config setting)\n') %
+                                 (host, nicefingerprint))
             else: # python 2.5 ?
                 if hostfingerprint:
                     raise util.Abort(_("host fingerprint for %s can't be "

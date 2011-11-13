@@ -46,7 +46,7 @@ class ui(object):
     def copy(self):
         return self.__class__(self)
 
-    def _is_trusted(self, fp, f):
+    def _trusted(self, fp, f):
         st = util.fstat(fp)
         if util.isowner(st):
             return True
@@ -75,7 +75,7 @@ class ui(object):
             raise
 
         cfg = config.config()
-        trusted = sections or trust or self._is_trusted(fp, filename)
+        trusted = sections or trust or self._trusted(fp, filename)
 
         try:
             cfg.read(filename, fp, sections=sections, remap=remap)
@@ -155,7 +155,19 @@ class ui(object):
         return self._data(untrusted).source(section, name) or 'none'
 
     def config(self, section, name, default=None, untrusted=False):
-        value = self._data(untrusted).get(section, name, default)
+        if isinstance(name, list):
+            alternates = name
+        else:
+            alternates = [name]
+
+        for n in alternates:
+            value = self._data(untrusted).get(section, name, None)
+            if value is not None:
+                name = n
+                break
+        else:
+            value = default
+
         if self.debugflag and not untrusted and self._reportuntrusted:
             uvalue = self._ucfg.get(section, name)
             if uvalue is not None and uvalue != value:
@@ -164,12 +176,14 @@ class ui(object):
         return value
 
     def configpath(self, section, name, default=None, untrusted=False):
-        'get a path config item, expanded relative to config file'
+        'get a path config item, expanded relative to repo root or config file'
         v = self.config(section, name, default, untrusted)
+        if v is None:
+            return None
         if not os.path.isabs(v) or "://" not in v:
             src = self.configsource(section, name, untrusted)
             if ':' in src:
-                base = os.path.dirname(src.rsplit(':'))
+                base = os.path.dirname(src.rsplit(':')[0])
                 v = os.path.join(base, os.path.expanduser(v))
         return v
 
@@ -541,11 +555,15 @@ class ui(object):
         # e.g. color extension on Windows
         self.write(prompt)
 
-        # instead of trying to emulate raw_input, swap self.fin with sys.stdin
-        old = sys.stdin
+        # instead of trying to emulate raw_input, swap (self.fin,
+        # self.fout) with (sys.stdin, sys.stdout)
+        oldin = sys.stdin
+        oldout = sys.stdout
         sys.stdin = self.fin
+        sys.stdout = self.fout
         line = raw_input(' ')
-        sys.stdin = old
+        sys.stdin = oldin
+        sys.stdout = oldout
 
         # When stdin is in binary mode on Windows, it can cause
         # raw_input() to emit an extra trailing carriage return
@@ -649,9 +667,9 @@ class ui(object):
         printed.'''
         if self.tracebackflag:
             if exc:
-                traceback.print_exception(exc[0], exc[1], exc[2])
+                traceback.print_exception(exc[0], exc[1], exc[2], file=self.ferr)
             else:
-                traceback.print_exc()
+                traceback.print_exc(file=self.ferr)
         return self.tracebackflag
 
     def geteditor(self):

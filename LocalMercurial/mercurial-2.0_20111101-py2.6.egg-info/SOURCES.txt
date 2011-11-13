@@ -47,6 +47,17 @@ hgext/convert/subversion.py
 hgext/convert/transport.py
 hgext/highlight/__init__.py
 hgext/highlight/highlight.py
+hgext/largefiles/__init__.py
+hgext/largefiles/basestore.py
+hgext/largefiles/lfcommands.py
+hgext/largefiles/lfutil.py
+hgext/largefiles/localstore.py
+hgext/largefiles/overrides.py
+hgext/largefiles/proto.py
+hgext/largefiles/remotestore.py
+hgext/largefiles/reposetup.py
+hgext/largefiles/uisetup.py
+hgext/largefiles/wirestore.py
 hgext/zeroconf/Zeroconf.py
 hgext/zeroconf/__init__.py
 mercurial/__init__.py

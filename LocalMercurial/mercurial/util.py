@@ -16,15 +16,81 @@ hide platform-specific details from the core.
 from i18n import _
 import error, osutil, encoding
 import errno, re, shutil, sys, tempfile, traceback
-import os, time, calendar, textwrap, unicodedata, signal
+import os, time, calendar, textwrap, signal
 import imp, socket, urllib
+
+if os.name == 'nt':
+    import windows as platform
+else:
+    import posix as platform
+
+cachestat = platform.cachestat
+checkexec = platform.checkexec
+checklink = platform.checklink
+copymode = platform.copymode
+executablepath = platform.executablepath
+expandglobs = platform.expandglobs
+explainexit = platform.explainexit
+findexe = platform.findexe
+gethgcmd = platform.gethgcmd
+getuser = platform.getuser
+groupmembers = platform.groupmembers
+groupname = platform.groupname
+hidewindow = platform.hidewindow
+isexec = platform.isexec
+isowner = platform.isowner
+localpath = platform.localpath
+lookupreg = platform.lookupreg
+makedir = platform.makedir
+nlinks = platform.nlinks
+normpath = platform.normpath
+nulldev = platform.nulldev
+openhardlinks = platform.openhardlinks
+oslink = platform.oslink
+parsepatchoutput = platform.parsepatchoutput
+pconvert = platform.pconvert
+popen = platform.popen
+posixfile = platform.posixfile
+quotecommand = platform.quotecommand
+realpath = platform.realpath
+rename = platform.rename
+samedevice = platform.samedevice
+samefile = platform.samefile
+samestat = platform.samestat
+setbinary = platform.setbinary
+setflags = platform.setflags
+setsignalhandler = platform.setsignalhandler
+shellquote = platform.shellquote
+spawndetached = platform.spawndetached
+sshargs = platform.sshargs
+statfiles = platform.statfiles
+termwidth = platform.termwidth
+testpid = platform.testpid
+umask = platform.umask
+unlink = platform.unlink
+unlinkpath = platform.unlinkpath
+username = platform.username
 
 # Python compatibility
 
-def sha1(s):
+def sha1(s=''):
+    '''
+    Low-overhead wrapper around Python's SHA support
+
+    >>> f = _fastsha1
+    >>> a = sha1()
+    >>> a = f()
+    >>> a.hexdigest()
+    'da39a3ee5e6b4b0d3255bfef95601890afd80709'
+    '''
+
     return _fastsha1(s)
 
-def _fastsha1(s):
+_notset = object()
+def safehasattr(thing, attr):
+    return getattr(thing, attr, _notset) is not _notset
+
+def _fastsha1(s=''):
     # This function will import sha1 from hashlib or sha (whichever is
     # available) and overwrite itself with it on the first call.
     # Subsequent calls will go directly to the imported function.
@@ -303,8 +369,8 @@ def mainfrozen():
     The code supports py2exe (most common, Windows only) and tools/freeze
     (portable, not much used).
     """
-    return (hasattr(sys, "frozen") or # new py2exe
-            hasattr(sys, "importers") or # old py2exe
+    return (safehasattr(sys, "frozen") or # new py2exe
+            safehasattr(sys, "importers") or # old py2exe
             imp.is_frozen("__main__")) # tools/freeze
 
 def hgexecutable():
@@ -314,10 +380,13 @@ def hgexecutable():
     """
     if _hgexecutable is None:
         hg = os.environ.get('HG')
+        mainmod = sys.modules['__main__']
         if hg:
             _sethgexecutable(hg)
         elif mainfrozen():
             _sethgexecutable(sys.executable)
+        elif os.path.basename(getattr(mainmod, '__file__', '')) == 'hg':
+            _sethgexecutable(mainmod.__file__)
         else:
             exe = findexe('hg') or os.path.basename(sys.argv[0])
             _sethgexecutable(exe)
@@ -390,18 +459,6 @@ def checksignature(func):
 
     return check
 
-def makedir(path, notindexed):
-    os.mkdir(path)
-
-def unlinkpath(f):
-    """unlink and remove the directory if it is empty"""
-    os.unlink(f)
-    # try removing directories that might now be empty
-    try:
-        os.removedirs(os.path.dirname(f))
-    except OSError:
-        pass
-
 def copyfile(src, dest):
     "copy a file, preserving mode and atime/mtime"
     if os.path.islink(src):
@@ -467,6 +524,7 @@ def checkwinfilename(path):
     "filename contains '\\\\x07', which is invalid on Windows"
     >>> checkwinfilename("foo/bar/bla ")
     "filename ends with ' ', which is not allowed on Windows"
+    >>> checkwinfilename("../bar")
     '''
     for n in path.replace('\\', '/').split('/'):
         if not n:
@@ -483,26 +541,14 @@ def checkwinfilename(path):
             return _("filename contains '%s', which is reserved "
                      "on Windows") % base
         t = n[-1]
-        if t in '. ':
+        if t in '. ' and n not in '..':
             return _("filename ends with '%s', which is not allowed "
                      "on Windows") % t
 
-def lookupreg(key, name=None, scope=None):
-    return None
-
-def hidewindow():
-    """Hide current shell window.
-
-    Used to hide the window opened when starting asynchronous
-    child process under Windows, unneeded on other systems.
-    """
-    pass
-
 if os.name == 'nt':
     checkosfilename = checkwinfilename
-    from windows import *
 else:
-    from posix import *
+    checkosfilename = platform.checkosfilename
 
 def makelock(info, pathname):
     try:
@@ -686,16 +732,7 @@ def mktempcopy(name, emptyok=False, createmode=None):
     # Temporary files are created with mode 0600, which is usually not
     # what we want.  If the original file already exists, just copy
     # its mode.  Otherwise, manually obey umask.
-    try:
-        st_mode = os.lstat(name).st_mode & 0777
-    except OSError, inst:
-        if inst.errno != errno.ENOENT:
-            raise
-        st_mode = createmode
-        if st_mode is None:
-            st_mode = ~umask
-        st_mode &= 0666
-    os.chmod(temp, st_mode)
+    copymode(name, temp, createmode)
     if emptyok:
         return temp
     try:
@@ -722,11 +759,10 @@ class atomictempfile(object):
     '''writeable file object that atomically updates a file
 
     All writes will go to a temporary copy of the original file. Call
-    rename() when you are done writing, and atomictempfile will rename
-    the temporary copy to the original name, making the changes visible.
-
-    Unlike other file-like objects, close() discards your writes by
-    simply deleting the temporary file.
+    close() when you are done writing, and atomictempfile will rename
+    the temporary copy to the original name, making the changes
+    visible. If the object is destroyed without being closed, all your
+    writes are discarded.
     '''
     def __init__(self, name, mode='w+b', createmode=None):
         self.__name = name      # permanent name
@@ -738,12 +774,12 @@ class atomictempfile(object):
         self.write = self._fp.write
         self.fileno = self._fp.fileno
 
-    def rename(self):
+    def close(self):
         if not self._fp.closed:
             self._fp.close()
             rename(self._tempname, localpath(self.__name))
 
-    def close(self):
+    def discard(self):
         if not self._fp.closed:
             try:
                 os.unlink(self._tempname)
@@ -752,24 +788,25 @@ class atomictempfile(object):
             self._fp.close()
 
     def __del__(self):
-        if hasattr(self, '_fp'): # constructor actually did something
-            self.close()
+        if safehasattr(self, '_fp'): # constructor actually did something
+            self.discard()
 
 def makedirs(name, mode=None):
     """recursive directory creation with parent mode inheritance"""
-    parent = os.path.abspath(os.path.dirname(name))
     try:
         os.mkdir(name)
-        if mode is not None:
-            os.chmod(name, mode)
-        return
     except OSError, err:
         if err.errno == errno.EEXIST:
             return
-        if not name or parent == name or err.errno != errno.ENOENT:
+        if err.errno != errno.ENOENT or not name:
             raise
-    makedirs(parent, mode)
-    makedirs(name, mode)
+        parent = os.path.dirname(os.path.abspath(name))
+        if parent == name:
+            raise
+        makedirs(parent, mode)
+        os.mkdir(name)
+    if mode is not None:
+        os.chmod(name, mode)
 
 def readfile(path):
     fp = open(path, 'rb')
@@ -887,7 +924,12 @@ def datestr(date=None, format='%a %b %d %H:%M:%S %Y %1%2'):
         minutes = abs(tz) // 60
         format = format.replace("%1", "%c%02d" % (sign, minutes // 60))
         format = format.replace("%2", "%02d" % (minutes % 60))
-    s = time.strftime(format, time.gmtime(float(t) - tz))
+    try:
+        t = time.gmtime(float(t) - tz)
+    except ValueError:
+        # time was out of range
+        t = time.gmtime(sys.maxint)
+    s = time.strftime(format, t)
     return s
 
 def shortdate(date=None):
@@ -1135,29 +1177,34 @@ def uirepr(s):
 def MBTextWrapper(**kwargs):
     class tw(textwrap.TextWrapper):
         """
-        Extend TextWrapper for double-width characters.
+        Extend TextWrapper for width-awareness.
 
-        Some Asian characters use two terminal columns instead of one.
-        A good example of this behavior can be seen with u'\u65e5\u672c',
-        the two Japanese characters for "Japan":
-        len() returns 2, but when printed to a terminal, they eat 4 columns.
+        Neither number of 'bytes' in any encoding nor 'characters' is
+        appropriate to calculate terminal columns for specified string.
 
-        (Note that this has nothing to do whatsoever with unicode
-        representation, or encoding of the underlying string)
+        Original TextWrapper implementation uses built-in 'len()' directly,
+        so overriding is needed to use width information of each characters.
+
+        In addition, characters classified into 'ambiguous' width are
+        treated as wide in east asian area, but as narrow in other.
+
+        This requires use decision to determine width of such characters.
         """
         def __init__(self, **kwargs):
             textwrap.TextWrapper.__init__(self, **kwargs)
 
-        def _cutdown(self, str, space_left):
+            # for compatibility between 2.4 and 2.6
+            if getattr(self, 'drop_whitespace', None) is None:
+                self.drop_whitespace = kwargs.get('drop_whitespace', True)
+
+        def _cutdown(self, ucstr, space_left):
             l = 0
-            ucstr = unicode(str, encoding.encoding)
-            colwidth = unicodedata.east_asian_width
+            colwidth = encoding.ucolwidth
             for i in xrange(len(ucstr)):
-                l += colwidth(ucstr[i]) in 'WFA' and 2 or 1
+                l += colwidth(ucstr[i])
                 if space_left < l:
-                    return (ucstr[:i].encode(encoding.encoding),
-                            ucstr[i:].encode(encoding.encoding))
-            return str, ''
+                    return (ucstr[:i], ucstr[i:])
+            return ucstr, ''
 
         # overriding of base class
         def _handle_long_word(self, reversed_chunks, cur_line, cur_len, width):
@@ -1170,6 +1217,69 @@ def MBTextWrapper(**kwargs):
             elif not cur_line:
                 cur_line.append(reversed_chunks.pop())
 
+        # this overriding code is imported from TextWrapper of python 2.6
+        # to calculate columns of string by 'encoding.ucolwidth()'
+        def _wrap_chunks(self, chunks):
+            colwidth = encoding.ucolwidth
+
+            lines = []
+            if self.width <= 0:
+                raise ValueError("invalid width %r (must be > 0)" % self.width)
+
+            # Arrange in reverse order so items can be efficiently popped
+            # from a stack of chucks.
+            chunks.reverse()
+
+            while chunks:
+
+                # Start the list of chunks that will make up the current line.
+                # cur_len is just the length of all the chunks in cur_line.
+                cur_line = []
+                cur_len = 0
+
+                # Figure out which static string will prefix this line.
+                if lines:
+                    indent = self.subsequent_indent
+                else:
+                    indent = self.initial_indent
+
+                # Maximum width for this line.
+                width = self.width - len(indent)
+
+                # First chunk on line is whitespace -- drop it, unless this
+                # is the very beginning of the text (ie. no lines started yet).
+                if self.drop_whitespace and chunks[-1].strip() == '' and lines:
+                    del chunks[-1]
+
+                while chunks:
+                    l = colwidth(chunks[-1])
+
+                    # Can at least squeeze this chunk onto the current line.
+                    if cur_len + l <= width:
+                        cur_line.append(chunks.pop())
+                        cur_len += l
+
+                    # Nope, this line is full.
+                    else:
+                        break
+
+                # The current line is full, and the next chunk is too big to
+                # fit on *any* line (not just this one).
+                if chunks and colwidth(chunks[-1]) > width:
+                    self._handle_long_word(chunks, cur_line, cur_len, width)
+
+                # If the last chunk on this line is all whitespace, drop it.
+                if (self.drop_whitespace and
+                    cur_line and cur_line[-1].strip() == ''):
+                    del cur_line[-1]
+
+                # Convert current line back to a string and store it in list
+                # of all lines (return value).
+                if cur_line:
+                    lines.append(indent + ''.join(cur_line))
+
+            return lines
+
     global MBTextWrapper
     MBTextWrapper = tw
     return tw(**kwargs)
@@ -1179,10 +1289,13 @@ def wrap(line, width, initindent='', hangindent=''):
     if width <= maxindent:
         # adjust for weird terminal size
         width = max(78, maxindent + 1)
+    line = line.decode(encoding.encoding, encoding.encodingmode)
+    initindent = initindent.decode(encoding.encoding, encoding.encodingmode)
+    hangindent = hangindent.decode(encoding.encoding, encoding.encodingmode)
     wrapper = MBTextWrapper(width=width,
                             initial_indent=initindent,
                             subsequent_indent=hangindent)
-    return wrapper.fill(line)
+    return wrapper.fill(line).encode(encoding.encoding)
 
 def iterlines(iterator):
     for chunk in iterator:
@@ -1223,8 +1336,9 @@ def rundetached(args, condfn):
     def handler(signum, frame):
         terminated.add(os.wait())
     prevhandler = None
-    if hasattr(signal, 'SIGCHLD'):
-        prevhandler = signal.signal(signal.SIGCHLD, handler)
+    SIGCHLD = getattr(signal, 'SIGCHLD', None)
+    if SIGCHLD is not None:
+        prevhandler = signal.signal(SIGCHLD, handler)
     try:
         pid = spawndetached(args)
         while not condfn():
@@ -1363,6 +1477,8 @@ class url(object):
     <url path: 'c:\\foo\\bar'>
     >>> url(r'\\blah\blah\blah')
     <url path: '\\\\blah\\blah\\blah'>
+    >>> url(r'\\blah\blah\blah#baz')
+    <url path: '\\\\blah\\blah\\blah', fragment: 'baz'>
 
     Authentication credentials:
 
@@ -1391,6 +1507,11 @@ class url(object):
         self._hostport = ''
         self._origpath = path
 
+        if parsefragment and '#' in path:
+            path, self.fragment = path.split('#', 1)
+            if not path:
+                path = None
+
         # special case for Windows drive letters and UNC paths
         if hasdriveletter(path) or path.startswith(r'\\'):
             self.path = path
@@ -1418,10 +1539,6 @@ class url(object):
                 self.path = ''
                 return
         else:
-            if parsefragment and '#' in path:
-                path, self.fragment = path.split('#', 1)
-                if not path:
-                    path = None
             if self._localpath:
                 self.path = path
                 return
@@ -1565,8 +1682,10 @@ class url(object):
             self.user, self.passwd = user, passwd
         if not self.user:
             return (s, None)
-        # authinfo[1] is passed to urllib2 password manager, and its URIs
-        # must not contain credentials.
+        # authinfo[1] is passed to urllib2 password manager, and its
+        # URIs must not contain credentials. The host is passed in the
+        # URIs list because Python < 2.4.3 uses only that to search for
+        # a password.
         return (s, (None, (s, self.host),
                     self.user, self.passwd or ''))
 

@@ -116,27 +116,11 @@ class dirstate(object):
 
     @propertycache
     def _checklink(self):
-         d = os.path.join(self._root, '.hg', 'fschecks')
-         try:
-             if not os.path.isdir(d):
-                 os.mkdir(d)
-             return util.checklink(d)
-         except (IOError, OSError):
-             # we don't care, the user probably won't be able to commit
-             # anyway
-             return False
+        return util.checklink(self._root)
 
     @propertycache
     def _checkexec(self):
-         d = os.path.join(self._root, '.hg', 'fschecks')
-         try:
-             if not os.path.isdir(d):
-                 os.mkdir(d)
-             return util.checkexec(d)
-         except (IOError, OSError):
-             # we don't care, the user probably won't be able to commit
-             # anyway
-             return False
+        return util.checkexec(self._root)
 
     @propertycache
     def _checkcase(self):
@@ -147,17 +131,19 @@ class dirstate(object):
         # it's safe because f is always a relative path
         return self._rootdir + f
 
-    def flagfunc(self, fallback):
+    def flagfunc(self, buildfallback):
+        if self._checklink and self._checkexec:
+            def f(x):
+                p = self._join(x)
+                if os.path.islink(p):
+                    return 'l'
+                if util.isexec(p):
+                    return 'x'
+                return ''
+            return f
+
+        fallback = buildfallback()
         if self._checklink:
-            if self._checkexec:
-                def f(x):
-                    p = self._join(x)
-                    if os.path.islink(p):
-                        return 'l'
-                    if util.isexec(p):
-                        return 'x'
-                    return ''
-                return f
             def f(x):
                 if os.path.islink(self._join(x)):
                     return 'l'
@@ -173,7 +159,8 @@ class dirstate(object):
                     return 'x'
                 return ''
             return f
-        return fallback
+        else:
+            return fallback
 
     def getcwd(self):
         cwd = os.getcwd()
@@ -383,9 +370,10 @@ class dirstate(object):
 
     def drop(self, f):
         '''Drop a file from the dirstate'''
-        self._dirty = True
-        self._droppath(f)
-        del self._map[f]
+        if f in self._map:
+            self._dirty = True
+            self._droppath(f)
+            del self._map[f]
 
     def _normalize(self, path, isknown):
         normed = os.path.normcase(path)
@@ -469,7 +457,7 @@ class dirstate(object):
             write(e)
             write(f)
         st.write(cs.getvalue())
-        st.rename()
+        st.close()
         self._lastnormaltime = None
         self._dirty = self._dirtypl = False
 

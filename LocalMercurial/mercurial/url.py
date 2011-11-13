@@ -93,13 +93,15 @@ class proxyhandler(urllib2.ProxyHandler):
             proxies = {}
 
         # urllib2 takes proxy values from the environment and those
-        # will take precedence if found, so drop them
-        for env in ["HTTP_PROXY", "http_proxy", "no_proxy"]:
-            try:
-                if env in os.environ:
-                    del os.environ[env]
-            except OSError:
-                pass
+        # will take precedence if found. So, if there's a config entry
+        # defining a proxy, drop the environment ones
+        if ui.config("http_proxy", "host"):
+            for env in ["HTTP_PROXY", "http_proxy", "no_proxy"]:
+                try:
+                    if env in os.environ:
+                        del os.environ[env]
+                except OSError:
+                    pass
 
         urllib2.ProxyHandler.__init__(self, proxies)
         self.ui = ui
@@ -133,7 +135,7 @@ def _gen_sendfile(orgsend):
             orgsend(self, data)
     return _sendfile
 
-has_https = hasattr(urllib2, 'HTTPSHandler')
+has_https = util.safehasattr(urllib2, 'HTTPSHandler')
 if has_https:
     try:
         _create_connection = socket.create_connection
@@ -190,8 +192,8 @@ class httpconnection(keepalive.HTTPConnection):
 # general transaction handler to support different ways to handle
 # HTTPS proxying before and after Python 2.6.3.
 def _generic_start_transaction(handler, h, req):
-    if hasattr(req, '_tunnel_host') and req._tunnel_host:
-        tunnel_host = req._tunnel_host
+    tunnel_host = getattr(req, '_tunnel_host', None)
+    if tunnel_host:
         if tunnel_host[:7] not in ['http://', 'https:/']:
             tunnel_host = 'https://' + tunnel_host
         new_tunnel = True

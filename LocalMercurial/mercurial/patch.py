@@ -126,7 +126,7 @@ def split(stream):
 
     mimeheaders = ['content-type']
 
-    if not hasattr(stream, 'next'):
+    if not util.safehasattr(stream, 'next'):
         # http responses, for example, have readline but not next
         stream = fiter(stream)
 
@@ -188,7 +188,7 @@ def extract(ui, fileobj):
                 pend = subject.find(']')
                 if pend >= 0:
                     subject = subject[pend + 1:].lstrip()
-            subject = subject.replace('\n\t', ' ')
+            subject = re.sub(r'\n[ \t]+', ' ', subject)
             ui.debug('Subject: %s\n' % subject)
         if user:
             ui.debug('From: %s\n' % user)
@@ -1199,7 +1199,7 @@ def iterhunks(fp):
             m = gitre.match(x)
             if not m:
                 continue
-            if gitpatches is None:
+            if not gitpatches:
                 # scan whole input for git metadata
                 gitpatches = [('a/' + gp.path, 'b/' + gp.path, gp) for gp
                               in scangitpatch(lr, x)]
@@ -1619,27 +1619,36 @@ def diff(repo, node1=None, node2=None, match=None, changes=None, opts=None,
 
 def difflabel(func, *args, **kw):
     '''yields 2-tuples of (output, label) based on the output of func()'''
-    prefixes = [('diff', 'diff.diffline'),
-                ('copy', 'diff.extended'),
-                ('rename', 'diff.extended'),
-                ('old', 'diff.extended'),
-                ('new', 'diff.extended'),
-                ('deleted', 'diff.extended'),
-                ('---', 'diff.file_a'),
-                ('+++', 'diff.file_b'),
-                ('@@', 'diff.hunk'),
-                ('-', 'diff.deleted'),
-                ('+', 'diff.inserted')]
-
+    headprefixes = [('diff', 'diff.diffline'),
+                    ('copy', 'diff.extended'),
+                    ('rename', 'diff.extended'),
+                    ('old', 'diff.extended'),
+                    ('new', 'diff.extended'),
+                    ('deleted', 'diff.extended'),
+                    ('---', 'diff.file_a'),
+                    ('+++', 'diff.file_b')]
+    textprefixes = [('@', 'diff.hunk'),
+                    ('-', 'diff.deleted'),
+                    ('+', 'diff.inserted')]
+    head = False
     for chunk in func(*args, **kw):
         lines = chunk.split('\n')
         for i, line in enumerate(lines):
             if i != 0:
                 yield ('\n', '')
+            if head:
+                if line.startswith('@'):
+                    head = False
+            else:
+                if line and not line[0] in ' +-@':
+                    head = True
             stripline = line
-            if line and line[0] in '+-':
+            if not head and line and line[0] in '+-':
                 # highlight trailing whitespace, but only in changed lines
                 stripline = line.rstrip()
+            prefixes = textprefixes
+            if head:
+                prefixes = headprefixes
             for prefix, label in prefixes:
                 if stripline.startswith(prefix):
                     yield (stripline, label)
@@ -1778,18 +1787,17 @@ def diffstatdata(lines):
     diffre = re.compile('^diff .*-r [a-z0-9]+\s(.*)$')
 
     results = []
-    filename, adds, removes = None, 0, 0
+    filename, adds, removes, isbinary = None, 0, 0, False
 
     def addresult():
         if filename:
-            isbinary = adds == 0 and removes == 0
             results.append((filename, adds, removes, isbinary))
 
     for line in lines:
         if line.startswith('diff'):
             addresult()
             # set numbers to 0 anyway when starting new file
-            adds, removes = 0, 0
+            adds, removes, isbinary = 0, 0, False
             if line.startswith('diff --git'):
                 filename = gitre.search(line).group(1)
             elif line.startswith('diff -r'):
@@ -1799,6 +1807,9 @@ def diffstatdata(lines):
             adds += 1
         elif line.startswith('-') and not line.startswith('---'):
             removes += 1
+        elif (line.startswith('GIT binary patch') or
+              line.startswith('Binary file')):
+            isbinary = True
     addresult()
     return results
 
@@ -1823,7 +1834,7 @@ def diffstat(lines, width=80, git=False):
         return max(i * graphwidth // maxtotal, int(bool(i)))
 
     for filename, adds, removes, isbinary in stats:
-        if git and isbinary:
+        if isbinary:
             count = 'Bin'
         else:
             count = adds + removes

@@ -28,6 +28,7 @@ class httprepository(wireproto.wirerepository):
         self.path = path
         self.caps = None
         self.handler = None
+        self.urlopener = None
         u = util.url(path)
         if u.query or u.fragment:
             raise util.Abort(_('unsupported URL component: "%s"') %
@@ -42,10 +43,10 @@ class httprepository(wireproto.wirerepository):
         self.urlopener = url.opener(ui, authinfo)
 
     def __del__(self):
-        for h in self.urlopener.handlers:
-            h.close()
-            if hasattr(h, "close_all"):
-                h.close_all()
+        if self.urlopener:
+            for h in self.urlopener.handlers:
+                h.close()
+                getattr(h, "close_all", lambda : None)()
 
     def url(self):
         return self.path
@@ -74,9 +75,14 @@ class httprepository(wireproto.wirerepository):
         if cmd == 'pushkey':
             args['data'] = ''
         data = args.pop('data', None)
+        size = 0
+        if util.safehasattr(data, 'length'):
+            size = data.length
+        elif data is not None:
+            size = len(data)
         headers = args.pop('headers', {})
 
-        if data and self.ui.configbool('ui', 'usehttp2', False):
+        if size and self.ui.configbool('ui', 'usehttp2', False):
             headers['Expect'] = '100-Continue'
             headers['X-HgHttp2'] = '1'
 
@@ -105,9 +111,6 @@ class httprepository(wireproto.wirerepository):
         cu = "%s%s" % (self._url, qs)
         req = urllib2.Request(cu, data, headers)
         if data is not None:
-            # len(data) is broken if data doesn't fit into Py_ssize_t
-            # add the header ourself to avoid OverflowError
-            size = data.__len__()
             self.ui.debug("sending %s bytes\n" % size)
             req.add_unredirected_header('Content-Length', '%d' % size)
         try:
@@ -137,6 +140,8 @@ class httprepository(wireproto.wirerepository):
             proto = resp.headers.get('content-type', '')
 
         safeurl = util.hidepassword(self._url)
+        if proto.startswith('application/hg-error'):
+            raise error.OutOfBandError(resp.read())
         # accept old "text/plain" and "application/hg-changegroup" for now
         if not (proto.startswith('application/mercurial-') or
                 proto.startswith('text/plain') or
