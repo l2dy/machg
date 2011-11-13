@@ -792,6 +792,7 @@
         <nil key="NSViewClass"/>
         <nil key="NSUserInterfaceItemIdentifier"/>
         <string key="NSWindowContentMaxSize">{1.7976931348623157e+308, 1.7976931348623157e+308}</string>
+        <string key="NSWindowContentMinSize">{600, 500}</string>
         <object class="NSView" key="NSWindowView" id="160619577">
           <reference key="NSNextResponder"/>
           <int key="NSvFlags">256</int>
@@ -1194,18 +1195,18 @@ ZXNzYWdlIHdpdGhvdXQgY2hhbmdpbmcgY29tbWl0IGNvbnRlbnQ</string>
                 </object>
               </object>
             </object>
-            <object class="NSTextField" id="595773694">
+            <object class="NSTextField" id="603190405">
               <reference key="NSNextResponder" ref="160619577"/>
               <int key="NSvFlags">292</int>
               <string key="NSFrame">{{144, 128}, {43, 85}}</string>
               <reference key="NSSuperview" ref="160619577"/>
               <bool key="NSEnabled">YES</bool>
-              <object class="NSTextFieldCell" key="NSCell" id="778572296">
+              <object class="NSTextFieldCell" key="NSCell" id="555043596">
                 <int key="NSCellFlags">67239424</int>
                 <int key="NSCellFlags2">1212153856</int>
                 <string type="base64-UTF8" key="NSContents">cGljawplZGl0CmZvbGQKZHJvcAptZXNzA</string>
                 <reference key="NSSupport" ref="759469090"/>
-                <reference key="NSControlView" ref="595773694"/>
+                <reference key="NSControlView" ref="603190405"/>
                 <reference key="NSBackgroundColor" ref="215863928"/>
                 <object class="NSColor" key="NSTextColor">
                   <int key="NSColorSpace">1</int>
@@ -1256,6 +1257,7 @@ ZXNzYWdlIHdpdGhvdXQgY2hhbmdpbmcgY29tbWl0IGNvbnRlbnQ</string>
           <reference key="NSSuperview"/>
         </object>
         <string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
+        <string key="NSMinSize">{600, 522}</string>
         <string key="NSMaxSize">{1.7976931348623157e+308, 1.7976931348623157e+308}</string>
         <bool key="NSWindowIsRestorable">YES</bool>
       </object>
@@ -1730,7 +1732,7 @@ ZXNzYWdlIHdpdGhvdXQgY2hhbmdpbmcgY29tbWl0IGNvbnRlbnQ</string>
               <reference ref="428393411"/>
               <reference ref="38025332"/>
               <reference ref="470629531"/>
-              <reference ref="595773694"/>
+              <reference ref="603190405"/>
             </array>
             <reference key="parent" ref="983794844"/>
           </object>
@@ -1964,16 +1966,16 @@ ZXNzYWdlIHdpdGhvdXQgY2hhbmdpbmcgY29tbWl0IGNvbnRlbnQ</string>
           </object>
           <object class="IBObjectRecord">
             <int key="objectID">224</int>
-            <reference key="object" ref="595773694"/>
+            <reference key="object" ref="603190405"/>
             <array class="NSMutableArray" key="children">
-              <reference ref="778572296"/>
+              <reference ref="555043596"/>
             </array>
             <reference key="parent" ref="160619577"/>
           </object>
           <object class="IBObjectRecord">
             <int key="objectID">225</int>
-            <reference key="object" ref="778572296"/>
-            <reference key="parent" ref="595773694"/>
+            <reference key="object" ref="555043596"/>
+            <reference key="parent" ref="603190405"/>
           </object>
         </array>
       </object>
@@ -2003,8 +2005,8 @@ ZXNzYWdlIHdpdGhvdXQgY2hhbmdpbmcgY29tbWl0IGNvbnRlbnQ</string>
         <string key="153.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="153.IBWindowTemplateEditedContentRect">{{262, 350}, {697, 517}}</string>
         <boolean value="NO" key="153.NSWindowTemplate.visibleAtLaunch"/>
-        <boolean value="NO" key="153.windowTemplate.hasMinSize"/>
-        <string key="153.windowTemplate.minSize">{700, 500}</string>
+        <boolean value="YES" key="153.windowTemplate.hasMinSize"/>
+        <string key="153.windowTemplate.minSize">{600, 500}</string>
         <string key="154.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="155.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="156.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
