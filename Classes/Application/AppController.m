@@ -51,7 +51,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	YESasNumber = [NSNumber numberWithBool:YES];
 	SlotNumber  = [NSNumber numberWithInteger:(NSNotFound -1)];	
 
-	configurationForProgress = [NSArray arrayWithObjects:@"--config", @"extensions.progress=", @"--config", @"progress.delay=0.5", @"--config", @"progress.format=number", @"--config", @"progress.assume-tty=True", @"--config", @"progress.refresh=0.25", @"--config", @"progress.output-prefix=MHGProgress:", nil];
+	configurationForProgress = [NSArray arrayWithObjects:@"--config", @"extensions.hgext.progress=", @"--config", @"progress.delay=0.5", @"--config", @"progress.format=number", @"--config", @"progress.assume-tty=True", @"--config", @"progress.refresh=0.25", @"--config", @"progress.output-prefix=MHGProgress:", nil];
 	setupGlobalsForLogEntryPartsAndTemplate();
 	setupGlobalsForLogRecordPartsAndTemplate();
 	
@@ -378,14 +378,14 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	// If the ~/.hgignore exists then make sure ~/Application Support/MacHg/hgrc points to it
 	if (pathIsExistent(userHgignorePath))
 	{
-		NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"extensions.cedit=", @"--add", fstr(@"ui.ignore = %@", userHgignorePath), @"--file", macHgHGRCFilePath, nil];
+		NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"extensions.hgext.cedit=", @"--add", fstr(@"ui.ignore = %@", userHgignorePath), @"--file", macHgHGRCFilePath, nil];
 		[TaskExecutions executeMercurialWithArgs:argsCedit  fromRoot:@"/tmp"];
 	}
 
 	NSString* macHgIgnoreFilePath = fstr(@"%@/hgignore",applicationSupportFolder());
 	[self ensureFileExists:macHgIgnoreFilePath orCopyFromBundleResource:@"hgignore"];
 
-	NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"extensions.cedit=", @"--add", fstr(@"ui.ignore.other = %@", macHgIgnoreFilePath), @"--file", macHgHGRCFilePath, nil];
+	NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"extensions.hgext.cedit=", @"--add", fstr(@"ui.ignore.other = %@", macHgIgnoreFilePath), @"--file", macHgHGRCFilePath, nil];
 	[TaskExecutions executeMercurialWithArgs:argsCedit  fromRoot:@"/tmp"];
 }
 
@@ -405,7 +405,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		// If we currently don't have a certificate then point to our TrustedCertificates
 		if ([result hasErrors] || [result hasWarnings] || IsEmpty([result outStr]))
 		{
-			NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"extensions.cedit=", @"--add", fstr(@"web.cacerts = %@", macHgCertFilePath), @"--file", macHgHGRCFilePath, nil];
+			NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"extensions.hgext.cedit=", @"--add", fstr(@"web.cacerts = %@", macHgCertFilePath), @"--file", macHgHGRCFilePath, nil];
 			[TaskExecutions executeMercurialWithArgs:argsCedit  fromRoot:@"/tmp"];
 		}		
 	}];	
@@ -524,7 +524,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	NSString* macHgBundleResourcePath = [[NSBundle mainBundle] resourcePath];
 	NSString* configurationString1 = [configurationString  stringByReplacingOccurrencesOfRegex:@"TOOL_PATH" withString:toolPath];
 	NSString* configurationString2 = [configurationString1 stringByReplacingOccurrencesOfRegex:@"MACHG_RESOURCE_PATH" withString:macHgBundleResourcePath];
-	NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"extensions.cedit=", @"--add", configurationString2, @"--file", macHgHGRCFilePath, nil];
+	NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"extensions.hgext.cedit=", @"--add", configurationString2, @"--file", macHgHGRCFilePath, nil];
 	[TaskExecutions executeMercurialWithArgs:argsCedit  fromRoot:@"/tmp"];
 }
 

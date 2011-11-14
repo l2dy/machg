@@ -2291,7 +2291,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 		if ([[AppController sharedAppController] diffToolWantsGroupedFiles:diffTool])
 		{
 			dispatch_group_async(group, globalQueue(), ^{
-				NSMutableArray* diffArgs = [NSMutableArray arrayWithObjects: cmd, @"--config", @"extensions.extdiff=", @"--cwd", rootPath, nil];
+				NSMutableArray* diffArgs = [NSMutableArray arrayWithObjects: cmd, @"--config", @"extensions.hgext.extdiff=", @"--cwd", rootPath, nil];
 				if (versionToCompareTo)
 					[diffArgs addObject:@"--rev" followedBy:versionToCompareTo];
 				[diffArgs addObjectsFromArray:filesWhichHaveDifferences];
@@ -2309,7 +2309,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 			for (NSString* file in filesWhichHaveDifferences)
 				if (IsNotEmpty(file))
 					dispatch_group_async(group, globalQueue(), ^{
-						NSMutableArray* diffArgs = [NSMutableArray arrayWithObjects: cmd, @"--config", @"extensions.extdiff=", @"--cwd", rootPath, nil];
+						NSMutableArray* diffArgs = [NSMutableArray arrayWithObjects: cmd, @"--config", @"extensions.hgext.extdiff=", @"--cwd", rootPath, nil];
 						if (versionToCompareTo)
 							[diffArgs addObject:@"--rev" followedBy:versionToCompareTo];
 						[diffArgs addObject:file];

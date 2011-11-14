@@ -207,7 +207,7 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 	NSString* repositoryName = [[[myDocument sidebar] selectedNode] shortName];
 	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
 	NSString* collapseDescription = fstr(@"Collapsing %d-%d in “%@”", pair.lowRevision, pair.highRevision, repositoryName);
-	NSMutableArray* argsCollapse  = [NSMutableArray arrayWithObjects:@"collapse",  @"--config", @"extensions.collapse=", nil];
+	NSMutableArray* argsCollapse  = [NSMutableArray arrayWithObjects:@"collapse",  @"--config", @"extensions.hgext.collapse=", nil];
 
 	NSString* revisionNumbers = fstr(@"%d%:%d", pair.lowRevision, pair.highRevision);
 	[argsCollapse addObject:@"--rev" followedBy:revisionNumbers];

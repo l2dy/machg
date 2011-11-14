@@ -291,7 +291,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 		//
 		// Load all of the new full label information
 		//
-		NSMutableArray* fullLabelArgs = [NSMutableArray arrayWithObjects:@"combinedinfo",  @"--config", @"extensions.combinedinfo=", nil];
+		NSMutableArray* fullLabelArgs = [NSMutableArray arrayWithObjects:@"combinedinfo",  @"--config", @"extensions.hgext.combinedinfo=", nil];
 		ExecutionResult* fullLabelResults = [TaskExecutions executeMercurialWithArgs:fullLabelArgs fromRoot: rootPath_ logging:eLoggingNone];
 		if (discarded_)
 		{
