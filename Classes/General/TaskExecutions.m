@@ -287,6 +287,50 @@ NSString* filterProgressOutOfErrorString(NSString* rawErrorStr)
 }
 
 
+- (void) reportMercurialError:(NSInteger)errorNumber withMessage:(NSString*)errorMessage andDetails:(NSString*)errorDetails
+{
+	dispatch_async(mainQueue(), ^{
+		// If we have a short enough error message then we can report the error simply using NSRunAlertPanel
+		NSInteger lineCount = [[errorDetails componentsSeparatedByString:@"\n"] count];
+		if ([errorDetails length] < 400 && lineCount <= 8)
+		{
+			NSString* fullErrorMessage = fstr(@"Mercurial reported error number %d:\n%@", errorNumber, errorDetails);
+			NSRunAlertPanel(errorMessage, fullErrorMessage, @"OK", nil, nil);
+			return;
+		}
+		
+		// But in the case that we have more than 8 lines of message or we have more than 400 characters in the error message then
+		// put the details of the message into a scrolling text view so it doesn't take up the full height of the screen. 
+		NSRect initialSize = NSMakeRect(0,0,400,100);
+		NSString* informativeText = fstr(@"Mercurial reported error number %d", result_);
+	
+		NSTextView* textView = [[NSTextView alloc] initWithFrame:initialSize];
+		NSDictionary* dict = [NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:25.0], NSFontAttributeName, nil];
+		NSAttributedString* str = [NSAttributedString string:errorDetails withAttributes:dict];
+		[textView setFont:[NSFont systemFontOfSize:[NSFont smallSystemFontSize]]];
+		[textView insertText:str];
+		[textView setEditable:NO];
+		[textView setRichText:YES];
+		[textView setDrawsBackground:NO];
+
+		NSScrollView* scrollview = [[NSScrollView alloc] initWithFrame: initialSize];
+		[scrollview setBorderType:NSNoBorder];
+		[scrollview setHasVerticalScroller:YES];
+		[scrollview setDrawsBackground:NO];
+		[scrollview setHasHorizontalScroller:NO];
+		[scrollview setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
+		[scrollview setDocumentView:textView];
+
+		NSAlert* alert = [NSAlert new];
+		[alert setInformativeText: informativeText];
+		[alert setMessageText: errorMessage];
+		[alert setAccessoryView:scrollview];
+		[alert addButtonWithTitle:@"OK"];
+		[alert runModal];
+	});
+}
+
+
 - (void) logAndReportAnyErrors:(LoggingEnum)log
 {
 	
@@ -306,10 +350,8 @@ NSString* filterProgressOutOfErrorString(NSString* rawErrorStr)
 		// This is a heuristic see the thread I started Versioning of Extensions and Matt's rather empty response here http:
 		// www.selenic.com/pipermail/mercurial/2010-May/032095.html
 		NSString* errorString = IsEmpty(errStr_) ? outStr_ : errStr_;
-		NSString* fullErrorMessage = fstr(@"Mercurial reported error number %d:\n%@", result_, errorString);
-		dispatch_async(mainQueue(), ^{
-			NSRunAlertPanel(errorMessage, fullErrorMessage, @"OK", nil, nil);
-		});
+		[self reportMercurialError:result_ withMessage:errorMessage andDetails:errorString];
+
 		loggedToAlertOrWindow_ = YES;
 	}
 }
