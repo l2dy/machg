@@ -2,16 +2,16 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
   <data>
     <int key="IBDocument.SystemTarget">1060</int>
-    <string key="IBDocument.SystemVersion">11B26</string>
+    <string key="IBDocument.SystemVersion">11C74</string>
     <string key="IBDocument.InterfaceBuilderVersion">851</string>
-    <string key="IBDocument.AppKitVersion">1138</string>
-    <string key="IBDocument.HIToolboxVersion">566.00</string>
+    <string key="IBDocument.AppKitVersion">1138.23</string>
+    <string key="IBDocument.HIToolboxVersion">567.00</string>
     <dictionary class="NSMutableDictionary" key="IBDocument.PluginVersions">
       <string key="com.apple.InterfaceBuilder.CocoaPlugin">851</string>
       <string key="com.brandonwalkin.BWToolkit">1.2.2</string>
     </dictionary>
     <array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-      <integer value="60"/>
+      <integer value="137"/>
     </array>
     <array key="IBDocument.PluginDependencies">
       <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -637,59 +637,6 @@
                 <reference key="NSTextColor" ref="1032412444"/>
               </object>
             </object>
-            <object class="BWGradientBox" id="929352984">
-              <reference key="NSNextResponder" ref="803546326"/>
-              <int key="NSvFlags">266</int>
-              <array class="NSMutableArray" key="NSSubviews">
-                <object class="NSTextField" id="576477867">
-                  <reference key="NSNextResponder" ref="929352984"/>
-                  <int key="NSvFlags">266</int>
-                  <string key="NSFrame">{{17, 15}, {796, 22}}</string>
-                  <reference key="NSSuperview" ref="929352984"/>
-                  <bool key="NSEnabled">YES</bool>
-                  <object class="NSTextFieldCell" key="NSCell" id="73349910">
-                    <int key="NSCellFlags">68288064</int>
-                    <int key="NSCellFlags2">138413056</int>
-                    <string key="NSContents">Backout Repository</string>
-                    <object class="NSFont" key="NSSupport">
-                      <string key="NSName">LucidaGrande</string>
-                      <double key="NSSize">18</double>
-                      <int key="NSfFlags">16</int>
-                    </object>
-                    <reference key="NSControlView" ref="576477867"/>
-                    <reference key="NSBackgroundColor" ref="435704360"/>
-                    <reference key="NSTextColor" ref="1032412444"/>
-                  </object>
-                </object>
-              </array>
-              <string key="NSFrame">{{-1, 549}, {834, 51}}</string>
-              <reference key="NSSuperview" ref="803546326"/>
-              <object class="NSColor" key="BWGBFillStartingColor">
-                <int key="NSColorSpace">1</int>
-                <bytes key="NSRGB">MC43MTU2NjA2OTEzIDAuNzY0NTY2MzYxOSAwLjgxMDQ4Mzg3MjkAA</bytes>
-              </object>
-              <object class="NSColor" key="BWGBFillEndingColor">
-                <int key="NSColorSpace">1</int>
-                <bytes key="NSRGB">MC41MTM3NjcxODI4IDAuNTY4NDkwNTA1MiAwLjYxNzM0Njk0MjQAA</bytes>
-              </object>
-              <object class="NSColor" key="BWGBFillColor">
-                <int key="NSColorSpace">1</int>
-                <bytes key="NSRGB">MC44NzQ1MDk4MTE0IDAuODk0MTE3NjUzNCAwLjkxNzY0NzA2MzcAA</bytes>
-              </object>
-              <object class="NSColor" key="BWGBTopBorderColor">
-                <int key="NSColorSpace">1</int>
-                <bytes key="NSRGB">MC41NTc2NjQ2OTI0IDAuNTk4ODkyNTA5OSAwLjY0Mjg1NzEzNDMAA</bytes>
-              </object>
-              <object class="NSColor" key="BWGBBottomBorderColor">
-                <int key="NSColorSpace">1</int>
-                <bytes key="NSRGB">MC40Mjc4NDM2NjAxIDAuNDc5NDI1MTYyMSAwLjUyMDQwODE1MzUAA</bytes>
-              </object>
-              <bool key="BWGBHasTopBorder">NO</bool>
-              <bool key="BWGBHasBottomBorder">YES</bool>
-              <bool key="BWGBHasGradient">YES</bool>
-              <float key="BWGBTopInsetAlpha">0.30000001192092896</float>
-              <float key="BWGBBottomInsetAlpha">0.0</float>
-            </object>
             <object class="NSTextField" id="841911001">
               <reference key="NSNextResponder" ref="803546326"/>
               <int key="NSvFlags">289</int>
@@ -771,6 +718,36 @@
                 <int key="NSPeriodicDelay">200</int>
                 <int key="NSPeriodicInterval">25</int>
               </object>
+            </object>
+            <object class="NSCustomView" id="620188851">
+              <reference key="NSNextResponder" ref="803546326"/>
+              <int key="NSvFlags">266</int>
+              <array class="NSMutableArray" key="NSSubviews">
+                <object class="NSTextField" id="576477867">
+                  <reference key="NSNextResponder" ref="620188851"/>
+                  <int key="NSvFlags">266</int>
+                  <string key="NSFrame">{{19, 14}, {796, 22}}</string>
+                  <reference key="NSSuperview" ref="620188851"/>
+                  <bool key="NSEnabled">YES</bool>
+                  <object class="NSTextFieldCell" key="NSCell" id="73349910">
+                    <int key="NSCellFlags">68288064</int>
+                    <int key="NSCellFlags2">138413056</int>
+                    <string key="NSContents">Backout Repository</string>
+                    <object class="NSFont" key="NSSupport">
+                      <string key="NSName">LucidaGrande</string>
+                      <double key="NSSize">18</double>
+                      <int key="NSfFlags">16</int>
+                    </object>
+                    <reference key="NSControlView" ref="576477867"/>
+                    <reference key="NSBackgroundColor" ref="435704360"/>
+                    <reference key="NSTextColor" ref="1032412444"/>
+                  </object>
+                </object>
+              </array>
+              <string key="NSFrame">{{-1, 549}, {834, 51}}</string>
+              <reference key="NSSuperview" ref="803546326"/>
+              <string key="NSReuseIdentifierKey">_NS:1109</string>
+              <string key="NSClassName">GradientBox</string>
             </object>
           </array>
           <string key="NSFrameSize">{832, 599}</string>
@@ -932,13 +909,13 @@
               <reference ref="584481268"/>
               <reference ref="867765666"/>
               <reference ref="715708594"/>
-              <reference ref="929352984"/>
               <reference ref="823002813"/>
               <reference ref="766248391"/>
               <reference ref="841911001"/>
               <reference ref="225346345"/>
               <reference ref="448542979"/>
               <reference ref="135828301"/>
+              <reference ref="620188851"/>
             </array>
             <reference key="parent" ref="471338142"/>
           </object>
@@ -1176,27 +1153,6 @@
             <reference key="parent" ref="226065549"/>
           </object>
           <object class="IBObjectRecord">
-            <int key="objectID">109</int>
-            <reference key="object" ref="929352984"/>
-            <array class="NSMutableArray" key="children">
-              <reference ref="576477867"/>
-            </array>
-            <reference key="parent" ref="803546326"/>
-          </object>
-          <object class="IBObjectRecord">
-            <int key="objectID">110</int>
-            <reference key="object" ref="576477867"/>
-            <array class="NSMutableArray" key="children">
-              <reference ref="73349910"/>
-            </array>
-            <reference key="parent" ref="929352984"/>
-          </object>
-          <object class="IBObjectRecord">
-            <int key="objectID">111</int>
-            <reference key="object" ref="73349910"/>
-            <reference key="parent" ref="576477867"/>
-          </object>
-          <object class="IBObjectRecord">
             <int key="objectID">114</int>
             <reference key="object" ref="841911001"/>
             <array class="NSMutableArray" key="children">
@@ -1261,6 +1217,27 @@
             <reference key="object" ref="778348994"/>
             <reference key="parent" ref="171194663"/>
           </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">137</int>
+            <reference key="object" ref="620188851"/>
+            <array class="NSMutableArray" key="children">
+              <reference ref="576477867"/>
+            </array>
+            <reference key="parent" ref="803546326"/>
+          </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">110</int>
+            <reference key="object" ref="576477867"/>
+            <array class="NSMutableArray" key="children">
+              <reference ref="73349910"/>
+            </array>
+            <reference key="parent" ref="620188851"/>
+          </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">111</int>
+            <reference key="object" ref="73349910"/>
+            <reference key="parent" ref="576477867"/>
+          </object>
         </array>
       </object>
       <dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -1268,8 +1245,10 @@
         <string key="107.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="108.CustomClassName">LogGraphCell</string>
         <string key="108.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-        <string key="109.IBPluginDependency">com.brandonwalkin.BWToolkit</string>
         <string key="110.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+        <object class="NSAffineTransform" key="110.IBViewBoundsToFrameTransform">
+          <bytes key="NSTransformStruct">P4AAAL+AAABBQAAAxAtAAA</bytes>
+        </object>
         <string key="111.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="114.CustomClassName">CommandKeyTextField</string>
         <string key="114.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1298,6 +1277,7 @@
         <string key="133.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="134.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="136.CustomClassName">LogTableTextFieldCell</string>
+        <string key="137.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="34.IBEditorWindowLastContentRect">{{127, 257}, {832, 599}}</string>
         <string key="34.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="34.IBWindowTemplateEditedContentRect">{{127, 257}, {832, 599}}</string>
@@ -1349,7 +1329,7 @@
       <nil key="activeLocalization"/>
       <dictionary class="NSMutableDictionary" key="localizations"/>
       <nil key="sourceID"/>
-      <int key="maxID">136</int>
+      <int key="maxID">137</int>
     </object>
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -1578,14 +1558,6 @@
         </object>
       </array>
       <array class="NSMutableArray" key="referencedPartialClassDescriptionsV3.2+">
-        <object class="IBPartialClassDescription">
-          <string key="className">BWGradientBox</string>
-          <string key="superclassName">NSView</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">BWToolkitFramework.framework/Headers/BWGradientBox.h</string>
-          </object>
-        </object>
         <object class="IBPartialClassDescription">
           <string key="className">BWSplitView</string>
           <string key="superclassName">NSSplitView</string>

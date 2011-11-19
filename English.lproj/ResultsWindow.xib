@@ -2,20 +2,19 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
   <data>
     <int key="IBDocument.SystemTarget">1060</int>
-    <string key="IBDocument.SystemVersion">11B26</string>
+    <string key="IBDocument.SystemVersion">11C74</string>
     <string key="IBDocument.InterfaceBuilderVersion">851</string>
-    <string key="IBDocument.AppKitVersion">1138</string>
-    <string key="IBDocument.HIToolboxVersion">566.00</string>
-    <dictionary class="NSMutableDictionary" key="IBDocument.PluginVersions">
-      <string key="com.apple.InterfaceBuilder.CocoaPlugin">851</string>
-      <string key="com.brandonwalkin.BWToolkit">1.2.2</string>
-    </dictionary>
+    <string key="IBDocument.AppKitVersion">1138.23</string>
+    <string key="IBDocument.HIToolboxVersion">567.00</string>
+    <object class="NSMutableDictionary" key="IBDocument.PluginVersions">
+      <string key="NS.key.0">com.apple.InterfaceBuilder.CocoaPlugin</string>
+      <string key="NS.object.0">851</string>
+    </object>
     <array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-      <integer value="2"/>
+      <integer value="21"/>
     </array>
     <array key="IBDocument.PluginDependencies">
       <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-      <string>com.brandonwalkin.BWToolkit</string>
     </array>
     <dictionary class="NSMutableDictionary" key="IBDocument.Metadata"/>
     <array class="NSMutableArray" key="IBDocument.RootObjects" id="1000">
@@ -184,15 +183,15 @@
                 <int key="NSPeriodicInterval">25</int>
               </object>
             </object>
-            <object class="BWGradientBox" id="262907895">
+            <object class="NSCustomView" id="278429561">
               <reference key="NSNextResponder" ref="854565636"/>
               <int key="NSvFlags">266</int>
               <array class="NSMutableArray" key="NSSubviews">
                 <object class="NSTextField" id="163764761">
-                  <reference key="NSNextResponder" ref="262907895"/>
+                  <reference key="NSNextResponder" ref="278429561"/>
                   <int key="NSvFlags">266</int>
-                  <string key="NSFrame">{{17, 15}, {543, 22}}</string>
-                  <reference key="NSSuperview" ref="262907895"/>
+                  <string key="NSFrame">{{19, 14}, {543, 22}}</string>
+                  <reference key="NSSuperview" ref="278429561"/>
                   <bool key="NSEnabled">YES</bool>
                   <object class="NSTextFieldCell" key="NSCell" id="506342279">
                     <int key="NSCellFlags">68288064</int>
@@ -221,31 +220,8 @@
               </array>
               <string key="NSFrame">{{-1, 382}, {581, 51}}</string>
               <reference key="NSSuperview" ref="854565636"/>
-              <object class="NSColor" key="BWGBFillStartingColor">
-                <int key="NSColorSpace">1</int>
-                <bytes key="NSRGB">MC43NzE3NzMzOTc5IDAuODIzMjUxMTI4MiAwLjg2NDE0NzI0NTkAA</bytes>
-              </object>
-              <object class="NSColor" key="BWGBFillEndingColor">
-                <int key="NSColorSpace">1</int>
-                <bytes key="NSRGB">MC42MTY1Njc0MzI5IDAuNjc2NDQwNTk2NiAwLjcyMTI3NTgwNjQAA</bytes>
-              </object>
-              <object class="NSColor" key="BWGBFillColor">
-                <int key="NSColorSpace">1</int>
-                <bytes key="NSRGB">MC44NzQ1MDk4MTE0IDAuODk0MTE3NjUzNCAwLjkxNzY0NzA2MzcAA</bytes>
-              </object>
-              <object class="NSColor" key="BWGBTopBorderColor">
-                <int key="NSColorSpace">1</int>
-                <bytes key="NSRGB">MC41NTc2NjQ2OTI0IDAuNTk4ODkyNTA5OSAwLjY0Mjg1NzEzNDMAA</bytes>
-              </object>
-              <object class="NSColor" key="BWGBBottomBorderColor">
-                <int key="NSColorSpace">1</int>
-                <bytes key="NSRGB">MC40Mjc4NDM2NjAxIDAuNDc5NDI1MTYyMSAwLjUyMDQwODE1MzUAA</bytes>
-              </object>
-              <bool key="BWGBHasTopBorder">NO</bool>
-              <bool key="BWGBHasBottomBorder">YES</bool>
-              <bool key="BWGBHasGradient">YES</bool>
-              <float key="BWGBTopInsetAlpha">0.30000001192092896</float>
-              <float key="BWGBBottomInsetAlpha">0.0</float>
+              <string key="NSReuseIdentifierKey">_NS:1109</string>
+              <string key="NSClassName">GradientBox</string>
             </object>
           </array>
           <string key="NSFrameSize">{579, 432}</string>
@@ -333,7 +309,7 @@
             <array class="NSMutableArray" key="children">
               <reference ref="947668281"/>
               <reference ref="1061375545"/>
-              <reference ref="262907895"/>
+              <reference ref="278429561"/>
             </array>
             <reference key="parent" ref="1010294379"/>
           </object>
@@ -376,8 +352,8 @@
             <reference key="parent" ref="947668281"/>
           </object>
           <object class="IBObjectRecord">
-            <int key="objectID">16</int>
-            <reference key="object" ref="262907895"/>
+            <int key="objectID">21</int>
+            <reference key="object" ref="278429561"/>
             <array class="NSMutableArray" key="children">
               <reference ref="163764761"/>
             </array>
@@ -389,7 +365,7 @@
             <array class="NSMutableArray" key="children">
               <reference ref="506342279"/>
             </array>
-            <reference key="parent" ref="262907895"/>
+            <reference key="parent" ref="278429561"/>
           </object>
           <object class="IBObjectRecord">
             <int key="objectID">18</int>
@@ -408,10 +384,13 @@
         <string key="1.windowTemplate.minSize">{300, 200}</string>
         <string key="10.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="11.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-        <string key="16.IBPluginDependency">com.brandonwalkin.BWToolkit</string>
         <string key="17.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+        <object class="NSAffineTransform" key="17.IBViewBoundsToFrameTransform">
+          <bytes key="NSTransformStruct">P4AAAL+AAABB8AAAw6IAAA</bytes>
+        </object>
         <string key="18.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="2.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+        <string key="21.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="3.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="4.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="8.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -421,7 +400,7 @@
       <nil key="activeLocalization"/>
       <dictionary class="NSMutableDictionary" key="localizations"/>
       <nil key="sourceID"/>
-      <int key="maxID">20</int>
+      <int key="maxID">21</int>
     </object>
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -481,14 +460,6 @@
         </object>
       </array>
       <array class="NSMutableArray" key="referencedPartialClassDescriptionsV3.2+">
-        <object class="IBPartialClassDescription">
-          <string key="className">BWGradientBox</string>
-          <string key="superclassName">NSView</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">BWToolkitFramework.framework/Headers/BWGradientBox.h</string>
-          </object>
-        </object>
         <object class="IBPartialClassDescription">
           <string key="className">NSActionCell</string>
           <string key="superclassName">NSCell</string>
