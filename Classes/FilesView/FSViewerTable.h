@@ -16,7 +16,7 @@
 }
 @property (readwrite, assign) FSViewer*	parentViewer;
 
-- (NSArray*)	theLeafNodeList;
+- (NSArray*) theLeafNodeList;
 
 @end
 

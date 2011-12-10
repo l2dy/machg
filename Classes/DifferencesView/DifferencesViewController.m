@@ -201,9 +201,9 @@
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 // We should open the differences pane to show the differences of the rows selected in the history pane.
-- (IBAction) openDifferencesView:(id)sender
+- (void) prepareToOpenDifferencesView
 {
-	[self refreshDifferencesView:sender];
+	[self refreshDifferencesView:self];
 	LowHighPair pair  = [[[myDocument theHistoryView] logTableView] parentToHighestSelectedRevisions];
 	NSNumber* lowRev  = (pair.lowRevision  != NSNotFound) ? intAsNumber(pair.lowRevision)  : [myDocument getHGParent1Revision];
 	NSNumber* highRev = (pair.highRevision != NSNotFound) ? intAsNumber(pair.highRevision) : [myDocument getHGParent1Revision];

@@ -182,7 +182,13 @@
 - (void) setCurrentFSViewerPane:(FSViewerNum)styleNum
 {
 	NSView* view = [self viewOfFSViewerPane:styleNum];
+	[self prepareToOpenFSViewerPane];	
 	[self setContentView:view];
+}
+
+- (void) prepareToOpenFSViewerPane
+{
+	[[self currentView] prepareToOpenFSViewerPane];	
 }
 	
 

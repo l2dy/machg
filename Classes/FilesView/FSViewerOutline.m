@@ -18,6 +18,12 @@
 	[self setDelegate:self];
 }
 
+- (void) prepareToOpenFSViewerPane
+{
+	[[[parentViewer_ myDocument] mainWindow] makeFirstResponder:self];
+}
+
+
 
 // Testing of selection and clicks
 - (BOOL)		nodesAreSelected				{ return NO; }

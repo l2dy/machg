@@ -91,9 +91,13 @@
 	[theFSViewer setIsMainFSBrowser:YES];
 }
 
-- (void) unload									{ }
+- (void) unload					{ }
 
-- (IBAction) openFilesView:(id)sender	{ [[myDocument mainWindow] makeFirstResponder:self]; }
+- (void) prepareToOpenFilesView
+{
+	[[myDocument mainWindow] makeFirstResponder:self];
+	[theFSViewer prepareToOpenFSViewerPane];
+}
 
 
 

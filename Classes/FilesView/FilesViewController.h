@@ -57,7 +57,7 @@
 @property (readonly,assign)  FSViewer*		theFSViewer;
 
 - (void)	 unload;
-- (IBAction) openFilesView:(id)sender;
+- (void)	 prepareToOpenFilesView;
 - (NSInteger) numberOfQuickLookPreviewItems;
 
 - (IBAction) refreshBrowserContent:(id)sender;

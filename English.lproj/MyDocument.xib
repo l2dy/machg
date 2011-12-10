@@ -3454,7 +3454,7 @@
 							<string>mainMenuOpenSelectedFilesInFinder:</string>
 							<string>mainMenuOpenTerminalHere:</string>
 							<string>mainMenuRevealSelectedFilesInFinder:</string>
-							<string>openDifferencesView:</string>
+							<string>prepareToOpenDifferencesView:</string>
 							<string>redisplayBrowser:</string>
 							<string>refreshDifferencesView:</string>
 							<string>toolbarDiffFiles:</string>
@@ -3493,7 +3493,7 @@
 							<string>mainMenuOpenSelectedFilesInFinder:</string>
 							<string>mainMenuOpenTerminalHere:</string>
 							<string>mainMenuRevealSelectedFilesInFinder:</string>
-							<string>openDifferencesView:</string>
+							<string>prepareToOpenDifferencesView:</string>
 							<string>redisplayBrowser:</string>
 							<string>refreshDifferencesView:</string>
 							<string>toolbarDiffFiles:</string>
@@ -3542,7 +3542,7 @@
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
-								<string key="name">openDifferencesView:</string>
+								<string key="name">prepareToOpenDifferencesView:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
@@ -3800,7 +3800,7 @@
 							<string>mainMenuRevertSelectedFilesToVersion:</string>
 							<string>mainMenuUnignoreSelectedFiles:</string>
 							<string>mainMenuUntrackSelectedFiles:</string>
-							<string>openFilesView:</string>
+							<string>prepareToOpenFilesView:</string>
 							<string>refreshBrowserContent:</string>
 							<string>toolbarAddRenameRemoveFiles:</string>
 							<string>toolbarCommitFiles:</string>
@@ -3863,7 +3863,7 @@
 							<string>mainMenuRevertSelectedFilesToVersion:</string>
 							<string>mainMenuUnignoreSelectedFiles:</string>
 							<string>mainMenuUntrackSelectedFiles:</string>
-							<string>openFilesView:</string>
+							<string>prepareToOpenFilesView:</string>
 							<string>refreshBrowserContent:</string>
 							<string>toolbarAddRenameRemoveFiles:</string>
 							<string>toolbarCommitFiles:</string>
@@ -3957,7 +3957,7 @@
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
-								<string key="name">openFilesView:</string>
+								<string key="name">prepareToOpenFilesView:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
@@ -4076,7 +4076,7 @@
 							<string>mainMenuRebaseChangesets:</string>
 							<string>mainMenuRevertAllFiles:</string>
 							<string>mainMenuStripChangesets:</string>
-							<string>openHistoryView:</string>
+							<string>prepareToOpenHistoryView:</string>
 							<string>refreshHistoryView:</string>
 							<string>toolbarCommitFiles:</string>
 							<string>toolbarDiffFiles:</string>
@@ -4129,7 +4129,7 @@
 							<string>mainMenuRebaseChangesets:</string>
 							<string>mainMenuRevertAllFiles:</string>
 							<string>mainMenuStripChangesets:</string>
-							<string>openHistoryView:</string>
+							<string>prepareToOpenHistoryView:</string>
 							<string>refreshHistoryView:</string>
 							<string>toolbarCommitFiles:</string>
 							<string>toolbarDiffFiles:</string>
@@ -4206,7 +4206,7 @@
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">
-								<string key="name">openHistoryView:</string>
+								<string key="name">prepareToOpenHistoryView:</string>
 								<string key="candidateClassName">id</string>
 							</object>
 							<object class="IBActionInfo">

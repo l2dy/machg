@@ -77,6 +77,11 @@
 	[self setRowHeight:rowHeight];
 }
 
+- (void) prepareToOpenFSViewerPane
+{
+	[[[parentViewer_ myDocument] mainWindow] makeFirstResponder:self];
+}
+
 
 
 

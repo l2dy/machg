@@ -607,9 +607,9 @@
 	// Specific opening handling for some panes
 	switch (newPaneNum)
 	{
-		case eFilesView:			[[self theFilesView] openFilesView:self];					break;
-		case eHistoryView:			[[self theHistoryView] openHistoryView:self];				break;
-		case eDifferencesView:		[[self theDifferencesView] openDifferencesView:self];		break;
+		case eFilesView:			[[self theFilesView] prepareToOpenFilesView];				break;
+		case eHistoryView:			[[self theHistoryView] prepareToOpenHistoryView];			break;
+		case eDifferencesView:		[[self theDifferencesView] prepareToOpenDifferencesView];	break;
 		default:																				break;
 	}	
 	

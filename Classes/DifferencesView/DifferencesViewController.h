@@ -98,7 +98,7 @@
 
 
 - (IBAction)	validateButtons:(id)sender;
-- (IBAction)	openDifferencesView:(id)sender;
+- (void)		prepareToOpenDifferencesView;
 - (IBAction)	refreshDifferencesView:(id)sender;
 - (void)		scrollToSelected;
 - (IBAction)	redisplayBrowser:(id)sender;

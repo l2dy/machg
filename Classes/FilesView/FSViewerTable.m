@@ -59,9 +59,9 @@
 	[self reloadData];
 }
 
-- (IBAction) openFilesViewTable:(id)sender
+- (void) prepareToOpenFSViewerPane
 {
-	
+	[self reloadData];
 	[[[parentViewer_ myDocument] mainWindow] makeFirstResponder:self];
 }
 

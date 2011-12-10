@@ -57,6 +57,9 @@
 // forwards these methods onto the current pane. 
 @protocol FSViewerProtocol <NSObject>
 
+// Opening
+- (void)		prepareToOpenFSViewerPane;
+
 // Testing of selection and clicks
 - (BOOL)		nodesAreSelected;
 - (BOOL)		nodeIsClicked;
