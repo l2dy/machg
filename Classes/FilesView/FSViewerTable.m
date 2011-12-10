@@ -9,14 +9,28 @@
 #import "FSViewerTable.h"
 #import "FSNodeInfo.h"
 
+@interface FSViewerTable (PrivateAPI)
+- (void) regenerateTableData;
+@end
+
 
 @implementation FSViewerTable
 
 @synthesize parentViewer = parentViewer_;
 
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: initialization
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
 - (void) awakeFromNib
 {
 	[self setDelegate:self];
+	[self setDataSource:self];
 }
 
 - (NSArray*) theLeafNodeList
@@ -24,13 +38,41 @@
 	@synchronized(self)
 	{
 		if (!theLeafNodeList_)
-			theLeafNodeList_ = [[parentViewer_ rootNodeInfo] generateFlatLeafNodeList];
+			[self regenerateTableData];
 	}
 	return theLeafNodeList_;
 }
 
+- (void) regenerateTableData
+{
+	theLeafNodeList_ = [[parentViewer_ rootNodeInfo] generateFlatLeafNodeList];
+}
 
-// Testing of selection and clicks
+- (void) reloadData
+{
+	[self regenerateTableData];
+	[super reloadData];
+}
+
+- (void) reloadDataSin
+{
+	[self reloadData];
+}
+
+- (IBAction) openFilesViewTable:(id)sender
+{
+	
+	[[[parentViewer_ myDocument] mainWindow] makeFirstResponder:self];
+}
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Testing of selection and clicks
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
 - (BOOL)		nodesAreSelected				{ return NO; }
 - (BOOL)		nodeIsClicked					{ return NO; }
 - (BOOL)		nodesAreChosen					{ return NO; }
@@ -41,7 +83,14 @@
 - (NSArray*)	chosenNodes						{ return [NSArray array]; }
 
 
-// Path and Selection Operations
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Path and Selection Operations
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
 - (BOOL)		singleFileIsChosenInBrowser											{ return NO; }
 - (BOOL)		singleItemIsChosenInBrowser											{ return NO; }
 - (HGStatus)	statusOfChosenPathsInBrowser										{ return eHGStatusClean; }
@@ -56,7 +105,6 @@
 
 - (BOOL)		clickedNodeCoincidesWithTerminalSelections							{ return NO; }
 
-- (void)		reloadDataSin														{ [self reloadData]; }
 - (void)		repositoryDataIsNew													{ }
 - (NSArray*)	quickLookPreviewItems												{ return [NSArray array]; }
 
@@ -68,7 +116,7 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK: Patches Table View Data Source
+// MARK: FSViewerTable Data Source
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (NSInteger) numberOfRowsInTableView:(NSTableView*)aTableView

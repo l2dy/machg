@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "FSViewer.h"
 
-@interface FSViewerTable : NSTableView <FSViewerProtocol, NSTableViewDelegate>
+@interface FSViewerTable : NSTableView <FSViewerProtocol, NSTableViewDelegate, NSTableViewDataSource>
 {
 	NSArray*	theLeafNodeList_;				// Map of table row -> FSNodeInfo
 	FSViewer*	parentViewer_;
