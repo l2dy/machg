@@ -7,7 +7,10 @@
 //  This software is licensed under the "New BSD License". The full license text is given in the file License.txt
 //
 
-#import "FSBrowser.h"
+#import "FSViewer.h"
+#import "FSViewerBrowser.h"
+#import "FSViewerOutline.h"
+#import "FSViewerTable.h"
 #import "MacHgDocument.h"
 #import "FSNodeInfo.h"
 #import "FSBrowserCell.h"
@@ -48,7 +51,7 @@
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 
-@implementation FSBrowser
+@implementation FSViewer
 
 @synthesize areNodesVirtual = areNodesVirtual_;
 @synthesize absolutePathOfRepositoryRoot = absolutePathOfRepositoryRoot_;
@@ -66,7 +69,6 @@
 - (id) init
 {
 	self = [super init];
-	[self setDelegate:self];
 	rootNodeInfo_ = nil;
 	isMainFSBrowser_ = NO;
 	return self;
@@ -76,18 +78,50 @@
 - (void) awakeFromNib
 {
 	[self observe:kBrowserDisplayPreferencesChanged from:nil byCalling:@selector(reloadDataSin)];
-
-	[self setDelegate:self];
-
-	// Make the browser user our custom browser cell.
-	[self setCellClass: [FSBrowserCell class]];
-	    
-	// Configure the number of visible columns (default max visible columns is 0 and set in IB, which means an unlimited number of
-	// columns. (like the finder)).
-	[self setDefaultColumnWidth:sizeOfBrowserColumnsFromDefaults()];
 	[parentController awakeFromNib];	// The parents must ensure that the internals of awakeFromNib only ever happen once.
 	rootNodeInfo_ = nil;
+	[self actionSwitchToFilesBrowser:eFilesBrowser];
 }
+
+- (FSViewerBrowser*) theFilesBrowser
+{
+	dispatch_once(&theFilesBrowserInitilizer_, ^{
+		// We can't use [NSBundle loadNibNamed:... owner:self] since that causes the FSViewer::awakeFromNib method to fire which
+		// will call this method for a second time and we will lock at this dispatch_once again. Thus do this dance of loading the
+		// nib and then hooking it up manually. 
+		NSViewController* controller = [[NSViewController alloc] initWithNibName:@"FilesViewBrowser" bundle:nil];
+		theFilesBrowser_ = DynamicCast(FSViewerBrowser, [controller view]);
+		[theFilesBrowser_ setParentViewer:self];
+	});
+	return theFilesBrowser_;
+}
+
+- (FSViewerOutline*) theFilesOutline
+{
+	dispatch_once(&theFilesOutlineInitilizer_, ^{
+		// We can't use [NSBundle loadNibNamed:... owner:self] since that causes the FSViewer::awakeFromNib method to fire which
+		// will call this method for a second time and we will lock at this dispatch_once again. Thus do this dance of loading the
+		// nib and then hooking it up manually. 
+		NSViewController* controller = [[NSViewController alloc] initWithNibName:@"FilesViewOutline" bundle:nil];
+		theFilesOutline_ = DynamicCast(FSViewerOutline, [controller view]);
+		[theFilesOutline_ setParentViewer:self];
+	});
+	return theFilesOutline_;
+}
+
+- (FSViewerTable*) theFilesTable
+{
+	dispatch_once(&theFilesTableInitilizer_, ^{
+		// We can't use [NSBundle loadNibNamed:... owner:self] since that causes the FSViewer::awakeFromNib method to fire which
+		// will call this method for a second time and we will lock at this dispatch_once again. Thus do this dance of loading the
+		// nib and then hooking it up manually. 
+		NSViewController* controller = [[NSViewController alloc] initWithNibName:@"FilesViewTable" bundle:nil];
+		theFilesTable_ = DynamicCast(FSViewerTable, [controller view]);
+		[theFilesTable_ setParentViewer:self];
+	});
+	return theFilesTable_;
+}
+
 
 - (void) unload
 {
@@ -112,67 +146,78 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
+// MARK: Pane switching
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (NSView*) viewOfFSViewerPane:(FSViewerNum)styleNum
+{
+	switch (styleNum)
+	{
+		case eFilesBrowser:		return [self theFilesBrowser];
+		case eFilesOutline:		return [[self theFilesOutline] enclosingScrollView];
+		case eFilesTable:		return [[self theFilesTable] enclosingScrollView];
+		default:				return nil;
+	}
+}
+
+- (NSView<FSViewerProtocol>*) currentView
+{
+	switch (currentFSViewerPane_)
+	{
+		case eFilesBrowser:		return [self theFilesBrowser];
+		case eFilesOutline:		return [self theFilesOutline];
+		case eFilesTable:		return [self theFilesTable];
+		default:				return nil;
+	}
+}
+
+- (BOOL)	 showingFilesBrowser						{ return currentFSViewerPane_ == eFilesBrowser; }
+- (BOOL)	 showingFilesOutline						{ return currentFSViewerPane_ == eFilesOutline; }
+- (BOOL)	 showingFilesTable							{ return currentFSViewerPane_ == eFilesTable; }
+- (IBAction) actionSwitchToFilesBrowser:(id)sender		{ [self setCurrentFSViewerPane:eFilesBrowser]; }
+- (IBAction) actionSwitchToFilesOutline:(id)sender		{ [self setCurrentFSViewerPane:eFilesOutline]; }
+- (IBAction) actionSwitchToFilesTable:(id)sender		{ [self setCurrentFSViewerPane:eFilesTable]; }
+- (FSViewerNum)	currentFSViewerPaneNum					{ return currentFSViewerPane_; }
+
+- (void) setCurrentFSViewerPane:(FSViewerNum)styleNum
+{
+	NSView* view = [self viewOfFSViewerPane:styleNum];
+	[self setContentView:view];
+}
+	
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
 // MARK: Path and Selection Operations
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (FSNodeInfo*) rootNodeInfo		{ return rootNodeInfo_; }
-- (IBAction) reloadData:(id)sender
-{
-	[self setRowHeightForFont];
-	[self loadColumnZero];
-	[parentController updateCurrentPreviewImage];
-}
-- (void) reloadDataSin
-{
-	[self setRowHeightForFont];
-	BrowserSelectionState* theSavedState = [BrowserSelectionState saveBrowserState:self];
-	[self setDefaultColumnWidth:sizeOfBrowserColumnsFromDefaults()];
-	[self reloadData:self];
-	[theSavedState restoreBrowserSelection];				// restore the selection and the scroll positions of the columns and the horizontal scroll
-	[parentController updateCurrentPreviewImage];
-}
-
-- (void) setRowHeightForFont
-{
-	static float storedFontSizeofBrowserItems = 0.0;
-	static float rowHeight = 0.0;
-	if (storedFontSizeofBrowserItems != fontSizeOfBrowserItemsFromDefaults())
-	{
-		storedFontSizeofBrowserItems = fontSizeOfBrowserItemsFromDefaults();
-		NSFont* textFont = [NSFont fontWithName:@"Verdana" size:storedFontSizeofBrowserItems];
-		rowHeight = MAX([textFont boundingRectForFont].size.height + 4.0, 16.0);
-	}
-	[self setRowHeight:rowHeight];
-}
+- (FSNodeInfo*) rootNodeInfo			{ return rootNodeInfo_; }
+- (void) reloadData						{ [[self currentView] reloadData]; }
+- (void) reloadDataSin					{ [[self currentView] reloadDataSin]; }
 
 
-- (BOOL)		nodesAreSelected	{ return [self selectedColumn] >= 0; }
-- (BOOL)		nodeIsClicked		{ return [self clickedRow] != -1; }
-- (BOOL)		nodesAreChosen		{ return [self nodeIsClicked] || [self nodesAreSelected]; }
-- (FSNodeInfo*) chosenNode			{ FSNodeInfo* ans = [self clickedNode]; return ans ? ans : [[self selectedCell] nodeInfo]; }
-- (FSNodeInfo*) clickedNode
-{
-	@try
-	{
-		return [self nodeIsClicked] ? [self itemAtRow:[self clickedRow] inColumn:[self clickedColumn]] : nil;
-	}
-	@catch (NSException* ne)
-	{
-		return nil;
-	}
-	return nil;
-}
+- (BOOL)		nodesAreSelected		{ return [[self currentView] nodesAreSelected]; }
+- (BOOL)		nodeIsClicked			{ return [[self currentView] nodeIsClicked]; }
+- (BOOL)		nodesAreChosen			{ return [[self currentView] nodesAreChosen]; }
+- (FSNodeInfo*) chosenNode				{ return [[self currentView] chosenNode]; }
+- (FSNodeInfo*) clickedNode				{ return [[self currentView] clickedNode]; }
+- (NSArray*) selectedNodes				{ return [[self currentView] selectedNodes]; }
+- (BOOL) singleFileIsChosenInBrowser	{ return [[self currentView] singleFileIsChosenInBrowser]; }
+- (BOOL) singleItemIsChosenInBrowser	{ return [[self currentView] singleItemIsChosenInBrowser]; }
+- (BOOL) clickedNodeInSelectedNodes		{ return [[self currentView] clickedNodeInSelectedNodes]; }
 
-- (NSArray*) selectedNodes
-{
-	if (![self nodesAreSelected])
-		return [NSArray array];
-	NSArray* theSelectedNodes = [self selectedCells];
-	NSMutableArray* nodes = [[NSMutableArray alloc] init];
-	for (FSBrowserCell* cell in theSelectedNodes)
-		[nodes addObjectIfNonNil:[cell nodeInfo]];
-	return nodes;
-}
+- (HGStatus) statusOfChosenPathsInBrowser				{ return [[self currentView] statusOfChosenPathsInBrowser]; }
+- (NSArray*) absolutePathsOfSelectedFilesInBrowser		{ return [[self currentView] absolutePathsOfSelectedFilesInBrowser]; }
+- (NSArray*) absolutePathsOfChosenFilesInBrowser		{ return [[self currentView] absolutePathsOfChosenFilesInBrowser]; }
+- (NSString*) enclosingDirectoryOfChosenFilesInBrowser	{ return [[self currentView] enclosingDirectoryOfChosenFilesInBrowser]; }
+- (BOOL) clickedNodeCoincidesWithTerminalSelections		{ return [[self currentView] clickedNodeCoincidesWithTerminalSelections]; }
+
+
+
 
 - (NSArray*) chosenNodes
 {
@@ -182,117 +227,13 @@
 	return [self selectedNodes];
 }
 
-- (BOOL) singleFileIsChosenInBrowser
-{
-	if ([self nodeIsClicked] && [[self clickedNode] isFile])
-		return YES;
-	
-	int selectedColumn = [self selectedColumn];
-	if (selectedColumn >= 0)
-		if ([[self selectedRowIndexesInColumn:selectedColumn] count] == 1)
-			if ([[[self selectedCell] nodeInfo] isFile])
-				return YES;
-	return NO;
-}
 
-
-- (BOOL) singleItemIsChosenInBrowser
-{
-	if ([self nodeIsClicked] && [[self clickedNode] isDirectory])
-		return YES;
-
-	int selectedColumn = [self selectedColumn];
-	if (selectedColumn >= 0)
-		if ([[self selectedRowIndexesInColumn:selectedColumn] count] == 1)
-			return YES;
-	return NO;
-}
-
-- (BOOL) clickedNodeInSelectedNodes
-{
-	if (![self nodeIsClicked])
-		return NO;
-	if ([self clickedColumn] != [self selectedColumn])
-		return NO;
-	
-	NSArray* indexPaths = [self selectionIndexPaths];
-	for (NSIndexPath* indexPath in indexPaths)
-		if ([indexPath indexAtPosition:[self clickedColumn]] == [self clickedRow])
-			return YES;
-	return NO;
-}
-
-- (BOOL) clickedNodeCoincidesWithTerminalSelections	{ return ([self nodeIsClicked] && ([self clickedColumn] == [self selectedColumn]) && [self clickedNodeInSelectedNodes]); }
 
 
 - (BOOL) statusOfChosenPathsInBrowserContain:(HGStatus)status	{ return bitsInCommon(status, [self statusOfChosenPathsInBrowser]); }
 - (BOOL) repositoryHasFilesWhichContainStatus:(HGStatus)status	{ return bitsInCommon(status, [[self rootNodeInfo] hgStatus]); }
 
 
-- (HGStatus) statusOfChosenPathsInBrowser
-{
-	if ([self nodeIsClicked] && ![self clickedNodeInSelectedNodes])
-		return [[self clickedNode] hgStatus];
-	
-	if (![self nodesAreSelected])
-		return eHGStatusNoStatus;
-
-	HGStatus combinedStatus = eHGStatusNoStatus;
-	NSArray* theSelectedNodes = [self selectedCells];
-	for (FSBrowserCell* cell in theSelectedNodes)
-		combinedStatus = unionBits(combinedStatus, [[cell nodeInfo] hgStatus]);
-	return combinedStatus;
-}
-
-- (NSArray*) absolutePathsOfSelectedFilesInBrowser
-{
-	if (![self nodesAreSelected])
-		return [NSArray array];
-	NSArray* theSelectedNodes = [self selectedCells];
-	NSMutableArray* paths = [[NSMutableArray alloc] init];
-	for (FSBrowserCell* cell in theSelectedNodes)
-		if ([cell nodeInfo])
-			[paths addObject:[[cell nodeInfo] absolutePath]];
-	return paths;
-}
-
-- (NSArray*) absolutePathsOfChosenFilesInBrowser
-{
-	if ([self nodeIsClicked] && ![self clickedNodeInSelectedNodes])
-		return [NSArray arrayWithObject:[[self clickedNode] absolutePath]];
-
-	return [self absolutePathsOfSelectedFilesInBrowser];
-}
-
-
-- (NSString*) enclosingDirectoryOfChosenFilesInBrowser
-{
-	if (![self nodesAreChosen])
-		return nil;
-
-	FSNodeInfo* clickedNode = [self clickedNode];
-	if ([self nodeIsClicked])
-			return [clickedNode isDirectory] ? [clickedNode absolutePath] : [[clickedNode absolutePath] stringByDeletingLastPathComponent];
-
-	// If we have more than one selected cell then we return the enclosing directory.
-	NSArray* theSelectedNodes = [self selectedCells];
-	if ([theSelectedNodes count] >1)
-		return [[[[theSelectedNodes lastObject] nodeInfo] absolutePath] stringByDeletingLastPathComponent];
-
-	FSNodeInfo* selectedNode = [[theSelectedNodes lastObject] nodeInfo];
-	return [selectedNode isDirectory] ? [selectedNode absolutePath] : [[selectedNode absolutePath] stringByDeletingLastPathComponent];
-}
-
-
-- (FSNodeInfo*) parentNodeInfoForColumn:(NSInteger)column
-{
-	if (column == 0)
-        return rootNodeInfo_;
-	
-	// Find the selected item leading up to this column and grab its FSNodeInfo stored in that cell
-	FSBrowserCell* selectedCell = [self selectedCellInColumn:column-1];
-	return [selectedCell nodeInfo];
-}
 
 
 - (NSArray*) filterPaths:(NSArray*)absolutePaths byBitfield:(HGStatus)status
@@ -309,6 +250,10 @@
 	return remainingPaths;
 }
 
+- (NSArray*) quickLookPreviewItems		{ return [[self currentView] quickLookPreviewItems]; }
+
+
+
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -316,20 +261,7 @@
 // MARK:  Graphic Operations
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (NSRect) frameinWindowOfRow:(NSInteger)row inColumn:(NSInteger)column
-{
-	NSRect itemRect = [self frameOfRow:row inColumn:column];
-	NSRect itemRectInWindow = NSZeroRect;
-
-	// check that the path Rect is visible on screen
-	if (NSIntersectsRect([self visibleRect], itemRect))
-	{
-		// convert item rect to screen coordinates
-		itemRectInWindow = [self convertRectToBase:itemRect];
-		itemRectInWindow.origin = [[self window] convertBaseToScreen:itemRectInWindow.origin];
-	}
-	return itemRectInWindow;
-}
+- (NSRect) frameinWindowOfRow:(NSInteger)row inColumn:(NSInteger)column		{ return [[self currentView] frameinWindowOfRow:row inColumn:column]; }
 
 
 
@@ -486,31 +418,9 @@
 	}
 }
 
-//- (NSMenu *)menu
-//{
-//	NSMenu* supermenu = [super menu];
-//	return supermenu;
-//}
-//
-//+ (NSMenu *)defaultMenu {
-//    NSMenu *theMenu = [[[NSMenu alloc] initWithTitle:@"Contextual Menu"] autorelease];
-//    [theMenu insertItemWithTitle:@"Beep" action:@selector(browserMenuOpenSelectedFilesInFinder:) keyEquivalent:@"" atIndex:0];
-//    [theMenu insertItemWithTitle:@"Honk" action:@selector(browserMenuRevealSelectedFilesInFinder:) keyEquivalent:@"" atIndex:1];
-//    return theMenu;
-//}
-//
-//- (NSMenu *)menuForEvent:(NSEvent *)theEvent
-//{
-////    NSPoint curLoc = [self convertPoint:[theEvent locationInWindow] fromView:nil];
-////    NSRect magic_square = NSMakeRect(0.0, 0.0, 10.0, 10.0);
-////	
-////    if ([self mouse:curLoc inRect:magic_square]) {
-////        NSMenu *theMenu = [[self class] defaultMenu];
-////        [theMenu insertItemWithTitle:@"Wail" action:@selector(wail:) keyEquivalent:@"" atIndex:[theMenu numberOfItems]-1];
-////        return theMenu;
-////    }
-//    return [[self class] defaultMenu];
-//}
+
+
+
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
@@ -545,54 +455,12 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK: Browser Delegate Methods
+// MARK:  Drag & Drop
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (id) rootItemForBrowser:(NSBrowser*)browser										{ return rootNodeInfo_; }
-- (NSInteger) browser:(NSBrowser*)browser numberOfChildrenOfItem:(FSNodeInfo*)item	{ return [[item sortedChildNodeKeys] count]; }
-- (BOOL) browser:(NSBrowser*)browser isLeafItem:(FSNodeInfo*)item					{ return ![item isDirectory]; }
-- (id) browser:(NSBrowser*)browser objectValueForItem:(FSNodeInfo*)item				{ return [item lastPathComponent]; }
-- (id) browser:(NSBrowser*)browser child:(NSInteger)index ofItem:(FSNodeInfo*)item	{ return [[item childNodes] objectForKey:[[item sortedChildNodeKeys] objectAtIndex:index]]; }
-
-
-- (void) browser:(NSBrowser*)sender willDisplayCell:(FSBrowserCell*)cell atRow:(NSInteger)row column:(NSInteger)column
+- (BOOL) writeRowsWithIndexes:(NSIndexSet*)rowIndexes inColumn:(NSInteger)column toPasteboard:(NSPasteboard*)pasteboard
 {
-	// Find our parent FSNodeInfo and access the child at this particular row
-	FSNodeInfo* parentNodeInfo = [self parentNodeInfoForColumn:column];
-	if (!parentNodeInfo || [[parentNodeInfo sortedChildNodeKeys] count] <= row)
-		return;
-	NSString* childKey = [[parentNodeInfo sortedChildNodeKeys] objectAtIndex:row];	// This is the string key of the child at the rowth row.
-	FSNodeInfo* currentNodeInfo = [[parentNodeInfo childNodes] objectForKey:childKey];
-	[cell setParentNodeInfo:parentNodeInfo];
-	[cell setNodeInfo:currentNodeInfo];
-	[cell loadCellContents];
-}
-
-
-- (NSViewController*) browser:(NSBrowser*) browser previewViewControllerForLeafItem:(id)item
-{
-	if (!ShowFilePreviewInBrowserFromDefaults())
-		return nil;
-	if (!browserLeafPreviewController_)
-		browserLeafPreviewController_ = [[NSViewController alloc] initWithNibName:@"BrowserPreviewView" bundle:[NSBundle bundleForClass:[self class]]];
-	return browserLeafPreviewController_; // NSBrowser will set the representedObject for us
-}
-
-
-
-
-
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
-// MARK:  Delegates Drag & Drop
-// -----------------------------------------------------------------------------------------------------------------------------------------
-
-- (NSDragOperation) draggingSourceOperationMaskForLocal:(BOOL)isLocal																				{ return NSDragOperationCopy | NSDragOperationLink; }
-
-- (BOOL)browser:(NSBrowser*)browser canDragRowsWithIndexes:(NSIndexSet*)rowIndexes inColumn:(NSInteger)column withEvent:(NSEvent*)event				{ return YES; }
-- (BOOL)browser:(NSBrowser*)browser   writeRowsWithIndexes:(NSIndexSet*)rowIndexes inColumn:(NSInteger)column toPasteboard:(NSPasteboard*)pasteboard
-{
-	return [parentController writeRowsWithIndexes:rowIndexes inColumn:column toPasteboard:pasteboard];	// The parent controller handles writing out the pasteboard items
+	return [parentController writeRowsWithIndexes:rowIndexes inColumn:column toPasteboard:pasteboard];	// The parent handles writing out the pasteboard items
 }
 
 
@@ -612,7 +480,7 @@
 		NSArray* absoluteDirtyPaths = [dirtyPaths absolutePaths];
 		
 		DispatchGroup group = dispatch_group_create();
-		__block BrowserSelectionState* theSavedState = nil;
+		__block FSViewerSelectionState* theSavedState = nil;
 		__block FSNodeInfo* newRootNode = nil;
 
 		// mark the dirty paths and all children as dirty
@@ -620,14 +488,14 @@
 			newRootNode = [rootNodeInfo_ shallowTreeCopyMarkingPathsDirty:absoluteDirtyPaths];	});
 
 		dispatch_group_async(group, globalQueue(), ^{
-			theSavedState = [BrowserSelectionState saveBrowserState:self];  });
+			theSavedState = [self saveViewerSelectionState];  });
 		
 		dispatchGroupWaitAndFinish(group);
 
 		dispatch_async(mainQueue(), ^{
 			rootNodeInfo_ = newRootNode;
-			[self reloadData:self];
-			[theSavedState restoreBrowserSelection];				// restore the selection and the scroll positions of the columns and the horizontal scroll
+			[self reloadData];
+			[self restoreViewerSelectionState:theSavedState ];				// restore the selection and the scroll positions of the columns and the horizontal scroll
 		});
 	});
 }
@@ -700,10 +568,10 @@
 			// In the mean time, only if our results are still relevant (ie the root has not changed) then switch to the new root
 			if ([rootPath isEqualTo:[[self myDocument] absolutePathOfRepositoryRoot]])
 			{			
-				BrowserSelectionState* theSavedState = [BrowserSelectionState saveBrowserState:self];
+				FSViewerSelectionState* theSavedState = [self saveViewerSelectionState];
 				rootNodeInfo_ = newRootNode;
-				[self reloadData:self];
-				[theSavedState restoreBrowserSelection];		// restore the selection and the scroll positions of the columns and the horizontal scroll
+				[self reloadData];
+				[self restoreViewerSelectionState:theSavedState ];		// restore the selection and the scroll positions of the columns and the horizontal scroll
 				if (isMainFSBrowser_ && ![[self myDocument] underlyingRepositoryChangedEventIsQueued])
 					[[[self myDocument] repositoryData] adjustCollectionForIncompleteRevision];
 			}
@@ -723,13 +591,7 @@
 // The parent controller determines when we receive this event.
 - (void) repositoryDataIsNew
 {
-	if ([[self myDocument] aRepositoryIsSelected])
-	{
-		NSString* fileName = [[self myDocument] documentNameForAutosave];
-		NSString* repositoryName = [[self myDocument] selectedRepositoryShortName];
-		NSString* columnAutoSaveName = fstr(@"File:%@:Repository:%@", fileName ? fileName : @"Untitled", repositoryName ? repositoryName : @"Unnamed");
-		[self setColumnsAutosaveName:columnAutoSaveName];
-	}
+	[[self currentView] repositoryDataIsNew];
 	absolutePathOfRepositoryRoot_ = [[self myDocument] absolutePathOfRepositoryRoot];
 	[self regenerateBrowserDataAndReload];
 }
@@ -747,6 +609,16 @@
 	[self refreshBrowserPaths:[RepositoryPaths fromPaths:absoluteChangedPaths withRootPath:rootPath]  finishingBlock:nil];
 }
 
+- (void) updateCurrentPreviewImage { [parentController updateCurrentPreviewImage]; }
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Save and Restore Viewer Selection state
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (FSViewerSelectionState*)	saveViewerSelectionState						{ return [[self currentView] saveViewerSelectionState]; }
+- (void) restoreViewerSelectionState:(FSViewerSelectionState*)savedState	{ [[self currentView] restoreViewerSelectionState:savedState] ; }
 
 @end
 
@@ -757,130 +629,16 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK: BrowserSelectionState
+// MARK: FSViewerSelectionState
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 
-@implementation BrowserSelectionState
+@implementation FSViewerSelectionState
 
 @synthesize savedColumnScrollPositions;
 @synthesize savedHorizontalScrollPosition;
 @synthesize savedSelectedPaths;
-@synthesize restoreFirstResponderToBrowser;
-
-
-
-
-
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
-// MARK: Save and Restore Browser state
-// -----------------------------------------------------------------------------------------------------------------------------------------
-
-+ (BrowserSelectionState*)	saveBrowserState:(FSBrowser*)browser
-{
-	// Save scroll positions of the columns
-	NSArray* selectedPaths = [browser absolutePathsOfSelectedFilesInBrowser];
-	BrowserSelectionState* newSavedState = [[BrowserSelectionState alloc] init];
-	newSavedState->theBrowser = browser;
-	int numberOfColumns = [browser lastColumn];
-	newSavedState.savedColumnScrollPositions = [[NSMutableArray alloc] init];
-	for (int i = 0; i <= numberOfColumns; i++)
-	{
-		NSMatrix* matrixForColumn = [browser matrixInColumn:i];
-		NSScrollView* enclosingSV = [matrixForColumn enclosingScrollView];
-		NSPoint currentScrollPosition = [[enclosingSV contentView] bounds].origin;
-		[newSavedState.savedColumnScrollPositions addObject:[NSValue valueWithPoint:currentScrollPosition]];
-	}
-
-	// Save the horizontal scroll position
-	NSScrollView* horizontalSV = [[[browser matrixInColumn:0] enclosingScrollView] enclosingScrollView];
-	newSavedState.savedHorizontalScrollPosition = [[horizontalSV contentView] bounds].origin;
-
-	BOOL restoreFirstResponderToBrowser = NO;
-	for (NSResponder* theResponder = [[browser parentWindow] firstResponder]; theResponder; theResponder = [theResponder nextResponder])
-		if (theResponder == browser)
-		{
-			restoreFirstResponderToBrowser = YES;
-			break;
-		}
-	
-	// Save the selectedPaths
-	newSavedState.savedSelectedPaths = selectedPaths;
-	newSavedState.restoreFirstResponderToBrowser = restoreFirstResponderToBrowser;
-	
-	return newSavedState;
-}
-
-
-- (void) restoreBrowserSelection
-{
-	if ([savedSelectedPaths count] <1)
-		return;
-
-	// Restore the selection
-	NSString* rootPath = [theBrowser absolutePathOfRepositoryRoot];
-	NSString* relativeSelectedPath = pathDifference(rootPath, [savedSelectedPaths lastObject]);
-
-	// Loop through and select the correct row in each column until we get to the last column
-	if (restoreFirstResponderToBrowser)
-		[[theBrowser parentWindow] makeFirstResponder:theBrowser];
-	NSArray* components = [relativeSelectedPath pathComponents];
-	FSNodeInfo* childNode = [theBrowser rootNodeInfo];
-	FSNodeInfo* node = childNode;
-	int col = 0;
-	for (NSString* name in components)
-	{
-		node = childNode;
-		childNode = [[node childNodes] objectForKey:name];
-		if (childNode)
-		{
-			[theBrowser selectRow: [[node sortedChildNodeKeys] indexOfObject:name] inColumn:col];
-			col++;
-		}
-		else
-			break;
-	}
-
-	// Note if the last node was a directory (ie the only things selected in the column then with the above
-	// code the next column will also be displayed although nothing will be selected in it.) If this is the
-	// case then we can't call the method selectRowIndexes because this will blow away the display of this next
-	// column. Thus if we have more than one thing selected go ahead and select the multiple items.
-	if ([savedSelectedPaths count] > 1)
-	{
-		NSMutableIndexSet* rowIndexes = [[NSMutableIndexSet alloc] init];
-		for (NSString* path in savedSelectedPaths)
-		{
-			NSString* name = [path lastPathComponent];
-			NSInteger rowIndex = [[node sortedChildNodeKeys] indexOfObject:name];
-			if (rowIndex != NSNotFound)
-				[rowIndexes addIndex:rowIndex];
-		}
-		if (IsNotEmpty(rowIndexes))
-			[theBrowser selectRowIndexes:rowIndexes inColumn:(col-1)];
-	}
-	if (restoreFirstResponderToBrowser)
-		[[theBrowser window] makeFirstResponder:theBrowser];
-
-
-	// restore column scroll positions
-	int i = 0;
-	for (NSValue* position in savedColumnScrollPositions)
-	{
-		NSPoint savedScrollPosition = [position pointValue];
-		NSMatrix* matrixForColumn = [theBrowser matrixInColumn:i];
-		NSScrollView* enclosingSV = [matrixForColumn enclosingScrollView];
-		[[enclosingSV documentView] scrollPoint:savedScrollPosition];
-		i++;
-	}
-
-	// restore horizontal scroll position
-	NSScrollView* horizontalSV = [[[theBrowser matrixInColumn:0] enclosingScrollView] enclosingScrollView];
-	[[horizontalSV documentView] scrollPoint:savedHorizontalScrollPosition];
-}
-
-
-
+@synthesize restoreFirstResponderToViewer;
 
 @end
 

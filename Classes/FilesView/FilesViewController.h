@@ -1,5 +1,5 @@
 //
-//  BrowserViewController.h
+//  FilesViewController.h
 //  MacHg
 //
 //  Created by Jason Harris on 12/4/09.
@@ -9,7 +9,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "Common.h"
-#import "FSBrowser.h"
+#import "FSViewer.h"
 
 
 
@@ -17,19 +17,19 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK:  BrowserViewController
+// MARK:  FilesViewController
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 
-@interface BrowserViewController : NSViewController
+@interface FilesViewController : NSViewController
 {
 	MacHgDocument*			myDocument;
-	IBOutlet BrowserView*	theBrowserView;
+	IBOutlet FilesView*		theFilesView;
 }
 @property (readwrite,assign) MacHgDocument*	myDocument;
-@property (readwrite,assign) BrowserView*	theBrowserView;
+@property (readwrite,assign) FilesView*	theFilesView;
 
-- (BrowserViewController*) initBrowserViewControllerWithDocument:(MacHgDocument*)doc;
+- (FilesViewController*) initFilesViewControllerWithDocument:(MacHgDocument*)doc;
 - (void) unload;
 @end
 
@@ -39,14 +39,14 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK:  BrowserView
+// MARK:  FilesView
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 
-@interface BrowserView : NSView <AccessesDocument, ControllerForFSBrowser, NSUserInterfaceValidations>
+@interface FilesView : NSView <AccessesDocument, ControllerForFSBrowser, NSUserInterfaceValidations>
 {
-	IBOutlet BrowserViewController* parentContoller;
-	IBOutlet FSBrowser*		theBrowser;
+	IBOutlet FilesViewController* parentContoller;
+	IBOutlet FSViewer*		theFSViewer;
 	IBOutlet NSImageView*	nodeIconWell;	// Image well showing the selected items icon.
 	IBOutlet NSTextField*	nodeInspector;	// Text field showing the selected items attributes.
 	MacHgDocument*			myDocument;
@@ -54,10 +54,10 @@
 }
 
 @property (readwrite,assign) MacHgDocument*	myDocument;
-@property (readonly,assign)  FSBrowser*		theBrowser;
+@property (readonly,assign)  FSViewer*		theFSViewer;
 
 - (void)	 unload;
-- (IBAction) openBrowserView:(id)sender;
+- (IBAction) openFilesView:(id)sender;
 - (NSInteger) numberOfQuickLookPreviewItems;
 
 - (IBAction) refreshBrowserContent:(id)sender;

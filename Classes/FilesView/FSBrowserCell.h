@@ -33,5 +33,5 @@
 @property (readwrite,assign) FSNodeInfo*	parentNodeInfo;
 
 - (void)		loadCellContents;
-- (FSBrowser*)	parentBrowser;
+- (FSViewer*)	parentBrowser;
 @end

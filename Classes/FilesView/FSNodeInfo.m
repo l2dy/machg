@@ -128,7 +128,7 @@
 	return self;
 }
 
-- (FSNodeInfo*) initNewWithParent:(FSNodeInfo*)parent atRelativePath:(NSString*)path withParentBrowser:(FSBrowser*)browser
+- (FSNodeInfo*) initNewWithParent:(FSNodeInfo*)parent atRelativePath:(NSString*)path withParentBrowser:(FSViewer*)browser
 {
 	relativePath = path;
 	absolutePath = [[parent absolutePath] stringByAppendingPathComponent:relativePath];
@@ -348,7 +348,7 @@
 }
 
 
-- (FSNodeInfo*) fleshOutTreeWithStatusLines:(NSArray*)hgStatusLines withParentBrowser:(FSBrowser*)browser
+- (FSNodeInfo*) fleshOutTreeWithStatusLines:(NSArray*)hgStatusLines withParentBrowser:(FSViewer*)browser
 {
 	FSNodeInfo* newRoot = self;
 	for (NSString* statusLine in hgStatusLines)
@@ -510,6 +510,33 @@
 {
 	return fstr(@"FSNodeInfo: %@:%@, status = %d", relativePath, absolutePath, hgStatus);
 }
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Flat List Construction
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (void) addAllLeafNodes:(NSMutableArray*)flatNodes
+{
+	if ([[self sortedChildNodeKeys] count] == 0)
+	{
+		[flatNodes addObject:self];
+		return;
+	}
+	for (NSString* key in [self sortedChildNodeKeys])
+		[[childNodes objectForKey:key] addAllLeafNodes:flatNodes];
+}
+
+- (NSArray*) generateFlatLeafNodeList
+{
+	NSMutableArray* nodeList = [[NSMutableArray alloc]init];
+	[self addAllLeafNodes:nodeList];
+	return nodeList;
+}	
 
 
 

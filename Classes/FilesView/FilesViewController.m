@@ -1,5 +1,5 @@
 //
-//  BrowserViewController.m
+//  FilesViewController.m
 //  MacHg
 //
 //  Created by Jason Harris on 12/4/09.
@@ -7,7 +7,7 @@
 //  This software is licensed under the "New BSD License". The full license text is given in the file License.txt
 //
 
-#import "BrowserViewController.h"
+#import "FilesViewController.h"
 #import "FSBrowserCell.h"
 #import "FSNodeInfo.h"
 #import "MacHgDocument.h"
@@ -22,24 +22,22 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK:  BrowserViewController
+// MARK:  FilesViewController
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 
-@implementation BrowserViewController
+@implementation FilesViewController
 @synthesize myDocument;
-@synthesize theBrowserView;
+@synthesize theFilesView;
 
-- (BrowserViewController*) initBrowserViewControllerWithDocument:(MacHgDocument*)doc
+- (FilesViewController*) initFilesViewControllerWithDocument:(MacHgDocument*)doc
 {
 	myDocument = doc;
-	[NSBundle loadNibNamed:@"BrowserView" owner:self];
-	//[[theBrowserView theBrowser] reloadData:nil]; 	// Prime the browser with an initial load of data.
-
+	[NSBundle loadNibNamed:@"FilesView" owner:self];
 	return self;
 }
 
-- (void) unload { [theBrowserView unload]; }
+- (void) unload { [theFilesView unload]; }
 @end
 
 
@@ -48,14 +46,14 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK:  BrowserView
+// MARK:  FilesView
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 
-@implementation BrowserView
+@implementation FilesView
 
 @synthesize myDocument;
-@synthesize theBrowser;
+@synthesize theFSViewer;
 
 
 
@@ -85,17 +83,17 @@
 	[self observe:kRepositoryDataIsNew		from:[self myDocument]  byCalling:@selector(repositoryDataIsNew)];
 
 	// Tell the browser to send us messages when it is clicked or a key is typed in it.
-	[theBrowser setTarget:self];
-	[theBrowser setAction:@selector(browserAction:)];
-	[theBrowser setDoubleAction:@selector(browserDoubleAction:)];
-	[theBrowser setAreNodesVirtual:NO];
+	[[theFSViewer theFilesBrowser] setTarget:self];
+	[[theFSViewer theFilesBrowser] setAction:@selector(browserAction:)];
+	[[theFSViewer theFilesBrowser] setDoubleAction:@selector(browserDoubleAction:)];
+	[theFSViewer setAreNodesVirtual:NO];
     
-	[theBrowser setIsMainFSBrowser:YES];
+	[theFSViewer setIsMainFSBrowser:YES];
 }
 
 - (void) unload									{ }
 
-- (IBAction) openBrowserView:(id)sender	{ [[myDocument mainWindow] makeFirstResponder:self]; }
+- (IBAction) openFilesView:(id)sender	{ [[myDocument mainWindow] makeFirstResponder:self]; }
 
 
 
@@ -124,7 +122,7 @@
 - (IBAction) browserAction:(id)browser	{ [self updateCurrentPreviewImage]; }
 - (IBAction) browserDoubleAction:(id)browser
 {
-	SEL theAction = [self actionForDoubleClickEnum:[theBrowser actionEnumForBrowserDoubleClick]];
+	SEL theAction = [self actionForDoubleClickEnum:[theFSViewer actionEnumForBrowserDoubleClick]];
 	[[NSApplication sharedApplication] sendAction:theAction to:nil from:browser];
 }
 
@@ -137,7 +135,7 @@
 // MARK:  Refreshing
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) repositoryDataIsNew					{ [theBrowser repositoryDataIsNew]; }
+- (void) repositoryDataIsNew					{ [theFSViewer repositoryDataIsNew]; }
 
 - (IBAction) refreshBrowserContent:(id)sender	{ return [myDocument refreshBrowserContent:myDocument]; }
 
@@ -215,7 +213,7 @@
 	NSMutableArray* paths = [[NSMutableArray alloc] init];
 	for (NSInteger row = [rowIndexes firstIndex]; row != NSNotFound; row = [rowIndexes indexGreaterThanIndex: row])
 	{
-		FSNodeInfo* node = [theBrowser itemAtRow:row inColumn:column];
+		FSNodeInfo* node = [[theFSViewer theFilesBrowser] itemAtRow:row inColumn:column];
 		[paths addObject:[node absolutePath]];
 	}
 
@@ -234,27 +232,9 @@
 // MARK:  Quicklook Handling
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (NSInteger) numberOfQuickLookPreviewItems		{ return [[theBrowser absolutePathsOfSelectedFilesInBrowser] count]; }
+- (NSInteger) numberOfQuickLookPreviewItems		{ return [[theFSViewer absolutePathsOfSelectedFilesInBrowser] count]; }
 
-- (NSArray*) quickLookPreviewItems
-{
-	if (![theBrowser nodesAreSelected])
-		return [NSArray array];
-	
-	NSMutableArray* quickLookPreviewItems = [[NSMutableArray alloc] init];
-	NSArray* indexPaths = [theBrowser selectionIndexPaths];
-	for (NSIndexPath* indexPath in indexPaths)
-	{
-		NSString* path = [[theBrowser itemAtIndexPath:indexPath] absolutePath];
-		if (!path)
-			continue;
-		NSInteger col = [indexPath length] - 1;
-		NSInteger row = [indexPath indexAtPosition:col];
-		NSRect rect   = [theBrowser frameinWindowOfRow:row inColumn:col];
-		[quickLookPreviewItems addObject:[PathQuickLookPreviewItem previewItemForPath:path withRect:rect]];
-	}
-	return quickLookPreviewItems;
-}
+- (NSArray*) quickLookPreviewItems				{ return [theFSViewer quickLookPreviewItems]; }
 
 - (void) keyDown:(NSEvent *)theEvent
 {
@@ -274,12 +254,12 @@
 // MARK: Preview Image
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (NSImage*) imageForMultipleCells:(NSArray*) cells
+- (NSImage*) imageForMultipleNodes:(NSArray*) nodes
 {
-	FSNodeInfo* firstNode = [[cells objectAtIndex:0] nodeInfo];
+	FSNodeInfo* firstNode = [nodes objectAtIndex:0];
 	NSString* extension = [[firstNode absolutePath] pathExtension];
-	for (FSBrowserCell* cell in cells)
-		if (![extension isEqualToString:[[[cell nodeInfo] absolutePath] pathExtension]])
+	for (FSNodeInfo* node in nodes)
+		if (![extension isEqualToString:[[node absolutePath] pathExtension]])
 			return nil;
 	return [firstNode iconImageForPreview];
 }
@@ -299,23 +279,22 @@
 	// Determine the selection and display it's icon and inspector information on the right side of the UI.
 	NSImage* inspectorImage = nil;
 	NSAttributedString* attributedString = nil;
-	if (![theBrowser nodesAreSelected])
+	if (![theFSViewer nodesAreSelected])
 		attributedString = [NSAttributedString string:@"No Selection" withAttributes:smallCenteredSystemFontAttributes];
 	else
 	{
-		NSArray* selectedCells = [theBrowser selectedCells];
-		if ([selectedCells count] > 1)
+		NSArray* selectedNodes = [theFSViewer selectedNodes];
+		if ([selectedNodes count] > 1)
 		{
 			attributedString = [NSAttributedString string:@"Multiple Selection" withAttributes:smallCenteredSystemFontAttributes];
-			inspectorImage = [self imageForMultipleCells:selectedCells];
+			inspectorImage = [self imageForMultipleNodes:selectedNodes];
 		}
-		else if ([selectedCells count] == 1)
+		else if ([selectedNodes count] == 1)
 		{
 			// Find the last selected cell and show its information
-			FSBrowserCell* lastSelectedCell = [selectedCells objectAtIndex:[selectedCells count] - 1];
-			FSNodeInfo* fsNode = [lastSelectedCell nodeInfo];
-			attributedString   = [fsNode attributedInspectorStringForFSNode];
-			inspectorImage     = [fsNode iconImageForPreview];
+			FSNodeInfo* lastSelectedNode = [selectedNodes objectAtIndex:[selectedNodes count] - 1];
+			attributedString   = [lastSelectedNode attributedInspectorStringForFSNode];
+			inspectorImage     = [lastSelectedNode iconImageForPreview];
 		}
 	}
     
@@ -341,28 +320,28 @@
 - (IBAction) mainMenuCommitAllFiles:(id)sender					{ [[myDocument theCommitSheetController] openCommitSheetWithAllFiles:sender]; }
 - (IBAction) toolbarCommitFiles:(id)sender
 {
-	if ([theBrowser nodesAreChosen] && ![[myDocument repositoryData] inMergeState])
+	if ([theFSViewer nodesAreChosen] && ![[myDocument repositoryData] inMergeState])
 		[self mainMenuCommitSelectedFiles:sender];
 	else
 		[self mainMenuCommitAllFiles:sender];
 }
 
 
-- (IBAction) mainMenuDiffSelectedFiles:(id)sender				{ [myDocument viewDifferencesInCurrentRevisionFor:[theBrowser absolutePathsOfChosenFilesInBrowser] toRevision:nil]; }	// nil indicates the current revision
+- (IBAction) mainMenuDiffSelectedFiles:(id)sender				{ [myDocument viewDifferencesInCurrentRevisionFor:[theFSViewer absolutePathsOfChosenFilesInBrowser] toRevision:nil]; }	// nil indicates the current revision
 - (IBAction) mainMenuDiffAllFiles:(id)sender					{ [myDocument viewDifferencesInCurrentRevisionFor:[myDocument absolutePathOfRepositoryRootAsArray] toRevision:nil]; }	// nil indicates the current revision
 - (IBAction) toolbarDiffFiles:(id)sender
 {
-	if ([theBrowser nodesAreChosen])
+	if ([theFSViewer nodesAreChosen])
 		[self mainMenuDiffSelectedFiles:sender];
 	else
 		[self mainMenuDiffAllFiles:sender];
 }
 
-- (IBAction) mainMenuAddRenameRemoveSelectedFiles:(id)sender	{ [myDocument primaryActionAddRenameRemoveFiles:[theBrowser absolutePathsOfChosenFilesInBrowser]]; }
+- (IBAction) mainMenuAddRenameRemoveSelectedFiles:(id)sender	{ [myDocument primaryActionAddRenameRemoveFiles:[theFSViewer absolutePathsOfChosenFilesInBrowser]]; }
 - (IBAction) mainMenuAddRenameRemoveAllFiles:(id)sender			{ [myDocument primaryActionAddRenameRemoveFiles:[myDocument absolutePathOfRepositoryRootAsArray]]; }
 - (IBAction) toolbarAddRenameRemoveFiles:(id)sender
 {
-	if ([theBrowser nodesAreChosen])
+	if ([theFSViewer nodesAreChosen])
 		[self mainMenuAddRenameRemoveSelectedFiles:sender];
 	else
 		[self mainMenuAddRenameRemoveAllFiles:sender];
@@ -371,12 +350,12 @@
 
 
 
-- (IBAction) mainMenuRevertSelectedFiles:(id)sender				{ [myDocument primaryActionRevertFiles:[theBrowser absolutePathsOfChosenFilesInBrowser] toVersion:nil]; }
+- (IBAction) mainMenuRevertSelectedFiles:(id)sender				{ [myDocument primaryActionRevertFiles:[theFSViewer absolutePathsOfChosenFilesInBrowser] toVersion:nil]; }
 - (IBAction) mainMenuRevertAllFiles:(id)sender					{ [myDocument primaryActionRevertFiles:[myDocument absolutePathOfRepositoryRootAsArray] toVersion:nil]; }
 - (IBAction) mainMenuRevertSelectedFilesToVersion:(id)sender	{ [[myDocument theRevertSheetController] openRevertSheetWithSelectedFiles:sender]; }
 - (IBAction) toolbarRevertFiles:(id)sender
 {
-	if ([theBrowser nodesAreChosen])
+	if ([theFSViewer nodesAreChosen])
 		[self mainMenuRevertSelectedFilesToVersion:sender];
 	else
 		[self mainMenuRevertAllFiles:sender];
@@ -384,15 +363,15 @@
 
 
 
-- (IBAction) mainMenuDeleteSelectedFiles:(id)sender				{ [myDocument primaryActionDeleteSelectedFiles:[theBrowser absolutePathsOfChosenFilesInBrowser]]; }
-- (IBAction) mainMenuAddSelectedFiles:(id)sender				{ [myDocument primaryActionAddSelectedFiles:[theBrowser absolutePathsOfChosenFilesInBrowser]]; }
-- (IBAction) mainMenuUntrackSelectedFiles:(id)sender			{ [myDocument primaryActionUntrackSelectedFiles:[theBrowser absolutePathsOfChosenFilesInBrowser]]; }
+- (IBAction) mainMenuDeleteSelectedFiles:(id)sender				{ [myDocument primaryActionDeleteSelectedFiles:[theFSViewer absolutePathsOfChosenFilesInBrowser]]; }
+- (IBAction) mainMenuAddSelectedFiles:(id)sender				{ [myDocument primaryActionAddSelectedFiles:[theFSViewer absolutePathsOfChosenFilesInBrowser]]; }
+- (IBAction) mainMenuUntrackSelectedFiles:(id)sender			{ [myDocument primaryActionUntrackSelectedFiles:[theFSViewer absolutePathsOfChosenFilesInBrowser]]; }
 - (IBAction) mainMenuRenameSelectedItem:(id)sender				{ [[myDocument theRenameFileSheetController] openRenameFileSheet:sender]; }
 
 
-- (IBAction) mainMenuIgnoreSelectedFiles:(id)sender				{ [myDocument primaryActionIgnoreSelectedFiles:[theBrowser absolutePathsOfChosenFilesInBrowser]]; }
-- (IBAction) mainMenuUnignoreSelectedFiles:(id)sender			{ [myDocument primaryActionUnignoreSelectedFiles:[theBrowser absolutePathsOfChosenFilesInBrowser]]; }
-- (IBAction) mainMenuAnnotateSelectedFiles:(id)sender			{ [myDocument primaryActionAnnotateSelectedFiles:[theBrowser absolutePathsOfChosenFilesInBrowser]]; }
+- (IBAction) mainMenuIgnoreSelectedFiles:(id)sender				{ [myDocument primaryActionIgnoreSelectedFiles:[theFSViewer absolutePathsOfChosenFilesInBrowser]]; }
+- (IBAction) mainMenuUnignoreSelectedFiles:(id)sender			{ [myDocument primaryActionUnignoreSelectedFiles:[theFSViewer absolutePathsOfChosenFilesInBrowser]]; }
+- (IBAction) mainMenuAnnotateSelectedFiles:(id)sender			{ [myDocument primaryActionAnnotateSelectedFiles:[theFSViewer absolutePathsOfChosenFilesInBrowser]]; }
 
 
 
@@ -403,9 +382,9 @@
 // MARK:  Contextual Menu actions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (IBAction) mainMenuOpenSelectedFilesInFinder:(id)sender		{ [theBrowser browserMenuOpenSelectedFilesInFinder:sender]; }
-- (IBAction) mainMenuRevealSelectedFilesInFinder:(id)sender		{ [theBrowser browserMenuRevealSelectedFilesInFinder:sender]; }
-- (IBAction) mainMenuOpenTerminalHere:(id)sender				{ [theBrowser browserMenuOpenTerminalHere:sender]; }
+- (IBAction) mainMenuOpenSelectedFilesInFinder:(id)sender		{ [theFSViewer browserMenuOpenSelectedFilesInFinder:sender]; }
+- (IBAction) mainMenuRevealSelectedFilesInFinder:(id)sender		{ [theFSViewer browserMenuRevealSelectedFilesInFinder:sender]; }
+- (IBAction) mainMenuOpenTerminalHere:(id)sender				{ [theFSViewer browserMenuOpenTerminalHere:sender]; }
 
 
 
@@ -416,7 +395,7 @@
 // MARK: Action Validation
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BOOL) toolbarActionAppliesToFilesWith:(HGStatus)status	{ return ([theBrowser statusOfChosenPathsInBrowserContain:status] || (![theBrowser nodesAreChosen] && [theBrowser repositoryHasFilesWhichContainStatus:status])); }
+- (BOOL) toolbarActionAppliesToFilesWith:(HGStatus)status	{ return ([theFSViewer statusOfChosenPathsInBrowserContain:status] || (![theFSViewer nodesAreChosen] && [theFSViewer repositoryHasFilesWhichContainStatus:status])); }
 
 - (BOOL) validateAndSwitchMenuForCommitSelectedFiles:(NSMenuItem*)menuItem
 {
@@ -424,19 +403,19 @@
 		return NO;
 	BOOL inMergeState = [[myDocument repositoryData] inMergeState];
 	[menuItem setTitle: inMergeState ? @"Commit Merged Files…" : @"Commit Selected Files…"];
-	return inMergeState ? [myDocument repositoryHasFilesWhichContainStatus:eHGStatusCommittable] : ([myDocument pathsAreSelectedInBrowserWhichContainStatus:eHGStatusCommittable] && [myDocument showingBrowserView]);
+	return inMergeState ? [myDocument repositoryHasFilesWhichContainStatus:eHGStatusCommittable] : ([myDocument pathsAreSelectedInBrowserWhichContainStatus:eHGStatusCommittable] && [myDocument showingFilesView]);
 }
 
 - (BOOL) validateAndSwitchMenuForRenameSelectedItem:(NSMenuItem*)menuItem
 {
 	if (!menuItem)
 		return NO;
-	NSArray* chosenNodes = [theBrowser chosenNodes];
+	NSArray* chosenNodes = [theFSViewer chosenNodes];
 	if ([chosenNodes count] != 1)
 		return NO;
 	BOOL isDirectory = [[chosenNodes firstObject] isDirectory];
 	[menuItem setTitle: isDirectory ? @"Rename Selected Directory…" : @"Rename Selected File…"];
-	return [theBrowser statusOfChosenPathsInBrowserContain:eHGStatusInRepository];
+	return [theFSViewer statusOfChosenPathsInBrowserContain:eHGStatusInRepository];
 }
 
 - (BOOL) validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem, NSObject>)anItem
@@ -447,33 +426,33 @@
 	if (theAction == @selector(mainMenuCommitAllFiles:))				return [myDocument repositoryIsSelectedAndReady] && [myDocument validateAndSwitchMenuForCommitAllFiles:anItem];
 	if (theAction == @selector(toolbarCommitFiles:))					return [myDocument repositoryIsSelectedAndReady] && ([[myDocument repositoryData] inMergeState] || [self toolbarActionAppliesToFilesWith:eHGStatusCommittable]);
 	
-	if (theAction == @selector(mainMenuDiffSelectedFiles:))				return [myDocument repositoryIsSelectedAndReady] && [theBrowser statusOfChosenPathsInBrowserContain:eHGStatusModified];
-	if (theAction == @selector(mainMenuDiffAllFiles:))					return [myDocument repositoryIsSelectedAndReady] && [theBrowser repositoryHasFilesWhichContainStatus:eHGStatusModified];
+	if (theAction == @selector(mainMenuDiffSelectedFiles:))				return [myDocument repositoryIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInBrowserContain:eHGStatusModified];
+	if (theAction == @selector(mainMenuDiffAllFiles:))					return [myDocument repositoryIsSelectedAndReady] && [theFSViewer repositoryHasFilesWhichContainStatus:eHGStatusModified];
 	if (theAction == @selector(toolbarDiffFiles:))						return [myDocument repositoryIsSelectedAndReady] && [self toolbarActionAppliesToFilesWith:eHGStatusModified];
 
-	if (theAction == @selector(mainMenuAddRenameRemoveSelectedFiles:))	return [myDocument repositoryIsSelectedAndReady] && [theBrowser statusOfChosenPathsInBrowserContain:eHGStatusAddableOrRemovable];
-	if (theAction == @selector(mainMenuAddRenameRemoveAllFiles:))		return [myDocument repositoryIsSelectedAndReady] && [theBrowser repositoryHasFilesWhichContainStatus:eHGStatusAddableOrRemovable];
+	if (theAction == @selector(mainMenuAddRenameRemoveSelectedFiles:))	return [myDocument repositoryIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInBrowserContain:eHGStatusAddableOrRemovable];
+	if (theAction == @selector(mainMenuAddRenameRemoveAllFiles:))		return [myDocument repositoryIsSelectedAndReady] && [theFSViewer repositoryHasFilesWhichContainStatus:eHGStatusAddableOrRemovable];
 	if (theAction == @selector(toolbarAddRenameRemoveFiles:))			return [myDocument repositoryIsSelectedAndReady] && [self toolbarActionAppliesToFilesWith:eHGStatusAddableOrRemovable];
 	// ------	
-	if (theAction == @selector(mainMenuRevertSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && [theBrowser statusOfChosenPathsInBrowserContain:eHGStatusChangedInSomeWay];
-	if (theAction == @selector(mainMenuRevertAllFiles:))				return [myDocument repositoryIsSelectedAndReady] && [theBrowser repositoryHasFilesWhichContainStatus:eHGStatusChangedInSomeWay];
-	if (theAction == @selector(mainMenuRevertSelectedFilesToVersion:))	return [myDocument repositoryIsSelectedAndReady] && [theBrowser nodesAreChosen];
+	if (theAction == @selector(mainMenuRevertSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInBrowserContain:eHGStatusChangedInSomeWay];
+	if (theAction == @selector(mainMenuRevertAllFiles:))				return [myDocument repositoryIsSelectedAndReady] && [theFSViewer repositoryHasFilesWhichContainStatus:eHGStatusChangedInSomeWay];
+	if (theAction == @selector(mainMenuRevertSelectedFilesToVersion:))	return [myDocument repositoryIsSelectedAndReady] && [theFSViewer nodesAreChosen];
 	if (theAction == @selector(toolbarRevertFiles:))					return [myDocument repositoryIsSelectedAndReady] && [self toolbarActionAppliesToFilesWith:eHGStatusChangedInSomeWay];
 	
-	if (theAction == @selector(mainMenuDeleteSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && [theBrowser nodesAreChosen];
-	if (theAction == @selector(mainMenuAddSelectedFiles:))				return [myDocument repositoryIsSelectedAndReady] && [theBrowser statusOfChosenPathsInBrowserContain:eHGStatusAddable];
-	if (theAction == @selector(mainMenuUntrackSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && [theBrowser statusOfChosenPathsInBrowserContain:eHGStatusInRepository];
+	if (theAction == @selector(mainMenuDeleteSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && [theFSViewer nodesAreChosen];
+	if (theAction == @selector(mainMenuAddSelectedFiles:))				return [myDocument repositoryIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInBrowserContain:eHGStatusAddable];
+	if (theAction == @selector(mainMenuUntrackSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInBrowserContain:eHGStatusInRepository];
 	if (theAction == @selector(mainMenuRenameSelectedItem:))			return [myDocument repositoryIsSelectedAndReady] && [self validateAndSwitchMenuForRenameSelectedItem:DynamicCast(NSMenuItem, anItem)];
 	// ------
-	if (theAction == @selector(mainMenuRemergeSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && [theBrowser statusOfChosenPathsInBrowserContain:eHGStatusSecondary];
-	if (theAction == @selector(mainMenuMarkResolvedSelectedFiles:))		return [myDocument repositoryIsSelectedAndReady] && [theBrowser statusOfChosenPathsInBrowserContain:eHGStatusUnresolved];
+	if (theAction == @selector(mainMenuRemergeSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInBrowserContain:eHGStatusSecondary];
+	if (theAction == @selector(mainMenuMarkResolvedSelectedFiles:))		return [myDocument repositoryIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInBrowserContain:eHGStatusUnresolved];
 	// ------
-	if (theAction == @selector(mainMenuIgnoreSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && [theBrowser statusOfChosenPathsInBrowserContain:eHGStatusNotIgnored];
-	if (theAction == @selector(mainMenuUnignoreSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && [theBrowser statusOfChosenPathsInBrowserContain:eHGStatusIgnored];
-	if (theAction == @selector(mainMenuAnnotateSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && [theBrowser statusOfChosenPathsInBrowserContain:eHGStatusInRepository];
+	if (theAction == @selector(mainMenuIgnoreSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInBrowserContain:eHGStatusNotIgnored];
+	if (theAction == @selector(mainMenuUnignoreSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInBrowserContain:eHGStatusIgnored];
+	if (theAction == @selector(mainMenuAnnotateSelectedFiles:))			return [myDocument repositoryIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInBrowserContain:eHGStatusInRepository];
 	// ------
 
-	if (theAction == @selector(mainMenuOpenSelectedFilesInFinder:))		return [myDocument repositoryIsSelectedAndReady] && [theBrowser nodesAreChosen];
+	if (theAction == @selector(mainMenuOpenSelectedFilesInFinder:))		return [myDocument repositoryIsSelectedAndReady] && [theFSViewer nodesAreChosen];
 	if (theAction == @selector(mainMenuRevealSelectedFilesInFinder:))	return [myDocument repositoryIsSelectedAndReady];
 	if (theAction == @selector(mainMenuOpenTerminalHere:))				return [myDocument repositoryIsSelectedAndReady];
 

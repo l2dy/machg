@@ -21,7 +21,7 @@
 @interface FSNodeInfo : NSObject
 {
   @private
-	FSBrowser*	parentBrowser;				// The parent browser which this node belongs to
+	FSViewer*	parentBrowser;				// The parent browser which this node belongs to
 	NSString*   relativePath;				// Path component relative to the parent.
 	NSString*   absolutePath;
 	NSMutableDictionary* childNodes;		// map of pathComponent -> childNode
@@ -37,7 +37,7 @@
 											// this directory.)
 }
 
-@property (readwrite,assign) FSBrowser* parentBrowser;
+@property (readwrite,assign) FSViewer* parentBrowser;
 @property (readonly, assign) NSString* relativePath;
 @property (readwrite,assign) NSString* absolutePath;
 @property (readwrite,assign) NSMutableDictionary* childNodes;
@@ -49,13 +49,14 @@
 + (HGStatus)	statusEnumFromLetter:(NSString*)statusLetter;
 
 + (FSNodeInfo*)	newEmptyTreeRootedAt:(NSString*)theAbsolutePath;
-- (FSNodeInfo*)	fleshOutTreeWithStatusLines:(NSArray*)hgStatusLines withParentBrowser:(FSBrowser*)browser;	// add in new changes to the tree
+- (FSNodeInfo*)	fleshOutTreeWithStatusLines:(NSArray*)hgStatusLines withParentBrowser:(FSViewer*)browser;	// add in new changes to the tree
 - (FSNodeInfo*) shallowTreeCopyMarkingPathsDirty:(NSArray*)theAbsolutePaths;	// Do a shallow copy of the tree copying those bits down to the parts
 																				// we are going to dirty. for the bits we are dirtying, do a deep copy
 																				// and dirty them.
 - (FSNodeInfo*) shallowTreeCopyRemoving:(NSArray*)theAbsolutePaths;				// Do a shallow copy of the tree except for the bits we are removing.
 																				// For these bits create copies down to the level of the parts we are
 																				// removing.
+- (NSArray*)	generateFlatLeafNodeList;										// Generate a flat list of all child leaf nodes
 
 
 - (NSString*)	fsType;

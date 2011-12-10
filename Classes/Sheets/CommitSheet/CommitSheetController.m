@@ -150,7 +150,7 @@ NSString* kAmendOption	 = @"amendOption";
 	[theCommitSheet makeFirstResponder:commitMessageTextView];
 
 	// Store the paths of the files to be committed
-	absolutePathsOfFilesToCommit = [[myDocument theBrowser] filterPaths:paths byBitfield:eHGStatusChangedInSomeWay];
+	absolutePathsOfFilesToCommit = [[myDocument theFSViewer] filterPaths:paths byBitfield:eHGStatusChangedInSomeWay];
 	
 	// Initialize the table source data and show the files which are about to be changed in the commit sheet.
 	NSMutableArray* argsStatus = [NSMutableArray arrayWithObjects:@"status", @"--modified", @"--added", @"--removed", nil];

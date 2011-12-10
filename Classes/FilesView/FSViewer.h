@@ -12,8 +12,6 @@
 #import <Quartz/Quartz.h>	// Quartz framework provides the QLPreviewPanel public API
 
 
-
-
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 // MARK:  ControllerForFSBrowser
@@ -53,37 +51,11 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK: FSBrowser
+// MARK:  FSViewerProtocol
 // -----------------------------------------------------------------------------------------------------------------------------------------
-
-@interface FSBrowser : NSBrowser <NSBrowserDelegate>
-{
-	IBOutlet id <ControllerForFSBrowser> parentController;
-	
-	NSString*			absolutePathOfRepositoryRoot_;
-	FSNodeInfo*			rootNodeInfo_;
-	BOOL				areNodesVirtual_;				// Is this browser used to display virtual nodes?
-	BOOL				isMainFSBrowser_;
-
-	NSViewController*	browserLeafPreviewController_;
-}
-
-@property (readwrite,assign) BOOL			areNodesVirtual;
-@property (readwrite,assign) BOOL			isMainFSBrowser;
-@property (readwrite,assign) NSString*		absolutePathOfRepositoryRoot;
-
-
-// Initialization
-- (void)		unload;
-- (IBAction)	reloadData:(id)sender;
-- (void)		reloadDataSin;
-- (FSNodeInfo*) rootNodeInfo;
-
-
-// Chained
-- (NSWindow*)	parentWindow;
-- (MacHgDocument*) myDocument;
-
+// The main FSViewer object as well as all the FSViewerPanes must be able to perform the following methods. The main FSViewer just
+// forwards these methods onto the current pane. 
+@protocol FSViewerProtocol <NSObject>
 
 // Testing of selection and clicks
 - (BOOL)		nodesAreSelected;
@@ -100,17 +72,93 @@
 - (BOOL)		singleFileIsChosenInBrowser;		// Not debugged
 - (BOOL)		singleItemIsChosenInBrowser;		// Not debugged
 - (HGStatus)	statusOfChosenPathsInBrowser;
-- (BOOL)		statusOfChosenPathsInBrowserContain:(HGStatus)status;
-- (BOOL)		repositoryHasFilesWhichContainStatus:(HGStatus)status;
 - (NSArray*)	absolutePathsOfSelectedFilesInBrowser;
 - (NSArray*)	absolutePathsOfChosenFilesInBrowser;
 - (NSString*)	enclosingDirectoryOfChosenFilesInBrowser;
-- (FSNodeInfo*)	parentNodeInfoForColumn:(NSInteger)column;
 - (NSArray*)	filterPaths:(NSArray*)absolutePaths byBitfield:(HGStatus)status;
 
 
 // Graphic Operations
 - (NSRect)		frameinWindowOfRow:(NSInteger)row inColumn:(NSInteger)column;
+
+- (BOOL)		clickedNodeCoincidesWithTerminalSelections;
+
+- (void)		reloadData;
+- (void)		reloadDataSin;
+- (void)		repositoryDataIsNew;	// Reset the repository root and regenerate all the data and reload it.
+- (NSArray*)	quickLookPreviewItems;
+
+// Save and restore browser, outline, or table state
+- (FSViewerSelectionState*)	saveViewerSelectionState;
+- (void)					restoreViewerSelectionState:(FSViewerSelectionState*)savedState;
+
+@end
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: FSViewer
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+@interface FSViewer : NSBox <FSViewerProtocol>
+{
+	IBOutlet id <ControllerForFSBrowser> parentController;
+	
+	NSString*		absolutePathOfRepositoryRoot_;
+	FSNodeInfo*		rootNodeInfo_;
+	BOOL			areNodesVirtual_;				// Is this browser used to display virtual nodes?
+	BOOL			isMainFSBrowser_;
+
+ @private
+	FSViewerBrowser*	theFilesBrowser_;
+	FSViewerOutline*	theFilesOutline_;
+	FSViewerTable*		theFilesTable_;
+	FSViewerNum			currentFSViewerPane_;			// The current style of viewing the files, ie browser, outline, or table
+
+	dispatch_once_t		theFilesBrowserInitilizer_;
+	dispatch_once_t		theFilesOutlineInitilizer_;
+	dispatch_once_t		theFilesTableInitilizer_;	
+}
+
+@property (readwrite,assign) BOOL		areNodesVirtual;
+@property (readwrite,assign) BOOL		isMainFSBrowser;
+@property (readwrite,assign) NSString*	absolutePathOfRepositoryRoot;
+
+
+// Access the FSViewerPanes
+- (FSViewerBrowser*)	theFilesBrowser;
+- (FSViewerOutline*)	theFilesOutline;
+- (FSViewerTable*)		theFilesTable;
+
+
+// Initialization
+- (void)		unload;
+- (FSNodeInfo*) rootNodeInfo;
+
+
+// Chained
+- (NSWindow*)	parentWindow;
+- (MacHgDocument*) myDocument;
+
+
+// Pane switching
+- (BOOL)		showingFilesBrowser;
+- (BOOL)		showingFilesOutline;
+- (BOOL)		showingFilesTable;
+- (IBAction)	actionSwitchToFilesBrowser:(id)sender;
+- (IBAction)	actionSwitchToFilesOutline:(id)sender;
+- (IBAction)	actionSwitchToFilesTable:(id)sender;
+- (FSViewerNum)	currentFSViewerPaneNum;
+- (void)		setCurrentFSViewerPane:(FSViewerNum)styleNum;
+- (NSView<FSViewerProtocol>*)	currentView;
+
+
+// Common Path and Selection Operations
+- (BOOL)		statusOfChosenPathsInBrowserContain:(HGStatus)status;
+- (BOOL)		repositoryHasFilesWhichContainStatus:(HGStatus)status;
 
 
 // Menu Item Actions
@@ -123,12 +171,16 @@
 - (BrowserDoubleClickAction) actionEnumForBrowserDoubleClick;	// Get the keyboard modifier state and return the corresponding action enum for a double click
 
 
+// Drag and Drop
+- (BOOL)		writeRowsWithIndexes:(NSIndexSet*)rowIndexes inColumn:(NSInteger)column toPasteboard:(NSPasteboard*)pasteboard;
+
+
 // Refresh / Regenrate Browser
-- (void)		setRowHeightForFont;
 - (void)		markPathsDirty:(RepositoryPaths*)dirtyPaths;
 - (void)		refreshBrowserPaths:(RepositoryPaths*)changes finishingBlock:(BlockProcess)theBlock;
 - (void)		repositoryDataIsNew;								// Reset the repository root and regenerate all the data and reload it.
 - (void)		regenerateBrowserDataAndReload;						// Regenerate all the data for the browser and reload the browser.
+- (void)		updateCurrentPreviewImage;
 
 @end
 
@@ -138,27 +190,30 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK: BrowserSelectionState
+// MARK: FSViewerSelectionState
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-@interface BrowserSelectionState : NSObject
+// This is a way to save the state of any FSViewer, be it browser, outline, or table.
+@interface FSViewerSelectionState : NSObject
 {
-	NSMutableArray* savedColumnScrollPositions;
-	NSPoint			savedHorizontalScrollPosition;
-	NSArray*		savedSelectedPaths;
-	BOOL			restoreFirstResponderToBrowser;
-	FSBrowser*		theBrowser;
+  @public
+	// Information for saving a Browser state
+	NSMutableArray*		savedColumnScrollPositions;
+	NSPoint				savedHorizontalScrollPosition;
+
+	// Information for saving an Outline state
+	// XXXX
+	// Information for saving a Table state
+	// XXXX
+
+	NSArray*			savedSelectedPaths;
+	BOOL				restoreFirstResponderToViewer;
 }
 
-@property (readwrite,assign) BOOL				restoreFirstResponderToBrowser;
+@property (readwrite,assign) BOOL				restoreFirstResponderToViewer;
 @property (readwrite,assign) NSMutableArray*	savedColumnScrollPositions;
 @property (readwrite,assign) NSPoint			savedHorizontalScrollPosition;
 @property (readwrite,assign) NSArray*			savedSelectedPaths;
-
-
-// Save and restore browser state
-+ (BrowserSelectionState*)	saveBrowserState:(FSBrowser*)browser;
-- (void)					restoreBrowserSelection;
 
 @end
 

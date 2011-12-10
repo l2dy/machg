@@ -20,20 +20,24 @@
 @class SidebarCell;
 
 // Pane Controllers
-@class BrowserViewController;
+@class FilesViewController;
 @class HistoryViewController;
 @class DifferencesViewController;
 @class BackingViewController;
 
 // Pane Views
-@class BrowserView;
+@class FilesView;
 @class HistoryView;
 @class DifferencesView;
 //@class BackingView;
 
-// FSBrowser
-@class FSBrowser;
+// FSViewer
+@class FSViewer;
+@class FSViewerBrowser;
+@class FSViewerOutline;
+@class FSViewerTable;
 @class FSNodeInfo;
+@class FSViewerSelectionState;
 
 // History / Log
 @class LogEntry;
@@ -297,11 +301,18 @@ typedef enum
 
 typedef enum
 {
-	eBrowserView     = 0x0,
+	eFilesView       = 0x0,
 	eHistoryView     = 0x01,
 	eDifferencesView = 0x02,
 	eBackingView     = 0x03
 } PaneViewNum;
+
+typedef enum
+{
+	eFilesBrowser    = 0x0,
+	eFilesOutline    = 0x01,
+	eFilesTable		 = 0x02
+} FSViewerNum;
 
 typedef enum
 {

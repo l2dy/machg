@@ -15,12 +15,12 @@
 #import "LogEntry.h"
 #import "RepositoryData.h"
 
-#import "BrowserViewController.h"
+#import "FilesViewController.h"
 #import "HistoryViewController.h"
 #import "DifferencesViewController.h"
 #import "BackingViewController.h"
 
-#import "FSBrowser.h"
+#import "FSViewer.h"
 #import "FSBrowserCell.h"	// Do we need this here?
 #import "FSNodeInfo.h"
 #import "Sidebar.h"
@@ -261,11 +261,11 @@
 // MARK: Initialize Controllers
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BrowserViewController*) theBrowserViewController
+- (FilesViewController*) theFilesViewController
 {
-	dispatch_once(&theBrowserViewControllerInitilizer_, ^{
-		theBrowserViewController_ = [[BrowserViewController alloc] initBrowserViewControllerWithDocument:self]; });
-	return theBrowserViewController_;
+	dispatch_once(&theFilesViewControllerInitilizer_, ^{
+		theFilesViewController_ = [[FilesViewController alloc] initFilesViewControllerWithDocument:self]; });
+	return theFilesViewController_;
 }
 
 - (HistoryViewController*) theHistoryViewController
@@ -438,10 +438,10 @@
 }
 
 
-- (void) unloadBrowserView
+- (void) unloadFilesView
 {
-	[theBrowserViewController_ unload];
-	theBrowserViewController_ = nil;
+	[theFilesViewController_ unload];
+	theFilesViewController_ = nil;
 }
 
 - (void) unloadHistoryView
@@ -465,7 +465,7 @@
 // MARK:  The Views
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BrowserView*)		theBrowserView		{ return [[self theBrowserViewController] theBrowserView]; }
+- (FilesView*)			theFilesView		{ return [[self theFilesViewController] theFilesView]; }
 - (HistoryView*)		theHistoryView		{ return [[self theHistoryViewController] theHistoryView]; }
 - (DifferencesView*)	theDifferencesView	{ return [[self theDifferencesViewController] theDifferencesView]; }
 
@@ -539,7 +539,7 @@
 {
 	switch (paneNum)
 	{
-		case eBrowserView:		return [self theBrowserView];
+		case eFilesView:		return [self theFilesView];
 		case eHistoryView:		return [self theHistoryView];
 		case eDifferencesView:	return [self theDifferencesView];
 		case eBackingView:		return [[self theBackingViewController] view];
@@ -607,10 +607,10 @@
 	// Specific opening handling for some panes
 	switch (newPaneNum)
 	{
-		case eBrowserView:			[[self theBrowserView] openBrowserView:self];				break;
+		case eFilesView:			[[self theFilesView] openFilesView:self];					break;
 		case eHistoryView:			[[self theHistoryView] openHistoryView:self];				break;
 		case eDifferencesView:		[[self theDifferencesView] openDifferencesView:self];		break;
-		default:                      break;
+		default:																				break;
 	}	
 	
 	currentPane_ = newPaneNum;
@@ -658,17 +658,17 @@
 // MARK: Actions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BOOL)	showingBrowserView								{ return currentPane_ == eBrowserView; }
+- (BOOL)	showingFilesView								{ return currentPane_ == eFilesView; }
 - (BOOL)	showingHistoryView								{ return currentPane_ == eHistoryView; }
 - (BOOL)	showingDifferencesView							{ return currentPane_ == eDifferencesView; }
 - (BOOL)	showingBackingView								{ return currentPane_ == eBackingView; }
-- (BOOL)	showingBrowserOrHistoryView						{ return currentPane_ == eBrowserView || currentPane_ == eHistoryView; }
-- (BOOL)	showingBrowserOrDifferencesView					{ return currentPane_ == eBrowserView || currentPane_ == eDifferencesView; }
-- (BOOL)	showingBrowserOrHistoryOrDifferencesView		{ return currentPane_ == eBrowserView || currentPane_ == eHistoryView || currentPane_ == eDifferencesView; }
+- (BOOL)	showingBrowserOrHistoryView						{ return currentPane_ == eFilesView || currentPane_ == eHistoryView; }
+- (BOOL)	showingBrowserOrDifferencesView					{ return currentPane_ == eFilesView || currentPane_ == eDifferencesView; }
+- (BOOL)	showingBrowserOrHistoryOrDifferencesView		{ return currentPane_ == eFilesView || currentPane_ == eHistoryView || currentPane_ == eDifferencesView; }
 - (BOOL)	showingASheet									{ return showingSheet_; }
 
 
-- (IBAction) actionSwitchViewToBrowserView:(id)sender		{ [self setCurrentPane:eBrowserView]; }
+- (IBAction) actionSwitchViewToFilesView:(id)sender			{ [self setCurrentPane:eFilesView]; }
 - (IBAction) actionSwitchViewToBackingView:(id)sender		{ [self setCurrentPane:eBackingView]; }
 - (IBAction) actionSwitchViewToDifferencesView:(id)sender	{ [self setCurrentPane:eDifferencesView]; }
 - (IBAction) actionSwitchViewToHistoryView:(id)sender		{ [self setCurrentPane:eHistoryView]; }
@@ -766,10 +766,10 @@
 
 - (BOOL) previewPanel:(QLPreviewPanel*)panel handleEvent:(NSEvent*)event
 {
-    // redirect all key down events to the browser view
+    // redirect all key down events to the files view
     if ([event type] == NSKeyDown)
 	{
-        [[self theBrowser] keyDown:event];
+        [[self theFSViewer] keyDown:event];
         return YES;
     }
     return NO;
@@ -839,8 +839,8 @@
 	if (menuItem)
 		[menuItem setTitle: [self quicklookPreviewIsVisible] ? @"Close Quick Look panel" : @"Open Quick Look panel"];
 	return [self repositoryIsSelectedAndReady] &&
-			(([self showingBrowserView]     && [[[self theBrowserView]     theBrowser] nodesAreChosen]) ||
-			 ([self showingDifferencesView] && [[[self theDifferencesView] theBrowser] nodesAreChosen]) ||
+			(([self showingFilesView]       && [[[self theFilesView]       theFSViewer] nodesAreChosen]) ||
+			 ([self showingDifferencesView] && [[[self theDifferencesView] theFSViewer] nodesAreChosen]) ||
 			 ([self showingHistoryView]     && [[[self theHistoryView]   logTableView] revisionsAreSelected]));
 }
 
@@ -849,14 +849,14 @@
 {
 	SEL theAction = [anItem action];
 	
-	if (theAction == @selector(actionSwitchViewToBrowserView:))			return [self repositoryIsSelectedAndReady];
+	if (theAction == @selector(actionSwitchViewToFilesView:))			return [self repositoryIsSelectedAndReady];
 	if (theAction == @selector(actionSwitchViewToHistoryView:))			return [self repositoryIsSelectedAndReady];
 	if (theAction == @selector(actionSwitchViewToDifferencesView:))		return [self repositoryIsSelectedAndReady];
 
 
-	if (theAction == @selector(mainMenuRevertSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusChangedInSomeWay];
+	if (theAction == @selector(mainMenuRevertSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingFilesView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusChangedInSomeWay];
 	if (theAction == @selector(mainMenuRevertAllFiles:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [self repositoryHasFilesWhichContainStatus:eHGStatusChangedInSomeWay];
-	if (theAction == @selector(mainMenuRevertSelectedFilesToVersion:))	return [self repositoryIsSelectedAndReady] && [self showingBrowserView] && [self nodesAreChosenInBrowser];
+	if (theAction == @selector(mainMenuRevertSelectedFilesToVersion:))	return [self repositoryIsSelectedAndReady] && [self showingFilesView] && [self nodesAreChosenInBrowser];
 	// ------
 	if (theAction == @selector(mainMenuRollbackCommit:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [[self repositoryData] isRollbackInformationAvailable];
 	
@@ -1257,7 +1257,7 @@
 	if (dirtify)
 	{
 		NSString* rootPath = [self absolutePathOfRepositoryRoot];
-		[[self theBrowser] markPathsDirty:[RepositoryPaths fromPaths:paths withRootPath:rootPath]];		// Mark the paths as dirty and redisplay them...
+		[[self theFSViewer] markPathsDirty:[RepositoryPaths fromPaths:paths withRootPath:rootPath]];		// Mark the paths as dirty and redisplay them...
 	}
 }
 
@@ -1349,18 +1349,18 @@
 - (SidebarNode*)	selectedRepositoryRepositoryRef			{ SidebarNode* repo = [sidebar_ selectedNode]; return [repo isRepositoryRef] ? repo : nil; }
 - (NSArray*)		absolutePathOfRepositoryRootAsArray		{ return [NSArray arrayWithObject:[self absolutePathOfRepositoryRoot]]; }
 
-- (FSBrowser*)		theBrowser								{ return [[self theBrowserView] theBrowser]; }
-- (FSNodeInfo*)		rootNodeInfo							{ return [[self theBrowser] rootNodeInfo]; }
+- (FSViewer*)		theFSViewer								{ return [[self theFilesView] theFSViewer]; }
+- (FSNodeInfo*)		rootNodeInfo							{ return [[self theFSViewer] rootNodeInfo]; }
 - (FSNodeInfo*)		nodeForPath:(NSString*)absolutePath		{ return [[self rootNodeInfo] nodeForPathFromRoot:absolutePath]; }
-- (BOOL)			singleFileIsChosenInBrowser				{ return [[self theBrowser] singleFileIsChosenInBrowser]; }
-- (BOOL)			singleItemIsChosenInBrowser				{ return [[self theBrowser] singleItemIsChosenInBrowser]; }
-- (BOOL)			nodesAreChosenInBrowser					{ return [[self theBrowser] nodesAreChosen]; }
-- (HGStatus)		statusOfChosenPathsInBrowser			{ return [[self theBrowser] statusOfChosenPathsInBrowser]; }
-- (NSArray*)		absolutePathsOfBrowserChosenFiles		{ return [[self theBrowser] absolutePathsOfChosenFilesInBrowser]; }
-- (NSString*)		enclosingDirectoryOfBrowserChosenFiles	{ return [[self theBrowser] enclosingDirectoryOfChosenFilesInBrowser]; }
+- (BOOL)			singleFileIsChosenInBrowser				{ return [[self theFSViewer] singleFileIsChosenInBrowser]; }
+- (BOOL)			singleItemIsChosenInBrowser				{ return [[self theFSViewer] singleItemIsChosenInBrowser]; }
+- (BOOL)			nodesAreChosenInBrowser					{ return [[self theFSViewer] nodesAreChosen]; }
+- (HGStatus)		statusOfChosenPathsInBrowser			{ return [[self theFSViewer] statusOfChosenPathsInBrowser]; }
+- (NSArray*)		absolutePathsOfBrowserChosenFiles		{ return [[self theFSViewer] absolutePathsOfChosenFilesInBrowser]; }
+- (NSString*)		enclosingDirectoryOfBrowserChosenFiles	{ return [[self theFSViewer] enclosingDirectoryOfChosenFilesInBrowser]; }
 
-- (BOOL) pathsAreSelectedInBrowserWhichContainStatus:(HGStatus)status	{ return bitsInCommon(status, [[self theBrowser] statusOfChosenPathsInBrowser]); }
-- (BOOL) repositoryHasFilesWhichContainStatus:(HGStatus)status			{ return bitsInCommon(status, [[[self theBrowser] rootNodeInfo] hgStatus]); }
+- (BOOL) pathsAreSelectedInBrowserWhichContainStatus:(HGStatus)status	{ return bitsInCommon(status, [[self theFSViewer] statusOfChosenPathsInBrowser]); }
+- (BOOL) repositoryHasFilesWhichContainStatus:(HGStatus)status			{ return bitsInCommon(status, [[[self theFSViewer] rootNodeInfo] hgStatus]); }
 
 // Move any "unknown" files ending in .orig to the trash.
 - (void) pruneDotOrigFiles:(NSArray*)paths
@@ -1490,7 +1490,7 @@
 	}
 
 	if ([node isLocalRepositoryRef] && [self showingBackingView])
-		[self actionSwitchViewToBrowserView:self];
+		[self actionSwitchViewToFilesView:self];
 
 	NSString* rootPath = [self absolutePathOfRepositoryRoot];
 	BOOL rootPathChanged = !repositoryData_ || ![[repositoryData_ rootPath] isEqualToString:rootPath];
@@ -1526,7 +1526,7 @@
 - (void) refreshBrowserPaths:(NSArray*)absoluteChangedPaths  { [self refreshBrowserPaths:absoluteChangedPaths finishingBlock:nil]; }
 - (void) refreshBrowserPaths:(NSArray*)absoluteChangedPaths  finishingBlock:(BlockProcess)theBlock
 {
-	[[self theBrowser] refreshBrowserPaths:[RepositoryPaths fromPaths:absoluteChangedPaths withRootPath:[self absolutePathOfRepositoryRoot]] finishingBlock:theBlock];
+	[[self theFSViewer] refreshBrowserPaths:[RepositoryPaths fromPaths:absoluteChangedPaths withRootPath:[self absolutePathOfRepositoryRoot]] finishingBlock:theBlock];
 }
 
 
@@ -1537,7 +1537,7 @@
 		return;
 		
 	NSString* rootPath = [self absolutePathOfRepositoryRoot];
-	[[self theBrowser] refreshBrowserPaths:[RepositoryPaths fromRootPath:rootPath] finishingBlock:nil];
+	[[self theFSViewer] refreshBrowserPaths:[RepositoryPaths fromRootPath:rootPath] finishingBlock:nil];
 	[self setupEventlistener];
 }
 
@@ -1620,7 +1620,7 @@
 	}
 	
 	[self removeAllUndoActionsForDocument];
-	NSArray* pathsForHGToUntrack = [[self theBrowser] filterPaths:theSelectedFiles byBitfield:eHGStatusInRepository];
+	NSArray* pathsForHGToUntrack = [[self theFSViewer] filterPaths:theSelectedFiles byBitfield:eHGStatusInRepository];
 	if ([pathsForHGToUntrack count] > 0)
 		[self dispatchToMercurialQueuedWithDescription:@"Untrack Files" process:^{
 			[self registerPendingRefresh:pathsForHGToUntrack];
@@ -1826,7 +1826,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 
 - (BOOL) primaryActionRevertFiles:(NSArray*)absolutePaths toVersion:(NSNumber*)version
 {
-	NSArray* filteredPaths = version ? absolutePaths : [[self theBrowser] filterPaths:absolutePaths byBitfield:eHGStatusChangedInSomeWay];
+	NSArray* filteredPaths = version ? absolutePaths : [[self theFSViewer] filterPaths:absolutePaths byBitfield:eHGStatusChangedInSomeWay];
 	
 	if ([filteredPaths count] <= 0)
 		{ PlayBeep(); DebugLog(@"No files selected to revert"); return NO; }
@@ -2100,7 +2100,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 
 	switch (AfterMergeSwitchToFromDefaults())
 	{
-		case eAfterMergeSwitchToBrowser:	[self actionSwitchViewToBrowserView:self]; break;
+		case eAfterMergeSwitchToBrowser:	[self actionSwitchViewToFilesView:self]; break;
 		case eAfterMergeSwitchToHistory:	[self actionSwitchViewToHistoryView:self]; break;
 	}
 

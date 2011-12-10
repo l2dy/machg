@@ -14,7 +14,7 @@
 #import "ResultsWindowController.h"
 #import "LogTableView.h"
 #import "LogEntry.h"
-#import "FSBrowser.h"
+#import "FSViewer.h"
 #import "FSBrowserCell.h"
 #import "FSNodeInfo.h"
 
@@ -65,7 +65,7 @@
 @synthesize showUnresolvedFilesInBrowser = showUnresolvedFilesInBrowser_;
 @synthesize showResolvedFilesInBrowser   = showResolvedFilesInBrowser_;
 @synthesize myDocument;
-@synthesize theBrowser;
+@synthesize theFSViewer;
 
 
 
@@ -96,10 +96,10 @@
 	[self openSplitViewPanesToDefaultHeights: self];
 
 	// Tell the browser to send us messages when it is clicked.
-	[theBrowser setTarget:self];
-	[theBrowser setAction:@selector(browserAction:)];
-	[theBrowser setDoubleAction:@selector(browserDoubleAction:)];
-	[theBrowser setAreNodesVirtual:YES];
+	[[theFSViewer theFilesBrowser] setTarget:self];
+	[[theFSViewer theFilesBrowser] setAction:@selector(browserAction:)];
+	[[theFSViewer theFilesBrowser] setDoubleAction:@selector(browserDoubleAction:)];
+	[theFSViewer setAreNodesVirtual:YES];
 	[mainSplitView setPosition:400 ofDividerAtIndex:0];
 	
 	[compareLogTableView setCanSelectIncompleteRevision:YES];
@@ -114,16 +114,16 @@
 	
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	if (rootPath)
-		[theBrowser refreshBrowserPaths:[RepositoryPaths fromRootPath:rootPath] finishingBlock:nil];
+		[theFSViewer refreshBrowserPaths:[RepositoryPaths fromRootPath:rootPath] finishingBlock:nil];
 }
 
 - (void) unload
 {
 	[self stopObserving];
-	[theBrowser unload];
+	[theFSViewer unload];
 	[baseLogTableView unload];
 	[compareLogTableView unload];
-	theBrowser = nil;
+	theFSViewer = nil;
 	baseLogTableView = nil;
 	compareLogTableView = nil;
 }
@@ -246,7 +246,7 @@
 {
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	if (rootPath)
-		[theBrowser refreshBrowserPaths:[RepositoryPaths fromRootPath:rootPath]  finishingBlock:nil];
+		[theFSViewer refreshBrowserPaths:[RepositoryPaths fromRootPath:rootPath]  finishingBlock:nil];
 }
 
 
@@ -301,13 +301,13 @@
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (IBAction) mainMenuOpenSelectedFilesInFinder:(id)sender		{ [self differencesMenuOpenSelectedFilesInFinder:sender]; }
-- (IBAction) mainMenuRevealSelectedFilesInFinder:(id)sender		{ [theBrowser browserMenuRevealSelectedFilesInFinder:sender]; }
-- (IBAction) mainMenuOpenTerminalHere:(id)sender				{ [theBrowser browserMenuOpenTerminalHere:sender]; }
+- (IBAction) mainMenuRevealSelectedFilesInFinder:(id)sender		{ [theFSViewer browserMenuRevealSelectedFilesInFinder:sender]; }
+- (IBAction) mainMenuOpenTerminalHere:(id)sender				{ [theFSViewer browserMenuOpenTerminalHere:sender]; }
 
 
 - (IBAction) mainMenuDiffSelectedFiles:(id)sender
 {
-	NSArray* selectedPaths = [theBrowser absolutePathsOfChosenFilesInBrowser];
+	NSArray* selectedPaths = [theFSViewer absolutePathsOfChosenFilesInBrowser];
 	[myDocument viewDifferencesInCurrentRevisionFor:selectedPaths toRevision:[self revisionNumbers]];
 }
 - (IBAction) mainMenuDiffAllFiles:(id)sender
@@ -317,7 +317,7 @@
 }
 - (IBAction) toolbarDiffFiles:(id)sender
 {
-	if ([theBrowser nodesAreChosen])
+	if ([theFSViewer nodesAreChosen])
 		[self mainMenuDiffSelectedFiles:sender];
 	else
 		[self mainMenuDiffAllFiles:sender];
@@ -326,14 +326,14 @@
 
 - (IBAction) differencesMenuAnnotateBaseRevisionOfSelectedFiles:(id)sender
 {
-	NSArray* selectedFiles = [theBrowser absolutePathsOfChosenFilesInBrowser];
+	NSArray* selectedFiles = [theFSViewer absolutePathsOfChosenFilesInBrowser];
 	NSArray* options = [[AppController sharedAppController] annotationOptionsFromDefaults];
 	[myDocument primaryActionAnnotateSelectedFiles:selectedFiles withRevision:[baseLogTableView selectedCompleteRevision] andOptions:options];
 }
 
 - (IBAction) differencesMenuAnnotateCompareRevisionOfSelectedFiles:(id)sender
 {
-	NSArray* selectedFiles = [theBrowser absolutePathsOfChosenFilesInBrowser];
+	NSArray* selectedFiles = [theFSViewer absolutePathsOfChosenFilesInBrowser];
 	NSArray* options = [[AppController sharedAppController] annotationOptionsFromDefaults];
 	[myDocument primaryActionAnnotateSelectedFiles:selectedFiles withRevision:[compareLogTableView selectedCompleteRevision] andOptions:options];
 }
@@ -348,7 +348,7 @@
 	BOOL isNotIncompleteRev    = ![compareRev isEqualTo:[compareLogTableView incompleteRevision]];
 	NSString* compareChangeset = isNotIncompleteRev ? [[compareLogTableView selectedEntry] changeset] : nil;
 
-	NSArray* nodes = [theBrowser selectedNodes];
+	NSArray* nodes = [theFSViewer selectedNodes];
 	for (FSNodeInfo* node in nodes)
 	{
 		// If the node has children its a directory which means we don't want to take a snapshot of it.
@@ -373,7 +373,7 @@
 // Test to see if we can make a valid snapshot of at least some of the selected nodes in the differences view
 - (BOOL) nodesAreChosenInBrowserWhichAreSnapshotable
 {
-	NSArray* nodes = [theBrowser chosenNodes];
+	NSArray* nodes = [theFSViewer chosenNodes];
 	for (FSNodeInfo* node in nodes)
 		if (IsEmpty([node childNodes]))
 			if (bitsInCommon([node hgStatus], eHGStatusPresent))
@@ -381,9 +381,9 @@
 	return NO;
 }
 
-- (BOOL) pathsAreSelectedInBrowserWhichContainStatus:(HGStatus)status	{ return bitsInCommon(status, [theBrowser statusOfChosenPathsInBrowser]); }
-- (BOOL) repositoryHasFilesWhichContainStatus:(HGStatus)status			{ return bitsInCommon(status, [[theBrowser rootNodeInfo] hgStatus]); }
-- (BOOL) nodesAreChosenInBrowser										{ return [theBrowser nodesAreChosen]; }
+- (BOOL) pathsAreSelectedInBrowserWhichContainStatus:(HGStatus)status	{ return bitsInCommon(status, [theFSViewer statusOfChosenPathsInBrowser]); }
+- (BOOL) repositoryHasFilesWhichContainStatus:(HGStatus)status			{ return bitsInCommon(status, [[theFSViewer rootNodeInfo] hgStatus]); }
+- (BOOL) nodesAreChosenInBrowser										{ return [theFSViewer nodesAreChosen]; }
 - (BOOL) toolbarActionAppliesToFilesWith:(HGStatus)status				{ return ([self pathsAreSelectedInBrowserWhichContainStatus:status] || (![self nodesAreChosenInBrowser] && [self repositoryHasFilesWhichContainStatus:status])); }
 
 - (BOOL) validateUserInterfaceItem:(id < NSValidatedUserInterfaceItem >)anItem
@@ -430,7 +430,7 @@
 - (IBAction) browserAction:(id)browser	{ [self updateCurrentPreviewImage]; }
 - (IBAction) browserDoubleAction:(id)browser
 {
-	SEL theAction = [self actionForDoubleClickEnum:[theBrowser actionEnumForBrowserDoubleClick]];
+	SEL theAction = [self actionForDoubleClickEnum:[theFSViewer actionEnumForBrowserDoubleClick]];
 	[[NSApplication sharedApplication] sendAction:theAction to:nil from:browser];
 }
 
@@ -516,7 +516,7 @@
 	NSMutableArray* pathsOfCachedItems = [[NSMutableArray alloc] init];
 	for (NSInteger row = [rowIndexes firstIndex]; row != NSNotFound; row = [rowIndexes indexGreaterThanIndex: row])
 	{
-		FSNodeInfo* node = [theBrowser itemAtRow:row inColumn:column];
+		FSNodeInfo* node = [[theFSViewer theFilesBrowser] itemAtRow:row inColumn:column];
 		NSString* path = [node absolutePath];
 		NSString* pathOfCachedCopy = [myDocument loadCachedCopyOfPath:path forChangeset:compareChangeset];
 		[pathsOfCachedItems addObjectIfNonNil:pathOfCachedCopy];
@@ -557,11 +557,11 @@
 // MARK:  Quicklook Handling
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (NSInteger) numberOfQuickLookPreviewItems		{ return [[theBrowser absolutePathsOfSelectedFilesInBrowser] count]; }
+- (NSInteger) numberOfQuickLookPreviewItems		{ return [[theFSViewer absolutePathsOfSelectedFilesInBrowser] count]; }
 
 - (NSArray*) quickLookPreviewItems
 {
-	if (![theBrowser nodesAreSelected])
+	if (![theFSViewer nodesAreSelected])
 		return [NSArray array];
 
 	NSNumber* compareRev       = [compareLogTableView selectedRevision];
@@ -571,16 +571,16 @@
 	NSString* compareChangeset = isNotIncompleteRev ? [[compareLogTableView selectedEntry] changeset] : nil;
 
 	NSMutableArray* quickLookPreviewItems = [[NSMutableArray alloc] init];
-	NSArray* indexPaths = [theBrowser selectionIndexPaths];
+	NSArray* indexPaths = [[theFSViewer theFilesBrowser] selectionIndexPaths];
 	for (NSIndexPath* indexPath in indexPaths)
 	{
-		NSString* path = [[theBrowser itemAtIndexPath:indexPath] absolutePath];
+		NSString* path = [[[theFSViewer theFilesBrowser] itemAtIndexPath:indexPath] absolutePath];
 		if (!path)
 			continue;
 		
 		NSInteger col = [indexPath length] - 1;
 		NSInteger row = [indexPath indexAtPosition:col];
-		NSRect itemRect   = [theBrowser frameinWindowOfRow:row inColumn:col];
+		NSRect itemRect   = [theFSViewer frameinWindowOfRow:row inColumn:col];
 		
 		NSString* pathOfCachedCopy = [myDocument loadCachedCopyOfPath:path forChangeset:compareChangeset];
 		if (pathOfCachedCopy)

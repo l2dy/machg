@@ -10,7 +10,7 @@
 #import <Cocoa/Cocoa.h>
 #import "Common.h"
 #import "LogTableView.h"
-#import "FSBrowser.h"
+#import "FSViewer.h"
 
 
 
@@ -64,7 +64,7 @@
 	IBOutlet LogTableView*		compareLogTableView;
 	IBOutlet NSTextView*		detailedCompareEntryTextView;
 
-	IBOutlet FSBrowser*			theBrowser;
+	IBOutlet FSViewer*			theFSViewer;
 
 	
 	BOOL						showCleanFilesInBrowser_;
@@ -91,7 +91,7 @@
 @property (readwrite,assign) BOOL showUnresolvedFilesInBrowser;
 @property (readwrite,assign) BOOL showResolvedFilesInBrowser;
 @property (readwrite,assign) MacHgDocument*  myDocument;
-@property (readwrite,assign) FSBrowser*  theBrowser;
+@property (readwrite,assign) FSViewer*  theFSViewer;
 
 - (void) unload;
 

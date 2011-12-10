@@ -10,7 +10,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "Common.h"
-#import "FSBrowser.h"
+#import "FSViewer.h"
 #import <Quartz/Quartz.h>	// Quartz framework provides the QLPreviewPanel public API
 
 @class LoadedInitializationData;
@@ -63,7 +63,7 @@
  @private
 	
 	// Pane Controllers
-	BrowserViewController*				theBrowserViewController_;
+	FilesViewController*				theFilesViewController_;
 	HistoryViewController*				theHistoryViewController_;
 	DifferencesViewController*			theDifferencesViewController_;
 	BackingViewController*				theBackingViewController_;
@@ -93,7 +93,7 @@
 
 	
 	// Initilizers for Pane and Sheet Controllers
-	dispatch_once_t						theBrowserViewControllerInitilizer_;
+	dispatch_once_t						theFilesViewControllerInitilizer_;
 	dispatch_once_t						theHistoryViewControllerInitilizer_;
 	dispatch_once_t						theDifferencesViewControllerInitilizer_;
 	dispatch_once_t						theBackingViewControllerInitilizer_;
@@ -164,13 +164,13 @@
 @property (nonatomic, assign) BOOL					toolbarSearchFieldQueryIsValid;
 @property (readonly,  assign) NSToolbarItem*		toolbarSearchItem;
 
-- (BrowserView*)					theBrowserView;
+- (FilesView*)						theFilesView;
 - (HistoryView*)					theHistoryView;
 - (DifferencesView*)				theDifferencesView;
 
 
 // Access the controllers
-- (BrowserViewController*)			theBrowserViewController;
+- (FilesViewController*)			theFilesViewController;
 - (HistoryViewController*)			theHistoryViewController;
 - (DifferencesViewController*)		theDifferencesViewController;
 - (BackingViewController*)			theBackingViewController;
@@ -203,7 +203,7 @@
 
 
 // Pane switching
-- (BOOL)		showingBrowserView;
+- (BOOL)		showingFilesView;
 - (BOOL)		showingHistoryView;
 - (BOOL)		showingDifferencesView;
 - (BOOL)		showingBackingView;
@@ -213,7 +213,7 @@
 - (BOOL)		showingASheet;
 - (PaneViewNum)	currentPane;
 - (void)		setCurrentPane:(PaneViewNum)paneNum;
-- (IBAction)	actionSwitchViewToBrowserView:(id)sender;
+- (IBAction)	actionSwitchViewToFilesView:(id)sender;
 - (IBAction)	actionSwitchViewToHistoryView:(id)sender;
 - (IBAction)	actionSwitchViewToDifferencesView:(id)sender;
 - (IBAction)	actionSwitchViewToBackingView:(id)sender;
@@ -237,7 +237,7 @@
 
 
 // Query the browsed files of the repository
-- (FSBrowser*)	theBrowser;
+- (FSViewer*)	theFSViewer;
 - (FSNodeInfo*)	rootNodeInfo;
 - (BOOL)		singleFileIsChosenInBrowser;
 - (BOOL)		singleItemIsChosenInBrowser;

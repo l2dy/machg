@@ -2,17 +2,16 @@
 <archive type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="8.00">
   <data>
     <int key="IBDocument.SystemTarget">1060</int>
-    <string key="IBDocument.SystemVersion">11B26</string>
+    <string key="IBDocument.SystemVersion">11C74</string>
     <string key="IBDocument.InterfaceBuilderVersion">851</string>
-    <string key="IBDocument.AppKitVersion">1138</string>
-    <string key="IBDocument.HIToolboxVersion">566.00</string>
+    <string key="IBDocument.AppKitVersion">1138.23</string>
+    <string key="IBDocument.HIToolboxVersion">567.00</string>
     <dictionary class="NSMutableDictionary" key="IBDocument.PluginVersions">
       <string key="com.apple.InterfaceBuilder.CocoaPlugin">851</string>
       <string key="com.brandonwalkin.BWToolkit">1.2.2</string>
     </dictionary>
     <array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-      <integer value="416"/>
-      <integer value="251"/>
+      <integer value="303"/>
     </array>
     <array key="IBDocument.PluginDependencies">
       <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1062,6 +1061,39 @@
                 <reference key="NSNextResponder" ref="174023107"/>
                 <int key="NSvFlags">274</int>
                 <array class="NSMutableArray" key="NSSubviews">
+                  <object class="NSBox" id="43990950">
+                    <reference key="NSNextResponder" ref="299178848"/>
+                    <int key="NSvFlags">18</int>
+                    <array class="NSMutableArray" key="NSSubviews">
+                      <object class="NSView" id="762777940">
+                        <reference key="NSNextResponder" ref="43990950"/>
+                        <int key="NSvFlags">274</int>
+                        <string key="NSFrameSize">{981, 303}</string>
+                        <reference key="NSSuperview" ref="43990950"/>
+                        <string key="NSReuseIdentifierKey">_NS:21</string>
+                      </object>
+                    </array>
+                    <string key="NSFrame">{{20, 20}, {981, 303}}</string>
+                    <reference key="NSSuperview" ref="299178848"/>
+                    <string key="NSReuseIdentifierKey">_NS:18</string>
+                    <string key="NSOffsets">{0, 0}</string>
+                    <object class="NSTextFieldCell" key="NSTitleCell">
+                      <int key="NSCellFlags">67239424</int>
+                      <int key="NSCellFlags2">0</int>
+                      <string key="NSContents">Box</string>
+                      <reference key="NSSupport" ref="26"/>
+                      <reference key="NSBackgroundColor" ref="376560920"/>
+                      <object class="NSColor" key="NSTextColor">
+                        <int key="NSColorSpace">3</int>
+                        <bytes key="NSWhite">MCAwLjgwMDAwMDAxMTkAA</bytes>
+                      </object>
+                    </object>
+                    <reference key="NSContentView" ref="762777940"/>
+                    <int key="NSBorderType">0</int>
+                    <int key="NSBoxType">4</int>
+                    <int key="NSTitlePosition">2</int>
+                    <bool key="NSTransparent">NO</bool>
+                  </object>
                   <object class="NSButton" id="56005608">
                     <reference key="NSNextResponder" ref="299178848"/>
                     <int key="NSvFlags">265</int>
@@ -1239,32 +1271,6 @@
                       <int key="NSPeriodicDelay">200</int>
                       <int key="NSPeriodicInterval">25</int>
                     </object>
-                  </object>
-                  <object class="NSBrowser" id="756877055">
-                    <reference key="NSNextResponder" ref="299178848"/>
-                    <int key="NSvFlags">4370</int>
-                    <string key="NSFrame">{{20, 20}, {981, 303}}</string>
-                    <reference key="NSSuperview" ref="299178848"/>
-                    <bool key="NSEnabled">YES</bool>
-                    <object class="NSBrowserCell" key="NSCellPrototype">
-                      <int key="NSCellFlags">67239488</int>
-                      <int key="NSCellFlags2">1024</int>
-                      <object class="NSMutableString" key="NSContents">
-                        <characters key="NS.bytes">BrowserItem</characters>
-                      </object>
-                      <reference key="NSSupport" ref="317279393"/>
-                    </object>
-                    <object class="NSMutableString" key="NSPathSeparator">
-                      <characters key="NS.bytes">/</characters>
-                    </object>
-                    <string key="NSFirstColumnTitle">Browser</string>
-                    <int key="NSMinColumnWidth">50</int>
-                    <int key="NSNumberOfVisibleColumns">4</int>
-                    <int key="NSColumnResizingType">2</int>
-                    <double key="NSPreferedColumnWidth">267</double>
-                    <bool key="NSAllowsTypeSelect">YES</bool>
-                    <int key="NSBrFlags">-939442176</int>
-                    <double key="NSBrowserRowHeight">17</double>
                   </object>
                   <object class="NSImageView" id="571627055">
                     <reference key="NSNextResponder" ref="299178848"/>
@@ -1801,14 +1807,6 @@
         </object>
         <object class="IBConnectionRecord">
           <object class="IBOutletConnection" key="connection">
-            <string key="label">menu</string>
-            <reference key="source" ref="756877055"/>
-            <reference key="destination" ref="572099067"/>
-          </object>
-          <int key="connectionID">443</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBOutletConnection" key="connection">
             <string key="label">logTable</string>
             <reference key="source" ref="72495217"/>
             <reference key="destination" ref="881988333"/>
@@ -1830,14 +1828,6 @@
             <reference key="destination" ref="1001"/>
           </object>
           <int key="connectionID">557</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBOutletConnection" key="connection">
-            <string key="label">theBrowser</string>
-            <reference key="source" ref="554596880"/>
-            <reference key="destination" ref="756877055"/>
-          </object>
-          <int key="connectionID">558</int>
         </object>
         <object class="IBConnectionRecord">
           <object class="IBOutletConnection" key="connection">
@@ -2145,14 +2135,6 @@
         </object>
         <object class="IBConnectionRecord">
           <object class="IBOutletConnection" key="connection">
-            <string key="label">parentController</string>
-            <reference key="source" ref="756877055"/>
-            <reference key="destination" ref="554596880"/>
-          </object>
-          <int key="connectionID">592</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBOutletConnection" key="connection">
             <string key="label">delegate</string>
             <reference key="source" ref="881988333"/>
             <reference key="destination" ref="554596880"/>
@@ -2278,6 +2260,22 @@
             <reference key="destination" ref="639855978"/>
           </object>
           <int key="connectionID">617</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBOutletConnection" key="connection">
+            <string key="label">parentController</string>
+            <reference key="source" ref="43990950"/>
+            <reference key="destination" ref="554596880"/>
+          </object>
+          <int key="connectionID">620</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBOutletConnection" key="connection">
+            <string key="label">theFSViewer</string>
+            <reference key="source" ref="554596880"/>
+            <reference key="destination" ref="43990950"/>
+          </object>
+          <int key="connectionID">621</int>
         </object>
       </array>
       <object class="IBMutableOrderedSet" key="objectRecords">
@@ -2516,7 +2514,6 @@
               <reference ref="843444281"/>
               <reference ref="578542084"/>
               <reference ref="391176378"/>
-              <reference ref="756877055"/>
               <reference ref="571627055"/>
               <reference ref="2171518"/>
               <reference ref="573236560"/>
@@ -2533,6 +2530,7 @@
               <reference ref="197647178"/>
               <reference ref="722979603"/>
               <reference ref="56005608"/>
+              <reference ref="43990950"/>
             </array>
             <reference key="parent" ref="174023107"/>
             <string key="objectName">Browse differeces View</string>
@@ -2575,11 +2573,6 @@
             <array class="NSMutableArray" key="children">
               <reference ref="117785598"/>
             </array>
-            <reference key="parent" ref="299178848"/>
-          </object>
-          <object class="IBObjectRecord">
-            <int key="objectID">318</int>
-            <reference key="object" ref="756877055"/>
             <reference key="parent" ref="299178848"/>
           </object>
           <object class="IBObjectRecord">
@@ -3145,6 +3138,12 @@
             <reference key="object" ref="639855978"/>
             <reference key="parent" ref="572099067"/>
           </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">619</int>
+            <reference key="object" ref="43990950"/>
+            <reference key="parent" ref="299178848"/>
+            <string key="objectName">TheFSViewer</string>
+          </object>
         </array>
       </object>
       <dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -3217,9 +3216,6 @@
         <string key="315.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="316.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="317.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-        <string key="318.CustomClassName">FSBrowser</string>
-        <string key="318.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-        <boolean value="YES" key="318.ImportedFromIB2"/>
         <string key="319.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="320.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="321.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3290,202 +3286,17 @@
         <string key="613.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="614.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="616.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+        <string key="619.CustomClassName">FSViewer</string>
+        <string key="619.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
       </dictionary>
       <dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
       <nil key="activeLocalization"/>
       <dictionary class="NSMutableDictionary" key="localizations"/>
       <nil key="sourceID"/>
-      <int key="maxID">617</int>
+      <int key="maxID">621</int>
     </object>
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <array class="NSMutableArray" key="referencedPartialClassDescriptions">
-        <object class="IBPartialClassDescription">
-          <string key="className">BrowserView</string>
-          <string key="superclassName">NSView</string>
-          <dictionary class="NSMutableDictionary" key="actions">
-            <string key="browserAction:">id</string>
-            <string key="browserDoubleAction:">id</string>
-            <string key="mainMenuAddRenameRemoveAllFiles:">id</string>
-            <string key="mainMenuAddRenameRemoveSelectedFiles:">id</string>
-            <string key="mainMenuAddSelectedFiles:">id</string>
-            <string key="mainMenuAnnotateSelectedFiles:">id</string>
-            <string key="mainMenuCommitAllFiles:">id</string>
-            <string key="mainMenuCommitSelectedFiles:">id</string>
-            <string key="mainMenuDeleteSelectedFiles:">id</string>
-            <string key="mainMenuDiffAllFiles:">id</string>
-            <string key="mainMenuDiffSelectedFiles:">id</string>
-            <string key="mainMenuIgnoreSelectedFiles:">id</string>
-            <string key="mainMenuOpenSelectedFilesInFinder:">id</string>
-            <string key="mainMenuOpenTerminalHere:">id</string>
-            <string key="mainMenuRenameSelectedItem:">id</string>
-            <string key="mainMenuRevealSelectedFilesInFinder:">id</string>
-            <string key="mainMenuRevertAllFiles:">id</string>
-            <string key="mainMenuRevertSelectedFiles:">id</string>
-            <string key="mainMenuRevertSelectedFilesToVersion:">id</string>
-            <string key="mainMenuUnignoreSelectedFiles:">id</string>
-            <string key="mainMenuUntrackSelectedFiles:">id</string>
-            <string key="openBrowserView:">id</string>
-            <string key="refreshBrowserContent:">id</string>
-            <string key="toolbarAddRenameRemoveFiles:">id</string>
-            <string key="toolbarCommitFiles:">id</string>
-            <string key="toolbarDiffFiles:">id</string>
-            <string key="toolbarRevertFiles:">id</string>
-          </dictionary>
-          <dictionary class="NSMutableDictionary" key="actionInfosByName">
-            <object class="IBActionInfo" key="browserAction:">
-              <string key="name">browserAction:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBActionInfo" key="browserDoubleAction:">
-              <string key="name">browserDoubleAction:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBActionInfo" key="mainMenuAddRenameRemoveAllFiles:">
-              <string key="name">mainMenuAddRenameRemoveAllFiles:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBActionInfo" key="mainMenuAddRenameRemoveSelectedFiles:">
-              <string key="name">mainMenuAddRenameRemoveSelectedFiles:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBActionInfo" key="mainMenuAddSelectedFiles:">
-              <string key="name">mainMenuAddSelectedFiles:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBActionInfo" key="mainMenuAnnotateSelectedFiles:">
-              <string key="name">mainMenuAnnotateSelectedFiles:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBActionInfo" key="mainMenuCommitAllFiles:">
-              <string key="name">mainMenuCommitAllFiles:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBActionInfo" key="mainMenuCommitSelectedFiles:">
-              <string key="name">mainMenuCommitSelectedFiles:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBActionInfo" key="mainMenuDeleteSelectedFiles:">
-              <string key="name">mainMenuDeleteSelectedFiles:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBActionInfo" key="mainMenuDiffAllFiles:">
-              <string key="name">mainMenuDiffAllFiles:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBActionInfo" key="mainMenuDiffSelectedFiles:">
-              <string key="name">mainMenuDiffSelectedFiles:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBActionInfo" key="mainMenuIgnoreSelectedFiles:">
-              <string key="name">mainMenuIgnoreSelectedFiles:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBActionInfo" key="mainMenuOpenSelectedFilesInFinder:">
-              <string key="name">mainMenuOpenSelectedFilesInFinder:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBActionInfo" key="mainMenuOpenTerminalHere:">
-              <string key="name">mainMenuOpenTerminalHere:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBActionInfo" key="mainMenuRenameSelectedItem:">
-              <string key="name">mainMenuRenameSelectedItem:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBActionInfo" key="mainMenuRevealSelectedFilesInFinder:">
-              <string key="name">mainMenuRevealSelectedFilesInFinder:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBActionInfo" key="mainMenuRevertAllFiles:">
-              <string key="name">mainMenuRevertAllFiles:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBActionInfo" key="mainMenuRevertSelectedFiles:">
-              <string key="name">mainMenuRevertSelectedFiles:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBActionInfo" key="mainMenuRevertSelectedFilesToVersion:">
-              <string key="name">mainMenuRevertSelectedFilesToVersion:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBActionInfo" key="mainMenuUnignoreSelectedFiles:">
-              <string key="name">mainMenuUnignoreSelectedFiles:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBActionInfo" key="mainMenuUntrackSelectedFiles:">
-              <string key="name">mainMenuUntrackSelectedFiles:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBActionInfo" key="openBrowserView:">
-              <string key="name">openBrowserView:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBActionInfo" key="refreshBrowserContent:">
-              <string key="name">refreshBrowserContent:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBActionInfo" key="toolbarAddRenameRemoveFiles:">
-              <string key="name">toolbarAddRenameRemoveFiles:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBActionInfo" key="toolbarCommitFiles:">
-              <string key="name">toolbarCommitFiles:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBActionInfo" key="toolbarDiffFiles:">
-              <string key="name">toolbarDiffFiles:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBActionInfo" key="toolbarRevertFiles:">
-              <string key="name">toolbarRevertFiles:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-          </dictionary>
-          <dictionary class="NSMutableDictionary" key="outlets">
-            <string key="nodeIconWell">NSImageView</string>
-            <string key="nodeInspector">NSTextField</string>
-            <string key="parentContoller">BrowserViewController</string>
-            <string key="theBrowser">FSBrowser</string>
-          </dictionary>
-          <dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-            <object class="IBToOneOutletInfo" key="nodeIconWell">
-              <string key="name">nodeIconWell</string>
-              <string key="candidateClassName">NSImageView</string>
-            </object>
-            <object class="IBToOneOutletInfo" key="nodeInspector">
-              <string key="name">nodeInspector</string>
-              <string key="candidateClassName">NSTextField</string>
-            </object>
-            <object class="IBToOneOutletInfo" key="parentContoller">
-              <string key="name">parentContoller</string>
-              <string key="candidateClassName">BrowserViewController</string>
-            </object>
-            <object class="IBToOneOutletInfo" key="theBrowser">
-              <string key="name">theBrowser</string>
-              <string key="candidateClassName">FSBrowser</string>
-            </object>
-          </dictionary>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier" id="889075582">
-            <string key="majorKey">IBProjectSource</string>
-            <string key="minorKey">Classes/BrowserView/BrowserViewController.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">BrowserViewController</string>
-          <string key="superclassName">NSViewController</string>
-          <object class="NSMutableDictionary" key="outlets">
-            <string key="NS.key.0">theBrowserView</string>
-            <string key="NS.object.0">BrowserView</string>
-          </object>
-          <object class="NSMutableDictionary" key="toOneOutletInfosByName">
-            <string key="NS.key.0">theBrowserView</string>
-            <object class="IBToOneOutletInfo" key="NS.object.0">
-              <string key="name">theBrowserView</string>
-              <string key="candidateClassName">BrowserView</string>
-            </object>
-          </object>
-          <reference key="sourceIdentifier" ref="889075582"/>
-        </object>
         <object class="IBPartialClassDescription">
           <string key="className">DifferencesView</string>
           <string key="superclassName">NSView</string>
@@ -3588,7 +3399,7 @@
             <string key="detailedCompareEntryTextView">NSTextView</string>
             <string key="mainSplitView">BWSplitView</string>
             <string key="parentController">DifferencesViewController</string>
-            <string key="theBrowser">FSBrowser</string>
+            <string key="theFSViewer">FSViewer</string>
           </dictionary>
           <dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
             <object class="IBToOneOutletInfo" key="baseBottom">
@@ -3647,9 +3458,9 @@
               <string key="name">parentController</string>
               <string key="candidateClassName">DifferencesViewController</string>
             </object>
-            <object class="IBToOneOutletInfo" key="theBrowser">
-              <string key="name">theBrowser</string>
-              <string key="candidateClassName">FSBrowser</string>
+            <object class="IBToOneOutletInfo" key="theFSViewer">
+              <string key="name">theFSViewer</string>
+              <string key="candidateClassName">FSViewer</string>
             </object>
           </dictionary>
           <object class="IBClassDescriptionSource" key="sourceIdentifier" id="854523369">
@@ -3690,15 +3501,29 @@
           </object>
         </object>
         <object class="IBPartialClassDescription">
-          <string key="className">FSBrowser</string>
-          <string key="superclassName">NSBrowser</string>
+          <string key="className">FSViewer</string>
+          <string key="superclassName">NSBox</string>
           <dictionary class="NSMutableDictionary" key="actions">
+            <string key="actionSwitchToFilesBrowser:">id</string>
+            <string key="actionSwitchToFilesOutline:">id</string>
+            <string key="actionSwitchToFilesTable:">id</string>
             <string key="browserMenuOpenSelectedFilesInFinder:">id</string>
             <string key="browserMenuOpenTerminalHere:">id</string>
             <string key="browserMenuRevealSelectedFilesInFinder:">id</string>
-            <string key="reloadData:">id</string>
           </dictionary>
           <dictionary class="NSMutableDictionary" key="actionInfosByName">
+            <object class="IBActionInfo" key="actionSwitchToFilesBrowser:">
+              <string key="name">actionSwitchToFilesBrowser:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="actionSwitchToFilesOutline:">
+              <string key="name">actionSwitchToFilesOutline:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="actionSwitchToFilesTable:">
+              <string key="name">actionSwitchToFilesTable:</string>
+              <string key="candidateClassName">id</string>
+            </object>
             <object class="IBActionInfo" key="browserMenuOpenSelectedFilesInFinder:">
               <string key="name">browserMenuOpenSelectedFilesInFinder:</string>
               <string key="candidateClassName">id</string>
@@ -3709,10 +3534,6 @@
             </object>
             <object class="IBActionInfo" key="browserMenuRevealSelectedFilesInFinder:">
               <string key="name">browserMenuRevealSelectedFilesInFinder:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBActionInfo" key="reloadData:">
-              <string key="name">reloadData:</string>
               <string key="candidateClassName">id</string>
             </object>
           </dictionary>
@@ -3729,15 +3550,239 @@
           </object>
           <object class="IBClassDescriptionSource" key="sourceIdentifier">
             <string key="majorKey">IBProjectSource</string>
-            <string key="minorKey">Classes/BrowserView/FSBrowser.h</string>
+            <string key="minorKey">Classes/FilesView/FSViewer.h</string>
+          </object>
+        </object>
+        <object class="IBPartialClassDescription">
+          <string key="className">FSViewer</string>
+          <string key="superclassName">NSBox</string>
+          <object class="NSMutableDictionary" key="actions">
+            <string key="NS.key.0">reloadData:</string>
+            <string key="NS.object.0">id</string>
+          </object>
+          <object class="NSMutableDictionary" key="actionInfosByName">
+            <string key="NS.key.0">reloadData:</string>
+            <object class="IBActionInfo" key="NS.object.0">
+              <string key="name">reloadData:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+          </object>
+          <object class="IBClassDescriptionSource" key="sourceIdentifier">
+            <string key="majorKey">IBUserSource</string>
+            <string key="minorKey"/>
+          </object>
+        </object>
+        <object class="IBPartialClassDescription">
+          <string key="className">FilesView</string>
+          <string key="superclassName">NSView</string>
+          <dictionary class="NSMutableDictionary" key="actions">
+            <string key="browserAction:">id</string>
+            <string key="browserDoubleAction:">id</string>
+            <string key="mainMenuAddRenameRemoveAllFiles:">id</string>
+            <string key="mainMenuAddRenameRemoveSelectedFiles:">id</string>
+            <string key="mainMenuAddSelectedFiles:">id</string>
+            <string key="mainMenuAnnotateSelectedFiles:">id</string>
+            <string key="mainMenuCommitAllFiles:">id</string>
+            <string key="mainMenuCommitSelectedFiles:">id</string>
+            <string key="mainMenuDeleteSelectedFiles:">id</string>
+            <string key="mainMenuDiffAllFiles:">id</string>
+            <string key="mainMenuDiffSelectedFiles:">id</string>
+            <string key="mainMenuIgnoreSelectedFiles:">id</string>
+            <string key="mainMenuOpenSelectedFilesInFinder:">id</string>
+            <string key="mainMenuOpenTerminalHere:">id</string>
+            <string key="mainMenuRenameSelectedItem:">id</string>
+            <string key="mainMenuRevealSelectedFilesInFinder:">id</string>
+            <string key="mainMenuRevertAllFiles:">id</string>
+            <string key="mainMenuRevertSelectedFiles:">id</string>
+            <string key="mainMenuRevertSelectedFilesToVersion:">id</string>
+            <string key="mainMenuUnignoreSelectedFiles:">id</string>
+            <string key="mainMenuUntrackSelectedFiles:">id</string>
+            <string key="openFilesView:">id</string>
+            <string key="refreshBrowserContent:">id</string>
+            <string key="toolbarAddRenameRemoveFiles:">id</string>
+            <string key="toolbarCommitFiles:">id</string>
+            <string key="toolbarDiffFiles:">id</string>
+            <string key="toolbarRevertFiles:">id</string>
+          </dictionary>
+          <dictionary class="NSMutableDictionary" key="actionInfosByName">
+            <object class="IBActionInfo" key="browserAction:">
+              <string key="name">browserAction:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="browserDoubleAction:">
+              <string key="name">browserDoubleAction:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="mainMenuAddRenameRemoveAllFiles:">
+              <string key="name">mainMenuAddRenameRemoveAllFiles:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="mainMenuAddRenameRemoveSelectedFiles:">
+              <string key="name">mainMenuAddRenameRemoveSelectedFiles:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="mainMenuAddSelectedFiles:">
+              <string key="name">mainMenuAddSelectedFiles:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="mainMenuAnnotateSelectedFiles:">
+              <string key="name">mainMenuAnnotateSelectedFiles:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="mainMenuCommitAllFiles:">
+              <string key="name">mainMenuCommitAllFiles:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="mainMenuCommitSelectedFiles:">
+              <string key="name">mainMenuCommitSelectedFiles:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="mainMenuDeleteSelectedFiles:">
+              <string key="name">mainMenuDeleteSelectedFiles:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="mainMenuDiffAllFiles:">
+              <string key="name">mainMenuDiffAllFiles:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="mainMenuDiffSelectedFiles:">
+              <string key="name">mainMenuDiffSelectedFiles:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="mainMenuIgnoreSelectedFiles:">
+              <string key="name">mainMenuIgnoreSelectedFiles:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="mainMenuOpenSelectedFilesInFinder:">
+              <string key="name">mainMenuOpenSelectedFilesInFinder:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="mainMenuOpenTerminalHere:">
+              <string key="name">mainMenuOpenTerminalHere:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="mainMenuRenameSelectedItem:">
+              <string key="name">mainMenuRenameSelectedItem:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="mainMenuRevealSelectedFilesInFinder:">
+              <string key="name">mainMenuRevealSelectedFilesInFinder:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="mainMenuRevertAllFiles:">
+              <string key="name">mainMenuRevertAllFiles:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="mainMenuRevertSelectedFiles:">
+              <string key="name">mainMenuRevertSelectedFiles:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="mainMenuRevertSelectedFilesToVersion:">
+              <string key="name">mainMenuRevertSelectedFilesToVersion:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="mainMenuUnignoreSelectedFiles:">
+              <string key="name">mainMenuUnignoreSelectedFiles:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="mainMenuUntrackSelectedFiles:">
+              <string key="name">mainMenuUntrackSelectedFiles:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="openFilesView:">
+              <string key="name">openFilesView:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="refreshBrowserContent:">
+              <string key="name">refreshBrowserContent:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="toolbarAddRenameRemoveFiles:">
+              <string key="name">toolbarAddRenameRemoveFiles:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="toolbarCommitFiles:">
+              <string key="name">toolbarCommitFiles:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="toolbarDiffFiles:">
+              <string key="name">toolbarDiffFiles:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="toolbarRevertFiles:">
+              <string key="name">toolbarRevertFiles:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+          </dictionary>
+          <dictionary class="NSMutableDictionary" key="outlets">
+            <string key="nodeIconWell">NSImageView</string>
+            <string key="nodeInspector">NSTextField</string>
+            <string key="parentContoller">FilesViewController</string>
+            <string key="theFSViewer">FSViewer</string>
+          </dictionary>
+          <dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+            <object class="IBToOneOutletInfo" key="nodeIconWell">
+              <string key="name">nodeIconWell</string>
+              <string key="candidateClassName">NSImageView</string>
+            </object>
+            <object class="IBToOneOutletInfo" key="nodeInspector">
+              <string key="name">nodeInspector</string>
+              <string key="candidateClassName">NSTextField</string>
+            </object>
+            <object class="IBToOneOutletInfo" key="parentContoller">
+              <string key="name">parentContoller</string>
+              <string key="candidateClassName">FilesViewController</string>
+            </object>
+            <object class="IBToOneOutletInfo" key="theFSViewer">
+              <string key="name">theFSViewer</string>
+              <string key="candidateClassName">FSViewer</string>
+            </object>
+          </dictionary>
+          <object class="IBClassDescriptionSource" key="sourceIdentifier" id="991992354">
+            <string key="majorKey">IBProjectSource</string>
+            <string key="minorKey">Classes/FilesView/FilesViewController.h</string>
+          </object>
+        </object>
+        <object class="IBPartialClassDescription">
+          <string key="className">FilesView</string>
+          <string key="superclassName">NSView</string>
+          <object class="IBClassDescriptionSource" key="sourceIdentifier">
+            <string key="majorKey">IBUserSource</string>
+            <string key="minorKey"/>
+          </object>
+        </object>
+        <object class="IBPartialClassDescription">
+          <string key="className">FilesViewController</string>
+          <string key="superclassName">NSViewController</string>
+          <object class="NSMutableDictionary" key="outlets">
+            <string key="NS.key.0">theFilesView</string>
+            <string key="NS.object.0">FilesView</string>
+          </object>
+          <object class="NSMutableDictionary" key="toOneOutletInfosByName">
+            <string key="NS.key.0">theFilesView</string>
+            <object class="IBToOneOutletInfo" key="NS.object.0">
+              <string key="name">theFilesView</string>
+              <string key="candidateClassName">FilesView</string>
+            </object>
+          </object>
+          <reference key="sourceIdentifier" ref="991992354"/>
+        </object>
+        <object class="IBPartialClassDescription">
+          <string key="className">FilesViewController</string>
+          <string key="superclassName">NSViewController</string>
+          <object class="IBClassDescriptionSource" key="sourceIdentifier">
+            <string key="majorKey">IBUserSource</string>
+            <string key="minorKey"/>
           </object>
         </object>
         <object class="IBPartialClassDescription">
           <string key="className">HistoryView</string>
           <string key="superclassName">NSView</string>
           <dictionary class="NSMutableDictionary" key="actions">
+            <string key="diffSelectedRevisions:">id</string>
             <string key="historyMenuAddLabelToChosenRevision:">id</string>
             <string key="historyMenuDiffAllToChosenRevision:">id</string>
+            <string key="historyMenuGotoChangeset:">id</string>
             <string key="historyMenuManifestOfChosenRevision:">id</string>
             <string key="historyMenuMergeRevision:">id</string>
             <string key="historyMenuUpdateRepositoryToChosenRevision:">id</string>
@@ -3760,12 +3805,20 @@
             <string key="toolbarRevertFiles:">id</string>
           </dictionary>
           <dictionary class="NSMutableDictionary" key="actionInfosByName">
+            <object class="IBActionInfo" key="diffSelectedRevisions:">
+              <string key="name">diffSelectedRevisions:</string>
+              <string key="candidateClassName">id</string>
+            </object>
             <object class="IBActionInfo" key="historyMenuAddLabelToChosenRevision:">
               <string key="name">historyMenuAddLabelToChosenRevision:</string>
               <string key="candidateClassName">id</string>
             </object>
             <object class="IBActionInfo" key="historyMenuDiffAllToChosenRevision:">
               <string key="name">historyMenuDiffAllToChosenRevision:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="historyMenuGotoChangeset:">
+              <string key="name">historyMenuGotoChangeset:</string>
               <string key="candidateClassName">id</string>
             </object>
             <object class="IBActionInfo" key="historyMenuManifestOfChosenRevision:">
@@ -4041,6 +4094,7 @@
           <string key="className">LogTableView</string>
           <string key="superclassName">NSTableView</string>
           <dictionary class="NSMutableDictionary" key="actions">
+            <string key="getAndScrollToChangeset:">id</string>
             <string key="refreshTable:">id</string>
             <string key="resetTable:">id</string>
             <string key="scrollToBeginning:">id</string>
@@ -4049,6 +4103,10 @@
             <string key="scrollToSelected:">id</string>
           </dictionary>
           <dictionary class="NSMutableDictionary" key="actionInfosByName">
+            <object class="IBActionInfo" key="getAndScrollToChangeset:">
+              <string key="name">getAndScrollToChangeset:</string>
+              <string key="candidateClassName">id</string>
+            </object>
             <object class="IBActionInfo" key="refreshTable:">
               <string key="name">refreshTable:</string>
               <string key="candidateClassName">id</string>
@@ -4096,6 +4154,10 @@
             <string key="majorKey">IBProjectSource</string>
             <string key="minorKey">Classes/General/Common.h</string>
           </object>
+        </object>
+        <object class="IBPartialClassDescription">
+          <string key="className">NSBox</string>
+          <reference key="sourceIdentifier" ref="553227317"/>
         </object>
         <object class="IBPartialClassDescription">
           <string key="className">NSObject</string>
@@ -4224,14 +4286,6 @@
           <object class="IBClassDescriptionSource" key="sourceIdentifier">
             <string key="majorKey">IBFrameworkSource</string>
             <string key="minorKey">AppKit.framework/Headers/NSBox.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSBrowser</string>
-          <string key="superclassName">NSControl</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">AppKit.framework/Headers/NSBrowser.h</string>
           </object>
         </object>
         <object class="IBPartialClassDescription">

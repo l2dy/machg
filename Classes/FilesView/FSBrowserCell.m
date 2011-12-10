@@ -10,7 +10,7 @@
 #import "FSNodeInfo.h"
 #import "FSBrowserCell.h"
 #import "AppController.h"
-#import "FSBrowser.h"
+#import "FSViewer.h"
 
 #define iconOverlapCompression 3	// This controls how squished the icons look when there are multiple icons representing the
 									// status of a directory. With this setting just a 3rd of an icon pokes out behind the icon in
@@ -47,7 +47,7 @@
 }
 
 
-- (FSBrowser*)	parentBrowser { return [nodeInfo parentBrowser]; }
+- (FSViewer*)	parentBrowser { return [nodeInfo parentBrowser]; }
 
 
 - (void) loadCellContents
