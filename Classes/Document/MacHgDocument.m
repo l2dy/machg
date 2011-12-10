@@ -672,6 +672,9 @@
 - (IBAction) actionSwitchViewToBackingView:(id)sender		{ [self setCurrentPane:eBackingView]; }
 - (IBAction) actionSwitchViewToDifferencesView:(id)sender	{ [self setCurrentPane:eDifferencesView]; }
 - (IBAction) actionSwitchViewToHistoryView:(id)sender		{ [self setCurrentPane:eHistoryView]; }
+- (IBAction) actionSwitchViewToFilesBrowserView:(id)sender	{ [self setCurrentPane:eFilesView]; [[[self theFilesView] theFSViewer] actionSwitchToFilesBrowser:sender]; }
+- (IBAction) actionSwitchViewToFilesOutlineView:(id)sender	{ [self setCurrentPane:eFilesView]; [[[self theFilesView] theFSViewer] actionSwitchToFilesOutline:sender]; }
+- (IBAction) actionSwitchViewToFilesTableView:(id)sender	{ [self setCurrentPane:eFilesView]; [[[self theFilesView] theFSViewer] actionSwitchToFilesTable:sender]; }
 
 
 
@@ -852,6 +855,9 @@
 	if (theAction == @selector(actionSwitchViewToFilesView:))			return [self repositoryIsSelectedAndReady];
 	if (theAction == @selector(actionSwitchViewToHistoryView:))			return [self repositoryIsSelectedAndReady];
 	if (theAction == @selector(actionSwitchViewToDifferencesView:))		return [self repositoryIsSelectedAndReady];
+	if (theAction == @selector(actionSwitchViewToFilesBrowserView:))	return [self repositoryIsSelectedAndReady];
+	if (theAction == @selector(actionSwitchViewToFilesOutlineView:))	return [self repositoryIsSelectedAndReady];
+	if (theAction == @selector(actionSwitchViewToFilesTableView:))		return [self repositoryIsSelectedAndReady];
 
 
 	if (theAction == @selector(mainMenuRevertSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingFilesView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusChangedInSomeWay];

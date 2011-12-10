@@ -217,6 +217,9 @@
 - (IBAction)	actionSwitchViewToHistoryView:(id)sender;
 - (IBAction)	actionSwitchViewToDifferencesView:(id)sender;
 - (IBAction)	actionSwitchViewToBackingView:(id)sender;
+- (IBAction)	actionSwitchViewToFilesBrowserView:(id)sender;
+- (IBAction)	actionSwitchViewToFilesOutlineView:(id)sender;
+- (IBAction)	actionSwitchViewToFilesTableView:(id)sender;
 
 
 // Document Information
