@@ -1354,17 +1354,21 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 // MARK: -
 @implementation NSWorkspace ( NSWorkspacePlusExtensions )
-+ (NSImage*) iconImageOfSize:(NSSize)size forPath:(NSString*)path
++ (NSImage*) iconImageOfSize:(NSSize)size forPath:(NSString*)path	{ return [self iconImageOfSize:size forPath:path withDefault:nil]; }
++ (NSImage*) iconImageOfSize:(NSSize)size forPath:(NSString*)path withDefault:(NSString*)defaultImageName;
 {
-	NSImage* nodeImage = [[NSWorkspace sharedWorkspace] iconForFile:path];
+	NSImage* nodeImage = nil;
+	if (pathIsExistent(path))
+		nodeImage = [[NSWorkspace sharedWorkspace] iconForFile:path];
+	if (!nodeImage && IsNotEmpty([path pathExtension]))
+		nodeImage = [[NSWorkspace sharedWorkspace] iconForFileType:[path pathExtension]];        // No icon for actual file, try the extension.    
+	if (!nodeImage && defaultImageName)
+		nodeImage = [NSImage imageNamed:defaultImageName];
 	if (!nodeImage)
-        nodeImage = [[NSWorkspace sharedWorkspace] iconForFileType:[path pathExtension]];        // No icon for actual file, try the extension.
-	
+		nodeImage = [[NSWorkspace sharedWorkspace] iconForFile:path];
+
 	[nodeImage setSize:size];
-    
-	if (!nodeImage)
-        nodeImage = [NSImage imageNamed:@"FSIconImage-Default"];
-	
+
 	return nodeImage;
 }
 @end

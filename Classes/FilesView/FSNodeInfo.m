@@ -34,16 +34,20 @@
 
 - (BOOL) isDirectory
 {
+	if ([childNodes count]	> 0)
+		return YES;
 	BOOL isDir = NO;
 	BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:absolutePath isDirectory:&isDir];
-	return (exists && isDir);
+	return exists && isDir;
 }
 
 - (BOOL) isFile
 {
+	if ([childNodes count]	> 0)
+		return NO;
 	BOOL isDir = NO;
 	BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:absolutePath isDirectory:&isDir];
-	return (exists && !isDir);
+	return exists && !isDir;
 }
 
 
@@ -66,24 +70,10 @@
 
 
 - (NSImage*) iconImageOfSize:(NSSize)size
-{
-//	NSImage* cachedImagedIfAny = [self cachedImageForSize:size];
-//	if (cachedImagedIfAny)
-//		return cachedImagedIfAny;
-    
+{    
 	NSString* path = [self absolutePath];
-	NSImage* nodeImage = nil;
-    
-	nodeImage = [[NSWorkspace sharedWorkspace] iconForFile:path];
-	if (!nodeImage)
-        nodeImage = [[NSWorkspace sharedWorkspace] iconForFileType:[path pathExtension]];        // No icon for actual file, try the extension.
-
-	[nodeImage setSize:size];
-    
-	if (nodeImage == nil)
-        nodeImage = [NSImage imageNamed:@"FSIconImage-Default"];
-    
-	return nodeImage;
+	NSString* defaultImageName = [self isDirectory] ? NSImageNameFolder : @"FSIconImage-Default";
+	return [NSWorkspace iconImageOfSize:size forPath:path withDefault:defaultImageName];
 }
 
 

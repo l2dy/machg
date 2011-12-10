@@ -65,7 +65,7 @@
 	if (DisplayFileIconsInBrowserFromDefaults())
 	{
 		NSSize imageSize = NSMakeSize(ICON_SIZE, ICON_SIZE);
-		NSImage* theFileIcon = [NSWorkspace iconImageOfSize:imageSize forPath:[nodeInfo absolutePath]];
+		NSImage* theFileIcon = [nodeInfo iconImageOfSize:imageSize];
 		[self setFileIcon:theFileIcon];
 	}
 	else
@@ -118,7 +118,7 @@
 	[self setDrawsBackground:NO];
 
 	// If we have fewer icons than the maximum, then inset the origin accordingly so that the icons are right aligned
-	imageFrame.origin.x += ([parentNodeInfo maxIconCountOfSubitems] - [icons count]) * ICON_SIZE / iconOverlapCompression;
+	imageFrame.origin.x += (((CGFloat)[parentNodeInfo maxIconCountOfSubitems]) - ((CGFloat)[icons count])) * ICON_SIZE / iconOverlapCompression;
 
 
 	for (NSImage* icon in icons)

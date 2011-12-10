@@ -1032,6 +1032,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 // MARK: -
 @interface NSWorkspace ( NSWorkspacePlusExtensions )
 + (NSImage*) iconImageOfSize:(NSSize)size forPath:(NSString*)path;
++ (NSImage*) iconImageOfSize:(NSSize)size forPath:(NSString*)path withDefault:(NSString*)imageName;
 @end
 
 
