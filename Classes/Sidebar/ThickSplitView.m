@@ -28,6 +28,8 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 - (CGFloat) splitView:(NSSplitView*)splitView constrainSplitPosition:(CGFloat)proposedPosition ofSubviewAt:(NSInteger)dividerIndex
 {
 	CGFloat height = [self bounds].size.height;
+	if (proposedPosition > height - 50)
+		return height - 18;
 	return constrain(proposedPosition, height - 250, height - 100);
 }
 
