@@ -92,6 +92,7 @@
 		NSViewController* controller = [[NSViewController alloc] initWithNibName:@"FilesViewBrowser" bundle:nil];
 		theFilesBrowser_ = DynamicCast(FSViewerBrowser, [controller view]);
 		[theFilesBrowser_ setParentViewer:self];
+		[theFilesBrowser_ setMenu:contextualMenuForFSViewerPane];
 	});
 	return theFilesBrowser_;
 }
@@ -105,6 +106,7 @@
 		NSViewController* controller = [[NSViewController alloc] initWithNibName:@"FilesViewOutline" bundle:nil];
 		theFilesOutline_ = DynamicCast(FSViewerOutline, [controller view]);
 		[theFilesOutline_ setParentViewer:self];
+		[theFilesOutline_ setMenu:contextualMenuForFSViewerPane];
 	});
 	return theFilesOutline_;
 }
@@ -118,6 +120,7 @@
 		NSViewController* controller = [[NSViewController alloc] initWithNibName:@"FilesViewTable" bundle:nil];
 		theFilesTable_ = DynamicCast(FSViewerTable, [controller view]);
 		[theFilesTable_ setParentViewer:self];
+		[theFilesTable_ setMenu:contextualMenuForFSViewerPane];
 	});
 	return theFilesTable_;
 }
@@ -184,6 +187,7 @@
 	NSView* view = [self viewOfFSViewerPane:styleNum];
 	[self prepareToOpenFSViewerPane];	
 	[self setContentView:view];
+	currentFSViewerPane_ = styleNum;
 }
 
 - (void) prepareToOpenFSViewerPane

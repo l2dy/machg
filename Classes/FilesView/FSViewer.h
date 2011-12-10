@@ -109,6 +109,7 @@
 @interface FSViewer : NSBox <FSViewerProtocol>
 {
 	IBOutlet id <ControllerForFSBrowser> parentController;
+	IBOutlet NSMenu* contextualMenuForFSViewerPane;
 	
 	NSString*		absolutePathOfRepositoryRoot_;
 	FSNodeInfo*		rootNodeInfo_;
