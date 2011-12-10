@@ -70,7 +70,11 @@
 	NSSet* descendants = [[myDocument repositoryData] descendantsOfRevisionNumber:rev];
 	NSMutableIndexSet* newIndexes = [[NSMutableIndexSet alloc]init];
 	for (NSNumber* revNum in descendants)
-		[newIndexes addIndex:[logTableView tableRowForRevision:revNum]];
+	{
+		NSInteger row = [logTableView tableRowForRevision:revNum];
+		if (row != NSNotFound)
+			[newIndexes addIndex:row];
+	}
 	return newIndexes;
 }
 
