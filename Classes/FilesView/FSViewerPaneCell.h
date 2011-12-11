@@ -20,7 +20,7 @@
 #define ICON_TEXT_SPACING	 4.0	// Distance between the end of the icon and the text part
 
 
-@interface FSBrowserCell : NSTextFieldCell
+@interface FSViewerPaneCell : NSTextFieldCell
 {
   @private
 	NSImage*	fileIcon;

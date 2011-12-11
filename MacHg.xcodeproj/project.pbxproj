@@ -191,7 +191,7 @@
 		96A377EA10C8ECDD00FA190A /* TaskExecutions.m in Sources */ = {isa = PBXBuildFile; fileRef = 96A377E910C8ECDD00FA190A /* TaskExecutions.m */; };
 		96A396061440824F001EEE74 /* terminalinformation.sh in Resources */ = {isa = PBXBuildFile; fileRef = 96A396051440824F001EEE74 /* terminalinformation.sh */; };
 		96A77BBC14940EE200A51000 /* FilesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96A77BB514940EE200A51000 /* FilesViewController.m */; };
-		96A77BBD14940EE200A51000 /* FSBrowserCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96A77BB714940EE200A51000 /* FSBrowserCell.m */; };
+		96A77BBD14940EE200A51000 /* FSViewerPaneCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96A77BB714940EE200A51000 /* FSViewerPaneCell.m */; };
 		96A77BBE14940EE200A51000 /* FSNodeInfo.m in Sources */ = {isa = PBXBuildFile; fileRef = 96A77BB914940EE200A51000 /* FSNodeInfo.m */; };
 		96A77BBF14940EE200A51000 /* FSViewer.m in Sources */ = {isa = PBXBuildFile; fileRef = 96A77BBB14940EE200A51000 /* FSViewer.m */; };
 		96AD9C3C11C468CF00F5C82E /* MacHgHelp in Resources */ = {isa = PBXBuildFile; fileRef = 96AD9C0811C468CF00F5C82E /* MacHgHelp */; };
@@ -526,8 +526,8 @@
 		96A396051440824F001EEE74 /* terminalinformation.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = terminalinformation.sh; sourceTree = "<group>"; };
 		96A77BB414940EE200A51000 /* FilesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FilesViewController.h; sourceTree = "<group>"; };
 		96A77BB514940EE200A51000 /* FilesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FilesViewController.m; sourceTree = "<group>"; };
-		96A77BB614940EE200A51000 /* FSBrowserCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSBrowserCell.h; sourceTree = "<group>"; };
-		96A77BB714940EE200A51000 /* FSBrowserCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSBrowserCell.m; sourceTree = "<group>"; };
+		96A77BB614940EE200A51000 /* FSViewerPaneCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSViewerPaneCell.h; sourceTree = "<group>"; };
+		96A77BB714940EE200A51000 /* FSViewerPaneCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSViewerPaneCell.m; sourceTree = "<group>"; };
 		96A77BB814940EE200A51000 /* FSNodeInfo.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSNodeInfo.h; sourceTree = "<group>"; };
 		96A77BB914940EE200A51000 /* FSNodeInfo.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSNodeInfo.m; sourceTree = "<group>"; };
 		96A77BBA14940EE200A51000 /* FSViewer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSViewer.h; sourceTree = "<group>"; };
@@ -1568,8 +1568,8 @@
 				96D05C8914945886000D513E /* FSViewerBrowser.m */,
 				96A77BB414940EE200A51000 /* FilesViewController.h */,
 				96A77BB514940EE200A51000 /* FilesViewController.m */,
-				96A77BB614940EE200A51000 /* FSBrowserCell.h */,
-				96A77BB714940EE200A51000 /* FSBrowserCell.m */,
+				96A77BB614940EE200A51000 /* FSViewerPaneCell.h */,
+				96A77BB714940EE200A51000 /* FSViewerPaneCell.m */,
 				96A77BB814940EE200A51000 /* FSNodeInfo.h */,
 				96A77BB914940EE200A51000 /* FSNodeInfo.m */,
 				96A77BBA14940EE200A51000 /* FSViewer.h */,
@@ -1949,7 +1949,7 @@
 				96631773136DF9A600A72689 /* AboutWindowController.m in Sources */,
 				96E3E61C1477CD820077503D /* GradientBox.m in Sources */,
 				96A77BBC14940EE200A51000 /* FilesViewController.m in Sources */,
-				96A77BBD14940EE200A51000 /* FSBrowserCell.m in Sources */,
+				96A77BBD14940EE200A51000 /* FSViewerPaneCell.m in Sources */,
 				96A77BBE14940EE200A51000 /* FSNodeInfo.m in Sources */,
 				96A77BBF14940EE200A51000 /* FSViewer.m in Sources */,
 				96D05C8A14945886000D513E /* FSViewerBrowser.m in Sources */,

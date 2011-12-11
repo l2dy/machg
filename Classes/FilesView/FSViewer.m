@@ -13,7 +13,7 @@
 #import "FSViewerTable.h"
 #import "MacHgDocument.h"
 #import "FSNodeInfo.h"
-#import "FSBrowserCell.h"
+#import "FSViewerPaneCell.h"
 #import "ProcessListController.h"
 #import "TaskExecutions.h"
 #import "MonitorFSEvents.h"

@@ -12,7 +12,7 @@
     </object>
     <object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
       <bool key="EncodedWithXMLCoder">YES</bool>
-      <integer value="4"/>
+      <integer value="8"/>
     </object>
     <object class="NSArray" key="IBDocument.PluginDependencies">
       <bool key="EncodedWithXMLCoder">YES</bool>
@@ -73,6 +73,7 @@
                 <object class="NSMutableArray" key="NSTableColumns">
                   <bool key="EncodedWithXMLCoder">YES</bool>
                   <object class="NSTableColumn" id="809232678">
+                    <string key="NSIdentifier">path</string>
                     <double key="NSWidth">364.37109375</double>
                     <double key="NSMinWidth">40</double>
                     <double key="NSMaxWidth">1000</double>
@@ -147,7 +148,7 @@
                   </object>
                 </object>
                 <double key="NSRowHeight">17</double>
-                <int key="NSTvFlags">-700448768</int>
+                <int key="NSTvFlags">-633339904</int>
                 <reference key="NSDelegate"/>
                 <reference key="NSDataSource"/>
                 <int key="NSColumnAutoresizingStyle">4</int>
@@ -321,6 +322,7 @@
           <string>4.IBPluginDependency</string>
           <string>5.IBPluginDependency</string>
           <string>7.IBPluginDependency</string>
+          <string>8.CustomClassName</string>
           <string>8.IBPluginDependency</string>
         </object>
         <object class="NSMutableArray" key="dict.values">
@@ -333,6 +335,7 @@
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+          <string>FSViewerPaneCell</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
         </object>
       </object>
@@ -357,6 +360,14 @@
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <object class="NSMutableArray" key="referencedPartialClassDescriptions">
         <bool key="EncodedWithXMLCoder">YES</bool>
+        <object class="IBPartialClassDescription">
+          <string key="className">FSViewerPaneCell</string>
+          <string key="superclassName">NSTextFieldCell</string>
+          <object class="IBClassDescriptionSource" key="sourceIdentifier">
+            <string key="majorKey">IBProjectSource</string>
+            <string key="minorKey">Classes/FilesView/FSViewerPaneCell.h</string>
+          </object>
+        </object>
         <object class="IBPartialClassDescription">
           <string key="className">FSViewerTable</string>
           <string key="superclassName">NSTableView</string>

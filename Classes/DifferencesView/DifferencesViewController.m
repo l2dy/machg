@@ -15,7 +15,7 @@
 #import "LogTableView.h"
 #import "LogEntry.h"
 #import "FSViewer.h"
-#import "FSBrowserCell.h"
+#import "FSViewerPaneCell.h"
 #import "FSNodeInfo.h"
 
 

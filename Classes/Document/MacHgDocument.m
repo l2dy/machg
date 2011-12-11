@@ -21,7 +21,7 @@
 #import "BackingViewController.h"
 
 #import "FSViewer.h"
-#import "FSBrowserCell.h"	// Do we need this here?
+#import "FSViewerPaneCell.h"	// Do we need this here?
 #import "FSNodeInfo.h"
 #import "Sidebar.h"
 #import "SidebarNode.h"

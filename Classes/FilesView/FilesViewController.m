@@ -8,7 +8,7 @@
 //
 
 #import "FilesViewController.h"
-#import "FSBrowserCell.h"
+#import "FSViewerPaneCell.h"
 #import "FSNodeInfo.h"
 #import "MacHgDocument.h"
 #import "CommitSheetController.h"

@@ -8,7 +8,7 @@
 
 #import "FSViewerBrowser.h"
 #import "FSNodeInfo.h"
-#import "FSBrowserCell.h"
+#import "FSViewerPaneCell.h"
 #import "MacHgDocument.h"
 
 @interface FSViewerBrowser (PrivateAPI)
@@ -30,7 +30,7 @@
 	[self setDelegate:self];
 	
 	// Make the browser user our custom browser cell.
-	[self setCellClass: [FSBrowserCell class]];	
+	[self setCellClass: [FSViewerPaneCell class]];
 }
 
 - (FSNodeInfo*) rootNodeInfo		{ return [parentViewer_ rootNodeInfo]; }
@@ -114,7 +114,7 @@
 		return [NSArray array];
 	NSArray* theSelectedNodes = [self selectedCells];
 	NSMutableArray* nodes = [[NSMutableArray alloc] init];
-	for (FSBrowserCell* cell in theSelectedNodes)
+	for (FSViewerPaneCell* cell in theSelectedNodes)
 		[nodes addObjectIfNonNil:[cell nodeInfo]];
 	return nodes;
 }
@@ -180,7 +180,7 @@
 	
 	HGStatus combinedStatus = eHGStatusNoStatus;
 	NSArray* theSelectedNodes = [self selectedCells];
-	for (FSBrowserCell* cell in theSelectedNodes)
+	for (FSViewerPaneCell* cell in theSelectedNodes)
 		combinedStatus = unionBits(combinedStatus, [[cell nodeInfo] hgStatus]);
 	return combinedStatus;
 }
@@ -191,7 +191,7 @@
 		return [NSArray array];
 	NSArray* theSelectedNodes = [self selectedCells];
 	NSMutableArray* paths = [[NSMutableArray alloc] init];
-	for (FSBrowserCell* cell in theSelectedNodes)
+	for (FSViewerPaneCell* cell in theSelectedNodes)
 		if ([cell nodeInfo])
 			[paths addObject:[[cell nodeInfo] absolutePath]];
 	return paths;
@@ -231,7 +231,7 @@
         return [self rootNodeInfo];
 	
 	// Find the selected item leading up to this column and grab its FSNodeInfo stored in that cell
-	FSBrowserCell* selectedCell = [self selectedCellInColumn:column-1];
+	FSViewerPaneCell* selectedCell = [self selectedCellInColumn:column-1];
 	return [selectedCell nodeInfo];
 }
 
@@ -347,7 +347,7 @@
 - (id) browser:(NSBrowser*)browser child:(NSInteger)index ofItem:(FSNodeInfo*)item	{ return [item childNodeAtIndex:index]; }
 
 
-- (void) browser:(NSBrowser*)sender willDisplayCell:(FSBrowserCell*)cell atRow:(NSInteger)row column:(NSInteger)column
+- (void) browser:(NSBrowser*)sender willDisplayCell:(FSViewerPaneCell*)cell atRow:(NSInteger)row column:(NSInteger)column
 {
 	// Find our parent FSNodeInfo and access the child at this particular row
 	FSNodeInfo* parentNodeInfo = [self parentNodeInfoForColumn:column];

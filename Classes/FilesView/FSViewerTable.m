@@ -8,6 +8,7 @@
 
 #import "FSViewerTable.h"
 #import "FSNodeInfo.h"
+#import "FSViewerPaneCell.h"
 
 @interface FSViewerTable (PrivateAPI)
 - (void) regenerateTableData;
@@ -133,6 +134,14 @@
 //	return value;
 }
 
+- (void) tableView:(NSTableView*)aTableView  willDisplayCell:(id)aCell forTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
+{
+	FSNodeInfo* node = [[self theLeafNodeList] objectAtIndex:rowIndex];
+	[aCell setParentNodeInfo:nil];
+	[aCell setNodeInfo:node];
+	[aCell loadCellContents];
+}
+
 //- (void) tableView:(NSTableView*)aTableView setObjectValue:(id)anObject forTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
 //{
 //	PatchData* clickedPatch = [[self patchesTableData] objectAtIndex:rowIndex];
@@ -148,11 +157,6 @@
 //	[self reloadData];
 //}
 //
-//- (void) tableView:(NSTableView*)aTableView  willDisplayCell:(id)aCell forTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
-//{
-//	[aCell setPatchesTableColumn:aTableColumn];
-//	[aCell setPatch:[patchesTableData_ objectAtIndex:rowIndex]];
-//}
 //
 //
 //- (BOOL)tableView:(NSTableView*)aTableView shouldEditTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex

@@ -8,7 +8,7 @@
 
 
 #import "FSNodeInfo.h"
-#import "FSBrowserCell.h"
+#import "FSViewerPaneCell.h"
 #import "AppController.h"
 #import "FSViewer.h"
 
@@ -17,7 +17,7 @@
 									// front of it. This looks to be a nice balance between composite images not being too large
 									// and still seeing the multiple icons which make up the status.
 
-@interface FSBrowserCell(PrivateUtilities)
+@interface FSViewerPaneCell(PrivateUtilities)
 - (NSDictionary*) fsStringAttributes;
 @end
 
@@ -30,7 +30,7 @@
 // MARK: FSBrowserCell
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-@implementation FSBrowserCell
+@implementation FSViewerPaneCell
 
 @synthesize fileIcon;
 @synthesize nodeInfo;
