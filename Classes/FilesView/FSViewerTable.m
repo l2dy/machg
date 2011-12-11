@@ -131,7 +131,11 @@
 	if ([[aTableColumn identifier] isEqualToString:@"name"])
 		return [node relativePath];
 	if ([[aTableColumn identifier] isEqualToString:@"path"])
-		return [[node absolutePath] stringByDeletingLastPathComponent];
+	{
+		NSString* root = [[parentViewer_ rootNodeInfo] absolutePath];
+		NSString* pathInRepository = pathDifference(root, [[node absolutePath] stringByDeletingLastPathComponent]);
+		return IsNotEmpty(pathInRepository) ? pathInRepository : @" ";
+	}
 	return nil;
 }
 
