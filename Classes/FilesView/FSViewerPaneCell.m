@@ -92,7 +92,7 @@
 
 - (CGFloat) iconRowSize
 {
-	int iconCount = [parentNodeInfo maxIconCountOfSubitems];
+	int iconCount = parentNodeInfo ? [parentNodeInfo maxIconCountOfSubitems] : 1;
 	return ICON_SIZE + floor(ICON_SIZE * (iconCount - 1)/iconOverlapCompression);
 }
 
@@ -116,7 +116,7 @@
 	[self setDrawsBackground:NO];
 
 	// If we have fewer icons than the maximum, then inset the origin accordingly so that the icons are right aligned
-	imageFrame.origin.x += (((CGFloat)[parentNodeInfo maxIconCountOfSubitems]) - ((CGFloat)[icons count])) * ICON_SIZE / iconOverlapCompression;
+	imageFrame.origin.x += (((CGFloat)(parentNodeInfo ? [parentNodeInfo maxIconCountOfSubitems] : 1)) - ((CGFloat)[icons count])) * ICON_SIZE / iconOverlapCompression;
 
 
 	for (NSImage* icon in icons)
