@@ -9,7 +9,7 @@
 #import <Cocoa/Cocoa.h>
 #import "FSViewer.h"
 
-@interface FSViewerOutline : NSOutlineView <FSViewerProtocol, NSOutlineViewDelegate>
+@interface FSViewerOutline : NSOutlineView <FSViewerProtocol, NSOutlineViewDelegate, NSOutlineViewDataSource>
 {
 	FSViewer*	parentViewer_;
 }
