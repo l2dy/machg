@@ -22,16 +22,20 @@
 
 @interface FSViewerPaneCell : NSTextFieldCell
 {
-  @private
-	NSImage*	fileIcon;
 	FSNodeInfo* nodeInfo;
 	FSNodeInfo* parentNodeInfo;
 }
-
-@property (readwrite,assign) NSImage*		fileIcon;
 @property (readwrite,assign) FSNodeInfo*	nodeInfo;
 @property (readwrite,assign) FSNodeInfo*	parentNodeInfo;
 
 - (void)		loadCellContents;
-- (FSViewer*)	parentFSViewer;
+@end
+
+
+@interface FSViewerPaneIconedCell : FSViewerPaneCell
+{
+	NSImage*	fileIcon;
+}
+
+@property (readwrite,assign) NSImage*		fileIcon;
 @end

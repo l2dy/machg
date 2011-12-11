@@ -334,7 +334,7 @@
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>FSViewerPaneCell</string>
+          <string>FSViewerPaneIconedCell</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
         </object>
       </object>
@@ -370,10 +370,15 @@
         <object class="IBPartialClassDescription">
           <string key="className">FSViewerPaneCell</string>
           <string key="superclassName">NSTextFieldCell</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
+          <object class="IBClassDescriptionSource" key="sourceIdentifier" id="548655600">
             <string key="majorKey">IBProjectSource</string>
             <string key="minorKey">Classes/FilesView/FSViewerPaneCell.h</string>
           </object>
+        </object>
+        <object class="IBPartialClassDescription">
+          <string key="className">FSViewerPaneIconedCell</string>
+          <string key="superclassName">FSViewerPaneCell</string>
+          <reference key="sourceIdentifier" ref="548655600"/>
         </object>
         <object class="IBPartialClassDescription">
           <string key="className">NSApplication</string>

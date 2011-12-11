@@ -17,48 +17,99 @@
 									// front of it. This looks to be a nice balance between composite images not being too large
 									// and still seeing the multiple icons which make up the status.
 
-@interface FSViewerPaneCell(PrivateUtilities)
-- (NSDictionary*) fsStringAttributes;
-@end
-
 
 
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK: FSBrowserCell
+// MARK: FSViewerPaneCell
 // -----------------------------------------------------------------------------------------------------------------------------------------
+
 
 @implementation FSViewerPaneCell
 
-@synthesize fileIcon;
 @synthesize nodeInfo;
 @synthesize parentNodeInfo;
 
-- (id) init
+- (NSDictionary*) fsStringAttributes
 {
-	self = [super init];
-	if (self)
-		fileIcon = nil;
-	return self;
+	// Cache the two common attribute cases to help improve speed. This will be called a lot, and helps improve performance.
+	static NSDictionary* standardAttributes = nil;
+	static NSDictionary* italicAttributes   = nil;
+	static NSDictionary* virtualAttributes  = nil;
+	static NSDictionary* dirtyAttributes    = nil;
+	static NSDictionary* grayedAttributes   = nil;
+	static float storedFontSizeofBrowserItems = 0.0;
+	
+	if (standardAttributes == nil || storedFontSizeofBrowserItems != fontSizeOfBrowserItemsFromDefaults())
+	{
+		storedFontSizeofBrowserItems = fontSizeOfBrowserItemsFromDefaults();
+		NSFontManager* fontManager   = [NSFontManager sharedFontManager];
+		NSMutableParagraphStyle* ps  = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+		[ps setLineBreakMode:NSLineBreakByTruncatingMiddle];
+		NSFont* textFont = [NSFont fontWithName:@"Verdana" size:storedFontSizeofBrowserItems];
+		NSColor* greyColor = [NSColor grayColor];
+		NSFont* italicTextFont = [fontManager convertFont:textFont toHaveTrait:NSItalicFontMask];
+		NSFont* boldTextFont   = [fontManager convertFont:textFont toHaveTrait:NSBoldFontMask];
+		
+		standardAttributes = [NSDictionary dictionaryWithObjectsAndKeys: textFont,       NSFontAttributeName, ps, NSParagraphStyleAttributeName, nil];
+		italicAttributes   = [NSDictionary dictionaryWithObjectsAndKeys: italicTextFont, NSFontAttributeName, ps, NSParagraphStyleAttributeName, nil];
+		grayedAttributes   = [NSDictionary dictionaryWithObjectsAndKeys: textFont,       NSFontAttributeName, greyColor, NSForegroundColorAttributeName, ps, NSParagraphStyleAttributeName, nil];
+		dirtyAttributes    = [NSDictionary dictionaryWithObjectsAndKeys: boldTextFont,   NSFontAttributeName, greyColor, NSForegroundColorAttributeName, ps, NSParagraphStyleAttributeName, nil];
+		virtualAttributes  = [NSDictionary dictionaryWithObjectsAndKeys: italicTextFont, NSFontAttributeName, ps, NSParagraphStyleAttributeName, nil];
+	}
+	
+	if ([nodeInfo isDirty])
+		return dirtyAttributes;
+	
+	if ([[nodeInfo parentFSViewer] areNodesVirtual])
+		return virtualAttributes;
+	
+	if ([nodeInfo isLink])
+		return italicAttributes;
+	
+	if ([nodeInfo hgStatus] == eHGStatusIgnored)
+		return grayedAttributes;
+	
+	return standardAttributes;
 }
-
-
-- (FSViewer*) parentFSViewer { return [nodeInfo parentFSViewer]; }
 
 
 - (void) loadCellContents
 {
 	// Given a particular FSNodeInfo object set up our display properties.
-	NSString* stringValue = [nodeInfo lastPathComponent];
+	NSString* stringValue = [self stringValue];
 	if (!stringValue)
 		return;
-
+	
 	// Set the text part.  FSNode will format the string (underline, bold, etc...) based on various properties of the file.
-	NSDictionary* attributesToApply = [self fsStringAttributes];
-	NSAttributedString* attrStringValue = [NSAttributedString string:stringValue withAttributes:attributesToApply];
+	NSAttributedString* attrStringValue = [NSAttributedString string:stringValue withAttributes:[self fsStringAttributes]];
 	[self setAttributedStringValue:attrStringValue];
+	
+	// If we don't have access to the file, make sure the user can't select it!
+	[self setEnabled:[nodeInfo isReadable]];
+	[self setBackgroundStyle:NSBackgroundStyleLight];
+	[self setHighlighted:NO];	
+}
+	
+@end
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: FSViewerPaneIconedCell
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+@implementation FSViewerPaneIconedCell
+
+@synthesize fileIcon;
+
+- (void) loadCellContents
+{
+	[super loadCellContents];
 	
 	if (DisplayFileIconsInBrowserFromDefaults())
 	{
@@ -68,26 +119,18 @@
 	}
 	else
 		[self setFileIcon:nil];
-
-
-	// If we don't have access to the file, make sure the user can't select it!
-	[self setEnabled:[nodeInfo isReadable]];
-	[self setBackgroundStyle:NSBackgroundStyleLight];
-	[self setHighlighted:NO];
 }
 
 
 - (NSSize) cellSizeForBounds:(NSRect)aRect
 {
 	// Make our cells a bit higher than normal to give some additional space for the icon to fit.
-	NSSize theSize = [super cellSizeForBounds:aRect];
+	NSSize theSize  = [super cellSizeForBounds:aRect];
 	NSSize iconSize = NSMakeSize(ICON_SIZE, ICON_SIZE);
 	theSize.width += iconSize.width + ICON_INSET_HORIZ + ICON_TEXT_SPACING;
-	theSize.height = MAX(ICON_SIZE + ICON_INSET_VERT*  2.0, [[self attributedStringValue] size].height + 5);
+	theSize.height = MAX(ICON_SIZE + ICON_INSET_VERT * 2.0, [[self attributedStringValue] size].height + 5);
 	return theSize;
 }
-
-
 
 
 - (CGFloat) iconRowSize
@@ -95,6 +138,7 @@
 	int iconCount = parentNodeInfo ? [parentNodeInfo maxIconCountOfSubitems] : 1;
 	return ICON_SIZE + floor(ICON_SIZE * (iconCount - 1)/iconOverlapCompression);
 }
+
 
 - (void) drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView*)controlView
 {
@@ -159,48 +203,6 @@
 	[super drawInteriorWithFrame:cellFrame inView:view];
 }
 
-- (NSDictionary*) fsStringAttributes
-{
-	// Cache the two common attribute cases to help improve speed. This will be called a lot, and helps improve performance.
-	static NSDictionary* standardAttributes = nil;
-	static NSDictionary* italicAttributes   = nil;
-	static NSDictionary* virtualAttributes  = nil;
-	static NSDictionary* dirtyAttributes    = nil;
-	static NSDictionary* grayedAttributes   = nil;
-	static float storedFontSizeofBrowserItems = 0.0;
-	
-	if (standardAttributes == nil || storedFontSizeofBrowserItems != fontSizeOfBrowserItemsFromDefaults())
-	{
-		storedFontSizeofBrowserItems = fontSizeOfBrowserItemsFromDefaults();
-		NSFontManager* fontManager   = [NSFontManager sharedFontManager];
-		NSMutableParagraphStyle* ps  = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-		[ps setLineBreakMode:NSLineBreakByTruncatingMiddle];
-		NSFont* textFont = [NSFont fontWithName:@"Verdana" size:storedFontSizeofBrowserItems];
-		NSColor* greyColor = [NSColor grayColor];
-		NSFont* italicTextFont = [fontManager convertFont:textFont toHaveTrait:NSItalicFontMask];
-		NSFont* boldTextFont   = [fontManager convertFont:textFont toHaveTrait:NSBoldFontMask];
-		
-		standardAttributes = [NSDictionary dictionaryWithObjectsAndKeys: textFont,       NSFontAttributeName, ps, NSParagraphStyleAttributeName, nil];
-		italicAttributes   = [NSDictionary dictionaryWithObjectsAndKeys: italicTextFont, NSFontAttributeName, ps, NSParagraphStyleAttributeName, nil];
-		grayedAttributes   = [NSDictionary dictionaryWithObjectsAndKeys: textFont,       NSFontAttributeName, greyColor, NSForegroundColorAttributeName, ps, NSParagraphStyleAttributeName, nil];
-		dirtyAttributes    = [NSDictionary dictionaryWithObjectsAndKeys: boldTextFont,   NSFontAttributeName, greyColor, NSForegroundColorAttributeName, ps, NSParagraphStyleAttributeName, nil];
-		virtualAttributes  = [NSDictionary dictionaryWithObjectsAndKeys: italicTextFont, NSFontAttributeName, ps, NSParagraphStyleAttributeName, nil];
-	}
-
-	if ([nodeInfo isDirty])
-		return dirtyAttributes;
-	
-	if ([[nodeInfo parentFSViewer] areNodesVirtual])
-		return virtualAttributes;
-	
-	if ([nodeInfo isLink])
-		return italicAttributes;
-	
-	if ([nodeInfo hgStatus] == eHGStatusIgnored)
-		return grayedAttributes;
-	
-	return standardAttributes;
-}
 
 @end
 

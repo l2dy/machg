@@ -30,7 +30,7 @@
 	[self setDelegate:self];
 	
 	// Make the browser user our custom browser cell.
-	[self setCellClass: [FSViewerPaneCell class]];
+	[self setCellClass: [FSViewerPaneIconedCell class]];
 }
 
 - (FSNodeInfo*) rootNodeInfo		{ return [parentViewer_ rootNodeInfo]; }
@@ -356,6 +356,7 @@
 	FSNodeInfo* currentNodeInfo = [parentNodeInfo childNodeAtIndex:row];
 	[cell setParentNodeInfo:parentNodeInfo];
 	[cell setNodeInfo:currentNodeInfo];
+	[cell setStringValue:[currentNodeInfo lastPathComponent]];
 	[cell loadCellContents];
 }
 

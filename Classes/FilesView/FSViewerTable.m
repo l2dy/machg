@@ -128,10 +128,11 @@
 - (id) tableView:(NSTableView*)aTableView objectValueForTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)requestedRow
 {
 	FSNodeInfo* node = [[self theLeafNodeList] objectAtIndex:requestedRow];
-	return [node absolutePath];
-//	NSString* requestedColumn = [aTableColumn identifier];	
-//	id value = [patch valueForKey:requestedColumn];
-//	return value;
+	if ([[aTableColumn identifier] isEqualToString:@"name"])
+		return [node relativePath];
+	if ([[aTableColumn identifier] isEqualToString:@"path"])
+		return [[node absolutePath] stringByDeletingLastPathComponent];
+	return nil;
 }
 
 - (void) tableView:(NSTableView*)aTableView  willDisplayCell:(id)aCell forTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
