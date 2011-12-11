@@ -152,7 +152,7 @@
 // MARK: Pane switching
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (NSView*) viewOfFSViewerPane:(FSViewerNum)styleNum
+- (NSView*) primaryViewOfFSViewerPane:(FSViewerNum)styleNum
 {
 	switch (styleNum)
 	{
@@ -163,9 +163,9 @@
 	}
 }
 
-- (NSView<FSViewerProtocol>*) currentViewerPane
+- (NSView<FSViewerProtocol>*) viewerPane:(FSViewerNum)styleNum
 {
-	switch (currentFSViewerPane_)
+	switch (styleNum)
 	{
 		case eFilesBrowser:		return [self theFilesBrowser];
 		case eFilesOutline:		return [self theFilesOutline];
@@ -174,6 +174,7 @@
 	}
 }
 
+- (NSView<FSViewerProtocol>*) currentViewerPane			{ return [self viewerPane:currentFSViewerPane_]; }
 - (BOOL)	 showingFilesBrowser						{ return currentFSViewerPane_ == eFilesBrowser; }
 - (BOOL)	 showingFilesOutline						{ return currentFSViewerPane_ == eFilesOutline; }
 - (BOOL)	 showingFilesTable							{ return currentFSViewerPane_ == eFilesTable; }
@@ -184,8 +185,8 @@
 
 - (void) setCurrentFSViewerPane:(FSViewerNum)styleNum
 {
-	NSView* view = [self viewOfFSViewerPane:styleNum];
-	[self prepareToOpenFSViewerPane];	
+	NSView* view = [self primaryViewOfFSViewerPane:styleNum];
+	[[self viewerPane:styleNum] prepareToOpenFSViewerPane];
 	[self setContentView:view];
 	currentFSViewerPane_ = styleNum;
 }
