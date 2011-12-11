@@ -157,7 +157,7 @@
 - (IBAction)	actionSwitchToFilesTable:(id)sender;
 - (FSViewerNum)	currentFSViewerPaneNum;
 - (void)		setCurrentFSViewerPane:(FSViewerNum)styleNum;
-- (NSView<FSViewerProtocol>*)	currentView;
+- (NSView<FSViewerProtocol>*)	currentViewerPane;
 
 
 // Common Path and Selection Operations

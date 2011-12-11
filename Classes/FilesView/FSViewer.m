@@ -163,7 +163,7 @@
 	}
 }
 
-- (NSView<FSViewerProtocol>*) currentView
+- (NSView<FSViewerProtocol>*) currentViewerPane
 {
 	switch (currentFSViewerPane_)
 	{
@@ -192,7 +192,7 @@
 
 - (void) prepareToOpenFSViewerPane
 {
-	[[self currentView] prepareToOpenFSViewerPane];	
+	[[self currentViewerPane] prepareToOpenFSViewerPane];	
 }
 	
 
@@ -206,25 +206,25 @@
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (FSNodeInfo*) rootNodeInfo			{ return rootNodeInfo_; }
-- (void) reloadData						{ [[self currentView] reloadData]; }
-- (void) reloadDataSin					{ [[self currentView] reloadDataSin]; }
+- (void) reloadData						{ [[self currentViewerPane] reloadData]; }
+- (void) reloadDataSin					{ [[self currentViewerPane] reloadDataSin]; }
 
 
-- (BOOL)		nodesAreSelected		{ return [[self currentView] nodesAreSelected]; }
-- (BOOL)		nodeIsClicked			{ return [[self currentView] nodeIsClicked]; }
-- (BOOL)		nodesAreChosen			{ return [[self currentView] nodesAreChosen]; }
-- (FSNodeInfo*) chosenNode				{ return [[self currentView] chosenNode]; }
-- (FSNodeInfo*) clickedNode				{ return [[self currentView] clickedNode]; }
-- (NSArray*) selectedNodes				{ return [[self currentView] selectedNodes]; }
-- (BOOL) singleFileIsChosenInBrowser	{ return [[self currentView] singleFileIsChosenInBrowser]; }
-- (BOOL) singleItemIsChosenInBrowser	{ return [[self currentView] singleItemIsChosenInBrowser]; }
-- (BOOL) clickedNodeInSelectedNodes		{ return [[self currentView] clickedNodeInSelectedNodes]; }
+- (BOOL)		nodesAreSelected		{ return [[self currentViewerPane] nodesAreSelected]; }
+- (BOOL)		nodeIsClicked			{ return [[self currentViewerPane] nodeIsClicked]; }
+- (BOOL)		nodesAreChosen			{ return [[self currentViewerPane] nodesAreChosen]; }
+- (FSNodeInfo*) chosenNode				{ return [[self currentViewerPane] chosenNode]; }
+- (FSNodeInfo*) clickedNode				{ return [[self currentViewerPane] clickedNode]; }
+- (NSArray*) selectedNodes				{ return [[self currentViewerPane] selectedNodes]; }
+- (BOOL) singleFileIsChosenInBrowser	{ return [[self currentViewerPane] singleFileIsChosenInBrowser]; }
+- (BOOL) singleItemIsChosenInBrowser	{ return [[self currentViewerPane] singleItemIsChosenInBrowser]; }
+- (BOOL) clickedNodeInSelectedNodes		{ return [[self currentViewerPane] clickedNodeInSelectedNodes]; }
 
-- (HGStatus) statusOfChosenPathsInBrowser				{ return [[self currentView] statusOfChosenPathsInBrowser]; }
-- (NSArray*) absolutePathsOfSelectedFilesInBrowser		{ return [[self currentView] absolutePathsOfSelectedFilesInBrowser]; }
-- (NSArray*) absolutePathsOfChosenFilesInBrowser		{ return [[self currentView] absolutePathsOfChosenFilesInBrowser]; }
-- (NSString*) enclosingDirectoryOfChosenFilesInBrowser	{ return [[self currentView] enclosingDirectoryOfChosenFilesInBrowser]; }
-- (BOOL) clickedNodeCoincidesWithTerminalSelections		{ return [[self currentView] clickedNodeCoincidesWithTerminalSelections]; }
+- (HGStatus) statusOfChosenPathsInBrowser				{ return [[self currentViewerPane] statusOfChosenPathsInBrowser]; }
+- (NSArray*) absolutePathsOfSelectedFilesInBrowser		{ return [[self currentViewerPane] absolutePathsOfSelectedFilesInBrowser]; }
+- (NSArray*) absolutePathsOfChosenFilesInBrowser		{ return [[self currentViewerPane] absolutePathsOfChosenFilesInBrowser]; }
+- (NSString*) enclosingDirectoryOfChosenFilesInBrowser	{ return [[self currentViewerPane] enclosingDirectoryOfChosenFilesInBrowser]; }
+- (BOOL) clickedNodeCoincidesWithTerminalSelections		{ return [[self currentViewerPane] clickedNodeCoincidesWithTerminalSelections]; }
 
 
 
@@ -260,7 +260,7 @@
 	return remainingPaths;
 }
 
-- (NSArray*) quickLookPreviewItems		{ return [[self currentView] quickLookPreviewItems]; }
+- (NSArray*) quickLookPreviewItems		{ return [[self currentViewerPane] quickLookPreviewItems]; }
 
 
 
@@ -271,7 +271,7 @@
 // MARK:  Graphic Operations
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (NSRect) frameinWindowOfRow:(NSInteger)row inColumn:(NSInteger)column		{ return [[self currentView] frameinWindowOfRow:row inColumn:column]; }
+- (NSRect) frameinWindowOfRow:(NSInteger)row inColumn:(NSInteger)column		{ return [[self currentViewerPane] frameinWindowOfRow:row inColumn:column]; }
 
 
 
@@ -601,7 +601,7 @@
 // The parent controller determines when we receive this event.
 - (void) repositoryDataIsNew
 {
-	[[self currentView] repositoryDataIsNew];
+	[[self currentViewerPane] repositoryDataIsNew];
 	absolutePathOfRepositoryRoot_ = [[self myDocument] absolutePathOfRepositoryRoot];
 	[self regenerateBrowserDataAndReload];
 }
@@ -627,8 +627,8 @@
 // MARK: Save and Restore Viewer Selection state
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (FSViewerSelectionState*)	saveViewerSelectionState						{ return [[self currentView] saveViewerSelectionState]; }
-- (void) restoreViewerSelectionState:(FSViewerSelectionState*)savedState	{ [[self currentView] restoreViewerSelectionState:savedState] ; }
+- (FSViewerSelectionState*)	saveViewerSelectionState						{ return [[self currentViewerPane] saveViewerSelectionState]; }
+- (void) restoreViewerSelectionState:(FSViewerSelectionState*)savedState	{ [[self currentViewerPane] restoreViewerSelectionState:savedState] ; }
 
 @end
 
