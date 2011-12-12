@@ -40,7 +40,6 @@
 	NSString*				rootPath_;						// The root of the repository
 
 	BOOL					canSelectIncompleteRevision_;	// Are you allowed to select the incomplete revision in this LogTableView
-	int						numberOfTableRows_;
 	NSArray*				theTableRows_;					// Map of table row -> revision number (NSString)
 	BOOL					tableIsFiltered_;				// Are the revisions filtered through some keyword, or revset filter
 	SingleTimedQueue*		queueForDetailedEntryDisplay_;	// When we are asked to display the details of an entry or range of
@@ -52,7 +51,6 @@
 
 @property (readwrite,assign) NSArray*	theTableRows;
 @property (readonly, assign) BOOL		tableIsFiltered;
-@property int							numberOfTableRows;
 @property BOOL							canSelectIncompleteRevision;
 
 - (void)		unload;

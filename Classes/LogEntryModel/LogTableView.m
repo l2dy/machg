@@ -44,7 +44,6 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 
 @synthesize theTableRows		= theTableRows_;
 @synthesize tableIsFiltered		= tableIsFiltered_;
-@synthesize numberOfTableRows	= numberOfTableRows_;
 @synthesize canSelectIncompleteRevision = canSelectIncompleteRevision_;
 
 
@@ -63,7 +62,6 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 	{
 		theTableRows_ = nil;
 		repositoryData_ = nil;
-		numberOfTableRows_ = 0;
 		canSelectIncompleteRevision_ = NO;
 		tableIsFiltered_ = NO;
 		rootPath_ = nil;
@@ -520,7 +518,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 
 - (NSInteger) numberOfRowsInTableView:(NSTableView*)aTableView
 {
-	return numberOfTableRows_;
+	return [theTableRows_ count];
 }
 
 
@@ -829,7 +827,6 @@ static inline void addRevisionsToTableRowList(NSString* str, NSMutableArray* tab
 
 		[self setSortDescriptorsAccordingToDefaults];
 		theTableRows_ = [self sortTableRowsAccordingToSortOrder:newTableRows];
-		[self setNumberOfTableRows:[theTableRows_ count]];
 
 		[self refreshTable:sender];
 		[self selectAndScrollToRevisions:theSelectedRevisions];

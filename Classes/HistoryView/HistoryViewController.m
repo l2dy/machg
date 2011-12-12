@@ -129,7 +129,7 @@
 // MARK: Actions Notifications & Updating
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (NSString*) searchCaption		{ return fstr(@"%d entries shown", [logTableView numberOfTableRows]); }
+- (NSString*) searchCaption		{ return fstr(@"%d entries shown", [[logTableView theTableRows] count]); }
 
 - (IBAction) refreshHistoryView:(id)sender
 {
