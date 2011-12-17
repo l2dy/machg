@@ -558,11 +558,8 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 			[aCell setStringValue:@"-"];
 		else
 		{
-			NSColor* grayColor = [NSColor grayColor];
-			NSDictionary* newColorAttribute = [NSDictionary dictionaryWithObject:grayColor forKey:NSForegroundColorAttributeName];
-			NSMutableAttributedString* str = [[NSMutableAttributedString alloc]init];
-			[str initWithAttributedString:[aCell attributedStringValue]];
-			[str addAttributes:newColorAttribute range:NSMakeRange(0, [str length])];
+			NSMutableAttributedString* str = [[aCell attributedStringValue] mutableCopy];
+			[str addAttribute:NSForegroundColorAttributeName value:[NSColor grayColor]];
 			[aCell setAttributedStringValue:str];
 		}
 	}

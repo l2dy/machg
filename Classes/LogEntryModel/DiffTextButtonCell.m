@@ -76,9 +76,9 @@
 		[paragraphStyle setAlignment:NSCenterTextAlignment];
 		NSFont* font = [NSFont controlContentFontOfSize:[NSFont systemFontSize]];
 		
-		NSColor* redTextColor   = [NSColor color255WithRed:100.0 green:  0.0 blue:  0.0 alpha:1.0];
-		NSColor* greenTextColor = [NSColor color255WithRed:  0.0 green:100.0 blue:  0.0 alpha:1.0];
-		NSColor* blueTextColor  = [NSColor color255WithRed:  0.0 green:  0.0 blue:100.0 alpha:1.0];
+		NSColor* redTextColor   = rgbColor255(100.0,   0.0,   0.0);
+		NSColor* greenTextColor = rgbColor255(  0.0, 100.0,   0.0);
+		NSColor* blueTextColor  = rgbColor255(  0.0,   0.0, 100.0);
 		
 		theDictionaryAdded    = [NSDictionary dictionaryWithObjectsAndKeys: font, NSFontAttributeName, greenTextColor, NSForegroundColorAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil];
 		theDictionaryModified = [NSDictionary dictionaryWithObjectsAndKeys: font, NSFontAttributeName, blueTextColor,  NSForegroundColorAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil];

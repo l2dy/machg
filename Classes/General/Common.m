@@ -1305,11 +1305,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 - (NSArray*) reversedArray
 {
-    NSMutableArray* array = [NSMutableArray arrayWithCapacity:[self count]];
-    NSEnumerator* enumerator = [self reverseObjectEnumerator];
-    for (id element in enumerator)
-        [array addObject:element];
-    return array;
+    return [[self reverseObjectEnumerator] allObjects];
 }
 
 @end

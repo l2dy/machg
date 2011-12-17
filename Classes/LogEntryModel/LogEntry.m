@@ -571,7 +571,7 @@ NSDictionary* categoryFontAttributes()
 		[paragraphStyle setFirstLineHeadIndent:theFirstLineIndent];
 		[paragraphStyle setTabStops: [NSArray arrayWithObject:tabstop]];
 		
-		NSColor* textColor = [NSColor color255WithRed:180.0 green:180.0 blue:180.0 alpha:1.0];
+		NSColor* textColor = rgbColor255(180.0, 180.0, 180.0);
 		
 		NSFont* font = [NSFont fontWithName:@"Helvetica-Bold"  size:[NSFont systemFontSize]];
 		
@@ -610,7 +610,7 @@ NSDictionary* grayedFontAttributes()
 		[paragraphStyle setFirstLineHeadIndent:theIndent];
 		[paragraphStyle setTabStops: [NSArray arrayWithObject:tabstop]];
 		
-		NSColor* textColor = [NSColor color255WithRed:180.0 green:180.0 blue:180.0 alpha:1.0];
+		NSColor* textColor = rgbColor255(180.0, 180.0, 180.0);
 		
 		NSFont* font = [NSFont fontWithName:@"Helvetica"  size:[NSFont systemFontSize]];
 		

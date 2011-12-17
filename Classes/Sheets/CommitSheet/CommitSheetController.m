@@ -166,7 +166,7 @@ NSString* kAmendOption	 = @"amendOption";
 	ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:rootPath  logging:eLoggingNone];
 	logCommentsTableSourceData = [hgLogResults.outStr componentsSeparatedByString:@"\n#^&^#\n"];
 	[previousCommitMessagesTableView reloadData];
-	cachedCommitMessageForAmend_ = [NSString stringWithString:[logCommentsTableSourceData objectAtIndex:0]];
+	cachedCommitMessageForAmend_ = [[logCommentsTableSourceData objectAtIndex:0] copy];
 
 	[self validateButtons:self];
 }
@@ -284,7 +284,7 @@ NSString* kAmendOption	 = @"amendOption";
 // message, forthe old message, etc.
 - (void) amendOptionChanged
 {
-	NSString* currentMessage = [NSString stringWithString:[commitMessageTextView string]];
+	NSString* currentMessage = [[commitMessageTextView string] copy];
 	[commitMessageTextView setSelectedRange:NSMakeRange(0, [currentMessage length])];
 	[commitMessageTextView insertText:cachedCommitMessageForAmend_];
 	cachedCommitMessageForAmend_ = currentMessage;
@@ -328,11 +328,8 @@ NSString* kAmendOption	 = @"amendOption";
 	if (aTableView == filesToCommitTableView)
 		if ([excludedItems containsIndex:rowIndex])
 		{
-			NSColor* grayColor = [NSColor grayColor];
-			NSDictionary* newColorAttribute = [NSDictionary dictionaryWithObject:grayColor forKey:NSForegroundColorAttributeName];
-			NSMutableAttributedString* str = [[NSMutableAttributedString alloc]init];
-			[str initWithAttributedString:[aCell attributedStringValue]];
-			[str addAttributes:newColorAttribute range:NSMakeRange(0, [str length])];
+			NSMutableAttributedString* str = [[aCell attributedStringValue] mutableCopy];
+			[str addAttribute:NSForegroundColorAttributeName value:[NSColor grayColor]];
 			[aCell setAttributedStringValue:str];
 		}
 }

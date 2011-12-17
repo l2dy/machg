@@ -154,7 +154,7 @@
 	parentFSViewer = [node parentFSViewer];
 	relativePath = [node relativePath];
 	absolutePath = [node absolutePath];
-	childNodes = [NSMutableDictionary dictionaryWithDictionary:[node childNodes]];
+	childNodes = [[node childNodes] mutableCopy];
 	sortedChildNodeKeys = nil;
 	haveComputedTheProperties = NO;
 	hgStatus = eHGStatusNoStatus;

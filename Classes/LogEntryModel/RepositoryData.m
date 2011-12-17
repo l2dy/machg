@@ -316,21 +316,21 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 			if ([labelType isEqualToString:@"tip"])
 			{
 				newTipRevision  = stringAsNumber(revString);
-				newTipChangeset = [NSString stringWithString:changesetString];
+				newTipChangeset = [changesetString copy];
 				continue;
 			}
 			
 			if ([labelType isEqualToString:@"parent1"])
 			{
 				newParent1Revision  = stringAsNumber(revString);
-				newParent1Changeset = [NSString stringWithString:changesetString];
+				newParent1Changeset = [changesetString copy];
 				continue;
 			}
 			
 			if ([labelType isEqualToString:@"parent2"])
 			{
 				newParent2Revision  = stringAsNumber(revString);
-				newParent2Changeset = [NSString stringWithString:changesetString];
+				newParent2Changeset = [changesetString copy];
 				continue;
 			}
 			

@@ -47,7 +47,7 @@
 
 - (NSString*) commandLineString
 {
-    NSMutableString* desc = [NSMutableString stringWithString:[[self launchPath] lastPathComponent]];
+    NSMutableString* desc = [[[self launchPath] lastPathComponent] mutableCopy];
     for (NSString* arg in [self arguments])
 	{
         [desc appendString:@" "];
