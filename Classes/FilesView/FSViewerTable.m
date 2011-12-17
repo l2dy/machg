@@ -51,6 +51,7 @@
 
 - (void) reloadData
 {
+	[self setRowHeight:[parentViewer_ rowHeightForFont]];
 	[self regenerateTableData];
 	[super reloadData];
 }

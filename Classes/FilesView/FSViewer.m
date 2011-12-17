@@ -533,7 +533,18 @@
 // MARK: Refresh / Regenrate Browser
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-
+- (float) rowHeightForFont
+{
+	static float storedFontSizeofBrowserItems = 0.0;
+	static float rowHeight = 0.0;
+	if (storedFontSizeofBrowserItems != fontSizeOfBrowserItemsFromDefaults())
+	{
+		storedFontSizeofBrowserItems = fontSizeOfBrowserItemsFromDefaults();
+		NSFont* textFont = [NSFont fontWithName:@"Verdana" size:storedFontSizeofBrowserItems];
+		rowHeight = MAX([textFont boundingRectForFont].size.height + 4.0, 16.0);
+	}
+	return rowHeight;
+}
 
 - (void) markPathsDirty:(RepositoryPaths*)dirtyPaths
 {

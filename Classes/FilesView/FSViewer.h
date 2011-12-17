@@ -183,6 +183,7 @@
 
 
 // Refresh / Regenrate Browser
+- (float)		rowHeightForFont;
 - (void)		markPathsDirty:(RepositoryPaths*)dirtyPaths;
 - (void)		refreshBrowserPaths:(RepositoryPaths*)changes finishingBlock:(BlockProcess)theBlock;
 - (void)		repositoryDataIsNew;								// Reset the repository root and regenerate all the data and reload it.

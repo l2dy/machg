@@ -11,11 +11,6 @@
 #import "FSViewerPaneCell.h"
 #import "MacHgDocument.h"
 
-@interface FSViewerBrowser (PrivateAPI)
-- (void) setRowHeightForFont;
-@end
-
-
 @implementation FSViewerBrowser
 
 @synthesize parentViewer = parentViewer_;
@@ -37,14 +32,13 @@
 
 - (void) reloadData
 {
-	[self setRowHeightForFont];
+	[self setRowHeight:[parentViewer_ rowHeightForFont]];
 	[self loadColumnZero];
 	[parentViewer_ updateCurrentPreviewImage];
 }
 
 - (void) reloadDataSin
 {
-	[self setRowHeightForFont];
 	FSViewerSelectionState* theSavedState = [self saveViewerSelectionState];
 	[self setDefaultColumnWidth:sizeOfBrowserColumnsFromDefaults()];
 	[self reloadData];
@@ -62,19 +56,6 @@
 		NSString* columnAutoSaveName = fstr(@"File:%@:Repository:%@", fileName ? fileName : @"Untitled", repositoryName ? repositoryName : @"Unnamed");
 		[self setColumnsAutosaveName:columnAutoSaveName];
 	}
-}
-
-- (void) setRowHeightForFont
-{
-	static float storedFontSizeofBrowserItems = 0.0;
-	static float rowHeight = 0.0;
-	if (storedFontSizeofBrowserItems != fontSizeOfBrowserItemsFromDefaults())
-	{
-		storedFontSizeofBrowserItems = fontSizeOfBrowserItemsFromDefaults();
-		NSFont* textFont = [NSFont fontWithName:@"Verdana" size:storedFontSizeofBrowserItems];
-		rowHeight = MAX([textFont boundingRectForFont].size.height + 4.0, 16.0);
-	}
-	[self setRowHeight:rowHeight];
 }
 
 - (void) prepareToOpenFSViewerPane

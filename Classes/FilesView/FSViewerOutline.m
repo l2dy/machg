@@ -20,6 +20,17 @@
 	[self setDataSource:self];
 }
 
+- (void) reloadData
+{
+	[self setRowHeight:[parentViewer_ rowHeightForFont]];
+	[super reloadData];
+}
+
+- (void) reloadDataSin
+{
+	[self reloadData];
+}
+
 - (void) prepareToOpenFSViewerPane
 {
 	[self reloadData];
@@ -80,8 +91,6 @@
 - (NSRect)		frameinWindowOfRow:(NSInteger)row inColumn:(NSInteger)column		{ return NSMakeRect(0, 0, 20, 20); }
 
 - (BOOL)		clickedNodeCoincidesWithTerminalSelections							{ return NO; }
-
-- (void)		reloadDataSin														{ [self reloadData]; }
 - (void)		repositoryDataIsNew													{ }
 - (NSArray*)	quickLookPreviewItems												{ return [NSArray array]; }
 
