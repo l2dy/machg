@@ -69,18 +69,33 @@
 
 
 
+
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 // MARK: Testing of selection and clicks
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BOOL)		nodesAreSelected				{ return NO; }
-- (BOOL)		nodeIsClicked					{ return NO; }
-- (BOOL)		nodesAreChosen					{ return NO; }
-- (FSNodeInfo*) clickedNode						{ return nil; }
-- (BOOL)		clickedNodeInSelectedNodes		{ return NO; }
-- (FSNodeInfo*) chosenNode						{ return nil; }
-- (NSArray*)	selectedNodes;					{ return [NSArray array]; }
+- (FSNodeInfo*) nodeAtIndex:(NSInteger)index
+{
+	@try
+	{
+		return [[self theLeafNodeList] objectAtIndex:index];
+	}
+	@catch (NSException* ne)
+	{
+		return nil;
+	}
+	return nil;
+}
+
+- (BOOL)		nodesAreSelected			{ return IsNotEmpty([self selectedRowIndexes]); }
+- (BOOL)		nodeIsClicked				{ return [self clickedRow] != -1; }
+- (BOOL)		nodesAreChosen				{ return [self nodeIsClicked] || [self nodesAreSelected]; }
+- (FSNodeInfo*) selectedNode				{ return [self nodeAtIndex:[self selectedRow]]; }
+- (FSNodeInfo*) clickedNode					{ return [self nodeAtIndex:[self clickedRow]]; }
+- (BOOL)		clickedNodeInSelectedNodes	{ return [self nodeIsClicked] ? [[self selectedRowIndexes] containsIndex:[self clickedRow]] : NO; }
+- (FSNodeInfo*) chosenNode					{ FSNodeInfo* ans = [self clickedNode]; return ans ? ans : [self selectedNode]; }
+- (NSArray*)	selectedNodes				{ return [[self theLeafNodeList] objectsAtIndexes:[self selectedRowIndexes]]; }
 
 
 
@@ -91,7 +106,8 @@
 // MARK: Path and Selection Operations
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BOOL)		singleFileIsChosenInBrowser											{ return NO; }
+- (BOOL)		singleFileIsChosenInBrowser	{ return ([self nodeIsClicked] || [[self selectedRowIndexes] count] == 1); }
+
 - (BOOL)		singleItemIsChosenInBrowser											{ return NO; }
 
 
@@ -106,6 +122,8 @@
 // Save and restore browser, outline, or table state
 - (FSViewerSelectionState*)	saveViewerSelectionState								{ return [[FSViewerSelectionState alloc]init]; }
 - (void)					restoreViewerSelectionState:(FSViewerSelectionState*)savedState {}
+
+
 
 
 

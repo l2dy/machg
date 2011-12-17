@@ -28,17 +28,58 @@
 
 
 
-// Testing of selection and clicks
-- (BOOL)		nodesAreSelected				{ return NO; }
-- (BOOL)		nodeIsClicked					{ return NO; }
-- (BOOL)		nodesAreChosen					{ return NO; }
-- (FSNodeInfo*) clickedNode						{ return nil; }
-- (BOOL)		clickedNodeInSelectedNodes		{ return NO; }
-- (FSNodeInfo*) chosenNode						{ return nil; }
-- (NSArray*)	selectedNodes;					{ return [NSArray array]; }
 
 
-// Path and Selection Operations
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Testing of selection and clicks
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (FSNodeInfo*) nodeAtIndex:(NSInteger)index
+{
+	@try
+	{
+		return [self itemAtRow:index];
+	}
+	@catch (NSException* ne)
+	{
+		return nil;
+	}
+	return nil;
+}
+
+- (BOOL)		nodesAreSelected	{ return IsNotEmpty([self selectedRowIndexes]); }
+- (BOOL)		nodeIsClicked		{ return [self clickedRow] != -1; }
+- (BOOL)		nodesAreChosen		{ return [self nodeIsClicked] || [self nodesAreSelected]; }
+- (FSNodeInfo*) selectedNode		{ return [self nodeAtIndex:[self selectedRow]]; }
+- (FSNodeInfo*) clickedNode			{ return [self nodeAtIndex:[self clickedRow]]; }
+- (FSNodeInfo*) chosenNode			{ FSNodeInfo* ans = [self clickedNode]; return ans ? ans : [self selectedNode]; }
+- (NSArray*)	selectedNodes
+{
+	NSMutableArray* nodes = [[NSMutableArray alloc]init];
+	NSIndexSet* rows = [self selectedRowIndexes];
+	[rows enumerateIndexesUsingBlock:^(NSUInteger row, BOOL* stop) {
+		[nodes addObjectIfNonNil:[self itemAtRow:row]];
+	}];	
+	return nodes;
+}
+
+- (BOOL) clickedNodeInSelectedNodes
+{
+	if (![self nodeIsClicked])
+		return NO;
+	return [[self selectedRowIndexes] containsIndex:[self clickedRow]];
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Path and Selection Operations
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
 - (BOOL)		singleFileIsChosenInBrowser											{ return NO; }
 - (BOOL)		singleItemIsChosenInBrowser											{ return NO; }
 
@@ -55,6 +96,7 @@
 // Save and restore browser, outline, or table state
 - (FSViewerSelectionState*)	saveViewerSelectionState								{ return [[FSViewerSelectionState alloc]init]; }
 - (void)					restoreViewerSelectionState:(FSViewerSelectionState*)savedState {}
+
 
 
 
