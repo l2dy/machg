@@ -1590,6 +1590,18 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 
 // MARK: -
+@implementation NSResponder ( NSResponderPlusExtensions )
+- (BOOL) hasAncestor:(NSResponder*)responder
+{
+	for (NSResponder* resp = self; resp; resp = [resp nextResponder])
+		if (resp == responder)
+			return YES;
+	return NO;
+}
+@end
+
+
+// MARK: -
 @implementation NSBox ( NSBoxPlusExtensions )
 
 - (void) growToFit
@@ -1637,6 +1649,22 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	if (!NSLocationInRange(tableRowCount, theRange))
 		if (lowTableRow == NSNotFound || tableRowCount - lowTableRow < theRange.length)
 			[self scrollRowToVisible:(tableRowCount - 1)];
+}
+
+@end
+
+
+
+// MARK: -
+@implementation NSOutlineView ( NSOutlineViewPlusExtensions )
+- (NSArray*) selectedItems;
+{
+	NSMutableArray* nodes = [[NSMutableArray alloc]init];
+	NSIndexSet* rows = [self selectedRowIndexes];
+	[rows enumerateIndexesUsingBlock:^(NSUInteger row, BOOL* stop) {
+		[nodes addObjectIfNonNil:[self itemAtRow:row]];
+	}];	
+	return nodes;	
 }
 
 @end

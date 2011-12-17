@@ -309,13 +309,7 @@
 	NSScrollView* horizontalSV = [[[self matrixInColumn:0] enclosingScrollView] enclosingScrollView];
 	newSavedState.savedHorizontalScrollPosition = [[horizontalSV contentView] bounds].origin;
 	
-	BOOL restoreFirstResponderToViewer = NO;
-	for (NSResponder* theResponder = [[parentViewer_ parentWindow] firstResponder]; theResponder; theResponder = [theResponder nextResponder])
-		if (theResponder == self)
-		{
-			restoreFirstResponderToViewer = YES;
-			break;
-		}
+	BOOL restoreFirstResponderToViewer = [[[parentViewer_ parentWindow] firstResponder] hasAncestor:self];
 	
 	// Save the selectedPaths
 	newSavedState.savedSelectedPaths = selectedPaths;

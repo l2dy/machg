@@ -54,15 +54,7 @@
 - (FSNodeInfo*) selectedNode		{ return [self nodeAtIndex:[self selectedRow]]; }
 - (FSNodeInfo*) clickedNode			{ return [self nodeAtIndex:[self clickedRow]]; }
 - (FSNodeInfo*) chosenNode			{ FSNodeInfo* ans = [self clickedNode]; return ans ? ans : [self selectedNode]; }
-- (NSArray*)	selectedNodes
-{
-	NSMutableArray* nodes = [[NSMutableArray alloc]init];
-	NSIndexSet* rows = [self selectedRowIndexes];
-	[rows enumerateIndexesUsingBlock:^(NSUInteger row, BOOL* stop) {
-		[nodes addObjectIfNonNil:[self itemAtRow:row]];
-	}];	
-	return nodes;
-}
+- (NSArray*)	selectedNodes		{ return [self selectedItems]; }
 
 - (BOOL) clickedNodeInSelectedNodes
 {

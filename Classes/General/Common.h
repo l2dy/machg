@@ -1089,6 +1089,12 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 
 // MARK: -
+@interface NSResponder ( NSResponderPlusExtensions )
+- (BOOL)	hasAncestor:(NSResponder*)responder;
+@end
+
+
+// MARK: -
 @interface NSBox ( NSBoxPlusExtensions )
 - (void)	growToFit;
 @end
@@ -1101,4 +1107,10 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 - (NSInteger) chosenRow;	// If n row was clicked on (that triggered an action) in the table then return
 							// that, or else return the selected row
 - (void) scrollToRangeOfRowsLow:(NSInteger)lowTableRow high:(NSInteger)highTableRow;
+@end
+
+
+// MARK: -
+@interface NSOutlineView ( NSOutlineViewPlusExtensions )
+- (NSArray*) selectedItems;
 @end
