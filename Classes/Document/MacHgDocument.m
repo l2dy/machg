@@ -709,6 +709,9 @@
 
 - (void) windowWillBeginSheet:(NSNotification*)notification	{ showingSheet_ = YES; }
 - (void) windowDidEndSheet:(NSNotification*)notification	{ showingSheet_ = NO;  }
+- (void) windowDidBecomeMain:(NSNotification*)notification	{ [sidebar_ becomeMain]; }
+- (void) windowDidResignMain:(NSNotification*)notification	{ [sidebar_ resignMain]; }
+
 
 
 

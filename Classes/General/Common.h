@@ -600,9 +600,7 @@ extern NSArray*			configurationForProgress;
 
 // Font Attributes
 extern NSDictionary*	boldSystemFontAttributes;
-extern NSDictionary*	italicSidebarFontAttributes;
 extern NSDictionary*	italicSystemFontAttributes;
-extern NSDictionary*	italicVirginSidebarFontAttributes;
 extern NSDictionary*	smallBoldCenteredSystemFontAttributes;
 extern NSDictionary*	smallBoldSystemFontAttributes;
 extern NSDictionary*	smallCenteredSystemFontAttributes;
@@ -611,11 +609,13 @@ extern NSDictionary*	smallSystemFontAttributes;
 extern NSDictionary*	smallFixedWidthUserFontAttributes;
 extern NSDictionary*	smallGraySystemFontAttributes;
 extern NSDictionary*	standardSidebarFontAttributes;
-extern NSDictionary*	standardMissingSidebarFontAttributes;
-extern NSDictionary*	standardVirginSidebarFontAttributes;
 extern NSDictionary*	systemFontAttributes;
 extern NSDictionary*	graySystemFontAttributes;
 
+extern NSColor*			virginSidebarColor;
+extern NSColor*			virginSidebarSelectedColor;
+extern NSColor*			missingSidebarColor;
+extern NSColor*			missingSidebarSelectedColor;
 
 
 
@@ -815,18 +815,19 @@ static inline BOOL IsEmpty(id thing)
 }
 
 
-static inline BOOL IsNotEmpty(id thing) { return !IsEmpty(thing); }
+static inline BOOL		IsNotEmpty(id thing) { return !IsEmpty(thing); }
 
-NS_INLINE NSRange		MakeRangeFirstLast(NSUInteger first, NSUInteger last)	{ NSUInteger min = MIN(first, last); NSUInteger max = MAX(first, last); return (NSRange){.location = min, .length = max + 1 - min}; }
-NS_INLINE LowHighPair	MakeLowHighPair(NSInteger low, NSInteger high)			{ return (LowHighPair){.lowRevision = low, .highRevision = high}; }
+NS_INLINE NSRange		MakeRangeFirstLast(NSUInteger first, NSUInteger last)	 { NSUInteger min = MIN(first, last); NSUInteger max = MAX(first, last); return (NSRange){.location = min, .length = max + 1 - min}; }
+NS_INLINE LowHighPair	MakeLowHighPair(NSInteger low, NSInteger high)			 { return (LowHighPair){.lowRevision = low, .highRevision = high}; }
 
-#define MakeNSValue(type,obj) ([NSValue value:&obj  withObjCType:@encode(type)])
+static inline NSColor*	rgbColor255( CGFloat r, CGFloat g, CGFloat b)			 { return [NSColor colorWithDeviceRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:1.0]; }
+static inline NSColor*	rgbaColor255(CGFloat r, CGFloat g, CGFloat b, CGFloat a) { return [NSColor colorWithDeviceRed:r/255.0 green:g/255.0 blue:b/255.0 alpha:a]; }
 
-extern void PlayBeep();
+extern void				PlayBeep();
 
-static inline NSRect UnionWidthHeight(NSRect r, CGFloat w, CGFloat h) { r.size.width = MAX(r.size.width, w); r.size.height = MAX(r.size.height, h); return r;}
-static inline NSRect UnionRectWithSize(NSRect r, NSSize s) { r.size.width = MAX(r.size.width, s.width); r.size.height = MAX(r.size.height, s.height); return r;}
-static inline NSSize UnionSizeWIthSize(NSSize r, NSSize s) { return NSMakeSize(MAX(r.width, s.width), MAX(r.height, s.height)); }
+static inline NSRect	UnionWidthHeight(NSRect r, CGFloat w, CGFloat h) { r.size.width = MAX(r.size.width, w); r.size.height = MAX(r.size.height, h); return r;}
+static inline NSRect	UnionRectWithSize(NSRect r, NSSize s) { r.size.width = MAX(r.size.width, s.width); r.size.height = MAX(r.size.height, s.height); return r;}
+static inline NSSize	UnionSizeWIthSize(NSSize r, NSSize s) { return NSMakeSize(MAX(r.width, s.width), MAX(r.height, s.height)); }
 
 static inline NSString* fstr(NSString* format, ...)
 {
@@ -836,6 +837,8 @@ static inline NSString* fstr(NSString* format, ...)
     va_end(args);
     return string;
 }
+
+#define MakeNSValue(type,obj) ([NSValue value:&obj  withObjCType:@encode(type)])
 
 
 
@@ -966,6 +969,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 @interface NSMutableAttributedString ( NSMutableAttributedStringPlusInitilizers)
 + (NSMutableAttributedString*) string:(NSString*)string withAttributes:(NSDictionary*)theAttributes;
 - (void) appendString:(NSString*)string withAttributes:(NSDictionary*)theAttributes;
+- (void) addAttribute:(NSString*)name value:(id)value;
 @end
 
 
@@ -1066,7 +1070,6 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 // MARK: -
 @interface NSColor ( NSColorPlusExtensions )
 - (NSColor*) intensifySaturationAndBrightness:(double)factor;
-+ (NSColor*) color255WithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha;
 + (NSColor*) errorColor;
 + (NSColor*) successColor;
 @end

@@ -1,5 +1,5 @@
 //
-//  TSBadgeCell.m
+//  SidebarCell.m
 //  Tahsis
 //
 //  Original version created by Matteo Bertozzi on 3/8/09.
@@ -13,6 +13,9 @@
 //
 
 #import "SidebarCell.h"
+#import "SidebarNode.h"
+#import "Sidebar.h"
+
 
 @interface SidebarCell (Private)
 - (CGFloat) drawBadge:(NSRect)cellFrame;
@@ -23,7 +26,7 @@
 #define TSBADGECELL_BUFFER_LEFT_SMALL		2
 #define TSBADGECELL_BUFFER_LEFT				4
 #define TSBADGECELL_BUFFER_SIDE				3
-#define TSBADGECELL_BUFFER_TOP				3
+#define TSBADGECELL_BUFFER_TOP				2
 #define TSBADGECELL_PADDING					6
 
 #define TSBADGECELL_CIRCLE_BUFFER_RIGHT		5
@@ -41,7 +44,16 @@
 @synthesize badgeString = badgeString_;
 @synthesize hasBadge	= hasBadge_;
 @synthesize icon = icon_;
+@synthesize node = node_;
 
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Initialization
+// -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (void) awakeFromNib
 {
@@ -114,6 +126,7 @@
 	{
 		NSRect iconFrame, textFrame;
 		[self divide:cellFrame intoIconFrame:&iconFrame andTextFrame:&textFrame];
+		iconFrame.origin.y -= 3.0;
 		[icon_ drawInRect:iconFrame fromRect:NSZeroRect  operation:NSCompositeSourceOver fraction:1.0 respectFlipped:YES hints:nil];	// drawIcon
 		[super drawInteriorWithFrame:textFrame inView:controlView];	// drawText
 	}

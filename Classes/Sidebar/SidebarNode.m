@@ -151,17 +151,33 @@
 - (BOOL) isDraggable								{ return ![self isSectionNode]; }
 - (BOOL) isRepositoryRef							{ return [self isLocalRepositoryRef] || [self isServerRepositoryRef]; }
 
-- (NSAttributedString*) attributedStringForNode
+- (NSAttributedString*) attributedStringForNodeAndSelected:(BOOL)selected
 {
-	NSDictionary* attributesToApply = standardMissingSidebarFontAttributes;
-	if ([self isServerRepositoryRef])
-		attributesToApply = [self isVirginRepository] ? italicVirginSidebarFontAttributes : italicSidebarFontAttributes;
-	else if ([self isLocalRepositoryRef])
+	static NSShadow* noShadow = nil;
+	static NSShadow* shadow   = nil;
+	if (!shadow)
 	{
-		if (!repositoryExistsAtPath(path))
-			attributesToApply = standardMissingSidebarFontAttributes;
-		else
-			attributesToApply = [self isVirginRepository] ? standardVirginSidebarFontAttributes : standardSidebarFontAttributes;
+		noShadow = [[NSShadow alloc] init];
+		shadow   = [[NSShadow alloc] init];
+		[shadow setShadowColor:[NSColor colorWithDeviceWhite:1 alpha:0.7]];
+		[shadow setShadowOffset:NSMakeSize(0,-1)];
+		[shadow setShadowBlurRadius:1];
+	}
+	
+	NSMutableDictionary* attributesToApply = [standardSidebarFontAttributes mutableCopy];
+	if (selected)
+		[attributesToApply setObject:[NSColor whiteColor] forKey:NSForegroundColorAttributeName];
+	if ([self isVirginRepository])
+		[attributesToApply setObject:selected ? virginSidebarSelectedColor : virginSidebarColor forKey:NSForegroundColorAttributeName];
+	if ([self isServerRepositoryRef])
+		[attributesToApply setObject:[NSNumber numberWithFloat:0.15] forKey:NSObliquenessAttributeName];
+	if ([self isLocalRepositoryRef] && !repositoryExistsAtPath(path))
+		[attributesToApply setObject:selected ? missingSidebarSelectedColor : missingSidebarColor forKey:NSForegroundColorAttributeName];
+	if ([self isSectionNode])
+	{
+		[attributesToApply setObject:selected ? [NSColor whiteColor] : [NSColor colorWithDeviceWhite:0.5 alpha:1.0] forKey:NSForegroundColorAttributeName];
+		[attributesToApply setObject:[NSFont boldSystemFontOfSize:[NSFont smallSystemFontSize]] forKey:NSFontAttributeName];
+		[attributesToApply setObject:selected ? noShadow : shadow forKey:NSShadowAttributeName];
 	}
 	return [NSAttributedString string:shortName withAttributes:attributesToApply];
 }

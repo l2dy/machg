@@ -24,6 +24,13 @@
 #import "NSString+SymlinksAndAliases.h"
 #import "ShellHere.h"
 
+
+//
+// For a nicer visual look I have made section node rows a little taller, and then to account for this space I override
+// outlineView:heightOfRowByItem:, frameOfCellAtColumn:row:, frameOfOutlineCellAtRow: and offsetRectForSectionNode(...) 
+//
+
+
 #define NSMaxiumRange    ((NSRange){.location= 0UL, .length= NSUIntegerMax})
 
 @interface Sidebar (PrivateMethods)
@@ -59,11 +66,10 @@
 	// Scroll to the top in case the outline contents is very long
 	[[[self enclosingScrollView] verticalScroller] setFloatValue:0.0];
 	[[[self enclosingScrollView] contentView] scrollToPoint:NSMakePoint(0, 0)];
-	[self setBackgroundColor:[NSColor colorWithCalibratedRed:0.72 green:0.74 blue:0.79 alpha:1.0]];
 	
 	// Make outline view appear with gradient selection, and behave like the Finder, iTunes, etc.
-	[self setSelectionHighlightStyle:NSTableViewSelectionHighlightStyleSourceList];
-	
+	[self setSelectionHighlightStyle:NSTableViewSelectionHighlightStyleNone];
+
 	// drag and drop support
 	[self registerForDraggedTypes:[NSArray arrayWithObjects:kSidebarPBoardType, NSFilenamesPboardType, nil]];
 
@@ -71,6 +77,8 @@
 	[repositoryPathControl_ setURL:[NSURL fileURLWithPath:NSHomeDirectory()]];
 	[repositoryPathControl_ setDoubleAction:@selector(pathControlDoubleClickAction:)];
 	[repositoryPathControl_ setTarget:self];
+
+	[self setRowHeight:[self rowHeight]+1.0];	// Tweak the row height a bit so it looks more like source lists.
 
 	// Set up Delegates & Data Source
 	[self setDataSource:self];
@@ -180,37 +188,82 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
+// MARK: Drawing Utilities
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+static NSRect offsetRectForSectionNode(NSRect r)
+{
+	r.size.height -= GroupItemExtraTopHeight + GroupItemExtraBottomDepth + 2;
+	r.origin.y += GroupItemExtraTopHeight + 5;
+	return r;
+}
+
+static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
+{
+	NSBezierPath *path = [NSBezierPath bezierPath];
+	[path setLineWidth:0.0f];
+	[path moveToPoint:NSMakePoint(x,   y)];
+	[path lineToPoint:NSMakePoint(x+w, y)];
+	[color set];
+	[path stroke];	
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
 // MARK: Delegates
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (NSCell*) outlineView:(NSOutlineView*)outlineView  dataCellForTableColumn:(NSTableColumn*)tableColumn item:(id)item	{ return [tableColumn dataCell]; }
 - (BOOL)	outlineView:(NSOutlineView*)outlineView  shouldEditTableColumn:(NSTableColumn*)tableColumn  item:(id)item   { return YES; }
 - (BOOL)	outlineView:(NSOutlineView*)outlineView  shouldSelectItem:(id)item											{ return YES; }
-- (BOOL)	outlineView:(NSOutlineView*)outlineView  isGroupItem:(id)item												{ return ![item isRepositoryRef]; }
+- (BOOL)	outlineView:(NSOutlineView*)outlineView  isGroupItem:(id)item												{ return NO; }
+- (CGFloat) outlineView:(NSOutlineView*)outlineView  heightOfRowByItem:(id)item											{ return [item isSectionNode] ? (18 + GroupItemExtraTopHeight + GroupItemExtraBottomDepth) : 18; }
+
+- (NSRect)frameOfCellAtColumn:(NSInteger)columnIndex row:(NSInteger)rowIndex
+{
+	NSRect r = [super frameOfCellAtColumn:columnIndex row:rowIndex];
+	SidebarNode* item = [self itemAtRow:rowIndex];
+	r.origin.y += 2;
+	return [item isSectionNode] ? NSOffsetRect(offsetRectForSectionNode(r),3,-1) : r;
+}
+
+- (NSRect) frameOfOutlineCellAtRow:(NSInteger)rowIndex
+{
+	NSRect r = [super frameOfOutlineCellAtRow:rowIndex];
+	SidebarNode* item = [self itemAtRow:rowIndex];
+	return [item isSectionNode] ? offsetRectForSectionNode(r) : r;
+}
+
 - (void)	outlineView:(NSOutlineView*)outlineView  willDisplayCell:(NSCell*)cell  forTableColumn:(NSTableColumn*)tableColumn  item:(id)item
 {
 	if ([cell isKindOfClass:[SidebarCell class]])
 	{
-		SidebarCell* badgeCell = (SidebarCell*) cell;
+		SidebarCell* sidebarCell = (SidebarCell*) cell;
 		SidebarNode* node = ExactDynamicCast(SidebarNode,item);
 		SidebarNode* selectedNode = [self selectedNode];
+		[sidebarCell setNode:node];
 		NSString* outgoingCount = [outgoingCounts objectForKey:[node path]];
 		NSString* incomingCount = [incomingCounts objectForKey:[node path]];
-		if (node != selectedNode && outgoingCount && incomingCount)
+		BOOL selected = (node == selectedNode);
+		if (!selected && outgoingCount && incomingCount)
 		{
 			NSString* badgeString = fstr(@"%@↓:%@↑",incomingCount, outgoingCount);
-			[badgeCell setBadgeString:badgeString];
-			[badgeCell setHasBadge:YES];
+			[sidebarCell setBadgeString:badgeString];
+			[sidebarCell setHasBadge:YES];
 		}
-		else if (node != selectedNode && [node isCompatibleTo:selectedNode])
+		else if (!selected && [node isCompatibleTo:selectedNode])
 		{
-			[badgeCell setBadgeString:@" "];
-			[badgeCell setHasBadge:YES];
+			[sidebarCell setBadgeString:@" "];
+			[sidebarCell setHasBadge:YES];
 		}
 		else
 		{
-			[badgeCell setBadgeString:nil];
-			[badgeCell setHasBadge:NO];
+			[sidebarCell setBadgeString:nil];
+			[sidebarCell setHasBadge:NO];
 		}
 
 		// If the icon disagrees with the repo being present or not then update it.
@@ -223,10 +276,63 @@
 				[node refreshNodeIcon];
 		}
 		
-		[badgeCell setIcon:[node icon]];
-		if (![node isSectionNode])
-			[badgeCell setAttributedStringValue:[node attributedStringForNode]];
+		[sidebarCell setIcon:[node icon]];
+		[sidebarCell setAttributedStringValue:[node attributedStringForNodeAndSelected:selected]];		
 	}
+}
+
+
+
+- (void) drawRow:(NSInteger)rowIndex clipRect:(NSRect)clipRect
+{
+	static NSColor* fillStartingActiveColor = nil;
+	static NSColor* fillEndingActiveColor   = nil;
+	static NSColor* topBorderActiveColor    = nil;
+	static NSColor* bottomBorderActiveColor = nil;
+	static NSGradient* gradientActive = nil;
+
+	static NSColor* fillStartingInactiveColor = nil;
+	static NSColor* fillEndingInactiveColor   = nil;
+	static NSColor* topBorderInactiveColor    = nil;
+	static NSColor* bottomBorderInactiveColor = nil;
+	static NSGradient* gradientInactive = nil;
+	
+	if (!fillStartingActiveColor)
+	{
+		fillStartingActiveColor   = rgbColor255(127, 184, 233);
+		fillEndingActiveColor     = rgbColor255( 77, 132, 210);
+		topBorderActiveColor      = rgbColor255(108, 163, 222);
+		bottomBorderActiveColor   = rgbColor255( 71, 119, 193);
+		gradientActive            = [[NSGradient alloc] initWithStartingColor:fillStartingActiveColor endingColor:fillEndingActiveColor];
+
+		fillStartingInactiveColor = rgbColor255(197, 203, 224);
+		fillEndingInactiveColor   = rgbColor255(159, 169, 197);
+		topBorderInactiveColor    = rgbColor255(189, 197, 215);
+		bottomBorderInactiveColor = rgbColor255(150, 159, 186);
+		gradientInactive          = [[NSGradient alloc] initWithStartingColor:fillStartingInactiveColor endingColor:fillEndingInactiveColor];
+	}
+
+	SidebarNode* node = [self itemAtRow:rowIndex];
+
+	if ([node isSectionNode])
+	{
+		NSColor* backColor = [self backgroundColor];
+		NSRect bounds = [self rectOfRow:rowIndex];
+		[backColor set];
+		[NSBezierPath fillRect:bounds];
+	}
+	
+	if ([[self selectedRowIndexes] containsIndex:rowIndex])
+	{
+		BOOL active = [[[myDocument mainWindow] firstResponder] hasAncestor:self];	// We display active if we are in the rsponde chain
+		NSRect cellBounds = [self rectOfRow:rowIndex];
+		NSRect bounds =  [node isSectionNode] ? offsetRectForSectionNode(cellBounds) : cellBounds;
+		[(active ? gradientActive : gradientInactive) drawInRect:bounds angle:90];
+		drawHorizontalLine(bounds.origin.x, bounds.origin.y + 0.5,						bounds.size.width, active ?    topBorderActiveColor :    topBorderInactiveColor);
+		drawHorizontalLine(bounds.origin.x, bounds.origin.y + bounds.size.height - 0.5, bounds.size.width, active ? bottomBorderActiveColor : bottomBorderInactiveColor);
+	}
+
+	[super drawRow:rowIndex clipRect:clipRect];
 }
 
 
@@ -300,7 +406,7 @@
 
 	SidebarNode* selectedNode = [self selectedNode];
 	NSText* fieldEditor = [[aNotification userInfo] objectForKey:@"NSFieldEditor"];
-	NSString* newString = [NSString stringWithString:[fieldEditor string]];		// Important to make a copy here. Apple says:
+	NSString* newString = [[fieldEditor string] copy];		// Important to make a copy here. Apple says:
 
 	if (newString == [selectedNode shortName])
 		return;
@@ -522,6 +628,21 @@
 	
 	return NSCellHitContentArea;
 }
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Drawing
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+// We are faking the source list look since apple has made it really non UI like since it has no disclosure arrows and the default
+// source list indentation is all messed up. Thus when a document becomes main or resigns main we need to adjust the sidebar
+// background like source lists do. 
+- (void) becomeMain	{ [self setBackgroundColor:rgbColor255(220, 224, 231)]; }	// source list active
+- (void) resignMain { [self setBackgroundColor:rgbColor255(238, 238, 238)]; }	// source list inactive
 
 
 
@@ -804,7 +925,7 @@
 	[[node parent] removeChild:node];
 	if ([node isRepositoryRef])
 	{
-		NSMutableDictionary* connectionsCopy = [NSMutableDictionary dictionaryWithDictionary:[myDocument connections]];
+		NSMutableDictionary* connectionsCopy = [[myDocument connections] mutableCopy];
 		[[self prepareUndoWithTarget:myDocument] setConnections:connectionsCopy];
 		[self removeConnectionsFor:[node path]];
 	}

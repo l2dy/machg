@@ -81,7 +81,7 @@ typedef enum
 - (BOOL) isSectionNode;
 - (BOOL) isDraggable;
 - (BOOL) isRepositoryRef;
-- (NSAttributedString*) attributedStringForNode;
+- (NSAttributedString*) attributedStringForNodeAndSelected:(BOOL)selected;
 
 
 // Decorated Paths

@@ -1,5 +1,5 @@
 //
-//  TSBadgeCell.h
+//  SidebarCell.h
 //  Tahsis
 //
 //  Original version created by Matteo Bertozzi on 3/8/09.
@@ -15,14 +15,16 @@
 @interface SidebarCell : NSTextFieldCell
 {
 	@private
-	NSString*	badgeString_;
-	BOOL		hasBadge_;
-	NSImage*	icon_;
+	NSString*	 badgeString_;
+	BOOL		 hasBadge_;
+	NSImage*	 icon_;
+	SidebarNode* node_;
 }
 
 @property (readwrite,assign) NSString* badgeString;
 @property (readwrite,assign) BOOL hasBadge;
 @property (readonly) NSImage* icon;
+@property (readwrite,assign) SidebarNode* node;
 
 - (void) setIcon:(NSImage*)icon;
 

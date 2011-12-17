@@ -60,10 +60,16 @@
 											// that, or else return the selected node
 - (SidebarNode*) lastSectionNode;
 
+
 // Expand/Collapse Methods
 - (void) expandAll;
 - (void) collapseAll;
 - (void) restoreSavedExpandedness;
+
+
+// Drawing
+- (void) becomeMain;
+- (void) resignMain;
 
 
 // Saving and Loading
@@ -81,3 +87,5 @@
 
 @end
 
+#define GroupItemExtraTopHeight		12.0
+#define GroupItemExtraBottomDepth	 5.0

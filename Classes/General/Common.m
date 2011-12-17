@@ -549,9 +549,7 @@ NSArray*		configurationForProgress = nil;
 // Font attributes
 NSDictionary*	boldSystemFontAttributes		      = nil;
 NSDictionary*	graySystemFontAttributes              = nil;
-NSDictionary*	italicSidebarFontAttributes           = nil;
 NSDictionary*	italicSystemFontAttributes		      = nil;
-NSDictionary*	italicVirginSidebarFontAttributes	  = nil;
 NSDictionary*	smallBoldCenteredSystemFontAttributes = nil;
 NSDictionary*	smallBoldSystemFontAttributes         = nil;
 NSDictionary*	smallCenteredSystemFontAttributes     = nil;
@@ -560,9 +558,12 @@ NSDictionary*	smallSystemFontAttributes             = nil;
 NSDictionary*	smallFixedWidthUserFontAttributes     = nil;
 NSDictionary*	smallGraySystemFontAttributes         = nil;
 NSDictionary*	standardSidebarFontAttributes         = nil;
-NSDictionary*	standardMissingSidebarFontAttributes  = nil;
-NSDictionary*	standardVirginSidebarFontAttributes   = nil;
 NSDictionary*	systemFontAttributes			      = nil;
+
+NSColor*		virginSidebarColor					  = nil;
+NSColor*		virginSidebarSelectedColor			  = nil;
+NSColor*		missingSidebarColor					  = nil;
+NSColor*		missingSidebarSelectedColor			  = nil;
 
 void PlayBeep()
 {
@@ -1134,16 +1135,13 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 		[newString appendString:s2 withAttributes:a2];
 	return newString;
 }
-
-
 +(NSAttributedString*) hyperlinkFromString:(NSString*)inString withURL:(NSURL*)aURL
 {
-    NSMutableAttributedString* attrString = [[NSMutableAttributedString alloc] initWithString: inString];
-    NSRange range = NSMakeRange(0, [attrString length]);
+    NSMutableAttributedString* attrString = [[NSMutableAttributedString alloc] initWithString:inString];
     [attrString beginEditing];
-    [attrString addAttribute:NSLinkAttributeName value:[aURL absoluteString] range:range];
-    [attrString addAttribute:NSForegroundColorAttributeName value:[NSColor blueColor] range:range];	    // make the text appear in blue
-    [attrString addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSSingleUnderlineStyle] range:range];		// next make the text appear with an underline
+    [attrString addAttribute:NSLinkAttributeName value:[aURL absoluteString]];
+    [attrString addAttribute:NSForegroundColorAttributeName value:[NSColor blueColor]];	    // make the text appear in blue
+    [attrString addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSSingleUnderlineStyle]];		// next make the text appear with an underline
     [attrString endEditing];
     return attrString;
 }
@@ -1166,6 +1164,10 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 - (void) appendString:(NSString*)string withAttributes:(NSDictionary*)theAttributes
 {
 	[self appendAttributedString:[[NSAttributedString alloc] initWithString:string attributes:theAttributes]];
+}
+- (void) addAttribute:(NSString*)name value:(id)value
+{
+	[self addAttribute:name value:value range:NSMakeRange(0, [self length])];
 }
 @end
 
@@ -1488,13 +1490,8 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	return [NSColor colorWithCalibratedHue: h saturation:s*factor brightness:b*factor alpha:a];
 }
 
-+ (NSColor *)color255WithRed:(CGFloat)red green:(CGFloat)green blue:(CGFloat)blue alpha:(CGFloat)alpha
-{
-	return [NSColor colorWithDeviceRed:red/255.0 green:green/255.0 blue:blue/255.0 alpha:alpha];
-}
-
-+ (NSColor*) errorColor		{ return [NSColor color255WithRed:255.0 green:239.0 blue:242.0 alpha:1.0]; }
-+ (NSColor*) successColor	{ return [NSColor color255WithRed:240.0 green:255.0 blue:234.0 alpha:1.0]; }
++ (NSColor*) errorColor		{ return rgbColor255(255.0, 239.0, 242.0); }
++ (NSColor*) successColor	{ return rgbColor255(240.0, 255.0, 234.0); }
 @end
 
 
