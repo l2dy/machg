@@ -81,7 +81,6 @@
 - (BOOL)		clickedNodeInSelectedNodes		{ return NO; }
 - (FSNodeInfo*) chosenNode						{ return nil; }
 - (NSArray*)	selectedNodes;					{ return [NSArray array]; }
-- (NSArray*)	chosenNodes						{ return [NSArray array]; }
 
 
 
@@ -94,11 +93,6 @@
 
 - (BOOL)		singleFileIsChosenInBrowser											{ return NO; }
 - (BOOL)		singleItemIsChosenInBrowser											{ return NO; }
-- (HGStatus)	statusOfChosenPathsInBrowser										{ return eHGStatusClean; }
-- (NSArray*)	absolutePathsOfSelectedFilesInBrowser								{ return [NSArray array]; }
-- (NSArray*)	absolutePathsOfChosenFilesInBrowser									{ return [NSArray array]; }
-- (NSString*)	enclosingDirectoryOfChosenFilesInBrowser							{ return @""; }
-- (NSArray*)	filterPaths:(NSArray*)absolutePaths byBitfield:(HGStatus)status		{ return [NSArray array]; }
 
 
 // Graphic Operations

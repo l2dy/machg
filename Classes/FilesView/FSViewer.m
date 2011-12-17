@@ -221,30 +221,79 @@
 - (BOOL) singleItemIsChosenInBrowser	{ return [[self currentViewerPane] singleItemIsChosenInBrowser]; }
 - (BOOL) clickedNodeInSelectedNodes		{ return [[self currentViewerPane] clickedNodeInSelectedNodes]; }
 
-- (HGStatus) statusOfChosenPathsInBrowser				{ return [[self currentViewerPane] statusOfChosenPathsInBrowser]; }
-- (NSArray*) absolutePathsOfSelectedFilesInBrowser		{ return [[self currentViewerPane] absolutePathsOfSelectedFilesInBrowser]; }
-- (NSArray*) absolutePathsOfChosenFilesInBrowser		{ return [[self currentViewerPane] absolutePathsOfChosenFilesInBrowser]; }
-- (NSString*) enclosingDirectoryOfChosenFilesInBrowser	{ return [[self currentViewerPane] enclosingDirectoryOfChosenFilesInBrowser]; }
 - (BOOL) clickedNodeCoincidesWithTerminalSelections		{ return [[self currentViewerPane] clickedNodeCoincidesWithTerminalSelections]; }
-
 
 
 
 - (NSArray*) chosenNodes
 {
 	if ([self nodeIsClicked] && ![self clickedNodeInSelectedNodes])
-		return [NSArray arrayWithObject:[self clickedNode]];
-	
+		return [NSArray arrayWithObject:[self clickedNode]];	
 	return [self selectedNodes];
 }
 
 
+- (NSArray*) absolutePathsOfSelectedFilesInBrowser
+{
+	NSArray* theSelectedNodes = [self selectedNodes];
+	if (IsEmpty(theSelectedNodes))
+		return [NSArray array];
+	NSMutableArray* paths = [[NSMutableArray alloc] init];
+	for (FSNodeInfo* node in theSelectedNodes)
+		[paths addObjectIfNonNil:[node absolutePath]];
+	return paths;
+}
 
+
+- (NSArray*) absolutePathsOfChosenFilesInBrowser
+{
+	if ([self nodeIsClicked] && ![self clickedNodeInSelectedNodes])
+		return [NSArray arrayWithObject:[[self clickedNode] absolutePath]];
+	return [self absolutePathsOfSelectedFilesInBrowser];
+}
+
+
+- (NSString*) enclosingDirectoryOfChosenFilesInBrowser
+{
+	if (![self nodesAreChosen])
+		return nil;
+	
+	FSNodeInfo* clickedNode = [self clickedNode];
+	if ([self nodeIsClicked])
+		return [clickedNode isDirectory] ? [clickedNode absolutePath] : [[clickedNode absolutePath] stringByDeletingLastPathComponent];
+	
+	// If we have more than one selected cell then we return the enclosing directory.
+	NSArray* theSelectedNodes = [self selectedNodes];
+	if ([theSelectedNodes count] >1)
+		return [[[theSelectedNodes lastObject] absolutePath] stringByDeletingLastPathComponent];
+	
+	FSNodeInfo* selectedNode = [theSelectedNodes lastObject];
+	return [selectedNode isDirectory] ? [selectedNode absolutePath] : [[selectedNode absolutePath] stringByDeletingLastPathComponent];
+}
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Status Operations
+// -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (BOOL) statusOfChosenPathsInBrowserContain:(HGStatus)status	{ return bitsInCommon(status, [self statusOfChosenPathsInBrowser]); }
 - (BOOL) repositoryHasFilesWhichContainStatus:(HGStatus)status	{ return bitsInCommon(status, [[self rootNodeInfo] hgStatus]); }
 
 
+- (HGStatus) statusOfChosenPathsInBrowser
+{
+	if ([self nodeIsClicked] && ![self clickedNodeInSelectedNodes])
+		return [[self clickedNode] hgStatus];
+	
+	if (![self nodesAreSelected])
+		return eHGStatusNoStatus;
+	
+	HGStatus combinedStatus = eHGStatusNoStatus;
+	NSArray* theSelectedNodes = [self selectedNodes];
+	for (FSNodeInfo* node in theSelectedNodes)
+		combinedStatus = unionBits(combinedStatus, [node hgStatus]);
+	return combinedStatus;
+}
 
 
 - (NSArray*) filterPaths:(NSArray*)absolutePaths byBitfield:(HGStatus)status
@@ -260,6 +309,7 @@
 	}
 	return remainingPaths;
 }
+
 
 - (NSArray*) quickLookPreviewItems		{ return [[self currentViewerPane] quickLookPreviewItems]; }
 

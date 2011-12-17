@@ -68,17 +68,11 @@
 - (BOOL)		clickedNodeInSelectedNodes;
 - (FSNodeInfo*) chosenNode;
 - (NSArray*)	selectedNodes;
-- (NSArray*)	chosenNodes;
 
 
 // Path and Selection Operations
 - (BOOL)		singleFileIsChosenInBrowser;		// Not debugged
 - (BOOL)		singleItemIsChosenInBrowser;		// Not debugged
-- (HGStatus)	statusOfChosenPathsInBrowser;
-- (NSArray*)	absolutePathsOfSelectedFilesInBrowser;
-- (NSArray*)	absolutePathsOfChosenFilesInBrowser;
-- (NSString*)	enclosingDirectoryOfChosenFilesInBrowser;
-- (NSArray*)	filterPaths:(NSArray*)absolutePaths byBitfield:(HGStatus)status;
 
 
 // Graphic Operations
@@ -161,8 +155,17 @@
 
 
 // Common Path and Selection Operations
+- (NSArray*)	chosenNodes;
+- (NSArray*)	absolutePathsOfSelectedFilesInBrowser;
+- (NSArray*)	absolutePathsOfChosenFilesInBrowser;
+- (NSString*)	enclosingDirectoryOfChosenFilesInBrowser;
+
+
+// Status Operations
+- (HGStatus)	statusOfChosenPathsInBrowser;
 - (BOOL)		statusOfChosenPathsInBrowserContain:(HGStatus)status;
 - (BOOL)		repositoryHasFilesWhichContainStatus:(HGStatus)status;
+- (NSArray*)	filterPaths:(NSArray*)absolutePaths byBitfield:(HGStatus)status;
 
 
 // Menu Item Actions

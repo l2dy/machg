@@ -112,20 +112,13 @@
 {
 	if (![self nodesAreSelected])
 		return [NSArray array];
-	NSArray* theSelectedNodes = [self selectedCells];
+	NSArray* theSelectedCells = [self selectedCells];
 	NSMutableArray* nodes = [[NSMutableArray alloc] init];
-	for (FSViewerPaneCell* cell in theSelectedNodes)
+	for (FSViewerPaneCell* cell in theSelectedCells)
 		[nodes addObjectIfNonNil:[cell nodeInfo]];
 	return nodes;
 }
 
-- (NSArray*) chosenNodes
-{
-	if ([self nodeIsClicked] && ![self clickedNodeInSelectedNodes])
-		return [NSArray arrayWithObject:[self clickedNode]];
-	
-	return [self selectedNodes];
-}
 
 - (BOOL) singleFileIsChosenInBrowser
 {
@@ -167,62 +160,8 @@
 	return NO;
 }
 
+
 - (BOOL) clickedNodeCoincidesWithTerminalSelections	{ return ([self nodeIsClicked] && ([self clickedColumn] == [self selectedColumn]) && [self clickedNodeInSelectedNodes]); }
-
-
-- (HGStatus) statusOfChosenPathsInBrowser
-{
-	if ([self nodeIsClicked] && ![self clickedNodeInSelectedNodes])
-		return [[self clickedNode] hgStatus];
-	
-	if (![self nodesAreSelected])
-		return eHGStatusNoStatus;
-	
-	HGStatus combinedStatus = eHGStatusNoStatus;
-	NSArray* theSelectedNodes = [self selectedCells];
-	for (FSViewerPaneCell* cell in theSelectedNodes)
-		combinedStatus = unionBits(combinedStatus, [[cell nodeInfo] hgStatus]);
-	return combinedStatus;
-}
-
-- (NSArray*) absolutePathsOfSelectedFilesInBrowser
-{
-	if (![self nodesAreSelected])
-		return [NSArray array];
-	NSArray* theSelectedNodes = [self selectedCells];
-	NSMutableArray* paths = [[NSMutableArray alloc] init];
-	for (FSViewerPaneCell* cell in theSelectedNodes)
-		if ([cell nodeInfo])
-			[paths addObject:[[cell nodeInfo] absolutePath]];
-	return paths;
-}
-
-- (NSArray*) absolutePathsOfChosenFilesInBrowser
-{
-	if ([self nodeIsClicked] && ![self clickedNodeInSelectedNodes])
-		return [NSArray arrayWithObject:[[self clickedNode] absolutePath]];
-	
-	return [self absolutePathsOfSelectedFilesInBrowser];
-}
-
-
-- (NSString*) enclosingDirectoryOfChosenFilesInBrowser
-{
-	if (![self nodesAreChosen])
-		return nil;
-	
-	FSNodeInfo* clickedNode = [self clickedNode];
-	if ([self nodeIsClicked])
-		return [clickedNode isDirectory] ? [clickedNode absolutePath] : [[clickedNode absolutePath] stringByDeletingLastPathComponent];
-	
-	// If we have more than one selected cell then we return the enclosing directory.
-	NSArray* theSelectedNodes = [self selectedCells];
-	if ([theSelectedNodes count] >1)
-		return [[[[theSelectedNodes lastObject] nodeInfo] absolutePath] stringByDeletingLastPathComponent];
-	
-	FSNodeInfo* selectedNode = [[theSelectedNodes lastObject] nodeInfo];
-	return [selectedNode isDirectory] ? [selectedNode absolutePath] : [[selectedNode absolutePath] stringByDeletingLastPathComponent];
-}
 
 
 - (FSNodeInfo*) parentNodeInfoForColumn:(NSInteger)column
@@ -233,21 +172,6 @@
 	// Find the selected item leading up to this column and grab its FSNodeInfo stored in that cell
 	FSViewerPaneCell* selectedCell = [self selectedCellInColumn:column-1];
 	return [selectedCell nodeInfo];
-}
-
-
-- (NSArray*) filterPaths:(NSArray*)absolutePaths byBitfield:(HGStatus)status
-{
-	FSNodeInfo* theRoot = [self rootNodeInfo];
-	NSMutableArray* remainingPaths = [[NSMutableArray alloc] init];
-	for (NSString* path in absolutePaths)
-	{
-		FSNodeInfo* node = [theRoot nodeForPathFromRoot:path];
-		BOOL includePath = bitsInCommon([node hgStatus], status);
-		if (includePath)
-			[remainingPaths addObject:path];
-	}
-	return remainingPaths;
 }
 
 
@@ -276,34 +200,6 @@
 
 
 
-
-
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
-// MARK: Action Utilities
-// -----------------------------------------------------------------------------------------------------------------------------------------
-
-- (BrowserDoubleClickAction) actionEnumForBrowserDoubleClick
-{
-	CGEventRef event = CGEventCreate(NULL /*default event source*/);
-	CGEventFlags modifiers = CGEventGetFlags(event);
-	CFRelease(event);
-	
-	//BOOL isShiftDown    = bitsInCommon(modifiers, kCGEventFlagMaskShift);
-	BOOL isCommandDown  = bitsInCommon(modifiers, kCGEventFlagMaskCommand);
-	BOOL isCtrlDown     = bitsInCommon(modifiers, kCGEventFlagMaskControl);
-	BOOL isOptDown      = bitsInCommon(modifiers, kCGEventFlagMaskAlternate);
-	
-	// Open the file and display it information by calling the single click routine.
-	
-	if (      isCommandDown && !isCtrlDown && !isOptDown) return browserBehaviourCommandDoubleClick();
-	else if ( isCommandDown && !isCtrlDown &&  isOptDown) return browserBehaviourCommandOptionDoubleClick();
-	else if (!isCommandDown && !isCtrlDown &&  isOptDown) return browserBehaviourOptionDoubleClick();
-	else if (!isCommandDown && !isCtrlDown && !isOptDown) return browserBehaviourDoubleClick();
-	
-	PlayBeep();
-	return eBrowserClickActionNoAction;
-}
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -397,7 +293,7 @@
 - (FSViewerSelectionState*)	saveViewerSelectionState
 {
 	// Save scroll positions of the columns
-	NSArray* selectedPaths = [self absolutePathsOfSelectedFilesInBrowser];
+	NSArray* selectedPaths = [parentViewer_ absolutePathsOfSelectedFilesInBrowser];
 	FSViewerSelectionState* newSavedState = [[FSViewerSelectionState alloc] init];
 	int numberOfColumns = [self lastColumn];
 	newSavedState.savedColumnScrollPositions = [[NSMutableArray alloc] init];
