@@ -34,19 +34,19 @@
 	[self setDataSource:self];
 }
 
-- (NSArray*) theLeafNodeList
+- (NSArray*) leafNodeForTableRow
 {
 	@synchronized(self)
 	{
-		if (!theLeafNodeList_)
+		if (!leafNodeForTableRow_)
 			[self regenerateTableData];
 	}
-	return theLeafNodeList_;
+	return leafNodeForTableRow_;
 }
 
 - (void) regenerateTableData
 {
-	theLeafNodeList_ = [[parentViewer_ rootNodeInfo] generateFlatLeafNodeList];
+	leafNodeForTableRow_ = [[parentViewer_ rootNodeInfo] generateFlatLeafNodeList];
 }
 
 - (void) reloadData
@@ -79,7 +79,7 @@
 {
 	@try
 	{
-		return [[self theLeafNodeList] objectAtIndex:index];
+		return [[self leafNodeForTableRow] objectAtIndex:index];
 	}
 	@catch (NSException* ne)
 	{
@@ -95,7 +95,7 @@
 - (FSNodeInfo*) clickedNode					{ return [self nodeAtIndex:[self clickedRow]]; }
 - (BOOL)		clickedNodeInSelectedNodes	{ return [self nodeIsClicked] ? [[self selectedRowIndexes] containsIndex:[self clickedRow]] : NO; }
 - (FSNodeInfo*) chosenNode					{ FSNodeInfo* ans = [self clickedNode]; return ans ? ans : [self selectedNode]; }
-- (NSArray*)	selectedNodes				{ return [[self theLeafNodeList] objectsAtIndexes:[self selectedRowIndexes]]; }
+- (NSArray*)	selectedNodes				{ return [[self leafNodeForTableRow] objectsAtIndexes:[self selectedRowIndexes]]; }
 
 
 
@@ -134,12 +134,12 @@
 
 - (NSInteger) numberOfRowsInTableView:(NSTableView*)aTableView
 {
-	return [[self theLeafNodeList] count];
+	return [[self leafNodeForTableRow] count];
 }
 
 - (id) tableView:(NSTableView*)aTableView objectValueForTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)requestedRow
 {
-	FSNodeInfo* node = [[self theLeafNodeList] objectAtIndex:requestedRow];
+	FSNodeInfo* node = [[self leafNodeForTableRow] objectAtIndex:requestedRow];
 	if ([[aTableColumn identifier] isEqualToString:@"name"])
 		return [node relativePath];
 	if ([[aTableColumn identifier] isEqualToString:@"path"])
@@ -153,7 +153,7 @@
 
 - (void) tableView:(NSTableView*)aTableView  willDisplayCell:(id)aCell forTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
 {
-	FSNodeInfo* node = [[self theLeafNodeList] objectAtIndex:rowIndex];
+	FSNodeInfo* node = [[self leafNodeForTableRow] objectAtIndex:rowIndex];
 	[aCell setParentNodeInfo:nil];
 	[aCell setNodeInfo:node];
 	[aCell loadCellContents];

@@ -11,12 +11,12 @@
 
 @interface FSViewerTable : NSTableView <FSViewerProtocol, NSTableViewDelegate, NSTableViewDataSource>
 {
-	NSArray*	theLeafNodeList_;				// Map of table row -> FSNodeInfo
+	NSArray*	leafNodeForTableRow_;				// Array of table row -> FSNodeInfo*
 	FSViewer*	parentViewer_;
 }
 @property (readwrite, assign) FSViewer*	parentViewer;
 
-- (NSArray*) theLeafNodeList;
+- (NSArray*) leafNodeForTableRow;
 
 @end
 
