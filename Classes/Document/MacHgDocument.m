@@ -600,9 +600,12 @@
 	if (currentPane_ == newPaneNum)
 		return;
 
-	BOOL ended = [mainWindow_ makeFirstResponder:mainWindow_];
-	if (!ended)
-		{ PlayBeep(); return; }
+	if (newPaneNum != eBackingView)
+	{
+		BOOL ended = [mainWindow_ makeFirstResponder:mainWindow_];
+		if (!ended)
+			{ PlayBeep(); return; }
+	}
 	
 	// Specific opening handling for some panes
 	switch (newPaneNum)
