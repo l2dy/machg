@@ -58,6 +58,7 @@
 - (SidebarNode*) selectedNode;
 - (SidebarNode*) chosenNode;				// If a node was clicked on (that triggered an action) then return
 											// that, or else return the selected node
+- (BOOL) multipleNodesAreSelected;
 - (SidebarNode*) lastSectionNode;
 
 

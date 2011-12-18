@@ -143,6 +143,7 @@
 - (SidebarNode*) selectedNode				{ return [self itemAtRow:[self selectedRow]]; }
 - (SidebarNode*) chosenNode					{ return [self itemAtRow:[self chosenRow]]; }
 - (SidebarNode*) clickedNode				{ return [self rowWasClicked] ? [self chosenNode] : nil; }
+- (BOOL) multipleNodesAreSelected			{ return [self numberOfSelectedRows] > 1; }
 
 
 
@@ -248,14 +249,16 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 		[sidebarCell setNode:node];
 		NSString* outgoingCount = [outgoingCounts objectForKey:[node path]];
 		NSString* incomingCount = [incomingCounts objectForKey:[node path]];
-		BOOL selected = (node == selectedNode);
-		if (!selected && outgoingCount && incomingCount)
+		BOOL selected = [self isRowSelected:[self rowForItem:node]];
+		BOOL multipleSelection = [self multipleNodesAreSelected];
+		
+		if (!selected && outgoingCount && incomingCount && !multipleSelection)
 		{
 			NSString* badgeString = fstr(@"%@↓:%@↑",incomingCount, outgoingCount);
 			[sidebarCell setBadgeString:badgeString];
 			[sidebarCell setHasBadge:YES];
 		}
-		else if (!selected && [node isCompatibleTo:selectedNode])
+		else if (!selected && [node isCompatibleTo:selectedNode] && !multipleSelection)
 		{
 			[sidebarCell setBadgeString:@" "];
 			[sidebarCell setHasBadge:YES];
@@ -342,7 +345,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 - (void) outlineViewSelectionDidChange:(NSNotification*)notification
 {
 	SidebarNode* selectedNode = [self selectedNode];
-
+	
 	outgoingCounts = [[NSMutableDictionary alloc]init];				// reset the outgoing counts which will get recomputed below.
 	incomingCounts = [[NSMutableDictionary alloc]init];				// reset the outgoing counts which will get recomputed below.
 

@@ -830,8 +830,8 @@
 // MARK: Action Validation
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BOOL) repositoryIsSelectedAndReady						{ return !showingSheet_ && [[sidebar_ chosenNode] isLocalRepositoryRef]; }
-- (BOOL) repositoryOrServerIsSelectedAndReady				{ return !showingSheet_ && [[sidebar_ chosenNode] isRepositoryRef]; }
+- (BOOL) repositoryIsSelectedAndReady						{ return !showingSheet_ && [[sidebar_ chosenNode] isLocalRepositoryRef] && ![sidebar_ multipleNodesAreSelected]; }
+- (BOOL) repositoryOrServerIsSelectedAndReady				{ return !showingSheet_ && [[sidebar_ chosenNode] isRepositoryRef]      && ![sidebar_ multipleNodesAreSelected]; }
 - (BOOL) toolbarActionAppliesToFilesWith:(HGStatus)status	{ return ([self pathsAreSelectedInBrowserWhichContainStatus:status] || (![self nodesAreChosenInBrowser] && [self repositoryHasFilesWhichContainStatus:status])); }
 - (BOOL) validateAndSwitchMenuForCommitAllFiles:(id)anItem
 {
@@ -1491,8 +1491,9 @@
 - (void) repositoryRootDidChange
 {
 	SidebarNode* node = [sidebar_ selectedNode];
+	BOOL multipleSelection = [[sidebar_ selectedRowIndexes] count] > 1;
 	
-	if (![node isExistentLocalRepositoryRef])
+	if (![node isExistentLocalRepositoryRef] || multipleSelection)
 	{
 		[self discardCurrentRepository];
 		return;
