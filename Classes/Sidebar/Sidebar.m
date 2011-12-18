@@ -98,6 +98,14 @@
 		[self selectRow:[self rowForItem:node]];
 }
 
+- (void) selectNodes:(NSArray*)nodes
+{
+	NSMutableIndexSet* indexes = [[NSMutableIndexSet alloc]init];
+	for (SidebarNode* node in nodes)
+		[indexes addIndex:[self rowForItem:node]];
+	[self selectRowIndexes:indexes byExtendingSelection:NO];
+}
+
 // This method is used when we are undoing / redoing things. It's cheating a bit since I could introduce more targeted lightweight
 // changes to the sidebar tree. However the whole size of the sidebar tree should be small. Something like:90 bytes per node, and
 // then the NSMutableArray in there and so on. Maybe 1K or 2K bytes for a whole tree so I am not going to sweat this.
@@ -141,6 +149,7 @@
 - (BOOL) selectedNodeIsLocalRepositoryRef	{ return [[self selectedNode] isLocalRepositoryRef]; }
 - (BOOL) selectedNodeIsServerRepositoryRef	{ return [[self selectedNode] isServerRepositoryRef]; }
 - (SidebarNode*) selectedNode				{ return [self itemAtRow:[self selectedRow]]; }
+- (NSArray*)     selectedNodes				{ return [self selectedItems]; }
 - (SidebarNode*) chosenNode					{ return [self itemAtRow:[self chosenRow]]; }
 - (SidebarNode*) clickedNode				{ return [self rowWasClicked] ? [self chosenNode] : nil; }
 - (BOOL) multipleNodesAreSelected			{ return [self numberOfSelectedRows] > 1; }
@@ -742,14 +751,21 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 - (void) menuNeedsUpdate:(NSMenu*)theMenu
 {
     if (theMenu == sidebarContextualMenu)
-	{
-		SidebarNode* node = [self clickedNode];
-    
+	{		
 		// Remove all the items after the 3rd.
 		int numberOfItems = [theMenu numberOfItems];
 		for (int i = 3; i < numberOfItems; i++)
 			[theMenu removeItemAtIndex:3];
 
+		BOOL multipleSelection = [self multipleNodesAreSelected];
+		if (multipleSelection && [[self selectedRowIndexes] containsIndex:[self clickedRow]])
+		{
+			[theMenu addItem:[NSMenuItem separatorItem]];
+			[theMenu addItemWithTitle:@"Delete Items"									action:@selector(sidebarMenuRemoveSidebarItems:)				keyEquivalent:@""];
+			return;
+		}
+
+		SidebarNode* node = [self clickedNode];
         if (node != nil && [node isLocalRepositoryRef])
 		{
 			[theMenu addItem:[NSMenuItem separatorItem]];
@@ -786,7 +802,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK:  AddSidebarNode
+// MARK:  Add / Remove nodes
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (void) addSidebarNode:(SidebarNode*)newNode
@@ -814,6 +830,13 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 		node = root_;
 	[node addChild:newNode];
 	[self reloadData];
+}
+
+- (void) removeNodeFromSidebar:(SidebarNode*)node
+{
+	if ([node isRepositoryRef])
+		[self removeConnectionsFor:[node path]];
+	[[node parent] removeChild:node];
 }
 
 
@@ -873,7 +896,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	BOOL deleteRepositoryAsWell = NO;
 	if (DisplayWarningForRepositoryDeletionFromDefaults() && [node isExistentLocalRepositoryRef])
 	{
-		NSString* subMessage = fstr(@"Are you sure you want to delete the bookmark “%@”", [node shortName]);
+		NSString* subMessage = fstr(@"Are you sure you want to delete the bookmark “%@”?", [node shortName]);
 		int result = RunCriticalAlertPanelOptionsWithSuppression( @"Delete Repository Bookmark", subMessage, @"Delete Bookmark", @"Cancel", @"Delete Bookmark and Repository", MHGDisplayWarningForRepositoryDeletion);
 		if (result == NSAlertSecondButtonReturn)
 			return;
@@ -882,14 +905,14 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	}
 	else if (DisplayWarningForRepositoryDeletionFromDefaults() && [node isServerRepositoryRef])
 	{
-		NSString* subMessage = fstr(@"Are you sure you want to delete the server bookmark “%@”", [node shortName]);
+		NSString* subMessage = fstr(@"Are you sure you want to delete the server bookmark “%@”?", [node shortName]);
 		int result = RunCriticalAlertPanelOptionsWithSuppression( @"Delete Repository Bookmark", subMessage, @"Delete Bookmark", @"Cancel", nil, MHGDisplayWarningForRepositoryDeletion);
 		if (result == NSAlertSecondButtonReturn)
 			return;
 	}
 	else if (DisplayWarningForRepositoryDeletionFromDefaults() && [node isSectionNode])
 	{
-		NSString* subMessage = fstr(@"Are you sure you want to delete the group “%@”", [node shortName]);
+		NSString* subMessage = fstr(@"Are you sure you want to delete the group “%@”?", [node shortName]);
 		int result = RunCriticalAlertPanelOptionsWithSuppression( @"Delete Group", subMessage, @"Delete Group", @"Cancel", nil, MHGDisplayWarningForRepositoryDeletion);
 		if (result == NSAlertSecondButtonReturn)
 			return;
@@ -902,20 +925,19 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 			deleteRepositoryAsWell = YES;
 	}
 
-	BOOL deletingSelectedNode = ([self selectedNode] == node);
-	SidebarNode* theSelectedNode = [self selectedNode];
+	NSArray* nodes = [self selectedNodes];
+	BOOL deletingSelectedNode = [nodes containsObject:node];
 	if (deleteRepositoryAsWell)
 	{
 		moveFilesToTheTrash([NSArray arrayWithObject:[node path]]);
 		[myDocument removeAllUndoActionsForDocument];
 		[myDocument updateChangeCount:NSChangeDone];
-		[self removeConnectionsFor:[node path]];
-		[[node parent] removeChild:node];
+		[self removeNodeFromSidebar:node];
 		if (deletingSelectedNode)
 			[self deselectAll:self];
 		[self reloadData];
 		if (!deletingSelectedNode)
-			[self selectNode:theSelectedNode];
+			[self selectNodes:nodes];
 		if (deletingSelectedNode)
 			[myDocument discardCurrentRepository];
 		[myDocument saveDocumentIfNamed];
@@ -925,22 +947,119 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 
 	[[self prepareUndoWithTarget:self] setRootAndUpdate:[root_ copyNodeTree]];									// With the undo restore the root node tree
 	[[self undoManager] setActionName:@"Delete Item"];
-	[[node parent] removeChild:node];
-	if ([node isRepositoryRef])
-	{
-		NSMutableDictionary* connectionsCopy = [[myDocument connections] mutableCopy];
-		[[self prepareUndoWithTarget:myDocument] setConnections:connectionsCopy];
-		[self removeConnectionsFor:[node path]];
-	}
+	NSMutableDictionary* connectionsCopy = [[myDocument connections] mutableCopy];
+	[[self prepareUndoWithTarget:myDocument] setConnections:connectionsCopy];
+	[self removeNodeFromSidebar:node];
 	if (deletingSelectedNode)
 		[self deselectAll:self];
 	[self reloadData];
 	if (!deletingSelectedNode)
-		[self selectNode:theSelectedNode];
+		[self selectNodes:nodes];
 	[myDocument saveDocumentIfNamed];
 	if (deletingSelectedNode)
 		[myDocument discardCurrentRepository];
 }
+
+
+- (IBAction) sidebarMenuRemoveSidebarItems:(id)sender
+{
+	NSArray* nodes = [self selectedNodes];
+	if (IsEmpty(nodes))
+		{ NSBeep(); return; }
+	if ([nodes count] == 1)
+	{
+		[self sidebarMenuRemoveSidebarItem:sender];
+		return;
+	}
+	
+	NSMutableArray*  existentLocalRepositories = [[NSMutableArray alloc]init];
+	for (SidebarNode* node in nodes)
+		if ([node isExistentLocalRepositoryRef])
+			if (![existentLocalRepositories containsObject:[node path]])
+				[existentLocalRepositories addObject:[node path]];
+	
+	NSString* listedRepositories = [existentLocalRepositories componentsJoinedByString:@"\n\t"];
+	
+	BOOL deleteRepositoriesAsWell = NO;
+	if (DisplayWarningForRepositoryDeletionFromDefaults() && [existentLocalRepositories count] == [nodes count])
+	{
+		NSString* subMessage = fstr(@"Are you sure you want to delete the %d local repositories:\n\t%@", [nodes count], listedRepositories);
+		int result = RunCriticalAlertPanelOptionsWithSuppression( @"Delete Bookmarks", subMessage, @"Delete Items", @"Cancel", @"Delete Bookmarks and Local Repositories", MHGDisplayWarningForRepositoryDeletion);
+		if (result == NSAlertSecondButtonReturn)
+			return;
+		if (result == NSAlertThirdButtonReturn)
+			deleteRepositoriesAsWell = YES;
+	}
+	else if (DisplayWarningForRepositoryDeletionFromDefaults() && [existentLocalRepositories count] > 1)
+	{
+		NSString* subMessage = fstr(@"Are you sure you want to delete the %d items which include the repositories:\n\t%@", [nodes count], listedRepositories);
+		int result = RunCriticalAlertPanelOptionsWithSuppression( @"Delete Items", subMessage, @"Delete Items", @"Cancel", @"Delete Items and Local Repositories", MHGDisplayWarningForRepositoryDeletion);
+		if (result == NSAlertSecondButtonReturn)
+			return;
+		if (result == NSAlertThirdButtonReturn)
+			deleteRepositoriesAsWell = YES;
+	}
+	else if (DisplayWarningForRepositoryDeletionFromDefaults() && [existentLocalRepositories count] == 1)
+	{
+		NSString* subMessage = fstr(@"Are you sure you want to delete the %d items which include the repository:\n\t%@", [nodes count], [existentLocalRepositories firstObject]);
+		int result = RunCriticalAlertPanelOptionsWithSuppression( @"Delete Items", subMessage, @"Delete Items", @"Cancel", @"Delete Items and Local Repositories", MHGDisplayWarningForRepositoryDeletion);
+		if (result == NSAlertSecondButtonReturn)
+			return;
+		if (result == NSAlertThirdButtonReturn)
+			deleteRepositoriesAsWell = YES;
+	}
+	else if (DisplayWarningForRepositoryDeletionFromDefaults() && [existentLocalRepositories count] == 0)
+	{
+		NSString* subMessage = fstr(@"Are you sure you want to delete the %d items?", [nodes count]);
+		int result = RunCriticalAlertPanelOptionsWithSuppression( @"Delete Items", subMessage, @"Delete Items", @"Cancel", nil, MHGDisplayWarningForRepositoryDeletion);
+		if (result == NSAlertSecondButtonReturn)
+			return;
+		if (result == NSAlertThirdButtonReturn)
+			deleteRepositoriesAsWell = YES;
+	}
+	else if (!DisplayWarningForRepositoryDeletionFromDefaults() && [existentLocalRepositories count] > 1)
+	{
+		NSString* subMessage = fstr(@"The %d items will be deleted. Do you also want to move to the trash the following underlying repositories located at:\n\t%@", [nodes count], listedRepositories);
+		NSInteger result = NSRunCriticalAlertPanel(@"Delete Repositories?", subMessage, @"Leave Repositories Alone", @"Delete Repositories", nil);
+		if (result == NSAlertAlternateReturn)
+			deleteRepositoriesAsWell = YES;
+	}
+	else if (!DisplayWarningForRepositoryDeletionFromDefaults() && [existentLocalRepositories count] > 0)
+	{
+		NSString* subMessage = fstr(@"The %d items will be deleted. Do you also want to move to the trash the following underlying repository located at:\n\t%@", [nodes count], [existentLocalRepositories firstObject]);
+		NSInteger result = NSRunCriticalAlertPanel(@"Delete Repository?", subMessage, @"Leave Repository Alone", @"Delete Repository", nil);
+		if (result == NSAlertAlternateReturn)
+			deleteRepositoriesAsWell = YES;
+	}
+
+	if (deleteRepositoriesAsWell)
+	{
+		[self deselectAll:self];
+		moveFilesToTheTrash(existentLocalRepositories);
+		[myDocument removeAllUndoActionsForDocument];
+		[myDocument updateChangeCount:NSChangeDone];
+		for (SidebarNode* node in nodes)
+			[self removeNodeFromSidebar:node];
+		[self reloadData];
+		[self deselectAll:self];
+		[myDocument saveDocumentIfNamed];
+		return;
+	};
+	
+	[[self prepareUndoWithTarget:self] setRootAndUpdate:[root_ copyNodeTree]];									// With the undo restore the root node tree
+	[[self undoManager] setActionName:@"Delete Items"];
+
+	NSMutableDictionary* connectionsCopy = [[myDocument connections] mutableCopy];
+	[[self prepareUndoWithTarget:myDocument] setConnections:connectionsCopy];
+	
+	for (SidebarNode* node in nodes)
+		[self removeNodeFromSidebar:node];
+
+	[self reloadData];
+	[self deselectAll:self];
+	[myDocument saveDocumentIfNamed];
+}
+
 
 
 - (IBAction) sidebarMenuRevealRepositoryInFinder:(id)sender
@@ -993,7 +1112,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 //		if (keyCode == NSDeleteCharacter || keyCode == NSBackspaceCharacter)
 //			if ([self numberOfSelectedRows] > 0)
 //			{
-//				[self sidebarMenuRemoveSidebarItem:self];
+//				[self sidebarMenuRemoveSidebarItems:self];
 //				return;
 //			}
 //	}

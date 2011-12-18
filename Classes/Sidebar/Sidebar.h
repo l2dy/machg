@@ -38,27 +38,29 @@
 - (IBAction)	sidebarMenuConfigureServerRepositoryRef:(id)sender;
 - (IBAction)	sidebarMenuAddNewSidebarGroupItem:(id)sender;
 - (IBAction)	sidebarMenuRemoveSidebarItem:(id)sender;
+- (IBAction)	sidebarMenuRemoveSidebarItems:(id)sender;
 - (IBAction)	sidebarMenuRevealRepositoryInFinder:(id)sender;
 - (IBAction)	sidebarMenuOpenTerminalHere:(id)sender;
 
 - (IBAction)	reloadSidebarData:(id)sender;
 
 
-// Addition of Nodes
+// Add / delete Nodes
 - (void) addSidebarNode:(SidebarNode*)newNode;
 - (void) addSidebarNode:(SidebarNode*)newNode afterNode:(SidebarNode*)existingNode;
+- (void) removeNodeFromSidebar:(SidebarNode*)node;
 - (NSArray*) serversIfAvailable:(NSString*)file includingAlreadyPresent:(BOOL)includeAlreadyPresent;
-
 
 // Selection Methods
 - (BOOL) selectedNodeIsLocalRepositoryRef;
 - (BOOL) selectedNodeIsServerRepositoryRef;
 - (void) selectNode:(SidebarNode*)node;
+- (void) selectNodes:(NSArray*)nodes;
 - (void) setRootAndUpdate:(SidebarNode*)root;
 - (SidebarNode*) selectedNode;
-- (SidebarNode*) chosenNode;				// If a node was clicked on (that triggered an action) then return
-											// that, or else return the selected node
-- (BOOL) multipleNodesAreSelected;
+- (SidebarNode*) chosenNode;
+- (NSArray*)     selectedNodes;
+- (BOOL)		 multipleNodesAreSelected;
 - (SidebarNode*) lastSectionNode;
 
 

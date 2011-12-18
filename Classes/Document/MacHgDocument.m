@@ -893,7 +893,8 @@
 	if (theAction == @selector(sidebarMenuAddLocalRepositoryRef:))		return !showingSheet_;
 	if (theAction == @selector(sidebarMenuAddServerRepositoryRef:))		return !showingSheet_;
 	if (theAction == @selector(sidebarMenuAddNewSidebarGroupItem:))		return !showingSheet_;
-	if (theAction == @selector(sidebarMenuRemoveSidebarItem:))			return !showingSheet_ && ([sidebar_ chosenNode] ? YES : NO);
+	if (theAction == @selector(sidebarMenuRemoveSidebarItem:))			return !showingSheet_ && ([sidebar_ chosenNode] && ![sidebar_ multipleNodesAreSelected] ? YES : NO);
+	if (theAction == @selector(sidebarMenuRemoveSidebarItems:))			return !showingSheet_ && ([sidebar_ multipleNodesAreSelected] ? YES : NO);
 	if (theAction == @selector(sidebarMenuConfigureRepositoryRef:))		return [self repositoryOrServerIsSelectedAndReady];
 	if (theAction == @selector(sidebarMenuConfigureLocalRepositoryRef:))return [self repositoryIsSelectedAndReady];
 	if (theAction == @selector(sidebarMenuConfigureServerRepositoryRef:))return [self repositoryOrServerIsSelectedAndReady];
@@ -1691,6 +1692,7 @@
 - (IBAction) sidebarMenuConfigureServerRepositoryRef:(id)sender	{ return [sidebar_ sidebarMenuConfigureServerRepositoryRef:sender]; }
 - (IBAction) sidebarMenuAddNewSidebarGroupItem:(id)sender		{ return [sidebar_ sidebarMenuAddNewSidebarGroupItem:sender]; }
 - (IBAction) sidebarMenuRemoveSidebarItem:(id)sender			{ return [sidebar_ sidebarMenuRemoveSidebarItem:sender]; }
+- (IBAction) sidebarMenuRemoveSidebarItems:(id)sender			{ return [sidebar_ sidebarMenuRemoveSidebarItems:sender]; }
 - (IBAction) sidebarMenuRevealRepositoryInFinder:(id)sender		{ return [sidebar_ sidebarMenuRevealRepositoryInFinder:sender]; }
 - (IBAction) sidebarMenuOpenTerminalHere:(id)sender				{ return [sidebar_ sidebarMenuOpenTerminalHere:sender]; }
 - (IBAction) mainMenuRevealSelectedFilesInFinder:(id)sender		{ return [sidebar_ sidebarMenuRevealRepositoryInFinder:sender]; }
