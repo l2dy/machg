@@ -231,7 +231,8 @@
 
 // Query the active repository
 - (BOOL)		aRepositoryIsSelected;
-- (NSString*)	absolutePathOfRepositoryRoot;
+- (NSString*)	absolutePathOfRepositoryRoot;				// Uses the root from the repository data
+- (NSString*)	absolutePathOfRepositoryRootFromSidebar;	// Uses the root from the sidebar
 - (NSArray*)	absolutePathOfRepositoryRootAsArray;
 - (NSString*)	selectedRepositoryShortName;
 - (NSString*)	selectedRepositoryPath;

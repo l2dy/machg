@@ -1299,7 +1299,7 @@
 	{
 		DebugLog(@"Initializing log entry collection");
 		[repositoryData_ stopObserving];	// Stop any old repositoryData object from receiving notifications.
-		NSString* rootPath = [self absolutePathOfRepositoryRoot];
+		NSString* rootPath = [self absolutePathOfRepositoryRootFromSidebar];
 		repositoryData_ = [[RepositoryData alloc] initWithRootPath:rootPath andDocument:self];
 	}
 }
@@ -1356,7 +1356,8 @@
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (BOOL)			aRepositoryIsSelected					{ return [[sidebar_ selectedNode] isLocalRepositoryRef]; }
-- (NSString*)		absolutePathOfRepositoryRoot			{ SidebarNode* repo = [sidebar_ selectedNode]; return [repo isLocalRepositoryRef] ? [repo path] : nil; }
+- (NSString*)		absolutePathOfRepositoryRoot			{ return [repositoryData_ rootPath]; }
+- (NSString*)		absolutePathOfRepositoryRootFromSidebar	{ SidebarNode* repo = [sidebar_ selectedNode]; return [repo isLocalRepositoryRef] ? [repo path] : nil; }
 - (NSString*)		selectedRepositoryShortName				{ SidebarNode* repo = [sidebar_ selectedNode]; return [repo isLocalRepositoryRef]  ? [repo shortName]  : nil; }
 - (NSString*)		selectedRepositoryPath					{ SidebarNode* repo = [sidebar_ selectedNode]; return [repo isRepositoryRef] ? [repo path] : nil; }
 - (SidebarNode*)	selectedRepositoryRepositoryRef			{ SidebarNode* repo = [sidebar_ selectedNode]; return [repo isRepositoryRef] ? repo : nil; }
@@ -1506,7 +1507,7 @@
 	if ([node isLocalRepositoryRef] && [self showingBackingView])
 		[self actionSwitchViewToFilesView:self];
 
-	NSString* rootPath = [self absolutePathOfRepositoryRoot];
+	NSString* rootPath = [self absolutePathOfRepositoryRootFromSidebar];
 	BOOL rootPathChanged = !repositoryData_ || ![[repositoryData_ rootPath] isEqualToString:rootPath];
 	if (rootPathChanged)
 		[self initializeRepositoryData];
