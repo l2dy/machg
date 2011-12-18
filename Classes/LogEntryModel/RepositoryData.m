@@ -197,7 +197,7 @@
 	if (![self combinedHGIgnoreRegExNeedsRefresh])
 		return hgIgnoreFilesRegEx_;
 	NSMutableArray* argsDebugIgnore = [NSMutableArray arrayWithObjects:@"debugignore", nil];
-	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsDebugIgnore  fromRoot:rootPath_];
+	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsDebugIgnore  fromRoot:rootPath_  logging:eLoggingNone];
 	if ([results hasErrors])
 		return nil;
 	hgIgnoreFilesTimeStamp_ = [NSDate date];
