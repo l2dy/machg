@@ -77,6 +77,7 @@ typedef enum
 // Accessors
 - (BOOL) isLocalRepositoryRef;
 - (BOOL) isExistentLocalRepositoryRef;
+- (BOOL) isMissingLocalRepositoryRef;
 - (BOOL) isServerRepositoryRef;
 - (BOOL) isSectionNode;
 - (BOOL) isDraggable;

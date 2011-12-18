@@ -26,6 +26,7 @@
 	SingleTimedQueue*		queueForAutomaticOutgoingComputation_;
 	SingleTimedQueue*		queueForUpdatingInformationTextView_;
 	NSArray*				dragNodesArray;
+	BOOL					currentSelectionAllowsBadges_;
 }
 
 @property (nonatomic, assign) SidebarNode* root;

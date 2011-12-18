@@ -256,18 +256,20 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 		SidebarNode* node = ExactDynamicCast(SidebarNode,item);
 		SidebarNode* selectedNode = [self selectedNode];
 		[sidebarCell setNode:node];
+
 		NSString* outgoingCount = [outgoingCounts objectForKey:[node path]];
 		NSString* incomingCount = [incomingCounts objectForKey:[node path]];
 		BOOL selected = [self isRowSelected:[self rowForItem:node]];
-		BOOL multipleSelection = [self multipleNodesAreSelected];
-		
-		if (!selected && outgoingCount && incomingCount && !multipleSelection)
+		BOOL exists = [node isLocalRepositoryRef] && repositoryExistsAtPath([node path]);
+		BOOL allowedBadge = exists || [node isServerRepositoryRef];
+
+		if (!selected && outgoingCount && incomingCount && currentSelectionAllowsBadges_ && allowedBadge)
 		{
 			NSString* badgeString = fstr(@"%@↓:%@↑",incomingCount, outgoingCount);
 			[sidebarCell setBadgeString:badgeString];
 			[sidebarCell setHasBadge:YES];
 		}
-		else if (!selected && [node isCompatibleTo:selectedNode] && !multipleSelection)
+		else if (!selected && [node isCompatibleTo:selectedNode] && currentSelectionAllowsBadges_ && allowedBadge)
 		{
 			[sidebarCell setBadgeString:@" "];
 			[sidebarCell setHasBadge:YES];
@@ -281,7 +283,6 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 		// If the icon disagrees with the repo being present or not then update it.
 		if ([node isLocalRepositoryRef])
 		{
-			BOOL exists = repositoryExistsAtPath([node path]);
 			NSString* name = [[node icon] name];
 			BOOL nameIsMissingRepository = [name isEqualToString:@"MissingRepository"];
 			if ((exists && nameIsMissingRepository) || (!exists && !nameIsMissingRepository))
@@ -349,8 +350,6 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 
 
 
-
-
 - (void) outlineViewSelectionDidChange:(NSNotification*)notification
 {
 	SidebarNode* selectedNode = [self selectedNode];
@@ -361,6 +360,9 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	[myDocument postNotificationWithName:kSidebarSelectionDidChange];
 	[myDocument postNotificationWithName:kRepositoryRootChanged];	// We have switched to a new root (possibly a nil root)
 
+	SidebarNode* node = [self selectedNode];
+	currentSelectionAllowsBadges_ = ![self multipleNodesAreSelected] && node && ![node isMissingLocalRepositoryRef];
+	
 	if (selectedNode == nil || [selectedNode nodeKind] == kSidebarNodeKindSection)
 	{
 		[myDocument discardCurrentRepository];

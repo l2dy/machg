@@ -145,6 +145,7 @@
 - (NSUInteger) numberOfChildren						{ return [children count]; }
 
 - (BOOL) isExistentLocalRepositoryRef				{ return [self isLocalRepositoryRef] && pathIsExistentDirectory(path); }
+- (BOOL) isMissingLocalRepositoryRef				{ return [self isLocalRepositoryRef] && !repositoryExistsAtPath(path); }
 - (BOOL) isLocalRepositoryRef						{ return (nodeKind == kSidebarNodeKindLocalRepositoryRef); }
 - (BOOL) isServerRepositoryRef						{ return (nodeKind == kSidebarNodeKindServerRepositoryRef); }
 - (BOOL) isSectionNode								{ return (nodeKind == kSidebarNodeKindSection); }
@@ -171,7 +172,7 @@
 		[attributesToApply setObject:selected ? virginSidebarSelectedColor : virginSidebarColor forKey:NSForegroundColorAttributeName];
 	if ([self isServerRepositoryRef])
 		[attributesToApply setObject:[NSNumber numberWithFloat:0.15] forKey:NSObliquenessAttributeName];
-	if ([self isLocalRepositoryRef] && !repositoryExistsAtPath(path))
+	if ([self isMissingLocalRepositoryRef])
 		[attributesToApply setObject:selected ? missingSidebarSelectedColor : missingSidebarColor forKey:NSForegroundColorAttributeName];
 	if ([self isSectionNode])
 	{
