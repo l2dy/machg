@@ -627,9 +627,8 @@ NSArray* aliasesForShell(NSString* path)
 	NSString* ehgAlias  = fstr(@"alias %@='HGPLAIN=1 HGENCODING=UTF-8 HGRCPATH=\"%@\" \"${mhgResources}/localhg\"'", LocalWhitelistedHGShellAliasNameFromDefaults(), hgrcPath());
 	NSString* terminalInfoScriptPath = fstr(@"\"${mhgResources}/terminalinformation.sh\"");
 	NSString* terminalInfo  = fstr(@"%@ %@ %@", terminalInfoScriptPath, LocalHGShellAliasNameFromDefaults(), LocalWhitelistedHGShellAliasNameFromDefaults());
-
-	NSArray* cmds = [NSArray arrayWithObjects:mhgResources, mhgAlias, ehgAlias, terminalInfo, nil];
-	return cmds;
+	NSString* combinedCmd = fstr(@"%@; %@; %@; %@", mhgResources, mhgAlias, ehgAlias, terminalInfo);
+	return [NSArray arrayWithObject:combinedCmd];
 }
 
 NSString* tempFilePathWithTemplate(NSString* nameTemplate)
