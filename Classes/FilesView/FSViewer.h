@@ -71,8 +71,8 @@
 
 
 // Path and Selection Operations
-- (BOOL)		singleFileIsChosenInBrowser;		// Not debugged
-- (BOOL)		singleItemIsChosenInBrowser;		// Not debugged
+- (BOOL)		singleFileIsChosenInFiles;		// Not debugged
+- (BOOL)		singleItemIsChosenInFiles;		// Not debugged
 
 
 // Graphic Operations
@@ -157,13 +157,13 @@
 // Common Path and Selection Operations
 - (NSArray*)	chosenNodes;
 - (NSArray*)	absolutePathsOfSelectedFilesInBrowser;
-- (NSArray*)	absolutePathsOfChosenFilesInBrowser;
-- (NSString*)	enclosingDirectoryOfChosenFilesInBrowser;
+- (NSArray*)	absolutePathsOfChosenFiles;
+- (NSString*)	enclosingDirectoryOfChosenFiles;
 
 
 // Status Operations
-- (HGStatus)	statusOfChosenPathsInBrowser;
-- (BOOL)		statusOfChosenPathsInBrowserContain:(HGStatus)status;
+- (HGStatus)	statusOfChosenPathsInFiles;
+- (BOOL)		statusOfChosenPathsInFilesContain:(HGStatus)status;
 - (BOOL)		repositoryHasFilesWhichContainStatus:(HGStatus)status;
 - (NSArray*)	filterPaths:(NSArray*)absolutePaths byBitfield:(HGStatus)status;
 

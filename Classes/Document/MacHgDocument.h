@@ -207,9 +207,9 @@
 - (BOOL)		showingHistoryView;
 - (BOOL)		showingDifferencesView;
 - (BOOL)		showingBackingView;
-- (BOOL)		showingBrowserOrHistoryView;
-- (BOOL)		showingBrowserOrDifferencesView;
-- (BOOL)		showingBrowserOrHistoryOrDifferencesView;
+- (BOOL)		showingFilesOrHistoryView;
+- (BOOL)		showingFilesOrDifferencesView;
+- (BOOL)		showingFilesOrHistoryOrDifferencesView;
 - (BOOL)		showingASheet;
 - (PaneViewNum)	currentPane;
 - (void)		setCurrentPane:(PaneViewNum)paneNum;
@@ -230,7 +230,10 @@
 
 
 // Query the active repository
-- (BOOL)		aRepositoryIsSelected;
+- (BOOL)		localRepoIsSelectedAndReady;
+- (BOOL)		localRepoIsChosenAndReady;
+- (BOOL)		localOrServerRepoIsSelectedAndReady;
+- (BOOL)		localOrServerRepoIsChosenAndReady;
 - (NSString*)	absolutePathOfRepositoryRoot;				// Uses the root from the repository data
 - (NSString*)	absolutePathOfRepositoryRootFromSidebar;	// Uses the root from the sidebar
 - (NSArray*)	absolutePathOfRepositoryRootAsArray;
@@ -243,14 +246,14 @@
 // Query the browsed files of the repository
 - (FSViewer*)	theFSViewer;
 - (FSNodeInfo*)	rootNodeInfo;
-- (BOOL)		singleFileIsChosenInBrowser;
-- (BOOL)		singleItemIsChosenInBrowser;
-- (BOOL)		nodesAreChosenInBrowser;
-- (BOOL)		pathsAreSelectedInBrowserWhichContainStatus:(HGStatus)status;
+- (BOOL)		singleFileIsChosenInFiles;
+- (BOOL)		singleItemIsChosenInFiles;
+- (BOOL)		nodesAreChosenInFiles;
+- (BOOL)		statusOfChosenPathsInFilesContain:(HGStatus)status;
 - (BOOL)		repositoryHasFilesWhichContainStatus:(HGStatus)status;
-- (HGStatus)	statusOfChosenPathsInBrowser;
-- (NSArray*)	absolutePathsOfBrowserChosenFiles;
-- (NSString*)	enclosingDirectoryOfBrowserChosenFiles;
+- (HGStatus)	statusOfChosenPathsInFiles;
+- (NSArray*)	absolutePathsOfChosenFiles;
+- (NSString*)	enclosingDirectoryOfChosenFiles;
 - (FSNodeInfo*) nodeForPath:(NSString*)absolutePath;
 
 
@@ -289,54 +292,90 @@
 - (IBAction)	refreshBrowserContent:(id)sender;
 
 
+//
+// Action Menu
+// 
+- (IBAction)	mainMenuCommitSelectedFiles:(id)sender;
+- (IBAction)	mainMenuCommitAllFiles:(id)sender;
+- (IBAction)	toolbarCommitFiles:(id)sender;
+- (IBAction)	mainMenuDiffSelectedFiles:(id)sender;
+- (IBAction)	mainMenuDiffAllFiles:(id)sender;
+- (IBAction)	toolbarDiffFiles:(id)sender;
+- (IBAction)	mainMenuAddRenameRemoveSelectedFiles:(id)sender;
+- (IBAction)	mainMenuAddRenameRemoveAllFiles:(id)sender;
+- (IBAction)	toolbarAddRenameRemoveFiles:(id)sender;
+// ------------------------------------------------------
+- (IBAction)	mainMenuRevertSelectedFiles:(id)sender;
+- (IBAction)	mainMenuRevertAllFiles:(id)sender;
+- (IBAction)	mainMenuRevertSelectedFilesToVersion:(id)sender;
+- (IBAction)	toolbarRevertFiles:(id)sender;
+- (IBAction)	mainMenuDeleteSelectedFiles:(id)sender;
+- (IBAction)	mainMenuAddSelectedFiles:(id)sender;
+- (IBAction)	mainMenuUntrackSelectedFiles:(id)sender;
+- (IBAction)	mainMenuRenameSelectedItem:(id)sender;
+// ------------------------------------------------------
+- (IBAction)	mainMenuRemergeSelectedFiles:(id)sender;
+- (IBAction)	mainMenuMarkResolvedSelectedFiles:(id)sender;
+// ------------------------------------------------------
+- (IBAction)	mainMenuIgnoreSelectedFiles:(id)sender;
+- (IBAction)	mainMenuUnignoreSelectedFiles:(id)sender;
+- (IBAction)	mainMenuAnnotateSelectedFiles:(id)sender;
+// ------------------------------------------------------
+- (IBAction)	mainMenuRollbackCommit:(id)sender;
+- (IBAction)	mainMenuNoAction:(id)sender;
+
+
+
+//
+// Repository Menu Actions
+//
+- (IBAction)	mainMenuCloneRepository:(id)sender;
+- (IBAction)	mainMenuPullFromRepository:(id)sender;
+- (IBAction)	mainMenuPushToRepository:(id)sender;
+- (IBAction)	mainMenuIncomingFromRepository:(id)sender;
+- (IBAction)	mainMenuOutgoingToRepository:(id)sender;
+// ------------------------------------------------------
+- (IBAction)	mainMenuUpdateRepository:(id)sender;
+- (IBAction)	mainMenuUpdateRepositoryToVersion:(id)sender;
+- (IBAction)	mainMenuGotoChangeset:(id)sender;
+- (IBAction)	mainMenuMergeWith:(id)sender;
+// ------------------------------------------------------
+- (IBAction)	mainMenuCollapseChangesets:(id)sender;
+- (IBAction)	mainMenuStripChangesets:(id)sender;
+- (IBAction)	mainMenuRebaseChangesets:(id)sender;
+- (IBAction)	mainMenuHistoryEditChangesets:(id)sender;
+- (IBAction)	mainMenuBackoutChangeset:(id)sender;
+// ------------------------------------------------------
+- (IBAction)	mainMenuManifestOfCurrentVersion:(id)sender;
+- (IBAction)	mainMenuAddLabelToCurrentRevision:(id)sender;
+// ------------------------------------------------------
+- (IBAction)	mainMenuAddLocalRepositoryRef:(id)sender;
+- (IBAction)	mainMenuAddServerRepositoryRef:(id)sender;
+- (IBAction)	mainMenuAddNewSidebarGroupItem:(id)sender;
+- (IBAction)	mainMenuRemoveSidebarItem:(id)sender;
+- (IBAction)	mainMenuRemoveSidebarItems:(id)sender;
+- (IBAction)	mainMenuConfigureRepositoryRef:(id)sender;
+- (IBAction)	mainMenuConfigureLocalRepositoryRef:(id)sender;
+- (IBAction)	mainMenuConfigureServerRepositoryRef:(id)sender;
+// ------------------------------------------------------
+- (IBAction)	mainMenuRevealSelectedFilesInFinder:(id)sender;
+- (IBAction)	mainMenuOpenSelectedFilesInFinder:(id)sender;
+- (IBAction)	mainMenuOpenTerminalHere:(id)sender;
+
+
+
 // File Menu
 - (IBAction)	mainMenuImportPatches:(id)sender;
 - (IBAction)	mainMenuExportPatches:(id)sender;
 
 
-// All Files Menu Actions
-- (IBAction)	mainMenuUpdateRepository:(id)sender;
-- (IBAction)	mainMenuUpdateRepositoryToVersion:(id)sender;
-
-
 // Switching actions
 - (IBAction)	toolbarUpdate:(id)sender;
 
-
-- (IBAction)	mainMenuAddLabelToCurrentRevision:(id)sender;
-- (IBAction)	mainMenuMergeWith:(id)sender;
-- (IBAction)	mainMenuRemergeSelectedFiles:(id)sender;
-- (IBAction)	mainMenuMarkResolvedSelectedFiles:(id)sender;
-
-
-// Viewing Menu Actions
-- (IBAction)	mainMenuRollbackCommit:(id)sender;
-- (IBAction)	mainMenuNoAction:(id)sender;
-
-
-// Repository Menu Actions
-- (IBAction)	mainMenuManifestOfCurrentVersion:(id)sender;
-- (IBAction)	mainMenuGotoChangeset:(id)sender;
-- (IBAction)	mainMenuCloneRepository:(id)sender;
-- (IBAction)	mainMenuPushToRepository:(id)sender;
-- (IBAction)	mainMenuPullFromRepository:(id)sender;
-- (IBAction)	mainMenuIncomingFromRepository:(id)sender;
-- (IBAction)	mainMenuOutgoingToRepository:(id)sender;
+- (IBAction)	mainMenuRevealRepositoryInFinder:(id)sender;
 
 
 // Proxies for SideBar Methods
-- (IBAction)	sidebarMenuAddLocalRepositoryRef:(id)sender;
-- (IBAction)	sidebarMenuAddServerRepositoryRef:(id)sender;
-- (IBAction)	sidebarMenuConfigureRepositoryRef:(id)sender;
-- (IBAction)	sidebarMenuConfigureLocalRepositoryRef:(id)sender;
-- (IBAction)	sidebarMenuConfigureServerRepositoryRef:(id)sender;
-- (IBAction)	sidebarMenuAddNewSidebarGroupItem:(id)sender;
-- (IBAction)	sidebarMenuRemoveSidebarItem:(id)sender;
-- (IBAction)	sidebarMenuRemoveSidebarItems:(id)sender;
-- (IBAction)	sidebarMenuRevealRepositoryInFinder:(id)sender;
-- (IBAction)	sidebarMenuOpenTerminalHere:(id)sender;
-- (IBAction)	mainMenuRevealSelectedFilesInFinder:(id)sender;
-- (IBAction)	mainMenuOpenTerminalHere:(id)sender;
 - (IBAction)	mainMenuAddAndCloneServerRepositoryRef:(id)sender;
 
 
@@ -366,8 +405,8 @@
 
 // Validation
 - (BOOL)		validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem;
-- (BOOL)		repositoryIsSelectedAndReady;
-- (BOOL)		repositoryOrServerIsSelectedAndReady;
+- (BOOL)		localRepoIsSelectedAndReady;
+- (BOOL)		localOrServerRepoIsSelectedAndReady;
 - (BOOL)		toolbarActionAppliesToFilesWith:(HGStatus)status;
 - (BOOL)		validateAndSwitchMenuForCommitAllFiles:(id)menuItem;
 

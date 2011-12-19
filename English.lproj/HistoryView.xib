@@ -3644,6 +3644,7 @@
 						<string key="mainMenuPullFromRepository:">id</string>
 						<string key="mainMenuPushToRepository:">id</string>
 						<string key="mainMenuRemergeSelectedFiles:">id</string>
+						<string key="mainMenuRevealRepositoryInFinder:">id</string>
 						<string key="mainMenuRevealSelectedFilesInFinder:">id</string>
 						<string key="mainMenuRollbackCommit:">id</string>
 						<string key="mainMenuUpdateRepository:">id</string>
@@ -3657,7 +3658,6 @@
 						<string key="sidebarMenuConfigureServerRepositoryRef:">id</string>
 						<string key="sidebarMenuOpenTerminalHere:">id</string>
 						<string key="sidebarMenuRemoveSidebarItem:">id</string>
-						<string key="sidebarMenuRevealRepositoryInFinder:">id</string>
 						<string key="testBrowserLoad:">id</string>
 						<string key="togglePreviewPanel:">id</string>
 						<string key="toolbarUpdate:">id</string>
@@ -3751,6 +3751,10 @@
 							<string key="name">mainMenuRemergeSelectedFiles:</string>
 							<string key="candidateClassName">id</string>
 						</object>
+						<object class="IBActionInfo" key="mainMenuRevealRepositoryInFinder:">
+							<string key="name">mainMenuRevealRepositoryInFinder:</string>
+							<string key="candidateClassName">id</string>
+						</object>
 						<object class="IBActionInfo" key="mainMenuRevealSelectedFilesInFinder:">
 							<string key="name">mainMenuRevealSelectedFilesInFinder:</string>
 							<string key="candidateClassName">id</string>
@@ -3801,10 +3805,6 @@
 						</object>
 						<object class="IBActionInfo" key="sidebarMenuRemoveSidebarItem:">
 							<string key="name">sidebarMenuRemoveSidebarItem:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="sidebarMenuRevealRepositoryInFinder:">
-							<string key="name">sidebarMenuRevealRepositoryInFinder:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="testBrowserLoad:">
@@ -3996,51 +3996,51 @@
 					<string key="className">Sidebar</string>
 					<string key="superclassName">NSOutlineView</string>
 					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="mainMenuAddLocalRepositoryRef:">id</string>
+						<string key="mainMenuAddNewSidebarGroupItem:">id</string>
+						<string key="mainMenuAddServerRepositoryRef:">id</string>
+						<string key="mainMenuConfigureLocalRepositoryRef:">id</string>
+						<string key="mainMenuConfigureServerRepositoryRef:">id</string>
+						<string key="mainMenuOpenTerminalHere:">id</string>
+						<string key="mainMenuRemoveSidebarItem:">id</string>
+						<string key="mainMenuRevealRepositoryInFinder:">id</string>
 						<string key="reloadSidebarData:">id</string>
-						<string key="sidebarMenuAddLocalRepositoryRef:">id</string>
-						<string key="sidebarMenuAddNewSidebarGroupItem:">id</string>
-						<string key="sidebarMenuAddServerRepositoryRef:">id</string>
-						<string key="sidebarMenuConfigureLocalRepositoryRef:">id</string>
-						<string key="sidebarMenuConfigureServerRepositoryRef:">id</string>
-						<string key="sidebarMenuOpenTerminalHere:">id</string>
-						<string key="sidebarMenuRemoveSidebarItem:">id</string>
-						<string key="sidebarMenuRevealRepositoryInFinder:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="mainMenuAddLocalRepositoryRef:">
+							<string key="name">mainMenuAddLocalRepositoryRef:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="mainMenuAddNewSidebarGroupItem:">
+							<string key="name">mainMenuAddNewSidebarGroupItem:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="mainMenuAddServerRepositoryRef:">
+							<string key="name">mainMenuAddServerRepositoryRef:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="mainMenuConfigureLocalRepositoryRef:">
+							<string key="name">mainMenuConfigureLocalRepositoryRef:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="mainMenuConfigureServerRepositoryRef:">
+							<string key="name">mainMenuConfigureServerRepositoryRef:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="mainMenuOpenTerminalHere:">
+							<string key="name">mainMenuOpenTerminalHere:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="mainMenuRemoveSidebarItem:">
+							<string key="name">mainMenuRemoveSidebarItem:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="mainMenuRevealRepositoryInFinder:">
+							<string key="name">mainMenuRevealRepositoryInFinder:</string>
+							<string key="candidateClassName">id</string>
+						</object>
 						<object class="IBActionInfo" key="reloadSidebarData:">
 							<string key="name">reloadSidebarData:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="sidebarMenuAddLocalRepositoryRef:">
-							<string key="name">sidebarMenuAddLocalRepositoryRef:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="sidebarMenuAddNewSidebarGroupItem:">
-							<string key="name">sidebarMenuAddNewSidebarGroupItem:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="sidebarMenuAddServerRepositoryRef:">
-							<string key="name">sidebarMenuAddServerRepositoryRef:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="sidebarMenuConfigureLocalRepositoryRef:">
-							<string key="name">sidebarMenuConfigureLocalRepositoryRef:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="sidebarMenuConfigureServerRepositoryRef:">
-							<string key="name">sidebarMenuConfigureServerRepositoryRef:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="sidebarMenuOpenTerminalHere:">
-							<string key="name">sidebarMenuOpenTerminalHere:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="sidebarMenuRemoveSidebarItem:">
-							<string key="name">sidebarMenuRemoveSidebarItem:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="sidebarMenuRevealRepositoryInFinder:">
-							<string key="name">sidebarMenuRevealRepositoryInFinder:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 					</dictionary>

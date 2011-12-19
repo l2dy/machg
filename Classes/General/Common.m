@@ -995,6 +995,12 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 @end
 
 
+// MARK: -
+@implementation NSObject (NSObjectPlusSelectorResponders)
+- (id) performSelectorIfPossible:(SEL)sel						{ return [self respondsToSelector:sel] ? [self performSelector:sel] : nil; }
+- (id) performSelectorIfPossible:(SEL)sel withObject:(id)obj	{ return [self respondsToSelector:sel] ? [self performSelector:sel withObject:obj] : nil; }
+@end
+
 
 
 // MARK: -

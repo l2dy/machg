@@ -25,7 +25,7 @@
 - (NSString*) windowTitleForDocumentDisplayName:(NSString*)displayName
 {
 	MacHgDocument* myDocument = DynamicCast(MacHgDocument,[self document]);
-	if ([[myDocument sidebar] selectedNodeIsLocalRepositoryRef])
+	if ([myDocument localRepoIsSelectedAndReady])
 		return fstr(@"%@ - %@", displayName, [[[myDocument sidebar] selectedNode] shortName]);
 	return displayName;
 }

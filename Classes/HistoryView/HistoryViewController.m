@@ -404,41 +404,41 @@
 {
 	SEL theAction = [anItem action];
 	
-	if (theAction == @selector(mainMenuCommitAllFiles:))						return [myDocument repositoryIsSelectedAndReady] && [myDocument validateAndSwitchMenuForCommitAllFiles:anItem];
-	if (theAction == @selector(toolbarCommitFiles:))							return [myDocument repositoryIsSelectedAndReady] && [myDocument toolbarActionAppliesToFilesWith:eHGStatusCommittable];
+	if (theAction == @selector(mainMenuCommitAllFiles:))						return [myDocument localRepoIsSelectedAndReady] && [myDocument validateAndSwitchMenuForCommitAllFiles:anItem];
+	if (theAction == @selector(toolbarCommitFiles:))							return [myDocument localRepoIsSelectedAndReady] && [myDocument toolbarActionAppliesToFilesWith:eHGStatusCommittable];
 
-	if (theAction == @selector(mainMenuDiffAllFiles:))							return [myDocument repositoryIsSelectedAndReady] && [myDocument repositoryHasFilesWhichContainStatus:eHGStatusModified];
-	if (theAction == @selector(toolbarDiffFiles:))								return [myDocument repositoryIsSelectedAndReady] && ![logTableView noRevisionSelected];
+	if (theAction == @selector(mainMenuDiffAllFiles:))							return [myDocument localRepoIsSelectedAndReady] && [myDocument repositoryHasFilesWhichContainStatus:eHGStatusModified];
+	if (theAction == @selector(toolbarDiffFiles:))								return [myDocument localRepoIsSelectedAndReady] && ![logTableView noRevisionSelected];
 	
 	// ------
-	if (theAction == @selector(mainMenuRollbackCommit:))						return [myDocument repositoryIsSelectedAndReady] && [myDocument showingBrowserOrHistoryView];
+	if (theAction == @selector(mainMenuRollbackCommit:))						return [myDocument localRepoIsSelectedAndReady] && [myDocument showingFilesOrHistoryView] && [[myDocument repositoryData] isRollbackInformationAvailable];
 	
 	
 	// History only methods
-	if (theAction == @selector(mainMenuCollapseChangesets:))					return [myDocument repositoryIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();
-	if (theAction == @selector(mainMenuHistoryEditChangesets:))					return [myDocument repositoryIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();
-	if (theAction == @selector(mainMenuStripChangesets:))						return [myDocument repositoryIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();
-	if (theAction == @selector(mainMenuRebaseChangesets:))						return [myDocument repositoryIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();
-	if (theAction == @selector(mainMenuBackoutChangeset:))						return [myDocument repositoryIsSelectedAndReady] && ![myDocument repositoryHasFilesWhichContainStatus:eHGStatusChangedInSomeWay];
+	if (theAction == @selector(mainMenuCollapseChangesets:))					return [myDocument localRepoIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();
+	if (theAction == @selector(mainMenuHistoryEditChangesets:))					return [myDocument localRepoIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();
+	if (theAction == @selector(mainMenuStripChangesets:))						return [myDocument localRepoIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();
+	if (theAction == @selector(mainMenuRebaseChangesets:))						return [myDocument localRepoIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();
+	if (theAction == @selector(mainMenuBackoutChangeset:))						return [myDocument localRepoIsSelectedAndReady] && ![myDocument repositoryHasFilesWhichContainStatus:eHGStatusChangedInSomeWay];
 	
 	// HistoryView contextual items
-	if (theAction == @selector(historyMenuAddLabelToChosenRevision:))			return [myDocument repositoryIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
-	if (theAction == @selector(historyMenuDiffAllToChosenRevision:))			return [myDocument repositoryIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
-	if (theAction == @selector(historyMenuUpdateRepositoryToChosenRevision:))	return [myDocument repositoryIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
-	if (theAction == @selector(historyMenuGotoChangeset:))						return [myDocument repositoryIsSelectedAndReady] && [myDocument showingHistoryView];
-	if (theAction == @selector(historyMenuMergeRevision:))						return [myDocument repositoryIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
-	if (theAction == @selector(historyMenuManifestOfChosenRevision:))			return [myDocument repositoryIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuAddLabelToChosenRevision:))			return [myDocument localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuDiffAllToChosenRevision:))			return [myDocument localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuUpdateRepositoryToChosenRevision:))	return [myDocument localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuGotoChangeset:))						return [myDocument localRepoIsSelectedAndReady] && [myDocument showingHistoryView];
+	if (theAction == @selector(historyMenuMergeRevision:))						return [myDocument localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuManifestOfChosenRevision:))			return [myDocument localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
 	// -------
-	if (theAction == @selector(historyMenuViewRevisionDifferences:))			return [myDocument repositoryIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuViewRevisionDifferences:))			return [myDocument localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
 
 	// Labels contextual items
-	if (theAction == @selector(labelsMenuAddLabelToCurrentRevision:))			return [myDocument repositoryIsSelectedAndReady];
-	if (theAction == @selector(labelsMenuMoveChosenLabel:))						return [myDocument repositoryIsSelectedAndReady] && [theLabelsTableView_ chosenLabel] && ![[theLabelsTableView_ chosenLabel] isOpenHead];
-	if (theAction == @selector(labelsMenuRemoveChosenLabel:))					return [myDocument repositoryIsSelectedAndReady] && [theLabelsTableView_ chosenLabel] && ![[theLabelsTableView_ chosenLabel] isOpenHead];
+	if (theAction == @selector(labelsMenuAddLabelToCurrentRevision:))			return [myDocument localRepoIsSelectedAndReady];
+	if (theAction == @selector(labelsMenuMoveChosenLabel:))						return [myDocument localRepoIsSelectedAndReady] && [theLabelsTableView_ chosenLabel] && ![[theLabelsTableView_ chosenLabel] isOpenHead];
+	if (theAction == @selector(labelsMenuRemoveChosenLabel:))					return [myDocument localRepoIsSelectedAndReady] && [theLabelsTableView_ chosenLabel] && ![[theLabelsTableView_ chosenLabel] isOpenHead];
 	// -------
-	if (theAction == @selector(labelsMenuUpdateRepositoryToChosenRevision:))	return [myDocument repositoryIsSelectedAndReady] && [theLabelsTableView_ chosenLabel];
+	if (theAction == @selector(labelsMenuUpdateRepositoryToChosenRevision:))	return [myDocument localRepoIsSelectedAndReady] && [theLabelsTableView_ chosenLabel];
 	
-	return [myDocument validateUserInterfaceItem:anItem];
+	return NO;
 }
 
 // Maybe move this to the parent controller for the LabelsTableView

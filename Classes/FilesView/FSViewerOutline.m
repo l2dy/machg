@@ -83,8 +83,8 @@
 // MARK: Path and Selection Operations
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BOOL)		singleFileIsChosenInBrowser											{ return NO; }
-- (BOOL)		singleItemIsChosenInBrowser											{ return NO; }
+- (BOOL)		singleFileIsChosenInFiles											{ return NO; }
+- (BOOL)		singleItemIsChosenInFiles											{ return NO; }
 
 
 // Graphic Operations

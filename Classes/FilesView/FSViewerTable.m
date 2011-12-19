@@ -107,9 +107,9 @@
 // MARK: Path and Selection Operations
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BOOL)		singleFileIsChosenInBrowser	{ return ([self nodeIsClicked] || [[self selectedRowIndexes] count] == 1); }
+- (BOOL)		singleFileIsChosenInFiles	{ return ([self nodeIsClicked] || [[self selectedRowIndexes] count] == 1); }
 
-- (BOOL)		singleItemIsChosenInBrowser											{ return NO; }
+- (BOOL)		singleItemIsChosenInFiles											{ return NO; }
 
 
 // Graphic Operations

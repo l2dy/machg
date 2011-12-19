@@ -16,6 +16,7 @@
 @synthesize buttonBox;
 @synthesize backingBox;
 @synthesize myDocument;
+@synthesize backingView;
 
 
 
@@ -42,3 +43,21 @@
 
 
 
+@implementation BackingView
+
+@synthesize myDocument;
+
+-(void) unload
+{
+}
+
+- (void) prepareToOpenBackingView
+{
+}
+
+- (BOOL) validateUserInterfaceItem:(id < NSValidatedUserInterfaceItem, NSObject >)anItem
+{
+	return NO;
+}
+
+@end

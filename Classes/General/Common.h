@@ -29,7 +29,7 @@
 @class FilesView;
 @class HistoryView;
 @class DifferencesView;
-//@class BackingView;
+@class BackingView;
 
 // FSViewer
 @class FSViewer;
@@ -151,7 +151,7 @@ typedef enum
 
 typedef enum
 {
-	eAfterMergeSwitchToBrowser	= 0,
+	eAfterMergeSwitchToFiles	= 0,
 	eAfterMergeSwitchToHistory	= 1
 } AfterMergeSwitchToOption;
 
@@ -928,6 +928,13 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 // MARK: -
 @interface NSObject (NSObjectPlusUndoManager)
 - (id)		prepareUndoWithTarget:(id)target;
+@end
+
+
+// MARK: -
+@interface NSObject (NSObjectPlusSelectorResponders)
+- (id) performSelectorIfPossible:(SEL)sel;
+- (id) performSelectorIfPossible:(SEL)sel withObject:(id)obj;
 @end
 
 

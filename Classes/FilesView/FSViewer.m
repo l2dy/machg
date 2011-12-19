@@ -217,8 +217,8 @@
 - (FSNodeInfo*) chosenNode				{ return [[self currentViewerPane] chosenNode]; }
 - (FSNodeInfo*) clickedNode				{ return [[self currentViewerPane] clickedNode]; }
 - (NSArray*) selectedNodes				{ return [[self currentViewerPane] selectedNodes]; }
-- (BOOL) singleFileIsChosenInBrowser	{ return [[self currentViewerPane] singleFileIsChosenInBrowser]; }
-- (BOOL) singleItemIsChosenInBrowser	{ return [[self currentViewerPane] singleItemIsChosenInBrowser]; }
+- (BOOL) singleFileIsChosenInFiles	{ return [[self currentViewerPane] singleFileIsChosenInFiles]; }
+- (BOOL) singleItemIsChosenInFiles	{ return [[self currentViewerPane] singleItemIsChosenInFiles]; }
 - (BOOL) clickedNodeInSelectedNodes		{ return [[self currentViewerPane] clickedNodeInSelectedNodes]; }
 
 - (BOOL) clickedNodeCoincidesWithTerminalSelections		{ return [[self currentViewerPane] clickedNodeCoincidesWithTerminalSelections]; }
@@ -245,7 +245,7 @@
 }
 
 
-- (NSArray*) absolutePathsOfChosenFilesInBrowser
+- (NSArray*) absolutePathsOfChosenFiles
 {
 	if ([self nodeIsClicked] && ![self clickedNodeInSelectedNodes])
 		return [NSArray arrayWithObject:[[self clickedNode] absolutePath]];
@@ -253,7 +253,7 @@
 }
 
 
-- (NSString*) enclosingDirectoryOfChosenFilesInBrowser
+- (NSString*) enclosingDirectoryOfChosenFiles
 {
 	if (![self nodesAreChosen])
 		return nil;
@@ -276,11 +276,11 @@
 // MARK: Status Operations
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BOOL) statusOfChosenPathsInBrowserContain:(HGStatus)status	{ return bitsInCommon(status, [self statusOfChosenPathsInBrowser]); }
+- (BOOL) statusOfChosenPathsInFilesContain:(HGStatus)status	{ return bitsInCommon(status, [self statusOfChosenPathsInFiles]); }
 - (BOOL) repositoryHasFilesWhichContainStatus:(HGStatus)status	{ return bitsInCommon(status, [[self rootNodeInfo] hgStatus]); }
 
 
-- (HGStatus) statusOfChosenPathsInBrowser
+- (HGStatus) statusOfChosenPathsInFiles
 {
 	if ([self nodeIsClicked] && ![self clickedNodeInSelectedNodes])
 		return [[self clickedNode] hgStatus];
@@ -335,7 +335,7 @@
 
 - (IBAction) browserMenuOpenSelectedFilesInFinder:(id)sender
 {
-	NSArray* paths = [self absolutePathsOfChosenFilesInBrowser];
+	NSArray* paths = [self absolutePathsOfChosenFiles];
 	for (NSString* path in paths)
 		[[NSWorkspace sharedWorkspace] openFile:path];
 }
@@ -356,7 +356,7 @@
 	}
 
 	NSMutableArray* urls = [[NSMutableArray alloc] init];
-	for (NSString* path in [self absolutePathsOfChosenFilesInBrowser])
+	for (NSString* path in [self absolutePathsOfChosenFiles])
 	{
 		NSURL* newURL = [NSURL fileURLWithPath:[path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 		[urls addObject:newURL];
@@ -367,7 +367,7 @@
 
 - (IBAction) browserMenuOpenTerminalHere:(id)sender
 {
-	NSString* theDir = [self enclosingDirectoryOfChosenFilesInBrowser];
+	NSString* theDir = [self enclosingDirectoryOfChosenFiles];
 	if (!theDir)
 		theDir = [self absolutePathOfRepositoryRoot];
 
@@ -391,7 +391,7 @@
 		return;
 
 	NSString* applicationPath = [[item representedObject] path];
-	NSArray* paths = [self absolutePathsOfChosenFilesInBrowser];
+	NSArray* paths = [self absolutePathsOfChosenFiles];
 	for (NSString* path in paths)
 		[[NSWorkspace sharedWorkspace] openFile:path withApplication:applicationPath];
 }
@@ -399,7 +399,7 @@
 - (IBAction) browserOpenChosenNodesWithABrowserToChoose:(id)sender
 {
 	NSString* applicationPath = getSingleApplicationPathFromOpenPanel([[[self clickedNode] absolutePath] lastPathComponent]);
-	NSArray* paths = [self absolutePathsOfChosenFilesInBrowser];
+	NSArray* paths = [self absolutePathsOfChosenFiles];
 	for (NSString* path in paths)
 		[[NSWorkspace sharedWorkspace] openFile:path withApplication:applicationPath];
 }
@@ -436,7 +436,7 @@
 	if (openWithItem)
 		[theMenu removeItem:openWithItem];
 
-	if (isMainFSBrowser_ && [self singleFileIsChosenInBrowser])
+	if (isMainFSBrowser_ && [self singleFileIsChosenInFiles])
 	{
 		FSNodeInfo* clickedNode = [self clickedNode];
 		NSString* path = [clickedNode absolutePath];

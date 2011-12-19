@@ -10,6 +10,8 @@
 #import "FSNodeInfo.h"
 #import "FSViewerPaneCell.h"
 #import "MacHgDocument.h"
+#import "Sidebar.h"
+
 
 @implementation FSViewerBrowser
 
@@ -49,7 +51,7 @@
 - (void) repositoryDataIsNew
 {
 	MacHgDocument* myDocument = [parentViewer_ myDocument];
-	if ([myDocument aRepositoryIsSelected])
+	if ([[myDocument sidebar] localRepoIsSelected])
 	{
 		NSString* fileName = [myDocument documentNameForAutosave];
 		NSString* repositoryName = [myDocument selectedRepositoryShortName];
@@ -101,7 +103,7 @@
 }
 
 
-- (BOOL) singleFileIsChosenInBrowser
+- (BOOL) singleFileIsChosenInFiles
 {
 	if ([self nodeIsClicked] && [[self clickedNode] isFile])
 		return YES;
@@ -115,7 +117,7 @@
 }
 
 
-- (BOOL) singleItemIsChosenInBrowser
+- (BOOL) singleItemIsChosenInFiles
 {
 	if ([self nodeIsClicked] && [[self clickedNode] isDirectory])
 		return YES;

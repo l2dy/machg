@@ -32,16 +32,14 @@
 @property (nonatomic, assign) SidebarNode* root;
 
 // Actions
-- (IBAction)	sidebarMenuAddLocalRepositoryRef:(id)sender;
-- (IBAction)	sidebarMenuAddServerRepositoryRef:(id)sender;
-- (IBAction)	sidebarMenuConfigureRepositoryRef:(id)sender;
-- (IBAction)	sidebarMenuConfigureLocalRepositoryRef:(id)sender;
-- (IBAction)	sidebarMenuConfigureServerRepositoryRef:(id)sender;
-- (IBAction)	sidebarMenuAddNewSidebarGroupItem:(id)sender;
-- (IBAction)	sidebarMenuRemoveSidebarItem:(id)sender;
-- (IBAction)	sidebarMenuRemoveSidebarItems:(id)sender;
-- (IBAction)	sidebarMenuRevealRepositoryInFinder:(id)sender;
-- (IBAction)	sidebarMenuOpenTerminalHere:(id)sender;
+- (IBAction)	mainMenuConfigureRepositoryRef:(id)sender;
+- (IBAction)	mainMenuConfigureLocalRepositoryRef:(id)sender;
+- (IBAction)	mainMenuConfigureServerRepositoryRef:(id)sender;
+- (IBAction)	mainMenuAddNewSidebarGroupItem:(id)sender;
+- (IBAction)	mainMenuRemoveSidebarItem:(id)sender;
+- (IBAction)	mainMenuRemoveSidebarItems:(id)sender;
+- (IBAction)	mainMenuRevealRepositoryInFinder:(id)sender;
+- (IBAction)	mainMenuOpenTerminalHere:(id)sender;
 
 - (IBAction)	reloadSidebarData:(id)sender;
 
@@ -53,16 +51,20 @@
 - (NSArray*) serversIfAvailable:(NSString*)file includingAlreadyPresent:(BOOL)includeAlreadyPresent;
 
 // Selection Methods
-- (BOOL) selectedNodeIsLocalRepositoryRef;
-- (BOOL) selectedNodeIsServerRepositoryRef;
+- (BOOL) multipleNodesAreSelected;
+- (BOOL) localRepoIsSelected;
+- (BOOL) localRepoIsChosen;
+- (BOOL) localOrServerRepoIsSelected;
+- (BOOL) localOrServerRepoIsChosen;
+- (BOOL) serverRepoIsSelected;
 - (void) selectNode:(SidebarNode*)node;
 - (void) selectNodes:(NSArray*)nodes;
 - (void) setRootAndUpdate:(SidebarNode*)root;
 - (SidebarNode*) selectedNode;
 - (SidebarNode*) chosenNode;
 - (NSArray*)     selectedNodes;
-- (BOOL)		 multipleNodesAreSelected;
 - (SidebarNode*) lastSectionNode;
+
 
 
 // Expand/Collapse Methods

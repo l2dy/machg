@@ -21,7 +21,9 @@
     </object>
     <object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
       <bool key="EncodedWithXMLCoder">YES</bool>
-      <integer value="100351"/>
+      <integer value="100459"/>
+      <integer value="100274"/>
+      <integer value="100409"/>
     </object>
     <object class="NSArray" key="IBDocument.PluginDependencies">
       <bool key="EncodedWithXMLCoder">YES</bool>
@@ -786,7 +788,7 @@
         <string key="NSWindowContentMaxSize">{1.7976931348623157e+308, 1.7976931348623157e+308}</string>
         <string key="NSWindowContentMinSize">{300, 200}</string>
         <object class="NSView" key="NSWindowView" id="568628114">
-          <nil key="NSNextResponder"/>
+          <reference key="NSNextResponder"/>
           <int key="NSvFlags">256</int>
           <object class="NSMutableArray" key="NSSubviews">
             <bool key="EncodedWithXMLCoder">YES</bool>
@@ -1047,6 +1049,7 @@
                                 </object>
                               </object>
                             </object>
+                            <int key="NSSelectedIndex">3</int>
                             <bool key="NSPullDown">YES</bool>
                             <int key="NSPreferredEdge">1</int>
                             <bool key="NSUsesItemFromMenu">YES</bool>
@@ -1118,6 +1121,7 @@
                                 </object>
                               </object>
                             </object>
+                            <int key="NSSelectedIndex">2</int>
                             <bool key="NSPullDown">YES</bool>
                             <int key="NSPreferredEdge">1</int>
                             <bool key="NSUsesItemFromMenu">YES</bool>
@@ -1236,6 +1240,7 @@
             </object>
           </object>
           <string key="NSFrameSize">{893, 491}</string>
+          <reference key="NSSuperview"/>
         </object>
         <string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
         <string key="NSMinSize">{300, 278}</string>
@@ -1372,7 +1377,7 @@
         <nil key="NSDelegate"/>
       </object>
       <object class="NSBox" id="276788744">
-        <reference key="NSNextResponder"/>
+        <nil key="NSNextResponder"/>
         <int key="NSvFlags">12</int>
         <object class="NSMutableArray" key="NSSubviews">
           <bool key="EncodedWithXMLCoder">YES</bool>
@@ -1609,7 +1614,6 @@
           </object>
         </object>
         <string key="NSFrameSize">{240, 133}</string>
-        <reference key="NSSuperview"/>
         <string key="NSOffsets">{0, 0}</string>
         <object class="NSTextFieldCell" key="NSTitleCell">
           <int key="NSCellFlags">67239424</int>
@@ -2116,78 +2120,6 @@
           <int key="connectionID">100376</int>
         </object>
         <object class="IBConnectionRecord">
-          <object class="IBActionConnection" key="connection">
-            <string key="label">sidebarMenuRemoveSidebarItem:</string>
-            <reference key="source" ref="613418571"/>
-            <reference key="destination" ref="780976407"/>
-          </object>
-          <int key="connectionID">100384</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBActionConnection" key="connection">
-            <string key="label">sidebarMenuAddNewSidebarGroupItem:</string>
-            <reference key="source" ref="613418571"/>
-            <reference key="destination" ref="77472598"/>
-          </object>
-          <int key="connectionID">100387</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBActionConnection" key="connection">
-            <string key="label">sidebarMenuAddNewSidebarGroupItem:</string>
-            <reference key="source" ref="613418571"/>
-            <reference key="destination" ref="509607063"/>
-          </object>
-          <int key="connectionID">100390</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBActionConnection" key="connection">
-            <string key="label">sidebarMenuRemoveSidebarItem:</string>
-            <reference key="source" ref="613418571"/>
-            <reference key="destination" ref="255517966"/>
-          </object>
-          <int key="connectionID">100391</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBActionConnection" key="connection">
-            <string key="label">sidebarMenuAddLocalRepositoryRef:</string>
-            <reference key="source" ref="613418571"/>
-            <reference key="destination" ref="1092"/>
-          </object>
-          <int key="connectionID">100392</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBActionConnection" key="connection">
-            <string key="label">sidebarMenuAddServerRepositoryRef:</string>
-            <reference key="source" ref="613418571"/>
-            <reference key="destination" ref="828744095"/>
-          </object>
-          <int key="connectionID">100393</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBActionConnection" key="connection">
-            <string key="label">sidebarMenuAddLocalRepositoryRef:</string>
-            <reference key="source" ref="613418571"/>
-            <reference key="destination" ref="704131338"/>
-          </object>
-          <int key="connectionID">100394</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBActionConnection" key="connection">
-            <string key="label">sidebarMenuAddServerRepositoryRef:</string>
-            <reference key="source" ref="613418571"/>
-            <reference key="destination" ref="777682861"/>
-          </object>
-          <int key="connectionID">100395</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBActionConnection" key="connection">
-            <string key="label">sidebarMenuConfigureLocalRepositoryRef:</string>
-            <reference key="source" ref="613418571"/>
-            <reference key="destination" ref="848289603"/>
-          </object>
-          <int key="connectionID">100396</int>
-        </object>
-        <object class="IBConnectionRecord">
           <object class="IBOutletConnection" key="connection">
             <string key="label">mainWindow_</string>
             <reference key="source" ref="512844837"/>
@@ -2370,6 +2302,78 @@
             <reference key="destination" ref="460238651"/>
           </object>
           <int key="connectionID">100469</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">mainMenuAddLocalRepositoryRef:</string>
+            <reference key="source" ref="613418571"/>
+            <reference key="destination" ref="1092"/>
+          </object>
+          <int key="connectionID">100470</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">mainMenuAddServerRepositoryRef:</string>
+            <reference key="source" ref="613418571"/>
+            <reference key="destination" ref="828744095"/>
+          </object>
+          <int key="connectionID">100471</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">mainMenuAddNewSidebarGroupItem:</string>
+            <reference key="source" ref="613418571"/>
+            <reference key="destination" ref="509607063"/>
+          </object>
+          <int key="connectionID">100472</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">mainMenuRemoveSidebarItems:</string>
+            <reference key="source" ref="613418571"/>
+            <reference key="destination" ref="255517966"/>
+          </object>
+          <int key="connectionID">100473</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">mainMenuConfigureRepositoryRef:</string>
+            <reference key="source" ref="613418571"/>
+            <reference key="destination" ref="848289603"/>
+          </object>
+          <int key="connectionID">100474</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">mainMenuRemoveSidebarItems:</string>
+            <reference key="source" ref="613418571"/>
+            <reference key="destination" ref="780976407"/>
+          </object>
+          <int key="connectionID">100475</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">mainMenuAddLocalRepositoryRef:</string>
+            <reference key="source" ref="613418571"/>
+            <reference key="destination" ref="704131338"/>
+          </object>
+          <int key="connectionID">100476</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">mainMenuAddServerRepositoryRef:</string>
+            <reference key="source" ref="613418571"/>
+            <reference key="destination" ref="777682861"/>
+          </object>
+          <int key="connectionID">100477</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">mainMenuAddNewSidebarGroupItem:</string>
+            <reference key="source" ref="613418571"/>
+            <reference key="destination" ref="77472598"/>
+          </object>
+          <int key="connectionID">100478</int>
         </object>
       </object>
       <object class="IBMutableOrderedSet" key="objectRecords">
@@ -2675,10 +2679,10 @@
             <object class="NSMutableArray" key="children">
               <bool key="EncodedWithXMLCoder">YES</bool>
               <reference ref="828744095"/>
-              <reference ref="1092"/>
               <reference ref="509607063"/>
               <reference ref="1024064026"/>
               <reference ref="255517966"/>
+              <reference ref="1092"/>
             </object>
             <reference key="parent" ref="0"/>
             <string key="objectName">Menu (SidebarContextualMenu)</string>
@@ -3311,14 +3315,14 @@
           <string>com.brandonwalkin.BWToolkit</string>
           <string>com.brandonwalkin.BWToolkit</string>
           <string>com.brandonwalkin.BWToolkit</string>
-          <string>{{149, 23}, {189, 71}}</string>
+          <string>{{123, 271}, {189, 71}}</string>
           <string>com.brandonwalkin.BWToolkit</string>
           <string>com.brandonwalkin.BWToolkit</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.brandonwalkin.BWToolkit</string>
           <string>com.brandonwalkin.BWToolkit</string>
           <string>com.brandonwalkin.BWToolkit</string>
-          <string>{{180, 40}, {184, 54}}</string>
+          <string>{{154, 288}, {184, 54}}</string>
           <string>com.brandonwalkin.BWToolkit</string>
           <string>com.brandonwalkin.BWToolkit</string>
           <string>com.brandonwalkin.BWToolkit</string>
@@ -3402,14 +3406,14 @@
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>{{0, 1311}, {211, 63}}</string>
+          <string>{{1709, 1093}, {211, 63}}</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>{{148, 4}, {893, 491}}</string>
+          <string>{{135, 319}, {893, 491}}</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>{{148, 4}, {893, 491}}</string>
+          <string>{{135, 319}, {893, 491}}</string>
           <integer value="1"/>
           <string>{{201, 387}, {507, 413}}</string>
           <integer value="1"/>
@@ -3434,7 +3438,7 @@
         </object>
       </object>
       <nil key="sourceID"/>
-      <int key="maxID">100469</int>
+      <int key="maxID">100478</int>
     </object>
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3823,303 +3827,6 @@
               <string key="candidateClassName">id</string>
             </object>
           </object>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBUserSource</string>
-            <string key="minorKey"/>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">FilesView</string>
-          <string key="superclassName">NSView</string>
-          <object class="NSMutableDictionary" key="actions">
-            <bool key="EncodedWithXMLCoder">YES</bool>
-            <object class="NSArray" key="dict.sortedKeys">
-              <bool key="EncodedWithXMLCoder">YES</bool>
-              <string>browserAction:</string>
-              <string>browserDoubleAction:</string>
-              <string>mainMenuAddRenameRemoveAllFiles:</string>
-              <string>mainMenuAddRenameRemoveSelectedFiles:</string>
-              <string>mainMenuAddSelectedFiles:</string>
-              <string>mainMenuAnnotateSelectedFiles:</string>
-              <string>mainMenuCommitAllFiles:</string>
-              <string>mainMenuCommitSelectedFiles:</string>
-              <string>mainMenuDeleteSelectedFiles:</string>
-              <string>mainMenuDiffAllFiles:</string>
-              <string>mainMenuDiffSelectedFiles:</string>
-              <string>mainMenuIgnoreSelectedFiles:</string>
-              <string>mainMenuOpenSelectedFilesInFinder:</string>
-              <string>mainMenuOpenTerminalHere:</string>
-              <string>mainMenuRenameSelectedItem:</string>
-              <string>mainMenuRevealSelectedFilesInFinder:</string>
-              <string>mainMenuRevertAllFiles:</string>
-              <string>mainMenuRevertSelectedFiles:</string>
-              <string>mainMenuRevertSelectedFilesToVersion:</string>
-              <string>mainMenuUnignoreSelectedFiles:</string>
-              <string>mainMenuUntrackSelectedFiles:</string>
-              <string>refreshBrowserContent:</string>
-              <string>toolbarAddRenameRemoveFiles:</string>
-              <string>toolbarCommitFiles:</string>
-              <string>toolbarDiffFiles:</string>
-              <string>toolbarRevertFiles:</string>
-            </object>
-            <object class="NSMutableArray" key="dict.values">
-              <bool key="EncodedWithXMLCoder">YES</bool>
-              <string>id</string>
-              <string>id</string>
-              <string>id</string>
-              <string>id</string>
-              <string>id</string>
-              <string>id</string>
-              <string>id</string>
-              <string>id</string>
-              <string>id</string>
-              <string>id</string>
-              <string>id</string>
-              <string>id</string>
-              <string>id</string>
-              <string>id</string>
-              <string>id</string>
-              <string>id</string>
-              <string>id</string>
-              <string>id</string>
-              <string>id</string>
-              <string>id</string>
-              <string>id</string>
-              <string>id</string>
-              <string>id</string>
-              <string>id</string>
-              <string>id</string>
-              <string>id</string>
-            </object>
-          </object>
-          <object class="NSMutableDictionary" key="actionInfosByName">
-            <bool key="EncodedWithXMLCoder">YES</bool>
-            <object class="NSArray" key="dict.sortedKeys">
-              <bool key="EncodedWithXMLCoder">YES</bool>
-              <string>browserAction:</string>
-              <string>browserDoubleAction:</string>
-              <string>mainMenuAddRenameRemoveAllFiles:</string>
-              <string>mainMenuAddRenameRemoveSelectedFiles:</string>
-              <string>mainMenuAddSelectedFiles:</string>
-              <string>mainMenuAnnotateSelectedFiles:</string>
-              <string>mainMenuCommitAllFiles:</string>
-              <string>mainMenuCommitSelectedFiles:</string>
-              <string>mainMenuDeleteSelectedFiles:</string>
-              <string>mainMenuDiffAllFiles:</string>
-              <string>mainMenuDiffSelectedFiles:</string>
-              <string>mainMenuIgnoreSelectedFiles:</string>
-              <string>mainMenuOpenSelectedFilesInFinder:</string>
-              <string>mainMenuOpenTerminalHere:</string>
-              <string>mainMenuRenameSelectedItem:</string>
-              <string>mainMenuRevealSelectedFilesInFinder:</string>
-              <string>mainMenuRevertAllFiles:</string>
-              <string>mainMenuRevertSelectedFiles:</string>
-              <string>mainMenuRevertSelectedFilesToVersion:</string>
-              <string>mainMenuUnignoreSelectedFiles:</string>
-              <string>mainMenuUntrackSelectedFiles:</string>
-              <string>refreshBrowserContent:</string>
-              <string>toolbarAddRenameRemoveFiles:</string>
-              <string>toolbarCommitFiles:</string>
-              <string>toolbarDiffFiles:</string>
-              <string>toolbarRevertFiles:</string>
-            </object>
-            <object class="NSMutableArray" key="dict.values">
-              <bool key="EncodedWithXMLCoder">YES</bool>
-              <object class="IBActionInfo">
-                <string key="name">browserAction:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">browserDoubleAction:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">mainMenuAddRenameRemoveAllFiles:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">mainMenuAddRenameRemoveSelectedFiles:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">mainMenuAddSelectedFiles:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">mainMenuAnnotateSelectedFiles:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">mainMenuCommitAllFiles:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">mainMenuCommitSelectedFiles:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">mainMenuDeleteSelectedFiles:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">mainMenuDiffAllFiles:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">mainMenuDiffSelectedFiles:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">mainMenuIgnoreSelectedFiles:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">mainMenuOpenSelectedFilesInFinder:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">mainMenuOpenTerminalHere:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">mainMenuRenameSelectedItem:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">mainMenuRevealSelectedFilesInFinder:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">mainMenuRevertAllFiles:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">mainMenuRevertSelectedFiles:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">mainMenuRevertSelectedFilesToVersion:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">mainMenuUnignoreSelectedFiles:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">mainMenuUntrackSelectedFiles:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">refreshBrowserContent:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">toolbarAddRenameRemoveFiles:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">toolbarCommitFiles:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">toolbarDiffFiles:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">toolbarRevertFiles:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-            </object>
-          </object>
-          <object class="NSMutableDictionary" key="outlets">
-            <bool key="EncodedWithXMLCoder">YES</bool>
-            <object class="NSArray" key="dict.sortedKeys">
-              <bool key="EncodedWithXMLCoder">YES</bool>
-              <string>nodeIconWell</string>
-              <string>nodeInspector</string>
-              <string>parentContoller</string>
-              <string>theFSViewer</string>
-            </object>
-            <object class="NSMutableArray" key="dict.values">
-              <bool key="EncodedWithXMLCoder">YES</bool>
-              <string>NSImageView</string>
-              <string>NSTextField</string>
-              <string>FilesViewController</string>
-              <string>FSViewer</string>
-            </object>
-          </object>
-          <object class="NSMutableDictionary" key="toOneOutletInfosByName">
-            <bool key="EncodedWithXMLCoder">YES</bool>
-            <object class="NSArray" key="dict.sortedKeys">
-              <bool key="EncodedWithXMLCoder">YES</bool>
-              <string>nodeIconWell</string>
-              <string>nodeInspector</string>
-              <string>parentContoller</string>
-              <string>theFSViewer</string>
-            </object>
-            <object class="NSMutableArray" key="dict.values">
-              <bool key="EncodedWithXMLCoder">YES</bool>
-              <object class="IBToOneOutletInfo">
-                <string key="name">nodeIconWell</string>
-                <string key="candidateClassName">NSImageView</string>
-              </object>
-              <object class="IBToOneOutletInfo">
-                <string key="name">nodeInspector</string>
-                <string key="candidateClassName">NSTextField</string>
-              </object>
-              <object class="IBToOneOutletInfo">
-                <string key="name">parentContoller</string>
-                <string key="candidateClassName">FilesViewController</string>
-              </object>
-              <object class="IBToOneOutletInfo">
-                <string key="name">theFSViewer</string>
-                <string key="candidateClassName">FSViewer</string>
-              </object>
-            </object>
-          </object>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier" id="252254569">
-            <string key="majorKey">IBProjectSource</string>
-            <string key="minorKey">Classes/FilesView/FilesViewController.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">FilesView</string>
-          <string key="superclassName">NSView</string>
-          <object class="NSMutableDictionary" key="actions">
-            <string key="NS.key.0">prepareToOpenFilesView:</string>
-            <string key="NS.object.0">id</string>
-          </object>
-          <object class="NSMutableDictionary" key="actionInfosByName">
-            <string key="NS.key.0">prepareToOpenFilesView:</string>
-            <object class="IBActionInfo" key="NS.object.0">
-              <string key="name">prepareToOpenFilesView:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-          </object>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBUserSource</string>
-            <string key="minorKey"/>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">FilesViewController</string>
-          <string key="superclassName">NSViewController</string>
-          <object class="NSMutableDictionary" key="outlets">
-            <string key="NS.key.0">theFilesView</string>
-            <string key="NS.object.0">FilesView</string>
-          </object>
-          <object class="NSMutableDictionary" key="toOneOutletInfosByName">
-            <string key="NS.key.0">theFilesView</string>
-            <object class="IBToOneOutletInfo" key="NS.object.0">
-              <string key="name">theFilesView</string>
-              <string key="candidateClassName">FilesView</string>
-            </object>
-          </object>
-          <reference key="sourceIdentifier" ref="252254569"/>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">FilesViewController</string>
-          <string key="superclassName">NSViewController</string>
           <object class="IBClassDescriptionSource" key="sourceIdentifier">
             <string key="majorKey">IBUserSource</string>
             <string key="minorKey"/>
@@ -4716,42 +4423,84 @@
               <string>doLinkUp:</string>
               <string>mainMenuAddAndCloneServerRepositoryRef:</string>
               <string>mainMenuAddLabelToCurrentRevision:</string>
+              <string>mainMenuAddLocalRepositoryRef:</string>
+              <string>mainMenuAddNewSidebarGroupItem:</string>
+              <string>mainMenuAddRenameRemoveAllFiles:</string>
+              <string>mainMenuAddRenameRemoveSelectedFiles:</string>
+              <string>mainMenuAddSelectedFiles:</string>
+              <string>mainMenuAddServerRepositoryRef:</string>
+              <string>mainMenuAnnotateSelectedFiles:</string>
               <string>mainMenuCloneRepository:</string>
+              <string>mainMenuCommitAllFiles:</string>
+              <string>mainMenuCommitSelectedFiles:</string>
+              <string>mainMenuConfigureLocalRepositoryRef:</string>
+              <string>mainMenuConfigureRepositoryRef:</string>
+              <string>mainMenuConfigureServerRepositoryRef:</string>
+              <string>mainMenuDeleteSelectedFiles:</string>
+              <string>mainMenuDiffAllFiles:</string>
+              <string>mainMenuDiffSelectedFiles:</string>
               <string>mainMenuExportPatches:</string>
               <string>mainMenuGotoChangeset:</string>
+              <string>mainMenuIgnoreSelectedFiles:</string>
               <string>mainMenuImportPatches:</string>
               <string>mainMenuIncomingFromRepository:</string>
               <string>mainMenuManifestOfCurrentVersion:</string>
               <string>mainMenuMarkResolvedSelectedFiles:</string>
               <string>mainMenuMergeWith:</string>
               <string>mainMenuNoAction:</string>
+              <string>mainMenuOpenSelectedFilesInFinder:</string>
               <string>mainMenuOpenTerminalHere:</string>
               <string>mainMenuOutgoingToRepository:</string>
               <string>mainMenuPullFromRepository:</string>
               <string>mainMenuPushToRepository:</string>
               <string>mainMenuRemergeSelectedFiles:</string>
+              <string>mainMenuRemoveSidebarItem:</string>
+              <string>mainMenuRemoveSidebarItems:</string>
+              <string>mainMenuRenameSelectedItem:</string>
+              <string>mainMenuRevealRepositoryInFinder:</string>
               <string>mainMenuRevealSelectedFilesInFinder:</string>
+              <string>mainMenuRevertAllFiles:</string>
+              <string>mainMenuRevertSelectedFiles:</string>
+              <string>mainMenuRevertSelectedFilesToVersion:</string>
               <string>mainMenuRollbackCommit:</string>
+              <string>mainMenuUnignoreSelectedFiles:</string>
+              <string>mainMenuUntrackSelectedFiles:</string>
               <string>mainMenuUpdateRepository:</string>
               <string>mainMenuUpdateRepositoryToVersion:</string>
               <string>refreshBrowserContent:</string>
               <string>searchFieldChanged:</string>
               <string>setSearchCategory:</string>
-              <string>sidebarMenuAddLocalRepositoryRef:</string>
-              <string>sidebarMenuAddNewSidebarGroupItem:</string>
-              <string>sidebarMenuAddServerRepositoryRef:</string>
-              <string>sidebarMenuConfigureLocalRepositoryRef:</string>
-              <string>sidebarMenuConfigureRepositoryRef:</string>
-              <string>sidebarMenuConfigureServerRepositoryRef:</string>
-              <string>sidebarMenuOpenTerminalHere:</string>
-              <string>sidebarMenuRemoveSidebarItem:</string>
-              <string>sidebarMenuRevealRepositoryInFinder:</string>
               <string>testBrowserLoad:</string>
               <string>togglePreviewPanel:</string>
+              <string>toolbarAddRenameRemoveFiles:</string>
+              <string>toolbarCommitFiles:</string>
+              <string>toolbarDiffFiles:</string>
+              <string>toolbarRevertFiles:</string>
               <string>toolbarUpdate:</string>
             </object>
             <object class="NSMutableArray" key="dict.values">
               <bool key="EncodedWithXMLCoder">YES</bool>
+              <string>id</string>
+              <string>id</string>
+              <string>id</string>
+              <string>id</string>
+              <string>id</string>
+              <string>id</string>
+              <string>id</string>
+              <string>id</string>
+              <string>id</string>
+              <string>id</string>
+              <string>id</string>
+              <string>id</string>
+              <string>id</string>
+              <string>id</string>
+              <string>id</string>
+              <string>id</string>
+              <string>id</string>
+              <string>id</string>
+              <string>id</string>
+              <string>id</string>
+              <string>id</string>
               <string>id</string>
               <string>id</string>
               <string>id</string>
@@ -4813,38 +4562,59 @@
               <string>doLinkUp:</string>
               <string>mainMenuAddAndCloneServerRepositoryRef:</string>
               <string>mainMenuAddLabelToCurrentRevision:</string>
+              <string>mainMenuAddLocalRepositoryRef:</string>
+              <string>mainMenuAddNewSidebarGroupItem:</string>
+              <string>mainMenuAddRenameRemoveAllFiles:</string>
+              <string>mainMenuAddRenameRemoveSelectedFiles:</string>
+              <string>mainMenuAddSelectedFiles:</string>
+              <string>mainMenuAddServerRepositoryRef:</string>
+              <string>mainMenuAnnotateSelectedFiles:</string>
               <string>mainMenuCloneRepository:</string>
+              <string>mainMenuCommitAllFiles:</string>
+              <string>mainMenuCommitSelectedFiles:</string>
+              <string>mainMenuConfigureLocalRepositoryRef:</string>
+              <string>mainMenuConfigureRepositoryRef:</string>
+              <string>mainMenuConfigureServerRepositoryRef:</string>
+              <string>mainMenuDeleteSelectedFiles:</string>
+              <string>mainMenuDiffAllFiles:</string>
+              <string>mainMenuDiffSelectedFiles:</string>
               <string>mainMenuExportPatches:</string>
               <string>mainMenuGotoChangeset:</string>
+              <string>mainMenuIgnoreSelectedFiles:</string>
               <string>mainMenuImportPatches:</string>
               <string>mainMenuIncomingFromRepository:</string>
               <string>mainMenuManifestOfCurrentVersion:</string>
               <string>mainMenuMarkResolvedSelectedFiles:</string>
               <string>mainMenuMergeWith:</string>
               <string>mainMenuNoAction:</string>
+              <string>mainMenuOpenSelectedFilesInFinder:</string>
               <string>mainMenuOpenTerminalHere:</string>
               <string>mainMenuOutgoingToRepository:</string>
               <string>mainMenuPullFromRepository:</string>
               <string>mainMenuPushToRepository:</string>
               <string>mainMenuRemergeSelectedFiles:</string>
+              <string>mainMenuRemoveSidebarItem:</string>
+              <string>mainMenuRemoveSidebarItems:</string>
+              <string>mainMenuRenameSelectedItem:</string>
+              <string>mainMenuRevealRepositoryInFinder:</string>
               <string>mainMenuRevealSelectedFilesInFinder:</string>
+              <string>mainMenuRevertAllFiles:</string>
+              <string>mainMenuRevertSelectedFiles:</string>
+              <string>mainMenuRevertSelectedFilesToVersion:</string>
               <string>mainMenuRollbackCommit:</string>
+              <string>mainMenuUnignoreSelectedFiles:</string>
+              <string>mainMenuUntrackSelectedFiles:</string>
               <string>mainMenuUpdateRepository:</string>
               <string>mainMenuUpdateRepositoryToVersion:</string>
               <string>refreshBrowserContent:</string>
               <string>searchFieldChanged:</string>
               <string>setSearchCategory:</string>
-              <string>sidebarMenuAddLocalRepositoryRef:</string>
-              <string>sidebarMenuAddNewSidebarGroupItem:</string>
-              <string>sidebarMenuAddServerRepositoryRef:</string>
-              <string>sidebarMenuConfigureLocalRepositoryRef:</string>
-              <string>sidebarMenuConfigureRepositoryRef:</string>
-              <string>sidebarMenuConfigureServerRepositoryRef:</string>
-              <string>sidebarMenuOpenTerminalHere:</string>
-              <string>sidebarMenuRemoveSidebarItem:</string>
-              <string>sidebarMenuRevealRepositoryInFinder:</string>
               <string>testBrowserLoad:</string>
               <string>togglePreviewPanel:</string>
+              <string>toolbarAddRenameRemoveFiles:</string>
+              <string>toolbarCommitFiles:</string>
+              <string>toolbarDiffFiles:</string>
+              <string>toolbarRevertFiles:</string>
               <string>toolbarUpdate:</string>
             </object>
             <object class="NSMutableArray" key="dict.values">
@@ -4894,7 +4664,67 @@
                 <string key="candidateClassName">id</string>
               </object>
               <object class="IBActionInfo">
+                <string key="name">mainMenuAddLocalRepositoryRef:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuAddNewSidebarGroupItem:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuAddRenameRemoveAllFiles:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuAddRenameRemoveSelectedFiles:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuAddSelectedFiles:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuAddServerRepositoryRef:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuAnnotateSelectedFiles:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
                 <string key="name">mainMenuCloneRepository:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuCommitAllFiles:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuCommitSelectedFiles:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuConfigureLocalRepositoryRef:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuConfigureRepositoryRef:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuConfigureServerRepositoryRef:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuDeleteSelectedFiles:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuDiffAllFiles:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuDiffSelectedFiles:</string>
                 <string key="candidateClassName">id</string>
               </object>
               <object class="IBActionInfo">
@@ -4903,6 +4733,10 @@
               </object>
               <object class="IBActionInfo">
                 <string key="name">mainMenuGotoChangeset:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuIgnoreSelectedFiles:</string>
                 <string key="candidateClassName">id</string>
               </object>
               <object class="IBActionInfo">
@@ -4930,6 +4764,10 @@
                 <string key="candidateClassName">id</string>
               </object>
               <object class="IBActionInfo">
+                <string key="name">mainMenuOpenSelectedFilesInFinder:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
                 <string key="name">mainMenuOpenTerminalHere:</string>
                 <string key="candidateClassName">id</string>
               </object>
@@ -4950,11 +4788,47 @@
                 <string key="candidateClassName">id</string>
               </object>
               <object class="IBActionInfo">
+                <string key="name">mainMenuRemoveSidebarItem:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuRemoveSidebarItems:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuRenameSelectedItem:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuRevealRepositoryInFinder:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
                 <string key="name">mainMenuRevealSelectedFilesInFinder:</string>
                 <string key="candidateClassName">id</string>
               </object>
               <object class="IBActionInfo">
+                <string key="name">mainMenuRevertAllFiles:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuRevertSelectedFiles:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuRevertSelectedFilesToVersion:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
                 <string key="name">mainMenuRollbackCommit:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuUnignoreSelectedFiles:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuUntrackSelectedFiles:</string>
                 <string key="candidateClassName">id</string>
               </object>
               <object class="IBActionInfo">
@@ -4978,47 +4852,27 @@
                 <string key="candidateClassName">id</string>
               </object>
               <object class="IBActionInfo">
-                <string key="name">sidebarMenuAddLocalRepositoryRef:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">sidebarMenuAddNewSidebarGroupItem:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">sidebarMenuAddServerRepositoryRef:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">sidebarMenuConfigureLocalRepositoryRef:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">sidebarMenuConfigureRepositoryRef:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">sidebarMenuConfigureServerRepositoryRef:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">sidebarMenuOpenTerminalHere:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">sidebarMenuRemoveSidebarItem:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">sidebarMenuRevealRepositoryInFinder:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
                 <string key="name">testBrowserLoad:</string>
                 <string key="candidateClassName">id</string>
               </object>
               <object class="IBActionInfo">
                 <string key="name">togglePreviewPanel:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">toolbarAddRenameRemoveFiles:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">toolbarCommitFiles:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">toolbarDiffFiles:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">toolbarRevertFiles:</string>
                 <string key="candidateClassName">id</string>
               </object>
               <object class="IBActionInfo">
@@ -5165,6 +5019,10 @@
           <reference key="sourceIdentifier" ref="1010491287"/>
         </object>
         <object class="IBPartialClassDescription">
+          <string key="className">NSOutlineView</string>
+          <reference key="sourceIdentifier" ref="1010491287"/>
+        </object>
+        <object class="IBPartialClassDescription">
           <string key="className">NSResponder</string>
           <reference key="sourceIdentifier" ref="1010491287"/>
         </object>
@@ -5253,20 +5111,18 @@
             <bool key="EncodedWithXMLCoder">YES</bool>
             <object class="NSArray" key="dict.sortedKeys">
               <bool key="EncodedWithXMLCoder">YES</bool>
+              <string>mainMenuAddNewSidebarGroupItem:</string>
+              <string>mainMenuConfigureLocalRepositoryRef:</string>
+              <string>mainMenuConfigureRepositoryRef:</string>
+              <string>mainMenuConfigureServerRepositoryRef:</string>
+              <string>mainMenuOpenTerminalHere:</string>
+              <string>mainMenuRemoveSidebarItem:</string>
+              <string>mainMenuRemoveSidebarItems:</string>
+              <string>mainMenuRevealRepositoryInFinder:</string>
               <string>reloadSidebarData:</string>
-              <string>sidebarMenuAddLocalRepositoryRef:</string>
-              <string>sidebarMenuAddNewSidebarGroupItem:</string>
-              <string>sidebarMenuAddServerRepositoryRef:</string>
-              <string>sidebarMenuConfigureLocalRepositoryRef:</string>
-              <string>sidebarMenuConfigureRepositoryRef:</string>
-              <string>sidebarMenuConfigureServerRepositoryRef:</string>
-              <string>sidebarMenuOpenTerminalHere:</string>
-              <string>sidebarMenuRemoveSidebarItem:</string>
-              <string>sidebarMenuRevealRepositoryInFinder:</string>
             </object>
             <object class="NSMutableArray" key="dict.values">
               <bool key="EncodedWithXMLCoder">YES</bool>
-              <string>id</string>
               <string>id</string>
               <string>id</string>
               <string>id</string>
@@ -5282,57 +5138,52 @@
             <bool key="EncodedWithXMLCoder">YES</bool>
             <object class="NSArray" key="dict.sortedKeys">
               <bool key="EncodedWithXMLCoder">YES</bool>
+              <string>mainMenuAddNewSidebarGroupItem:</string>
+              <string>mainMenuConfigureLocalRepositoryRef:</string>
+              <string>mainMenuConfigureRepositoryRef:</string>
+              <string>mainMenuConfigureServerRepositoryRef:</string>
+              <string>mainMenuOpenTerminalHere:</string>
+              <string>mainMenuRemoveSidebarItem:</string>
+              <string>mainMenuRemoveSidebarItems:</string>
+              <string>mainMenuRevealRepositoryInFinder:</string>
               <string>reloadSidebarData:</string>
-              <string>sidebarMenuAddLocalRepositoryRef:</string>
-              <string>sidebarMenuAddNewSidebarGroupItem:</string>
-              <string>sidebarMenuAddServerRepositoryRef:</string>
-              <string>sidebarMenuConfigureLocalRepositoryRef:</string>
-              <string>sidebarMenuConfigureRepositoryRef:</string>
-              <string>sidebarMenuConfigureServerRepositoryRef:</string>
-              <string>sidebarMenuOpenTerminalHere:</string>
-              <string>sidebarMenuRemoveSidebarItem:</string>
-              <string>sidebarMenuRevealRepositoryInFinder:</string>
             </object>
             <object class="NSMutableArray" key="dict.values">
               <bool key="EncodedWithXMLCoder">YES</bool>
               <object class="IBActionInfo">
+                <string key="name">mainMenuAddNewSidebarGroupItem:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuConfigureLocalRepositoryRef:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuConfigureRepositoryRef:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuConfigureServerRepositoryRef:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuOpenTerminalHere:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuRemoveSidebarItem:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuRemoveSidebarItems:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuRevealRepositoryInFinder:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
                 <string key="name">reloadSidebarData:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">sidebarMenuAddLocalRepositoryRef:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">sidebarMenuAddNewSidebarGroupItem:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">sidebarMenuAddServerRepositoryRef:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">sidebarMenuConfigureLocalRepositoryRef:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">sidebarMenuConfigureRepositoryRef:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">sidebarMenuConfigureServerRepositoryRef:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">sidebarMenuOpenTerminalHere:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">sidebarMenuRemoveSidebarItem:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">sidebarMenuRevealRepositoryInFinder:</string>
                 <string key="candidateClassName">id</string>
               </object>
             </object>

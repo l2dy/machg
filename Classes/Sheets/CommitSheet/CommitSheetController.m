@@ -187,7 +187,7 @@ NSString* kAmendOption	 = @"amendOption";
 	}
 	
 	committingAllFiles = NO;
-	NSArray* paths = [myDocument absolutePathsOfBrowserChosenFiles];
+	NSArray* paths = [myDocument absolutePathsOfChosenFiles];
 	if ([paths count] <= 0)
 		{ PlayBeep(); DebugLog(@"No files are selected to commit"); return; }
 
@@ -254,7 +254,7 @@ NSString* kAmendOption	 = @"amendOption";
 	if (theAction == @selector(commitSheetDiffAction:))			return [self filesToCommitAreSelected];
 	if (theAction == @selector(excludePathsAction:))			return [selectedIndexes count] > 0 && ![excludedItems containsIndexes:selectedIndexes] && ![myDocument inMergeState];
 	if (theAction == @selector(includePathsAction:))			return [selectedIndexes count] > 0 && [excludedItems intersectsIndexes:selectedIndexes];
-	return [myDocument validateUserInterfaceItem:anItem];
+	return NO;
 }
 
 

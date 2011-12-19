@@ -85,7 +85,7 @@
 - (IBAction) openRenameFileSheet:(id)sender
 {
 
-	NSArray* theSelectedFiles = [myDocument absolutePathsOfBrowserChosenFiles];
+	NSArray* theSelectedFiles = [myDocument absolutePathsOfChosenFiles];
 
 	if ([theSelectedFiles count] < 1)
 	{

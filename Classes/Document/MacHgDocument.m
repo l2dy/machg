@@ -127,7 +127,7 @@
 
 - (IBAction) testBrowserLoad:(id)sender
 {
-	if ([sidebar_ selectedNodeIsLocalRepositoryRef])
+	if ([self localRepoIsSelectedAndReady])
 	{
 		NSArray* absoluteChangedPaths = [self absolutePathOfRepositoryRootAsArray];
 		[self refreshBrowserPaths:absoluteChangedPaths];
@@ -535,7 +535,7 @@
 // MARK: Pane switching
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (NSView*) paneView:(PaneViewNum)paneNum
+- (NSView <NSUserInterfaceValidations>*) paneView:(PaneViewNum)paneNum
 {
 	switch (paneNum)
 	{
@@ -593,8 +593,8 @@
 	[[toolbarSearchField_ layer] setFilters: [NSArray array]];
 }
 
-- (NSView*) currentPaneView							{ return [self paneView:currentPane_]; }
-- (PaneViewNum) currentPane							{ return currentPane_; }
+- (NSView <NSUserInterfaceValidations>*) currentPaneView	{ return [self paneView:currentPane_]; }
+- (PaneViewNum) currentPane									{ return currentPane_; }
 - (void) setCurrentPane:(PaneViewNum)newPaneNum
 {
 	if (currentPane_ == newPaneNum)
@@ -665,9 +665,9 @@
 - (BOOL)	showingHistoryView								{ return currentPane_ == eHistoryView; }
 - (BOOL)	showingDifferencesView							{ return currentPane_ == eDifferencesView; }
 - (BOOL)	showingBackingView								{ return currentPane_ == eBackingView; }
-- (BOOL)	showingBrowserOrHistoryView						{ return currentPane_ == eFilesView || currentPane_ == eHistoryView; }
-- (BOOL)	showingBrowserOrDifferencesView					{ return currentPane_ == eFilesView || currentPane_ == eDifferencesView; }
-- (BOOL)	showingBrowserOrHistoryOrDifferencesView		{ return currentPane_ == eFilesView || currentPane_ == eHistoryView || currentPane_ == eDifferencesView; }
+- (BOOL)	showingFilesOrHistoryView						{ return currentPane_ == eFilesView || currentPane_ == eHistoryView; }
+- (BOOL)	showingFilesOrDifferencesView					{ return currentPane_ == eFilesView || currentPane_ == eDifferencesView; }
+- (BOOL)	showingFilesOrHistoryOrDifferencesView			{ return currentPane_ == eFilesView || currentPane_ == eHistoryView || currentPane_ == eDifferencesView; }
 - (BOOL)	showingASheet									{ return showingSheet_; }
 
 
@@ -833,9 +833,11 @@
 // MARK: Action Validation
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BOOL) repositoryIsSelectedAndReady						{ return !showingSheet_ && [[sidebar_ chosenNode] isLocalRepositoryRef] && ![sidebar_ multipleNodesAreSelected]; }
-- (BOOL) repositoryOrServerIsSelectedAndReady				{ return !showingSheet_ && [[sidebar_ chosenNode] isRepositoryRef]      && ![sidebar_ multipleNodesAreSelected]; }
-- (BOOL) toolbarActionAppliesToFilesWith:(HGStatus)status	{ return ([self pathsAreSelectedInBrowserWhichContainStatus:status] || (![self nodesAreChosenInBrowser] && [self repositoryHasFilesWhichContainStatus:status])); }
+- (BOOL) localRepoIsSelectedAndReady						{ return !showingSheet_ && [sidebar_ localRepoIsSelected]; }
+- (BOOL) localRepoIsChosenAndReady							{ return !showingSheet_ && [sidebar_ localRepoIsChosen]; }
+- (BOOL) localOrServerRepoIsSelectedAndReady				{ return !showingSheet_ && [sidebar_ localOrServerRepoIsSelected]; }
+- (BOOL) localOrServerRepoIsChosenAndReady					{ return !showingSheet_ && [sidebar_ localOrServerRepoIsChosen]; }
+- (BOOL) toolbarActionAppliesToFilesWith:(HGStatus)status	{ return ([self statusOfChosenPathsInFilesContain:status] || (![self nodesAreChosenInFiles] && [self repositoryHasFilesWhichContainStatus:status])); }
 - (BOOL) validateAndSwitchMenuForCommitAllFiles:(id)anItem
 {
 	NSMenuItem* menuItem = DynamicCast(NSMenuItem, anItem);
@@ -847,7 +849,7 @@
 	NSMenuItem* menuItem = DynamicCast(NSMenuItem, anItem);
 	if (menuItem)
 		[menuItem setTitle: [self quicklookPreviewIsVisible] ? @"Close Quick Look panel" : @"Open Quick Look panel"];
-	return [self repositoryIsSelectedAndReady] &&
+	return [self localRepoIsSelectedAndReady] &&
 			(([self showingFilesView]       && [[[self theFilesView]       theFSViewer] nodesAreChosen]) ||
 			 ([self showingDifferencesView] && [[[self theDifferencesView] theFSViewer] nodesAreChosen]) ||
 			 ([self showingHistoryView]     && [[[self theHistoryView]   logTableView] revisionsAreSelected]));
@@ -858,61 +860,106 @@
 {
 	SEL theAction = [anItem action];
 	
-	if (theAction == @selector(actionSwitchViewToFilesView:))			return [self repositoryIsSelectedAndReady];
-	if (theAction == @selector(actionSwitchViewToHistoryView:))			return [self repositoryIsSelectedAndReady];
-	if (theAction == @selector(actionSwitchViewToDifferencesView:))		return [self repositoryIsSelectedAndReady];
-	if (theAction == @selector(actionSwitchViewToFilesBrowserView:))	return [self repositoryIsSelectedAndReady];
-	if (theAction == @selector(actionSwitchViewToFilesOutlineView:))	return [self repositoryIsSelectedAndReady];
-	if (theAction == @selector(actionSwitchViewToFilesTableView:))		return [self repositoryIsSelectedAndReady];
+	if (theAction == @selector(actionSwitchViewToFilesView:))			return [self localRepoIsSelectedAndReady];
+	if (theAction == @selector(actionSwitchViewToHistoryView:))			return [self localRepoIsSelectedAndReady];
+	if (theAction == @selector(actionSwitchViewToDifferencesView:))		return [self localRepoIsSelectedAndReady];
+	if (theAction == @selector(actionSwitchViewToFilesBrowserView:))	return [self localRepoIsSelectedAndReady];
+	if (theAction == @selector(actionSwitchViewToFilesOutlineView:))	return [self localRepoIsSelectedAndReady];
+	if (theAction == @selector(actionSwitchViewToFilesTableView:))		return [self localRepoIsSelectedAndReady];
 
-
-	if (theAction == @selector(mainMenuRevertSelectedFiles:))			return [self repositoryIsSelectedAndReady] && [self showingFilesView] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusChangedInSomeWay];
-	if (theAction == @selector(mainMenuRevertAllFiles:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [self repositoryHasFilesWhichContainStatus:eHGStatusChangedInSomeWay];
-	if (theAction == @selector(mainMenuRevertSelectedFilesToVersion:))	return [self repositoryIsSelectedAndReady] && [self showingFilesView] && [self nodesAreChosenInBrowser];
+	// Action Menu
+	// -----------
+	if (theAction == @selector(mainMenuCommitSelectedFiles:))			return [[self currentPaneView] validateUserInterfaceItem:anItem];
+	if (theAction == @selector(mainMenuCommitAllFiles:))				return [[self currentPaneView] validateUserInterfaceItem:anItem];
+	if (theAction == @selector(toolbarCommitFiles:))					return [[self currentPaneView] validateUserInterfaceItem:anItem];
+	if (theAction == @selector(mainMenuDiffSelectedFiles:))				return [[self currentPaneView] validateUserInterfaceItem:anItem];
+	if (theAction == @selector(mainMenuDiffAllFiles:))					return [[self currentPaneView] validateUserInterfaceItem:anItem];
+	if (theAction == @selector(toolbarDiffFiles:))						return [[self currentPaneView] validateUserInterfaceItem:anItem];
+	if (theAction == @selector(mainMenuAddRenameRemoveSelectedFiles:))	return [[self currentPaneView] validateUserInterfaceItem:anItem];
+	if (theAction == @selector(mainMenuAddRenameRemoveAllFiles:))		return [[self currentPaneView] validateUserInterfaceItem:anItem];
+	if (theAction == @selector(toolbarAddRenameRemoveFiles:))			return [[self currentPaneView] validateUserInterfaceItem:anItem];
+	// ------	
+	if (theAction == @selector(mainMenuRevertSelectedFiles:))			return [[self currentPaneView] validateUserInterfaceItem:anItem];
+	if (theAction == @selector(mainMenuRevertSelectedFilesToVersion:))	return [[self currentPaneView] validateUserInterfaceItem:anItem];
+	if (theAction == @selector(mainMenuRevertAllFiles:))				return [[self currentPaneView] validateUserInterfaceItem:anItem];
+	if (theAction == @selector(toolbarRevertFiles:))					return [[self currentPaneView] validateUserInterfaceItem:anItem];
+	if (theAction == @selector(mainMenuDeleteSelectedFiles:))			return [[self currentPaneView] validateUserInterfaceItem:anItem];
+	if (theAction == @selector(mainMenuAddSelectedFiles:))				return [[self currentPaneView] validateUserInterfaceItem:anItem];
+	if (theAction == @selector(mainMenuUntrackSelectedFiles:))			return [[self currentPaneView] validateUserInterfaceItem:anItem];
+	if (theAction == @selector(mainMenuRenameSelectedItem:))			return [[self currentPaneView] validateUserInterfaceItem:anItem];
 	// ------
-	if (theAction == @selector(mainMenuRollbackCommit:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [[self repositoryData] isRollbackInformationAvailable];
+	if (theAction == @selector(mainMenuRemergeSelectedFiles:))			return [[self currentPaneView] validateUserInterfaceItem:anItem];
+	if (theAction == @selector(mainMenuMarkResolvedSelectedFiles:))		return [[self currentPaneView] validateUserInterfaceItem:anItem];
+	// ------
+	if (theAction == @selector(mainMenuIgnoreSelectedFiles:))			return [[self currentPaneView] validateUserInterfaceItem:anItem];
+	if (theAction == @selector(mainMenuUnignoreSelectedFiles:))			return [[self currentPaneView] validateUserInterfaceItem:anItem];
+	if (theAction == @selector(mainMenuAnnotateSelectedFiles:))			return [[self currentPaneView] validateUserInterfaceItem:anItem];
+	// ------	
+	if (theAction == @selector(mainMenuRollbackCommit:))				return [[self currentPaneView] validateUserInterfaceItem:anItem];
 	
 	
-	// Repository actions
-	if (theAction == @selector(mainMenuCloneRepository:))				return [self repositoryOrServerIsSelectedAndReady];
-	if (theAction == @selector(mainMenuPushToRepository:))				return [self repositoryIsSelectedAndReady];
-	if (theAction == @selector(mainMenuPullFromRepository:))			return [self repositoryIsSelectedAndReady];
-	if (theAction == @selector(mainMenuIncomingFromRepository:))		return [self repositoryIsSelectedAndReady];
-	if (theAction == @selector(mainMenuOutgoingToRepository:))			return [self repositoryIsSelectedAndReady];
+	// Repository Menu
+	// ---------------
+	if (theAction == @selector(mainMenuCloneRepository:))				return [self localOrServerRepoIsSelectedAndReady];
+	if (theAction == @selector(mainMenuPushToRepository:))				return [self localRepoIsSelectedAndReady];
+	if (theAction == @selector(mainMenuPullFromRepository:))			return [self localRepoIsSelectedAndReady];
+	if (theAction == @selector(mainMenuIncomingFromRepository:))		return [self localRepoIsSelectedAndReady];
+	if (theAction == @selector(mainMenuOutgoingToRepository:))			return [self localRepoIsSelectedAndReady];
 	// ------
-	if (theAction == @selector(mainMenuUpdateRepository:))				return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView];
-	if (theAction == @selector(mainMenuUpdateRepositoryToVersion:))		return [self repositoryIsSelectedAndReady];
-	if (theAction == @selector(toolbarUpdate:))							return [self repositoryIsSelectedAndReady];
-	if (theAction == @selector(mainMenuGotoChangeset:))					return [self repositoryIsSelectedAndReady];
-	if (theAction == @selector(mainMenuMergeWith:))						return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView] && [[self repositoryData]hasMultipleOpenHeads] && ![self repositoryHasFilesWhichContainStatus:eHGStatusSecondary];
+	if (theAction == @selector(mainMenuUpdateRepository:))				return [self localRepoIsSelectedAndReady] && [self showingFilesOrHistoryView];
+	if (theAction == @selector(mainMenuUpdateRepositoryToVersion:))		return [self localRepoIsSelectedAndReady];
+	if (theAction == @selector(toolbarUpdate:))							return [self localRepoIsSelectedAndReady];
+	if (theAction == @selector(mainMenuGotoChangeset:))					return [self localRepoIsSelectedAndReady];
+	if (theAction == @selector(mainMenuMergeWith:))						return [self localRepoIsSelectedAndReady] && [self showingFilesOrHistoryView] && [[self repositoryData]hasMultipleOpenHeads] && ![self repositoryHasFilesWhichContainStatus:eHGStatusSecondary];
 	// ------
+	if (theAction == @selector(mainMenuCollapseChangesets:))		 	return [[self currentPaneView] validateUserInterfaceItem:anItem];
+	if (theAction == @selector(mainMenuHistoryEditChangesets:))		 	return [[self currentPaneView] validateUserInterfaceItem:anItem];
+	if (theAction == @selector(mainMenuStripChangesets:))			 	return [[self currentPaneView] validateUserInterfaceItem:anItem];
+	if (theAction == @selector(mainMenuRebaseChangesets:))			 	return [[self currentPaneView] validateUserInterfaceItem:anItem];
+	if (theAction == @selector(mainMenuBackoutChangeset:))			 	return [[self currentPaneView] validateUserInterfaceItem:anItem];
 	// ------
-	if (theAction == @selector(mainMenuManifestOfCurrentVersion:))		return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView];
-	if (theAction == @selector(mainMenuAddLabelToCurrentRevision:))		return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView];
+	if (theAction == @selector(mainMenuManifestOfCurrentVersion:))		return [self localRepoIsSelectedAndReady] && [self showingFilesOrHistoryView];
+	if (theAction == @selector(mainMenuAddLabelToCurrentRevision:))		return [self localRepoIsSelectedAndReady] && [self showingFilesOrHistoryView];	
 	// ------
-	if (theAction == @selector(sidebarMenuAddLocalRepositoryRef:))		return !showingSheet_;
-	if (theAction == @selector(sidebarMenuAddServerRepositoryRef:))		return !showingSheet_;
-	if (theAction == @selector(sidebarMenuAddNewSidebarGroupItem:))		return !showingSheet_;
-	if (theAction == @selector(sidebarMenuRemoveSidebarItem:))			return !showingSheet_ && ([sidebar_ chosenNode] && ![sidebar_ multipleNodesAreSelected] ? YES : NO);
-	if (theAction == @selector(sidebarMenuRemoveSidebarItems:))			return !showingSheet_ && ([sidebar_ multipleNodesAreSelected] ? YES : NO);
-	if (theAction == @selector(sidebarMenuConfigureRepositoryRef:))		return [self repositoryOrServerIsSelectedAndReady];
-	if (theAction == @selector(sidebarMenuConfigureLocalRepositoryRef:))return [self repositoryIsSelectedAndReady];
-	if (theAction == @selector(sidebarMenuConfigureServerRepositoryRef:))return [self repositoryOrServerIsSelectedAndReady];
+	if (theAction == @selector(mainMenuAddLocalRepositoryRef:))			return !showingSheet_;
+	if (theAction == @selector(mainMenuAddServerRepositoryRef:))		return !showingSheet_;
+	if (theAction == @selector(mainMenuAddNewSidebarGroupItem:))		return !showingSheet_;
+	if (theAction == @selector(mainMenuRemoveSidebarItem:))				return !showingSheet_ && ([sidebar_ chosenNode] && ![sidebar_ multipleNodesAreSelected] ? YES : NO);
+	if (theAction == @selector(mainMenuRemoveSidebarItems:))			return !showingSheet_ && ([sidebar_ multipleNodesAreSelected] ? YES : NO);
+	if (theAction == @selector(mainMenuConfigureRepositoryRef:))		return [self localOrServerRepoIsSelectedAndReady];
+	if (theAction == @selector(mainMenuConfigureLocalRepositoryRef:))	return [self localRepoIsSelectedAndReady];
+	if (theAction == @selector(mainMenuConfigureServerRepositoryRef:))	return [self localOrServerRepoIsSelectedAndReady];
 	// ------
-	if (theAction == @selector(sidebarMenuRevealRepositoryInFinder:))	return [self repositoryIsSelectedAndReady];
-	if (theAction == @selector(sidebarMenuOpenTerminalHere:))			return [self repositoryIsSelectedAndReady];
-	if (theAction == @selector(mainMenuRevealSelectedFilesInFinder:))	return [self repositoryIsSelectedAndReady];
-	if (theAction == @selector(mainMenuOpenTerminalHere:))				return [self repositoryIsSelectedAndReady];
+	if (theAction == @selector(mainMenuRevealRepositoryInFinder:))		return [self localRepoIsSelectedAndReady];
+	if (theAction == @selector(mainMenuOpenTerminalHere:))				return [self localRepoIsSelectedAndReady];
 	if (theAction == @selector(actionTestListingItem:))					return !showingSheet_ && ([sidebar_ selectedNode] ? YES : NO);
-	
-	if (theAction == @selector(browserMenuOpenSelectedFilesInFinder:))	return [self repositoryIsSelectedAndReady] && [self nodesAreChosenInBrowser];
-	if (theAction == @selector(browserMenuRevealSelectedFilesInFinder:))return [self repositoryIsSelectedAndReady];
-	if (theAction == @selector(browserMenuOpenTerminalHere:))			return [self repositoryIsSelectedAndReady];
 
 	
-	// File Menu
-	if (theAction == @selector(mainMenuImportPatches:))					return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView];
-	if (theAction == @selector(mainMenuExportPatches:))					return [self repositoryIsSelectedAndReady] && [self showingBrowserOrHistoryView];
+	if (theAction == @selector(mainMenuOpenSelectedFilesInFinder:))		return [self localRepoIsSelectedAndReady] && [self nodesAreChosenInFiles];
+	if (theAction == @selector(mainMenuRevealSelectedFilesInFinder:))	return [self localRepoIsSelectedAndReady];
+	
+	
+	if (theAction == @selector(historyMenuViewRevisionDifferences:)) 	return [[self currentPaneView] validateUserInterfaceItem:anItem];
+
+	
+	// Labels contextual items                                       
+	if (theAction == @selector(labelsMenuAddLabelToCurrentRevision:))	return [[self currentPaneView] validateUserInterfaceItem:anItem];
+	if (theAction == @selector(labelsMenuMoveChosenLabel:))			 	return [[self currentPaneView] validateUserInterfaceItem:anItem];
+	if (theAction == @selector(labelsMenuRemoveChosenLabel:))		 	return [[self currentPaneView] validateUserInterfaceItem:anItem];
+	// -------                                                       
+	if (theAction == @selector(labelsMenuUpdateRepositoryToChosenRevision:))	return [[self currentPaneView] validateUserInterfaceItem:anItem];
+
+
+
+	
+	// Files Contextual Menu
+	if (theAction == @selector(browserMenuOpenSelectedFilesInFinder:))	return [self localRepoIsSelectedAndReady] && [self nodesAreChosenInFiles];
+	if (theAction == @selector(browserMenuRevealSelectedFilesInFinder:))return [self localRepoIsSelectedAndReady];
+	if (theAction == @selector(browserMenuOpenTerminalHere:))			return [self localRepoIsSelectedAndReady];
+	// -------                                                       
+	if (theAction == @selector(mainMenuImportPatches:))					return [self localRepoIsSelectedAndReady] && [self showingFilesOrHistoryView];
+	if (theAction == @selector(mainMenuExportPatches:))					return [self localRepoIsSelectedAndReady] && [self showingFilesOrHistoryView];
+
 	
 	if (theAction == @selector(mainMenuNoAction:))						return !showingSheet_ && ([sidebar_ selectedNode] ? YES : NO);
 	if (theAction == @selector(togglePreviewPanel:))					return [self validateAndSwitchMenuForPreviewSelectedFiles:anItem];
@@ -920,6 +967,107 @@
 	// subclass of NSDocument, so invoke super's implementation
 	return [super validateUserInterfaceItem:anItem];
 }
+
+
+- (IBAction)	mainMenuOpenSelectedFilesInFinder:(id)sender	{ [[self currentPaneView] performSelectorIfPossible:@selector(mainMenuOpenSelectedFilesInFinder:) withObject:sender]; }
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Action Menu
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (IBAction) mainMenuCommitSelectedFiles:(id)sender				{ [[self theCommitSheetController] openCommitSheetWithSelectedFiles:sender]; }
+- (IBAction) mainMenuCommitAllFiles:(id)sender					{ [[self theCommitSheetController] openCommitSheetWithAllFiles:sender]; }
+- (IBAction) mainMenuDiffSelectedFiles:(id)sender				{ [self viewDifferencesInCurrentRevisionFor:[self absolutePathsOfChosenFiles] toRevision:nil]; }	// nil indicates the current revision
+- (IBAction) mainMenuDiffAllFiles:(id)sender					{ [self viewDifferencesInCurrentRevisionFor:[self absolutePathOfRepositoryRootAsArray] toRevision:nil]; }	// nil indicates the current revision
+- (IBAction) mainMenuAddRenameRemoveSelectedFiles:(id)sender	{ [self primaryActionAddRenameRemoveFiles:[self absolutePathsOfChosenFiles]]; }
+- (IBAction) mainMenuAddRenameRemoveAllFiles:(id)sender			{ [self primaryActionAddRenameRemoveFiles:[self absolutePathOfRepositoryRootAsArray]]; }
+
+- (IBAction) mainMenuRevertSelectedFiles:(id)sender				{ [self primaryActionRevertFiles:[self absolutePathsOfChosenFiles] toVersion:nil]; }
+- (IBAction) mainMenuRevertAllFiles:(id)sender					{ [self primaryActionRevertFiles:[self absolutePathOfRepositoryRootAsArray] toVersion:nil]; }
+- (IBAction) mainMenuRevertSelectedFilesToVersion:(id)sender	{ [[self theRevertSheetController] openRevertSheetWithSelectedFiles:sender]; }
+- (IBAction) mainMenuDeleteSelectedFiles:(id)sender				{ [self primaryActionDeleteSelectedFiles:[self absolutePathsOfChosenFiles]]; }
+- (IBAction) mainMenuAddSelectedFiles:(id)sender				{ [self primaryActionAddSelectedFiles:[self absolutePathsOfChosenFiles]]; }
+- (IBAction) mainMenuUntrackSelectedFiles:(id)sender			{ [self primaryActionUntrackSelectedFiles:[self absolutePathsOfChosenFiles]]; }
+- (IBAction) mainMenuRenameSelectedItem:(id)sender				{ [[self theRenameFileSheetController] openRenameFileSheet:sender]; }
+
+- (IBAction) mainMenuRemergeSelectedFiles:(id)sender			{ [self primaryActionRemerge:[self absolutePathsOfChosenFiles] withConfirmation:YES]; }
+- (IBAction) mainMenuMarkResolvedSelectedFiles:(id)sender		{ [self primaryActionMarkResolved:[self absolutePathsOfChosenFiles] withConfirmation:NO]; }
+
+- (IBAction) mainMenuIgnoreSelectedFiles:(id)sender				{ [self primaryActionIgnoreSelectedFiles:[self absolutePathsOfChosenFiles]]; }
+- (IBAction) mainMenuUnignoreSelectedFiles:(id)sender			{ [self primaryActionUnignoreSelectedFiles:[self absolutePathsOfChosenFiles]]; }
+- (IBAction) mainMenuAnnotateSelectedFiles:(id)sender			{ [self primaryActionAnnotateSelectedFiles:[self absolutePathsOfChosenFiles]]; }
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Toolbar Actions
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+
+- (IBAction) toolbarCommitFiles:(id)sender
+{
+	if ([[self theFSViewer] nodesAreChosen] && ![[self repositoryData] inMergeState])
+		[self mainMenuCommitSelectedFiles:sender];
+	else
+		[self mainMenuCommitAllFiles:sender];
+}
+
+- (IBAction) toolbarDiffFiles:(id)sender
+{
+	if ([[self theFSViewer] nodesAreChosen])
+		[self mainMenuDiffSelectedFiles:sender];
+	else
+		[self mainMenuDiffAllFiles:sender];
+}
+
+- (IBAction) toolbarAddRenameRemoveFiles:(id)sender
+{
+	if ([[self theFSViewer] nodesAreChosen])
+		[self mainMenuAddRenameRemoveSelectedFiles:sender];
+	else
+		[self mainMenuAddRenameRemoveAllFiles:sender];
+}
+
+- (IBAction) toolbarRevertFiles:(id)sender
+{
+	if ([[self theFSViewer] nodesAreChosen])
+		[self mainMenuRevertSelectedFilesToVersion:sender];
+	else
+		[self mainMenuRevertAllFiles:sender];
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  File Menu Actions
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (IBAction) mainMenuImportPatches:(id)sender				{ [[self theImportPatchesSheetController] openImportPatchesSheet:sender]; }
+- (IBAction) mainMenuExportPatches:(id)sender				{ [[self theExportPatchesSheetController] openExportPatchesSheetWithSelectedRevisions:sender]; }
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: History Altering Actions
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (IBAction) mainMenuCollapseChangesets:(id)sender			{ [[self theCollapseSheetController]	openCollapseSheetWithSelectedRevisions:sender]; }
+- (IBAction) mainMenuHistoryEditChangesets:(id)sender		{ [[self theHistoryEditSheetController]	openHistoryEditSheetWithSelectedRevisions:sender]; }
+- (IBAction) mainMenuStripChangesets:(id)sender				{ [[self theStripSheetController]		openStripSheetWithSelectedRevisions:sender]; }
+- (IBAction) mainMenuRebaseChangesets:(id)sender			{ [[self theRebaseSheetController]		openRebaseSheetWithSelectedRevisions:sender]; }
+- (IBAction) mainMenuBackoutChangeset:(id)sender			{ [[self theBackoutSheetController]		openBackoutSheetWithSelectedRevision:sender]; }
 
 
 
@@ -930,11 +1078,11 @@
 // MARK: Repository Menu Actions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (IBAction)	mainMenuManifestOfCurrentVersion:(id)sender	{ [self primaryActionDisplayManifestForVersion:[self getHGParent1Revision]]; }
-- (IBAction)	mainMenuPushToRepository:(id)sender			{ [[self thePushSheetController]		openSheet:sender]; }
-- (IBAction)	mainMenuPullFromRepository:(id)sender		{ [[self thePullSheetController]		openSheet:sender]; }
-- (IBAction)	mainMenuIncomingFromRepository:(id)sender	{ [[self theIncomingSheetController]	openSheet:sender]; }
-- (IBAction)	mainMenuOutgoingToRepository:(id)sender		{ [[self theOutgoingSheetController]	openSheet:sender]; }
+- (IBAction) mainMenuManifestOfCurrentVersion:(id)sender	{ [self primaryActionDisplayManifestForVersion:[self getHGParent1Revision]]; }
+- (IBAction) mainMenuPushToRepository:(id)sender			{ [[self thePushSheetController]		openSheet:sender]; }
+- (IBAction) mainMenuPullFromRepository:(id)sender			{ [[self thePullSheetController]		openSheet:sender]; }
+- (IBAction) mainMenuIncomingFromRepository:(id)sender		{ [[self theIncomingSheetController]	openSheet:sender]; }
+- (IBAction) mainMenuOutgoingToRepository:(id)sender		{ [[self theOutgoingSheetController]	openSheet:sender]; }
 
 - (IBAction) mainMenuCloneRepository:(id)sender
 {
@@ -947,12 +1095,63 @@
 
 - (IBAction) mainMenuGotoChangeset:(id)sender
 {
-	if (![self repositoryIsSelectedAndReady])
+	if (![self localRepoIsSelectedAndReady])
 		return;
 	if (![self showingHistoryView])
 		[self actionSwitchViewToHistoryView:sender];
 	[[self theHistoryView] historyMenuGotoChangeset:sender];
 }
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: All Files Menu Actions
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (IBAction) mainMenuUpdateRepository:(id)sender				{ [self primaryActionUpdateFilesToVersion:[self getHGTipRevision] withCleanOption:NO]; }
+- (IBAction) mainMenuUpdateRepositoryToVersion:(id)sender		{ [[self theUpdateSheetController] openUpdateSheetWithSelectedRevision:sender]; }
+- (IBAction) toolbarUpdate:(id)sender							{ [[self theUpdateSheetController] openUpdateSheetWithSelectedRevision:sender]; }
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Merging
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (IBAction) mainMenuMergeWith:(id)sender						{ [[self theMergeSheetController] openMergeSheet:sender]; }
+- (IBAction) mainMenuAddLabelToCurrentRevision:(id)sender		{ [[self theAddLabelSheetController] openAddLabelSheet:sender]; }
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Proxies for SideBar Methods
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+
+- (IBAction) mainMenuAddLocalRepositoryRef:(id)sender			{ [[self  theLocalRepositoryRefSheetController]	openSheetForNewRepositoryRef]; }
+- (IBAction) mainMenuAddServerRepositoryRef:(id)sender			{ [[self theServerRepositoryRefSheetController]	openSheetForNewRepositoryRef]; }
+- (IBAction) mainMenuConfigureLocalRepositoryRef:(id)sender		{ [[self  theLocalRepositoryRefSheetController]	openSheetForConfigureRepositoryRef:[sidebar_ chosenNode]]; }
+- (IBAction) mainMenuConfigureServerRepositoryRef:(id)sender	{ [[self theServerRepositoryRefSheetController]	openSheetForConfigureRepositoryRef:[sidebar_ chosenNode]]; }
+
+- (IBAction) mainMenuConfigureRepositoryRef:(id)sender			{ return [sidebar_ mainMenuConfigureRepositoryRef:sender]; }
+- (IBAction) mainMenuAddNewSidebarGroupItem:(id)sender			{ return [sidebar_ mainMenuAddNewSidebarGroupItem:sender]; }
+- (IBAction) mainMenuRemoveSidebarItem:(id)sender				{ return [sidebar_ mainMenuRemoveSidebarItem:sender]; }
+- (IBAction) mainMenuRemoveSidebarItems:(id)sender				{ return [sidebar_ mainMenuRemoveSidebarItems:sender]; }
+- (IBAction) mainMenuRevealRepositoryInFinder:(id)sender		{ return [sidebar_ mainMenuRevealRepositoryInFinder:sender]; }
+- (IBAction) mainMenuRevealSelectedFilesInFinder:(id)sender		{ return [sidebar_ mainMenuRevealRepositoryInFinder:sender]; }
+- (IBAction) mainMenuOpenTerminalHere:(id)sender				{ return [sidebar_ mainMenuOpenTerminalHere:sender]; }
+- (IBAction) mainMenuAddAndCloneServerRepositoryRef:(id)sender	{ [[self theServerRepositoryRefSheetController] openSheetForAddAndClone]; }
+
+
 
 
 
@@ -1355,7 +1554,6 @@
 // MARK: Path and Selection Operations
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BOOL)			aRepositoryIsSelected					{ return [[sidebar_ selectedNode] isLocalRepositoryRef]; }
 - (NSString*)		absolutePathOfRepositoryRoot			{ return [repositoryData_ rootPath]; }
 - (NSString*)		absolutePathOfRepositoryRootFromSidebar	{ SidebarNode* repo = [sidebar_ selectedNode]; return [repo isLocalRepositoryRef] ? [repo path] : nil; }
 - (NSString*)		selectedRepositoryShortName				{ SidebarNode* repo = [sidebar_ selectedNode]; return [repo isLocalRepositoryRef]  ? [repo shortName]  : nil; }
@@ -1366,15 +1564,15 @@
 - (FSViewer*)		theFSViewer								{ return [[self theFilesView] theFSViewer]; }
 - (FSNodeInfo*)		rootNodeInfo							{ return [[self theFSViewer] rootNodeInfo]; }
 - (FSNodeInfo*)		nodeForPath:(NSString*)absolutePath		{ return [[self rootNodeInfo] nodeForPathFromRoot:absolutePath]; }
-- (BOOL)			singleFileIsChosenInBrowser				{ return [[self theFSViewer] singleFileIsChosenInBrowser]; }
-- (BOOL)			singleItemIsChosenInBrowser				{ return [[self theFSViewer] singleItemIsChosenInBrowser]; }
-- (BOOL)			nodesAreChosenInBrowser					{ return [[self theFSViewer] nodesAreChosen]; }
-- (HGStatus)		statusOfChosenPathsInBrowser			{ return [[self theFSViewer] statusOfChosenPathsInBrowser]; }
-- (NSArray*)		absolutePathsOfBrowserChosenFiles		{ return [[self theFSViewer] absolutePathsOfChosenFilesInBrowser]; }
-- (NSString*)		enclosingDirectoryOfBrowserChosenFiles	{ return [[self theFSViewer] enclosingDirectoryOfChosenFilesInBrowser]; }
+- (BOOL)			singleFileIsChosenInFiles				{ return [[self theFSViewer] singleFileIsChosenInFiles]; }
+- (BOOL)			singleItemIsChosenInFiles				{ return [[self theFSViewer] singleItemIsChosenInFiles]; }
+- (BOOL)			nodesAreChosenInFiles					{ return [[self theFSViewer] nodesAreChosen]; }
+- (HGStatus)		statusOfChosenPathsInFiles				{ return [[self theFSViewer] statusOfChosenPathsInFiles]; }
+- (NSArray*)		absolutePathsOfChosenFiles				{ return [[self theFSViewer] absolutePathsOfChosenFiles]; }
+- (NSString*)		enclosingDirectoryOfChosenFiles			{ return [[self theFSViewer] enclosingDirectoryOfChosenFiles]; }
 
-- (BOOL) pathsAreSelectedInBrowserWhichContainStatus:(HGStatus)status	{ return bitsInCommon(status, [[self theFSViewer] statusOfChosenPathsInBrowser]); }
-- (BOOL) repositoryHasFilesWhichContainStatus:(HGStatus)status			{ return bitsInCommon(status, [[[self theFSViewer] rootNodeInfo] hgStatus]); }
+- (BOOL) statusOfChosenPathsInFilesContain:(HGStatus)status	{ return bitsInCommon(status, [[self theFSViewer] statusOfChosenPathsInFiles]); }
+- (BOOL) repositoryHasFilesWhichContainStatus:(HGStatus)status	{ return bitsInCommon(status, [[[self theFSViewer] rootNodeInfo] hgStatus]); }
 
 // Move any "unknown" files ending in .orig to the trash.
 - (void) pruneDotOrigFiles:(NSArray*)paths
@@ -1547,26 +1745,13 @@
 
 - (IBAction) refreshBrowserContent:(id)sender
 {
-	BOOL repoIsSelected = [self aRepositoryIsSelected];
-	if (!repoIsSelected)
-		return;
-		
+	if (![sidebar_ localRepoIsSelected])
+		return;		
 	NSString* rootPath = [self absolutePathOfRepositoryRoot];
 	[[self theFSViewer] refreshBrowserPaths:[RepositoryPaths fromRootPath:rootPath] finishingBlock:nil];
 	[self setupEventlistener];
 }
 
-
-
-
-
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
-// MARK:  File Menu Actions
-// -----------------------------------------------------------------------------------------------------------------------------------------
-
-- (IBAction)	mainMenuImportPatches:(id)sender				{ [[self theImportPatchesSheetController] openImportPatchesSheet:sender]; }
-- (IBAction)	mainMenuExportPatches:(id)sender				{ [[self theExportPatchesSheetController] openExportPatchesSheetWithSelectedRevisions:sender]; }
 
 
 
@@ -1649,60 +1834,6 @@
 		}];
 	return YES;
 }
-
-
-
-
-
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
-// MARK: All Files Menu Actions
-// -----------------------------------------------------------------------------------------------------------------------------------------
-
-- (IBAction) mainMenuUpdateRepository:(id)sender				{ [self primaryActionUpdateFilesToVersion:[self getHGTipRevision] withCleanOption:NO]; }
-- (IBAction) mainMenuUpdateRepositoryToVersion:(id)sender		{ [[self theUpdateSheetController] openUpdateSheetWithSelectedRevision:sender]; }
-- (IBAction) toolbarUpdate:(id)sender							{ [[self theUpdateSheetController] openUpdateSheetWithSelectedRevision:sender]; }
-
-
-
-
-
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
-// MARK: Merging
-// -----------------------------------------------------------------------------------------------------------------------------------------
-
-- (IBAction) mainMenuMergeWith:(id)sender						{ [[self theMergeSheetController] openMergeSheet:sender]; }
-- (IBAction) mainMenuRemergeSelectedFiles:(id)sender			{ [self primaryActionRemerge:[self absolutePathsOfBrowserChosenFiles] withConfirmation:YES]; }
-- (IBAction) mainMenuMarkResolvedSelectedFiles:(id)sender		{ [self primaryActionMarkResolved:[self absolutePathsOfBrowserChosenFiles] withConfirmation:NO]; }
-- (IBAction) mainMenuAddLabelToCurrentRevision:(id)sender		{ [[self theAddLabelSheetController] openAddLabelSheet:sender]; }
-
-
-
-
-
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
-// MARK:  Proxies for SideBar Methods
-// -----------------------------------------------------------------------------------------------------------------------------------------
-
-- (IBAction) sidebarMenuAddLocalRepositoryRef:(id)sender		{ return [sidebar_ sidebarMenuAddLocalRepositoryRef:sender]; }
-- (IBAction) sidebarMenuAddServerRepositoryRef:(id)sender		{ return [sidebar_ sidebarMenuAddServerRepositoryRef:sender]; }
-- (IBAction) sidebarMenuConfigureRepositoryRef:(id)sender		{ return [sidebar_ sidebarMenuConfigureRepositoryRef:sender]; }
-- (IBAction) sidebarMenuConfigureLocalRepositoryRef:(id)sender	{ return [sidebar_ sidebarMenuConfigureLocalRepositoryRef:sender]; }
-- (IBAction) sidebarMenuConfigureServerRepositoryRef:(id)sender	{ return [sidebar_ sidebarMenuConfigureServerRepositoryRef:sender]; }
-- (IBAction) sidebarMenuAddNewSidebarGroupItem:(id)sender		{ return [sidebar_ sidebarMenuAddNewSidebarGroupItem:sender]; }
-- (IBAction) sidebarMenuRemoveSidebarItem:(id)sender			{ return [sidebar_ sidebarMenuRemoveSidebarItem:sender]; }
-- (IBAction) sidebarMenuRemoveSidebarItems:(id)sender			{ return [sidebar_ sidebarMenuRemoveSidebarItems:sender]; }
-- (IBAction) sidebarMenuRevealRepositoryInFinder:(id)sender		{ return [sidebar_ sidebarMenuRevealRepositoryInFinder:sender]; }
-- (IBAction) sidebarMenuOpenTerminalHere:(id)sender				{ return [sidebar_ sidebarMenuOpenTerminalHere:sender]; }
-- (IBAction) mainMenuRevealSelectedFilesInFinder:(id)sender		{ return [sidebar_ sidebarMenuRevealRepositoryInFinder:sender]; }
-- (IBAction) mainMenuOpenTerminalHere:(id)sender				{ return [sidebar_ sidebarMenuOpenTerminalHere:sender]; }
-- (IBAction) mainMenuAddAndCloneServerRepositoryRef:(id)sender	{ [[self theServerRepositoryRefSheetController] openSheetForAddAndClone]; }
-
-
-
-
 
 
 
@@ -2116,8 +2247,8 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 
 	switch (AfterMergeSwitchToFromDefaults())
 	{
-		case eAfterMergeSwitchToBrowser:	[self actionSwitchViewToFilesView:self]; break;
-		case eAfterMergeSwitchToHistory:	[self actionSwitchViewToHistoryView:self]; break;
+		case eAfterMergeSwitchToFiles:		[self actionSwitchViewToFilesView:self];	break;
+		case eAfterMergeSwitchToHistory:	[self actionSwitchViewToHistoryView:self];	break;
 	}
 
 	if (DisplayResultsOfMergingFromDefaults())

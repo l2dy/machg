@@ -87,7 +87,7 @@
 {
 	NSString* newTitle = fstr(@"Reverting Selected Files in %@", [myDocument selectedRepositoryShortName]);
 	[revertSheetTitle setStringValue:newTitle];
-	NSArray* paths = [myDocument absolutePathsOfBrowserChosenFiles];
+	NSArray* paths = [myDocument absolutePathsOfChosenFiles];
 	if ([paths count] <= 0)
 		{ PlayBeep(); DebugLog(@"No files are selected to revert"); return; }
 	

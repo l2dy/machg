@@ -307,7 +307,7 @@
 
 - (IBAction) mainMenuDiffSelectedFiles:(id)sender
 {
-	NSArray* selectedPaths = [theFSViewer absolutePathsOfChosenFilesInBrowser];
+	NSArray* selectedPaths = [theFSViewer absolutePathsOfChosenFiles];
 	[myDocument viewDifferencesInCurrentRevisionFor:selectedPaths toRevision:[self revisionNumbers]];
 }
 - (IBAction) mainMenuDiffAllFiles:(id)sender
@@ -326,14 +326,14 @@
 
 - (IBAction) differencesMenuAnnotateBaseRevisionOfSelectedFiles:(id)sender
 {
-	NSArray* selectedFiles = [theFSViewer absolutePathsOfChosenFilesInBrowser];
+	NSArray* selectedFiles = [theFSViewer absolutePathsOfChosenFiles];
 	NSArray* options = [[AppController sharedAppController] annotationOptionsFromDefaults];
 	[myDocument primaryActionAnnotateSelectedFiles:selectedFiles withRevision:[baseLogTableView selectedCompleteRevision] andOptions:options];
 }
 
 - (IBAction) differencesMenuAnnotateCompareRevisionOfSelectedFiles:(id)sender
 {
-	NSArray* selectedFiles = [theFSViewer absolutePathsOfChosenFilesInBrowser];
+	NSArray* selectedFiles = [theFSViewer absolutePathsOfChosenFiles];
 	NSArray* options = [[AppController sharedAppController] annotationOptionsFromDefaults];
 	[myDocument primaryActionAnnotateSelectedFiles:selectedFiles withRevision:[compareLogTableView selectedCompleteRevision] andOptions:options];
 }
@@ -371,7 +371,7 @@
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 // Test to see if we can make a valid snapshot of at least some of the selected nodes in the differences view
-- (BOOL) nodesAreChosenInBrowserWhichAreSnapshotable
+- (BOOL) nodesAreChosenInFilesWhichAreSnapshotable
 {
 	NSArray* nodes = [theFSViewer chosenNodes];
 	for (FSNodeInfo* node in nodes)
@@ -381,31 +381,31 @@
 	return NO;
 }
 
-- (BOOL) pathsAreSelectedInBrowserWhichContainStatus:(HGStatus)status	{ return bitsInCommon(status, [theFSViewer statusOfChosenPathsInBrowser]); }
-- (BOOL) repositoryHasFilesWhichContainStatus:(HGStatus)status			{ return bitsInCommon(status, [[theFSViewer rootNodeInfo] hgStatus]); }
-- (BOOL) nodesAreChosenInBrowser										{ return [theFSViewer nodesAreChosen]; }
-- (BOOL) toolbarActionAppliesToFilesWith:(HGStatus)status				{ return ([self pathsAreSelectedInBrowserWhichContainStatus:status] || (![self nodesAreChosenInBrowser] && [self repositoryHasFilesWhichContainStatus:status])); }
+- (BOOL) statusOfChosenPathsInFilesContain:(HGStatus)status		{ return bitsInCommon(status, [theFSViewer statusOfChosenPathsInFiles]); }
+- (BOOL) repositoryHasFilesWhichContainStatus:(HGStatus)status	{ return bitsInCommon(status, [[theFSViewer rootNodeInfo] hgStatus]); }
+- (BOOL) nodesAreChosenInFiles									{ return [theFSViewer nodesAreChosen]; }
+- (BOOL) toolbarActionAppliesToFilesWith:(HGStatus)status		{ return ([self statusOfChosenPathsInFilesContain:status] || (![self nodesAreChosenInFiles] && [self repositoryHasFilesWhichContainStatus:status])); }
 
 - (BOOL) validateUserInterfaceItem:(id < NSValidatedUserInterfaceItem >)anItem
 {
 	SEL theAction = [anItem action];
 
-	if (theAction == @selector(mainMenuDiffSelectedFiles:))				return [myDocument repositoryIsSelectedAndReady] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusModified];
-	if (theAction == @selector(mainMenuDiffAllFiles:))					return [myDocument repositoryIsSelectedAndReady] && [self repositoryHasFilesWhichContainStatus:eHGStatusModified];
-	if (theAction == @selector(toolbarDiffFiles:))						return [myDocument repositoryIsSelectedAndReady] && [self toolbarActionAppliesToFilesWith:eHGStatusModified];
+	if (theAction == @selector(mainMenuDiffSelectedFiles:))				return [myDocument localRepoIsSelectedAndReady] && [self statusOfChosenPathsInFilesContain:eHGStatusModified];
+	if (theAction == @selector(mainMenuDiffAllFiles:))					return [myDocument localRepoIsSelectedAndReady] && [self repositoryHasFilesWhichContainStatus:eHGStatusModified];
+	if (theAction == @selector(toolbarDiffFiles:))						return [myDocument localRepoIsSelectedAndReady] && [self toolbarActionAppliesToFilesWith:eHGStatusModified];
 	
-	if (theAction == @selector(mainMenuOpenSelectedFilesInFinder:))		return [myDocument repositoryIsSelectedAndReady] && [self nodesAreChosenInBrowserWhichAreSnapshotable];
-	if (theAction == @selector(mainMenuRevealSelectedFilesInFinder:))	return [myDocument repositoryIsSelectedAndReady];
-	if (theAction == @selector(mainMenuOpenTerminalHere:))				return [myDocument repositoryIsSelectedAndReady];
-	if (theAction == @selector(mainMenuDiffSelectedFiles:))				return [myDocument repositoryIsSelectedAndReady] && [self pathsAreSelectedInBrowserWhichContainStatus:eHGStatusModified];
-	if (theAction == @selector(mainMenuDiffAllFiles:))					return [myDocument repositoryIsSelectedAndReady] && [self repositoryHasFilesWhichContainStatus:eHGStatusModified];
+	if (theAction == @selector(mainMenuOpenSelectedFilesInFinder:))		return [myDocument localRepoIsSelectedAndReady] && [self nodesAreChosenInFilesWhichAreSnapshotable];
+	if (theAction == @selector(mainMenuRevealSelectedFilesInFinder:))	return [myDocument localRepoIsSelectedAndReady];
+	if (theAction == @selector(mainMenuOpenTerminalHere:))				return [myDocument localRepoIsSelectedAndReady];
+	if (theAction == @selector(mainMenuDiffSelectedFiles:))				return [myDocument localRepoIsSelectedAndReady] && [self statusOfChosenPathsInFilesContain:eHGStatusModified];
+	if (theAction == @selector(mainMenuDiffAllFiles:))					return [myDocument localRepoIsSelectedAndReady] && [self repositoryHasFilesWhichContainStatus:eHGStatusModified];
 
-	if (theAction == @selector(differencesMenuOpenSelectedFilesInFinder:))	return [myDocument repositoryIsSelectedAndReady] && [self nodesAreChosenInBrowserWhichAreSnapshotable];
+	if (theAction == @selector(differencesMenuAnnotateBaseRevisionOfSelectedFiles:))	return [myDocument localRepoIsSelectedAndReady] && [self nodesAreChosenInFilesWhichAreSnapshotable];
+	if (theAction == @selector(differencesMenuAnnotateCompareRevisionOfSelectedFiles:))	return [myDocument localRepoIsSelectedAndReady] && [self nodesAreChosenInFilesWhichAreSnapshotable];
+	if (theAction == @selector(differencesMenuOpenSelectedFilesInFinder:))				return [myDocument localRepoIsSelectedAndReady] && [self nodesAreChosenInFilesWhichAreSnapshotable];
 
-	return [myDocument validateUserInterfaceItem:anItem];
+	return NO;
 }
-
-
 
 
 
