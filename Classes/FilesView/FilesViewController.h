@@ -43,7 +43,7 @@
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 
-@interface FilesView : NSView <AccessesDocument, ControllerForFSBrowser, NSUserInterfaceValidations>
+@interface FilesView : NSView <AccessesDocument, ControllerForFSViewer, NSUserInterfaceValidations>
 {
 	IBOutlet FilesViewController* parentContoller;
 	IBOutlet FSViewer*		theFSViewer;

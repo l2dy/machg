@@ -14,10 +14,10 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK:  ControllerForFSBrowser
+// MARK:  ControllerForFSViewer
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // All Controllers which embed a FSBrowser must conform to this protocol
-@protocol ControllerForFSBrowser <NSObject>
+@protocol ControllerForFSViewer <NSObject>
 - (NSArray*)		statusLinesForPaths:(NSArray*)absolutePaths withRootPath:(NSString*)rootPath;
 - (NSArray*)		resolveStatusLines: (NSArray*)absolutePaths withRootPath:(NSString*)rootPath;
 - (BOOL)			writeRowsWithIndexes:(NSIndexSet*)rowIndexes inColumn:(NSInteger)column toPasteboard:(NSPasteboard*)pasteboard;	// dragging support
@@ -108,7 +108,7 @@
 
 @interface FSViewer : NSBox <FSViewerProtocol>
 {
-	IBOutlet id <ControllerForFSBrowser> parentController;
+	IBOutlet id <ControllerForFSViewer> parentController;
 	IBOutlet NSMenu* contextualMenuForFSViewerPane;
 	
 	NSString*		absolutePathOfRepositoryRoot_;

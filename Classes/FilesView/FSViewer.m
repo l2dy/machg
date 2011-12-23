@@ -571,9 +571,9 @@
 		}
 
 		if ([newStatusLines count] > 0)
-			newRootNode = [newRootNode fleshOutTreeWithStatusLines:newStatusLines withParentBrowser:self];
+			newRootNode = [newRootNode fleshOutTreeWithStatusLines:newStatusLines withParentViewer:self];
 		if ([newResolveStatusLines count] > 0)
-			newRootNode = [newRootNode fleshOutTreeWithStatusLines:newResolveStatusLines withParentBrowser:self];
+			newRootNode = [newRootNode fleshOutTreeWithStatusLines:newResolveStatusLines withParentViewer:self];
 
 		dispatch_group_async(group, mainQueue(), ^{
 			// In the mean time, only if our results are still relevant (ie the root has not changed) then switch to the new root

@@ -26,10 +26,8 @@
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
-// -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 // MARK: FSBrowserCell
-// -----------------------------------------------------------------------------------------------------------------------------------------
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 @implementation FSBrowserCell
@@ -47,7 +45,7 @@
 }
 
 
-- (FSViewer*)	parentBrowser { return [nodeInfo parentBrowser]; }
+- (FSViewer*) parentFSViewer { return [nodeInfo parentFSViewer]; }
 
 
 - (void) loadCellContents
@@ -192,7 +190,7 @@
 	if ([nodeInfo isDirty])
 		return dirtyAttributes;
 	
-	if ([[nodeInfo parentBrowser] areNodesVirtual])
+	if ([[nodeInfo parentFSViewer] areNodesVirtual])
 		return virtualAttributes;
 	
 	if ([nodeInfo isLink])

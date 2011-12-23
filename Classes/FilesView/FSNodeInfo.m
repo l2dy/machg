@@ -15,7 +15,7 @@
 
 @implementation FSNodeInfo
 
-@synthesize parentBrowser;
+@synthesize parentFSViewer;
 @synthesize relativePath;
 @synthesize absolutePath;
 @synthesize childNodes;
@@ -135,30 +135,30 @@
 	return self;
 }
 
-- (FSNodeInfo*) initNewWithParent:(FSNodeInfo*)parent atRelativePath:(NSString*)path withParentBrowser:(FSViewer*)browser
+- (FSNodeInfo*) initNewWithParent:(FSNodeInfo*)parent atRelativePath:(NSString*)path withParentViewer:(FSViewer*)viewer
 {
+	parentFSViewer = viewer;
 	relativePath = path;
 	absolutePath = [[parent absolutePath] stringByAppendingPathComponent:relativePath];
 	childNodes = nil;
 	sortedChildNodeKeys = nil;
-	hgStatus = eHGStatusNoStatus;
 	haveComputedTheProperties = NO;
-	parentBrowser = browser;
+	hgStatus = eHGStatusNoStatus;
+	maxIconCountOfSubitems_ = notYetComputedIconCount;
 	return self;
 }
 
 
 - (FSNodeInfo*) initWithNode:(FSNodeInfo*)node
 {
-	parentBrowser = [node parentBrowser];
+	parentFSViewer = [node parentFSViewer];
 	relativePath = [node relativePath];
 	absolutePath = [node absolutePath];
-	haveComputedTheProperties = NO;
-	maxIconCountOfSubitems_ = notYetComputedIconCount;
-	hgStatus = eHGStatusNoStatus;
-	sortedChildNodeKeys = nil;
-
 	childNodes = [NSMutableDictionary dictionaryWithDictionary:[node childNodes]];
+	sortedChildNodeKeys = nil;
+	haveComputedTheProperties = NO;
+	hgStatus = eHGStatusNoStatus;
+	maxIconCountOfSubitems_ = notYetComputedIconCount;
 	return self;
 }
 
@@ -350,7 +350,7 @@
 }
 
 
-- (FSNodeInfo*) fleshOutTreeWithStatusLines:(NSArray*)hgStatusLines withParentBrowser:(FSViewer*)browser
+- (FSNodeInfo*) fleshOutTreeWithStatusLines:(NSArray*)hgStatusLines withParentViewer:(FSViewer*)viewer
 {
 	FSNodeInfo* newRoot = self;
 	for (NSString* statusLine in hgStatusLines)
@@ -386,7 +386,7 @@
 			}
 			else
 			{
-				FSNodeInfo* newChild = [[FSNodeInfo alloc] initNewWithParent:parent atRelativePath:partName withParentBrowser:browser];
+				FSNodeInfo* newChild = [[FSNodeInfo alloc] initNewWithParent:parent atRelativePath:partName withParentViewer:viewer];
 				[theChildNodes setObject:newChild forKey:partName];
 				parent = newChild;
 			}

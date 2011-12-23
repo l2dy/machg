@@ -41,7 +41,7 @@
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 
-@interface DifferencesView : NSView < ControllerForLogTableView, ControllerForFSBrowser, NSUserInterfaceValidations >
+@interface DifferencesView : NSView < ControllerForLogTableView, ControllerForFSViewer, NSUserInterfaceValidations >
 {
 	IBOutlet DifferencesViewController*  parentController;
 	MacHgDocument*				myDocument;
