@@ -2305,38 +2305,6 @@
         </object>
         <object class="IBConnectionRecord">
           <object class="IBActionConnection" key="connection">
-            <string key="label">mainMenuAddLocalRepositoryRef:</string>
-            <reference key="source" ref="613418571"/>
-            <reference key="destination" ref="1092"/>
-          </object>
-          <int key="connectionID">100470</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBActionConnection" key="connection">
-            <string key="label">mainMenuAddServerRepositoryRef:</string>
-            <reference key="source" ref="613418571"/>
-            <reference key="destination" ref="828744095"/>
-          </object>
-          <int key="connectionID">100471</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBActionConnection" key="connection">
-            <string key="label">mainMenuAddNewSidebarGroupItem:</string>
-            <reference key="source" ref="613418571"/>
-            <reference key="destination" ref="509607063"/>
-          </object>
-          <int key="connectionID">100472</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBActionConnection" key="connection">
-            <string key="label">mainMenuRemoveSidebarItems:</string>
-            <reference key="source" ref="613418571"/>
-            <reference key="destination" ref="255517966"/>
-          </object>
-          <int key="connectionID">100473</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBActionConnection" key="connection">
             <string key="label">mainMenuConfigureRepositoryRef:</string>
             <reference key="source" ref="613418571"/>
             <reference key="destination" ref="848289603"/>
@@ -2374,6 +2342,38 @@
             <reference key="destination" ref="77472598"/>
           </object>
           <int key="connectionID">100478</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">contextualMenuAddLocalRepositoryRef:</string>
+            <reference key="source" ref="613418571"/>
+            <reference key="destination" ref="1092"/>
+          </object>
+          <int key="connectionID">100480</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">contextualMenuAddServerRepositoryRef:</string>
+            <reference key="source" ref="613418571"/>
+            <reference key="destination" ref="828744095"/>
+          </object>
+          <int key="connectionID">100481</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">contextualMenuAddNewSidebarGroupItem:</string>
+            <reference key="source" ref="613418571"/>
+            <reference key="destination" ref="509607063"/>
+          </object>
+          <int key="connectionID">100482</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">contextualMenuRemoveSidebarItems:</string>
+            <reference key="source" ref="613418571"/>
+            <reference key="destination" ref="255517966"/>
+          </object>
+          <int key="connectionID">100483</int>
         </object>
       </object>
       <object class="IBMutableOrderedSet" key="objectRecords">
@@ -3438,7 +3438,7 @@
         </object>
       </object>
       <nil key="sourceID"/>
-      <int key="maxID">100478</int>
+      <int key="maxID">100483</int>
     </object>
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -5111,6 +5111,17 @@
             <bool key="EncodedWithXMLCoder">YES</bool>
             <object class="NSArray" key="dict.sortedKeys">
               <bool key="EncodedWithXMLCoder">YES</bool>
+              <string>contextualMenuAddLocalRepositoryRef:</string>
+              <string>contextualMenuAddNewSidebarGroupItem:</string>
+              <string>contextualMenuAddServerRepositoryRef:</string>
+              <string>contextualMenuCloneRepositoryRef:</string>
+              <string>contextualMenuConfigureLocalRepositoryRef:</string>
+              <string>contextualMenuConfigureRepositoryRef:</string>
+              <string>contextualMenuConfigureServerRepositoryRef:</string>
+              <string>contextualMenuOpenTerminalHere:</string>
+              <string>contextualMenuRemoveSidebarItem:</string>
+              <string>contextualMenuRemoveSidebarItems:</string>
+              <string>contextualMenuRevealRepositoryInFinder:</string>
               <string>mainMenuAddNewSidebarGroupItem:</string>
               <string>mainMenuConfigureLocalRepositoryRef:</string>
               <string>mainMenuConfigureRepositoryRef:</string>
@@ -5123,6 +5134,17 @@
             </object>
             <object class="NSMutableArray" key="dict.values">
               <bool key="EncodedWithXMLCoder">YES</bool>
+              <string>id</string>
+              <string>id</string>
+              <string>id</string>
+              <string>id</string>
+              <string>id</string>
+              <string>id</string>
+              <string>id</string>
+              <string>id</string>
+              <string>id</string>
+              <string>id</string>
+              <string>id</string>
               <string>id</string>
               <string>id</string>
               <string>id</string>
@@ -5138,6 +5160,17 @@
             <bool key="EncodedWithXMLCoder">YES</bool>
             <object class="NSArray" key="dict.sortedKeys">
               <bool key="EncodedWithXMLCoder">YES</bool>
+              <string>contextualMenuAddLocalRepositoryRef:</string>
+              <string>contextualMenuAddNewSidebarGroupItem:</string>
+              <string>contextualMenuAddServerRepositoryRef:</string>
+              <string>contextualMenuCloneRepositoryRef:</string>
+              <string>contextualMenuConfigureLocalRepositoryRef:</string>
+              <string>contextualMenuConfigureRepositoryRef:</string>
+              <string>contextualMenuConfigureServerRepositoryRef:</string>
+              <string>contextualMenuOpenTerminalHere:</string>
+              <string>contextualMenuRemoveSidebarItem:</string>
+              <string>contextualMenuRemoveSidebarItems:</string>
+              <string>contextualMenuRevealRepositoryInFinder:</string>
               <string>mainMenuAddNewSidebarGroupItem:</string>
               <string>mainMenuConfigureLocalRepositoryRef:</string>
               <string>mainMenuConfigureRepositoryRef:</string>
@@ -5150,6 +5183,50 @@
             </object>
             <object class="NSMutableArray" key="dict.values">
               <bool key="EncodedWithXMLCoder">YES</bool>
+              <object class="IBActionInfo">
+                <string key="name">contextualMenuAddLocalRepositoryRef:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">contextualMenuAddNewSidebarGroupItem:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">contextualMenuAddServerRepositoryRef:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">contextualMenuCloneRepositoryRef:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">contextualMenuConfigureLocalRepositoryRef:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">contextualMenuConfigureRepositoryRef:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">contextualMenuConfigureServerRepositoryRef:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">contextualMenuOpenTerminalHere:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">contextualMenuRemoveSidebarItem:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">contextualMenuRemoveSidebarItems:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">contextualMenuRevealRepositoryInFinder:</string>
+                <string key="candidateClassName">id</string>
+              </object>
               <object class="IBActionInfo">
                 <string key="name">mainMenuAddNewSidebarGroupItem:</string>
                 <string key="candidateClassName">id</string>

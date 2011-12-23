@@ -1,6 +1,5 @@
 //
-//  SidebarNode.m
-//  Sidebar
+//  Sidebar.m
 //
 //  Copyright 2009 Jason Harris. All rights reserved.
 //  This was originally based on some code by Matteo Bertozzi on 3/8/09.
@@ -41,6 +40,20 @@
 - (IBAction)	mainMenuRevealRepositoryInFinder:(id)sender;
 - (IBAction)	mainMenuOpenTerminalHere:(id)sender;
 
+- (IBAction)	contextualMenuAddLocalRepositoryRef:(id)sender;
+- (IBAction)	contextualMenuAddServerRepositoryRef:(id)sender;
+- (IBAction)	contextualMenuAddNewSidebarGroupItem:(id)sender;
+- (IBAction)	contextualMenuConfigureRepositoryRef:(id)sender;
+- (IBAction)	contextualMenuConfigureLocalRepositoryRef:(id)sender;
+- (IBAction)	contextualMenuConfigureServerRepositoryRef:(id)sender;
+- (IBAction)	contextualMenuAddNewSidebarGroupItem:(id)sender;
+- (IBAction)	contextualMenuCloneRepositoryRef:(id)sender;
+- (IBAction)	contextualMenuRemoveSidebarItem:(id)sender;
+- (IBAction)	contextualMenuRemoveSidebarItems:(id)sender;
+- (IBAction)	contextualMenuRevealRepositoryInFinder:(id)sender;
+- (IBAction)	contextualMenuOpenTerminalHere:(id)sender;
+
+
 - (IBAction)	reloadSidebarData:(id)sender;
 
 
@@ -50,21 +63,29 @@
 - (void) removeNodeFromSidebar:(SidebarNode*)node;
 - (NSArray*) serversIfAvailable:(NSString*)file includingAlreadyPresent:(BOOL)includeAlreadyPresent;
 
-// Selection Methods
-- (BOOL) multipleNodesAreSelected;
+
+// Access Selection Methods
 - (BOOL) localRepoIsSelected;
 - (BOOL) localRepoIsChosen;
 - (BOOL) localOrServerRepoIsSelected;
 - (BOOL) localOrServerRepoIsChosen;
 - (BOOL) serverRepoIsSelected;
+- (BOOL) multipleNodesAreSelected;
+- (BOOL) multipleNodesAreChosen;
+- (SidebarNode*) selectedNode;
+- (SidebarNode*) chosenNode;
+- (SidebarNode*) clickedNode;
+- (NSArray*)	 selectedNodes;
+- (NSArray*)	 chosenNodes;
+- (SidebarNodeKind) combinedKindOfSelectedNodes;
+- (SidebarNodeKind) combinedKindOfChosenNodes;
+- (SidebarNode*)	 lastSectionNode;
+
+
+// Modify Selection Methods
 - (void) selectNode:(SidebarNode*)node;
 - (void) selectNodes:(NSArray*)nodes;
 - (void) setRootAndUpdate:(SidebarNode*)root;
-- (SidebarNode*) selectedNode;
-- (SidebarNode*) chosenNode;
-- (NSArray*)     selectedNodes;
-- (SidebarNode*) lastSectionNode;
-
 
 
 // Expand/Collapse Methods

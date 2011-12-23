@@ -262,10 +262,12 @@ typedef enum
 // Represents the type of a node in the sidebar
 typedef enum
 {
-	kSidebarNodeKindSection				= 0x01,
-	kSidebarNodeKindFolder				= 0x02,
-	kSidebarNodeKindLocalRepositoryRef	= 0x03,
-	kSidebarNodeKindServerRepositoryRef	= 0x04
+	kSidebarNodeKindNone				= 0,
+	kSidebarNodeKindSection				= 1<<1,
+	kSidebarNodeKindFolder				= 1<<2,
+	kSidebarNodeKindLocalRepositoryRef	= 1<<3,
+	kSidebarNodeKindServerRepositoryRef	= 1<<4,
+	kSidebarNodeKindRepository			= kSidebarNodeKindLocalRepositoryRef | kSidebarNodeKindServerRepositoryRef
 } SidebarNodeKind;
 
 

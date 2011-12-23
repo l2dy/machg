@@ -1,6 +1,5 @@
 //
 //  SidebarNode.m
-//  Sidebar
 //
 //  Original version created by Matteo Bertozzi on 3/8/09.
 //  Copyright 2009 Matteo Bertozzi. All rights reserved.
@@ -152,6 +151,7 @@
 - (BOOL) isDraggable								{ return ![self isSectionNode]; }
 - (BOOL) isRepositoryRef							{ return [self isLocalRepositoryRef] || [self isServerRepositoryRef]; }
 
+
 - (NSAttributedString*) attributedStringForNodeAndSelected:(BOOL)selected
 {
 	static NSShadow* noShadow = nil;
@@ -244,13 +244,42 @@
 // MARK: Saving & Loading
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+// Originally I stored the node kind as a sequential list, however with multiple selections it's nice to have a bitfield, to be
+// able to represent the type of multiple sidebar nodes. Thus translate from MacHg's internal use of a new enum bitfield and the
+// historical storage of the node kind. 
+NSInteger storedNodeTypeFromNodeKind(SidebarNodeKind nodeKind)
+{
+	switch (nodeKind)
+	{
+		case kSidebarNodeKindSection:				return 0x01;
+		case kSidebarNodeKindFolder:				return 0x02;
+		case kSidebarNodeKindLocalRepositoryRef:	return 0x03;
+		case kSidebarNodeKindServerRepositoryRef:	return 0x04;
+		default:									return 0x00;
+	}
+}
+
+SidebarNodeKind nodeKindFromStoredNodeType(NSInteger storedType)
+{
+	switch (storedType)
+	{
+		case 0x01:	return kSidebarNodeKindSection;
+		case 0x02:	return kSidebarNodeKindFolder;
+		case 0x03:	return kSidebarNodeKindLocalRepositoryRef;
+		case 0x04:	return kSidebarNodeKindServerRepositoryRef;
+		default:	return kSidebarNodeKindNone;
+	}
+}
+
+
+
 - (void) encodeWithCoder:(NSCoder*)coder
 {
 	// We don't include the icon here since it takes up a lot of room. Eg a document with only 8 repositories has a size of 768K
 	// if the icons are included and 8K if the are omitted, so we leave the icons out and just reload them. Of course if the
 	// files are no longer there then the icon will be different than the original icon.
-	
-	[coder encodeInt:nodeKind forKey:@"nodeType"];
+
+	[coder encodeInt:storedNodeTypeFromNodeKind(nodeKind) forKey:@"nodeType"];
 	[coder encodeObject:children forKey:@"children"];
 	[coder encodeObject:shortName forKey:@"caption"];
 	[coder encodeBool:isExpanded forKey:@"nodeIsExpanded"];
@@ -269,7 +298,7 @@
 - (id) initWithCoder:(NSCoder*)coder
 {
 	[super init];
-	nodeKind	= [coder decodeIntForKey:@"nodeType"];
+	nodeKind	= nodeKindFromStoredNodeType([coder decodeIntForKey:@"nodeType"]);
 	children	= [coder decodeObjectForKey:@"children"];
 	shortName	= [coder decodeObjectForKey:@"caption"];
 	isExpanded	= [coder decodeBoolForKey:@"nodeIsExpanded"];
