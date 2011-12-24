@@ -352,7 +352,6 @@
 - (IBAction)	mainMenuAddLocalRepositoryRef:(id)sender;
 - (IBAction)	mainMenuAddServerRepositoryRef:(id)sender;
 - (IBAction)	mainMenuAddNewSidebarGroupItem:(id)sender;
-- (IBAction)	mainMenuRemoveSidebarItem:(id)sender;
 - (IBAction)	mainMenuRemoveSidebarItems:(id)sender;
 - (IBAction)	mainMenuConfigureRepositoryRef:(id)sender;
 - (IBAction)	mainMenuConfigureLocalRepositoryRef:(id)sender;
@@ -409,6 +408,7 @@
 - (BOOL)		localOrServerRepoIsSelectedAndReady;
 - (BOOL)		toolbarActionAppliesToFilesWith:(HGStatus)status;
 - (BOOL)		validateAndSwitchMenuForCommitAllFiles:(id)menuItem;
+- (BOOL)		validateAndSwitchMenuForRemoveSidebarItems:(id)menuItem;
 
 
 // Saving

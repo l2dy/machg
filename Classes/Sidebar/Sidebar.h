@@ -20,6 +20,11 @@
 	NSMutableDictionary*	outgoingCounts;
 	NSMutableDictionary*	incomingCounts;
 
+	// Customized RemoveSidebar items Alert
+	IBOutlet NSView*		removeSidebarItemsAlertAccessoryView;
+	IBOutlet NSButton*		removeSidebarItemsAlertAccessoryDeleteReposOnDiskCheckBox;
+	IBOutlet NSButton*		removeSidebarItemsAlertAccessoryAlertSuppressionCheckBox;	
+	
   @private
 	SingleTimedQueue*		queueForAutomaticIncomingComputation_;
 	SingleTimedQueue*		queueForAutomaticOutgoingComputation_;
@@ -35,7 +40,6 @@
 - (IBAction)	mainMenuConfigureLocalRepositoryRef:(id)sender;
 - (IBAction)	mainMenuConfigureServerRepositoryRef:(id)sender;
 - (IBAction)	mainMenuAddNewSidebarGroupItem:(id)sender;
-- (IBAction)	mainMenuRemoveSidebarItem:(id)sender;
 - (IBAction)	mainMenuRemoveSidebarItems:(id)sender;
 - (IBAction)	mainMenuRevealRepositoryInFinder:(id)sender;
 - (IBAction)	mainMenuOpenTerminalHere:(id)sender;
@@ -48,7 +52,6 @@
 - (IBAction)	contextualMenuConfigureServerRepositoryRef:(id)sender;
 - (IBAction)	contextualMenuAddNewSidebarGroupItem:(id)sender;
 - (IBAction)	contextualMenuCloneRepositoryRef:(id)sender;
-- (IBAction)	contextualMenuRemoveSidebarItem:(id)sender;
 - (IBAction)	contextualMenuRemoveSidebarItems:(id)sender;
 - (IBAction)	contextualMenuRevealRepositoryInFinder:(id)sender;
 - (IBAction)	contextualMenuOpenTerminalHere:(id)sender;
@@ -80,6 +83,7 @@
 - (SidebarNodeKind) combinedKindOfSelectedNodes;
 - (SidebarNodeKind) combinedKindOfChosenNodes;
 - (SidebarNode*)	 lastSectionNode;
+- (NSString*) menuTitleForRemoveSidebarItems;
 
 
 // Modify Selection Methods

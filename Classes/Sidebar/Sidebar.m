@@ -838,18 +838,8 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 
 		if ([self multipleNodesAreChosen])
 		{
-			NSString* title;
-			SidebarNodeKind kinds = [self combinedKindOfChosenNodes];
-			switch (kinds)
-			{
-				case kSidebarNodeKindSection:				title = @"Delete Groups";				break;
-				case kSidebarNodeKindLocalRepositoryRef:	title = @"Delete Local Repositories";	break;
-				case kSidebarNodeKindServerRepositoryRef:	title = @"Delete Server Repositories";	break;
-				case kSidebarNodeKindRepository:			title = @"Delete Repositories";			break;
-				default:											title = @"Delete Items";				break;
-			}
 			[theMenu addItem:[NSMenuItem separatorItem]];
-			[theMenu addItemWithTitle:title												action:@selector(contextualMenuRemoveSidebarItems:)				keyEquivalent:@""];
+			[theMenu addItemWithTitle:[self menuTitleForRemoveSidebarItems]				action:@selector(contextualMenuRemoveSidebarItems:)				keyEquivalent:@""];
 			return;
 		}
 
@@ -859,7 +849,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 			[theMenu addItem:[NSMenuItem separatorItem]];
 			[theMenu addItemWithTitle:fstr(@"Clone “%@”", [node shortName])				action:@selector(contextualMenuCloneRepositoryRef:)				keyEquivalent:@""];
 			[theMenu addItemWithTitle:fstr(@"Configure “%@”", [node shortName])			action:@selector(contextualMenuConfigureLocalRepositoryRef:)	keyEquivalent:@""];
-			[theMenu addItemWithTitle:fstr(@"Delete Reference “%@”", [node shortName])	action:@selector(contextualMenuRemoveSidebarItem:)				keyEquivalent:@""];
+			[theMenu addItemWithTitle:fstr(@"Delete Bookmark “%@”", [node shortName])	action:@selector(contextualMenuRemoveSidebarItems:)				keyEquivalent:@""];
 			[theMenu addItem:[NSMenuItem separatorItem]];
 			[theMenu addItemWithTitle:fstr(@"Reveal “%@” in Finder", [node shortName])	action:@selector(contextualMenuRevealRepositoryInFinder:)		keyEquivalent:@""];
 			[theMenu addItemWithTitle:@"Open Terminal Here"								action:@selector(contextualMenuOpenTerminalHere:)				keyEquivalent:@""];
@@ -871,14 +861,14 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 			[theMenu addItem:[NSMenuItem separatorItem]];
 			[theMenu addItemWithTitle:fstr(@"Clone “%@”", [node shortName])				action:@selector(contextualMenuCloneRepositoryRef:)				keyEquivalent:@""];
 			[theMenu addItemWithTitle:fstr(@"Configure “%@”", [node shortName])			action:@selector(contextualMenuConfigureServerRepositoryRef:)	keyEquivalent:@""];
-			[theMenu addItemWithTitle:fstr(@"Delete Reference “%@”", [node shortName])	action:@selector(contextualMenuRemoveSidebarItem:)				keyEquivalent:@""];
+			[theMenu addItemWithTitle:fstr(@"Delete Bookmark “%@”", [node shortName])	action:@selector(contextualMenuRemoveSidebarItems:)				keyEquivalent:@""];
 			return;
 		}
 
 		if (node != nil)
 		{
 			[theMenu addItem:[NSMenuItem separatorItem]];
-			[theMenu addItemWithTitle:fstr(@"Delete Group “%@”", [node shortName])		action:@selector(contextualMenuRemoveSidebarItem:)				keyEquivalent:@""];
+			[theMenu addItemWithTitle:fstr(@"Delete Group “%@”", [node shortName])		action:@selector(contextualMenuRemoveSidebarItems:)				keyEquivalent:@""];
 			return;
 		}
     }
@@ -902,7 +892,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	SEL theAction = [anItem action];
 	
 	if (theAction == @selector(mainMenuAddNewSidebarGroupItem:))			return ![myDocument showingASheet];
-
+	if (theAction == @selector(mainMenuRemoveSidebarItems:))				return [myDocument validateAndSwitchMenuForRemoveSidebarItems:anItem];
 	if (theAction == @selector(mainMenuConfigureRepositoryRef:))			return [myDocument localOrServerRepoIsChosenAndReady];
 	if (theAction == @selector(mainMenuConfigureLocalRepositoryRef:))		return [myDocument localRepoIsChosenAndReady];
 	if (theAction == @selector(mainMenuConfigureServerRepositoryRef:))		return [myDocument localOrServerRepoIsChosenAndReady];
@@ -915,7 +905,6 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	if (theAction == @selector(contextualMenuConfigureServerRepositoryRef:))return [myDocument localOrServerRepoIsChosenAndReady];
 	if (theAction == @selector(contextualMenuAddNewSidebarGroupItem:))		return ![myDocument showingASheet];
 	if (theAction == @selector(contextualMenuCloneRepositoryRef:))			return [myDocument localOrServerRepoIsChosenAndReady];
-	if (theAction == @selector(contextualMenuRemoveSidebarItem:))			return ![myDocument showingASheet] && [self chosenNode];
 	if (theAction == @selector(contextualMenuRemoveSidebarItems:))			return ![myDocument showingASheet] && [self chosenNode];
 	if (theAction == @selector(contextualMenuRevealRepositoryInFinder:))	return [myDocument localOrServerRepoIsChosenAndReady];
 	if (theAction == @selector(contextualMenuOpenTerminalHere:))			return [myDocument localOrServerRepoIsChosenAndReady];
@@ -943,7 +932,6 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 - (IBAction) contextualMenuConfigureServerRepositoryRef:(id)sender	{ [myDocument mainMenuConfigureServerRepositoryRef:sender]; }
 - (IBAction) contextualMenuAddNewSidebarGroupItem:(id)sender		{ [myDocument mainMenuAddNewSidebarGroupItem:sender]; }
 - (IBAction) contextualMenuCloneRepositoryRef:(id)sender			{ [myDocument mainMenuCloneRepository:sender]; }
-- (IBAction) contextualMenuRemoveSidebarItem:(id)sender				{ [self mainMenuRemoveSidebarItem:sender]; }
 - (IBAction) contextualMenuRemoveSidebarItems:(id)sender			{ [self mainMenuRemoveSidebarItems:sender]; }
 - (IBAction) contextualMenuRevealRepositoryInFinder:(id)sender		{ [self mainMenuRevealRepositoryInFinder:sender]; }
 - (IBAction) contextualMenuOpenTerminalHere:(id)sender				{ [self mainMenuOpenTerminalHere:sender]; }
@@ -984,150 +972,84 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	[self reloadData];
 }
 
-
-- (IBAction) mainMenuRemoveSidebarItem:(id)sender
+- (NSString*) menuTitleForRemoveSidebarItems
 {
-	SidebarNode* node = [self chosenNode];
-	if (!node)
-		return;
-
-	BOOL deleteRepositoryAsWell = NO;
-	if (DisplayWarningForRepositoryDeletionFromDefaults() && [node isExistentLocalRepositoryRef])
-	{
-		NSString* subMessage = fstr(@"Are you sure you want to delete the bookmark “%@”?", [node shortName]);
-		int result = RunCriticalAlertPanelOptionsWithSuppression( @"Delete Repository Bookmark", subMessage, @"Delete Bookmark", @"Cancel", @"Delete Bookmark and Repository", MHGDisplayWarningForRepositoryDeletion);
-		if (result == NSAlertSecondButtonReturn)
-			return;
-		if (result == NSAlertThirdButtonReturn)
-			deleteRepositoryAsWell = YES;
-	}
-	else if (DisplayWarningForRepositoryDeletionFromDefaults() && [node isServerRepositoryRef])
-	{
-		NSString* subMessage = fstr(@"Are you sure you want to delete the server bookmark “%@”?", [node shortName]);
-		int result = RunCriticalAlertPanelOptionsWithSuppression( @"Delete Repository Bookmark", subMessage, @"Delete Bookmark", @"Cancel", nil, MHGDisplayWarningForRepositoryDeletion);
-		if (result == NSAlertSecondButtonReturn)
-			return;
-	}
-	else if (DisplayWarningForRepositoryDeletionFromDefaults() && [node isSectionNode])
-	{
-		NSString* subMessage = fstr(@"Are you sure you want to delete the group “%@”?", [node shortName]);
-		int result = RunCriticalAlertPanelOptionsWithSuppression( @"Delete Group", subMessage, @"Delete Group", @"Cancel", nil, MHGDisplayWarningForRepositoryDeletion);
-		if (result == NSAlertSecondButtonReturn)
-			return;
-	}
-	else if (!DisplayWarningForRepositoryDeletionFromDefaults() && [node isExistentLocalRepositoryRef])
-	{
-		NSString* subMessage = fstr(@"The bookmark “%@” will be deleted. Do you also want to move to the trash the underlying repository located at: \n   %@", [node shortName],[node path]);
-		NSInteger result = NSRunCriticalAlertPanel(@"Delete Repository?", subMessage, @"Leave Repository Alone", @"Delete Repository", nil);
-		if (result == NSAlertAlternateReturn)
-			deleteRepositoryAsWell = YES;
-	}
-
-	NSArray* nodes = [self selectedNodes];
-	BOOL deletingSelectedNode = [nodes containsObject:node];
-	if (deleteRepositoryAsWell)
-	{
-		moveFilesToTheTrash([NSArray arrayWithObject:[node path]]);
-		[myDocument removeAllUndoActionsForDocument];
-		[myDocument updateChangeCount:NSChangeDone];
-		[self removeNodeFromSidebar:node];
-		if (deletingSelectedNode)
-			[self deselectAll:self];
-		[self reloadData];
-		if (!deletingSelectedNode)
-			[self selectNodes:nodes];
-		if (deletingSelectedNode)
-			[myDocument discardCurrentRepository];
-		[myDocument saveDocumentIfNamed];
-		return;
-	};
+	// Do short circut for the really common case
+	if ([self numberOfSelectedRows] == 1 && [[self selectedNode] isLocalRepositoryRef])
+		return @"Delete Repository Bookmark";
 	
-
-	[[self prepareUndoWithTarget:self] setRootAndUpdate:[root_ copyNodeTree]];									// With the undo restore the root node tree
-	[[self undoManager] setActionName:@"Delete Item"];
-	NSMutableDictionary* connectionsCopy = [[myDocument connections] mutableCopy];
-	[[self prepareUndoWithTarget:myDocument] setConnections:connectionsCopy];
-	[self removeNodeFromSidebar:node];
-	if (deletingSelectedNode)
-		[self deselectAll:self];
-	[self reloadData];
-	if (!deletingSelectedNode)
-		[self selectNodes:nodes];
-	[myDocument saveDocumentIfNamed];
-	if (deletingSelectedNode)
-		[myDocument discardCurrentRepository];
+	NSArray* nodes = [self selectedNodes];
+	if (IsEmpty(nodes))
+		return @"Delete Repository Item";
+	NSInteger localRepoCount = 0;
+	NSInteger serverRepoCount = 0;
+	NSInteger sectionNodeCount = 0;
+	NSInteger nodeCount = [nodes count];
+	for (SidebarNode* node in nodes)
+	{
+		if		([node isLocalRepositoryRef]) localRepoCount++;
+		else if ([node isServerRepositoryRef]) serverRepoCount++;
+		else if ([node isSectionNode]) sectionNodeCount++;
+	}
+	if (sectionNodeCount == nodeCount && nodeCount == 1) return @"Delete Group";
+	if (sectionNodeCount == nodeCount && nodeCount > 1)  return @"Delete Groups";
+		
+	return fstr(@"Delete Repository %@%@",  (sectionNodeCount > 0) ? @"Item" : @"Bookmark",  (nodeCount > 1) ? @"s" : @"");
 }
-
 
 - (IBAction) mainMenuRemoveSidebarItems:(id)sender
 {
 	NSArray* nodes = [self chosenNodes];
 	if (IsEmpty(nodes))
 		{ NSBeep(); return; }
-	if ([nodes count] == 1)
-	{
-		[self mainMenuRemoveSidebarItem:sender];
-		return;
-	}
-	
+
+	NSInteger localRepoCount = 0;
+	NSInteger serverRepoCount = 0;
+	NSInteger sectionNodeCount = 0;
+	NSInteger nodeCount = [nodes count];
 	NSMutableArray*  existentLocalRepositories = [[NSMutableArray alloc]init];
 	for (SidebarNode* node in nodes)
+	{
 		if ([node isExistentLocalRepositoryRef])
 			if (![existentLocalRepositories containsObject:[node path]])
 				[existentLocalRepositories addObject:[node path]];
+		if ([node isLocalRepositoryRef]) localRepoCount++;
+		if ([node isServerRepositoryRef]) serverRepoCount++;
+		if ([node isSectionNode]) sectionNodeCount++;
+	}
 	
-	NSString* listedRepositories = [existentLocalRepositories componentsJoinedByString:@"\n\t"];
-	
+	NSInteger repoCount = localRepoCount + serverRepoCount;
+
 	BOOL deleteRepositoriesAsWell = NO;
-	if (DisplayWarningForRepositoryDeletionFromDefaults() && [existentLocalRepositories count] == [nodes count])
+	if (DisplayWarningForRepositoryDeletionFromDefaults())
 	{
-		NSString* subMessage = fstr(@"Are you sure you want to delete the %d local repositories:\n\t%@", [nodes count], listedRepositories);
-		int result = RunCriticalAlertPanelOptionsWithSuppression( @"Delete Bookmarks", subMessage, @"Delete Items", @"Cancel", @"Delete Bookmarks and Local Repositories", MHGDisplayWarningForRepositoryDeletion);
-		if (result == NSAlertSecondButtonReturn)
+		NSString* title   = fstr(@"Delete Repository %@%@",  (sectionNodeCount > 0) ? @"Item" : @"Bookmark",  (nodeCount > 1) ? @"s" : @"");
+		NSString* okTitle = fstr(@"Delete %@%@",			 (sectionNodeCount > 0) ? @"Item" : @"Bookmark",  (nodeCount > 1) ? @"s" : @"");
+		
+		NSString* subMessage;
+		if		(localRepoCount   == nodeCount && nodeCount == 1)	subMessage = fstr(@"Are you sure you want to delete the local bookmark “%@”?", [[nodes firstObject] shortName]);
+		else if	(serverRepoCount  == nodeCount && nodeCount == 1)	subMessage = fstr(@"Are you sure you want to delete the server bookmark “%@”?", [[nodes firstObject] shortName]);
+		else if	(sectionNodeCount == nodeCount && nodeCount == 1)	subMessage = fstr(@"Are you sure you want to delete the group “%@”?", [[nodes firstObject] shortName]);		
+		else if	(repoCount        == nodeCount)						subMessage =      @"Are you sure you want to delete the chosen reopository bookmarks?";
+		else														subMessage =      @"Are you sure you want to delete the chosen items?";
+
+		int result;
+		if ([existentLocalRepositories count] == 0)
+			result = RunCriticalAlertPanelOptionsWithSuppression(title, subMessage, okTitle, @"Cancel", nil, MHGDisplayWarningForRepositoryDeletion);
+		else
+		{
+			NSAlert* alert = NewAlertPanel(title, subMessage, okTitle, @"Cancel", nil);
+			[removeSidebarItemsAlertAccessoryDeleteReposOnDiskCheckBox setState:NO];
+			[removeSidebarItemsAlertAccessoryAlertSuppressionCheckBox setState:!DisplayWarningForRepositoryDeletionFromDefaults()];
+			[alert setAccessoryView:removeSidebarItemsAlertAccessoryView];
+			result = [alert runModal];
+			if ([removeSidebarItemsAlertAccessoryAlertSuppressionCheckBox state] == NSOnState)
+				[[NSUserDefaults standardUserDefaults] setBool:NO forKey:MHGDisplayWarningForRepositoryDeletion];
+			deleteRepositoriesAsWell = [removeSidebarItemsAlertAccessoryDeleteReposOnDiskCheckBox state];
+		}
+		
+		if (result != NSAlertFirstButtonReturn)
 			return;
-		if (result == NSAlertThirdButtonReturn)
-			deleteRepositoriesAsWell = YES;
-	}
-	else if (DisplayWarningForRepositoryDeletionFromDefaults() && [existentLocalRepositories count] > 1)
-	{
-		NSString* subMessage = fstr(@"Are you sure you want to delete the %d items which include the repositories:\n\t%@", [nodes count], listedRepositories);
-		int result = RunCriticalAlertPanelOptionsWithSuppression( @"Delete Items", subMessage, @"Delete Items", @"Cancel", @"Delete Items and Local Repositories", MHGDisplayWarningForRepositoryDeletion);
-		if (result == NSAlertSecondButtonReturn)
-			return;
-		if (result == NSAlertThirdButtonReturn)
-			deleteRepositoriesAsWell = YES;
-	}
-	else if (DisplayWarningForRepositoryDeletionFromDefaults() && [existentLocalRepositories count] == 1)
-	{
-		NSString* subMessage = fstr(@"Are you sure you want to delete the %d items which include the repository:\n\t%@", [nodes count], [existentLocalRepositories firstObject]);
-		int result = RunCriticalAlertPanelOptionsWithSuppression( @"Delete Items", subMessage, @"Delete Items", @"Cancel", @"Delete Items and Local Repositories", MHGDisplayWarningForRepositoryDeletion);
-		if (result == NSAlertSecondButtonReturn)
-			return;
-		if (result == NSAlertThirdButtonReturn)
-			deleteRepositoriesAsWell = YES;
-	}
-	else if (DisplayWarningForRepositoryDeletionFromDefaults() && [existentLocalRepositories count] == 0)
-	{
-		NSString* subMessage = fstr(@"Are you sure you want to delete the %d items?", [nodes count]);
-		int result = RunCriticalAlertPanelOptionsWithSuppression( @"Delete Items", subMessage, @"Delete Items", @"Cancel", nil, MHGDisplayWarningForRepositoryDeletion);
-		if (result == NSAlertSecondButtonReturn)
-			return;
-		if (result == NSAlertThirdButtonReturn)
-			deleteRepositoriesAsWell = YES;
-	}
-	else if (!DisplayWarningForRepositoryDeletionFromDefaults() && [existentLocalRepositories count] > 1)
-	{
-		NSString* subMessage = fstr(@"The %d items will be deleted. Do you also want to move to the trash the following underlying repositories located at:\n\t%@", [nodes count], listedRepositories);
-		NSInteger result = NSRunCriticalAlertPanel(@"Delete Repositories?", subMessage, @"Leave Repositories Alone", @"Delete Repositories", nil);
-		if (result == NSAlertAlternateReturn)
-			deleteRepositoriesAsWell = YES;
-	}
-	else if (!DisplayWarningForRepositoryDeletionFromDefaults() && [existentLocalRepositories count] > 0)
-	{
-		NSString* subMessage = fstr(@"The %d items will be deleted. Do you also want to move to the trash the following underlying repository located at:\n\t%@", [nodes count], [existentLocalRepositories firstObject]);
-		NSInteger result = NSRunCriticalAlertPanel(@"Delete Repository?", subMessage, @"Leave Repository Alone", @"Delete Repository", nil);
-		if (result == NSAlertAlternateReturn)
-			deleteRepositoriesAsWell = YES;
 	}
 
 	if (deleteRepositoriesAsWell)
@@ -1145,7 +1067,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	};
 	
 	[[self prepareUndoWithTarget:self] setRootAndUpdate:[root_ copyNodeTree]];									// With the undo restore the root node tree
-	[[self undoManager] setActionName:@"Delete Items"];
+	[[self undoManager] setActionName:[self menuTitleForRemoveSidebarItems]];
 
 	NSMutableDictionary* connectionsCopy = [[myDocument connections] mutableCopy];
 	[[self prepareUndoWithTarget:myDocument] setConnections:connectionsCopy];

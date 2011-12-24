@@ -838,6 +838,7 @@
 - (BOOL) localOrServerRepoIsSelectedAndReady				{ return !showingSheet_ && [sidebar_ localOrServerRepoIsSelected]; }
 - (BOOL) localOrServerRepoIsChosenAndReady					{ return !showingSheet_ && [sidebar_ localOrServerRepoIsChosen]; }
 - (BOOL) toolbarActionAppliesToFilesWith:(HGStatus)status	{ return ([self statusOfChosenPathsInFilesContain:status] || (![self nodesAreChosenInFiles] && [self repositoryHasFilesWhichContainStatus:status])); }
+
 - (BOOL) validateAndSwitchMenuForCommitAllFiles:(id)anItem
 {
 	NSMenuItem* menuItem = DynamicCast(NSMenuItem, anItem);
@@ -853,6 +854,12 @@
 			(([self showingFilesView]       && [[[self theFilesView]       theFSViewer] nodesAreChosen]) ||
 			 ([self showingDifferencesView] && [[[self theDifferencesView] theFSViewer] nodesAreChosen]) ||
 			 ([self showingHistoryView]     && [[[self theHistoryView]   logTableView] revisionsAreSelected]));
+}
+- (BOOL) validateAndSwitchMenuForRemoveSidebarItems:(id)anItem
+{
+	NSMenuItem* menuItem = DynamicCast(NSMenuItem, anItem);
+	[menuItem setTitle:[sidebar_ menuTitleForRemoveSidebarItems]];
+	return !showingSheet_ && [sidebar_ chosenNode];
 }
 
 
@@ -924,8 +931,7 @@
 	if (theAction == @selector(mainMenuAddLocalRepositoryRef:))			return !showingSheet_;
 	if (theAction == @selector(mainMenuAddServerRepositoryRef:))		return !showingSheet_;
 	if (theAction == @selector(mainMenuAddNewSidebarGroupItem:))		return !showingSheet_;
-	if (theAction == @selector(mainMenuRemoveSidebarItem:))				return !showingSheet_ && ([sidebar_ chosenNode] && ![sidebar_ multipleNodesAreSelected] ? YES : NO);
-	if (theAction == @selector(mainMenuRemoveSidebarItems:))			return !showingSheet_ && ([sidebar_ multipleNodesAreSelected] ? YES : NO);
+	if (theAction == @selector(mainMenuRemoveSidebarItems:))			return [self validateAndSwitchMenuForRemoveSidebarItems:anItem];
 	if (theAction == @selector(mainMenuConfigureRepositoryRef:))		return [self localOrServerRepoIsSelectedAndReady];
 	if (theAction == @selector(mainMenuConfigureLocalRepositoryRef:))	return [self localRepoIsSelectedAndReady];
 	if (theAction == @selector(mainMenuConfigureServerRepositoryRef:))	return [self localOrServerRepoIsSelectedAndReady];
@@ -1144,7 +1150,6 @@
 
 - (IBAction) mainMenuConfigureRepositoryRef:(id)sender			{ return [sidebar_ mainMenuConfigureRepositoryRef:sender]; }
 - (IBAction) mainMenuAddNewSidebarGroupItem:(id)sender			{ return [sidebar_ mainMenuAddNewSidebarGroupItem:sender]; }
-- (IBAction) mainMenuRemoveSidebarItem:(id)sender				{ return [sidebar_ mainMenuRemoveSidebarItem:sender]; }
 - (IBAction) mainMenuRemoveSidebarItems:(id)sender				{ return [sidebar_ mainMenuRemoveSidebarItems:sender]; }
 - (IBAction) mainMenuRevealRepositoryInFinder:(id)sender		{ return [sidebar_ mainMenuRevealRepositoryInFinder:sender]; }
 - (IBAction) mainMenuRevealSelectedFilesInFinder:(id)sender		{ return [sidebar_ mainMenuRevealRepositoryInFinder:sender]; }
@@ -2113,7 +2118,6 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 		NSAlert* alert = NewAlertPanel(mainMessage, subMessage, @"Update", @"Cancel", @"Options…");
 		[updateAlertAccessoryCleanCheckBox setState:clean];
 		[updateAlertAccessoryAlertSuppressionCheckBox setState:NO];
-		[updateAlertAccessoryAlertSuppressionCheckBox setHidden:!DisplayWarningForUpdatingFromDefaults()];
 		[alert setAccessoryView:updateAlertAccessoryView];
 		int result = [alert runModal];
 		if ([updateAlertAccessoryAlertSuppressionCheckBox state] == NSOnState)

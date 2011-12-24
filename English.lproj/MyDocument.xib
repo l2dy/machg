@@ -21,9 +21,11 @@
     </object>
     <object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
       <bool key="EncodedWithXMLCoder">YES</bool>
-      <integer value="100459"/>
-      <integer value="100274"/>
+      <integer value="100302"/>
       <integer value="100409"/>
+      <integer value="100459"/>
+      <integer value="100484"/>
+      <integer value="100274"/>
     </object>
     <object class="NSArray" key="IBDocument.PluginDependencies">
       <bool key="EncodedWithXMLCoder">YES</bool>
@@ -1049,7 +1051,6 @@
                                 </object>
                               </object>
                             </object>
-                            <int key="NSSelectedIndex">3</int>
                             <bool key="NSPullDown">YES</bool>
                             <int key="NSPreferredEdge">1</int>
                             <bool key="NSUsesItemFromMenu">YES</bool>
@@ -1121,7 +1122,6 @@
                                 </object>
                               </object>
                             </object>
-                            <int key="NSSelectedIndex">2</int>
                             <bool key="NSPullDown">YES</bool>
                             <int key="NSPreferredEdge">1</int>
                             <bool key="NSUsesItemFromMenu">YES</bool>
@@ -1302,7 +1302,7 @@
         </object>
       </object>
       <object class="NSCustomView" id="681348116">
-        <nil key="NSNextResponder"/>
+        <reference key="NSNextResponder"/>
         <int key="NSvFlags">268</int>
         <object class="NSMutableArray" key="NSSubviews">
           <bool key="EncodedWithXMLCoder">YES</bool>
@@ -1357,6 +1357,7 @@
           </object>
         </object>
         <string key="NSFrameSize">{236, 38}</string>
+        <reference key="NSSuperview"/>
         <string key="NSClassName">NSView</string>
       </object>
       <object class="NSCustomView" id="100433385">
@@ -1883,6 +1884,60 @@
           </object>
         </object>
       </object>
+      <object class="NSCustomView" id="179969830">
+        <reference key="NSNextResponder"/>
+        <int key="NSvFlags">268</int>
+        <object class="NSMutableArray" key="NSSubviews">
+          <bool key="EncodedWithXMLCoder">YES</bool>
+          <object class="NSButton" id="801144634">
+            <reference key="NSNextResponder" ref="179969830"/>
+            <int key="NSvFlags">268</int>
+            <string key="NSFrame">{{1, 1}, {237, 18}}</string>
+            <reference key="NSSuperview" ref="179969830"/>
+            <bool key="NSEnabled">YES</bool>
+            <object class="NSButtonCell" key="NSCell" id="583962795">
+              <int key="NSCellFlags">-2080244224</int>
+              <int key="NSCellFlags2">131072</int>
+              <string key="NSContents">Do not show this kind of message again</string>
+              <reference key="NSSupport" ref="26"/>
+              <reference key="NSControlView" ref="801144634"/>
+              <int key="NSButtonFlags">1211912703</int>
+              <int key="NSButtonFlags2">2</int>
+              <reference key="NSNormalImage" ref="474801691"/>
+              <reference key="NSAlternateImage" ref="268057623"/>
+              <string key="NSAlternateContents"/>
+              <string key="NSKeyEquivalent"/>
+              <int key="NSPeriodicDelay">200</int>
+              <int key="NSPeriodicInterval">25</int>
+            </object>
+          </object>
+          <object class="NSButton" id="889622163">
+            <reference key="NSNextResponder" ref="179969830"/>
+            <int key="NSvFlags">268</int>
+            <string key="NSFrame">{{0, 23}, {349, 18}}</string>
+            <reference key="NSSuperview" ref="179969830"/>
+            <bool key="NSEnabled">YES</bool>
+            <object class="NSButtonCell" key="NSCell" id="227368908">
+              <int key="NSCellFlags">67239424</int>
+              <int key="NSCellFlags2">0</int>
+              <string key="NSContents">Move corresponding local repositories to the trash</string>
+              <reference key="NSSupport" ref="768654009"/>
+              <reference key="NSControlView" ref="889622163"/>
+              <int key="NSButtonFlags">1211912703</int>
+              <int key="NSButtonFlags2">2</int>
+              <reference key="NSNormalImage" ref="474801691"/>
+              <reference key="NSAlternateImage" ref="268057623"/>
+              <string key="NSAlternateContents"/>
+              <string key="NSKeyEquivalent"/>
+              <int key="NSPeriodicDelay">200</int>
+              <int key="NSPeriodicInterval">25</int>
+            </object>
+          </object>
+        </object>
+        <string key="NSFrameSize">{395, 41}</string>
+        <reference key="NSSuperview"/>
+        <string key="NSClassName">NSView</string>
+      </object>
     </object>
     <object class="IBObjectContainer" key="IBDocument.Objects">
       <object class="NSMutableArray" key="connectionRecords">
@@ -2374,6 +2429,30 @@
             <reference key="destination" ref="255517966"/>
           </object>
           <int key="connectionID">100483</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBOutletConnection" key="connection">
+            <string key="label">removeSidebarItemsAlertAccessoryAlertSuppressionCheckBox</string>
+            <reference key="source" ref="454551463"/>
+            <reference key="destination" ref="801144634"/>
+          </object>
+          <int key="connectionID">100491</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBOutletConnection" key="connection">
+            <string key="label">removeSidebarItemsAlertAccessoryDeleteReposOnDiskCheckBox</string>
+            <reference key="source" ref="454551463"/>
+            <reference key="destination" ref="889622163"/>
+          </object>
+          <int key="connectionID">100492</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBOutletConnection" key="connection">
+            <string key="label">removeSidebarItemsAlertAccessoryView</string>
+            <reference key="source" ref="454551463"/>
+            <reference key="destination" ref="179969830"/>
+          </object>
+          <int key="connectionID">100493</int>
         </object>
       </object>
       <object class="IBMutableOrderedSet" key="objectRecords">
@@ -3177,6 +3256,45 @@
             <reference key="object" ref="584248175"/>
             <reference key="parent" ref="985363233"/>
           </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">100484</int>
+            <reference key="object" ref="179969830"/>
+            <object class="NSMutableArray" key="children">
+              <bool key="EncodedWithXMLCoder">YES</bool>
+              <reference ref="801144634"/>
+              <reference ref="889622163"/>
+            </object>
+            <reference key="parent" ref="0"/>
+            <string key="objectName">removeSidebarItemsAlertAccessoryView</string>
+          </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">100485</int>
+            <reference key="object" ref="801144634"/>
+            <object class="NSMutableArray" key="children">
+              <bool key="EncodedWithXMLCoder">YES</bool>
+              <reference ref="583962795"/>
+            </object>
+            <reference key="parent" ref="179969830"/>
+          </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">100486</int>
+            <reference key="object" ref="889622163"/>
+            <object class="NSMutableArray" key="children">
+              <bool key="EncodedWithXMLCoder">YES</bool>
+              <reference ref="227368908"/>
+            </object>
+            <reference key="parent" ref="179969830"/>
+          </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">100487</int>
+            <reference key="object" ref="227368908"/>
+            <reference key="parent" ref="889622163"/>
+          </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">100488</int>
+            <reference key="object" ref="583962795"/>
+            <reference key="parent" ref="801144634"/>
+          </object>
         </object>
       </object>
       <object class="NSMutableDictionary" key="flattenedProperties">
@@ -3239,6 +3357,7 @@
           <string>100293.IBPluginDependency</string>
           <string>100302.IBEditorWindowLastContentRect</string>
           <string>100302.IBPluginDependency</string>
+          <string>100302.IBViewBoundsToFrameTransform</string>
           <string>100303.IBPluginDependency</string>
           <string>100304.IBPluginDependency</string>
           <string>100309.IBPluginDependency</string>
@@ -3291,6 +3410,14 @@
           <string>100460.IBPluginDependency</string>
           <string>100461.IBPluginDependency</string>
           <string>100462.IBPluginDependency</string>
+          <string>100484.IBEditorWindowLastContentRect</string>
+          <string>100484.IBPluginDependency</string>
+          <string>100484.IBViewBoundsToFrameTransform</string>
+          <string>100485.IBPluginDependency</string>
+          <string>100486.IBPluginDependency</string>
+          <string>100486.IBViewBoundsToFrameTransform</string>
+          <string>100487.IBPluginDependency</string>
+          <string>100488.IBPluginDependency</string>
           <string>5.IBEditorWindowLastContentRect</string>
           <string>5.IBPluginDependency</string>
           <string>5.IBWindowTemplateEditedContentRect</string>
@@ -3359,6 +3486,7 @@
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>{{116, 1028}, {236, 38}}</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+          <object class="NSAffineTransform"/>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3406,9 +3534,19 @@
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>{{1709, 1093}, {211, 63}}</string>
+          <string>{{1380, 1093}, {211, 63}}</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+          <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+          <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+          <string>{{114, 961}, {395, 41}}</string>
+          <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+          <object class="NSAffineTransform"/>
+          <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+          <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+          <object class="NSAffineTransform">
+            <bytes key="NSTransformStruct">P4AAAL+AAAAAAAAAw6KAAA</bytes>
+          </object>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>{{135, 319}, {893, 491}}</string>
@@ -3438,7 +3576,7 @@
         </object>
       </object>
       <nil key="sourceID"/>
-      <int key="maxID">100483</int>
+      <int key="maxID">100493</int>
     </object>
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -4430,7 +4568,9 @@
               <string>mainMenuAddSelectedFiles:</string>
               <string>mainMenuAddServerRepositoryRef:</string>
               <string>mainMenuAnnotateSelectedFiles:</string>
+              <string>mainMenuBackoutChangeset:</string>
               <string>mainMenuCloneRepository:</string>
+              <string>mainMenuCollapseChangesets:</string>
               <string>mainMenuCommitAllFiles:</string>
               <string>mainMenuCommitSelectedFiles:</string>
               <string>mainMenuConfigureLocalRepositoryRef:</string>
@@ -4441,6 +4581,7 @@
               <string>mainMenuDiffSelectedFiles:</string>
               <string>mainMenuExportPatches:</string>
               <string>mainMenuGotoChangeset:</string>
+              <string>mainMenuHistoryEditChangesets:</string>
               <string>mainMenuIgnoreSelectedFiles:</string>
               <string>mainMenuImportPatches:</string>
               <string>mainMenuIncomingFromRepository:</string>
@@ -4453,8 +4594,8 @@
               <string>mainMenuOutgoingToRepository:</string>
               <string>mainMenuPullFromRepository:</string>
               <string>mainMenuPushToRepository:</string>
+              <string>mainMenuRebaseChangesets:</string>
               <string>mainMenuRemergeSelectedFiles:</string>
-              <string>mainMenuRemoveSidebarItem:</string>
               <string>mainMenuRemoveSidebarItems:</string>
               <string>mainMenuRenameSelectedItem:</string>
               <string>mainMenuRevealRepositoryInFinder:</string>
@@ -4463,6 +4604,7 @@
               <string>mainMenuRevertSelectedFiles:</string>
               <string>mainMenuRevertSelectedFilesToVersion:</string>
               <string>mainMenuRollbackCommit:</string>
+              <string>mainMenuStripChangesets:</string>
               <string>mainMenuUnignoreSelectedFiles:</string>
               <string>mainMenuUntrackSelectedFiles:</string>
               <string>mainMenuUpdateRepository:</string>
@@ -4480,6 +4622,10 @@
             </object>
             <object class="NSMutableArray" key="dict.values">
               <bool key="EncodedWithXMLCoder">YES</bool>
+              <string>id</string>
+              <string>id</string>
+              <string>id</string>
+              <string>id</string>
               <string>id</string>
               <string>id</string>
               <string>id</string>
@@ -4569,7 +4715,9 @@
               <string>mainMenuAddSelectedFiles:</string>
               <string>mainMenuAddServerRepositoryRef:</string>
               <string>mainMenuAnnotateSelectedFiles:</string>
+              <string>mainMenuBackoutChangeset:</string>
               <string>mainMenuCloneRepository:</string>
+              <string>mainMenuCollapseChangesets:</string>
               <string>mainMenuCommitAllFiles:</string>
               <string>mainMenuCommitSelectedFiles:</string>
               <string>mainMenuConfigureLocalRepositoryRef:</string>
@@ -4580,6 +4728,7 @@
               <string>mainMenuDiffSelectedFiles:</string>
               <string>mainMenuExportPatches:</string>
               <string>mainMenuGotoChangeset:</string>
+              <string>mainMenuHistoryEditChangesets:</string>
               <string>mainMenuIgnoreSelectedFiles:</string>
               <string>mainMenuImportPatches:</string>
               <string>mainMenuIncomingFromRepository:</string>
@@ -4592,8 +4741,8 @@
               <string>mainMenuOutgoingToRepository:</string>
               <string>mainMenuPullFromRepository:</string>
               <string>mainMenuPushToRepository:</string>
+              <string>mainMenuRebaseChangesets:</string>
               <string>mainMenuRemergeSelectedFiles:</string>
-              <string>mainMenuRemoveSidebarItem:</string>
               <string>mainMenuRemoveSidebarItems:</string>
               <string>mainMenuRenameSelectedItem:</string>
               <string>mainMenuRevealRepositoryInFinder:</string>
@@ -4602,6 +4751,7 @@
               <string>mainMenuRevertSelectedFiles:</string>
               <string>mainMenuRevertSelectedFilesToVersion:</string>
               <string>mainMenuRollbackCommit:</string>
+              <string>mainMenuStripChangesets:</string>
               <string>mainMenuUnignoreSelectedFiles:</string>
               <string>mainMenuUntrackSelectedFiles:</string>
               <string>mainMenuUpdateRepository:</string>
@@ -4692,7 +4842,15 @@
                 <string key="candidateClassName">id</string>
               </object>
               <object class="IBActionInfo">
+                <string key="name">mainMenuBackoutChangeset:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
                 <string key="name">mainMenuCloneRepository:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuCollapseChangesets:</string>
                 <string key="candidateClassName">id</string>
               </object>
               <object class="IBActionInfo">
@@ -4733,6 +4891,10 @@
               </object>
               <object class="IBActionInfo">
                 <string key="name">mainMenuGotoChangeset:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuHistoryEditChangesets:</string>
                 <string key="candidateClassName">id</string>
               </object>
               <object class="IBActionInfo">
@@ -4784,11 +4946,11 @@
                 <string key="candidateClassName">id</string>
               </object>
               <object class="IBActionInfo">
-                <string key="name">mainMenuRemergeSelectedFiles:</string>
+                <string key="name">mainMenuRebaseChangesets:</string>
                 <string key="candidateClassName">id</string>
               </object>
               <object class="IBActionInfo">
-                <string key="name">mainMenuRemoveSidebarItem:</string>
+                <string key="name">mainMenuRemergeSelectedFiles:</string>
                 <string key="candidateClassName">id</string>
               </object>
               <object class="IBActionInfo">
@@ -4821,6 +4983,10 @@
               </object>
               <object class="IBActionInfo">
                 <string key="name">mainMenuRollbackCommit:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuStripChangesets:</string>
                 <string key="candidateClassName">id</string>
               </object>
               <object class="IBActionInfo">
@@ -5119,7 +5285,6 @@
               <string>contextualMenuConfigureRepositoryRef:</string>
               <string>contextualMenuConfigureServerRepositoryRef:</string>
               <string>contextualMenuOpenTerminalHere:</string>
-              <string>contextualMenuRemoveSidebarItem:</string>
               <string>contextualMenuRemoveSidebarItems:</string>
               <string>contextualMenuRevealRepositoryInFinder:</string>
               <string>mainMenuAddNewSidebarGroupItem:</string>
@@ -5127,15 +5292,12 @@
               <string>mainMenuConfigureRepositoryRef:</string>
               <string>mainMenuConfigureServerRepositoryRef:</string>
               <string>mainMenuOpenTerminalHere:</string>
-              <string>mainMenuRemoveSidebarItem:</string>
               <string>mainMenuRemoveSidebarItems:</string>
               <string>mainMenuRevealRepositoryInFinder:</string>
               <string>reloadSidebarData:</string>
             </object>
             <object class="NSMutableArray" key="dict.values">
               <bool key="EncodedWithXMLCoder">YES</bool>
-              <string>id</string>
-              <string>id</string>
               <string>id</string>
               <string>id</string>
               <string>id</string>
@@ -5168,7 +5330,6 @@
               <string>contextualMenuConfigureRepositoryRef:</string>
               <string>contextualMenuConfigureServerRepositoryRef:</string>
               <string>contextualMenuOpenTerminalHere:</string>
-              <string>contextualMenuRemoveSidebarItem:</string>
               <string>contextualMenuRemoveSidebarItems:</string>
               <string>contextualMenuRevealRepositoryInFinder:</string>
               <string>mainMenuAddNewSidebarGroupItem:</string>
@@ -5176,7 +5337,6 @@
               <string>mainMenuConfigureRepositoryRef:</string>
               <string>mainMenuConfigureServerRepositoryRef:</string>
               <string>mainMenuOpenTerminalHere:</string>
-              <string>mainMenuRemoveSidebarItem:</string>
               <string>mainMenuRemoveSidebarItems:</string>
               <string>mainMenuRevealRepositoryInFinder:</string>
               <string>reloadSidebarData:</string>
@@ -5216,10 +5376,6 @@
                 <string key="candidateClassName">id</string>
               </object>
               <object class="IBActionInfo">
-                <string key="name">contextualMenuRemoveSidebarItem:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
                 <string key="name">contextualMenuRemoveSidebarItems:</string>
                 <string key="candidateClassName">id</string>
               </object>
@@ -5248,10 +5404,6 @@
                 <string key="candidateClassName">id</string>
               </object>
               <object class="IBActionInfo">
-                <string key="name">mainMenuRemoveSidebarItem:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
                 <string key="name">mainMenuRemoveSidebarItems:</string>
                 <string key="candidateClassName">id</string>
               </object>
@@ -5271,6 +5423,9 @@
               <bool key="EncodedWithXMLCoder">YES</bool>
               <string>informationTextView_</string>
               <string>myDocument</string>
+              <string>removeSidebarItemsAlertAccessoryAlertSuppressionCheckBox</string>
+              <string>removeSidebarItemsAlertAccessoryDeleteReposOnDiskCheckBox</string>
+              <string>removeSidebarItemsAlertAccessoryView</string>
               <string>repositoryPathControl_</string>
               <string>sidebarContextualMenu</string>
             </object>
@@ -5278,6 +5433,9 @@
               <bool key="EncodedWithXMLCoder">YES</bool>
               <string>NSTextView</string>
               <string>MacHgDocument</string>
+              <string>NSButton</string>
+              <string>NSButton</string>
+              <string>NSView</string>
               <string>NSPathControl</string>
               <string>NSMenu</string>
             </object>
@@ -5288,6 +5446,9 @@
               <bool key="EncodedWithXMLCoder">YES</bool>
               <string>informationTextView_</string>
               <string>myDocument</string>
+              <string>removeSidebarItemsAlertAccessoryAlertSuppressionCheckBox</string>
+              <string>removeSidebarItemsAlertAccessoryDeleteReposOnDiskCheckBox</string>
+              <string>removeSidebarItemsAlertAccessoryView</string>
               <string>repositoryPathControl_</string>
               <string>sidebarContextualMenu</string>
             </object>
@@ -5300,6 +5461,18 @@
               <object class="IBToOneOutletInfo">
                 <string key="name">myDocument</string>
                 <string key="candidateClassName">MacHgDocument</string>
+              </object>
+              <object class="IBToOneOutletInfo">
+                <string key="name">removeSidebarItemsAlertAccessoryAlertSuppressionCheckBox</string>
+                <string key="candidateClassName">NSButton</string>
+              </object>
+              <object class="IBToOneOutletInfo">
+                <string key="name">removeSidebarItemsAlertAccessoryDeleteReposOnDiskCheckBox</string>
+                <string key="candidateClassName">NSButton</string>
+              </object>
+              <object class="IBToOneOutletInfo">
+                <string key="name">removeSidebarItemsAlertAccessoryView</string>
+                <string key="candidateClassName">NSView</string>
               </object>
               <object class="IBToOneOutletInfo">
                 <string key="name">repositoryPathControl_</string>
