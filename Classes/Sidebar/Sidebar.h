@@ -35,26 +35,18 @@
 
 @property (nonatomic, assign) SidebarNode* root;
 
+
 // Actions
+- (IBAction)	mainMenuAddNewSidebarGroupItem:(id)sender;
+// ------------------------------------------------------
 - (IBAction)	mainMenuConfigureRepositoryRef:(id)sender;
 - (IBAction)	mainMenuConfigureLocalRepositoryRef:(id)sender;
 - (IBAction)	mainMenuConfigureServerRepositoryRef:(id)sender;
-- (IBAction)	mainMenuAddNewSidebarGroupItem:(id)sender;
+- (IBAction)	mainMenuCloneRepository:(id)sender;
 - (IBAction)	mainMenuRemoveSidebarItems:(id)sender;
+// ------------------------------------------------------
 - (IBAction)	mainMenuRevealRepositoryInFinder:(id)sender;
 - (IBAction)	mainMenuOpenTerminalHere:(id)sender;
-
-- (IBAction)	contextualMenuAddLocalRepositoryRef:(id)sender;
-- (IBAction)	contextualMenuAddServerRepositoryRef:(id)sender;
-- (IBAction)	contextualMenuAddNewSidebarGroupItem:(id)sender;
-- (IBAction)	contextualMenuConfigureRepositoryRef:(id)sender;
-- (IBAction)	contextualMenuConfigureLocalRepositoryRef:(id)sender;
-- (IBAction)	contextualMenuConfigureServerRepositoryRef:(id)sender;
-- (IBAction)	contextualMenuAddNewSidebarGroupItem:(id)sender;
-- (IBAction)	contextualMenuCloneRepositoryRef:(id)sender;
-- (IBAction)	contextualMenuRemoveSidebarItems:(id)sender;
-- (IBAction)	contextualMenuRevealRepositoryInFinder:(id)sender;
-- (IBAction)	contextualMenuOpenTerminalHere:(id)sender;
 
 
 - (IBAction)	reloadSidebarData:(id)sender;

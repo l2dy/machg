@@ -839,7 +839,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 		if ([self multipleNodesAreChosen])
 		{
 			[theMenu addItem:[NSMenuItem separatorItem]];
-			[theMenu addItemWithTitle:[self menuTitleForRemoveSidebarItems]				action:@selector(contextualMenuRemoveSidebarItems:)				keyEquivalent:@""];
+			[theMenu addItemWithTitle:[self menuTitleForRemoveSidebarItems]				action:@selector(mainMenuRemoveSidebarItems:)			keyEquivalent:@""];
 			return;
 		}
 
@@ -847,28 +847,28 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
         if (node != nil && [node isLocalRepositoryRef])
 		{
 			[theMenu addItem:[NSMenuItem separatorItem]];
-			[theMenu addItemWithTitle:fstr(@"Clone “%@”", [node shortName])				action:@selector(contextualMenuCloneRepositoryRef:)				keyEquivalent:@""];
-			[theMenu addItemWithTitle:fstr(@"Configure “%@”", [node shortName])			action:@selector(contextualMenuConfigureLocalRepositoryRef:)	keyEquivalent:@""];
-			[theMenu addItemWithTitle:fstr(@"Delete Bookmark “%@”", [node shortName])	action:@selector(contextualMenuRemoveSidebarItems:)				keyEquivalent:@""];
+			[theMenu addItemWithTitle:fstr(@"Clone “%@”…", [node shortName])			action:@selector(mainMenuCloneRepository:)				keyEquivalent:@""];
+			[theMenu addItemWithTitle:fstr(@"Configure “%@”…", [node shortName])		action:@selector(mainMenuConfigureLocalRepositoryRef:)	keyEquivalent:@""];
+			[theMenu addItemWithTitle:fstr(@"Delete Bookmark “%@”", [node shortName])	action:@selector(mainMenuRemoveSidebarItems:)			keyEquivalent:@""];
 			[theMenu addItem:[NSMenuItem separatorItem]];
-			[theMenu addItemWithTitle:fstr(@"Reveal “%@” in Finder", [node shortName])	action:@selector(contextualMenuRevealRepositoryInFinder:)		keyEquivalent:@""];
-			[theMenu addItemWithTitle:@"Open Terminal Here"								action:@selector(contextualMenuOpenTerminalHere:)				keyEquivalent:@""];
+			[theMenu addItemWithTitle:fstr(@"Reveal “%@” in Finder", [node shortName])	action:@selector(mainMenuRevealRepositoryInFinder:)		keyEquivalent:@""];
+			[theMenu addItemWithTitle:@"Open Terminal Here"								action:@selector(mainMenuOpenTerminalHere:)				keyEquivalent:@""];
 			return;
 		}
 
 		if (node != nil && [node isServerRepositoryRef])
 		{
 			[theMenu addItem:[NSMenuItem separatorItem]];
-			[theMenu addItemWithTitle:fstr(@"Clone “%@”", [node shortName])				action:@selector(contextualMenuCloneRepositoryRef:)				keyEquivalent:@""];
-			[theMenu addItemWithTitle:fstr(@"Configure “%@”", [node shortName])			action:@selector(contextualMenuConfigureServerRepositoryRef:)	keyEquivalent:@""];
-			[theMenu addItemWithTitle:fstr(@"Delete Bookmark “%@”", [node shortName])	action:@selector(contextualMenuRemoveSidebarItems:)				keyEquivalent:@""];
+			[theMenu addItemWithTitle:fstr(@"Clone “%@”…", [node shortName])			action:@selector(mainMenuCloneRepository:)				keyEquivalent:@""];
+			[theMenu addItemWithTitle:fstr(@"Configure “%@”…", [node shortName])		action:@selector(mainMenuConfigureServerRepositoryRef:)	keyEquivalent:@""];
+			[theMenu addItemWithTitle:fstr(@"Delete Bookmark “%@”", [node shortName])	action:@selector(mainMenuRemoveSidebarItems:)			keyEquivalent:@""];
 			return;
 		}
 
 		if (node != nil)
 		{
 			[theMenu addItem:[NSMenuItem separatorItem]];
-			[theMenu addItemWithTitle:fstr(@"Delete Group “%@”", [node shortName])		action:@selector(contextualMenuRemoveSidebarItems:)				keyEquivalent:@""];
+			[theMenu addItemWithTitle:fstr(@"Delete Group “%@”", [node shortName])		action:@selector(mainMenuRemoveSidebarItems:)				keyEquivalent:@""];
 			return;
 		}
     }
@@ -891,25 +891,15 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 {
 	SEL theAction = [anItem action];
 	
-	if (theAction == @selector(mainMenuAddNewSidebarGroupItem:))			return ![myDocument showingASheet];
-	if (theAction == @selector(mainMenuRemoveSidebarItems:))				return [myDocument validateAndSwitchMenuForRemoveSidebarItems:anItem];
-	if (theAction == @selector(mainMenuConfigureRepositoryRef:))			return [myDocument localOrServerRepoIsChosenAndReady];
-	if (theAction == @selector(mainMenuConfigureLocalRepositoryRef:))		return [myDocument localRepoIsChosenAndReady];
-	if (theAction == @selector(mainMenuConfigureServerRepositoryRef:))		return [myDocument localOrServerRepoIsChosenAndReady];
+	if (theAction == @selector(mainMenuAddNewSidebarGroupItem:))		return ![myDocument showingASheet];
+	if (theAction == @selector(mainMenuRemoveSidebarItems:))			return [myDocument validateAndSwitchMenuForRemoveSidebarItems:anItem];
+	if (theAction == @selector(mainMenuConfigureRepositoryRef:))		return [myDocument localOrServerRepoIsChosenAndReady];
+	if (theAction == @selector(mainMenuConfigureLocalRepositoryRef:))	return [myDocument localRepoIsChosenAndReady];
+	if (theAction == @selector(mainMenuConfigureServerRepositoryRef:))	return [myDocument localOrServerRepoIsChosenAndReady];
+	if (theAction == @selector(mainMenuCloneRepository:))				return [myDocument localOrServerRepoIsChosenAndReady];
+	if (theAction == @selector(mainMenuRevealRepositoryInFinder:))		return [myDocument localOrServerRepoIsChosenAndReady];
+	if (theAction == @selector(mainMenuOpenTerminalHere:))				return [myDocument localOrServerRepoIsChosenAndReady];
 	
-	if (theAction == @selector(contextualMenuAddLocalRepositoryRef:))		return [myDocument localOrServerRepoIsChosenAndReady];
-	if (theAction == @selector(contextualMenuAddServerRepositoryRef:))		return [myDocument localOrServerRepoIsChosenAndReady];
-	if (theAction == @selector(contextualMenuAddNewSidebarGroupItem:))		return [myDocument localOrServerRepoIsChosenAndReady];	
-	if (theAction == @selector(contextualMenuConfigureRepositoryRef:))		return [myDocument localOrServerRepoIsChosenAndReady];
-	if (theAction == @selector(contextualMenuConfigureLocalRepositoryRef:))	return [myDocument localOrServerRepoIsChosenAndReady];
-	if (theAction == @selector(contextualMenuConfigureServerRepositoryRef:))return [myDocument localOrServerRepoIsChosenAndReady];
-	if (theAction == @selector(contextualMenuAddNewSidebarGroupItem:))		return ![myDocument showingASheet];
-	if (theAction == @selector(contextualMenuCloneRepositoryRef:))			return [myDocument localOrServerRepoIsChosenAndReady];
-	if (theAction == @selector(contextualMenuRemoveSidebarItems:))			return ![myDocument showingASheet] && [self chosenNode];
-	if (theAction == @selector(contextualMenuRevealRepositoryInFinder:))	return [myDocument localOrServerRepoIsChosenAndReady];
-	if (theAction == @selector(contextualMenuOpenTerminalHere:))			return [myDocument localOrServerRepoIsChosenAndReady];
-
-
 	if (theAction == @selector(mainMenuRevealRepositoryInFinder:))		return [myDocument localRepoIsSelectedAndReady];
 	if (theAction == @selector(mainMenuOpenTerminalHere:))				return [myDocument localRepoIsSelectedAndReady];
 
@@ -925,19 +915,9 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 // MARK: Actions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (IBAction) contextualMenuAddLocalRepositoryRef:(id)sender			{ [myDocument mainMenuAddLocalRepositoryRef:sender]; }
-- (IBAction) contextualMenuAddServerRepositoryRef:(id)sender		{ [myDocument mainMenuAddServerRepositoryRef:sender]; }
-- (IBAction) contextualMenuConfigureRepositoryRef:(id)sender		{ [self mainMenuConfigureRepositoryRef:sender]; }
-- (IBAction) contextualMenuConfigureLocalRepositoryRef:(id)sender	{ [myDocument mainMenuConfigureLocalRepositoryRef:sender]; }
-- (IBAction) contextualMenuConfigureServerRepositoryRef:(id)sender	{ [myDocument mainMenuConfigureServerRepositoryRef:sender]; }
-- (IBAction) contextualMenuAddNewSidebarGroupItem:(id)sender		{ [myDocument mainMenuAddNewSidebarGroupItem:sender]; }
-- (IBAction) contextualMenuCloneRepositoryRef:(id)sender			{ [myDocument mainMenuCloneRepository:sender]; }
-- (IBAction) contextualMenuRemoveSidebarItems:(id)sender			{ [self mainMenuRemoveSidebarItems:sender]; }
-- (IBAction) contextualMenuRevealRepositoryInFinder:(id)sender		{ [self mainMenuRevealRepositoryInFinder:sender]; }
-- (IBAction) contextualMenuOpenTerminalHere:(id)sender				{ [self mainMenuOpenTerminalHere:sender]; }
-
 - (IBAction) mainMenuConfigureLocalRepositoryRef:(id)sender			{ [myDocument mainMenuConfigureLocalRepositoryRef:sender]; }
 - (IBAction) mainMenuConfigureServerRepositoryRef:(id)sender		{ [myDocument mainMenuConfigureServerRepositoryRef:sender]; }
+- (IBAction) mainMenuCloneRepository:(id)sender						{ [myDocument mainMenuCloneRepository:sender]; }
 
 - (IBAction) reloadSidebarData:(id)sender							{ [self reloadData]; }
 
@@ -946,9 +926,9 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	SidebarNode* node = [self chosenNode];
 
 	if ([node isLocalRepositoryRef])
-		[self mainMenuConfigureLocalRepositoryRef:sender];
+		[myDocument mainMenuConfigureLocalRepositoryRef:sender];
 	else if ([node isServerRepositoryRef])
-		[self mainMenuConfigureServerRepositoryRef:sender];
+		[myDocument mainMenuConfigureServerRepositoryRef:sender];
 	else
 		NSBeep();
 }
@@ -961,11 +941,12 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 
 	SidebarNode* newGroupNode = [SidebarNode sectionNodeWithCaption:@"NEW GROUP"];
 	
-	if ([self numberOfSelectedRows] <= 0)
+	SidebarNode* targetNode = [self chosenNode];
+	if ([self numberOfSelectedRows] <= 0 && !targetNode)
 		[root_ insertChild:newGroupNode atIndex:[[root_ children] count]];
 	else
 	{
-		SidebarNode* node = [self selectedNode];
+		SidebarNode* node = [self chosenNode];
 		NSInteger index = [[node parent] indexOfChildNode:node] + 1;
 		[[node parent] insertChild:newGroupNode atIndex:index];
 	}
@@ -973,28 +954,32 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 }
 
 - (NSString*) menuTitleForRemoveSidebarItems
-{
-	// Do short circut for the really common case
-	if ([self numberOfSelectedRows] == 1 && [[self selectedNode] isLocalRepositoryRef])
-		return @"Delete Repository Bookmark";
-	
-	NSArray* nodes = [self selectedNodes];
+{	
+	NSArray* nodes = [self chosenNodes];
 	if (IsEmpty(nodes))
 		return @"Delete Repository Item";
-	NSInteger localRepoCount = 0;
-	NSInteger serverRepoCount = 0;
-	NSInteger sectionNodeCount = 0;
+
 	NSInteger nodeCount = [nodes count];
+	if ([nodes count] == 1)
+	{
+		SidebarNode* node = [nodes firstObject];
+		if ([node isLocalRepositoryRef])		return fstr(@"Delete Bookmark “%@”", [node shortName]);
+		if ([node isServerRepositoryRef])		return fstr(@"Delete Bookmark “%@”", [node shortName]);
+		if ([node isSectionNode])				return fstr(@"Delete Group “%@”",    [node shortName]);
+		return @"Delete Item";
+	}
+				 
+	NSInteger repositoryNodeCount = 0;
+	NSInteger sectionNodeCount = 0;
 	for (SidebarNode* node in nodes)
 	{
-		if		([node isLocalRepositoryRef]) localRepoCount++;
-		else if ([node isServerRepositoryRef]) serverRepoCount++;
-		else if ([node isSectionNode]) sectionNodeCount++;
+		if		([node isRepositoryRef]) repositoryNodeCount++;
+		else if ([node isSectionNode])  sectionNodeCount++;
 	}
-	if (sectionNodeCount == nodeCount && nodeCount == 1) return @"Delete Group";
-	if (sectionNodeCount == nodeCount && nodeCount > 1)  return @"Delete Groups";
+	if (repositoryNodeCount == nodeCount)  return @"Delete Bookmarks";
+	if (   sectionNodeCount == nodeCount)  return @"Delete Groups";
 		
-	return fstr(@"Delete Repository %@%@",  (sectionNodeCount > 0) ? @"Item" : @"Bookmark",  (nodeCount > 1) ? @"s" : @"");
+	return @"Delete Items";
 }
 
 - (IBAction) mainMenuRemoveSidebarItems:(id)sender
