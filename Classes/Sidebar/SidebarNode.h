@@ -67,6 +67,7 @@ typedef enum
 - (NSInteger) indexOfChildNode:(SidebarNode*)node;
 - (SidebarNode*) childNodeAtIndex:(int)index;
 - (NSUInteger) numberOfChildren;
+- (NSArray*) allChildren;
 
 
 // Setters
@@ -82,6 +83,7 @@ typedef enum
 - (BOOL) isSectionNode;
 - (BOOL) isDraggable;
 - (BOOL) isRepositoryRef;
+- (NSArray*) allChildren;
 - (NSAttributedString*) attributedStringForNodeAndSelected:(BOOL)selected;
 
 

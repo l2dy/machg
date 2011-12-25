@@ -128,9 +128,10 @@
 	if (existingNode)
 	{
 		NSInteger existingIndex = [[existingNode parent] indexOfChildNode:existingNode];
-		if (existingIndex != NSNotFound && [existingNode parent])
+		SidebarNode* parent = [existingNode parent];
+		if (existingIndex != NSNotFound && parent)
 		{
-			[[existingNode parent] insertChild:newNode atIndex:existingIndex + 1];
+			[parent insertChild:newNode atIndex:existingIndex + 1];
 			[self reloadData];
 			return;
 		}
@@ -144,9 +145,15 @@
 
 - (void) removeNodeFromSidebar:(SidebarNode*)node
 {
+	// Remove all the children
+	for (SidebarNode* childNode in [node children])
+		[self removeNodeFromSidebar:childNode];
+
+	// Remove this node
+	SidebarNode* parent = [node parent];
 	if ([node isRepositoryRef])
 		[self removeConnectionsFor:[node path]];
-	[[node parent] removeChild:node];
+	[parent removeChild:node];
 }
 
 
@@ -265,7 +272,7 @@
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (id)        outlineView:(NSOutlineView*)outlineView  child:(NSInteger)index  ofItem:(id)item	{ return item ? [item childNodeAtIndex:index] : [root_ childNodeAtIndex:index]; }
-- (BOOL)      outlineView:(NSOutlineView*)outlineView  isItemExpandable:(id)item				{ return item ? ![item isRepositoryRef] : YES; }
+- (BOOL)      outlineView:(NSOutlineView*)outlineView  isItemExpandable:(id)item				{ return YES; }
 - (NSInteger) outlineView:(NSOutlineView*)outlineView  numberOfChildrenOfItem:(id)item			{ return item ? [item numberOfChildren] : [root_ numberOfChildren]; }
 - (id)        outlineView:(NSOutlineView*)outlineView  objectValueForTableColumn:(NSTableColumn*)tableColumn  byItem:(id)item	{ return [item shortName]; }
 
@@ -322,6 +329,8 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 {
 	NSRect r = [super frameOfOutlineCellAtRow:rowIndex];
 	SidebarNode* item = [self itemAtRow:rowIndex];
+	if ([item isRepositoryRef] && [item numberOfChildren] == 0)
+		return NSZeroRect;
 	return [item isSectionNode] ? offsetRectForSectionNode(r) : r;
 }
 
@@ -542,9 +551,6 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 
 - (NSDragOperation) outlineView:(NSOutlineView*)outlineView  validateDrop:(id<NSDraggingInfo>)info  proposedItem:(id)item  proposedChildIndex:(NSInteger)index
 {
-	if (index < 0)
-		return NSDragOperationNone;
-
 	NSPasteboard* pasteboard = [info draggingPasteboard];	// get the pasteboard
 	if ([pasteboard availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]])
 	{
@@ -556,8 +562,13 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 		return NSDragOperationNone;
 	}
 
+	if (index == NSOutlineViewDropOnItemIndex)
+		return NSDragOperationMove;
+
 	if (item == nil)
 		return NSDragOperationGeneric;
+	
+	return NSDragOperationMove;
 	
 	if (![item isDraggable] && index >= 0)
 		return NSDragOperationMove;
@@ -614,6 +625,27 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 }
 
 
+- (void) emmbedAnyNestedRepositoriesForPath:(NSString*)enclosingPath atNode:(SidebarNode*)node
+{
+	NSFileManager* localFileManager = [[NSFileManager alloc] init];
+	NSDirectoryEnumerator* dirEnum = [localFileManager enumeratorAtPath:enclosingPath];
+
+	NSString* path;
+	while ((path = [dirEnum nextObject]))
+	{
+		NSString* fullPath = [enclosingPath stringByAppendingPathComponent:path];
+		if (repositoryExistsAtPath(fullPath))
+		{
+			SidebarNode* newNode = [SidebarNode nodeForLocalURL:fullPath];
+			[node addChild:newNode];
+			[newNode refreshNodeIcon];
+			[self emmbedAnyNestedRepositoriesForPath:fullPath atNode:newNode];
+			[dirEnum skipDescendants];
+		}
+	}
+}
+
+
 - (BOOL) outlineView:(NSOutlineView*)outlineView  acceptDrop:(id<NSDraggingInfo>)info  item:(id)targetItem  childIndex:(NSInteger)index
 {
 	NSPasteboard* pasteboard = [info draggingPasteboard];	// get the pasteboard
@@ -655,7 +687,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 		for (NSInteger i = [dragNodesArray count] -1; i >=0; i--)
 		{
 			SidebarNode* node = [dragNodesArray objectAtIndex:i];
-			[targetParent insertChild:node atIndex:newTargetIndex];
+			[targetParent insertChild:node atIndex:MAX(newTargetIndex,0)];
 		}
 
 		[self reloadData];
@@ -674,24 +706,25 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 		NSArray* filenames = [pasteboard propertyListForType:NSFilenamesPboardType];
 		NSArray* resolvedFilenames = [filenames resolveSymlinksAndAliasesInPaths];
 		SidebarNode* newSelectedNode = nil;
-		for (id file in resolvedFilenames)
-			if (pathIsExistentDirectory(file) && repositoryExistsAtPath(file))
+		for (id path in resolvedFilenames)
+			if (pathIsExistentDirectory(path) && repositoryExistsAtPath(path))
 			{
-				SidebarNode* node = [SidebarNode nodeForLocalURL:file];
-				NSArray* servers  = [self serversIfAvailable:file includingAlreadyPresent:NO];
+				SidebarNode* node = [SidebarNode nodeForLocalURL:path];
+				NSArray* servers  = [self serversIfAvailable:path includingAlreadyPresent:NO];
 				[targetParent insertChild:node atIndex:index];
-				[[AppController sharedAppController] computeRepositoryIdentityForPath:file];
+				[self emmbedAnyNestedRepositoriesForPath:path atNode:node];
+				[[AppController sharedAppController] computeRepositoryIdentityForPath:path];
 				if (servers)
 					for (SidebarNode* serverNode in servers)
 						[targetParent insertChild:serverNode atIndex:index];
 				newSelectedNode = node;
 			}
 
-		for (id file in resolvedFilenames)
-			if (pathIsExistentDirectory(file) && !repositoryExistsAtPath(file))
+		for (id path in resolvedFilenames)
+			if (pathIsExistentDirectory(path) && !repositoryExistsAtPath(path))
 			{
-				NSString* fileName = [[NSFileManager defaultManager] displayNameAtPath:file];
-				[[myDocument theLocalRepositoryRefSheetController] openSheetForNewRepositoryRefNamed:fileName atPath:file addNewRepositoryRefTo:targetParent atIndex:index];
+				NSString* fileName = [[NSFileManager defaultManager] displayNameAtPath:path];
+				[[myDocument theLocalRepositoryRefSheetController] openSheetForNewRepositoryRefNamed:fileName atPath:path addNewRepositoryRefTo:targetParent atIndex:index];
 				return YES;
 			}
 
@@ -984,10 +1017,15 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 
 - (IBAction) mainMenuRemoveSidebarItems:(id)sender
 {
-	NSArray* nodes = [self chosenNodes];
-	if (IsEmpty(nodes))
+	NSArray* theChosenNodes = [self chosenNodes];
+	if (IsEmpty(theChosenNodes))
 		{ NSBeep(); return; }
 
+	NSMutableArray* accumulateAllNodes = [NSMutableArray arrayWithArray:theChosenNodes];
+	for (SidebarNode* node in theChosenNodes)
+		[accumulateAllNodes addObjectsFromArray:[node allChildren]];
+	NSArray* nodes = [[NSSet setWithArray:accumulateAllNodes] allObjects];
+	
 	NSInteger localRepoCount = 0;
 	NSInteger serverRepoCount = 0;
 	NSInteger sectionNodeCount = 0;

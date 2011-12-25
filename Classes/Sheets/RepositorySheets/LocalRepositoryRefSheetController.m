@@ -186,6 +186,7 @@
 		else
 		{
 			SidebarNode* newNode = [SidebarNode nodeWithCaption:newName  forLocalPath:newPath];
+			[[myDocument sidebar] emmbedAnyNestedRepositoriesForPath:newPath atNode:newNode];
 			NSArray* newServers  = [[myDocument sidebar] serversIfAvailable:newPath includingAlreadyPresent:NO];
 			[[AppController sharedAppController] computeRepositoryIdentityForPath:newPath];
 			[newNode refreshNodeIcon];

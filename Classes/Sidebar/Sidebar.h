@@ -57,6 +57,7 @@
 - (void) addSidebarNode:(SidebarNode*)newNode afterNode:(SidebarNode*)existingNode;
 - (void) removeNodeFromSidebar:(SidebarNode*)node;
 - (NSArray*) serversIfAvailable:(NSString*)file includingAlreadyPresent:(BOOL)includeAlreadyPresent;
+- (void) emmbedAnyNestedRepositoriesForPath:(NSString*)enclosingPath atNode:(SidebarNode*)node;
 
 
 // Access Selection Methods

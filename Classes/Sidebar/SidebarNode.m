@@ -152,6 +152,21 @@
 - (BOOL) isRepositoryRef							{ return [self isLocalRepositoryRef] || [self isServerRepositoryRef]; }
 
 
+
+- (NSMutableArray*) allChildrenAccumulate:(NSMutableArray*)all
+{
+	[all addObjectsFromArray:children];
+	for (SidebarNode* child in children)
+		[child allChildrenAccumulate:all];
+	return all;
+}
+- (NSArray*) allChildren
+{
+	NSMutableArray* all = [[NSMutableArray alloc] init];
+	return [self allChildrenAccumulate:all];
+}
+
+
 - (NSAttributedString*) attributedStringForNodeAndSelected:(BOOL)selected
 {
 	static NSShadow* noShadow = nil;
