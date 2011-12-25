@@ -1313,6 +1313,14 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
     return [[self reverseObjectEnumerator] allObjects];
 }
 
+- (NSArray*) arrayByRemovingObject:(id)object
+{
+	NSMutableArray* a = [self mutableCopy];
+	[a removeObject:object];
+	return [NSArray arrayWithArray:a];
+}
+
+
 @end
 
 
@@ -1619,14 +1627,12 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 // MARK: -
 @implementation NSTableView ( NSTableViewPlusExtensions )
-- (void) selectRow:(NSInteger)row	{ [self selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO]; }
-- (BOOL) rowWasClicked				{ return [self clickedRow] != -1; }
-
-- (NSInteger) chosenRow
-{
-	NSInteger clickedRow = [self clickedRow];
-	return (clickedRow != -1) ? clickedRow : [self selectedRow];
-}
+- (void) selectRow:(NSInteger)row		{ [self selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO]; }
+- (BOOL) rowWasClicked					{ return [self clickedRow] != -1; }
+- (NSInteger) chosenRow					{ NSInteger clickedRow = [self clickedRow];	return (clickedRow >= 0) ? clickedRow : [self selectedRow]; }
+- (BOOL) clickedRowInSelectedRows		{ NSInteger clickedRow = [self clickedRow]; return (clickedRow >= 0) &&  [self isRowSelected:clickedRow]; }
+- (BOOL) clickedRowOutsideSelectedRows	{ NSInteger clickedRow = [self clickedRow]; return (clickedRow >= 0) && ![self isRowSelected:clickedRow]; }
+- (BOOL) selectedRowsWereChosen			{ NSInteger clickedRow = [self clickedRow]; return ((clickedRow == -1) && ([self numberOfSelectedRows] > 0)) || ((clickedRow >= 0) && [self isRowSelected:clickedRow]); }
 
 - (void) scrollToRangeOfRowsLow:(NSInteger)lowTableRow high:(NSInteger)highTableRow
 {
@@ -1655,7 +1661,23 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 // MARK: -
 @implementation NSOutlineView ( NSOutlineViewPlusExtensions )
-- (NSArray*) selectedItems;
+- (id) safeItemAtRow:(NSInteger)row
+{
+	@try
+	{
+		return [self itemAtRow:row];
+	}
+	@catch (NSException* ne)
+	{
+		return nil;
+	}
+	return nil;
+}
+- (id) selectedItem		{ return ([self numberOfSelectedRows] > 0) ? [self safeItemAtRow:[self selectedRow]] : nil; }
+- (id) clickedItem		{ NSInteger clickedRow = [self clickedRow];  return (clickedRow >= 0) ? [self safeItemAtRow:clickedRow] : nil; }
+- (id) chosenItem		{ NSInteger clickedRow = [self clickedRow];  return (clickedRow >= 0) ? [self safeItemAtRow:clickedRow] : [self selectedItem]; }
+
+- (NSArray*) selectedItems
 {
 	NSMutableArray* nodes = [[NSMutableArray alloc]init];
 	NSIndexSet* rows = [self selectedRowIndexes];
@@ -1665,6 +1687,31 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	return nodes;	
 }
 
+- (NSArray*) chosenItems
+{
+	if (![self rowWasClicked] && [self numberOfSelectedRows] == 0)
+		return [NSArray array];
+	return [self isRowSelected:[self chosenRow]] ? [self selectedItems] : [NSArray arrayWithObject:[self chosenItem]];
+}
+
+- (void) selectItem:(id)item
+{
+	NSInteger row = item ? [self rowForItem:item] : -1;
+	if (row >= 0)
+		[self selectRow:row];
+}
+
+- (void) selectItems:(NSArray*)items
+{
+	NSMutableIndexSet* indexes = [[NSMutableIndexSet alloc]init];
+	for (id item in items)
+	{
+		NSInteger row = item ? [self rowForItem:item] : -1;
+		if (row >= 0)
+			[indexes addIndex:row];
+	}
+	[self selectRowIndexes:indexes byExtendingSelection:NO];
+}
 @end
 
 

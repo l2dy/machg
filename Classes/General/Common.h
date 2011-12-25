@@ -761,6 +761,9 @@ static inline int		stringAsInt(NSString* str)		{ return [str intValue]; }
 static inline NSNumber*	intAsNumber(int i)				{ return [NSNumber numberWithInt:i]; }
 static inline int		numberAsInt(NSNumber* num)		{ return [num intValue]; }
 
+static inline NSNumber*	floatAsNumber(float f)			{ return [NSNumber numberWithFloat:f]; }
+static inline float		numberAsFloat(NSNumber* num)	{ return [num floatValue]; }
+
 static inline NSString*	numberAsString(NSNumber* num)	{ return [num stringValue]; }
 static inline NSNumber*	stringAsNumber(NSString* str)	{ return [NSNumber numberWithInt:[str intValue]]; }
 
@@ -1013,6 +1016,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 @interface NSArray ( NSArrayPlusAccessors )
 - (id)		 firstObject;
 - (NSArray*) reversedArray;
+- (NSArray*) arrayByRemovingObject:(id)object;
 @end
 
 
@@ -1116,13 +1120,27 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 @interface NSTableView ( NSTableViewPlusExtensions )
 - (void)	selectRow:(NSInteger)row;
 - (BOOL)	rowWasClicked;
-- (NSInteger) chosenRow;	// If n row was clicked on (that triggered an action) in the table then return
+- (NSInteger) chosenRow;	// If a row was clicked on (that triggered an action) in the table then return
 							// that, or else return the selected row
-- (void) scrollToRangeOfRowsLow:(NSInteger)lowTableRow high:(NSInteger)highTableRow;
+- (BOOL)	clickedRowInSelectedRows;
+- (BOOL)	clickedRowOutsideSelectedRows;
+- (BOOL)	selectedRowsWereChosen;
+- (void)	scrollToRangeOfRowsLow:(NSInteger)lowTableRow high:(NSInteger)highTableRow;
 @end
+
 
 
 // MARK: -
 @interface NSOutlineView ( NSOutlineViewPlusExtensions )
+- (id) selectedItem;
+- (id) clickedItem;
 - (NSArray*) selectedItems;
+- (id) chosenItem;				// If a row was clicked on (that triggered an action) in the outline then return that item for that
+								// row, or else return the selected item 
+- (NSArray*) chosenItems;		// If a row was clicked on (that triggered an action) in the outline then if that row is in the
+								// selection then return the selected items, or else just return the item at that row. If no row
+								// was clicked then return the selected items.
+
+- (void) selectItem:(id)item;
+- (void) selectItems:(NSArray*)items;
 @end

@@ -46,33 +46,15 @@
 // MARK: Testing of selection and clicks
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (FSNodeInfo*) nodeAtIndex:(NSInteger)index
-{
-	@try
-	{
-		return [self itemAtRow:index];
-	}
-	@catch (NSException* ne)
-	{
-		return nil;
-	}
-	return nil;
-}
-
-- (BOOL)		nodesAreSelected	{ return IsNotEmpty([self selectedRowIndexes]); }
+- (BOOL)		nodesAreSelected	{ return [self numberOfSelectedRows] > 0; }
 - (BOOL)		nodeIsClicked		{ return [self clickedRow] != -1; }
 - (BOOL)		nodesAreChosen		{ return [self nodeIsClicked] || [self nodesAreSelected]; }
-- (FSNodeInfo*) selectedNode		{ return [self nodeAtIndex:[self selectedRow]]; }
-- (FSNodeInfo*) clickedNode			{ return [self nodeAtIndex:[self clickedRow]]; }
-- (FSNodeInfo*) chosenNode			{ FSNodeInfo* ans = [self clickedNode]; return ans ? ans : [self selectedNode]; }
+- (FSNodeInfo*) selectedNode		{ return [self selectedItem]; }
+- (FSNodeInfo*) clickedNode			{ return [self clickedItem]; }
+- (FSNodeInfo*) chosenNode			{ return [self chosenItem]; }
 - (NSArray*)	selectedNodes		{ return [self selectedItems]; }
-
-- (BOOL) clickedNodeInSelectedNodes
-{
-	if (![self nodeIsClicked])
-		return NO;
-	return [[self selectedRowIndexes] containsIndex:[self clickedRow]];
-}
+- (NSArray*)	chosenNodes			{ return [self chosenItems]; }
+- (BOOL) clickedNodeInSelectedNodes	{ return [self clickedRowInSelectedRows]; }
 
 
 

@@ -167,25 +167,19 @@
 // MARK:  Selection Queries
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BOOL) localRepoIsSelected					{ return [[self selectedNode] isLocalRepositoryRef]  && ![self multipleNodesAreSelected]; }
-- (BOOL) localRepoIsChosen						{ return [[self chosenNode]   isLocalRepositoryRef]  && ![self multipleNodesAreChosen]; }
-- (BOOL) serverRepoIsSelected					{ return [[self selectedNode] isServerRepositoryRef] && ![self multipleNodesAreSelected]; }
-- (BOOL) serverRepoIsChosen						{ return [[self selectedNode] isServerRepositoryRef] && ![self multipleNodesAreChosen]; }
-- (BOOL) localOrServerRepoIsSelected			{ return [[self selectedNode] isRepositoryRef]       && ![self multipleNodesAreSelected]; }
-- (BOOL) localOrServerRepoIsChosen				{ return [[self chosenNode]   isRepositoryRef]       && ![self multipleNodesAreChosen]; }
-- (SidebarNode*) selectedNode					{ return ([self numberOfSelectedRows] > 0) ? [self itemAtRow:[self selectedRow]] : nil; }
-- (NSArray*)     selectedNodes					{ return [self selectedItems]; }
-- (SidebarNode*) chosenNode						{ return [self rowWasClicked] ? [self itemAtRow:[self clickedRow]] : [self selectedNode]; }
-- (SidebarNode*) clickedNode					{ return [self rowWasClicked] ? [self itemAtRow:[self clickedRow]] : nil; }
-- (BOOL) multipleNodesAreSelected				{ return [self numberOfSelectedRows] > 1; }
-- (BOOL) multipleNodesAreChosen					{ return [self multipleNodesAreSelected] && [self isRowSelected:[self chosenRow]]; }
-
-- (NSArray*) chosenNodes
-{
-	if (![self rowWasClicked] && [self numberOfSelectedRows] == 0)
-		return [NSArray array];
-	return [self isRowSelected:[self chosenRow]] ? [self selectedNodes] : [NSArray arrayWithObject:[self chosenNode]];
-}
+- (BOOL) localRepoIsSelected			{ return [[self selectedNode] isLocalRepositoryRef]  && ![self multipleNodesAreSelected]; }
+- (BOOL) localRepoIsChosen				{ return [[self chosenNode]   isLocalRepositoryRef]  && ![self multipleNodesAreChosen]; }
+- (BOOL) serverRepoIsSelected			{ return [[self selectedNode] isServerRepositoryRef] && ![self multipleNodesAreSelected]; }
+- (BOOL) serverRepoIsChosen				{ return [[self selectedNode] isServerRepositoryRef] && ![self multipleNodesAreChosen]; }
+- (BOOL) localOrServerRepoIsSelected	{ return [[self selectedNode] isRepositoryRef]       && ![self multipleNodesAreSelected]; }
+- (BOOL) localOrServerRepoIsChosen		{ return [[self chosenNode]   isRepositoryRef]       && ![self multipleNodesAreChosen]; }
+- (SidebarNode*) selectedNode			{ return [self selectedItem]; }
+- (SidebarNode*) chosenNode				{ return [self chosenItem]; }
+- (SidebarNode*) clickedNode			{ return [self clickedItem]; }
+- (NSArray*)     selectedNodes			{ return [self selectedItems]; }
+- (NSArray*)     chosenNodes			{ return [self chosenItems]; }
+- (BOOL) multipleNodesAreSelected		{ return [self numberOfSelectedRows] > 1; }
+- (BOOL) multipleNodesAreChosen			{ return [self multipleNodesAreSelected] && [self isRowSelected:[self chosenRow]]; }
 
 - (SidebarNodeKind) combinedKindOfSelectedNodes
 {
@@ -211,19 +205,8 @@
 // MARK: Modify Selection Methods
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) selectNode:(SidebarNode*)node
-{
-	if (node)
-		[self selectRow:[self rowForItem:node]];
-}
-
-- (void) selectNodes:(NSArray*)nodes
-{
-	NSMutableIndexSet* indexes = [[NSMutableIndexSet alloc]init];
-	for (SidebarNode* node in nodes)
-		[indexes addIndex:[self rowForItem:node]];
-	[self selectRowIndexes:indexes byExtendingSelection:NO];
-}
+- (void) selectNode:(SidebarNode*)node	{ [self selectItem:node]; }
+- (void) selectNodes:(NSArray*)nodes	{ [self selectItems:nodes]; }
 
 // This method is used when we are undoing / redoing things. It's cheating a bit since I could introduce more targeted lightweight
 // changes to the sidebar tree. However the whole size of the sidebar tree should be small. Something like:90 bytes per node, and
