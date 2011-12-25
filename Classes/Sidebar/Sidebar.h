@@ -29,7 +29,6 @@
 	SingleTimedQueue*		queueForAutomaticIncomingComputation_;
 	SingleTimedQueue*		queueForAutomaticOutgoingComputation_;
 	SingleTimedQueue*		queueForUpdatingInformationTextView_;
-	NSArray*				dragNodesArray;
 	BOOL					currentSelectionAllowsBadges_;
 }
 

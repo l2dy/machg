@@ -78,6 +78,7 @@
 
 	// Set up some appearance paramaeters
 	[self setSelectionHighlightStyle:NSTableViewSelectionHighlightStyleNone];	// We do our own formatting so it looks like a source list
+	[self setDraggingDestinationFeedbackStyle:NSTableViewDraggingDestinationFeedbackStyleSourceList];
 	[self setRowHeight:[self rowHeight]+1.0];									// Tweak the row height a bit so it looks more like source lists.
 	[self setIndentationPerLevel:13.0];
 	
@@ -237,6 +238,15 @@
 	[self restoreSavedExpandedness];
 	[self reloadData];
 	[self setNeedsDisplay:YES];
+}
+
+// There is a bug with deselectAll in the 10.6 api / use. I can't track it down exactly but here is a reference:
+// http://stackoverflow.com/questions/8377205/enabling-empty-selection-on-view-based-nstableviews
+// http://stackoverflow.com/questions/1296798/cant-make-empty-selection-in-nstableview
+// http://www.cocoabuilder.com/archive/cocoa/242930-nstableview-empty-selection-not-working.html
+- (void) myDeselectAll
+{
+	[self selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
 }
 
 
@@ -544,18 +554,106 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
+// MARK:  Drag & Drop Helpers
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+// If we are adding a local repository to the document, check to see is the repository has a stored reference to the server and if
+// the server is not present in the document then return a server node which can be added to the document as well.
+- (NSArray*) serversIfAvailable:(NSString*)file includingAlreadyPresent:(BOOL)includeAlreadyPresent
+{
+	// Look for a server in [paths].default
+	NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"paths", nil];
+	ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:file];
+	
+	NSArray* paths = [result.outStr arrayOfCaptureComponentsMatchedByRegex:@"^paths\\.((?:[\\w-]+))\\s*=\\s*((?:ssh|http|https)://.*?)$" options:RKLMultiline range:NSMaxiumRange error:NULL];
+	if ([paths count] == 0 || [result hasErrors])
+		return nil;
+	
+	NSMutableArray* serversToAdd = [[NSMutableArray alloc]init];
+	NSMutableArray* allRepositories = [NSMutableArray arrayWithArray:[self allRepositories]];
+	NSString* captionBase = [file lastPathComponent];
+	for (NSArray* path in paths)
+	{
+		NSString* serverId = trimString([path objectAtIndex:1]);
+		NSString* serverPath = [path objectAtIndex:2];
+		NSString* url = trimmedURL(serverPath);
+		NSString* caption;
+		
+		// If the server is already present in the document don't add it again.
+		BOOL duplicate = NO;
+		if (!includeAlreadyPresent)
+			for (SidebarNode* repo in allRepositories)
+				if ([repo isServerRepositoryRef] && [trimmedURL([repo path]) isEqualToString:url])
+				{
+					duplicate = YES;
+					break;
+				}
+		if (duplicate)
+			continue;
+		
+		if ([serverId isEqualToString:@"default"])
+			caption = captionBase;
+		else
+			caption = fstr(@"%@ (%@)", captionBase, serverId);
+		
+		SidebarNode* serverNode = [SidebarNode nodeWithCaption:caption forServerPath:serverPath];
+		[[AppController sharedAppController] computeRepositoryIdentityForPath:serverPath];
+		[serversToAdd addObject:serverNode];
+		[allRepositories addObject:serverNode];
+	}
+	return serversToAdd;
+}
+
+
+- (void) emmbedAnyNestedRepositoriesForPath:(NSString*)enclosingPath atNode:(SidebarNode*)node
+{
+	NSFileManager* localFileManager = [[NSFileManager alloc] init];
+	NSDirectoryEnumerator* dirEnum = [localFileManager enumeratorAtPath:enclosingPath];
+	
+	NSString* path;
+	while ((path = [dirEnum nextObject]))
+	{
+		NSString* fullPath = [enclosingPath stringByAppendingPathComponent:path];
+		if (repositoryExistsAtPath(fullPath))
+		{
+			SidebarNode* newNode = [SidebarNode nodeForLocalURL:fullPath];
+			[node addChild:newNode];
+			[newNode refreshNodeIcon];
+			[self emmbedAnyNestedRepositoriesForPath:fullPath atNode:newNode];
+			[dirEnum skipDescendants];
+		}
+	}
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
 // MARK:  Delegates Drag & Drop
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (NSDragOperation) draggingSourceOperationMaskForLocal:(BOOL)isLocal  { return NSDragOperationMove; }
+- (NSDragOperation) draggingSourceOperationMaskForLocal:(BOOL)isLocal  { return isLocal ? (NSDragOperationMove|NSDragOperationCopy) : NSDragOperationNone; }
 - (BOOL) outlineView:(NSOutlineView*)outlineView  writeItems:(NSArray*)items  toPasteboard:(NSPasteboard*)pasteboard
 {
 	[pasteboard declareTypes:[NSArray arrayWithObjects:kSidebarPBoardType, nil] owner:self];
 	
 	// keep track of this nodes for drag feedback in "validateDrop"
-	dragNodesArray = items;
+	[[AppController sharedAppController] setDragNodesArray:items];
 	
 	return YES;
+}
+
+- (NSDragOperation)draggingUpdated:(id < NSDraggingInfo >)sender
+{
+	[super draggingUpdated:sender]; // let the outline update
+	
+	// If we drag to a different sidebar then copy, or when the option key is down, force a copy operation. When the option key is
+	// down the mask is just the NSDragOperationCopy mask otherwise it is the mask (NSDragOperationCopy|NSDragOperationMove) 
+	if ([sender draggingSource] != self || [sender draggingSourceOperationMask] == NSDragOperationCopy)	
+		return NSDragOperationCopy;
+	return NSDragOperationMove;
 }
 
 
@@ -587,75 +685,6 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 }
 
 
-// If we are adding a local repository to the document, check to see is the repository has a stored reference to the server and if
-// the server is not present in the document then return a server node which can be added to the document as well.
-- (NSArray*) serversIfAvailable:(NSString*)file includingAlreadyPresent:(BOOL)includeAlreadyPresent
-{
-	// Look for a server in [paths].default
-	NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", @"paths", nil];
-	ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:file];
-
-	NSArray* paths = [result.outStr arrayOfCaptureComponentsMatchedByRegex:@"^paths\\.((?:[\\w-]+))\\s*=\\s*((?:ssh|http|https)://.*?)$" options:RKLMultiline range:NSMaxiumRange error:NULL];
-	if ([paths count] == 0 || [result hasErrors])
-		return nil;
-
-	NSMutableArray* serversToAdd = [[NSMutableArray alloc]init];
-	NSMutableArray* allRepositories = [NSMutableArray arrayWithArray:[self allRepositories]];
-	NSString* captionBase = [file lastPathComponent];
-	for (NSArray* path in paths)
-	{
-		NSString* serverId = trimString([path objectAtIndex:1]);
-		NSString* serverPath = [path objectAtIndex:2];
-		NSString* url = trimmedURL(serverPath);
-		NSString* caption;
-		
-		// If the server is already present in the document don't add it again.
-		BOOL duplicate = NO;
-		if (!includeAlreadyPresent)
-			for (SidebarNode* repo in allRepositories)
-				if ([repo isServerRepositoryRef] && [trimmedURL([repo path]) isEqualToString:url])
-				{
-					duplicate = YES;
-					break;
-				}
-		if (duplicate)
-			continue;
-
-		if ([serverId isEqualToString:@"default"])
-			caption = captionBase;
-		else
-			caption = fstr(@"%@ (%@)", captionBase, serverId);
-		
-		SidebarNode* serverNode = [SidebarNode nodeWithCaption:caption forServerPath:serverPath];
-		[[AppController sharedAppController] computeRepositoryIdentityForPath:serverPath];
-		[serversToAdd addObject:serverNode];
-		[allRepositories addObject:serverNode];
-	}
-	return serversToAdd;
-}
-
-
-- (void) emmbedAnyNestedRepositoriesForPath:(NSString*)enclosingPath atNode:(SidebarNode*)node
-{
-	NSFileManager* localFileManager = [[NSFileManager alloc] init];
-	NSDirectoryEnumerator* dirEnum = [localFileManager enumeratorAtPath:enclosingPath];
-
-	NSString* path;
-	while ((path = [dirEnum nextObject]))
-	{
-		NSString* fullPath = [enclosingPath stringByAppendingPathComponent:path];
-		if (repositoryExistsAtPath(fullPath))
-		{
-			SidebarNode* newNode = [SidebarNode nodeForLocalURL:fullPath];
-			[node addChild:newNode];
-			[newNode refreshNodeIcon];
-			[self emmbedAnyNestedRepositoriesForPath:fullPath atNode:newNode];
-			[dirEnum skipDescendants];
-		}
-	}
-}
-
-
 - (BOOL) outlineView:(NSOutlineView*)outlineView  acceptDrop:(id<NSDraggingInfo>)info  item:(id)targetItem  childIndex:(NSInteger)index
 {
 	NSPasteboard* pasteboard = [info draggingPasteboard];	// get the pasteboard
@@ -675,31 +704,41 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 		[[self undoManager] setActionName:@"Drag"];
 		
 		// We can't drag the item onto itself
+		NSArray* dragNodesArray = [[AppController sharedAppController] dragNodesArray];
+		Sidebar* sourceSidebar  = DynamicCast(Sidebar, [info draggingSource]);
+		BOOL copyNodes = (sourceSidebar != self) || ([info draggingSourceOperationMask] == NSDragOperationCopy);
 		if ([dragNodesArray count] == 1 && [dragNodesArray objectAtIndex:0] == targetParent)
 			return NO;
 		
-		// Compute new offset
-		for (NSInteger i = 0; i < [dragNodesArray count]; ++i)
+		if (!copyNodes)
 		{
-			SidebarNode* node = [dragNodesArray objectAtIndex:i];
-			if ([node parent] == targetParent)
-				if ([targetParent indexOfChildNode:node] < index)
-					adjIdx--;
-		}
-		
-		for (NSInteger i = 0; i < [dragNodesArray count]; ++i)
-		{
-			SidebarNode* node = [dragNodesArray objectAtIndex:i];
-			[[node parent] removeChild:node];
+			// Compute new insertion offset
+			for (NSInteger i = 0; i < [dragNodesArray count]; ++i)
+			{
+				SidebarNode* node = [dragNodesArray objectAtIndex:i];
+				if ([node parent] == targetParent)
+					if ([targetParent indexOfChildNode:node] < index)
+						adjIdx--;
+			}
+
+			for (NSInteger i = 0; i < [dragNodesArray count]; ++i)
+			{
+				SidebarNode* node = [dragNodesArray objectAtIndex:i];
+				[[node parent] removeChild:node];
+			}
 		}
 
 		NSInteger newTargetIndex = index + adjIdx;
+		if (newTargetIndex < 0)
+			newTargetIndex = [targetParent numberOfChildren];
 		for (NSInteger i = [dragNodesArray count] -1; i >=0; i--)
 		{
-			SidebarNode* node = [dragNodesArray objectAtIndex:i];
-			[targetParent insertChild:node atIndex:MAX(newTargetIndex,0)];
+			SidebarNode* node = [[dragNodesArray objectAtIndex:i] copyNodeTree];
+			[targetParent insertChild:node atIndex:newTargetIndex];
 		}
 
+		if (sourceSidebar != self)
+			[sourceSidebar reloadData];
 		[self reloadData];
 		[self selectNode:currentSelectedNode];
 		[myDocument saveDocumentIfNamed];
@@ -716,7 +755,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 		NSArray* filenames = [pasteboard propertyListForType:NSFilenamesPboardType];
 		NSArray* resolvedFilenames = [filenames resolveSymlinksAndAliasesInPaths];
 		SidebarNode* newSelectedNode = nil;
-		for (id path in resolvedFilenames)
+		for (id path in [resolvedFilenames reverseObjectEnumerator])
 			if (pathIsExistentDirectory(path) && repositoryExistsAtPath(path))
 			{
 				SidebarNode* node = [SidebarNode nodeForLocalURL:path];
@@ -847,15 +886,18 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 - (void) updateInformationTextView
 {
 	[queueForUpdatingInformationTextView_ addBlockOperation:^{
-		
-		SidebarNode* selectedNode = [self selectedNode];
-		if ([selectedNode isRepositoryRef])
-		{
-			NSAttributedString* newInformativeMessage = [self informationTextViewMessage:selectedNode];
-			dispatch_async(mainQueue(), ^{
-				[[informationTextView_ textStorage] setAttributedString:newInformativeMessage];
-			});
-		}
+		// We do this updating on the main thread since acessing the selectedNode can cause problems while the NSOutlineView
+		// (sidebar) is being updated. 
+		dispatch_async(mainQueue(), ^{
+			SidebarNode* selectedNode = [self selectedNode];
+			if ([selectedNode isRepositoryRef])
+			{
+				NSAttributedString* newInformativeMessage = [self informationTextViewMessage:selectedNode];
+				dispatch_async(mainQueue(), ^{
+					[[informationTextView_ textStorage] setAttributedString:newInformativeMessage];
+				});
+			}
+		});
 	}];
 }
 
@@ -1087,14 +1129,13 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 
 	if (deleteRepositoriesAsWell)
 	{
-		[self deselectAll:self];
 		moveFilesToTheTrash(existentLocalRepositories);
 		[myDocument removeAllUndoActionsForDocument];
 		[myDocument updateChangeCount:NSChangeDone];
 		for (SidebarNode* node in nodes)
 			[self removeNodeFromSidebar:node];
 		[self reloadData];
-		[self deselectAll:self];
+		[self myDeselectAll];
 		[myDocument saveDocumentIfNamed];
 		return;
 	};
@@ -1109,7 +1150,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 		[self removeNodeFromSidebar:node];
 
 	[self reloadData];
-	[self deselectAll:self];
+	[self myDeselectAll];
 	[myDocument saveDocumentIfNamed];
 }
 

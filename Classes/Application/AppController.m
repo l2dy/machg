@@ -33,6 +33,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 @implementation AppController
 
 @synthesize repositoryIdentityForPath = repositoryIdentityForPath_;
+@synthesize  dragNodesArray;
 
 
 
