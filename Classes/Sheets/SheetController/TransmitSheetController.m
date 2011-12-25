@@ -189,21 +189,16 @@
 		return;
 	
 	NSMenuItem* item = [[NSMenuItem alloc]init];
+	NSDictionary* attributesForMenuTitle = graySystemFontAttributes;
 	if ([node isRepositoryRef])
 	{
-		NSDictionary* attributesToApply = [node isServerRepositoryRef] ? italicSystemFontAttributes : systemFontAttributes;
-		NSAttributedString* menuTitle = [NSAttributedString string:[node shortName] withAttributes:attributesToApply];
-		[item setIndentationLevel:level];
-		[item setAttributedTitle:menuTitle];
-		[item setEnabled:YES];
+		attributesForMenuTitle = [node isServerRepositoryRef] ? italicSystemFontAttributes : systemFontAttributes;
 		[item setRepresentedObject:node];
-		[[popup menu] addItem:item];
-		return;
 	}
 	
-	NSAttributedString* menuTitle = [NSAttributedString string:[node shortName] withAttributes:graySystemFontAttributes];
+	NSAttributedString* menuTitle = [NSAttributedString string:[node shortName] withAttributes:attributesForMenuTitle];
 	[item setAttributedTitle:menuTitle];
-	[item setEnabled:NO];
+	[item setEnabled:[node isRepositoryRef]];
 	[item setIndentationLevel:level];
 	[[popup menu] addItem:item];
 	for (SidebarNode* child in [node children])

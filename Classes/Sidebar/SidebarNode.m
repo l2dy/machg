@@ -407,19 +407,26 @@ SidebarNodeKind nodeKindFromStoredNodeType(NSInteger storedType)
 
 - (SidebarNode*) copySubtreeCompatibleTo:(SidebarNode*)comp
 {
-	if ([self isRepositoryRef] && [self isCompatibleTo:comp])
-		return [self copyNode];
+	BOOL isCompatobleRepo = [self isRepositoryRef] && [self isCompatibleTo:comp];
+	if (IsEmpty(children))
+		return isCompatobleRepo ? [self copyNode] : nil;
+
 	NSMutableArray* compatibleChildren = [[NSMutableArray alloc]init];
 	for (SidebarNode* node in children)
 	{
 		SidebarNode* subtree = [node copySubtreeCompatibleTo:comp];
-		if (subtree)
-			[compatibleChildren addObject:subtree];
+		[compatibleChildren addObjectIfNonNil:subtree];
 	}
-	if (IsEmpty(compatibleChildren))
+	
+	if (!isCompatobleRepo && IsEmpty(compatibleChildren))
 		return nil;
 	SidebarNode* prunedNode = [self copyNode];
 	prunedNode->children = compatibleChildren;
+	
+	// For the incompatible repository references list them in the selection menu's as section nodes
+	if ([self isRepositoryRef] && !isCompatobleRepo)
+		[prunedNode setNodeKind:kSidebarNodeKindSection];
+
 	return prunedNode;
 }
 
