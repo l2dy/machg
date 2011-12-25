@@ -142,12 +142,14 @@
 - (NSInteger) indexOfChildNode:(SidebarNode*)node	{ return [children indexOfObject:node]; }
 - (SidebarNode*) childNodeAtIndex:(int)index		{ return [children objectAtIndex:index]; }
 - (NSUInteger) numberOfChildren						{ return [children count]; }
+- (NSInteger) level									{ return parent ? (1 + [parent level]) : -1; }	// Should be the same as NSOutlineView::levelForItem:
 
 - (BOOL) isExistentLocalRepositoryRef				{ return [self isLocalRepositoryRef] && pathIsExistentDirectory(path); }
 - (BOOL) isMissingLocalRepositoryRef				{ return [self isLocalRepositoryRef] && !repositoryExistsAtPath(path); }
 - (BOOL) isLocalRepositoryRef						{ return (nodeKind == kSidebarNodeKindLocalRepositoryRef); }
 - (BOOL) isServerRepositoryRef						{ return (nodeKind == kSidebarNodeKindServerRepositoryRef); }
 - (BOOL) isSectionNode								{ return (nodeKind == kSidebarNodeKindSection); }
+- (BOOL) isTopLevelSectionNode						{ return [self isSectionNode] && ([self level] <= 0); }
 - (BOOL) isDraggable								{ return ![self isSectionNode]; }
 - (BOOL) isRepositoryRef							{ return [self isLocalRepositoryRef] || [self isServerRepositoryRef]; }
 

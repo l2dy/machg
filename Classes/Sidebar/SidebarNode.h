@@ -67,7 +67,7 @@ typedef enum
 - (NSInteger) indexOfChildNode:(SidebarNode*)node;
 - (SidebarNode*) childNodeAtIndex:(int)index;
 - (NSUInteger) numberOfChildren;
-- (NSArray*) allChildren;
+- (NSInteger) level;
 
 
 // Setters
@@ -81,6 +81,7 @@ typedef enum
 - (BOOL) isMissingLocalRepositoryRef;
 - (BOOL) isServerRepositoryRef;
 - (BOOL) isSectionNode;
+- (BOOL) isTopLevelSectionNode;
 - (BOOL) isDraggable;
 - (BOOL) isRepositoryRef;
 - (NSArray*) allChildren;

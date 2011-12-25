@@ -67,8 +67,6 @@
 	[[[self enclosingScrollView] verticalScroller] setFloatValue:0.0];
 	[[[self enclosingScrollView] contentView] scrollToPoint:NSMakePoint(0, 0)];
 	
-	// Make outline view appear with gradient selection, and behave like the Finder, iTunes, etc.
-	[self setSelectionHighlightStyle:NSTableViewSelectionHighlightStyleNone];
 
 	// drag and drop support
 	[self registerForDraggedTypes:[NSArray arrayWithObjects:kSidebarPBoardType, NSFilenamesPboardType, nil]];
@@ -78,8 +76,11 @@
 	[repositoryPathControl_ setDoubleAction:@selector(pathControlDoubleClickAction:)];
 	[repositoryPathControl_ setTarget:self];
 
-	[self setRowHeight:[self rowHeight]+1.0];	// Tweak the row height a bit so it looks more like source lists.
-
+	// Set up some appearance paramaeters
+	[self setSelectionHighlightStyle:NSTableViewSelectionHighlightStyleNone];	// We do our own formatting so it looks like a source list
+	[self setRowHeight:[self rowHeight]+1.0];									// Tweak the row height a bit so it looks more like source lists.
+	[self setIndentationPerLevel:13.0];
+	
 	// Set up Delegates & Data Source
 	[self setDataSource:self];
 	[self setDelegate:self];
@@ -285,10 +286,18 @@
 // MARK: Drawing Utilities
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-static NSRect offsetRectForSectionNode(NSRect r)
+static CGFloat extraHeightForSectionNode(NSInteger rowIndex)
 {
-	r.size.height -= GroupItemExtraTopHeight + GroupItemExtraBottomDepth + 2;
-	r.origin.y += GroupItemExtraTopHeight + 5;
+	if (rowIndex == 0)
+		return GroupItemExtraBottomDepth;
+	return GroupItemExtraTopHeight + GroupItemExtraBottomDepth;
+}
+
+static NSRect offsetRectForSectionNode(NSRect r, NSInteger rowIndex)
+{
+	CGFloat extraTop = (rowIndex != 0) ? GroupItemExtraTopHeight : 0;
+	r.size.height -= extraTop + GroupItemExtraBottomDepth + 2;
+	r.origin.y += extraTop + 5;
 	return r;
 }
 
@@ -315,14 +324,15 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 - (BOOL)	outlineView:(NSOutlineView*)outlineView  shouldEditTableColumn:(NSTableColumn*)tableColumn  item:(id)item   { return YES; }
 - (BOOL)	outlineView:(NSOutlineView*)outlineView  shouldSelectItem:(id)item											{ return YES; }
 - (BOOL)	outlineView:(NSOutlineView*)outlineView  isGroupItem:(id)item												{ return NO; }
-- (CGFloat) outlineView:(NSOutlineView*)outlineView  heightOfRowByItem:(id)item											{ return [item isSectionNode] ? (18 + GroupItemExtraTopHeight + GroupItemExtraBottomDepth) : 18; }
+- (CGFloat) outlineView:(NSOutlineView*)outlineView  heightOfRowByItem:(id)item											{ return 18 + ([item isTopLevelSectionNode] ? extraHeightForSectionNode([self rowForItem:item]) : 0); }
 
 - (NSRect)frameOfCellAtColumn:(NSInteger)columnIndex row:(NSInteger)rowIndex
 {
 	NSRect r = [super frameOfCellAtColumn:columnIndex row:rowIndex];
 	SidebarNode* item = [self itemAtRow:rowIndex];
 	r.origin.y += 2;
-	return [item isSectionNode] ? NSOffsetRect(offsetRectForSectionNode(r),3,-1) : r;
+	r.origin.x += 3;
+	return [item isTopLevelSectionNode] ? NSOffsetRect(offsetRectForSectionNode(r, rowIndex), 0,-1) : r;
 }
 
 - (NSRect) frameOfOutlineCellAtRow:(NSInteger)rowIndex
@@ -331,7 +341,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	SidebarNode* item = [self itemAtRow:rowIndex];
 	if ([item isRepositoryRef] && [item numberOfChildren] == 0)
 		return NSZeroRect;
-	return [item isSectionNode] ? offsetRectForSectionNode(r) : r;
+	return [item isTopLevelSectionNode] ? offsetRectForSectionNode(r, rowIndex) : r;
 }
 
 - (void)	outlineView:(NSOutlineView*)outlineView  willDisplayCell:(NSCell*)cell  forTableColumn:(NSTableColumn*)tableColumn  item:(id)item
@@ -425,7 +435,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	{
 		BOOL active = [[[myDocument mainWindow] firstResponder] hasAncestor:self];	// We display active if we are in the rsponde chain
 		NSRect cellBounds = [self rectOfRow:rowIndex];
-		NSRect bounds =  [node isSectionNode] ? offsetRectForSectionNode(cellBounds) : cellBounds;
+		NSRect bounds =  [node isTopLevelSectionNode] ? offsetRectForSectionNode(cellBounds, rowIndex) : cellBounds;
 		[(active ? gradientActive : gradientInactive) drawInRect:bounds angle:90];
 		drawHorizontalLine(bounds.origin.x, bounds.origin.y + 0.5,						bounds.size.width, active ?    topBorderActiveColor :    topBorderInactiveColor);
 		drawHorizontalLine(bounds.origin.x, bounds.origin.y + bounds.size.height - 0.5, bounds.size.width, active ? bottomBorderActiveColor : bottomBorderInactiveColor);
