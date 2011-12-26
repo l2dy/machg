@@ -201,6 +201,11 @@
 		96C3C4C613079EFE009BB242 /* DownArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C3C4C413079EFE009BB242 /* DownArrow.png */; };
 		96C3C4C713079EFE009BB242 /* UpArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C3C4C513079EFE009BB242 /* UpArrow.png */; };
 		96C613A911B40B0D00B54B09 /* MacHgSplash.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C613A811B40B0D00B54B09 /* MacHgSplash.png */; };
+		96C8964A149F4106007F7831 /* CTBadge.m in Sources */ = {isa = PBXBuildFile; fileRef = 96C89645149F4106007F7831 /* CTBadge.m */; };
+		96C8964B149F4106007F7831 /* CTBadge_1.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 96C89646149F4106007F7831 /* CTBadge_1.pdf */; };
+		96C8964C149F4106007F7831 /* CTBadge_3.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 96C89647149F4106007F7831 /* CTBadge_3.pdf */; };
+		96C8964D149F4106007F7831 /* CTBadge_4.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 96C89648149F4106007F7831 /* CTBadge_4.pdf */; };
+		96C8964E149F4106007F7831 /* CTBadge_5.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 96C89649149F4106007F7831 /* CTBadge_5.pdf */; };
 		96C98EA5113B70C2006816C0 /* MacHgsmaller.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C98EA4113B70C2006816C0 /* MacHgsmaller.png */; };
 		96D05C8A14945886000D513E /* FSViewerBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D05C8914945886000D513E /* FSViewerBrowser.m */; };
 		96D05C8F149458CB000D513E /* FSViewerOutline.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D05C8E149458CB000D513E /* FSViewerOutline.m */; };
@@ -539,6 +544,12 @@
 		96C3C4C413079EFE009BB242 /* DownArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = DownArrow.png; path = SheetIcons/DownArrow.png; sourceTree = "<group>"; };
 		96C3C4C513079EFE009BB242 /* UpArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = UpArrow.png; path = SheetIcons/UpArrow.png; sourceTree = "<group>"; };
 		96C613A811B40B0D00B54B09 /* MacHgSplash.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MacHgSplash.png; path = SplashTitles/MacHgSplash.png; sourceTree = "<group>"; };
+		96C89644149F4106007F7831 /* CTBadge.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CTBadge.h; sourceTree = "<group>"; };
+		96C89645149F4106007F7831 /* CTBadge.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CTBadge.m; sourceTree = "<group>"; };
+		96C89646149F4106007F7831 /* CTBadge_1.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = CTBadge_1.pdf; path = ../Classes/ExternalClasses/CTBadge/CTBadge_1.pdf; sourceTree = "<group>"; };
+		96C89647149F4106007F7831 /* CTBadge_3.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = CTBadge_3.pdf; path = ../Classes/ExternalClasses/CTBadge/CTBadge_3.pdf; sourceTree = "<group>"; };
+		96C89648149F4106007F7831 /* CTBadge_4.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = CTBadge_4.pdf; path = ../Classes/ExternalClasses/CTBadge/CTBadge_4.pdf; sourceTree = "<group>"; };
+		96C89649149F4106007F7831 /* CTBadge_5.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = CTBadge_5.pdf; path = ../Classes/ExternalClasses/CTBadge/CTBadge_5.pdf; sourceTree = "<group>"; };
 		96C98EA4113B70C2006816C0 /* MacHgsmaller.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MacHgsmaller.png; path = SplashTitles/MacHgsmaller.png; sourceTree = "<group>"; };
 		96D05C8814945886000D513E /* FSViewerBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSViewerBrowser.h; sourceTree = "<group>"; };
 		96D05C8914945886000D513E /* FSViewerBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSViewerBrowser.m; sourceTree = "<group>"; };
@@ -752,6 +763,7 @@
 			children = (
 				9600C28C10CD3D9F00CD8D28 /* Blank.png */,
 				961D5168115BC12B0064A4DA /* ApplicationIcons */,
+				96C89783149F6A7B007F7831 /* Badges */,
 				961D5167115BC11A0064A4DA /* ButtonIcons */,
 				9637C8B9118E9C030000C14B /* DividerItems */,
 				96189608133BC55D00C38570 /* ExternalDiffIcons */,
@@ -1086,6 +1098,7 @@
 		9631D05A1107A7E90007FDF2 /* ExternalClasses */ = {
 			isa = PBXGroup;
 			children = (
+				96C89643149F4106007F7831 /* CTBadge */,
 				96FF035E11991C21006EC616 /* DBPrefsWindowController */,
 				9631D05B1107A7E90007FDF2 /* DTCPathView */,
 				9605BBCD119C0D7D002EEA47 /* EMKeychainItem */,
@@ -1594,6 +1607,26 @@
 			path = DefaultFiles;
 			sourceTree = SOURCE_ROOT;
 		};
+		96C89643149F4106007F7831 /* CTBadge */ = {
+			isa = PBXGroup;
+			children = (
+				96C89644149F4106007F7831 /* CTBadge.h */,
+				96C89645149F4106007F7831 /* CTBadge.m */,
+			);
+			path = CTBadge;
+			sourceTree = "<group>";
+		};
+		96C89783149F6A7B007F7831 /* Badges */ = {
+			isa = PBXGroup;
+			children = (
+				96C89646149F4106007F7831 /* CTBadge_1.pdf */,
+				96C89647149F4106007F7831 /* CTBadge_3.pdf */,
+				96C89648149F4106007F7831 /* CTBadge_4.pdf */,
+				96C89649149F4106007F7831 /* CTBadge_5.pdf */,
+			);
+			name = Badges;
+			sourceTree = "<group>";
+		};
 		96DCCC1A10CD41B100C843C9 /* scripts */ = {
 			isa = PBXGroup;
 			children = (
@@ -1836,6 +1869,10 @@
 				96E22F7B1495938000174A55 /* FilesViewTable.xib in Resources */,
 				96E22FFC14959C5700174A55 /* FilesViewBrowser.xib in Resources */,
 				96E2303F1495A4A000174A55 /* FilesViewOutline.xib in Resources */,
+				96C8964B149F4106007F7831 /* CTBadge_1.pdf in Resources */,
+				96C8964C149F4106007F7831 /* CTBadge_3.pdf in Resources */,
+				96C8964D149F4106007F7831 /* CTBadge_4.pdf in Resources */,
+				96C8964E149F4106007F7831 /* CTBadge_5.pdf in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1955,6 +1992,7 @@
 				96D05C8A14945886000D513E /* FSViewerBrowser.m in Sources */,
 				96D05C8F149458CB000D513E /* FSViewerOutline.m in Sources */,
 				96D05C9414945900000D513E /* FSViewerTable.m in Sources */,
+				96C8964A149F4106007F7831 /* CTBadge.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
