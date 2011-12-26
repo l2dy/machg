@@ -11,8 +11,12 @@
 
 @interface FSViewerOutline : NSOutlineView <FSViewerProtocol, NSOutlineViewDelegate, NSOutlineViewDataSource>
 {
-	FSViewer*	parentViewer_;
+	FSViewer*		parentViewer_;
+	NSMutableSet*	expandedNodes_;
 }
 @property (readwrite, assign) FSViewer*	parentViewer;
+
+- (void) saveExpandedStateToUserDefaults;
+- (void) restoreExpandedStateFromUserDefaults;
 
 @end

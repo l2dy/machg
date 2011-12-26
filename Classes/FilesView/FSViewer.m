@@ -107,6 +107,7 @@
 		theFilesOutline_ = DynamicCast(FSViewerOutline, [controller view]);
 		[theFilesOutline_ setParentViewer:self];
 		[theFilesOutline_ setMenu:contextualMenuForFSViewerPane];
+		[theFilesOutline_ restoreExpandedStateFromUserDefaults];
 	});
 	return theFilesOutline_;
 }
@@ -666,6 +667,8 @@
 	[[self currentViewerPane] repositoryDataIsNew];
 	absolutePathOfRepositoryRoot_ = [[self myDocument] absolutePathOfRepositoryRoot];
 	[self regenerateBrowserDataAndReload];
+	if (theFilesOutline_)
+		[theFilesOutline_ restoreExpandedStateFromUserDefaults];
 }
 
 - (void) regenerateBrowserDataAndReload

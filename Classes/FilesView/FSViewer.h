@@ -109,6 +109,8 @@
 	FSNodeInfo*		rootNodeInfo_;
 	BOOL			areNodesVirtual_;				// Is this browser used to display virtual nodes?
 	BOOL			isMainFSBrowser_;
+	NSMutableSet*	expandedNodes_;					// The set of NSString* of which nodes need to be expanded in outline view
+
 
  @private
 	FSViewerBrowser*	theFilesBrowser_;
@@ -208,20 +210,18 @@
 	// Information for saving a Browser state
 	NSMutableArray*		savedColumnScrollPositions;
 	NSPoint				savedHorizontalScrollPosition;
-
-	// Information for saving an Outline state
-	// XXXX
+	NSArray*			savedSelectedPaths;
+	
 	// Information for saving a Table state
 	// XXXX
 
-	NSArray*			savedSelectedPaths;
 	BOOL				restoreFirstResponderToViewer;
 }
 
-@property (readwrite,assign) BOOL				restoreFirstResponderToViewer;
 @property (readwrite,assign) NSMutableArray*	savedColumnScrollPositions;
 @property (readwrite,assign) NSPoint			savedHorizontalScrollPosition;
 @property (readwrite,assign) NSArray*			savedSelectedPaths;
+@property (readwrite,assign) BOOL				restoreFirstResponderToViewer;
 
 @end
 

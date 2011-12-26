@@ -10,6 +10,13 @@
 #import "FSNodeInfo.h"
 #import "FSViewerPaneCell.h"
 
+
+
+@interface FSViewerOutline (PrivateMethods)
+- (void) restoreExpandedVisualsFromExpandedState;
+@end
+
+
 @implementation FSViewerOutline
 
 @synthesize parentViewer = parentViewer_;
@@ -24,6 +31,7 @@
 {
 	[self setRowHeight:[parentViewer_ rowHeightForFont]];
 	[super reloadData];
+	[self restoreExpandedVisualsFromExpandedState];
 }
 
 - (void) reloadDataSin
@@ -73,12 +81,8 @@
 - (NSRect)		frameinWindowOfRow:(NSInteger)row inColumn:(NSInteger)column		{ return NSMakeRect(0, 0, 20, 20); }
 
 - (BOOL)		clickedNodeCoincidesWithTerminalSelections							{ return NO; }
-- (void)		repositoryDataIsNew													{ }
+- (void)		repositoryDataIsNew													{  }
 - (NSArray*)	quickLookPreviewItems												{ return [NSArray array]; }
-
-// Save and restore browser, outline, or table state
-- (FSViewerSelectionState*)	saveViewerSelectionState								{ return [[FSViewerSelectionState alloc]init]; }
-- (void)					restoreViewerSelectionState:(FSViewerSelectionState*)savedState {}
 
 
 
@@ -114,52 +118,86 @@
 	}
 }
 
+- (void)outlineViewItemDidCollapse:(NSNotification *)notification
+{
+	FSNodeInfo* node = [[notification userInfo] objectForKey:@"NSObject"];
+	[expandedNodes_ removeObject:[node absolutePath]];
+	[self saveExpandedStateToUserDefaults];
+}
 
-//- (NSCell*) outlineView:(NSOutlineView*)outlineView  dataCellForTableColumn:(NSTableColumn*)tableColumn item:(id)item	{ return [tableColumn dataCell]; }
-//- (BOOL)	outlineView:(NSOutlineView*)outlineView  shouldEditTableColumn:(NSTableColumn*)tableColumn  item:(id)item   { return YES; }
-//- (BOOL)	outlineView:(NSOutlineView*)outlineView  shouldSelectItem:(id)item											{ return YES; }
-//- (BOOL)	outlineView:(NSOutlineView*)outlineView  isGroupItem:(id)item												{ return ![item isRepositoryRef]; }
-//- (void)	outlineView:(NSOutlineView*)outlineView  willDisplayCell:(NSCell*)cell  forTableColumn:(NSTableColumn*)tableColumn  item:(id)item
-//{
-//	if ([cell isKindOfClass:[SidebarCell class]])
-//	{
-//		SidebarCell* badgeCell = (SidebarCell*) cell;
-//		SidebarNode* node = ExactDynamicCast(SidebarNode,item);
-//		SidebarNode* selectedNode = [self selectedNode];
-//		NSString* outgoingCount = [outgoingCounts objectForKey:[node path]];
-//		NSString* incomingCount = [incomingCounts objectForKey:[node path]];
-//		if (node != selectedNode && outgoingCount && incomingCount)
-//		{
-//			NSString* badgeString = fstr(@"%@↓:%@↑",incomingCount, outgoingCount);
-//			[badgeCell setBadgeString:badgeString];
-//			[badgeCell setHasBadge:YES];
-//		}
-//		else if (node != selectedNode && [node isCompatibleTo:selectedNode])
-//		{
-//			[badgeCell setBadgeString:@" "];
-//			[badgeCell setHasBadge:YES];
-//		}
-//		else
-//		{
-//			[badgeCell setBadgeString:nil];
-//			[badgeCell setHasBadge:NO];
-//		}
-//		
-//		// If the icon disagrees with the repo being present or not then update it.
-//		if ([node isLocalRepositoryRef])
-//		{
-//			BOOL exists = repositoryExistsAtPath([node path]);
-//			NSString* name = [[node icon] name];
-//			BOOL nameIsMissingRepository = [name isEqualToString:@"MissingRepository"];
-//			if ((exists && nameIsMissingRepository) || (!exists && !nameIsMissingRepository))
-//				[node refreshNodeIcon];
-//		}
-//		
-//		[badgeCell setIcon:[node icon]];
-//		if (![node isSectionNode])
-//			[badgeCell setAttributedStringValue:[node attributedStringForNode]];
-//	}
-//}
+- (void)outlineViewItemDidExpand:(NSNotification *)notification
+{
+	FSNodeInfo* node = [[notification userInfo] objectForKey:@"NSObject"];
+	[expandedNodes_ addObject:[node absolutePath]];
+	[self saveExpandedStateToUserDefaults];
+}
 
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Save and Restore Outline state
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (void) saveExpandedStateToUserDefaults
+{
+	NSString* cacheKeyName = fstr(@"ChacheExpanded§%@", [[parentViewer_ myDocument] absolutePathOfRepositoryRoot]);
+	[[NSUserDefaults standardUserDefaults] setObject:[expandedNodes_ allObjects] forKey:cacheKeyName];
+}
+
+- (void) restoreExpandedStateFromUserDefaults
+{
+	NSString* cacheKeyName = fstr(@"ChacheExpanded§%@", [[parentViewer_ myDocument] absolutePathOfRepositoryRoot]);
+	NSArray* expandedNodes = [[NSUserDefaults standardUserDefaults] objectForKey:cacheKeyName];
+	expandedNodes_ = expandedNodes ? [NSMutableSet setWithArray:expandedNodes] : [[NSMutableSet alloc] init];
+}
+
+- (void) restoreExpandedVisualsFromExpandedState
+{
+	FSNodeInfo* rootNode = [parentViewer_ rootNodeInfo];
+	NSArray* sortedExpandedPaths = [[expandedNodes_ allObjects] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+	for (NSString* path in sortedExpandedPaths)
+	{
+		FSNodeInfo* node = [rootNode nodeForPathFromRoot:path];
+		if (node)
+			[self expandItem:node];
+	}	
+}
+
+- (FSViewerSelectionState*)	saveViewerSelectionState
+{
+	FSViewerSelectionState* newSavedState = [[FSViewerSelectionState alloc] init];
+
+	NSArray* selectedPaths = [parentViewer_ absolutePathsOfSelectedFilesInBrowser];
+	BOOL restoreFirstResponderToViewer = [[[parentViewer_ parentWindow] firstResponder] hasAncestor:self];
+	
+	// Save the selectedPaths
+	newSavedState.savedSelectedPaths = selectedPaths;
+	newSavedState.restoreFirstResponderToViewer = restoreFirstResponderToViewer;
+	
+	return newSavedState;
+}
+
+- (void) restoreViewerSelectionState:(FSViewerSelectionState*)savedState
+{
+	NSArray* savedSelectedPaths            = [savedState savedSelectedPaths];
+	BOOL     restoreFirstResponderToViewer = [savedState restoreFirstResponderToViewer];
+	FSNodeInfo* rootNode				   = [parentViewer_ rootNodeInfo];
+
+	// restore the selection
+	NSMutableIndexSet* rowsToBeSelected = [[NSMutableIndexSet alloc]init];	
+	for (NSString* path in savedSelectedPaths)
+	{
+		FSNodeInfo* item = [rootNode nodeForPathFromRoot:path];
+		if (item)
+			[rowsToBeSelected addIndex:[self rowForItem:item]];
+	}
+	[self selectRowIndexes:rowsToBeSelected byExtendingSelection:NO];
+
+	if (restoreFirstResponderToViewer)
+		[[self window] makeFirstResponder:self];	
+}
 
 @end
