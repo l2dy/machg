@@ -23,6 +23,7 @@
 #import "SingleTimedQueue.h"
 #import "NSString+SymlinksAndAliases.h"
 #import "ShellHere.h"
+#import "CTBadge.h"
 
 
 //
@@ -769,6 +770,22 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	}
 	
 	return NO;
+}
+
+
+- (NSImage *)dragImageForRowsWithIndexes:(NSIndexSet *)dragRows tableColumns:(NSArray *)tableColumns event:(NSEvent *)dragEvent offset:(NSPointPointer)dragImageOffset
+{
+	CTBadge* badgeFactory = [CTBadge badgeWithColor:[NSColor redColor] labelColor:[NSColor whiteColor]];
+	NSImage* badge = [badgeFactory smallBadgeForValue: [dragRows count]];
+	
+	if ([dragEvent modifierFlags] & NSAlternateKeyMask)
+	{
+		NSImage* addImage = [NSImage imageNamed:NSImageNameAddTemplate];
+		[badge lockFocus];
+		[addImage compositeToPoint:NSZeroPoint operation:NSCompositeSourceOver];
+		[badge unlockFocus];
+	}
+	return badge;
 }
 
 
