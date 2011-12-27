@@ -111,7 +111,7 @@ NSString* filterProgressOutOfErrorString(NSString* rawErrorStr)
 			[delegate shellTaskCreated:shellTask];
 		
 		[shellTask launch];			// Start the process
-		DebugLog(@"launched %@", [shellTask commandLineString]);
+		// DebugLog(@"launched %@", [shellTask commandLineString]);
 
 		// Move the process into our group if we can so when we quit all child processes are killed. See http:
 		// www.cocoadev.com/index.pl?NSTaskTermination. Maybe there is a better way to do this in which case I would like to know.
@@ -137,7 +137,7 @@ NSString* filterProgressOutOfErrorString(NSString* rawErrorStr)
 		sleep(repeats * 0.1);
 	} while (repeats < 4);
 
-	DebugLog(@"Finished execute cmd for %@", [shellTask commandLineString]);
+	// DebugLog(@"Finished execute cmd for %@", [shellTask commandLineString]);
 
 	if (IsNotEmpty(errStr))
 		DebugLog(@"err string for cmd %@ is %@", [shellTask commandLineString], errStr);
