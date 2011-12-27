@@ -12,7 +12,7 @@
 @interface FSViewerOutline : NSOutlineView <FSViewerProtocol, NSOutlineViewDelegate, NSOutlineViewDataSource>
 {
 	FSViewer*		parentViewer_;
-	NSMutableSet*	expandedNodes_;
+	NSMutableSet*	expandedNodes_;					// The set of NSString* of which nodes need to be expanded in outline view
 }
 @property (readwrite, assign) FSViewer*	parentViewer;
 

@@ -109,7 +109,6 @@
 	FSNodeInfo*		rootNodeInfo_;
 	BOOL			areNodesVirtual_;				// Is this browser used to display virtual nodes?
 	BOOL			isMainFSBrowser_;
-	NSMutableSet*	expandedNodes_;					// The set of NSString* of which nodes need to be expanded in outline view
 
 
  @private

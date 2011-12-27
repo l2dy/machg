@@ -31,6 +31,8 @@
 {
 	[self setRowHeight:[parentViewer_ rowHeightForFont]];
 	[super reloadData];
+	if (IsEmpty(expandedNodes_))
+		[self restoreExpandedStateFromUserDefaults];
 	[self restoreExpandedVisualsFromExpandedState];
 }
 
@@ -81,7 +83,7 @@
 - (NSRect)		frameinWindowOfRow:(NSInteger)row inColumn:(NSInteger)column		{ return NSMakeRect(0, 0, 20, 20); }
 
 - (BOOL)		clickedNodeCoincidesWithTerminalSelections							{ return NO; }
-- (void)		repositoryDataIsNew													{  }
+- (void)		repositoryDataIsNew													{ expandedNodes_ = nil; }
 - (NSArray*)	quickLookPreviewItems												{ return [NSArray array]; }
 
 
@@ -120,16 +122,26 @@
 
 - (void)outlineViewItemDidCollapse:(NSNotification *)notification
 {
+	if (!expandedNodes_)
+		[self restoreExpandedStateFromUserDefaults];
 	FSNodeInfo* node = [[notification userInfo] objectForKey:@"NSObject"];
-	[expandedNodes_ removeObject:[node absolutePath]];
-	[self saveExpandedStateToUserDefaults];
+	if ([expandedNodes_ containsObject:[node absolutePath]])
+	{
+		[expandedNodes_ removeObject:[node absolutePath]];
+		[self saveExpandedStateToUserDefaults];
+	}
 }
 
 - (void)outlineViewItemDidExpand:(NSNotification *)notification
 {
+	if (!expandedNodes_)
+		[self restoreExpandedStateFromUserDefaults];
 	FSNodeInfo* node = [[notification userInfo] objectForKey:@"NSObject"];
-	[expandedNodes_ addObject:[node absolutePath]];
-	[self saveExpandedStateToUserDefaults];
+	if (![expandedNodes_ containsObject:[node absolutePath]])
+	{
+		[expandedNodes_ addObject:[node absolutePath]];
+		[self saveExpandedStateToUserDefaults];
+	}	
 }
 
 
@@ -143,13 +155,13 @@
 
 - (void) saveExpandedStateToUserDefaults
 {
-	NSString* cacheKeyName = fstr(@"ChacheExpanded§%@", [[parentViewer_ myDocument] absolutePathOfRepositoryRoot]);
+	NSString* cacheKeyName = fstr(@"ChacheExpandedFSViewerOutlineNodes§%@", [[parentViewer_ myDocument] absolutePathOfRepositoryRoot]);
 	[[NSUserDefaults standardUserDefaults] setObject:[expandedNodes_ allObjects] forKey:cacheKeyName];
 }
 
 - (void) restoreExpandedStateFromUserDefaults
 {
-	NSString* cacheKeyName = fstr(@"ChacheExpanded§%@", [[parentViewer_ myDocument] absolutePathOfRepositoryRoot]);
+	NSString* cacheKeyName = fstr(@"ChacheExpandedFSViewerOutlineNodes§%@", [[parentViewer_ myDocument] absolutePathOfRepositoryRoot]);
 	NSArray* expandedNodes = [[NSUserDefaults standardUserDefaults] objectForKey:cacheKeyName];
 	expandedNodes_ = expandedNodes ? [NSMutableSet setWithArray:expandedNodes] : [[NSMutableSet alloc] init];
 }
