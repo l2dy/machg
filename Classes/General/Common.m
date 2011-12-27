@@ -1014,7 +1014,10 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 		[self compare:aString options:NSCaseInsensitiveSearch] == NSOrderedSame &&
 		[self compare:aString options:NSLiteralSearch] != NSOrderedSame;
 }
-
+- (NSComparisonResult)caseInsensitiveNumericCompare:(NSString*)aString
+{
+	return [self compare:aString options:(NSCaseInsensitiveSearch|NSNumericSearch|NSForcedOrderingSearch)];
+}
 - (BOOL) endsWithNewLine
 {
 	if ([self length] <= 0)
@@ -1022,7 +1025,6 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	unichar lastChar = [self characterAtIndex:[self length]-1];
 	return (lastChar == '\n' || lastChar == '\r');
 }
-
 @end
 
 

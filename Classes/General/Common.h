@@ -947,6 +947,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 @interface NSString ( NSStringPlusComparisons )
 - (BOOL)	isNotEqualToString:(NSString*)aString;
 - (BOOL)	differsOnlyInCaseFrom:(NSString*)aString;
+- (NSComparisonResult)caseInsensitiveNumericCompare:(NSString*)aString;
 - (BOOL)	endsWithNewLine;
 @end
 
