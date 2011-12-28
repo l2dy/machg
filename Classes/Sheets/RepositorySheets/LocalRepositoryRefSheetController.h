@@ -10,6 +10,10 @@
 #import <Cocoa/Cocoa.h>
 #import "Common.h"
 
+@class PathTextField;
+
+
+
 @interface LocalRepositoryRefSheetController : BaseSheetWindowController
 {
 	IBOutlet NSWindow*					theLocalRepositoryRefSheet;
@@ -17,7 +21,7 @@
 	IBOutlet NSBox*						repositoryPathBox;
 	IBOutlet NSTextField*				theTitleText;
 	IBOutlet NSTextField*				shortNameField;
-	IBOutlet NSTextField*				pathField;
+	IBOutlet PathTextField*				pathField;
 
 	MacHgDocument*		myDocument;
 	
@@ -45,4 +49,10 @@
 // Delegate Methods for text fields
 - (void)	 controlTextDidChange:(NSNotification*)aNotification;
 
+@end
+
+
+@interface PathTextField : NSTextField
+{
+}
 @end

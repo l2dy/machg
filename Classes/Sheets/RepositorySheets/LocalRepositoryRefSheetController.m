@@ -59,9 +59,14 @@
 
 - (IBAction) validateButtons:(id)sender
 {
+	BOOL repositoryExists = repositoryExistsAtPath(pathFieldValue_);
+	BOOL directoryExists = repositoryExists || pathIsExistentDirectory(pathFieldValue_);
+	if (directoryExists && [[theLocalRepositoryRefSheet firstResponder] hasAncestor:pathField])
+		if (IsEmpty(shortNameFieldValue_) || [[pathFieldValue_ pathComponents] containsObject:shortNameFieldValue_])
+			[self setShortNameFieldValue:[pathFieldValue_ lastPathComponent]];
+	
 	BOOL valid = ([[self pathFieldValue] length] > 0) && ([[self shortNameFieldValue] length] > 0);
 	[okButton setEnabled:valid];
-	BOOL repositoryExists = repositoryExistsAtPath(pathFieldValue_);
 	[repositoryPathBox setHidden:!repositoryExists];
 	[okButton setTitle:(repositoryExists ? @"Manage Repository" : @"Create Repository")];
 	[theTitleText setStringValue:(repositoryExists ? @"Manage Repository" : @"Create Repository")];
@@ -252,6 +257,35 @@
 	[self validateButtons:[aNotification object]];
 }
 
+@end
 
+
+
+
+@implementation PathTextField
+
+- (void) awakeFromNib
+{
+	[super awakeFromNib];
+	NSMutableArray* dragTypes = [NSMutableArray arrayWithArray:[self registeredDraggedTypes]];
+	[dragTypes addObject:NSFilenamesPboardType];
+	[self registerForDraggedTypes:dragTypes];
+}
+
+- (NSDragOperation) draggingSourceOperationMaskForLocal:(BOOL)isLocal  { return NSDragOperationMove; }
+
+
+- (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)info
+{
+	[[self window] makeFirstResponder:self];
+	NSPasteboard*  pasteboard  = [info draggingPasteboard];
+	NSString* availableType = [pasteboard availableTypeFromArray:[NSArray arrayWithObjects:NSFilenamesPboardType, NSURLPboardType, NSStringPboardType, NSMultipleTextSelectionPboardType, NSRTFPboardType, nil]];
+	if (availableType)
+	{
+		[[self window] makeFirstResponder:self];
+		return NSDragOperationCopy;
+	}
+	return NSDragOperationNone;
+}
 
 @end
