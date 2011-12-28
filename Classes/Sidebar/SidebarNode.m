@@ -134,10 +134,12 @@
 // MARK: Setters and Accessors
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+static inline NSInteger rangeCheckIndex(NSInteger index, NSInteger count)	{ return (index >= 0 && index <= count) ? index : count; }
+
 - (void) setShortName:(NSString*)name	{ shortName = name; }
 
-- (void) addChild:(SidebarNode*)node								{ if (!children) children = [[NSMutableArray alloc]init];  [children addObject:node];					[node setParent:self]; }
-- (void) insertChild:(SidebarNode*)node atIndex:(NSUInteger)index	{ if (!children) children = [[NSMutableArray alloc]init];  [children insertObject:node atIndex:index];	[node setParent:self]; }
+- (void) addChild:(SidebarNode*)node								{ if (!children) children = [[NSMutableArray alloc]init];  [children addObject:node];														[node setParent:self]; }
+- (void) insertChild:(SidebarNode*)node atIndex:(NSUInteger)index	{ if (!children) children = [[NSMutableArray alloc]init];  [children insertObject:node atIndex:rangeCheckIndex(index, [children count])];	[node setParent:self]; }
 - (void) removeChild:(SidebarNode*)node				{ [children removeObject:node]; }
 - (NSInteger) indexOfChildNode:(SidebarNode*)node	{ return [children indexOfObject:node]; }
 - (SidebarNode*) childNodeAtIndex:(int)index		{ return [children objectAtIndex:index]; }
