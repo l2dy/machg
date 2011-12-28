@@ -83,6 +83,15 @@
 	[self actionSwitchToFilesBrowser:eFilesBrowser];
 }
 
+- (void) setupViewerPane:(id)view
+{
+	[view setParentViewer:self];
+	[view setMenu:contextualMenuForFSViewerPane];
+	[view setTarget:parentController];
+	[view setAction:@selector(browserAction:)];
+	[view setDoubleAction:@selector(browserDoubleAction:)];	
+}
+
 - (FSViewerBrowser*) theFilesBrowser
 {
 	dispatch_once(&theFilesBrowserInitilizer_, ^{
@@ -91,8 +100,7 @@
 		// nib and then hooking it up manually. 
 		NSViewController* controller = [[NSViewController alloc] initWithNibName:@"FilesViewBrowser" bundle:nil];
 		theFilesBrowser_ = DynamicCast(FSViewerBrowser, [controller view]);
-		[theFilesBrowser_ setParentViewer:self];
-		[theFilesBrowser_ setMenu:contextualMenuForFSViewerPane];
+		[self setupViewerPane:theFilesBrowser_];		
 	});
 	return theFilesBrowser_;
 }
@@ -105,9 +113,7 @@
 		// nib and then hooking it up manually. 
 		NSViewController* controller = [[NSViewController alloc] initWithNibName:@"FilesViewOutline" bundle:nil];
 		theFilesOutline_ = DynamicCast(FSViewerOutline, [controller view]);
-		[theFilesOutline_ setParentViewer:self];
-		[theFilesOutline_ setMenu:contextualMenuForFSViewerPane];
-		[theFilesOutline_ restoreExpandedStateFromUserDefaults];
+		[self setupViewerPane:theFilesOutline_];		
 	});
 	return theFilesOutline_;
 }
@@ -120,8 +126,7 @@
 		// nib and then hooking it up manually. 
 		NSViewController* controller = [[NSViewController alloc] initWithNibName:@"FilesViewTable" bundle:nil];
 		theFilesTable_ = DynamicCast(FSViewerTable, [controller view]);
-		[theFilesTable_ setParentViewer:self];
-		[theFilesTable_ setMenu:contextualMenuForFSViewerPane];
+		[self setupViewerPane:theFilesTable_];
 	});
 	return theFilesTable_;
 }

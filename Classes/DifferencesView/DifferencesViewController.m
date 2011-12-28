@@ -95,10 +95,6 @@
 	myDocument = [parentController myDocument];
 	[self openSplitViewPanesToDefaultHeights: self];
 
-	// Tell the browser to send us messages when it is clicked.
-	[[theFSViewer theFilesBrowser] setTarget:self];
-	[[theFSViewer theFilesBrowser] setAction:@selector(browserAction:)];
-	[[theFSViewer theFilesBrowser] setDoubleAction:@selector(browserDoubleAction:)];
 	[theFSViewer setAreNodesVirtual:YES];
 	[mainSplitView setPosition:400 ofDividerAtIndex:0];
 	

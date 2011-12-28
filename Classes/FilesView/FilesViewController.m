@@ -83,12 +83,7 @@
 	myDocument = [parentContoller myDocument];
 	[self observe:kRepositoryDataIsNew		from:[self myDocument]  byCalling:@selector(repositoryDataIsNew)];
 
-	// Tell the browser to send us messages when it is clicked or a key is typed in it.
-	[[theFSViewer theFilesBrowser] setTarget:self];
-	[[theFSViewer theFilesBrowser] setAction:@selector(browserAction:)];
-	[[theFSViewer theFilesBrowser] setDoubleAction:@selector(browserDoubleAction:)];
 	[theFSViewer setAreNodesVirtual:NO];
-    
 	[theFSViewer setIsMainFSBrowser:YES];
 }
 
