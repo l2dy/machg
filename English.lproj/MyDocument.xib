@@ -22,6 +22,7 @@
     <object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
       <bool key="EncodedWithXMLCoder">YES</bool>
       <integer value="100274"/>
+      <integer value="5"/>
     </object>
     <object class="NSArray" key="IBDocument.PluginDependencies">
       <bool key="EncodedWithXMLCoder">YES</bool>
@@ -94,7 +95,7 @@
                 <string key="NSToolbarItemPaletteLabel"/>
                 <nil key="NSToolbarItemToolTip"/>
                 <object class="NSPathControl" key="NSToolbarItemView" id="504442913">
-                  <nil key="NSNextResponder"/>
+                  <reference key="NSNextResponder"/>
                   <int key="NSvFlags">268</int>
                   <object class="NSMutableSet" key="NSDragTypes">
                     <bool key="EncodedWithXMLCoder">YES</bool>
@@ -105,6 +106,8 @@
                     </object>
                   </object>
                   <string key="NSFrame">{{0, 14}, {179, 20}}</string>
+                  <reference key="NSSuperview"/>
+                  <reference key="NSWindow"/>
                   <bool key="NSEnabled">YES</bool>
                   <object class="NSPathCell" key="NSCell" id="821488445">
                     <int key="NSCellFlags">337772033</int>
@@ -385,12 +388,14 @@
                 <string key="NSToolbarItemPaletteLabel">View</string>
                 <nil key="NSToolbarItemToolTip"/>
                 <object class="NSSegmentedControl" key="NSToolbarItemView" id="758125634">
-                  <nil key="NSNextResponder"/>
+                  <reference key="NSNextResponder"/>
                   <int key="NSvFlags">268</int>
                   <string key="NSFrame">{{0, 14}, {104, 25}}</string>
+                  <reference key="NSSuperview"/>
+                  <reference key="NSWindow"/>
                   <bool key="NSEnabled">YES</bool>
                   <object class="NSSegmentedCell" key="NSCell" id="1068445230">
-                    <int key="NSCellFlags">-2080244224</int>
+                    <int key="NSCellFlags">67239424</int>
                     <int key="NSCellFlags2">0</int>
                     <object class="NSFont" key="NSSupport" id="314159787">
                       <string key="NSName">LucidaGrande</string>
@@ -407,14 +412,13 @@
                           <string key="NSResourceName">tb-browserPane</string>
                         </object>
                         <string key="NSSegmentItemLabel"/>
-                        <bool key="NSSegmentItemSelected">YES</bool>
                         <int key="NSSegmentItemImageScaling">2</int>
                       </object>
                       <object class="NSSegmentItem">
                         <double key="NSSegmentItemWidth">32</double>
                         <object class="NSCustomResource" key="NSSegmentItemImage">
                           <string key="NSClassName">NSImage</string>
-                          <string key="NSResourceName">tb-LogListPane</string>
+                          <string key="NSResourceName">tb-HistoryViewPane</string>
                         </object>
                         <string key="NSSegmentItemLabel"/>
                         <int key="NSSegmentItemTag">1</int>
@@ -496,9 +500,11 @@
                 <string key="NSToolbarItemPaletteLabel">Search</string>
                 <nil key="NSToolbarItemToolTip"/>
                 <object class="NSSearchField" key="NSToolbarItemView" id="59755526">
-                  <nil key="NSNextResponder"/>
+                  <reference key="NSNextResponder"/>
                   <int key="NSvFlags">268</int>
                   <string key="NSFrame">{{0, 14}, {160, 22}}</string>
+                  <reference key="NSSuperview"/>
+                  <reference key="NSWindow"/>
                   <bool key="NSViewIsLayerTreeHost">YES</bool>
                   <int key="NSViewLayerContentsRedrawPolicy">2</int>
                   <bool key="NSEnabled">YES</bool>
@@ -763,7 +769,7 @@
             <reference ref="661836347"/>
             <reference ref="421929319"/>
           </object>
-          <object class="NSArray" key="NSToolbarIBDefaultItems">
+          <object class="NSMutableArray" key="NSToolbarIBDefaultItems">
             <bool key="EncodedWithXMLCoder">YES</bool>
             <reference ref="494685999"/>
             <reference ref="799102986"/>
@@ -786,7 +792,7 @@
         <string key="NSWindowContentMaxSize">{1.7976931348623157e+308, 1.7976931348623157e+308}</string>
         <string key="NSWindowContentMinSize">{300, 200}</string>
         <object class="NSView" key="NSWindowView" id="568628114">
-          <nil key="NSNextResponder"/>
+          <reference key="NSNextResponder"/>
           <int key="NSvFlags">256</int>
           <object class="NSMutableArray" key="NSSubviews">
             <bool key="EncodedWithXMLCoder">YES</bool>
@@ -1236,6 +1242,7 @@
             </object>
           </object>
           <string key="NSFrameSize">{893, 491}</string>
+          <reference key="NSSuperview"/>
         </object>
         <string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
         <string key="NSMinSize">{300, 278}</string>
@@ -3424,7 +3431,7 @@
         <object class="NSMutableArray" key="dict.values">
           <bool key="EncodedWithXMLCoder">YES</bool>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>{{286, 210}, {617, 285}}</string>
+          <string>{{273, 810}, {617, 0}}</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3486,7 +3493,7 @@
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <integer value="2"/>
+          <integer value="0"/>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -6405,7 +6412,7 @@
         <string>clone</string>
         <string>merge</string>
         <string>tb-DiffInspectorPane</string>
-        <string>tb-LogListPane</string>
+        <string>tb-HistoryViewPane</string>
         <string>tb-browserPane</string>
         <string>tb-terminal</string>
       </object>
@@ -6434,7 +6441,7 @@
         <string>{32, 32}</string>
         <string>{32, 32}</string>
         <string>{29, 23}</string>
-        <string>{13, 14}</string>
+        <string>{15, 14}</string>
         <string>{15, 14}</string>
         <string>{32, 32}</string>
       </object>
