@@ -175,6 +175,13 @@ typedef enum
 
 typedef enum
 {
+	eFilesBrowserDefault    = 0x0,
+	eFilesOutlineDefault    = 0x01,
+	eFilesTableDefault		= 0x02
+} FSViewerNumberDefaultOption;
+
+typedef enum
+{
 	eUseNothingForDiffs		 = -1,
 	eUseFileMergeForDiffs	 = 0,
 	eUseAraxisMergeForDiffs  = 1,
@@ -311,9 +318,10 @@ typedef enum
 
 typedef enum
 {
-	eFilesBrowser    = 0x0,
-	eFilesOutline    = 0x01,
-	eFilesTable		 = 0x02
+	eFilesNoView	 = 0x0,
+	eFilesBrowser    = 0x01,
+	eFilesOutline    = 0x02,
+	eFilesTable		 = 0x03
 } FSViewerNum;
 
 typedef enum
@@ -438,6 +446,7 @@ extern NSString* const MHGDefaultAnnotationOptionLineNumber;
 extern NSString* const MHGDefaultAnnotationOptionNumber;
 extern NSString* const MHGDefaultAnnotationOptionText;
 extern NSString* const MHGDefaultAnnotationOptionUser;
+extern NSString* const MHGDefaultFilesView;
 extern NSString* const MHGDefaultHGIgnoreContents;
 extern NSString* const MHGDefaultWorkspacePath;
 extern NSString* const MHGDisplayFileIconsInBrowser;
@@ -577,6 +586,7 @@ HandleOrigFilesOption			HandleGeneratedOrigFilesFromDefaults();
 OnActivationOpenWhatOption		OnActivationOpenFromDefaults();
 ToolForDiffing					UseWhichToolForDiffingFromDefaults();
 ToolForMerging					UseWhichToolForMergingFromDefaults();
+FSViewerNumberDefaultOption		DefaultFilesViewFromDefaults();
 
 BrowserDoubleClickAction		browserBehaviourDoubleClick();
 BrowserDoubleClickAction		browserBehaviourCommandDoubleClick();

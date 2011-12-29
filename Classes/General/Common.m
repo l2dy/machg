@@ -78,6 +78,7 @@ NSString* const MHGDefaultAnnotationOptionLineNumber	= @"DefaultAnnotationOption
 NSString* const MHGDefaultAnnotationOptionNumber		= @"DefaultAnnotationOptionNumber";
 NSString* const MHGDefaultAnnotationOptionText			= @"DefaultAnnotationOptionText";
 NSString* const MHGDefaultAnnotationOptionUser			= @"DefaultAnnotationOptionUser";
+NSString* const MHGDefaultFilesView						= @"DefaultFilesView";
 NSString* const MHGDefaultHGIgnoreContents              = @"DefaultHGIgnoreContents";
 NSString* const MHGDefaultWorkspacePath					= @"DefaultWorkspacePath";
 NSString* const MHGDisplayFileIconsInBrowser			= @"DisplayFileIconsInBrowser";
@@ -229,6 +230,7 @@ HandleOrigFilesOption		HandleGeneratedOrigFilesFromDefaults()	{ return enumFromD
 OnActivationOpenWhatOption	OnActivationOpenFromDefaults()			{ return enumFromDefaultsForKey(MHGOnActivationOpen); }
 ToolForDiffing				UseWhichToolForDiffingFromDefaults()	{ return enumFromDefaultsForKey(MHGUseWhichToolForDiffing); }
 ToolForMerging				UseWhichToolForMergingFromDefaults()	{ return enumFromDefaultsForKey(MHGUseWhichToolForMerging); }
+FSViewerNumberDefaultOption	DefaultFilesViewFromDefaults()			{ return enumFromDefaultsForKey(MHGDefaultFilesView); }
 
 
 

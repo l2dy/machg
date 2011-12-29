@@ -36,6 +36,8 @@
 	<true/>
 	<key>DefaultAnnotationOptionUser</key>
 	<true/>
+	<key>DefaultFilesView</key>
+	<integer>0</integer>
 	<key>DefaultHGIgnoreContents</key>
 	<string>syntax: glob
 .DS_Store</string>

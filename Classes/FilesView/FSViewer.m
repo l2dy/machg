@@ -65,6 +65,8 @@
 // MARK: initialization
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+- (NSString*) viewerAutoSaveName { return fstr(@"File:%@:primaryViewer", [[parentController myDocument] documentNameForAutosave]); }
+
 - (id) init
 {
 	self = [super init];
@@ -78,7 +80,10 @@
 	[self observe:kBrowserDisplayPreferencesChanged from:nil byCalling:@selector(reloadDataSin)];
 	[parentController awakeFromNib];	// The parents must ensure that the internals of awakeFromNib only ever happen once.
 	rootNodeInfo_ = nil;
-	[self actionSwitchToFilesBrowser:eFilesBrowser];
+	FSViewerNum viewerNum = [[NSUserDefaults standardUserDefaults] integerForKey:[self viewerAutoSaveName]];
+	if (viewerNum == eFilesNoView)
+		viewerNum = DefaultFilesViewFromDefaults() + 1;
+	[self setCurrentFSViewerPane:viewerNum];
 }
 
 - (void) setupViewerPane:(id)view
