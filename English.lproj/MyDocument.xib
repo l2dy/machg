@@ -22,7 +22,7 @@
     <object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
       <bool key="EncodedWithXMLCoder">YES</bool>
       <integer value="100274"/>
-      <integer value="5"/>
+      <integer value="100021"/>
     </object>
     <object class="NSArray" key="IBDocument.PluginDependencies">
       <bool key="EncodedWithXMLCoder">YES</bool>
@@ -107,7 +107,6 @@
                   </object>
                   <string key="NSFrame">{{0, 14}, {179, 20}}</string>
                   <reference key="NSSuperview"/>
-                  <reference key="NSWindow"/>
                   <bool key="NSEnabled">YES</bool>
                   <object class="NSPathCell" key="NSCell" id="821488445">
                     <int key="NSCellFlags">337772033</int>
@@ -392,7 +391,6 @@
                   <int key="NSvFlags">268</int>
                   <string key="NSFrame">{{0, 14}, {104, 25}}</string>
                   <reference key="NSSuperview"/>
-                  <reference key="NSWindow"/>
                   <bool key="NSEnabled">YES</bool>
                   <object class="NSSegmentedCell" key="NSCell" id="1068445230">
                     <int key="NSCellFlags">67239424</int>
@@ -504,7 +502,6 @@
                   <int key="NSvFlags">268</int>
                   <string key="NSFrame">{{0, 14}, {160, 22}}</string>
                   <reference key="NSSuperview"/>
-                  <reference key="NSWindow"/>
                   <bool key="NSViewIsLayerTreeHost">YES</bool>
                   <int key="NSViewLayerContentsRedrawPolicy">2</int>
                   <bool key="NSEnabled">YES</bool>
@@ -769,7 +766,7 @@
             <reference ref="661836347"/>
             <reference ref="421929319"/>
           </object>
-          <object class="NSMutableArray" key="NSToolbarIBDefaultItems">
+          <object class="NSArray" key="NSToolbarIBDefaultItems">
             <bool key="EncodedWithXMLCoder">YES</bool>
             <reference ref="494685999"/>
             <reference ref="799102986"/>
@@ -2454,6 +2451,14 @@
           </object>
           <int key="connectionID">100497</int>
         </object>
+        <object class="IBConnectionRecord">
+          <object class="IBOutletConnection" key="connection">
+            <string key="label">toolbarSegementedControl_</string>
+            <reference key="source" ref="512844837"/>
+            <reference key="destination" ref="758125634"/>
+          </object>
+          <int key="connectionID">100498</int>
+        </object>
       </object>
       <object class="IBMutableOrderedSet" key="objectRecords">
         <object class="NSArray" key="orderedObjects">
@@ -3431,7 +3436,7 @@
         <object class="NSMutableArray" key="dict.values">
           <bool key="EncodedWithXMLCoder">YES</bool>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>{{273, 810}, {617, 0}}</string>
+          <string>{{273, 525}, {617, 285}}</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3576,7 +3581,7 @@
         </object>
       </object>
       <nil key="sourceID"/>
-      <int key="maxID">100497</int>
+      <int key="maxID">100498</int>
     </object>
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -5061,6 +5066,7 @@
               <string>theProcessListController_</string>
               <string>toolbarSearchField_</string>
               <string>toolbarSearchItem_</string>
+              <string>toolbarSegementedControl_</string>
               <string>updateAlertAccessoryAlertSuppressionCheckBox</string>
               <string>updateAlertAccessoryCleanCheckBox</string>
               <string>updateAlertAccessoryView</string>
@@ -5077,6 +5083,7 @@
               <string>ProcessListController</string>
               <string>NSSearchField</string>
               <string>NSToolbarItem</string>
+              <string>NSSegmentedControl</string>
               <string>NSButton</string>
               <string>NSButton</string>
               <string>NSView</string>
@@ -5096,6 +5103,7 @@
               <string>theProcessListController_</string>
               <string>toolbarSearchField_</string>
               <string>toolbarSearchItem_</string>
+              <string>toolbarSegementedControl_</string>
               <string>updateAlertAccessoryAlertSuppressionCheckBox</string>
               <string>updateAlertAccessoryCleanCheckBox</string>
               <string>updateAlertAccessoryView</string>
@@ -5141,6 +5149,10 @@
               <object class="IBToOneOutletInfo">
                 <string key="name">toolbarSearchItem_</string>
                 <string key="candidateClassName">NSToolbarItem</string>
+              </object>
+              <object class="IBToOneOutletInfo">
+                <string key="name">toolbarSegementedControl_</string>
+                <string key="candidateClassName">NSSegmentedControl</string>
               </object>
               <object class="IBToOneOutletInfo">
                 <string key="name">updateAlertAccessoryAlertSuppressionCheckBox</string>

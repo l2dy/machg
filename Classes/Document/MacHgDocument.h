@@ -49,7 +49,9 @@
 	IBOutlet ThickSplitView*		sidebarAndInformation_;		// The thick split view inside the lhs sidebar as a whole.
 	IBOutlet NSSearchField*			toolbarSearchField_;		// This is the search field inside the toolbar item inside the toolbar.
 	IBOutlet NSToolbarItem*			toolbarSearchItem_;			// This is the toolbarItem inside the toolbar. (It contains the search field)
+	IBOutlet NSSegmentedControl*	toolbarSegementedControl_;	// This is the segmented control to switch views.
 
+	
 	// Information and Activity View
 	IBOutlet ProcessListController* theProcessListController_;
 	IBOutlet NSBox*					informationAndActivityBox_;

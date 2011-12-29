@@ -93,6 +93,7 @@
 @interface MacHgDocument (PrivateAPI)
 - (void) initializeRepositoryData;
 - (void) populateOutlineContents;
+- (void) validateViewSelector;
 @end
 
 
@@ -205,6 +206,7 @@
 
 - (void) awakeFromNib
 {
+	[self observe:kSidebarSelectionDidChange	from:self		  byCalling:@selector(validateViewSelector)];
 	[self observe:kRepositoryRootChanged		from:self		  byCalling:@selector(repositoryRootDidChange)];
 	[self observe:NSWindowDidMoveNotification	from:mainWindow_  byCalling:@selector(recordWindowFrameToDefaults)];
 	[self observe:NSWindowDidResizeNotification	from:mainWindow_  byCalling:@selector(recordWindowFrameToDefaults)];
@@ -229,6 +231,8 @@
 	for (NSMenuItem* item in [theSearchFieldMenu itemArray])
 		[item setAttributedTitle:normalSheetMessageAttributedString([item title])];
 	
+	[self validateViewSelector];
+
 	// Test string matching.
 	if (NO)
 	{
@@ -599,6 +603,12 @@
 {
 	if (currentPane_ == newPaneNum)
 		return;
+
+	if ((newPaneNum != eBackingView) && ![self localRepoIsSelectedAndReady])
+	{
+		[self setCurrentPane:eBackingView];
+		return;
+	}
 
 	if (newPaneNum != eBackingView)
 	{
@@ -1695,6 +1705,15 @@
 // MARK: -
 // MARK: Notifications
 // -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (void) validateViewSelector
+{
+	BOOL enabled = [self localRepoIsSelectedAndReady];
+	[toolbarSegementedControl_ setEnabled:enabled forSegment:0];
+	[toolbarSegementedControl_ setEnabled:enabled forSegment:1];
+	[toolbarSegementedControl_ setEnabled:enabled forSegment:2];
+}
+
 
 - (void) repositoryRootDidChange
 {
