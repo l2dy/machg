@@ -113,6 +113,8 @@
 		[theFSViewer refreshBrowserPaths:[RepositoryPaths fromRootPath:rootPath] finishingBlock:nil];
 }
 
+- (BOOL) controlsMainFSViewer	{ return NO; }
+
 - (void) unload
 {
 	[self stopObserving];

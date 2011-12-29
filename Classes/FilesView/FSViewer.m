@@ -55,7 +55,6 @@
 
 @synthesize areNodesVirtual = areNodesVirtual_;
 @synthesize absolutePathOfRepositoryRoot = absolutePathOfRepositoryRoot_;
-@synthesize isMainFSBrowser = isMainFSBrowser_;
 
 
 
@@ -70,7 +69,6 @@
 {
 	self = [super init];
 	rootNodeInfo_ = nil;
-	isMainFSBrowser_ = NO;
 	return self;
 }
 
@@ -462,7 +460,7 @@
 	if (openWithItem)
 		[theMenu removeItem:openWithItem];
 
-	if (isMainFSBrowser_ && [self singleFileIsChosenInFiles])
+	if ([parentController controlsMainFSViewer] && [self singleFileIsChosenInFiles])
 	{
 		FSNodeInfo* clickedNode = [self clickedNode];
 		NSString* path = [clickedNode absolutePath];
@@ -670,7 +668,7 @@
 				rootNodeInfo_ = newRootNode;
 				[self reloadData];
 				[self restoreViewerSelectionState:theSavedState ];		// restore the selection and the scroll positions of the columns and the horizontal scroll
-				if (isMainFSBrowser_ && ![[self myDocument] underlyingRepositoryChangedEventIsQueued])
+				if ([parentController controlsMainFSViewer] && ![[self myDocument] underlyingRepositoryChangedEventIsQueued])
 					[[[self myDocument] repositoryData] adjustCollectionForIncompleteRevision];
 			}
 

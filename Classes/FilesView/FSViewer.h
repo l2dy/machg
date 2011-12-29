@@ -22,6 +22,7 @@
 - (NSArray*)		resolveStatusLines: (NSArray*)absolutePaths withRootPath:(NSString*)rootPath;
 - (BOOL)			writeRowsWithIndexes:(NSIndexSet*)rowIndexes inColumn:(NSInteger)column toPasteboard:(NSPasteboard*)pasteboard;	// dragging support
 - (MacHgDocument*)	myDocument;
+- (BOOL)			controlsMainFSViewer;
 - (void)			updateCurrentPreviewImage;
 - (void)			awakeFromNib;	// This routine needs to be able to be called multiple times on the Controller parent of the
 									// FSBrowser, yet interanlly fire only once
@@ -104,7 +105,6 @@
 	NSString*		absolutePathOfRepositoryRoot_;
 	FSNodeInfo*		rootNodeInfo_;
 	BOOL			areNodesVirtual_;				// Is this browser used to display virtual nodes?
-	BOOL			isMainFSBrowser_;
 
 
  @private
@@ -119,7 +119,6 @@
 }
 
 @property (readwrite,assign) BOOL		areNodesVirtual;
-@property (readwrite,assign) BOOL		isMainFSBrowser;
 @property (readwrite,assign) NSString*	absolutePathOfRepositoryRoot;
 
 

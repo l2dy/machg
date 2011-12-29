@@ -84,8 +84,9 @@
 	[self observe:kRepositoryDataIsNew		from:[self myDocument]  byCalling:@selector(repositoryDataIsNew)];
 
 	[theFSViewer setAreNodesVirtual:NO];
-	[theFSViewer setIsMainFSBrowser:YES];
 }
+
+- (BOOL) controlsMainFSViewer	{ return YES; }
 
 - (void) unload					{ }
 
