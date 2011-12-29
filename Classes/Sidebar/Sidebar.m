@@ -686,17 +686,19 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	// user is doing an intra-app drag within the outline view
 	if ([pasteboard availableTypeFromArray:[NSArray arrayWithObject:kSidebarPBoardType]])
 	{
-		SidebarNode* currentSelectedNode = [self selectedNode];
 		NSInteger adjIdx = 0;
 
 		SidebarNode* copiedTree = [root_ copyNodeTree];
 		[[self prepareUndoWithTarget:self] setRootAndUpdate:copiedTree];
 		[[self undoManager] setActionName:@"Drag"];
 		
-		// We can't drag the item onto itself
 		NSArray* dragNodesArray = [[AppController sharedAppController] dragNodesArray];
 		Sidebar* sourceSidebar  = DynamicCast(Sidebar, [info draggingSource]);
+		NSArray* currentSelectedNodes = [self selectedNodes];
+		NSArray* currentSelectedSourceNodes = [sourceSidebar selectedNodes];
 		BOOL copyNodes = (sourceSidebar != self) || ([info draggingSourceOperationMask] == NSDragOperationCopy);
+		
+		// We can't drag the item onto itself
 		if ([dragNodesArray count] == 1 && [dragNodesArray objectAtIndex:0] == targetParent)
 			return NO;
 		
@@ -723,14 +725,18 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 			newTargetIndex = [targetParent numberOfChildren];
 		for (NSInteger i = [dragNodesArray count] -1; i >=0; i--)
 		{
-			SidebarNode* node = [[dragNodesArray objectAtIndex:i] copyNodeTree];
-			[targetParent insertChild:node atIndex:newTargetIndex];
+			SidebarNode* node = [dragNodesArray objectAtIndex:i];
+			SidebarNode* useNode = copyNodes ? [node copyNodeTree] : node;
+			[targetParent insertChild:useNode atIndex:newTargetIndex];
 		}
 
 		if (sourceSidebar != self)
+		{
 			[sourceSidebar reloadData];
+			[sourceSidebar selectNodes:currentSelectedSourceNodes];
+		}
 		[self reloadData];
-		[self selectNode:currentSelectedNode];
+		[self selectNodes:currentSelectedNodes];
 		[myDocument saveDocumentIfNamed];
 		return YES;
 	}
@@ -1078,11 +1084,14 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	NSArray* theChosenNodes = [self chosenNodes];
 	if (IsEmpty(theChosenNodes))
 		{ NSBeep(); return; }
-
-	NSMutableArray* accumulateAllNodes = [NSMutableArray arrayWithArray:theChosenNodes];
+	
+	BOOL restoreSelectionAfterRemove = [self clickedRowOutsideSelectedRows];
+	NSArray* theSelectedNodes = [self selectedNodes];
+	
+	NSMutableArray* chosenNodesAndAllChildren = [NSMutableArray arrayWithArray:theChosenNodes];
 	for (SidebarNode* node in theChosenNodes)
-		[accumulateAllNodes addObjectsFromArray:[node allChildren]];
-	NSArray* nodes = [[NSSet setWithArray:accumulateAllNodes] allObjects];
+		[chosenNodesAndAllChildren addObjectsFromArray:[node allChildren]];
+	NSArray* nodes = [[NSSet setWithArray:chosenNodesAndAllChildren] allObjects];
 	
 	NSInteger localRepoCount = 0;
 	NSInteger serverRepoCount = 0;
@@ -1138,25 +1147,23 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 		moveFilesToTheTrash(existentLocalRepositories);
 		[myDocument removeAllUndoActionsForDocument];
 		[myDocument updateChangeCount:NSChangeDone];
-		for (SidebarNode* node in nodes)
-			[self removeNodeFromSidebar:node];
-		[self reloadData];
-		[self myDeselectAll];
-		[myDocument saveDocumentIfNamed];
-		return;
-	};
-	
-	[[self prepareUndoWithTarget:self] setRootAndUpdate:[root_ copyNodeTree]];									// With the undo restore the root node tree
-	[[self undoManager] setActionName:[self menuTitleForRemoveSidebarItems]];
-
-	NSMutableDictionary* connectionsCopy = [[myDocument connections] mutableCopy];
-	[[self prepareUndoWithTarget:myDocument] setConnections:connectionsCopy];
+	}
+	else
+	{
+		[[self prepareUndoWithTarget:self] setRootAndUpdate:[root_ copyNodeTree]];					// With the undo restore the root node tree
+		[[self undoManager] setActionName:[self menuTitleForRemoveSidebarItems]];		
+		NSMutableDictionary* connectionsCopy = [[myDocument connections] mutableCopy];
+		[[self prepareUndoWithTarget:myDocument] setConnections:connectionsCopy];
+	}
 	
 	for (SidebarNode* node in nodes)
 		[self removeNodeFromSidebar:node];
 
 	[self reloadData];
-	[self myDeselectAll];
+	if (restoreSelectionAfterRemove)
+		[self selectNodes:theSelectedNodes];
+	else
+		[self myDeselectAll];	
 	[myDocument saveDocumentIfNamed];
 }
 
