@@ -8,27 +8,22 @@
 //
 //
 //
-//
 // To use this class:
-// 1. in Interface builder construct a NSSplitView with 3 panes (Or generalize the methods below to 4, 5 panes etc.)
+// 1. in Interface builder construct a NSSplitView and delete all it's pains
 // 2. Change the NSSplitView into a JHAccordionView.  (Interface Builder : Menu Tools-> IdentityInspector. In the class identity change it there.)
-// 3. Change each of the children of the JHAccordionView into a JHAccordionSubView. (Again through the IdentityInspector)
-// 4. Hook up the outlets (pane1Box, pane2Box, pane3Box) of the JHAccordionView to point to the JHAccordionSubView's.
-// 5. Inside each of the JHAccordionSubView's add a NSView of some divider. Inside that add another view which can contain a group of buttons.
-//    This buttonsInDivider group will not act like a thick divider in that you can't drag it and you can't double click it. But you
-//    can of course click any button inside it and it will act like a normal button.
-// 6. In each of the JHAccordionSubView hook up the divider outlet to this NSView which acts as your thick divider.
-// 7. In each of the JHAccordionSubView hook up the buttonsInDivider outlet to this NSView which will contain the buttons in the thick divider.
-// 8. Run!
-// 9. Change the divider in Interface builder to something else you like. Add buttons to the buttonsInDivider view.
-//
-// The JHAccordionSubView is the direct child of a JHAccordionView
+// 3. Create NSViews for the dividers and set their resizing correctly.
+// 4. Create NSViews for the content and set their resizing correctly.
+// 5. Hook up the outlets (contentView1, dividerView1, contentView2, dividerView2, etc.. of the JHAccordionView. (If you need more
+//     just generalize the code it's quite easy to follow in that part.) 
+// 5. Run!
+// 6. Change the dividers / content views in Interface builder to something else you like. Add buttons to the divider views, etc.
 //
 //
 
 
 #import "JHAccordionView.h"
 
+static inline CGFloat square(CGFloat f) { return f*f; }
 static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val < min) return min; if (val > max) return max; return val; }
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -93,50 +88,7 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 - (BOOL)	clickIsInsideDivider:(NSEvent*)theEvent	 { return NSPointInRect([theEvent locationInWindow], [divider convertRect:[divider bounds] toView:nil]); }
 
 
-- (void) collapsePaneGivingSpaceTo:(JHAccordionSubView*)paneA and:(JHAccordionSubView*)paneB
-{
-	CGFloat contentA = [paneA contentHeight];					// Available space in other paneA
-	CGFloat contentB = [paneB contentHeight];					// Available space in other paneB
-	if (contentA == 0 && contentB ==0)
-		contentA = 5, contentB = 5;
-	double rA = contentA*contentA / (contentA*contentA + contentB*contentB);
-
-	oldPaneHeight = [self height];
-	CGFloat extra = [self contentHeight];
-	CGFloat extraA = floor(extra*rA);
-	[self  changeFrameHeightBy: -extra];
-	[paneA changeFrameHeightBy: extraA];
-	[paneB changeFrameHeightBy: extra - extraA];
-}
-
-- (void) expandPaneTakingSpaceFrom:(JHAccordionSubView*)paneA and:(JHAccordionSubView*)paneB
-{
-	CGFloat contentA = [paneA contentHeight];					// Available space in other paneA
-	CGFloat contentB = [paneB contentHeight];					// Available space in other paneB
-	if (contentA == 0 && contentB ==0)
-		contentA = 5, contentB = 5;
-	double rA = contentA*contentA / (contentA*contentA + contentB*contentB);
-	double rB = contentB*contentB / (contentA*contentA + contentB*contentB);
-	
-	CGFloat extra = oldPaneHeight - [self height];
-	CGFloat extraA = floor(extra*rA);
-	CGFloat extraB = floor(extra*rB);
-	if (extraA + extraB > contentA + contentB)
-	{
-		[self  changeFrameHeightBy: contentA + contentB];
-		[paneA changeFrameHeightBy: -contentA];
-		[paneB changeFrameHeightBy: -contentB];
-	}
-	else
-	{
-		[self  changeFrameHeightBy: extraA+extraB];
-		[paneA changeFrameHeightBy: -extraA];
-		[paneB changeFrameHeightBy: -extraB];
-	}
-}
-
-static inline float square(float f) { return f*f; }
-static inline float extraForPane(float extra, JHAccordionSubView* pane, float totalContentHeights) { return floor(extra * [pane contentHeight] / totalContentHeights); }
+static inline CGFloat extraForPane(CGFloat extra, JHAccordionSubView* pane, CGFloat totalContentHeights) { return floor(extra * [pane contentHeight] / totalContentHeights); }
 
 - (void) collapsePaneGivingSpaceToPanes:(NSArray*)panes
 {
@@ -226,31 +178,48 @@ static inline float extraForPane(float extra, JHAccordionSubView* pane, float to
 	
 	NSMutableArray* panes = [[NSMutableArray alloc]init];
 	
-	pane1Box = [[JHAccordionSubView alloc]initWithFrame:NSMakeRect(0, 200, width, 100)];
-	[pane1Box setDivider:divider1];
-	[pane1Box setContent:pane1View];
-	[pane1Box setOldPaneHeight];
-	[self addSubview:pane1Box];
-	[panes addObject:pane1Box];
-	
-	pane2Box = [[JHAccordionSubView alloc]initWithFrame:NSMakeRect(0, 100, width, 100)];
-	[pane2Box setDivider:divider2];
-	[pane2Box setContent:pane2View];
-	[pane2Box setOldPaneHeight];
-	[self addSubview:pane2Box];
-	[panes addObject:pane2Box];
+	JHAccordionSubView* pane;
+	pane = [[JHAccordionSubView alloc]initWithFrame:NSMakeRect(0, 200, width, 100)];
+	[pane setDivider:dividerView1];
+	[pane setContent:contentView1];
+	[self addSubview:pane];
+	[panes addObject:pane];
 
-	pane3Box = [[JHAccordionSubView alloc]initWithFrame:NSMakeRect(0, 100, width, 100)];
-	[pane3Box setDivider:divider3];
-	[pane3Box setContent:pane3View];
-	[pane3Box setOldPaneHeight];
-	[self addSubview:pane3Box];
-	[panes addObject:pane3Box];
-	
+	if (dividerView2 && contentView2)
+	{
+		pane = [[JHAccordionSubView alloc]initWithFrame:NSMakeRect(0, 100, width, 100)];
+		[pane setDivider:dividerView2];
+		[pane setContent:contentView2];
+		[self addSubview:pane];
+		[panes addObject:pane];
+	}
+		
+	if (dividerView3 && contentView3)
+	{
+		pane = [[JHAccordionSubView alloc]initWithFrame:NSMakeRect(0, 100, width, 100)];
+		[pane setDivider:dividerView3];
+		[pane setContent:contentView3];
+		[self addSubview:pane];
+		[panes addObject:pane];
+	}
+
+	if (dividerView4 && contentView4)
+	{
+		pane = [[JHAccordionSubView alloc]initWithFrame:NSMakeRect(0, 100, width, 100)];
+		[pane setDivider:dividerView4];
+		[pane setContent:contentView4];
+		[self addSubview:pane];
+		[panes addObject:pane];
+	}
+		
 	arrayOfAccordianPanes = [NSArray arrayWithArray:panes];
 
 	[self adjustSubviews];
-		
+	
+	for (JHAccordionSubView* pane in arrayOfAccordianPanes)
+		[pane setOldPaneHeight];
+
+	
 	dividerDragNumber = -1;
 
 	[self setDelegate:self];

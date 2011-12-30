@@ -32,27 +32,25 @@
 - (CGFloat) height;
 - (BOOL)	clickIsInsideDivider:(NSEvent*)theEvent;
 
-- (void) collapsePaneGivingSpaceTo:(JHAccordionSubView*)paneA and:(JHAccordionSubView*)paneB;
-- (void) expandPaneTakingSpaceFrom:(JHAccordionSubView*)paneA and:(JHAccordionSubView*)paneB;
+- (void) collapsePaneGivingSpaceToPanes:(NSArray*)panes;
+- (void) expandPaneTakingSpaceFromPanes:(NSArray*)panes;
 
 @end
 
 
 @interface JHAccordionView : NSSplitView <NSSplitViewDelegate>
 {
-	IBOutlet NSView*	divider1;
-	IBOutlet NSView*	divider2;
-	IBOutlet NSView*	divider3;
-	IBOutlet NSView*	pane1View;
-	IBOutlet NSView*	pane2View;
-	IBOutlet NSView*	pane3View;
+	IBOutlet NSView*	dividerView1;
+	IBOutlet NSView*	dividerView2;
+	IBOutlet NSView*	dividerView3;
+	IBOutlet NSView*	dividerView4;
+	IBOutlet NSView*	contentView1;
+	IBOutlet NSView*	contentView2;
+	IBOutlet NSView*	contentView3;
+	IBOutlet NSView*	contentView4;
 
 	NSArray*			arrayOfAccordianPanes;		// Array of JHAccordionSubView
-	NSInteger			dividerDragNumber;			// Which divider is currently being dragged. -1 is no divider
-	
-	JHAccordionSubView*	pane1Box;
-	JHAccordionSubView*	pane2Box;
-	JHAccordionSubView*	pane3Box;	
+	NSInteger			dividerDragNumber;			// Which divider is currently being dragged. -1 is no divider	
 }
 
 - (JHAccordionSubView*) pane:(NSInteger)paneNumber;

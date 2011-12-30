@@ -1200,7 +1200,7 @@
             <reference key="NSSuperview" ref="957515287"/>
           </object>
         </array>
-        <string key="NSFrame">{{-1, 211}, {824, 24}}</string>
+        <string key="NSFrameSize">{824, 24}</string>
         <string key="NSOffsets">{0, 0}</string>
         <object class="NSTextFieldCell" key="NSTitleCell">
           <int key="NSCellFlags">67239424</int>
@@ -1555,7 +1555,7 @@
             <reference key="NSSuperview" ref="944921791"/>
           </object>
         </array>
-        <string key="NSFrame">{{-1, 610}, {824, 24}}</string>
+        <string key="NSFrameSize">{824, 24}</string>
         <string key="NSOffsets">{0, 0}</string>
         <object class="NSTextFieldCell" key="NSTitleCell">
           <int key="NSCellFlags">67239424</int>
@@ -1947,51 +1947,51 @@
         </object>
         <object class="IBConnectionRecord">
           <object class="IBOutletConnection" key="connection">
-            <string key="label">pane1View</string>
+            <string key="label">contentView1</string>
             <reference key="source" ref="470152575"/>
             <reference key="destination" ref="292847127"/>
           </object>
-          <int key="connectionID">1024</int>
+          <int key="connectionID">1045</int>
         </object>
         <object class="IBConnectionRecord">
           <object class="IBOutletConnection" key="connection">
-            <string key="label">pane2View</string>
+            <string key="label">contentView2</string>
             <reference key="source" ref="470152575"/>
             <reference key="destination" ref="493621790"/>
           </object>
-          <int key="connectionID">1025</int>
+          <int key="connectionID">1046</int>
         </object>
         <object class="IBConnectionRecord">
           <object class="IBOutletConnection" key="connection">
-            <string key="label">pane3View</string>
+            <string key="label">contentView3</string>
             <reference key="source" ref="470152575"/>
             <reference key="destination" ref="192058997"/>
           </object>
-          <int key="connectionID">1026</int>
+          <int key="connectionID">1047</int>
         </object>
         <object class="IBConnectionRecord">
           <object class="IBOutletConnection" key="connection">
-            <string key="label">divider1</string>
+            <string key="label">dividerView1</string>
             <reference key="source" ref="470152575"/>
             <reference key="destination" ref="957515287"/>
           </object>
-          <int key="connectionID">1027</int>
+          <int key="connectionID">1048</int>
         </object>
         <object class="IBConnectionRecord">
           <object class="IBOutletConnection" key="connection">
-            <string key="label">divider2</string>
+            <string key="label">dividerView2</string>
             <reference key="source" ref="470152575"/>
             <reference key="destination" ref="232934855"/>
           </object>
-          <int key="connectionID">1028</int>
+          <int key="connectionID">1049</int>
         </object>
         <object class="IBConnectionRecord">
           <object class="IBOutletConnection" key="connection">
-            <string key="label">divider3</string>
+            <string key="label">dividerView3</string>
             <reference key="source" ref="470152575"/>
             <reference key="destination" ref="944921791"/>
           </object>
-          <int key="connectionID">1029</int>
+          <int key="connectionID">1050</int>
         </object>
       </array>
       <object class="IBMutableOrderedSet" key="objectRecords">
@@ -2842,6 +2842,7 @@
         <string key="846.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="847.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="848.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+        <string key="850.IBEditorWindowLastContentRect">{{105, 995}, {824, 24}}</string>
         <string key="850.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <object class="NSAffineTransform" key="850.IBViewBoundsToFrameTransform">
           <bytes key="NSTransformStruct">Ab+AAABEGIAAA</bytes>
@@ -2874,10 +2875,9 @@
         <string key="857.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="858.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="859.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+        <string key="861.IBEditorWindowLastContentRect">{{126, 972}, {824, 24}}</string>
         <string key="861.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-        <object class="NSAffineTransform" key="861.IBViewBoundsToFrameTransform">
-          <bytes key="NSTransformStruct">Ab+AAABDUwAAA</bytes>
-        </object>
+        <object class="NSAffineTransform" key="861.IBViewBoundsToFrameTransform"/>
         <string key="862.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="863.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="864.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2934,7 +2934,7 @@
       <nil key="activeLocalization"/>
       <dictionary class="NSMutableDictionary" key="localizations"/>
       <nil key="sourceID"/>
-      <int key="maxID">1029</int>
+      <int key="maxID">1050</int>
     </object>
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3151,36 +3151,46 @@
           <string key="className">JHAccordionView</string>
           <string key="superclassName">NSSplitView</string>
           <dictionary class="NSMutableDictionary" key="outlets">
-            <string key="divider1">NSView</string>
-            <string key="divider2">NSView</string>
-            <string key="divider3">NSView</string>
-            <string key="pane1View">NSView</string>
-            <string key="pane2View">NSView</string>
-            <string key="pane3View">NSView</string>
+            <string key="contentView1">NSView</string>
+            <string key="contentView2">NSView</string>
+            <string key="contentView3">NSView</string>
+            <string key="contentView4">NSView</string>
+            <string key="dividerView1">NSView</string>
+            <string key="dividerView2">NSView</string>
+            <string key="dividerView3">NSView</string>
+            <string key="dividerView4">NSView</string>
           </dictionary>
           <dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-            <object class="IBToOneOutletInfo" key="divider1">
-              <string key="name">divider1</string>
+            <object class="IBToOneOutletInfo" key="contentView1">
+              <string key="name">contentView1</string>
               <string key="candidateClassName">NSView</string>
             </object>
-            <object class="IBToOneOutletInfo" key="divider2">
-              <string key="name">divider2</string>
+            <object class="IBToOneOutletInfo" key="contentView2">
+              <string key="name">contentView2</string>
               <string key="candidateClassName">NSView</string>
             </object>
-            <object class="IBToOneOutletInfo" key="divider3">
-              <string key="name">divider3</string>
+            <object class="IBToOneOutletInfo" key="contentView3">
+              <string key="name">contentView3</string>
               <string key="candidateClassName">NSView</string>
             </object>
-            <object class="IBToOneOutletInfo" key="pane1View">
-              <string key="name">pane1View</string>
+            <object class="IBToOneOutletInfo" key="contentView4">
+              <string key="name">contentView4</string>
               <string key="candidateClassName">NSView</string>
             </object>
-            <object class="IBToOneOutletInfo" key="pane2View">
-              <string key="name">pane2View</string>
+            <object class="IBToOneOutletInfo" key="dividerView1">
+              <string key="name">dividerView1</string>
               <string key="candidateClassName">NSView</string>
             </object>
-            <object class="IBToOneOutletInfo" key="pane3View">
-              <string key="name">pane3View</string>
+            <object class="IBToOneOutletInfo" key="dividerView2">
+              <string key="name">dividerView2</string>
+              <string key="candidateClassName">NSView</string>
+            </object>
+            <object class="IBToOneOutletInfo" key="dividerView3">
+              <string key="name">dividerView3</string>
+              <string key="candidateClassName">NSView</string>
+            </object>
+            <object class="IBToOneOutletInfo" key="dividerView4">
+              <string key="name">dividerView4</string>
               <string key="candidateClassName">NSView</string>
             </object>
           </dictionary>
