@@ -50,8 +50,8 @@
 	MacHgDocument*				myDocument;
 	IBOutlet HistoryViewController*  parentController;
 
-	// Main accordion view containing the sub panes.
-	IBOutlet JHAccordionView*	accordionView;
+	// Main concertina view containing the sub panes.
+	IBOutlet JHConcertinaView*	concertinaView;
 	
 	// History SubPane
 	IBOutlet LogTableView*		logTableView;

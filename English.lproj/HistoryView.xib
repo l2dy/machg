@@ -12,6 +12,7 @@
     </object>
     <array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
       <integer value="838"/>
+      <integer value="850"/>
     </array>
     <array key="IBDocument.PluginDependencies">
       <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -679,7 +680,7 @@
         <array class="NSMutableArray" key="NSSubviews">
           <object class="NSBox" id="48728709">
             <reference key="NSNextResponder" ref="192058997"/>
-            <int key="NSvFlags">9</int>
+            <int key="NSvFlags">4105</int>
             <array class="NSMutableArray" key="NSSubviews">
               <object class="NSView" id="902590409">
                 <reference key="NSNextResponder" ref="48728709"/>
@@ -1395,7 +1396,7 @@
         </object>
       </object>
       <object class="NSBox" id="944921791">
-        <nil key="NSNextResponder"/>
+        <reference key="NSNextResponder"/>
         <int key="NSvFlags">10</int>
         <array class="NSMutableArray" key="NSSubviews">
           <object class="NSView" id="958889504">
@@ -1556,6 +1557,7 @@
           </object>
         </array>
         <string key="NSFrameSize">{824, 24}</string>
+        <reference key="NSSuperview"/>
         <string key="NSOffsets">{0, 0}</string>
         <object class="NSTextFieldCell" key="NSTitleCell">
           <int key="NSCellFlags">67239424</int>
@@ -1736,14 +1738,6 @@
             <reference key="destination" ref="610587452"/>
           </object>
           <int key="connectionID">980</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBOutletConnection" key="connection">
-            <string key="label">accordionView</string>
-            <reference key="source" ref="945562250"/>
-            <reference key="destination" ref="470152575"/>
-          </object>
-          <int key="connectionID">984</int>
         </object>
         <object class="IBConnectionRecord">
           <object class="IBOutletConnection" key="connection">
@@ -1992,6 +1986,14 @@
             <reference key="destination" ref="944921791"/>
           </object>
           <int key="connectionID">1050</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBOutletConnection" key="connection">
+            <string key="label">concertinaView</string>
+            <reference key="source" ref="945562250"/>
+            <reference key="destination" ref="470152575"/>
+          </object>
+          <int key="connectionID">1051</int>
         </object>
       </array>
       <object class="IBMutableOrderedSet" key="objectRecords">
@@ -2831,7 +2833,7 @@
         <string key="773.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="774.CustomClassName">LogTableTextView</string>
         <string key="774.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-        <string key="838.CustomClassName">JHAccordionView</string>
+        <string key="838.CustomClassName">JHConcertinaView</string>
         <string key="838.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="843.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <object class="NSAffineTransform" key="843.IBViewBoundsToFrameTransform">
@@ -2934,7 +2936,7 @@
       <nil key="activeLocalization"/>
       <dictionary class="NSMutableDictionary" key="localizations"/>
       <nil key="sourceID"/>
-      <int key="maxID">1050</int>
+      <int key="maxID">1051</int>
     </object>
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3061,7 +3063,7 @@
             </object>
           </dictionary>
           <dictionary class="NSMutableDictionary" key="outlets">
-            <string key="accordionView">JHAccordionView</string>
+            <string key="concertinaView">JHConcertinaView</string>
             <string key="detailedEntryTextView">LogTableTextView</string>
             <string key="detailsView">NSView</string>
             <string key="logTableView">LogTableView</string>
@@ -3070,9 +3072,9 @@
             <string key="theLabelsTableView_">LabelsTableView</string>
           </dictionary>
           <dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-            <object class="IBToOneOutletInfo" key="accordionView">
-              <string key="name">accordionView</string>
-              <string key="candidateClassName">JHAccordionView</string>
+            <object class="IBToOneOutletInfo" key="concertinaView">
+              <string key="name">concertinaView</string>
+              <string key="candidateClassName">JHConcertinaView</string>
             </object>
             <object class="IBToOneOutletInfo" key="detailedEntryTextView">
               <string key="name">detailedEntryTextView</string>
@@ -3148,7 +3150,7 @@
           </object>
         </object>
         <object class="IBPartialClassDescription">
-          <string key="className">JHAccordionView</string>
+          <string key="className">JHConcertinaView</string>
           <string key="superclassName">NSSplitView</string>
           <dictionary class="NSMutableDictionary" key="outlets">
             <string key="contentView1">NSView</string>
@@ -3196,49 +3198,7 @@
           </dictionary>
           <object class="IBClassDescriptionSource" key="sourceIdentifier">
             <string key="majorKey">IBProjectSource</string>
-            <string key="minorKey">Classes/HistoryView/JHAccordionView.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">JHAccordionView</string>
-          <string key="superclassName">NSSplitView</string>
-          <dictionary class="NSMutableDictionary" key="outlets">
-            <string key="buttonsInDivider1Box">NSView</string>
-            <string key="buttonsInDivider2Box">NSView</string>
-            <string key="buttonsInDivider3Box">NSView</string>
-            <string key="divider1Box">NSView</string>
-            <string key="divider2Box">NSView</string>
-            <string key="divider3Box">NSView</string>
-          </dictionary>
-          <dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-            <object class="IBToOneOutletInfo" key="buttonsInDivider1Box">
-              <string key="name">buttonsInDivider1Box</string>
-              <string key="candidateClassName">NSView</string>
-            </object>
-            <object class="IBToOneOutletInfo" key="buttonsInDivider2Box">
-              <string key="name">buttonsInDivider2Box</string>
-              <string key="candidateClassName">NSView</string>
-            </object>
-            <object class="IBToOneOutletInfo" key="buttonsInDivider3Box">
-              <string key="name">buttonsInDivider3Box</string>
-              <string key="candidateClassName">NSView</string>
-            </object>
-            <object class="IBToOneOutletInfo" key="divider1Box">
-              <string key="name">divider1Box</string>
-              <string key="candidateClassName">NSView</string>
-            </object>
-            <object class="IBToOneOutletInfo" key="divider2Box">
-              <string key="name">divider2Box</string>
-              <string key="candidateClassName">NSView</string>
-            </object>
-            <object class="IBToOneOutletInfo" key="divider3Box">
-              <string key="name">divider3Box</string>
-              <string key="candidateClassName">NSView</string>
-            </object>
-          </dictionary>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBUserSource</string>
-            <string key="minorKey"/>
+            <string key="minorKey">Classes/ExternalClasses/JHConcertinaView/JHConcertinaView.h</string>
           </object>
         </object>
         <object class="IBPartialClassDescription">

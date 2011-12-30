@@ -1,6 +1,6 @@
 //
-//  JHSplitView.h
-//  JHSplitView
+//  JHConcertinaView.h
+//  JHConcertinaView
 //
 //  Created by Jason Harris on 4/17/10.
 //  Copyright 2010 Jason F Harris. All rights reserved.
@@ -9,11 +9,11 @@
 
 #import <Cocoa/Cocoa.h>
 
-@class JHAccordionView;
-@class JHAccordionSubView;
+@class JHConcertinaView;
+@class JHConcertinaSubView;
 
 
-@interface JHAccordionSubView : NSView
+@interface JHConcertinaSubView : NSView
 {
 	NSView*		divider;
 	NSView*		content;
@@ -38,7 +38,7 @@
 @end
 
 
-@interface JHAccordionView : NSSplitView <NSSplitViewDelegate>
+@interface JHConcertinaView : NSSplitView <NSSplitViewDelegate>
 {
 	IBOutlet NSView*	dividerView1;
 	IBOutlet NSView*	dividerView2;
@@ -49,9 +49,9 @@
 	IBOutlet NSView*	contentView3;
 	IBOutlet NSView*	contentView4;
 
-	NSArray*			arrayOfAccordianPanes;		// Array of JHAccordionSubView
+	NSArray*			arrayOfConcertinaPanes;		// Array of JHConcertinaSubView
 	NSInteger			dividerDragNumber;			// Which divider is currently being dragged. -1 is no divider	
 }
 
-- (JHAccordionSubView*) pane:(NSInteger)paneNumber;
+- (JHConcertinaSubView*) pane:(NSInteger)paneNumber;
 @end

@@ -105,7 +105,7 @@
 @class OptionController;
 @class SingleTimedQueue;
 @class ThickSplitView;
-@class JHAccordionView;
+@class JHConcertinaView;
 
 @class BWSplitView;
 

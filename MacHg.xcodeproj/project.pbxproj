@@ -140,7 +140,6 @@
 		96631773136DF9A600A72689 /* AboutWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96631772136DF9A600A72689 /* AboutWindowController.m */; };
 		966E8E1811CB732E0052FF42 /* identity.png in Resources */ = {isa = PBXBuildFile; fileRef = 966E8E1711CB732E0052FF42 /* identity.png */; };
 		966E8E5011CB86160052FF42 /* HistoryViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E8E4D11CB86160052FF42 /* HistoryViewController.m */; };
-		966E8E5111CB86160052FF42 /* JHAccordionView.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E8E4F11CB86160052FF42 /* JHAccordionView.m */; };
 		966E8E6A11CB863C0052FF42 /* DifferencesViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E8E6711CB863C0052FF42 /* DifferencesViewController.m */; };
 		966E8E6B11CB863C0052FF42 /* JointSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E8E6911CB863C0052FF42 /* JointSplitView.m */; };
 		966E8E6F11CB864C0052FF42 /* BackingViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 966E8E6E11CB864C0052FF42 /* BackingViewController.m */; };
@@ -158,6 +157,7 @@
 		9673CD4A12D148C70043929D /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9673CD4912D148C70043929D /* Quartz.framework */; };
 		9673D08012D1C99A0043929D /* Quicklook.png in Resources */ = {isa = PBXBuildFile; fileRef = 9673D07F12D1C99A0043929D /* Quicklook.png */; };
 		967B251C137677D800EB102C /* htmlForDiff in Resources */ = {isa = PBXBuildFile; fileRef = 967B2516137677D800EB102C /* htmlForDiff */; };
+		968D76E114A66A85007E6AA2 /* JHConcertinaView.m in Sources */ = {isa = PBXBuildFile; fileRef = 968D76E014A66A85007E6AA2 /* JHConcertinaView.m */; };
 		969064EC11601E2400F30915 /* MonitorFSEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 969064EB11601E2400F30915 /* MonitorFSEvents.m */; };
 		9693CFC1129D82DF0064DAB9 /* LogRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 9693CFC0129D82DF0064DAB9 /* LogRecord.m */; };
 		9695007410CBE3E100548D1C /* FilesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9695007210CBE3E100548D1C /* FilesView.xib */; };
@@ -450,8 +450,6 @@
 		966E8E1711CB732E0052FF42 /* identity.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = identity.png; sourceTree = "<group>"; };
 		966E8E4C11CB86160052FF42 /* HistoryViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HistoryViewController.h; sourceTree = "<group>"; };
 		966E8E4D11CB86160052FF42 /* HistoryViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HistoryViewController.m; sourceTree = "<group>"; };
-		966E8E4E11CB86160052FF42 /* JHAccordionView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JHAccordionView.h; sourceTree = "<group>"; };
-		966E8E4F11CB86160052FF42 /* JHAccordionView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JHAccordionView.m; sourceTree = "<group>"; };
 		966E8E6611CB863C0052FF42 /* DifferencesViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DifferencesViewController.h; sourceTree = "<group>"; };
 		966E8E6711CB863C0052FF42 /* DifferencesViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DifferencesViewController.m; sourceTree = "<group>"; };
 		966E8E6811CB863C0052FF42 /* JointSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JointSplitView.h; sourceTree = "<group>"; };
@@ -479,6 +477,8 @@
 		9673CD4912D148C70043929D /* Quartz.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Quartz.framework; path = System/Library/Frameworks/Quartz.framework; sourceTree = SDKROOT; };
 		9673D07F12D1C99A0043929D /* Quicklook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Quicklook.png; path = Images/ToolbarItems/Quicklook.png; sourceTree = SOURCE_ROOT; };
 		967B2516137677D800EB102C /* htmlForDiff */ = {isa = PBXFileReference; lastKnownFileType = folder; path = htmlForDiff; sourceTree = "<group>"; };
+		968D76DF14A66A85007E6AA2 /* JHConcertinaView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JHConcertinaView.h; sourceTree = "<group>"; };
+		968D76E014A66A85007E6AA2 /* JHConcertinaView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JHConcertinaView.m; sourceTree = "<group>"; };
 		969064EA11601E2400F30915 /* MonitorFSEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MonitorFSEvents.h; sourceTree = "<group>"; };
 		969064EB11601E2400F30915 /* MonitorFSEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MonitorFSEvents.m; sourceTree = "<group>"; };
 		9693CFBF129D82DF0064DAB9 /* LogRecord.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LogRecord.h; sourceTree = "<group>"; };
@@ -1105,6 +1105,7 @@
 				96FF035E11991C21006EC616 /* DBPrefsWindowController */,
 				9631D05B1107A7E90007FDF2 /* DTCPathView */,
 				9605BBCD119C0D7D002EEA47 /* EMKeychainItem */,
+				968D76DE14A66A85007E6AA2 /* JHConcertinaView */,
 				9631D0601107A7E90007FDF2 /* LNCStopwatch */,
 				9631D0631107A7E90007FDF2 /* MAAttachedWindow */,
 				969064E811601E2400F30915 /* MonitorFSEvents */,
@@ -1311,8 +1312,6 @@
 			children = (
 				966E8E4C11CB86160052FF42 /* HistoryViewController.h */,
 				966E8E4D11CB86160052FF42 /* HistoryViewController.m */,
-				966E8E4E11CB86160052FF42 /* JHAccordionView.h */,
-				966E8E4F11CB86160052FF42 /* JHAccordionView.m */,
 				966E8E7011CB866E0052FF42 /* HistoryView.xib */,
 			);
 			name = HistoryView;
@@ -1427,6 +1426,15 @@
 				961D5A08115DBD9E0064A4DA /* CommandKeyTextField.m */,
 			);
 			name = CommandKeyTextField;
+			sourceTree = "<group>";
+		};
+		968D76DE14A66A85007E6AA2 /* JHConcertinaView */ = {
+			isa = PBXGroup;
+			children = (
+				968D76DF14A66A85007E6AA2 /* JHConcertinaView.h */,
+				968D76E014A66A85007E6AA2 /* JHConcertinaView.m */,
+			);
+			path = JHConcertinaView;
 			sourceTree = "<group>";
 		};
 		969064E811601E2400F30915 /* MonitorFSEvents */ = {
@@ -1975,7 +1983,6 @@
 				96DF437111B5209C00D986FF /* RelativePositionedBox.m in Sources */,
 				96DF581611BFC71A00D986FF /* MacHgDocumentController.m in Sources */,
 				966E8E5011CB86160052FF42 /* HistoryViewController.m in Sources */,
-				966E8E5111CB86160052FF42 /* JHAccordionView.m in Sources */,
 				966E8E6A11CB863C0052FF42 /* DifferencesViewController.m in Sources */,
 				966E8E6B11CB863C0052FF42 /* JointSplitView.m in Sources */,
 				966E8E6F11CB864C0052FF42 /* BackingViewController.m in Sources */,
@@ -1997,6 +2004,7 @@
 				96D05C8F149458CB000D513E /* FSViewerOutline.m in Sources */,
 				96D05C9414945900000D513E /* FSViewerTable.m in Sources */,
 				96C8964A149F4106007F7831 /* CTBadge.m in Sources */,
+				968D76E114A66A85007E6AA2 /* JHConcertinaView.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

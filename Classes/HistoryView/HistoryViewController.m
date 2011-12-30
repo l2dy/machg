@@ -28,7 +28,7 @@
 #import "LogTableView.h"
 #import "AddLabelSheetController.h"
 #import "MoveLabelSheetController.h"
-#import "JHAccordionView.h"
+#import "JHConcertinaView.h"
 
 
 
@@ -95,7 +95,7 @@
 
 	[self openSplitViewPaneToDefaultHeight: self];
 	NSString* fileName = [myDocument documentNameForAutosave];
-	[accordionView setAutosaveName:fstr(@"File:%@:HistoryViewSplitPositions", fileName)];
+	[concertinaView setAutosaveName:fstr(@"File:%@:HistoryViewSplitPositions", fileName)];
 	[logTableView setAutosaveTableColumns:YES];
 	[logTableView setAutosaveName:fstr(@"File:%@:HistoryTableViewColumnPositions", fileName)];
 	[logTableView resetTable:self];

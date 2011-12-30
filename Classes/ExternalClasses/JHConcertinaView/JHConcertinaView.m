@@ -1,6 +1,6 @@
 //
-//  JHSplitView.m
-//  JHSplitView
+//  JHConcertinaView.m
+//  JHSConcertinaView
 //
 //  Created by Jason Harris on 4/17/10.
 //  Copyright 2010 Jason F Harris. All rights reserved.
@@ -10,10 +10,10 @@
 //
 // To use this class:
 // 1. in Interface builder construct a NSSplitView and delete all it's pains
-// 2. Change the NSSplitView into a JHAccordionView.  (Interface Builder : Menu Tools-> IdentityInspector. In the class identity change it there.)
+// 2. Change the NSSplitView into a JHConcertinaView.  (Interface Builder : Menu Tools-> IdentityInspector. In the class identity change it there.)
 // 3. Create NSViews for the dividers and set their resizing correctly.
 // 4. Create NSViews for the content and set their resizing correctly.
-// 5. Hook up the outlets (contentView1, dividerView1, contentView2, dividerView2, etc.. of the JHAccordionView. (If you need more
+// 5. Hook up the outlets (contentView1, dividerView1, contentView2, dividerView2, etc.. of the JHConcertinaView. (If you need more
 //     just generalize the code it's quite easy to follow in that part.) 
 // 5. Run!
 // 6. Change the dividers / content views in Interface builder to something else you like. Add buttons to the divider views, etc.
@@ -21,18 +21,18 @@
 //
 
 
-#import "JHAccordionView.h"
+#import "JHConcertinaView.h"
 
 static inline CGFloat square(CGFloat f) { return f*f; }
 static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val < min) return min; if (val > max) return max; return val; }
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK:  JHAccordionSubView
+// MARK:  JHConcertinaSubView
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 
-@implementation JHAccordionSubView
+@implementation JHConcertinaSubView
 
 
 
@@ -88,7 +88,7 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 - (BOOL)	clickIsInsideDivider:(NSEvent*)theEvent	 { return NSPointInRect([theEvent locationInWindow], [divider convertRect:[divider bounds] toView:nil]); }
 
 
-static inline CGFloat extraForPane(CGFloat extra, JHAccordionSubView* pane, CGFloat totalContentHeights) { return floor(extra * [pane contentHeight] / totalContentHeights); }
+static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGFloat totalContentHeights) { return floor(extra * [pane contentHeight] / totalContentHeights); }
 
 - (void) collapsePaneGivingSpaceToPanes:(NSArray*)panes
 {
@@ -96,7 +96,7 @@ static inline CGFloat extraForPane(CGFloat extra, JHAccordionSubView* pane, CGFl
 	CGFloat extra = [self contentHeight];
 
 	CGFloat totalContentHeights = 0;
-	for (JHAccordionSubView* pane in panes)
+	for (JHConcertinaSubView* pane in panes)
 		totalContentHeights += [pane contentHeight];
 	
 	if (totalContentHeights < 1)
@@ -104,7 +104,7 @@ static inline CGFloat extraForPane(CGFloat extra, JHAccordionSubView* pane, CGFl
 		NSInteger count = [panes count];
 		CGFloat extraPerPane = floor(extra/count);
 		CGFloat total = 0;
-		for (JHAccordionSubView* pane in panes)
+		for (JHConcertinaSubView* pane in panes)
 		{
 			total += extraPerPane;
 			[pane changeFrameHeightBy: extraPerPane];
@@ -115,7 +115,7 @@ static inline CGFloat extraForPane(CGFloat extra, JHAccordionSubView* pane, CGFl
 	}
 
 	CGFloat total = 0;
-	for (JHAccordionSubView* pane in panes)
+	for (JHConcertinaSubView* pane in panes)
 	{
 		CGFloat amount = extraForPane(extra, pane, totalContentHeights);
 		total += amount;
@@ -129,26 +129,26 @@ static inline CGFloat extraForPane(CGFloat extra, JHAccordionSubView* pane, CGFl
 - (void) expandPaneTakingSpaceFromPanes:(NSArray*)panes
 {
 	CGFloat totalContentHeights = 0;
-	for (JHAccordionSubView* pane in panes)
+	for (JHConcertinaSubView* pane in panes)
 		totalContentHeights += [pane contentHeight];
 
 	CGFloat extra = oldPaneHeight - [self height];
 	
 	CGFloat totalExtra = 0;
 	if (totalContentHeights > 0.5)
-		for (JHAccordionSubView* pane in panes)
+		for (JHConcertinaSubView* pane in panes)
 			totalExtra += extraForPane(extra, pane, totalContentHeights);
 
 	if (totalExtra > totalContentHeights || totalContentHeights < 1)
 	{
 		[self changeFrameHeightBy: totalContentHeights];
-		for (JHAccordionSubView* pane in panes)
+		for (JHConcertinaSubView* pane in panes)
 			[pane changeFrameHeightBy: -[pane contentHeight]];
 	}
 	else
 	{
 		[self changeFrameHeightBy: totalExtra];
-		for (JHAccordionSubView* pane in panes)
+		for (JHConcertinaSubView* pane in panes)
 			[pane changeFrameHeightBy: -extraForPane(extra, pane, totalContentHeights)];
 	}
 }
@@ -161,16 +161,16 @@ static inline CGFloat extraForPane(CGFloat extra, JHAccordionSubView* pane, CGFl
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK:  JHAccordionView
+// MARK:  JHConcertinaView
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 
-@interface JHAccordionView (PrivateAPI)
+@interface JHConcertinaView (PrivateAPI)
 - (void) doDividerDragLoop:(NSEvent*)theEvent;
 @end
 
 
-@implementation JHAccordionView
+@implementation JHConcertinaView
 
 - (void) awakeFromNib
 {
@@ -178,8 +178,8 @@ static inline CGFloat extraForPane(CGFloat extra, JHAccordionSubView* pane, CGFl
 	
 	NSMutableArray* panes = [[NSMutableArray alloc]init];
 	
-	JHAccordionSubView* pane;
-	pane = [[JHAccordionSubView alloc]initWithFrame:NSMakeRect(0, 200, width, 100)];
+	JHConcertinaSubView* pane;
+	pane = [[JHConcertinaSubView alloc]initWithFrame:NSMakeRect(0, 200, width, 100)];
 	[pane setDivider:dividerView1];
 	[pane setContent:contentView1];
 	[self addSubview:pane];
@@ -187,7 +187,7 @@ static inline CGFloat extraForPane(CGFloat extra, JHAccordionSubView* pane, CGFl
 
 	if (dividerView2 && contentView2)
 	{
-		pane = [[JHAccordionSubView alloc]initWithFrame:NSMakeRect(0, 100, width, 100)];
+		pane = [[JHConcertinaSubView alloc]initWithFrame:NSMakeRect(0, 100, width, 100)];
 		[pane setDivider:dividerView2];
 		[pane setContent:contentView2];
 		[self addSubview:pane];
@@ -196,7 +196,7 @@ static inline CGFloat extraForPane(CGFloat extra, JHAccordionSubView* pane, CGFl
 		
 	if (dividerView3 && contentView3)
 	{
-		pane = [[JHAccordionSubView alloc]initWithFrame:NSMakeRect(0, 100, width, 100)];
+		pane = [[JHConcertinaSubView alloc]initWithFrame:NSMakeRect(0, 100, width, 100)];
 		[pane setDivider:dividerView3];
 		[pane setContent:contentView3];
 		[self addSubview:pane];
@@ -205,18 +205,18 @@ static inline CGFloat extraForPane(CGFloat extra, JHAccordionSubView* pane, CGFl
 
 	if (dividerView4 && contentView4)
 	{
-		pane = [[JHAccordionSubView alloc]initWithFrame:NSMakeRect(0, 100, width, 100)];
+		pane = [[JHConcertinaSubView alloc]initWithFrame:NSMakeRect(0, 100, width, 100)];
 		[pane setDivider:dividerView4];
 		[pane setContent:contentView4];
 		[self addSubview:pane];
 		[panes addObject:pane];
 	}
 		
-	arrayOfAccordianPanes = [NSArray arrayWithArray:panes];
+	arrayOfConcertinaPanes = [NSArray arrayWithArray:panes];
 
 	[self adjustSubviews];
 	
-	for (JHAccordionSubView* pane in arrayOfAccordianPanes)
+	for (JHConcertinaSubView* pane in arrayOfConcertinaPanes)
 		[pane setOldPaneHeight];
 
 	
@@ -226,23 +226,23 @@ static inline CGFloat extraForPane(CGFloat extra, JHAccordionSubView* pane, CGFl
 }
 
 
-- (JHAccordionSubView*) pane:(NSInteger)paneNumber
+- (JHConcertinaSubView*) pane:(NSInteger)paneNumber
 {
-	return [arrayOfAccordianPanes objectAtIndex:paneNumber];
+	return [arrayOfConcertinaPanes objectAtIndex:paneNumber];
 }
 
 - (void) mouseDown:(NSEvent*)theEvent
 {
 	
-	for (JHAccordionSubView* pane in arrayOfAccordianPanes)
+	for (JHConcertinaSubView* pane in arrayOfConcertinaPanes)
 	{
 		if ([pane clickIsInsideDivider:theEvent])
 		{
 			// Look for double clicks in the divider's, and if we only have a single click figure out if we are dragging.
-			NSInteger index = [arrayOfAccordianPanes indexOfObject:pane];
+			NSInteger index = [arrayOfConcertinaPanes indexOfObject:pane];
 			if ([theEvent clickCount] > 1)
 			{
-				NSMutableArray* otherPanes = [arrayOfAccordianPanes mutableCopy];
+				NSMutableArray* otherPanes = [arrayOfConcertinaPanes mutableCopy];
 				[otherPanes removeObject:pane];
 				if ([pane contentHeight] == 0)
 					[pane expandPaneTakingSpaceFromPanes:otherPanes];
@@ -274,7 +274,7 @@ static inline CGFloat extraForPane(CGFloat extra, JHAccordionSubView* pane, CGFl
 - (void) doDividerDragLoop:(NSEvent*)theEvent
 {
 	CGFloat mouseAnchor = [theEvent locationInWindow].y;
-	NSInteger count = [arrayOfAccordianPanes count];
+	NSInteger count = [arrayOfConcertinaPanes count];
 	
 	if (dividerDragNumber < 0)
 		return;
@@ -309,7 +309,7 @@ static inline CGFloat extraForPane(CGFloat extra, JHAccordionSubView* pane, CGFl
 			diff = floor(-diff); // reverse mental map here.
 
 			// Put extra space in the pane before the divider and progressively take space from the following panes 
-			JHAccordionSubView* recievingPane = [self pane:i-1];
+			JHConcertinaSubView* recievingPane = [self pane:i-1];
 			for (int j = i; j<count; j++)
 			{
 				CGFloat chunk = constrain(diff, 0, [[self pane:j] contentHeight]);
@@ -325,7 +325,7 @@ static inline CGFloat extraForPane(CGFloat extra, JHAccordionSubView* pane, CGFl
 			diff = floor(diff);
 
 			// Put extra space in the pane following the divider and progressively take space from the previous panes 
-			JHAccordionSubView* recievingPane = [self pane:i];
+			JHConcertinaSubView* recievingPane = [self pane:i];
 			for (int j = i-1; j>=0; j--)
 			{
 				CGFloat chunk = constrain(diff, 0, [[self pane:j] contentHeight]);
@@ -373,7 +373,7 @@ static inline CGFloat total(CGFloat* array, NSInteger count)
 - (void) splitView:(NSSplitView*)splitView resizeSubviewsWithOldSize:(NSSize)oldSize
 {
 	
-	NSInteger count = [arrayOfAccordianPanes count];
+	NSInteger count = [arrayOfConcertinaPanes count];
 
 	CGFloat dividerHeights[count];	// The array of the heights of the dividers (this is constant)
 	CGFloat paneHeights[count];		// The array of the heights of each pane (divider + content)
