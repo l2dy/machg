@@ -12,15 +12,20 @@
 @class JHAccordionView;
 @class JHAccordionSubView;
 
+
 @interface JHAccordionSubView : NSView
 {
-	IBOutlet NSView*			divider;
-	IBOutlet NSView*			buttonsContainerInDivider;
-	CGFloat						oldPaneHeight;
+	NSView*		divider;
+	NSView*		pane;
+	CGFloat		oldPaneHeight;
 }
-@property (readonly,assign) NSView*	divider;
-@property (readonly,assign) NSView* buttonsContainerInDivider;
 
+// Initilization
+- (void) setDivider:(NSView*)view;
+- (void) setPane:(NSView*)view;
+
+
+// Accessors
 - (CGFloat) dividerHeight;
 - (CGFloat) dividerWidth;
 - (CGFloat) contentHeight;
@@ -35,9 +40,16 @@
 
 @interface JHAccordionView : NSSplitView <NSSplitViewDelegate>
 {
-	IBOutlet JHAccordionSubView*	pane1Box;
-	IBOutlet JHAccordionSubView*	pane2Box;
-	IBOutlet JHAccordionSubView*	pane3Box;
+	IBOutlet NSView*	divider1;
+	IBOutlet NSView*	divider2;
+	IBOutlet NSView*	divider3;
+	IBOutlet NSView*	pane1View;
+	IBOutlet NSView*	pane2View;
+	IBOutlet NSView*	pane3View;
+
+	JHAccordionSubView*	pane1Box;
+	JHAccordionSubView*	pane2Box;
+	JHAccordionSubView*	pane3Box;	
 	BOOL draggingDivider0;
 	BOOL draggingDivider1;
 }

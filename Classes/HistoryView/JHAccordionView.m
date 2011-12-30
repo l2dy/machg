@@ -39,8 +39,47 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 
 @implementation JHAccordionSubView
 
-@synthesize divider;
-@synthesize buttonsContainerInDivider;
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Initialization
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (void) adjustPaneAndDivider
+{
+	CGFloat selfHeight    = self.bounds.size.height;	
+	CGFloat selfWidth     = self.bounds.size.width;	
+	CGFloat dividerHeight = divider.bounds.size.height;
+	CGFloat paneHeight = selfHeight - dividerHeight;
+	[divider setFrame:NSMakeRect(0, paneHeight, selfWidth, dividerHeight)];
+	[pane    setFrame:NSMakeRect(0, 0, selfWidth, paneHeight)];
+}
+
+- (void) setDivider:(NSView*)view
+{
+	divider = view;
+	if (![[self subviews] containsObject:divider])
+		[self addSubview:divider];
+	[self adjustPaneAndDivider];	
+}
+
+- (void) setPane:(NSView*)view
+{
+	pane = view;
+	if (![[self subviews] containsObject:pane])
+		[self addSubview:pane];
+	[self adjustPaneAndDivider];
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Accessors
+// -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (CGFloat) dividerHeight	{ return [divider frame].size.height; }
 - (CGFloat) dividerWidth	{ return [divider frame].size.width; }
@@ -49,14 +88,9 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 - (CGFloat) height			{ return [self frame].size.height; }
 - (void)	setOldPaneHeight {oldPaneHeight = MAX([self height], 100); };
 
-- (void)	changeFrameHeightBy:(CGFloat)delta		{ if (delta == 0) return; NSRect frame = [self frame]; frame.size.height += delta; [[self animator] setFrame:frame]; }
-- (void)	changeFrameHeightDirectBy:(CGFloat)delta{ if (delta == 0) return; NSRect frame = [self frame]; frame.size.height += delta; [self setFrame:frame]; }
-- (BOOL)	clickIsInsideDivider:(NSEvent*)theEvent
-{
-	return
-		 NSPointInRect([theEvent locationInWindow], [divider convertRect:[divider bounds] toView:nil]) &&
-		!NSPointInRect([theEvent locationInWindow], [buttonsContainerInDivider convertRect:[buttonsContainerInDivider bounds] toView:nil]);
-}
+- (void)	changeFrameHeightBy:(CGFloat)delta		 { if (delta == 0) return; NSRect frame = [self frame]; frame.size.height += delta; [[self animator] setFrame:frame]; }
+- (void)	changeFrameHeightDirectBy:(CGFloat)delta { if (delta == 0) return; NSRect frame = [self frame]; frame.size.height += delta; [self setFrame:frame]; }
+- (BOOL)	clickIsInsideDivider:(NSEvent*)theEvent	 { return NSPointInRect([theEvent locationInWindow], [divider convertRect:[divider bounds] toView:nil]); }
 
 
 - (void) collapsePaneGivingSpaceTo:(JHAccordionSubView*)paneA and:(JHAccordionSubView*)paneB
@@ -105,6 +139,8 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 
 
 
+
+
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 // MARK:  JHAccordionView
@@ -120,6 +156,25 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 
 - (void) awakeFromNib
 {
+	CGFloat width = [self frame].size.width;
+	
+	pane1Box = [[JHAccordionSubView alloc]initWithFrame:NSMakeRect(0, 200, width, 100)];
+	[pane1Box setDivider:divider1];
+	[pane1Box setPane:pane1View];
+	[self addSubview:pane1Box];
+
+	pane2Box = [[JHAccordionSubView alloc]initWithFrame:NSMakeRect(0, 100, width, 100)];
+	[pane2Box setDivider:divider2];
+	[pane2Box setPane:pane2View];
+	[self addSubview:pane2Box];
+
+	pane3Box = [[JHAccordionSubView alloc]initWithFrame:NSMakeRect(0, 100, width, 100)];
+	[pane3Box setDivider:divider3];
+	[pane3Box setPane:pane3View];
+	[self addSubview:pane3Box];
+	
+	[self adjustSubviews];
+	
 	[pane1Box setOldPaneHeight];
 	[pane2Box setOldPaneHeight];
 	[pane3Box setOldPaneHeight];
@@ -215,10 +270,13 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 		{
 			CGFloat diff0Divider = divider0Anchor - [pane2Box frame].origin.y;
 			CGFloat diff = (diffMouse - diff0Divider);
+
+			if (-1 < diff && diff < 1)
+				continue;
 				
 			if (diff < 0)
 			{
-				diff = -diff; // reverse mental map here.
+				diff = floor(-diff); // reverse mental map here.
 				
 				// Take from second pane and give to first
 				CGFloat chunk2 = constrain(diff, 0, [pane2Box contentHeight]);
@@ -233,6 +291,7 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 			}
 			else
 			{
+				diff = floor(diff);
 				// Take from first and give to second
 				CGFloat chunk3 = constrain(diff, 0, [pane1Box contentHeight]);
 				[pane1Box changeFrameHeightDirectBy:-chunk3];
@@ -246,6 +305,7 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 			
 			if (diff > 0)
 			{
+				diff = floor(diff);
 				// Take from second pane and give to third
 				CGFloat chunk2 = constrain(diff, 0, [pane2Box contentHeight]);
 				[pane2Box changeFrameHeightDirectBy:-chunk2];
@@ -259,8 +319,10 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 			}
 			else
 			{
+				diff = floor(-diff); // reverse mental map here.
+
 				// Take from third pane and give to second
-				CGFloat chunk3 = constrain(-diff, 0, [pane3Box contentHeight]);
+				CGFloat chunk3 = constrain(diff, 0, [pane3Box contentHeight]);
 				[pane2Box changeFrameHeightDirectBy:chunk3];
 				[pane3Box changeFrameHeightDirectBy:-chunk3];
 			}
