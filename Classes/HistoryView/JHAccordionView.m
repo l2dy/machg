@@ -53,7 +53,7 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 	CGFloat dividerHeight = divider.bounds.size.height;
 	CGFloat paneHeight = selfHeight - dividerHeight;
 	[divider setFrame:NSMakeRect(0, paneHeight, selfWidth, dividerHeight)];
-	[pane    setFrame:NSMakeRect(0, 0, selfWidth, paneHeight)];
+	[content    setFrame:NSMakeRect(0, 0, selfWidth, paneHeight)];
 }
 
 - (void) setDivider:(NSView*)view
@@ -64,11 +64,11 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 	[self adjustPaneAndDivider];	
 }
 
-- (void) setPane:(NSView*)view
+- (void) setContent:(NSView*)view
 {
-	pane = view;
-	if (![[self subviews] containsObject:pane])
-		[self addSubview:pane];
+	content = view;
+	if (![[self subviews] containsObject:content])
+		[self addSubview:content];
 	[self adjustPaneAndDivider];
 }
 
@@ -135,6 +135,72 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 	}
 }
 
+static inline float square(float f) { return f*f; }
+static inline float extraForPane(float extra, JHAccordionSubView* pane, float totalContentHeights) { return floor(extra * [pane contentHeight] / totalContentHeights); }
+
+- (void) collapsePaneGivingSpaceToPanes:(NSArray*)panes
+{
+	oldPaneHeight = [self height];
+	CGFloat extra = [self contentHeight];
+
+	CGFloat totalContentHeights = 0;
+	for (JHAccordionSubView* pane in panes)
+		totalContentHeights += [pane contentHeight];
+	
+	if (totalContentHeights < 1)
+	{
+		NSInteger count = [panes count];
+		CGFloat extraPerPane = floor(extra/count);
+		CGFloat total = 0;
+		for (JHAccordionSubView* pane in panes)
+		{
+			total += extraPerPane;
+			[pane changeFrameHeightBy: extraPerPane];
+		}
+		[[panes objectAtIndex:0] changeFrameHeightBy: (extra - total)]; // Put any left over into expanding the first pane
+		[self changeFrameHeightBy: -extra];
+		return;
+	}
+
+	CGFloat total = 0;
+	for (JHAccordionSubView* pane in panes)
+	{
+		CGFloat amount = extraForPane(extra, pane, totalContentHeights);
+		total += amount;
+		[pane changeFrameHeightBy: amount];
+	}
+	[[panes objectAtIndex:0] changeFrameHeightBy: (extra - total)]; // Put any left over into expanding the first pane
+	[self changeFrameHeightBy: -extra];
+	return;
+}
+
+- (void) expandPaneTakingSpaceFromPanes:(NSArray*)panes
+{
+	CGFloat totalContentHeights = 0;
+	for (JHAccordionSubView* pane in panes)
+		totalContentHeights += [pane contentHeight];
+
+	CGFloat extra = oldPaneHeight - [self height];
+	
+	CGFloat totalExtra = 0;
+	if (totalContentHeights > 0.5)
+		for (JHAccordionSubView* pane in panes)
+			totalExtra += extraForPane(extra, pane, totalContentHeights);
+
+	if (totalExtra > totalContentHeights || totalContentHeights < 1)
+	{
+		[self changeFrameHeightBy: totalContentHeights];
+		for (JHAccordionSubView* pane in panes)
+			[pane changeFrameHeightBy: -[pane contentHeight]];
+	}
+	else
+	{
+		[self changeFrameHeightBy: totalExtra];
+		for (JHAccordionSubView* pane in panes)
+			[pane changeFrameHeightBy: -extraForPane(extra, pane, totalContentHeights)];
+	}
+}
+
 @end
 
 
@@ -158,80 +224,71 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 {
 	CGFloat width = [self frame].size.width;
 	
+	NSMutableArray* panes = [[NSMutableArray alloc]init];
+	
 	pane1Box = [[JHAccordionSubView alloc]initWithFrame:NSMakeRect(0, 200, width, 100)];
 	[pane1Box setDivider:divider1];
-	[pane1Box setPane:pane1View];
+	[pane1Box setContent:pane1View];
+	[pane1Box setOldPaneHeight];
 	[self addSubview:pane1Box];
-
+	[panes addObject:pane1Box];
+	
 	pane2Box = [[JHAccordionSubView alloc]initWithFrame:NSMakeRect(0, 100, width, 100)];
 	[pane2Box setDivider:divider2];
-	[pane2Box setPane:pane2View];
+	[pane2Box setContent:pane2View];
+	[pane2Box setOldPaneHeight];
 	[self addSubview:pane2Box];
+	[panes addObject:pane2Box];
 
 	pane3Box = [[JHAccordionSubView alloc]initWithFrame:NSMakeRect(0, 100, width, 100)];
 	[pane3Box setDivider:divider3];
-	[pane3Box setPane:pane3View];
-	[self addSubview:pane3Box];
-	
-	[self adjustSubviews];
-	
-	[pane1Box setOldPaneHeight];
-	[pane2Box setOldPaneHeight];
+	[pane3Box setContent:pane3View];
 	[pane3Box setOldPaneHeight];
-	draggingDivider0 = NO;
-	draggingDivider1 = NO;
+	[self addSubview:pane3Box];
+	[panes addObject:pane3Box];
+	
+	arrayOfAccordianPanes = [NSArray arrayWithArray:panes];
+
+	[self adjustSubviews];
+		
+	dividerDragNumber = -1;
+
 	[self setDelegate:self];
 }
 
 
+- (JHAccordionSubView*) pane:(NSInteger)paneNumber
+{
+	return [arrayOfAccordianPanes objectAtIndex:paneNumber];
+}
+
 - (void) mouseDown:(NSEvent*)theEvent
 {
 	
-	// Look for double clicks in the divider's, and if we only have a single click figure out if we are dragging.
-	if ([pane1Box clickIsInsideDivider:theEvent])
+	for (JHAccordionSubView* pane in arrayOfAccordianPanes)
 	{
-		if ([theEvent clickCount] > 1)
+		if ([pane clickIsInsideDivider:theEvent])
 		{
-			if ([pane1Box contentHeight] == 0)
-				[pane1Box expandPaneTakingSpaceFrom:pane2Box and:pane3Box];
-			else
-				[pane1Box collapsePaneGivingSpaceTo:pane2Box and:pane3Box];
-			[self splitView:self resizeSubviewsWithOldSize:[self frame].size];
-			return;
+			// Look for double clicks in the divider's, and if we only have a single click figure out if we are dragging.
+			NSInteger index = [arrayOfAccordianPanes indexOfObject:pane];
+			if ([theEvent clickCount] > 1)
+			{
+				NSMutableArray* otherPanes = [arrayOfAccordianPanes mutableCopy];
+				[otherPanes removeObject:pane];
+				if ([pane contentHeight] == 0)
+					[pane expandPaneTakingSpaceFromPanes:otherPanes];
+				else
+					[pane collapsePaneGivingSpaceToPanes:otherPanes];
+				[self splitView:self resizeSubviewsWithOldSize:[self frame].size];
+				return;
+			}
+			dividerDragNumber = index;
+			break;
 		}
 	}
-
-	else if ([pane2Box clickIsInsideDivider:theEvent])
-	{
-		if ([theEvent clickCount] > 1)
-		{
-			if ([pane2Box contentHeight] == 0)
-				[pane2Box expandPaneTakingSpaceFrom:pane1Box and:pane3Box];
-			else
-				[pane2Box collapsePaneGivingSpaceTo:pane1Box and:pane3Box];
-			[self splitView:self resizeSubviewsWithOldSize:[self frame].size];
-			return;
-		}
-		draggingDivider0 = YES;
-	}
-	
-	else if ([pane3Box clickIsInsideDivider:theEvent])
-	{
-		if ([theEvent clickCount] > 1)
-		{
-			if ([pane3Box contentHeight] == 0)
-				[pane3Box expandPaneTakingSpaceFrom:pane1Box and:pane2Box];
-			else
-				[pane3Box collapsePaneGivingSpaceTo:pane1Box and:pane2Box];
-			[self splitView:self resizeSubviewsWithOldSize:[self frame].size];
-			return;
-		}
-		draggingDivider1 = YES;
-	}
-
 	
 	// If we are dragging do the drag loop until the mouse is let up.
-	if (draggingDivider0 || draggingDivider1)
+	if (dividerDragNumber > 0)
 	{
 		[self doDividerDragLoop:theEvent];
 		return;
@@ -248,16 +305,22 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 - (void) doDividerDragLoop:(NSEvent*)theEvent
 {
 	CGFloat mouseAnchor = [theEvent locationInWindow].y;
-	CGFloat divider0Anchor = [pane2Box frame].origin.y;
-	CGFloat divider1Anchor = [pane3Box frame].origin.y;
+	NSInteger count = [arrayOfAccordianPanes count];
+	
+	if (dividerDragNumber < 0)
+		return;
+
+	CGFloat dividerAnchors[count];
+	
+	for (int i = 0; i<count; i++)
+		dividerAnchors[i] = [[self pane:i] frame].origin.y;
 
 	while (true)
 	{
 		NSEvent* event = [[self window] nextEventMatchingMask:NSLeftMouseUpMask | NSLeftMouseDraggedMask];
 		if ([event type] == NSLeftMouseUp)
 		{
-			draggingDivider0 = NO;
-			draggingDivider1 = NO;
+			dividerDragNumber = -1;
 			return;
 		}
 		if ([event type] != NSLeftMouseDragged)
@@ -266,65 +329,42 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 		CGFloat newMouse = [event locationInWindow].y;
 		CGFloat diffMouse = newMouse - mouseAnchor;
 
-		if (draggingDivider0)
+		const NSInteger i = dividerDragNumber;
+		CGFloat diffDivider = dividerAnchors[i] - [[self pane:i] frame].origin.y;
+		CGFloat diff = (diffMouse - diffDivider);
+		if (fabs(diff) < 1)
+			continue;
+		
+		if (diff < 0)
 		{
-			CGFloat diff0Divider = divider0Anchor - [pane2Box frame].origin.y;
-			CGFloat diff = (diffMouse - diff0Divider);
+			diff = floor(-diff); // reverse mental map here.
 
-			if (-1 < diff && diff < 1)
-				continue;
-				
-			if (diff < 0)
+			// Put extra space in the pane before the divider and progressively take space from the following panes 
+			JHAccordionSubView* recievingPane = [self pane:i-1];
+			for (int j = i; j<count; j++)
 			{
-				diff = floor(-diff); // reverse mental map here.
-				
-				// Take from second pane and give to first
-				CGFloat chunk2 = constrain(diff, 0, [pane2Box contentHeight]);
-				[pane1Box changeFrameHeightDirectBy:chunk2];
-				[pane2Box changeFrameHeightDirectBy:-chunk2];
-				diff -= chunk2;
-
-				// Take remainder from third pane and give to first
-				CGFloat chunk3 = constrain(diff, 0, [pane3Box contentHeight]);
-				[pane1Box changeFrameHeightDirectBy:chunk3];
-				[pane3Box changeFrameHeightDirectBy:-chunk3];
-			}
-			else
-			{
-				diff = floor(diff);
-				// Take from first and give to second
-				CGFloat chunk3 = constrain(diff, 0, [pane1Box contentHeight]);
-				[pane1Box changeFrameHeightDirectBy:-chunk3];
-				[pane2Box changeFrameHeightDirectBy:chunk3];
+				CGFloat chunk = constrain(diff, 0, [[self pane:j] contentHeight]);
+				[recievingPane changeFrameHeightDirectBy:chunk];
+				[[self pane:j] changeFrameHeightDirectBy:-chunk];
+				diff -= chunk;
+				if (diff < 0)
+					break;
 			}
 		}
-		if (draggingDivider1)
+		else
 		{
-			CGFloat diff1Divider = divider1Anchor - [pane3Box frame].origin.y;
-			CGFloat diff = diffMouse - diff1Divider;
-			
-			if (diff > 0)
-			{
-				diff = floor(diff);
-				// Take from second pane and give to third
-				CGFloat chunk2 = constrain(diff, 0, [pane2Box contentHeight]);
-				[pane2Box changeFrameHeightDirectBy:-chunk2];
-				[pane3Box changeFrameHeightDirectBy:chunk2];
-				diff -= chunk2;
-				
-				// Take remainder from first pane and give to third
-				CGFloat chunk1 = constrain(diff, 0, [pane1Box contentHeight]);
-				[pane1Box changeFrameHeightDirectBy:-chunk1];
-				[pane3Box changeFrameHeightDirectBy:chunk1];
-			}
-			else
-			{
-				diff = floor(-diff); // reverse mental map here.
+			diff = floor(diff);
 
-				// Take from third pane and give to second
-				CGFloat chunk3 = constrain(diff, 0, [pane3Box contentHeight]);
-				[pane2Box changeFrameHeightDirectBy:chunk3];
-				[pane3Box changeFrameHeightDirectBy:-chunk3];
+			// Put extra space in the pane following the divider and progressively take space from the previous panes 
+			JHAccordionSubView* recievingPane = [self pane:i];
+			for (int j = i-1; j>=0; j--)
+			{
+				CGFloat chunk = constrain(diff, 0, [[self pane:j] contentHeight]);
+				[recievingPane changeFrameHeightDirectBy:chunk];
+				[[self pane:j] changeFrameHeightDirectBy:-chunk];
+				diff -= chunk;
+				if (diff < 0)
+					break;
 			}
 		}
     }
@@ -333,8 +373,7 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 
 - (void) mouseUp:(NSEvent*)theEvent
 {
-	draggingDivider0 = NO;
-	draggingDivider1 = NO;
+	dividerDragNumber = -1;
 	[super mouseUp:theEvent];
 }
 
@@ -353,76 +392,89 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 - (CGFloat)	dividerThickness	{ return 0; }
 - (void)	drawDividerInRect:(NSRect)aRect { }
 
+
+static inline CGFloat total(CGFloat* array, NSInteger count)
+{
+	CGFloat t = 0;
+	for (int i = 0; i<count; i++)
+		t += array[i];
+	return t;
+}
+
 - (void) splitView:(NSSplitView*)splitView resizeSubviewsWithOldSize:(NSSize)oldSize
 {
-	NSRect newFrame = [self frame];
+	
+	NSInteger count = [arrayOfAccordianPanes count];
 
-	CGFloat divider1Height = [pane1Box dividerHeight];
-	CGFloat divider2Height = [pane2Box dividerHeight];
-	CGFloat divider3Height = [pane3Box dividerHeight];
+	CGFloat dividerHeights[count];	// The array of the heights of the dividers (this is constant)
+	CGFloat paneHeights[count];		// The array of the heights of each pane (divider + content)
+
+	// Initilize Divider heights
+	for (int i = 0; i<count; i++)
+		dividerHeights[i] = [[self pane:i] dividerHeight];
 
 	// Make sure the total height is at least as big as the the divider heights.
-	if (newFrame.size.height < divider1Height + divider2Height + divider3Height)
+	NSRect newFrame = [self frame];
+	if (newFrame.size.height < total(dividerHeights, count))
 	{
 		newFrame.origin.y = 0;
-		newFrame.size.height = divider1Height + divider2Height + divider3Height;
+		newFrame.size.height = total(dividerHeights, count);
 		[self setFrame:newFrame];
 	}
 
 	CGFloat oldTotalHeight = oldSize.height;
 	CGFloat newTotalHeight = newFrame.size.height;
-	
-	CGFloat pane1Height = [pane1Box height];
-	CGFloat pane2Height = [pane2Box height];
-	CGFloat pane3Height = [pane3Box height];
-	
-	pane1Height = pane1Height + (newTotalHeight - oldTotalHeight);
 
-	pane1Height = constrain(pane1Height, divider1Height, CGFLOAT_MAX);
-	pane2Height = constrain(pane2Height, divider2Height, CGFLOAT_MAX);
-	pane3Height = constrain(pane3Height, divider3Height, CGFLOAT_MAX);
-		
+	// Initilize Pane heights by inserting / deleting the extra space into the first pane
+	for (int i = 0; i<count; i++)
+		paneHeights[i] = [[self pane:i] height];
+	paneHeights[0] += (newTotalHeight - oldTotalHeight);
+	for (int i = 0; i<count; i++)
+		paneHeights[i] = constrain(paneHeights[i], dividerHeights[i], CGFLOAT_MAX);
 	
-	while (pane1Height + pane2Height + pane3Height != newTotalHeight)
+	
+	// Iterate until we adjust the paneHeights to yeild the new total height
+	while (total(paneHeights, count) != newTotalHeight)
 	{
-		BOOL content1Closed = pane1Height <= divider1Height;
-		BOOL content2Closed = pane2Height <= divider2Height;
-		BOOL content3Closed = pane3Height <= divider3Height;
-		
-		if (pane1Height + pane2Height + pane3Height > newTotalHeight)
+		CGFloat totalPaneHeights = total(paneHeights, count);
+
+		if (totalPaneHeights > newTotalHeight)
 		{
-			if (!content1Closed && pane1Height > divider1Height)
-				pane1Height = newTotalHeight - pane2Height - pane3Height;
-			else if (!content3Closed && pane3Height > divider3Height)
-				pane3Height = newTotalHeight - pane1Height - pane2Height;
-			else if (!content2Closed && pane2Height > divider2Height)
-				pane2Height = newTotalHeight - pane1Height - pane3Height;
+			for (int i = 0; i<count; i++)
+				if (paneHeights[i] > dividerHeights[i])
+				{
+					paneHeights[i] += newTotalHeight - totalPaneHeights;
+					break;
+				}
 		}
-		else if (pane1Height + pane2Height + pane3Height < newTotalHeight)
+		else if (totalPaneHeights < newTotalHeight)
 		{
-			if (!content1Closed)
-				pane1Height = newTotalHeight - pane2Height - pane3Height;
-			else if (!content3Closed)
-				pane3Height = newTotalHeight - pane1Height - pane2Height;
-			else
-				pane2Height = newTotalHeight - pane1Height - pane3Height;
+			BOOL inserted = NO;
+			for (int i = 0; i<count; i++)
+				if (paneHeights[i] > dividerHeights[i])
+				{
+					paneHeights[i] += newTotalHeight - totalPaneHeights;
+					inserted = YES;
+					break;
+				}
+			if (!inserted)
+				paneHeights[1] += newTotalHeight - totalPaneHeights;
 		}
 
-		pane1Height = constrain(pane1Height, divider1Height, content1Closed ? divider1Height : CGFLOAT_MAX);
-		pane2Height = constrain(pane2Height, divider2Height, content2Closed ? divider2Height : CGFLOAT_MAX);
-		pane3Height = constrain(pane3Height, divider3Height, content3Closed ? divider3Height : CGFLOAT_MAX);
+		for (int i = 0; i<count; i++)
+			paneHeights[i] = constrain(paneHeights[i], dividerHeights[i], CGFLOAT_MAX);
 	}
 	
 	CGFloat width = [self frame].size.width;
-	NSRect pane1Frame = NSMakeRect(0, 0, width, pane1Height);
-	NSRect pane2Frame = NSMakeRect(0, pane1Frame.origin.y + pane1Height, width, pane2Height);
-	NSRect pane3Frame = NSMakeRect(0, pane2Frame.origin.y + pane2Height, width, pane3Height);
-	[pane1Box setFrame:pane1Frame];
-	[pane2Box setFrame:pane2Frame];
-	[pane3Box setFrame:pane3Frame];
-	[pane1Box needsDisplay];
-	[pane2Box needsDisplay];
-	[pane3Box needsDisplay];
+
+	CGFloat yOffset = 0;
+	for (int i = 0; i<count; i++)
+	{
+		NSRect paneFrame = NSMakeRect(0, yOffset, width, paneHeights[i]);
+		yOffset += paneHeights[i];
+		[[self pane:i] setFrame:paneFrame];
+		[[self pane:i] needsDisplay];
+	}
 }
 
 @end

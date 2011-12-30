@@ -16,13 +16,13 @@
 @interface JHAccordionSubView : NSView
 {
 	NSView*		divider;
-	NSView*		pane;
+	NSView*		content;
 	CGFloat		oldPaneHeight;
 }
 
 // Initilization
 - (void) setDivider:(NSView*)view;
-- (void) setPane:(NSView*)view;
+- (void) setContent:(NSView*)view;
 
 
 // Accessors
@@ -47,11 +47,13 @@
 	IBOutlet NSView*	pane2View;
 	IBOutlet NSView*	pane3View;
 
+	NSArray*			arrayOfAccordianPanes;		// Array of JHAccordionSubView
+	NSInteger			dividerDragNumber;			// Which divider is currently being dragged. -1 is no divider
+	
 	JHAccordionSubView*	pane1Box;
 	JHAccordionSubView*	pane2Box;
 	JHAccordionSubView*	pane3Box;	
-	BOOL draggingDivider0;
-	BOOL draggingDivider1;
 }
 
+- (JHAccordionSubView*) pane:(NSInteger)paneNumber;
 @end
