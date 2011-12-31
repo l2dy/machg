@@ -17,10 +17,12 @@
 {
 	NSView*		divider;
 	NSView*		content;
-	CGFloat		oldPaneHeight;
+	CGFloat		oldPaneHeight;	// We record the height of the pane when we collapse it so that if we subsequently expand the pane
+								// we know the height to expand it to. 
 }
 
 // Initilization
++ (JHConcertinaSubView*) concertinaViewWithFrame:(NSRect)f andDivider:(NSView*)d andContent:(NSView*)c;
 - (void) setDivider:(NSView*)view;
 - (void) setContent:(NSView*)view;
 
