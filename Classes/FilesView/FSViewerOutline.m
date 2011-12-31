@@ -25,6 +25,7 @@
 {
 	[self setDelegate:self];
 	[self setDataSource:self];
+	[self setIndentationPerLevel:20.0];
 }
 
 - (void) reloadData
