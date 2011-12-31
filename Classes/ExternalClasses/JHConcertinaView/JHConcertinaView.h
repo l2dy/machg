@@ -56,4 +56,5 @@
 }
 
 - (JHConcertinaSubView*) pane:(NSInteger)paneNumber;
+- (BOOL)isSubviewCollapsed:(NSView*)subview;
 @end

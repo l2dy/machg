@@ -435,4 +435,25 @@ static inline CGFloat total(CGFloat* array, NSInteger count)
 	}
 }
 
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  SplitView Overides
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (BOOL)isSubviewCollapsed:(NSView*)subview
+{
+	for (JHConcertinaSubView* pane in arrayOfConcertinaPanes)
+		if (pane == subview)
+			return [pane contentHeight] == 0;
+	return NO;
+}
+
+
+
+
+
 @end
