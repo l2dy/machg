@@ -40,7 +40,7 @@
       </object>
       <object class="NSScrollView" id="672077260">
         <reference key="NSNextResponder"/>
-        <int key="NSvFlags">274</int>
+        <int key="NSvFlags">4370</int>
         <object class="NSMutableArray" key="NSSubviews">
           <bool key="EncodedWithXMLCoder">YES</bool>
           <object class="NSClipView" id="323024051">
@@ -50,7 +50,7 @@
               <bool key="EncodedWithXMLCoder">YES</bool>
               <object class="NSTableView" id="958870888">
                 <reference key="NSNextResponder" ref="323024051"/>
-                <int key="NSvFlags">256</int>
+                <int key="NSvFlags">4352</int>
                 <string key="NSFrameSize">{457, 224}</string>
                 <reference key="NSSuperview" ref="323024051"/>
                 <string key="NSReuseIdentifierKey">_NS:1843</string>
@@ -442,6 +442,10 @@
         </object>
         <object class="IBPartialClassDescription">
           <string key="className">NSObject</string>
+          <reference key="sourceIdentifier" ref="705115631"/>
+        </object>
+        <object class="IBPartialClassDescription">
+          <string key="className">NSResponder</string>
           <reference key="sourceIdentifier" ref="705115631"/>
         </object>
         <object class="IBPartialClassDescription">
