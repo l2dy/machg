@@ -198,6 +198,7 @@
 	[[self viewerPane:styleNum] prepareToOpenFSViewerPane];
 	[self setContentView:view];
 	currentFSViewerPane_ = styleNum;
+	[parentController didSwitchViewTo:styleNum];
 }
 
 - (void) prepareToOpenFSViewerPane

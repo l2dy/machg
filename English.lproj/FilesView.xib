@@ -22,7 +22,7 @@
     <object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
       <bool key="EncodedWithXMLCoder">YES</bool>
       <integer value="201"/>
-      <integer value="230"/>
+      <integer value="193"/>
       <integer value="222"/>
     </object>
     <object class="NSArray" key="IBDocument.PluginDependencies">
@@ -1144,7 +1144,7 @@
                       <object class="NSButton" id="593147930">
                         <reference key="NSNextResponder" ref="666549832"/>
                         <int key="NSvFlags">268</int>
-                        <string key="NSFrame">{{4, -2}, {26, 26}}</string>
+                        <string key="NSFrame">{{4, -2}, {34, 26}}</string>
                         <reference key="NSSuperview" ref="666549832"/>
                         <bool key="NSEnabled">YES</bool>
                         <object class="NSButtonCell" key="NSCell" id="802273250">
@@ -1168,7 +1168,7 @@
                       <object class="NSButton" id="589549321">
                         <reference key="NSNextResponder" ref="666549832"/>
                         <int key="NSvFlags">268</int>
-                        <string key="NSFrame">{{29, -2}, {26, 26}}</string>
+                        <string key="NSFrame">{{37, -2}, {34, 26}}</string>
                         <reference key="NSSuperview" ref="666549832"/>
                         <bool key="NSEnabled">YES</bool>
                         <object class="NSButtonCell" key="NSCell" id="825860097">
@@ -1192,7 +1192,7 @@
                       <object class="NSButton" id="60214963">
                         <reference key="NSNextResponder" ref="666549832"/>
                         <int key="NSvFlags">268</int>
-                        <string key="NSFrame">{{54, -2}, {26, 26}}</string>
+                        <string key="NSFrame">{{70, -2}, {34, 26}}</string>
                         <reference key="NSSuperview" ref="666549832"/>
                         <bool key="NSEnabled">YES</bool>
                         <object class="NSButtonCell" key="NSCell" id="893623396">
@@ -1214,11 +1214,11 @@
                         </object>
                       </object>
                     </object>
-                    <string key="NSFrameSize">{82, 22}</string>
+                    <string key="NSFrameSize">{108, 22}</string>
                     <reference key="NSSuperview" ref="417462929"/>
                   </object>
                 </object>
-                <string key="NSFrame">{{60, 1}, {82, 22}}</string>
+                <string key="NSFrame">{{60, 1}, {108, 22}}</string>
                 <reference key="NSSuperview" ref="310906602"/>
                 <string key="NSOffsets">{0, 0}</string>
                 <object class="NSTextFieldCell" key="NSTitleCell">
@@ -1881,6 +1881,30 @@
             <reference key="destination" ref="264801874"/>
           </object>
           <int key="connectionID">225</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBOutletConnection" key="connection">
+            <string key="label">FilesViewBrowserSegement</string>
+            <reference key="source" ref="453712496"/>
+            <reference key="destination" ref="593147930"/>
+          </object>
+          <int key="connectionID">239</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBOutletConnection" key="connection">
+            <string key="label">FilesViewOutlineSegement</string>
+            <reference key="source" ref="453712496"/>
+            <reference key="destination" ref="589549321"/>
+          </object>
+          <int key="connectionID">240</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBOutletConnection" key="connection">
+            <string key="label">FilesViewTableSegement</string>
+            <reference key="source" ref="453712496"/>
+            <reference key="destination" ref="60214963"/>
+          </object>
+          <int key="connectionID">241</int>
         </object>
       </object>
       <object class="IBMutableOrderedSet" key="objectRecords">
@@ -2894,7 +2918,7 @@
         </object>
       </object>
       <nil key="sourceID"/>
-      <int key="maxID">236</int>
+      <int key="maxID">241</int>
     </object>
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3323,6 +3347,9 @@
             <bool key="EncodedWithXMLCoder">YES</bool>
             <object class="NSArray" key="dict.sortedKeys">
               <bool key="EncodedWithXMLCoder">YES</bool>
+              <string>FilesViewBrowserSegement</string>
+              <string>FilesViewOutlineSegement</string>
+              <string>FilesViewTableSegement</string>
               <string>nodeIconWell</string>
               <string>nodeInspector</string>
               <string>parentContoller</string>
@@ -3330,6 +3357,9 @@
             </object>
             <object class="NSMutableArray" key="dict.values">
               <bool key="EncodedWithXMLCoder">YES</bool>
+              <string>NSButton</string>
+              <string>NSButton</string>
+              <string>NSButton</string>
               <string>NSImageView</string>
               <string>NSTextField</string>
               <string>FilesViewController</string>
@@ -3340,6 +3370,9 @@
             <bool key="EncodedWithXMLCoder">YES</bool>
             <object class="NSArray" key="dict.sortedKeys">
               <bool key="EncodedWithXMLCoder">YES</bool>
+              <string>FilesViewBrowserSegement</string>
+              <string>FilesViewOutlineSegement</string>
+              <string>FilesViewTableSegement</string>
               <string>nodeIconWell</string>
               <string>nodeInspector</string>
               <string>parentContoller</string>
@@ -3347,6 +3380,18 @@
             </object>
             <object class="NSMutableArray" key="dict.values">
               <bool key="EncodedWithXMLCoder">YES</bool>
+              <object class="IBToOneOutletInfo">
+                <string key="name">FilesViewBrowserSegement</string>
+                <string key="candidateClassName">NSButton</string>
+              </object>
+              <object class="IBToOneOutletInfo">
+                <string key="name">FilesViewOutlineSegement</string>
+                <string key="candidateClassName">NSButton</string>
+              </object>
+              <object class="IBToOneOutletInfo">
+                <string key="name">FilesViewTableSegement</string>
+                <string key="candidateClassName">NSButton</string>
+              </object>
               <object class="IBToOneOutletInfo">
                 <string key="name">nodeIconWell</string>
                 <string key="candidateClassName">NSImageView</string>

@@ -49,6 +49,9 @@
 	IBOutlet FSViewer*		theFSViewer;
 	IBOutlet NSImageView*	nodeIconWell;	// Image well showing the selected items icon.
 	IBOutlet NSTextField*	nodeInspector;	// Text field showing the selected items attributes.
+	IBOutlet NSButton*		FilesViewBrowserSegement;
+	IBOutlet NSButton*		FilesViewOutlineSegement;
+	IBOutlet NSButton*		FilesViewTableSegement;
 	MacHgDocument*			myDocument;
 	BOOL					awake_;			// Ensure awakeFromNib fires only once
 }
@@ -60,6 +63,7 @@
 - (void)	 prepareToOpenFilesView;
 - (NSInteger) numberOfQuickLookPreviewItems;
 
+- (void)	 didSwitchViewTo:(FSViewerNum)viewNumber;
 - (IBAction) refreshBrowserContent:(id)sender;
 
 

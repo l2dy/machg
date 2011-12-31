@@ -82,6 +82,9 @@
 
 	myDocument = [parentContoller myDocument];
 	[self observe:kRepositoryDataIsNew		from:[self myDocument]  byCalling:@selector(repositoryDataIsNew)];
+	[FilesViewBrowserSegement setState:NO];
+	[FilesViewOutlineSegement setState:NO];
+	[FilesViewTableSegement setState:NO];
 
 	[theFSViewer setAreNodesVirtual:NO];
 }
@@ -135,6 +138,13 @@
 // MARK: -
 // MARK:  Refreshing
 // -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (void)	 didSwitchViewTo:(FSViewerNum)viewNumber
+{
+	[FilesViewBrowserSegement setState:(viewNumber == eFilesBrowser)];
+	[FilesViewOutlineSegement setState:(viewNumber == eFilesOutline)];
+	[FilesViewTableSegement   setState:(viewNumber == eFilesTable)];
+}
 
 - (void) repositoryDataIsNew					{ [theFSViewer repositoryDataIsNew]; }
 

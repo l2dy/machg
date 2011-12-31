@@ -234,6 +234,12 @@
 	[compareLogTableView resetTable:self];
 }
 
+
+- (void) didSwitchViewTo:(FSViewerNum)viewNumber
+{
+}
+
+
 - (void) scrollToSelected
 {
 	[baseLogTableView scrollToSelected:self];

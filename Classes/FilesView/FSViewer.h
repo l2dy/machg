@@ -22,6 +22,7 @@
 - (NSArray*)		resolveStatusLines: (NSArray*)absolutePaths withRootPath:(NSString*)rootPath;
 - (BOOL)			writeRowsWithIndexes:(NSIndexSet*)rowIndexes inColumn:(NSInteger)column toPasteboard:(NSPasteboard*)pasteboard;	// dragging support
 - (MacHgDocument*)	myDocument;
+- (void)			didSwitchViewTo:(FSViewerNum)viewNumber;
 - (BOOL)			controlsMainFSViewer;
 - (void)			updateCurrentPreviewImage;
 - (void)			awakeFromNib;	// This routine needs to be able to be called multiple times on the Controller parent of the
