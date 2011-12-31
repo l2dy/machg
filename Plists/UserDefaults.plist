@@ -156,7 +156,7 @@
 	<key>UseWhichToolForMerging</key>
 	<integer>0</integer>
 	<key>ViewsHaveIndependentSizes</key>
-	<true/>
+	<false/>
 	<key>WarnAboutBadMercurialConfiguration</key>
 	<false/>
 </dict>
