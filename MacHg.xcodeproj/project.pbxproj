@@ -49,7 +49,6 @@
 		9606F3451157F1F100968DE8 /* opendiff-w.sh in Resources */ = {isa = PBXBuildFile; fileRef = 9606F3441157F1F100968DE8 /* opendiff-w.sh */; };
 		9609EF4711391D3C0077E178 /* tb-browserPane.png in Resources */ = {isa = PBXBuildFile; fileRef = 9609EF4411391D3C0077E178 /* tb-browserPane.png */; };
 		9609EF4811391D3C0077E178 /* tb-DiffInspectorPane.png in Resources */ = {isa = PBXBuildFile; fileRef = 9609EF4511391D3C0077E178 /* tb-DiffInspectorPane.png */; };
-		9609EF4911391D3C0077E178 /* tb-LogListPane.png in Resources */ = {isa = PBXBuildFile; fileRef = 9609EF4611391D3C0077E178 /* tb-LogListPane.png */; };
 		9610639B117C6E4000FF7EB2 /* ActionDrop24.png in Resources */ = {isa = PBXBuildFile; fileRef = 9610639A117C6E4000FF7EB2 /* ActionDrop24.png */; };
 		96138847116B437D0022F368 /* ActionDrop.png in Resources */ = {isa = PBXBuildFile; fileRef = 96138846116B437D0022F368 /* ActionDrop.png */; };
 		9618880313382E3C00C38570 /* araxishgmerge in Resources */ = {isa = PBXBuildFile; fileRef = 9618880113382E3C00C38570 /* araxishgmerge */; };
@@ -207,6 +206,9 @@
 		96C8964D149F4106007F7831 /* CTBadge_4.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 96C89648149F4106007F7831 /* CTBadge_4.pdf */; };
 		96C8964E149F4106007F7831 /* CTBadge_5.pdf in Resources */ = {isa = PBXBuildFile; fileRef = 96C89649149F4106007F7831 /* CTBadge_5.pdf */; };
 		96C98EA5113B70C2006816C0 /* MacHgsmaller.png in Resources */ = {isa = PBXBuildFile; fileRef = 96C98EA4113B70C2006816C0 /* MacHgsmaller.png */; };
+		96D001DB14AA68A5007E53C8 /* FilesViewBrowser.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D001D814AA68A5007E53C8 /* FilesViewBrowser.png */; };
+		96D001DC14AA68A5007E53C8 /* FilesViewOutline.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D001D914AA68A5007E53C8 /* FilesViewOutline.png */; };
+		96D001DD14AA68A5007E53C8 /* FilesViewTable.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D001DA14AA68A5007E53C8 /* FilesViewTable.png */; };
 		96D05C8A14945886000D513E /* FSViewerBrowser.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D05C8914945886000D513E /* FSViewerBrowser.m */; };
 		96D05C8F149458CB000D513E /* FSViewerOutline.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D05C8E149458CB000D513E /* FSViewerOutline.m */; };
 		96D05C9414945900000D513E /* FSViewerTable.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D05C9314945900000D513E /* FSViewerTable.m */; };
@@ -322,7 +324,6 @@
 		9606F3441157F1F100968DE8 /* opendiff-w.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "opendiff-w.sh"; sourceTree = "<group>"; };
 		9609EF4411391D3C0077E178 /* tb-browserPane.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tb-browserPane.png"; sourceTree = "<group>"; };
 		9609EF4511391D3C0077E178 /* tb-DiffInspectorPane.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tb-DiffInspectorPane.png"; sourceTree = "<group>"; };
-		9609EF4611391D3C0077E178 /* tb-LogListPane.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tb-LogListPane.png"; sourceTree = "<group>"; };
 		9610639A117C6E4000FF7EB2 /* ActionDrop24.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ActionDrop24.png; path = ButtonIcons/ActionDrop24.png; sourceTree = "<group>"; };
 		96138846116B437D0022F368 /* ActionDrop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ActionDrop.png; path = ButtonIcons/ActionDrop.png; sourceTree = "<group>"; };
 		9618880113382E3C00C38570 /* araxishgmerge */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = araxishgmerge; sourceTree = "<group>"; };
@@ -552,6 +553,9 @@
 		96C89648149F4106007F7831 /* CTBadge_4.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = CTBadge_4.pdf; path = ../Classes/ExternalClasses/CTBadge/CTBadge_4.pdf; sourceTree = "<group>"; };
 		96C89649149F4106007F7831 /* CTBadge_5.pdf */ = {isa = PBXFileReference; lastKnownFileType = image.pdf; name = CTBadge_5.pdf; path = ../Classes/ExternalClasses/CTBadge/CTBadge_5.pdf; sourceTree = "<group>"; };
 		96C98EA4113B70C2006816C0 /* MacHgsmaller.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = MacHgsmaller.png; path = SplashTitles/MacHgsmaller.png; sourceTree = "<group>"; };
+		96D001D814AA68A5007E53C8 /* FilesViewBrowser.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FilesViewBrowser.png; sourceTree = "<group>"; };
+		96D001D914AA68A5007E53C8 /* FilesViewOutline.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FilesViewOutline.png; sourceTree = "<group>"; };
+		96D001DA14AA68A5007E53C8 /* FilesViewTable.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = FilesViewTable.png; sourceTree = "<group>"; };
 		96D05C8814945886000D513E /* FSViewerBrowser.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSViewerBrowser.h; sourceTree = "<group>"; };
 		96D05C8914945886000D513E /* FSViewerBrowser.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = FSViewerBrowser.m; sourceTree = "<group>"; };
 		96D05C8D149458CB000D513E /* FSViewerOutline.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = FSViewerOutline.h; sourceTree = "<group>"; };
@@ -823,7 +827,6 @@
 				9600C2B610CD3D9F00CD8D28 /* Push.png */,
 				9609EF4411391D3C0077E178 /* tb-browserPane.png */,
 				9609EF4511391D3C0077E178 /* tb-DiffInspectorPane.png */,
-				9609EF4611391D3C0077E178 /* tb-LogListPane.png */,
 				969BDCC0119659FC007AA6D9 /* tb-terminal.png */,
 				9654F5E311D237F200826FD6 /* AddRemove.png */,
 				9654F5E411D237F200826FD6 /* Commit.png */,
@@ -1222,6 +1225,9 @@
 				9637C8BA118E9C030000C14B /* DividerBackground18.png */,
 				9637C8BB118E9C030000C14B /* DividerBackground24.png */,
 				9637C8BC118E9C030000C14B /* DividerThumb.png */,
+				96D001D814AA68A5007E53C8 /* FilesViewBrowser.png */,
+				96D001D914AA68A5007E53C8 /* FilesViewOutline.png */,
+				96D001DA14AA68A5007E53C8 /* FilesViewTable.png */,
 				9637C8BD118E9C030000C14B /* SmallDividerThumb.png */,
 			);
 			path = DividerItems;
@@ -1819,7 +1825,6 @@
 				969C5302112EE45D00FA7C33 /* RebaseSheet.xib in Resources */,
 				9609EF4711391D3C0077E178 /* tb-browserPane.png in Resources */,
 				9609EF4811391D3C0077E178 /* tb-DiffInspectorPane.png in Resources */,
-				9609EF4911391D3C0077E178 /* tb-LogListPane.png in Resources */,
 				961CB6AB1139BC730071F9F6 /* BrowserPreviewView.xib in Resources */,
 				96C98EA5113B70C2006816C0 /* MacHgsmaller.png in Resources */,
 				9672AC6B114B799500312CE2 /* ResultsWindow.xib in Resources */,
@@ -1885,6 +1890,9 @@
 				96C8964D149F4106007F7831 /* CTBadge_4.pdf in Resources */,
 				96C8964E149F4106007F7831 /* CTBadge_5.pdf in Resources */,
 				96D49BB114A47A9B00171F63 /* tb-HistoryViewPane.png in Resources */,
+				96D001DB14AA68A5007E53C8 /* FilesViewBrowser.png in Resources */,
+				96D001DC14AA68A5007E53C8 /* FilesViewOutline.png in Resources */,
+				96D001DD14AA68A5007E53C8 /* FilesViewTable.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
