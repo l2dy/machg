@@ -466,12 +466,24 @@
 	if (openWithItem)
 		[theMenu removeItem:openWithItem];
 
-	if ([parentController controlsMainFSViewer] && [self singleFileIsChosenInFiles])
+	if ([parentController controlsMainFSViewer] && [self chosenNode])
 	{
-		FSNodeInfo* clickedNode = [self clickedNode];
-		NSString* path = [clickedNode absolutePath];
+		FSNodeInfo* chosenNode = [self chosenNode];
+		NSString* path = [chosenNode absolutePath];
 		NSURL* pathURL = [NSURL fileURLWithPath:path];
 		NSArray* apps = [NSApplication applicationsForURL:pathURL];
+		if (IsEmpty(apps))
+			for (FSNodeInfo* node in [self chosenNodes])
+			{
+				path = [node absolutePath];
+				pathURL = [NSURL fileURLWithPath:path];
+				apps = [NSApplication applicationsForURL:pathURL];
+				if (IsNotEmpty(apps))
+					break;
+			}
+		if (IsEmpty(apps))
+			return;
+		
 		NSArray* appsSorted = [apps sortedArrayUsingDescriptors:nsurlSortDescriptors];
 		NSMutableDictionary* dict = [[NSMutableDictionary alloc] init];
 		NSMenu* subMenu = [[[NSMenu alloc] initWithTitle:@"Open With…"] autorelease];
