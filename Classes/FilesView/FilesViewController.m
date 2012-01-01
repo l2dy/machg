@@ -415,3 +415,150 @@
 
 
 
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  StatusSidebar
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+
+const CGFloat collapsedWidth =  39;	// This is the width of the view in its collapsed form
+const CGFloat  expandedWidth = 146;	// This is the width of the view in its expanded form
+
+@implementation StatusSidebarSplitView
+
+- (void) awakeFromNib
+{
+	[self setDelegate:self];
+
+	[statusSidebarContent setContentView:expandedStatusSidebarGroup];
+
+	viewAnimation = [[NSViewAnimation alloc] init];
+	[viewAnimation setAnimationBlockingMode:NSAnimationBlocking];
+	[viewAnimation setAnimationCurve:NSAnimationEaseInOut];
+	[viewAnimation setDelegate:self];
+	
+	[self maximize:self];
+
+}
+
+- (CGFloat) targetDividerPosition					{ return self.frame.size.width - (minimized ? collapsedWidth : expandedWidth); }
+
+- (void) animationDidEnd:(NSAnimation*)animation	{ [self setPosition:[self targetDividerPosition] ofDividerAtIndex:0]; }
+
+
+- (void) animateContentToNewFrame:(NSRect)endFrame
+{
+	[viewAnimation stopAnimation];
+	
+	float duration = ([[[self window] currentEvent] modifierFlags] & NSShiftKeyMask) ? 1.25 : 0.25;
+	[viewAnimation setDuration:duration];
+	
+	NSDictionary* resizeDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
+									  theContent, NSViewAnimationTargetKey,
+									  [NSValue valueWithRect:[theContent frame]], NSViewAnimationStartFrameKey,
+									  [NSValue valueWithRect:endFrame], NSViewAnimationEndFrameKey,
+									  nil];
+	
+	NSArray* animationArray = [NSArray arrayWithObject:resizeDictionary];
+	[viewAnimation setViewAnimations:animationArray];
+	[viewAnimation startAnimation];	
+}
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  StatusSidebarSplitview actions 
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (IBAction) maximize:(id)sender
+{
+	if (!minimized)
+		return;
+
+	[toggleStatusSidebarButton setImage:[NSImage imageNamed:@"SidebarClose"]];
+	[toggleStatusSidebarButton setAction:@selector(minimize:)];
+
+	minimized = NO;
+	NSRect endFrame = [self frame];
+	endFrame.size.width -= expandedWidth;
+	[self animateContentToNewFrame:endFrame];
+
+	[statusSidebarContent setContentView:expandedStatusSidebarGroup];
+}
+
+- (IBAction) minimize:(id)sender
+{
+	if (minimized)
+		return;
+
+	[toggleStatusSidebarButton setImage:[NSImage imageNamed:@"SidebarOpen"]];
+	[toggleStatusSidebarButton setAction:@selector(maximize:)];
+
+	minimized = YES;
+	NSRect endFrame = [self frame];
+	endFrame.size.width -= collapsedWidth;
+	[self animateContentToNewFrame:endFrame];
+	
+	[statusSidebarContent setContentView:collapsedStatusSidebarGroup];
+}
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Splitview delegates 
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (CGFloat) splitView:(NSSplitView*)splitView constrainSplitPosition:(CGFloat)proposedPosition ofSubviewAt:(NSInteger)dividerIndex
+{
+	if ([viewAnimation isAnimating])
+		return theContent.frame.size.width;
+
+	CGFloat crossOverPoint = self.frame.size.width - (expandedWidth+collapsedWidth)/2;
+	if (minimized && proposedPosition<(crossOverPoint - 3))
+		[self maximize:self];
+	else if (!minimized && proposedPosition>(crossOverPoint + 3))
+		[self minimize:self];
+	return [self targetDividerPosition];
+}
+
+- (CGFloat)splitView:(NSSplitView*)splitView constrainMaxCoordinate:(CGFloat)proposedMaximumPosition ofSubviewAt:(NSInteger)dividerIndex
+{
+	return self.frame.size.width - collapsedWidth;
+}
+
+- (CGFloat)splitView:(NSSplitView*)splitView constrainMinCoordinate:(CGFloat)proposedMinimumPosition ofSubviewAt:(NSInteger)dividerIndex
+{
+	return self.frame.size.width - expandedWidth;
+}
+
+- (void) splitView:(NSSplitView*)splitView resizeSubviewsWithOldSize:(NSSize)oldSize
+{	
+	NSRect contentFrame	= [theContent frame];
+	NSRect sidebarFrame	= [theSidebar frame];
+	if ([viewAnimation isAnimating])
+	{
+		sidebarFrame.origin.x = contentFrame.size.width;		
+		sidebarFrame.size.width = self.frame.size.width - contentFrame.size.width;
+	}
+	else
+	{
+		sidebarFrame.size.width = minimized ? collapsedWidth : expandedWidth;
+		contentFrame.size.width = self.frame.size.width - sidebarFrame.size.width;
+		sidebarFrame.origin.x = contentFrame.size.width;
+	}
+	[theContent setFrame:contentFrame];
+	[theSidebar setFrame:sidebarFrame];
+	[self adjustSubviews];
+}
+
+- (void)splitViewDidResizeSubviews:(NSNotification *)notification
+{
+	[self display];
+}
+
+@end

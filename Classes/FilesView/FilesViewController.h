@@ -10,6 +10,7 @@
 #import <Cocoa/Cocoa.h>
 #import "Common.h"
 #import "FSViewer.h"
+@class StatusSidebarSplitView;
 
 
 
@@ -47,6 +48,7 @@
 {
 	IBOutlet FilesViewController* parentContoller;
 	IBOutlet FSViewer*		theFSViewer;
+	IBOutlet StatusSidebarSplitView*	statusSidebarSplitView;
 	IBOutlet NSImageView*	nodeIconWell;	// Image well showing the selected items icon.
 	IBOutlet NSTextField*	nodeInspector;	// Text field showing the selected items attributes.
 	IBOutlet NSButton*		FilesViewBrowserSegement;
@@ -70,5 +72,33 @@
 // Actions
 - (IBAction) browserAction:(id)browser;			// Respond to a single click or a key down event
 - (IBAction) browserDoubleAction:(id)browser;	// Respond to a double click
+
+@end
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  StatusSidebar
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+
+@interface StatusSidebarSplitView : NSSplitView <NSSplitViewDelegate, NSAnimationDelegate>
+{
+	IBOutlet NSView*		theContent;
+	IBOutlet NSView*		theSidebar;
+
+	IBOutlet NSBox*			statusSidebarContent;
+	IBOutlet NSView*		expandedStatusSidebarGroup;
+	IBOutlet NSView*		collapsedStatusSidebarGroup;
+	IBOutlet NSButton*		toggleStatusSidebarButton;
+	BOOL					minimized;
+	NSViewAnimation*		viewAnimation;
+}
+
+- (IBAction) maximize:(id)sender;
+- (IBAction) minimize:(id)sender;
 
 @end
