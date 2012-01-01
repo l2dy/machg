@@ -46,7 +46,10 @@
 
 - (void) regenerateTableData
 {
-	leafNodeForTableRow_ = [[parentViewer_ rootNodeInfo] generateFlatLeafNodeList];
+	if (IsEmpty([[parentViewer_ rootNodeInfo] childNodes]))
+		leafNodeForTableRow_ = [NSArray array];
+	else
+		leafNodeForTableRow_ = [[parentViewer_ rootNodeInfo] generateFlatLeafNodeList];
 }
 
 - (void) reloadData
