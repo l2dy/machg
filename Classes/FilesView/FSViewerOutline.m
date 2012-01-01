@@ -44,7 +44,7 @@
 
 - (void) prepareToOpenFSViewerPane
 {
-	[self reloadData];
+	[self reloadDataSin];
 	[[[parentViewer_ myDocument] mainWindow] makeFirstResponder:self];
 }
 
