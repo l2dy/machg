@@ -579,7 +579,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		case eUseDiffMergeForDiffs:			return @"com.sourcegear.DiffMerge";
 		case eUseKDiff3ForDiffs:			return @"com.yourcompany.kdiff3";
 		case eUseDelatWalkerForDiffs:		return @"com.deltopia.deltawalker";
-		case eUseKaleidoscopeForDiffs:		return @"com.madebysofa.Kaleidoscope";
+		case eUseKaleidoscopeForDiffs:		return @"com.blackpixel.kaleidoscope";
 		case eUseChangesForDiffs:			return @"com.skorpiostech.Changes";
 		case eUseBBEditForDiffs:			return @"com.barebones.bbedit";
 		case eUseTextWranglerForDiffs:		return @"com.barebones.textwrangler";
