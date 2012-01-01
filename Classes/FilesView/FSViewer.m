@@ -716,6 +716,11 @@
 - (void) updateCurrentPreviewImage { [parentController updateCurrentPreviewImage]; }
 
 
+- (void) viewerSelectionDidChange:(NSNotification*)notification
+{
+	
+}
+
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 // MARK: Save and Restore Viewer Selection state

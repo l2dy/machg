@@ -132,7 +132,7 @@
 	}
 }
 
-- (void)outlineViewItemDidCollapse:(NSNotification *)notification
+- (void)outlineViewItemDidCollapse:(NSNotification*)notification
 {
 	if (!expandedNodes_)
 		[self restoreExpandedStateFromUserDefaults];
@@ -144,7 +144,7 @@
 	}
 }
 
-- (void)outlineViewItemDidExpand:(NSNotification *)notification
+- (void)outlineViewItemDidExpand:(NSNotification*)notification
 {
 	if (!expandedNodes_)
 		[self restoreExpandedStateFromUserDefaults];
@@ -156,6 +156,10 @@
 	}	
 }
 
+- (void)outlineViewSelectionDidChange:(NSNotification*)notification
+{
+	[parentViewer_ viewerSelectionDidChange:notification];
+}
 
 
 

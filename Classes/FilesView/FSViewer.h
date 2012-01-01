@@ -192,6 +192,7 @@
 - (void)		repositoryDataIsNew;								// Reset the repository root and regenerate all the data and reload it.
 - (void)		regenerateBrowserDataAndReload;						// Regenerate all the data for the browser and reload the browser.
 - (void)		updateCurrentPreviewImage;
+- (void)		viewerSelectionDidChange:(NSNotification*)notification;
 
 @end
 

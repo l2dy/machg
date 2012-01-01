@@ -556,7 +556,7 @@ const CGFloat  expandedWidth = 146;	// This is the width of the view in its expa
 	[self adjustSubviews];
 }
 
-- (void)splitViewDidResizeSubviews:(NSNotification *)notification
+- (void)splitViewDidResizeSubviews:(NSNotification*)notification
 {
 	[self display];
 }
