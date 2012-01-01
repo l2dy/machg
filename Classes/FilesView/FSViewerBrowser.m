@@ -225,6 +225,15 @@
 }
 
 
+// We overide this here to emulate browserViewSelectionDidChange which doesn't exist. We fire the notification with a tiny delay
+// to ensure that the browser has actually changed to the new selection. 
+- (NSIndexSet*) browser:(NSBrowser*)browser selectionIndexesForProposedSelection:(NSIndexSet*)proposedSelectionIndexes inColumn:(NSInteger)column
+{
+	NSNotification* note = [NSNotification notificationWithName:@"BrowserViewSelectionDidChangeNotification" object:browser];
+	[parentViewer_ performSelector:@selector(viewerSelectionDidChange:) withObject:note afterDelay:(NSTimeInterval)0.1];
+	return proposedSelectionIndexes;
+}
+
 
 
 

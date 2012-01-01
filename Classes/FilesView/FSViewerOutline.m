@@ -39,12 +39,14 @@
 
 - (void) reloadDataSin
 {
+	FSViewerSelectionState* theSavedState = [self saveViewerSelectionState];
 	[self reloadData];
+	[self restoreViewerSelectionState:theSavedState];
 }
 
 - (void) prepareToOpenFSViewerPane
 {
-	[self reloadDataSin];
+	[self reloadDataSin];	// Have the desirable side effect of copying the selection from the current pane to this one.
 	[[[parentViewer_ myDocument] mainWindow] makeFirstResponder:self];
 }
 
