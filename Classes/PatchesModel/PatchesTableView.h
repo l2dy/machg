@@ -8,7 +8,6 @@
 //
 
 #import <WebKit/WebKit.h>
-#import <Cocoa/Cocoa.h>
 #import "Common.h"
 
 
