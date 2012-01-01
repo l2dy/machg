@@ -7,6 +7,7 @@
 //  This software is licensed under the "New BSD License". The full license text is given in the file License.txt
 //
 
+#import <WebKit/WebKit.h>
 #import "FSViewer.h"
 #import "FSViewerBrowser.h"
 #import "FSViewerOutline.h"
@@ -84,6 +85,10 @@
 	if (viewerNum == eFilesNoView)
 		viewerNum = DefaultFilesViewFromDefaults() + 1;
 	[self setCurrentFSViewerPane:viewerNum];
+
+	NSURL* diffDetailURL = [NSURL fileURLWithPath:fstr(@"%@/Webviews/htmlForDifferences/%@",[[NSBundle mainBundle] resourcePath], @"index.html")];
+	[[detailedDiffWebView mainFrame] loadRequest:[NSURLRequest requestWithURL:diffDetailURL]];
+	[[detailedDiffWebView windowScriptObject] setValue:self forKey:@"macHgPatchesTableView"];
 }
 
 - (void) setupViewerPane:(id)view
@@ -199,6 +204,7 @@
 	[self setContentView:view];
 	currentFSViewerPane_ = styleNum;
 	[parentController didSwitchViewTo:styleNum];
+	[self regenerateDifferencesInWebview];
 }
 
 - (void) prepareToOpenFSViewerPane
@@ -728,9 +734,35 @@
 - (void) updateCurrentPreviewImage { [parentController updateCurrentPreviewImage]; }
 
 
+- (void) regenerateDifferencesInWebview
+{
+	WebScriptObject* script = [detailedDiffWebView windowScriptObject];
+	[script setValue:self forKey:@"macHgPatchesTableView"];
+
+	NSArray* selectedPaths = [self absolutePathsOfSelectedFilesInBrowser];
+	if (IsEmpty(selectedPaths))
+	{
+		[script callWebScriptMethod:@"showMessage" withArguments:[NSArray arrayWithObject:@""]];
+		return;
+	}
+
+	NSString* rootPath = [self absolutePathOfRepositoryRoot];
+	NSMutableArray* argsDiff = [NSMutableArray arrayWithObjects:@"diff", nil];
+	[argsDiff addObjectsFromArray:[self absolutePathsOfSelectedFilesInBrowser]];
+	[script callWebScriptMethod:@"showMessage" withArguments:[NSArray arrayWithObject:@"Generating Differences..."]];
+	dispatch_async(globalQueue(), ^{
+		ExecutionResult* diffResult = [TaskExecutions executeMercurialWithArgs:argsDiff  fromRoot:rootPath];
+		NSArray* showDiffArgs = [NSArray arrayWithObject:diffResult.outStr];
+		dispatch_async(mainQueue(), ^{
+			WebScriptObject* script = [detailedDiffWebView windowScriptObject];
+			[script callWebScriptMethod:@"showDiff" withArguments:showDiffArgs];
+		});
+	});
+}
+
 - (void) viewerSelectionDidChange:(NSNotification*)notification
 {
-	
+	[self regenerateDifferencesInWebview];
 }
 
 // -----------------------------------------------------------------------------------------------------------------------------------------

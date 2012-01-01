@@ -7,9 +7,9 @@
 //  This software is licensed under the "New BSD License". The full license text is given in the file License.txt
 //
 
-#import <Cocoa/Cocoa.h>
 #import "Common.h"
 #import <Quartz/Quartz.h>	// Quartz framework provides the QLPreviewPanel public API
+@class WebView;
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -102,6 +102,7 @@
 {
 	IBOutlet id <ControllerForFSViewer> parentController;
 	IBOutlet NSMenu* contextualMenuForFSViewerPane;
+	IBOutlet WebView* detailedDiffWebView;
 	
 	NSString*		absolutePathOfRepositoryRoot_;
 	FSNodeInfo*		rootNodeInfo_;
@@ -193,6 +194,7 @@
 - (void)		regenerateBrowserDataAndReload;						// Regenerate all the data for the browser and reload the browser.
 - (void)		updateCurrentPreviewImage;
 - (void)		viewerSelectionDidChange:(NSNotification*)notification;
+- (void)		regenerateDifferencesInWebview;
 
 @end
 

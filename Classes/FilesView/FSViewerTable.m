@@ -203,42 +203,13 @@
 // MARK:  Table View Delegates
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-//static NSAttributedString*   normalAttributedString(NSString* string) { return [NSAttributedString string:string withAttributes:smallSystemFontAttributes]; }
-//static NSAttributedString*   grayedAttributedString(NSString* string) { return [NSAttributedString string:string withAttributes:smallGraySystemFontAttributes]; }
-//
-//
-//- (void) tableViewSelectionDidChange:(NSNotification*)aNotification
-//{
-//	WebScriptObject* script = [detailedPatchWebView windowScriptObject];
-//	[script setValue:self forKey:@"macHgPatchesTableView"];
-//	NSInteger selectedRowCount = [[self selectedRowIndexes] count];
-//	if (selectedRowCount == 0)
-//	{
-//		[script callWebScriptMethod:@"showMessage" withArguments:[NSArray arrayWithObject:@"No Patch Selected"]];
-//	}
-//	else if (selectedRowCount > 1)
-//	{
-//		[script callWebScriptMethod:@"showMessage" withArguments:[NSArray arrayWithObject:@"Multiple Patches Selected"]];
-//	}
-//	else
-//	{
-//		NSArray* showDiffArgs = [NSArray arrayWithObject:[[self selectedPatch] patchBody]];
-//		[script callWebScriptMethod:@"showDiff" withArguments:showDiffArgs];
-//	}
-//}
-//
-//// Clicking on the checkboxes in the table view shouldn't change the selection.
-//- (BOOL) selectionShouldChangeInTableView:(NSTableView*)aTableView
-//{
-//	NSInteger column = [self clickedColumn];
-//	if (column < 0)
-//		return YES;
-//	NSTableColumn* clickedTableColumn = [[self tableColumns] objectAtIndex:column];
-//	NSString* columnIdentifier = [clickedTableColumn identifier];
-//	if ([columnIdentifier isEqualToString:@"forceOption"] || [columnIdentifier isEqualToString:@"exactOption"] || [columnIdentifier isEqualToString:@"commitOption"] || [columnIdentifier isEqualToString:@"importBranchOption"])
-//		return NO;
-//	return YES;
-//}
+- (void) tableViewSelectionDidChange:(NSNotification*)notification
+{
+	[parentViewer_ viewerSelectionDidChange:notification];
+}
+
+
+
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------

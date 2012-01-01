@@ -78,7 +78,7 @@
 	// drag and drop support
 	[self registerForDraggedTypes:[NSArray arrayWithObjects:kPatchesTablePBoardType, NSFilenamesPboardType, nil]];
 	
-	NSURL* patchDetailURL = [NSURL fileURLWithPath:fstr(@"%@/htmlForDiff/%@",[[NSBundle mainBundle] resourcePath], @"index.html")];
+	NSURL* patchDetailURL = [NSURL fileURLWithPath:fstr(@"%@/Webviews/htmlForImport/%@",[[NSBundle mainBundle] resourcePath], @"index.html")];
 	[[detailedPatchWebView mainFrame] loadRequest:[NSURLRequest requestWithURL:patchDetailURL]];
 
 	[[detailedPatchWebView windowScriptObject] setValue:self forKey:@"macHgPatchesTableView"];
