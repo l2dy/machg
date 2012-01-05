@@ -1560,6 +1560,30 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	[[self animator] setFrame:selfFrame];
 }
 
+- (NSBox*) enclosingBoxView
+{
+	NSView* theView = self;
+	while(theView)
+	{
+		if ([theView isKindOfClass:[NSBox class]])
+			return (NSBox*)theView;
+		theView = [theView superview];
+	}
+	return nil;
+}
+
+- (NSView*) enclosingViewOfClass:(Class)class
+{
+	NSView* theView = self;
+	while(theView)
+	{
+		if ([theView isKindOfClass:class])
+			return theView;
+		theView = [theView superview];
+	}
+	return nil;
+}
+
 @end
 
 // MARK: -

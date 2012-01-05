@@ -1106,6 +1106,8 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 - (void)	setMinX:(CGFloat)coord;
 - (void)	setMaxX:(CGFloat)coord;
 - (void)	setToRightOf:(NSView*)theView bySpacing:(CGFloat)coord;
+- (NSBox*)  enclosingBoxView;
+- (NSView*) enclosingViewOfClass:(Class)class;
 @end
 
 
