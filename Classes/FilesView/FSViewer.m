@@ -165,9 +165,9 @@
 {
 	switch (styleNum)
 	{
-		case eFilesBrowser:		return [self theFilesBrowser];
+		case eFilesBrowser:		return [[self theFilesBrowser] enclosingBoxView];
 		case eFilesOutline:		return [[self theFilesOutline] enclosingScrollView];
-		case eFilesTable:		return [[self theFilesTable] enclosingScrollView];
+		case eFilesTable:		return [[self theFilesTable] enclosingBoxView];
 		default:				return nil;
 	}
 }

@@ -51,7 +51,7 @@
               <object class="NSOutlineView" id="257108537">
                 <reference key="NSNextResponder" ref="1053081411"/>
                 <int key="NSvFlags">4370</int>
-                <string key="NSFrameSize">{238, 133}</string>
+                <string key="NSFrameSize">{240, 135}</string>
                 <reference key="NSSuperview" ref="1053081411"/>
                 <string key="NSReuseIdentifierKey">_NS:1718</string>
                 <bool key="NSEnabled">YES</bool>
@@ -65,7 +65,7 @@
                   <bool key="EncodedWithXMLCoder">YES</bool>
                   <object class="NSTableColumn" id="295258218">
                     <string key="NSIdentifier">path</string>
-                    <double key="NSWidth">235.4609375</double>
+                    <double key="NSWidth">237.4609375</double>
                     <double key="NSMinWidth">16</double>
                     <double key="NSMaxWidth">3000</double>
                     <object class="NSTableHeaderCell" key="NSHeaderCell">
@@ -149,7 +149,7 @@
                 <int key="NSTableViewGroupRowStyle">1</int>
               </object>
             </object>
-            <string key="NSFrame">{{1, 1}, {238, 133}}</string>
+            <string key="NSFrameSize">{240, 135}</string>
             <reference key="NSSuperview" ref="857411291"/>
             <reference key="NSNextKeyView" ref="257108537"/>
             <string key="NSReuseIdentifierKey">_NS:1716</string>
@@ -183,7 +183,7 @@
         <reference key="NSSuperview"/>
         <reference key="NSNextKeyView" ref="1053081411"/>
         <string key="NSReuseIdentifierKey">_NS:1714</string>
-        <int key="NSsFlags">133682</int>
+        <int key="NSsFlags">133680</int>
         <reference key="NSVScroller" ref="918648898"/>
         <reference key="NSHScroller" ref="228822136"/>
         <reference key="NSContentView" ref="1053081411"/>

@@ -12,6 +12,7 @@
     </object>
     <array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
       <integer value="838"/>
+      <integer value="843"/>
       <integer value="850"/>
     </array>
     <array key="IBDocument.PluginDependencies">
@@ -1098,7 +1099,7 @@
                   <string>NeXT Encapsulated PostScript v1.2 pasteboard type</string>
                   <string>NeXT TIFF v4.0 pasteboard type</string>
                 </set>
-                <string key="NSFrame">{{-1, -1}, {824, 24}}</string>
+                <string key="NSFrameSize">{826, 24}</string>
                 <reference key="NSSuperview" ref="951636192"/>
                 <bool key="NSEnabled">YES</bool>
                 <object class="NSImageCell" key="NSCell" id="235983819">
@@ -1152,7 +1153,7 @@
                     <reference key="NSSuperview" ref="421810083"/>
                   </object>
                 </array>
-                <string key="NSFrame">{{764, -3}, {39, 26}}</string>
+                <string key="NSFrame">{{766, -1}, {39, 26}}</string>
                 <reference key="NSSuperview" ref="951636192"/>
                 <string key="NSOffsets">{0, 0}</string>
                 <object class="NSTextFieldCell" key="NSTitleCell">
@@ -1179,7 +1180,7 @@
               <object class="NSTextField" id="233500455">
                 <reference key="NSNextResponder" ref="951636192"/>
                 <int key="NSvFlags">268</int>
-                <string key="NSFrame">{{12, 4}, {49, 17}}</string>
+                <string key="NSFrame">{{12, 5}, {49, 17}}</string>
                 <reference key="NSSuperview" ref="951636192"/>
                 <bool key="NSEnabled">YES</bool>
                 <object class="NSTextFieldCell" key="NSCell" id="492729152">
@@ -1197,7 +1198,7 @@
                 </object>
               </object>
             </array>
-            <string key="NSFrame">{{1, 1}, {822, 22}}</string>
+            <string key="NSFrameSize">{824, 24}</string>
             <reference key="NSSuperview" ref="957515287"/>
           </object>
         </array>
@@ -1219,6 +1220,7 @@
         <int key="NSBoxType">4</int>
         <int key="NSTitlePosition">0</int>
         <bool key="NSTransparent">NO</bool>
+        <real value="0.0" key="NSBorderWidth2"/>
         <object class="NSColor" key="NSBorderColor2">
           <int key="NSColorSpace">3</int>
           <bytes key="NSWhite">MC43OTY2NjY2ODE4AA</bytes>
@@ -1229,7 +1231,7 @@
         </object>
       </object>
       <object class="NSBox" id="232934855">
-        <nil key="NSNextResponder"/>
+        <reference key="NSNextResponder"/>
         <int key="NSvFlags">10</int>
         <array class="NSMutableArray" key="NSSubviews">
           <object class="NSView" id="674072841">
@@ -1247,7 +1249,7 @@
                   <string>NeXT Encapsulated PostScript v1.2 pasteboard type</string>
                   <string>NeXT TIFF v4.0 pasteboard type</string>
                 </set>
-                <string key="NSFrame">{{0, -1}, {824, 24}}</string>
+                <string key="NSFrameSize">{826, 24}</string>
                 <reference key="NSSuperview" ref="674072841"/>
                 <bool key="NSEnabled">YES</bool>
                 <object class="NSImageCell" key="NSCell" id="489460615">
@@ -1272,7 +1274,7 @@
                       <object class="NSButton" id="678370463">
                         <reference key="NSNextResponder" ref="155653791"/>
                         <int key="NSvFlags">268</int>
-                        <string key="NSFrame">{{0, -2}, {26, 27}}</string>
+                        <string key="NSFrame">{{0, -2}, {26, 26}}</string>
                         <reference key="NSSuperview" ref="155653791"/>
                         <bool key="NSEnabled">YES</bool>
                         <object class="NSButtonCell" key="NSCell" id="450604427">
@@ -1294,11 +1296,11 @@
                         </object>
                       </object>
                     </array>
-                    <string key="NSFrame">{{1, 1}, {38, 22}}</string>
+                    <string key="NSFrameSize">{40, 22}</string>
                     <reference key="NSSuperview" ref="1053987670"/>
                   </object>
                 </array>
-                <string key="NSFrame">{{72, -1}, {40, 24}}</string>
+                <string key="NSFrame">{{72, 1}, {40, 22}}</string>
                 <reference key="NSSuperview" ref="674072841"/>
                 <string key="NSOffsets">{0, 0}</string>
                 <object class="NSTextFieldCell" key="NSTitleCell">
@@ -1317,12 +1319,13 @@
                 <int key="NSBoxType">4</int>
                 <int key="NSTitlePosition">0</int>
                 <bool key="NSTransparent">NO</bool>
+                <real value="0.0" key="NSBorderWidth2"/>
                 <reference key="NSBorderColor2" ref="330941797"/>
               </object>
               <object class="NSTextField" id="609134140">
                 <reference key="NSNextResponder" ref="674072841"/>
                 <int key="NSvFlags">268</int>
-                <string key="NSFrame">{{12, 4}, {48, 17}}</string>
+                <string key="NSFrame">{{12, 5}, {48, 17}}</string>
                 <reference key="NSSuperview" ref="674072841"/>
                 <bool key="NSEnabled">YES</bool>
                 <object class="NSTextFieldCell" key="NSCell" id="790781748">
@@ -1346,7 +1349,7 @@
                   <string>NeXT Encapsulated PostScript v1.2 pasteboard type</string>
                   <string>NeXT TIFF v4.0 pasteboard type</string>
                 </set>
-                <string key="NSFrame">{{803, 6}, {11, 10}}</string>
+                <string key="NSFrame">{{805, 8}, {11, 10}}</string>
                 <reference key="NSSuperview" ref="674072841"/>
                 <bool key="NSEnabled">YES</bool>
                 <object class="NSImageCell" key="NSCell" id="429097562">
@@ -1364,11 +1367,12 @@
                 <bool key="NSEditable">YES</bool>
               </object>
             </array>
-            <string key="NSFrame">{{1, 1}, {822, 22}}</string>
+            <string key="NSFrameSize">{824, 24}</string>
             <reference key="NSSuperview" ref="232934855"/>
           </object>
         </array>
-        <string key="NSFrame">{{-1, 297}, {824, 24}}</string>
+        <string key="NSFrameSize">{824, 24}</string>
+        <reference key="NSSuperview"/>
         <string key="NSOffsets">{0, 0}</string>
         <object class="NSTextFieldCell" key="NSTitleCell">
           <int key="NSCellFlags">67239424</int>
@@ -1386,6 +1390,7 @@
         <int key="NSBoxType">4</int>
         <int key="NSTitlePosition">0</int>
         <bool key="NSTransparent">NO</bool>
+        <real value="0.0" key="NSBorderWidth2"/>
         <object class="NSColor" key="NSBorderColor2">
           <int key="NSColorSpace">3</int>
           <bytes key="NSWhite">MC43OTY2NjY2ODE4AA</bytes>
@@ -1414,7 +1419,7 @@
                   <string>NeXT Encapsulated PostScript v1.2 pasteboard type</string>
                   <string>NeXT TIFF v4.0 pasteboard type</string>
                 </set>
-                <string key="NSFrame">{{-1, -1}, {824, 24}}</string>
+                <string key="NSFrameSize">{826, 24}</string>
                 <reference key="NSSuperview" ref="958889504"/>
                 <bool key="NSEnabled">YES</bool>
                 <object class="NSImageCell" key="NSCell" id="533240319">
@@ -1431,7 +1436,7 @@
               <object class="NSTextField" id="457168057">
                 <reference key="NSNextResponder" ref="958889504"/>
                 <int key="NSvFlags">268</int>
-                <string key="NSFrame">{{12, 4}, {44, 17}}</string>
+                <string key="NSFrame">{{12, 5}, {44, 17}}</string>
                 <reference key="NSSuperview" ref="958889504"/>
                 <bool key="NSEnabled">YES</bool>
                 <object class="NSTextFieldCell" key="NSCell" id="426936245">
@@ -1455,7 +1460,7 @@
                       <object class="NSButton" id="997326290">
                         <reference key="NSNextResponder" ref="709896321"/>
                         <int key="NSvFlags">268</int>
-                        <string key="NSFrame">{{4, -2}, {26, 27}}</string>
+                        <string key="NSFrame">{{4, -2}, {26, 26}}</string>
                         <reference key="NSSuperview" ref="709896321"/>
                         <bool key="NSEnabled">YES</bool>
                         <object class="NSButtonCell" key="NSCell" id="789564019">
@@ -1479,7 +1484,7 @@
                       <object class="NSButton" id="106307072">
                         <reference key="NSNextResponder" ref="709896321"/>
                         <int key="NSvFlags">268</int>
-                        <string key="NSFrame">{{29, -2}, {26, 27}}</string>
+                        <string key="NSFrame">{{29, -2}, {26, 26}}</string>
                         <reference key="NSSuperview" ref="709896321"/>
                         <bool key="NSEnabled">YES</bool>
                         <object class="NSButtonCell" key="NSCell" id="946627672">
@@ -1501,11 +1506,11 @@
                         </object>
                       </object>
                     </array>
-                    <string key="NSFrame">{{1, 1}, {57, 22}}</string>
+                    <string key="NSFrameSize">{59, 22}</string>
                     <reference key="NSSuperview" ref="55855600"/>
                   </object>
                 </array>
-                <string key="NSFrame">{{68, -1}, {59, 24}}</string>
+                <string key="NSFrame">{{68, 1}, {59, 22}}</string>
                 <reference key="NSSuperview" ref="958889504"/>
                 <string key="NSOffsets">{0, 0}</string>
                 <object class="NSTextFieldCell" key="NSTitleCell">
@@ -1524,6 +1529,7 @@
                 <int key="NSBoxType">4</int>
                 <int key="NSTitlePosition">0</int>
                 <bool key="NSTransparent">NO</bool>
+                <real value="0.0" key="NSBorderWidth2"/>
                 <reference key="NSBorderColor2" ref="330941797"/>
               </object>
               <object class="NSImageView" id="545804951">
@@ -1537,7 +1543,7 @@
                   <string>NeXT Encapsulated PostScript v1.2 pasteboard type</string>
                   <string>NeXT TIFF v4.0 pasteboard type</string>
                 </set>
-                <string key="NSFrame">{{803, 6}, {11, 10}}</string>
+                <string key="NSFrame">{{805, 8}, {11, 10}}</string>
                 <reference key="NSSuperview" ref="958889504"/>
                 <bool key="NSEnabled">YES</bool>
                 <object class="NSImageCell" key="NSCell" id="965556316">
@@ -1552,7 +1558,7 @@
                 <bool key="NSEditable">YES</bool>
               </object>
             </array>
-            <string key="NSFrame">{{1, 1}, {822, 22}}</string>
+            <string key="NSFrameSize">{824, 24}</string>
             <reference key="NSSuperview" ref="944921791"/>
           </object>
         </array>
@@ -1575,6 +1581,7 @@
         <int key="NSBoxType">4</int>
         <int key="NSTitlePosition">0</int>
         <bool key="NSTransparent">NO</bool>
+        <real value="0.0" key="NSBorderWidth2"/>
         <object class="NSColor" key="NSBorderColor2">
           <int key="NSColorSpace">3</int>
           <bytes key="NSWhite">MC43OTY2NjY2ODE4AA</bytes>
@@ -2835,6 +2842,7 @@
         <string key="774.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="838.CustomClassName">JHConcertinaView</string>
         <string key="838.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+        <string key="843.IBEditorWindowLastContentRect">{{0, 1121}, {824, 24}}</string>
         <string key="843.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <object class="NSAffineTransform" key="843.IBViewBoundsToFrameTransform">
           <bytes key="NSTransformStruct">Ab+AAABDlIAAA</bytes>
