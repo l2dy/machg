@@ -3782,12 +3782,6 @@
         <string key="NSFrameSize">{387, 89}</string>
       </object>
       <object class="NSUserDefaultsController" id="946571802">
-        <array class="NSMutableArray" key="NSDeclaredKeys">
-          <string>FontSizeOfDifferencesWebview</string>
-          <string>NumContextLinesForDifferencesWebview</string>
-          <string>FileCountCutoffForDifferencesWebview</string>
-          <string>DifferencesFileCountCutoff</string>
-        </array>
         <bool key="NSSharedInstance">YES</bool>
       </object>
       <object class="NSCustomObject" id="1056986908">
@@ -5267,30 +5261,6 @@
           <int key="connectionID">1778</int>
         </object>
         <object class="IBConnectionRecord">
-          <object class="IBActionConnection" key="connection">
-            <string key="label">displayPreferencesChanged:</string>
-            <reference key="source" ref="1001"/>
-            <reference key="destination" ref="836787083"/>
-          </object>
-          <int key="connectionID">1787</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBActionConnection" key="connection">
-            <string key="label">displayPreferencesChanged:</string>
-            <reference key="source" ref="1001"/>
-            <reference key="destination" ref="250536858"/>
-          </object>
-          <int key="connectionID">1789</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBActionConnection" key="connection">
-            <string key="label">displayPreferencesChanged:</string>
-            <reference key="source" ref="1001"/>
-            <reference key="destination" ref="1050768392"/>
-          </object>
-          <int key="connectionID">1791</int>
-        </object>
-        <object class="IBConnectionRecord">
           <object class="IBBindingConnection" key="connection">
             <string key="label">value: values.FontSizeOfDifferencesWebview</string>
             <reference key="source" ref="250536858"/>
@@ -5386,9 +5356,33 @@
           <object class="IBActionConnection" key="connection">
             <string key="label">differencesDisplayPreferencesChanged:</string>
             <reference key="source" ref="1003"/>
+            <reference key="destination" ref="1050768392"/>
+          </object>
+          <int key="connectionID">1801</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">differencesDisplayPreferencesChanged:</string>
+            <reference key="source" ref="1003"/>
+            <reference key="destination" ref="250536858"/>
+          </object>
+          <int key="connectionID">1802</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">differencesDisplayPreferencesChanged:</string>
+            <reference key="source" ref="1003"/>
+            <reference key="destination" ref="836787083"/>
+          </object>
+          <int key="connectionID">1803</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">differencesDisplayPreferencesChanged:</string>
+            <reference key="source" ref="1003"/>
             <reference key="destination" ref="781572112"/>
           </object>
-          <int key="connectionID">1800</int>
+          <int key="connectionID">1804</int>
         </object>
       </array>
       <object class="IBMutableOrderedSet" key="objectRecords">
@@ -8226,7 +8220,7 @@ dGVyLiAgKC0tc2ltaWxhcml0eSBvcHRpb24pA</string>
       <nil key="activeLocalization"/>
       <dictionary class="NSMutableDictionary" key="localizations"/>
       <nil key="sourceID"/>
-      <int key="maxID">1800</int>
+      <int key="maxID">1804</int>
     </object>
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <array class="NSMutableArray" key="referencedPartialClassDescriptions">

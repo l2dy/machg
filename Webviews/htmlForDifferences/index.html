@@ -12,9 +12,20 @@
 			var element = $("diff");
 			element.innerHTML = "<p class='message'>" + msg + "</p>";
 		}
+		var changeFontSizeToMacHgDefaults = function() {
+			var existingSheet = document.getElementById("dynamicStyle");
+			if (!existingSheet) {
+				var sheet = document.createElement('style')
+				sheet.id = "dynamicStyle"
+				document.body.appendChild(sheet);
+				existingSheet = sheet;
+			}
+			var size = machgFSViewer.fontSizeOfDifferencesWebview();
+			existingSheet.innerHTML = "body {font-size: "+size+"px;}";
+		}
 	</script>
 </head>
 
-<body>
+<body onload="changeFontSizeToMacHgDefaults()">
 	<div id='diff'></div>
 </body>

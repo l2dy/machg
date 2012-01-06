@@ -90,7 +90,7 @@
 
 	NSURL* diffDetailURL = [NSURL fileURLWithPath:fstr(@"%@/Webviews/htmlForDifferences/%@",[[NSBundle mainBundle] resourcePath], @"index.html")];
 	[[detailedDiffWebView mainFrame] loadRequest:[NSURLRequest requestWithURL:diffDetailURL]];
-	[[detailedDiffWebView windowScriptObject] setValue:self forKey:@"macHgPatchesTableView"];
+	[[detailedDiffWebView windowScriptObject] setValue:self forKey:@"machgFSViewer"];
 }
 
 - (void) setupViewerPane:(id)view
@@ -562,6 +562,29 @@
 
 
 
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Webview Handling
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (NSNumber*) fontSizeOfDifferencesWebview
+{
+	return [NSNumber numberWithFloat:FontSizeOfDifferencesWebviewFromDefaults()];
+}
+
++ (NSString *)webScriptNameForSelector:(SEL)sel
+{
+    // change the javascript name from 'disableHunk_forFile' to 'disableHunkForFile' etc...
+	if (sel == @selector(fontSizeOfDifferencesWebview))	return @"fontSizeOfDifferencesWebview";	
+	return nil;
+}
++ (BOOL)isSelectorExcludedFromWebScript:(SEL)sel
+{
+    if (sel == @selector(fontSizeOfDifferencesWebview)) return NO;
+    return YES;
+}
++ (BOOL)isKeyExcludedFromWebScript:(const char *)name { return NO; }
+
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -739,7 +762,8 @@
 - (void) regenerateDifferencesInWebview
 {
 	WebScriptObject* script = [detailedDiffWebView windowScriptObject];
-	[script setValue:self forKey:@"macHgPatchesTableView"];
+	[script setValue:self forKey:@"machgFSViewer"];
+	[script callWebScriptMethod:@"changeFontSizeToMacHgDefaults" withArguments:nil];
 
 	NSArray* selectedPaths = [self absolutePathsOfSelectedFilesInBrowser];
 	if (IsEmpty(selectedPaths))

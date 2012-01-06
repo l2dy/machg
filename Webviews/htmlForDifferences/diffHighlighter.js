@@ -282,7 +282,7 @@ var highlightDiff = function(diff, element, callbacks)
 	if (false)
 		Controller.log_("Total time:" + (new Date().getTime() - start));
 
-	macHgPatchesTableView.excludeHunksAccordingToModel();
+	machgFSViewer.excludeHunksAccordingToModel();
 }
 
 
@@ -332,9 +332,9 @@ function changeModelHunkStatus(theId, action)
 			var fileNamePath = theMatch[1];
 			var hunkNumber = theMatch[2];
 			if (action === "exclude")
-				macHgPatchesTableView.disableHunkForFileName(hunkNumber, fileNamePath);
+				machgFSViewer.disableHunkForFileName(hunkNumber, fileNamePath);
 			else
-				macHgPatchesTableView.enableHunkForFileName(hunkNumber, fileNamePath);
+				machgFSViewer.enableHunkForFileName(hunkNumber, fileNamePath);
 		}
 	}
 }
