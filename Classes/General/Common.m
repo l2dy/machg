@@ -27,6 +27,7 @@ NSString* const kMacHgApp								= @"MacHgApp";
 
 // Notifications
 NSString* const kBrowserDisplayPreferencesChanged		= @"BrowserDisplayPreferencesChanged";
+NSString* const kDifferencesDisplayPreferencesChanged	= @"DifferencesDisplayPreferencesChanged";
 NSString* const kCommandKeyIsDown						= @"CommandKeyIsDown";
 NSString* const kCommandKeyIsUp							= @"CommandKeyIsUp";
 NSString* const kCompatibleRepositoryChanged			= @"CompatibleRepositoryChanged";
@@ -61,83 +62,86 @@ BOOL		\1FromDefaults()					{ return boolFromDefaultsForKey(MHG\1); }
 
 
 // These are the names of the preferences in the plist.
-NSString* const MHGAddRemoveSimilarityFactor			= @"AddRemoveSimilarityFactor";
-NSString* const MHGAddRemoveUsesSimilarity				= @"AddRemoveUsesSimilarity";
-NSString* const MHGAfterMergeDo							= @"AfterMergeDo";
-NSString* const MHGAfterMergeSwitchTo					= @"AfterMergeSwitchTo";
-NSString* const MHGAllowHistoryEditingOfRepository		= @"AllowHistoryEditingOfRepository";
-NSString* const MHGBrowserBehaviourCommandDoubleClick	= @"BrowserBehaviourCommandDoubleClick";
+NSString* const MHGAddRemoveSimilarityFactor				= @"AddRemoveSimilarityFactor";
+NSString* const MHGAddRemoveUsesSimilarity					= @"AddRemoveUsesSimilarity";
+NSString* const MHGAfterMergeDo								= @"AfterMergeDo";
+NSString* const MHGAfterMergeSwitchTo						= @"AfterMergeSwitchTo";
+NSString* const MHGAllowHistoryEditingOfRepository			= @"AllowHistoryEditingOfRepository";
+NSString* const MHGBrowserBehaviourCommandDoubleClick		= @"BrowserBehaviourCommandDoubleClick";
 NSString* const MHGBrowserBehaviourCommandOptionDoubleClick	= @"BrowserBehaviourCommandOptionDoubleClick";
-NSString* const MHGBrowserBehaviourDoubleClick			= @"BrowserBehaviourDoubleClick";
-NSString* const MHGBrowserBehaviourOptionDoubleClick	= @"BrowserBehaviourOptionDoubleClick";
-NSString* const MHGDateAndTimeFormat					= @"DateAndTimeFormat";
-NSString* const MHGDefaultAnnotationOptionChangeset		= @"DefaultAnnotationOptionChangeset";
-NSString* const MHGDefaultAnnotationOptionDate			= @"DefaultAnnotationOptionDate";
-NSString* const MHGDefaultAnnotationOptionFollow		= @"DefaultAnnotationOptionFollow";
-NSString* const MHGDefaultAnnotationOptionLineNumber	= @"DefaultAnnotationOptionLineNumber";
-NSString* const MHGDefaultAnnotationOptionNumber		= @"DefaultAnnotationOptionNumber";
-NSString* const MHGDefaultAnnotationOptionText			= @"DefaultAnnotationOptionText";
-NSString* const MHGDefaultAnnotationOptionUser			= @"DefaultAnnotationOptionUser";
-NSString* const MHGDefaultFilesView						= @"DefaultFilesView";
-NSString* const MHGDefaultHGIgnoreContents              = @"DefaultHGIgnoreContents";
-NSString* const MHGDefaultWorkspacePath					= @"DefaultWorkspacePath";
-NSString* const MHGDisplayFileIconsInBrowser			= @"DisplayFileIconsInBrowser";
-NSString* const MHGDisplayResultsOfAddRemoveRenameFiles	= @"DisplayResultsOfAddRemoveRenameFiles";
-NSString* const MHGDisplayResultsOfMerging				= @"DisplayResultsOfMerging";
-NSString* const MHGDisplayResultsOfPulling				= @"DisplayResultsOfPulling";
-NSString* const MHGDisplayResultsOfPushing				= @"DisplayResultsOfPushing";
-NSString* const MHGDisplayResultsOfUpdating				= @"DisplayResultsOfUpdating";
-NSString* const MHGDisplayWarningForAddRemoveRenameFiles = @"DisplayWarningForAddRemoveRenameFiles";
-NSString* const MHGDisplayWarningForAmend				= @"DisplayWarningForAmend";
-NSString* const MHGDisplayWarningForBackout				= @"DisplayWarningForBackout";
-NSString* const MHGDisplayWarningForBranchNameRemoval	= @"DisplayWarningForBranchNameRemoval";
-NSString* const MHGDisplayWarningForFileDeletion		= @"DisplayWarningForFileDeletion";
-NSString* const MHGDisplayWarningForMarkingFilesResolved = @"DisplayWarningForMarkingFilesResolved";
-NSString* const MHGDisplayWarningForMerging				= @"DisplayWarningForMerging";
-NSString* const MHGDisplayWarningForPostMerge			= @"DisplayWarningForPostMerge";
-NSString* const MHGDisplayWarningForPulling			    = @"DisplayWarningForPulling";
-NSString* const MHGDisplayWarningForPushing			    = @"DisplayWarningForPushing";
-NSString* const MHGDisplayWarningForRenamingFiles		= @"DisplayWarningForRenamingFiles";
-NSString* const MHGDisplayWarningForRepositoryDeletion	= @"DisplayWarningForRepositoryDeletion";
-NSString* const MHGDisplayWarningForRevertingFiles		= @"DisplayWarningForRevertingFiles";
-NSString* const MHGDisplayWarningForRollbackFiles		= @"DisplayWarningForRollbackFiles";
-NSString* const MHGDisplayWarningForTagRemoval			= @"DisplayWarningForTagRemoval";
-NSString* const MHGDisplayWarningForUntrackingFiles		= @"DisplayWarningForUntrackingFiles";
-NSString* const MHGDisplayWarningForUpdating			= @"DisplayWarningForUpdating";
-NSString* const MHGFontSizeOfBrowserItems				= @"FontSizeOfBrowserItems";
-NSString* const MHGHandleGeneratedOrigFiles				= @"HandleGeneratedOrigFiles";
-NSString* const MHGIncludeHomeHgrcInHGRCPATH			= @"IncludeHomeHgrcInHGRCPATH";
-NSString* const MHGLaunchCount							= @"LaunchCount";
-NSString* const MHGLocalHGShellAliasName				= @"LocalHGShellAliasName";
-NSString* const MHGLocalWhitelistedHGShellAliasName		= @"LocalWhitelistedHGShellAliasName";
-NSString* const MHGLogEntryTableBookmarkHighlightColor	= @"LogEntryTableBookmarkHighlightColor";
-NSString* const MHGLogEntryTableBranchHighlightColor	= @"LogEntryTableBranchHighlightColor";
-NSString* const MHGLogEntryTableDisplayBranchColumn	    = @"LogEntryTableDisplayBranchColumn";
-NSString* const MHGLogEntryTableDisplayChangesetColumn	= @"LogEntryTableDisplayChangesetColumn";
-NSString* const MHGLogEntryTableParentHighlightColor	= @"LogEntryTableParentHighlightColor";
-NSString* const MHGLogEntryTableTagHighlightColor		= @"LogEntryTableTagHighlightColor";
-NSString* const MHGLoggingLevelForHGCommands			= @"LoggingLevelForHGCommands";
-NSString* const MHGMacHgLogFileLocation					= @"MacHgLogFileLocation";
-NSString* const MHGOnActivationOpen						= @"OnApplicationActivationOpenWhat";
-NSString* const MHGRequireVerifiedServerCertificates	= @"RequireVerifiedServerCertificates";
-NSString* const MHGRevisionSortOrder					= @"RevisionSortOrder";
-NSString* const MHGShowAddedFilesInBrowser				= @"ShowAddedFilesInBrowser";
-NSString* const MHGShowCleanFilesInBrowser				= @"ShowCleanFilesInBrowser";
-NSString* const MHGShowFilePreviewInBrowser				= @"ShowFilePreviewInBrowser";
-NSString* const MHGShowIgnoredFilesInBrowser			= @"ShowIgnoredFilesInBrowser";
-NSString* const MHGShowMissingFilesInBrowser			= @"ShowMissingFilesInBrowser";
-NSString* const MHGShowModifiedFilesInBrowser			= @"ShowModifiedFilesInBrowser";
-NSString* const MHGShowRemovedFilesInBrowser			= @"ShowRemovedFilesInBrowser";
-NSString* const MHGShowResolvedFilesInBrowser			= @"ShowResolvedFilesInBrowser";
-NSString* const MHGShowUnresolvedFilesInBrowser			= @"ShowUnresolvedFilesInBrowser";
-NSString* const MHGShowUntrackedFilesInBrowser			= @"ShowUntrackedFilesInBrowser";
-NSString* const MHGSizeOfBrowserColumns					= @"SizeOfBrowserColumns";
-NSString* const MHGToolNameForDiffing					= @"ToolNameForDiffing";
-NSString* const MHGToolNameForMerging					= @"ToolNameForMerging";
-NSString* const MHGUseWhichToolForDiffing				= @"UseWhichToolForDiffing";
-NSString* const MHGUseWhichToolForMerging				= @"UseWhichToolForMerging";
-NSString* const MHGViewsHaveIndependentSizes			= @"ViewsHaveIndependentSizes";
-NSString* const MHGWarnAboutBadMercurialConfiguration   = @"WarnAboutBadMercurialConfiguration";
+NSString* const MHGBrowserBehaviourDoubleClick				= @"BrowserBehaviourDoubleClick";
+NSString* const MHGBrowserBehaviourOptionDoubleClick		= @"BrowserBehaviourOptionDoubleClick";
+NSString* const MHGDateAndTimeFormat						= @"DateAndTimeFormat";
+NSString* const MHGDefaultAnnotationOptionChangeset			= @"DefaultAnnotationOptionChangeset";
+NSString* const MHGDefaultAnnotationOptionDate				= @"DefaultAnnotationOptionDate";
+NSString* const MHGDefaultAnnotationOptionFollow			= @"DefaultAnnotationOptionFollow";
+NSString* const MHGDefaultAnnotationOptionLineNumber		= @"DefaultAnnotationOptionLineNumber";
+NSString* const MHGDefaultAnnotationOptionNumber			= @"DefaultAnnotationOptionNumber";
+NSString* const MHGDefaultAnnotationOptionText				= @"DefaultAnnotationOptionText";
+NSString* const MHGDefaultAnnotationOptionUser				= @"DefaultAnnotationOptionUser";
+NSString* const MHGDefaultFilesView							= @"DefaultFilesView";
+NSString* const MHGDefaultHGIgnoreContents              	= @"DefaultHGIgnoreContents";
+NSString* const MHGDefaultWorkspacePath						= @"DefaultWorkspacePath";
+NSString* const MHGDisplayFileIconsInBrowser				= @"DisplayFileIconsInBrowser";
+NSString* const MHGDisplayResultsOfAddRemoveRenameFiles		= @"DisplayResultsOfAddRemoveRenameFiles";
+NSString* const MHGDisplayResultsOfMerging					= @"DisplayResultsOfMerging";
+NSString* const MHGDisplayResultsOfPulling					= @"DisplayResultsOfPulling";
+NSString* const MHGDisplayResultsOfPushing					= @"DisplayResultsOfPushing";
+NSString* const MHGDisplayResultsOfUpdating					= @"DisplayResultsOfUpdating";
+NSString* const MHGDisplayWarningForAddRemoveRenameFiles	= @"DisplayWarningForAddRemoveRenameFiles";
+NSString* const MHGDisplayWarningForAmend					= @"DisplayWarningForAmend";
+NSString* const MHGDisplayWarningForBackout					= @"DisplayWarningForBackout";
+NSString* const MHGDisplayWarningForBranchNameRemoval		= @"DisplayWarningForBranchNameRemoval";
+NSString* const MHGDisplayWarningForFileDeletion			= @"DisplayWarningForFileDeletion";
+NSString* const MHGDisplayWarningForMarkingFilesResolved	= @"DisplayWarningForMarkingFilesResolved";
+NSString* const MHGDisplayWarningForMerging					= @"DisplayWarningForMerging";
+NSString* const MHGDisplayWarningForPostMerge				= @"DisplayWarningForPostMerge";
+NSString* const MHGDisplayWarningForPulling			    	= @"DisplayWarningForPulling";
+NSString* const MHGDisplayWarningForPushing			    	= @"DisplayWarningForPushing";
+NSString* const MHGDisplayWarningForRenamingFiles			= @"DisplayWarningForRenamingFiles";
+NSString* const MHGDisplayWarningForRepositoryDeletion		= @"DisplayWarningForRepositoryDeletion";
+NSString* const MHGDisplayWarningForRevertingFiles			= @"DisplayWarningForRevertingFiles";
+NSString* const MHGDisplayWarningForRollbackFiles			= @"DisplayWarningForRollbackFiles";
+NSString* const MHGDisplayWarningForTagRemoval				= @"DisplayWarningForTagRemoval";
+NSString* const MHGDisplayWarningForUntrackingFiles			= @"DisplayWarningForUntrackingFiles";
+NSString* const MHGDisplayWarningForUpdating				= @"DisplayWarningForUpdating";
+NSString* const MHGFontSizeOfBrowserItems					= @"FontSizeOfBrowserItems";
+NSString* const MHGFontSizeOfDifferencesWebview				= @"FontSizeOfDifferencesWebview";
+NSString* const MHGHandleGeneratedOrigFiles					= @"HandleGeneratedOrigFiles";
+NSString* const MHGIncludeHomeHgrcInHGRCPATH				= @"IncludeHomeHgrcInHGRCPATH";
+NSString* const MHGLaunchCount								= @"LaunchCount";
+NSString* const MHGLocalHGShellAliasName					= @"LocalHGShellAliasName";
+NSString* const MHGLocalWhitelistedHGShellAliasName			= @"LocalWhitelistedHGShellAliasName";
+NSString* const MHGLogEntryTableBookmarkHighlightColor		= @"LogEntryTableBookmarkHighlightColor";
+NSString* const MHGLogEntryTableBranchHighlightColor		= @"LogEntryTableBranchHighlightColor";
+NSString* const MHGLogEntryTableDisplayBranchColumn	    	= @"LogEntryTableDisplayBranchColumn";
+NSString* const MHGLogEntryTableDisplayChangesetColumn		= @"LogEntryTableDisplayChangesetColumn";
+NSString* const MHGLogEntryTableParentHighlightColor		= @"LogEntryTableParentHighlightColor";
+NSString* const MHGLogEntryTableTagHighlightColor			= @"LogEntryTableTagHighlightColor";
+NSString* const MHGLoggingLevelForHGCommands				= @"LoggingLevelForHGCommands";
+NSString* const MHGMacHgLogFileLocation						= @"MacHgLogFileLocation";
+NSString* const MHGDifferencesFileCountCutoff				= @"DifferencesFileCountCutoff";
+NSString* const MHGNumContextLinesForDifferencesWebview 	= @"NumContextLinesForDifferencesWebview";
+NSString* const MHGOnActivationOpen							= @"OnApplicationActivationOpenWhat";
+NSString* const MHGRequireVerifiedServerCertificates		= @"RequireVerifiedServerCertificates";
+NSString* const MHGRevisionSortOrder						= @"RevisionSortOrder";
+NSString* const MHGShowAddedFilesInBrowser					= @"ShowAddedFilesInBrowser";
+NSString* const MHGShowCleanFilesInBrowser					= @"ShowCleanFilesInBrowser";
+NSString* const MHGShowFilePreviewInBrowser					= @"ShowFilePreviewInBrowser";
+NSString* const MHGShowIgnoredFilesInBrowser				= @"ShowIgnoredFilesInBrowser";
+NSString* const MHGShowMissingFilesInBrowser				= @"ShowMissingFilesInBrowser";
+NSString* const MHGShowModifiedFilesInBrowser				= @"ShowModifiedFilesInBrowser";
+NSString* const MHGShowRemovedFilesInBrowser				= @"ShowRemovedFilesInBrowser";
+NSString* const MHGShowResolvedFilesInBrowser				= @"ShowResolvedFilesInBrowser";
+NSString* const MHGShowUnresolvedFilesInBrowser				= @"ShowUnresolvedFilesInBrowser";
+NSString* const MHGShowUntrackedFilesInBrowser				= @"ShowUntrackedFilesInBrowser";
+NSString* const MHGSizeOfBrowserColumns						= @"SizeOfBrowserColumns";
+NSString* const MHGToolNameForDiffing						= @"ToolNameForDiffing";
+NSString* const MHGToolNameForMerging						= @"ToolNameForMerging";
+NSString* const MHGUseWhichToolForDiffing					= @"UseWhichToolForDiffing";
+NSString* const MHGUseWhichToolForMerging					= @"UseWhichToolForMerging";
+NSString* const MHGViewsHaveIndependentSizes				= @"ViewsHaveIndependentSizes";
+NSString* const MHGWarnAboutBadMercurialConfiguration   	= @"WarnAboutBadMercurialConfiguration";
 
 
 
@@ -214,23 +218,27 @@ NSString*	MacHgLogFileLocation()									{ return stringFromDefaultsForKey(MHGMa
 NSString*	ToolNameForDiffingFromDefaults()						{ return stringFromDefaultsForKey(MHGToolNameForDiffing); }
 NSString*	ToolNameForMergingFromDefaults()						{ return stringFromDefaultsForKey(MHGToolNameForMerging); }
 float		fontSizeOfBrowserItemsFromDefaults()					{ return floatFromDefaultsForKey(MHGFontSizeOfBrowserItems); }
+float		FontSizeOfDifferencesWebviewFromDefaults()				{ return floatFromDefaultsForKey(MHGFontSizeOfDifferencesWebview); }
 float		sizeOfBrowserColumnsFromDefaults()						{ return floatFromDefaultsForKey(MHGSizeOfBrowserColumns); }
 int			LoggingLevelForHGCommands()								{ return integerFromDefaultsForKey(MHGLoggingLevelForHGCommands); }
 int			LaunchCountFromDefaults()								{ return integerFromDefaultsForKey(MHGLaunchCount); }
+int			NumContextLinesForDifferencesWebviewFromDefaults()		{ return integerFromDefaultsForKey(MHGNumContextLinesForDifferencesWebview); }
 
-BrowserDoubleClickAction browserBehaviourCommandDoubleClick()		{ return enumFromDefaultsForKey(MHGBrowserBehaviourCommandDoubleClick); }
-BrowserDoubleClickAction browserBehaviourCommandOptionDoubleClick()	{ return enumFromDefaultsForKey(MHGBrowserBehaviourCommandOptionDoubleClick); }
-BrowserDoubleClickAction browserBehaviourDoubleClick()				{ return enumFromDefaultsForKey(MHGBrowserBehaviourDoubleClick); }
-BrowserDoubleClickAction browserBehaviourOptionDoubleClick()		{ return enumFromDefaultsForKey(MHGBrowserBehaviourOptionDoubleClick); }
-AfterMergeDoOption			AfterMergeDoFromDefaults()				{ return enumFromDefaultsForKey(MHGAfterMergeDo); }
-AfterMergeSwitchToOption	AfterMergeSwitchToFromDefaults()		{ return enumFromDefaultsForKey(MHGAfterMergeSwitchTo); }
-DateAndTimeFormatOption		DateAndTimeFormatFromDefaults()			{ return enumFromDefaultsForKey(MHGDateAndTimeFormat); }
-RevisionSortOrderOption		RevisionSortOrderFromDefaults()			{ return enumFromDefaultsForKey(MHGRevisionSortOrder); }
-HandleOrigFilesOption		HandleGeneratedOrigFilesFromDefaults()	{ return enumFromDefaultsForKey(MHGHandleGeneratedOrigFiles); }
-OnActivationOpenWhatOption	OnActivationOpenFromDefaults()			{ return enumFromDefaultsForKey(MHGOnActivationOpen); }
-ToolForDiffing				UseWhichToolForDiffingFromDefaults()	{ return enumFromDefaultsForKey(MHGUseWhichToolForDiffing); }
-ToolForMerging				UseWhichToolForMergingFromDefaults()	{ return enumFromDefaultsForKey(MHGUseWhichToolForMerging); }
-FSViewerNumberDefaultOption	DefaultFilesViewFromDefaults()			{ return enumFromDefaultsForKey(MHGDefaultFilesView); }
+
+BrowserDoubleClickAction browserBehaviourCommandDoubleClick()	    { return enumFromDefaultsForKey(MHGBrowserBehaviourCommandDoubleClick); }
+BrowserDoubleClickAction browserBehaviourCommandOptionDoubleClick() { return enumFromDefaultsForKey(MHGBrowserBehaviourCommandOptionDoubleClick); }
+BrowserDoubleClickAction browserBehaviourDoubleClick()			    { return enumFromDefaultsForKey(MHGBrowserBehaviourDoubleClick); }
+BrowserDoubleClickAction browserBehaviourOptionDoubleClick()	    { return enumFromDefaultsForKey(MHGBrowserBehaviourOptionDoubleClick); }
+AfterMergeDoOption			AfterMergeDoFromDefaults()			    { return enumFromDefaultsForKey(MHGAfterMergeDo); }
+AfterMergeSwitchToOption	AfterMergeSwitchToFromDefaults()	    { return enumFromDefaultsForKey(MHGAfterMergeSwitchTo); }
+DateAndTimeFormatOption		DateAndTimeFormatFromDefaults()		    { return enumFromDefaultsForKey(MHGDateAndTimeFormat); }
+RevisionSortOrderOption		RevisionSortOrderFromDefaults()		    { return enumFromDefaultsForKey(MHGRevisionSortOrder); }
+HandleOrigFilesOption		HandleGeneratedOrigFilesFromDefaults()  { return enumFromDefaultsForKey(MHGHandleGeneratedOrigFiles); }
+OnActivationOpenWhatOption	OnActivationOpenFromDefaults()		    { return enumFromDefaultsForKey(MHGOnActivationOpen); }
+ToolForDiffing				UseWhichToolForDiffingFromDefaults()    { return enumFromDefaultsForKey(MHGUseWhichToolForDiffing); }
+ToolForMerging				UseWhichToolForMergingFromDefaults()    { return enumFromDefaultsForKey(MHGUseWhichToolForMerging); }
+FSViewerNumberDefaultOption	DefaultFilesViewFromDefaults()		    { return enumFromDefaultsForKey(MHGDefaultFilesView); }
+DifferencesCutoffOption		DifferencesFileCountCutoffFromDefaults(){ return enumFromDefaultsForKey(MHGDifferencesFileCountCutoff); }
 
 
 
@@ -1324,6 +1332,14 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	return [NSArray arrayWithArray:a];
 }
 
+- (NSArray*) filterArrayWithBlock:(ArrayFilterBlock)block
+{
+	NSMutableArray* filtered = [[NSMutableArray alloc]init];
+	for (id obj in self)
+		if (block(obj))
+			[filtered addObject:obj];
+	return [NSArray arrayWithArray:filtered];
+}
 
 @end
 

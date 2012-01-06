@@ -76,9 +76,7 @@
 - (FSNodeInfo*) shallowTreeCopyRemoving:(NSArray*)theAbsolutePaths;				// Do a shallow copy of the tree except for the bits we are removing.
 																				// For these bits create copies down to the level of the parts we are
 																				// removing.
-- (NSArray*)	generateFlatLeafNodeList;										// Generate a flat list of all child leaf nodes
-
-
+- (NSArray*)	generateFlatLeafNodeListWithStatus:(HGStatus)status;			// Generate a flat list of all child leaf nodes
 
 
 // Icons for Nodes

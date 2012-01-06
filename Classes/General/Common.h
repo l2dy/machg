@@ -180,6 +180,16 @@ typedef enum
 	eFilesTableDefault		= 0x02
 } FSViewerNumberDefaultOption;
 
+
+typedef enum
+{
+	eDifferencesCutoffFiles5		= 0x0,
+	eDifferencesCutoffFiles10		= 0x1,
+	eDifferencesCutoffFiles20		= 0x2,
+	eDifferencesCutoffFilesNoLimit  = 0x3,
+} DifferencesCutoffOption;
+
+
 typedef enum
 {
 	eUseNothingForDiffs		 = -1,
@@ -242,7 +252,8 @@ typedef enum
 	eHGStatusAddableOrRemovable	= eHGStatusUntracked | eHGStatusMissing,
 	eHGStatusPresent            = eHGStatusClean | eHGStatusAdded | eHGStatusModified,
 	eHGStatusPrimary            = eHGStatusIgnored | eHGStatusClean | eHGStatusUntracked | eHGStatusAdded | eHGStatusRemoved | eHGStatusMissing | eHGStatusModified,
-	eHGStatusSecondary          = eHGStatusResolved | eHGStatusUnresolved
+	eHGStatusSecondary          = eHGStatusResolved | eHGStatusUnresolved,
+	eHGStatusAll				= eHGStatusPrimary | eHGStatusSecondary | eHGStatusDirty
 } HGStatus;
 
 
@@ -383,6 +394,9 @@ extern NSString* const kLogEntriesDidChange;				// Some LogEntires which are par
 // Non-critical notifications
 extern NSString* const kBrowserDisplayPreferencesChanged;	// The user selected some preference or something so tables etc should
 															// update their visual appearance.
+extern NSString* const kDifferencesDisplayPreferencesChanged;// The user selected some preference or something so that the file
+															// view differences should update their visual appearance. 
+
 extern NSString* const kCompatibleRepositoryChanged;		// A repository compatible to the current repository changed. (A push
 															// happened, etc.)
 extern NSString* const kReceivedCompatibleRepositoryCount;	// We just received the change count difference between the current
@@ -472,7 +486,9 @@ extern NSString* const MHGDisplayWarningForRollbackFiles;
 extern NSString* const MHGDisplayWarningForTagRemoval;
 extern NSString* const MHGDisplayWarningForUntrackingFiles;
 extern NSString* const MHGDisplayWarningForUpdating;
+extern NSString* const MHGDifferencesFileCountCutoff;
 extern NSString* const MHGFontSizeOfBrowserItems;
+extern NSString* const MHGFontSizeOfDifferencesWebview;
 extern NSString* const MHGHandleCommandDefaults;
 extern NSString* const MHGHandleGeneratedOrigFiles;
 extern NSString* const MHGIncludeHomeHgrcInHGRCPATH;
@@ -487,6 +503,7 @@ extern NSString* const MHGLogEntryTableParentHighlightColor;
 extern NSString* const MHGLogEntryTableTagHighlightColor;
 extern NSString* const MHGLoggingLevelForHGCommands;
 extern NSString* const MHGMacHgLogFileLocation;
+extern NSString* const MHGNumContextLinesForDifferencesWebview;
 extern NSString* const MHGOnActivationOpen;
 extern NSString* const MHGRequireVerifiedServerCertificates;
 extern NSString* const MHGRevisionSortOrder;
@@ -562,8 +579,11 @@ BOOL		WarnAboutBadMercurialConfigurationFromDefaults();
 
 float		fontSizeOfBrowserItemsFromDefaults();
 float		sizeOfBrowserColumnsFromDefaults();
+float		FontSizeOfDifferencesWebviewFromDefaults();
+
 int			LoggingLevelForHGCommands();
 int			LaunchCountFromDefaults();
+int			NumContextLinesForDifferencesWebviewFromDefaults();
 NSString*	AddRemoveSimilarityFactorFromDefaults();
 NSString*	DefaultHGIgnoreContentsFromDefaults();
 NSString*	DefaultWorkspacePathFromDefaults();
@@ -587,6 +607,7 @@ OnActivationOpenWhatOption		OnActivationOpenFromDefaults();
 ToolForDiffing					UseWhichToolForDiffingFromDefaults();
 ToolForMerging					UseWhichToolForMergingFromDefaults();
 FSViewerNumberDefaultOption		DefaultFilesViewFromDefaults();
+DifferencesCutoffOption			DifferencesFileCountCutoffFromDefaults();
 
 BrowserDoubleClickAction		browserBehaviourDoubleClick();
 BrowserDoubleClickAction		browserBehaviourCommandDoubleClick();
@@ -1022,12 +1043,13 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 - (void)	reverse;
 @end
 
-
 // MARK: -
+typedef BOOL (^ArrayFilterBlock)(id);
 @interface NSArray ( NSArrayPlusAccessors )
 - (id)		 firstObject;
 - (NSArray*) reversedArray;
 - (NSArray*) arrayByRemovingObject:(id)object;
+- (NSArray*) filterArrayWithBlock:(ArrayFilterBlock)block;
 @end
 
 

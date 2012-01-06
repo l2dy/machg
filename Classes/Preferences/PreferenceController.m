@@ -38,6 +38,7 @@
 }
 
 - (IBAction) displayPreferencesChanged:(id)sender			{ [self postNotificationWithName:kBrowserDisplayPreferencesChanged]; }
+- (IBAction) differencesDisplayPreferencesChanged:(id)sender{ [self postNotificationWithName:kDifferencesDisplayPreferencesChanged]; }
 - (IBAction) resetPreferences:(id)sender					{ [AppController resetUserPreferences]; }
 - (IBAction) repositoryEditingPreferencesChanged:(id)sender	{ ; }
 - (IBAction) openMacHgHGRCFileInExternalEditor:(id)sender	{ [[NSWorkspace sharedWorkspace] openFile:fstr(@"%@/hgrc", applicationSupportFolder())]; }

@@ -21,6 +21,7 @@
 }
 
 - (IBAction) displayPreferencesChanged:(id)sender;
+- (IBAction) differencesDisplayPreferencesChanged:(id)sender;
 - (IBAction) resetPreferences:(id)sender;
 - (IBAction) repositoryEditingPreferencesChanged:(id)sender;
 - (IBAction) openMacHgHGRCFileInExternalEditor:(id)sender;

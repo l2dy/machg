@@ -79,6 +79,8 @@
 - (void) awakeFromNib
 {
 	[self observe:kBrowserDisplayPreferencesChanged from:nil byCalling:@selector(reloadDataSin)];
+	[self observe:kDifferencesDisplayPreferencesChanged from:nil byCalling:@selector(regenerateDifferencesInWebview)];
+	
 	[parentController awakeFromNib];	// The parents must ensure that the internals of awakeFromNib only ever happen once.
 	rootNodeInfo_ = nil;
 	FSViewerNum viewerNum = [[NSUserDefaults standardUserDefaults] integerForKey:[self viewerAutoSaveName]];
@@ -746,9 +748,35 @@
 		return;
 	}
 
+	// If we have more files selected than our cutoff point just print a message of the number of files selected
+	NSArray* selectedNodes = [self selectedNodes];
+	ArrayFilterBlock filter = ^(id node) { return (BOOL)([[node sortedChildNodeKeys] count] == 0 && bitsInCommon(eHGStatusChangedInSomeWay, [node hgStatus])); };
+	NSArray* changedLeafs = [selectedNodes filterArrayWithBlock:filter];
+	NSMutableArray* accumulate = [changedLeafs mutableCopy];
+	for (FSNodeInfo* node in selectedNodes)
+		[accumulate addObjectsFromArray:[node generateFlatLeafNodeListWithStatus:eHGStatusChangedInSomeWay]];
+	NSArray* filtered = [NSSet setWithArray:accumulate];
+	NSInteger leafCount = [filtered count];
+		
+	DifferencesCutoffOption cutoffOption = DifferencesFileCountCutoffFromDefaults();
+	BOOL cutoff = NO;
+	switch (cutoffOption) {
+		case eDifferencesCutoffFiles5:			if (leafCount > 5)  cutoff = YES;	break;
+		case eDifferencesCutoffFiles10:			if (leafCount > 10) cutoff = YES;	break;
+		case eDifferencesCutoffFiles20:			if (leafCount > 20) cutoff = YES;	break;
+		case eDifferencesCutoffFilesNoLimit:										break;
+		default:																	break;
+	}
+	if (cutoff)
+	{
+		[script callWebScriptMethod:@"showMessage" withArguments:[NSArray arrayWithObject:fstr(@"%d Changed Files Selected...", leafCount)]];
+		return;
+	}
+
 	NSString* rootPath = [self absolutePathOfRepositoryRoot];
 	NSMutableArray* argsDiff = [NSMutableArray arrayWithObjects:@"diff", nil];
-	[argsDiff addObjectsFromArray:[self absolutePathsOfSelectedFilesInBrowser]];
+	[argsDiff addObject:@"--unified" followedBy:fstr(@"%d",NumContextLinesForDifferencesWebviewFromDefaults())];
+	[argsDiff addObjectsFromArray:selectedPaths];
 	[script callWebScriptMethod:@"showMessage" withArguments:[NSArray arrayWithObject:@"Generating Differences..."]];
 	dispatch_async(globalQueue(), ^{
 		ExecutionResult* diffResult = [TaskExecutions executeMercurialWithArgs:argsDiff  fromRoot:rootPath];

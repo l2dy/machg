@@ -549,21 +549,21 @@
 // MARK: Flat List Construction
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) addAllLeafNodes:(NSMutableArray*)flatNodes
+- (void) addAllLeafNodes:(NSMutableArray*)flatNodes withStatus:(HGStatus)status
 {
-	if ([[self sortedChildNodeKeys] count] == 0)
+	if ([[self sortedChildNodeKeys] count] == 0 && bitsInCommon(status, hgStatus))
 	{
 		[flatNodes addObject:self];
 		return;
 	}
 	for (NSString* key in [self sortedChildNodeKeys])
-		[[childNodes objectForKey:key] addAllLeafNodes:flatNodes];
+		[[childNodes objectForKey:key] addAllLeafNodes:flatNodes withStatus:status];
 }
 
-- (NSArray*) generateFlatLeafNodeList
+- (NSArray*) generateFlatLeafNodeListWithStatus:(HGStatus)status
 {
 	NSMutableArray* nodeList = [[NSMutableArray alloc]init];
-	[self addAllLeafNodes:nodeList];
+	[self addAllLeafNodes:nodeList withStatus:status];
 	return nodeList;
 }	
 
