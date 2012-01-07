@@ -780,7 +780,7 @@ static inline void addRevisionsToTableRowList(NSString* str, NSMutableArray* tab
 
 		[[self myDocument] setToolbarSearchFieldQueryIsValid:YES];
 		[[self myDocument] syncronizeSearchFieldTint];
-		NSString* theSearchFilter = [[[self myDocument] toolbarSearchField] stringValue];
+		NSString* theSearchFilter = [parentController respondsToSelector:@selector(searchFieldValue)] ? [parentController searchFieldValue] : nil;
 		BOOL filtered = IsNotEmpty(theSearchFilter);
 		BOOL validQuery = YES;
 		if (filtered)

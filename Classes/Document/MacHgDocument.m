@@ -114,6 +114,7 @@
 @synthesize connections = connections_;
 @synthesize hunkExclusions = hunkExclusions_;
 @synthesize toolbarSearchField = toolbarSearchField_;
+@synthesize toolbarSearchFieldValue = toolbarSearchFieldValue_;
 @synthesize toolbarSearchFieldCategory = toolbarSearchFieldCategory_;
 @synthesize toolbarSearchFieldQueryIsValid = toolbarSearchFieldQueryIsValid_;
 @synthesize toolbarSearchItem  = toolbarSearchItem_;

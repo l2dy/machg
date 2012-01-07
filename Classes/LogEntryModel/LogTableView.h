@@ -15,6 +15,7 @@
 @protocol ControllerForLogTableView <NSObject>
 - (MacHgDocument*)	myDocument;
 @optional
+- (NSString*)		searchFieldValue;
 - (void)			logTableViewSelectionDidChange:(LogTableView*)theTable;
 - (NSIndexSet*)		tableView:(NSTableView*)tableView selectionIndexesForProposedSelection:(NSIndexSet*)proposedSelectionIndexes;	// We forward the delegate method of implemented
 @end

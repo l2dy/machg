@@ -166,6 +166,7 @@
 @property (readonly,  assign) dispatch_queue_t		mercurialTaskSerialQueue;
 @property (readonly,  assign) MonitorFSEvents*		events;
 @property (readonly,  assign) NSSearchField*		toolbarSearchField;
+@property (readonly,  assign) NSString*				toolbarSearchFieldValue;
 @property (readonly,  assign) SearchFieldCategory	toolbarSearchFieldCategory;
 @property (nonatomic, assign) BOOL					toolbarSearchFieldQueryIsValid;
 @property (readonly,  assign) NSToolbarItem*		toolbarSearchItem;

@@ -108,12 +108,14 @@
 	[[myDocument mainWindow] makeFirstResponder:logTableView];
 }
 
+
 -(void) unload
 {
 	[self stopObserving];
 	[logTableView unload];
 	logTableView = nil;
 }
+
 
 - (void) prepareToOpenHistoryView
 {
@@ -124,12 +126,16 @@
 
 
 
+
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 // MARK: Actions Notifications & Updating
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (NSString*) searchCaption		{ return fstr(@"%d entries shown", [[logTableView theTableRows] count]); }
+
+- (NSString*) searchFieldValue	{ return [myDocument toolbarSearchFieldValue]; }
+
 
 - (IBAction) refreshHistoryView:(id)sender
 {
