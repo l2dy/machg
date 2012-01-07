@@ -73,6 +73,7 @@
 - (void)setShiftSlowsAnimation:(BOOL)slows;
 
 - (void)displayViewForIdentifier:(NSString *)identifier animate:(BOOL)animate;
+- (void)switchToViewForIdentifier:(NSString*)identifier animate:(BOOL)animate;
 - (void)crossFadeView:(NSView *)oldView withView:(NSView *)newView;
 - (NSRect)frameForView:(NSView *)view;
 
