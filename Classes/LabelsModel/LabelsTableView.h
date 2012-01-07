@@ -32,6 +32,7 @@
 
 	LabelType				labelsTableFilterType_;				// We cache the types of labels we are going to show. If this changes
 																// we have to recompute the labelsTableData_
+	BOOL					awake_;								// Has this nib been awakened yet?
 }
 
 - (MacHgDocument*)	myDocument;
@@ -42,6 +43,7 @@
 
 
 // Actions
+- (IBAction) refreshTable:(id)sender;
 - (IBAction) resetTable:(id)sender;
 - (IBAction) labelTableSingleClick:(id) sender;
 - (IBAction) labelTableDoubleClick:(id) sender;

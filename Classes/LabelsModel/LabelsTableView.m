@@ -59,6 +59,7 @@
 	{
 		labelsTableData_ = nil;
 		labelsTableFilterType_ = eNoLabelType;
+		awake_ = NO;
 	}
     
 	return self;
@@ -80,6 +81,8 @@
 	
 	// Stop garbage littering on Lion see issue #273
 	[DynamicCast(NSClipView, [self superview]) setCopiesOnScroll:NO];
+	awake_ = YES;
+	[self resetTable:self];
 }
 
 - (MacHgDocument*)		myDocument			{ return [parentController myDocument]; }
@@ -113,22 +116,21 @@
 
 - (void) repositoryDataIsNew
 {
-	[self recomputeLabelsTableData];
+	[self resetTable:self];
 	[parentController labelsChanged];
 }
 
 
 - (void) repositoryDataDidChange:(NSNotification*)notification
 {
-	[self recomputeLabelsTableData];
+	[self resetTable:self];
 	[parentController labelsChanged];
 }
 
 
 - (void) logEntriesDidChange:(NSNotification*)notification
 {
-	dispatch_async(mainQueue(), ^{
-		[self reloadData];});
+	[self refreshTable:self];
 }
 
 
@@ -206,7 +208,17 @@
 
 - (IBAction) resetTable:(id)sender
 {
+	if (!awake_)
+		return;
 	[self recomputeLabelsTableData];
+}
+
+- (IBAction) refreshTable:(id)sender
+{
+	if (!awake_)
+		return;
+	dispatch_async(mainQueue(), ^{
+		[self reloadData];});
 }
 
 

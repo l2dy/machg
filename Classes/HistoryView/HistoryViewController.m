@@ -117,7 +117,7 @@
 
 - (void) prepareToOpenHistoryView
 {
-	[self refreshHistoryView:self];
+	[self resetHistoryView:self];
 	[[myDocument mainWindow] makeFirstResponder:logTableView];
 }
 
@@ -136,6 +136,15 @@
 	NSString* newSearchMessage = IsEmpty([[myDocument toolbarSearchField] stringValue]) ? @"Search" : [self searchCaption];
 	[[myDocument toolbarSearchItem] setLabel:newSearchMessage];
 	[logTableView refreshTable:self];
+	[theLabelsTableView_ refreshTable:self];
+}
+
+- (IBAction) resetHistoryView:(id)sender
+{
+	NSString* newSearchMessage = IsEmpty([[myDocument toolbarSearchField] stringValue]) ? @"Search" : [self searchCaption];
+	[[myDocument toolbarSearchItem] setLabel:newSearchMessage];
+	[logTableView resetTable:self];
+	[theLabelsTableView_ resetTable:self];
 }
 
 - (void) scrollToSelected

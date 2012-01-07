@@ -751,7 +751,8 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 {
 	if (!awake_)
 		return;
-	[self reloadData];
+	dispatch_async(mainQueue(), ^{
+		[self reloadData];});
 }
 
 static inline void addRevisionsToTableRowList(NSString* str, NSMutableArray* tableRows)
