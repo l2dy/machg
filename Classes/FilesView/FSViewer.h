@@ -22,6 +22,7 @@
 - (NSArray*)		resolveStatusLines: (NSArray*)absolutePaths withRootPath:(NSString*)rootPath;
 - (BOOL)			writeRowsWithIndexes:(NSIndexSet*)rowIndexes inColumn:(NSInteger)column toPasteboard:(NSPasteboard*)pasteboard;	// dragging support
 - (MacHgDocument*)	myDocument;
+- (void)			setMyDocumentFromParent;
 - (void)			didSwitchViewTo:(FSViewerNum)viewNumber;
 - (BOOL)			controlsMainFSViewer;
 - (void)			updateCurrentPreviewImage;

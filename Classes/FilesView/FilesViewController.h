@@ -55,7 +55,6 @@
 	IBOutlet NSButton*		FilesViewOutlineSegement;
 	IBOutlet NSButton*		FilesViewTableSegement;
 	MacHgDocument*			myDocument;
-	BOOL					awake_;			// Ensure awakeFromNib fires only once
 }
 
 @property (readwrite,assign) MacHgDocument*	myDocument;

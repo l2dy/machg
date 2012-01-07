@@ -78,7 +78,6 @@
 	BOOL						showResolvedFilesInBrowser_;
 	NSMutableArray*				theTableRows;				// Map of table row -> revision number
 	NSString*					repositoryRootPath;			// The root of the repository being browsed
-	BOOL						awake_;						// Ensure awakeFromNib fires only once
 }
 
 @property (readwrite,assign) BOOL showAddedFilesInBrowser;

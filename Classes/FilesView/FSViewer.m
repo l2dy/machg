@@ -12,6 +12,7 @@
 #import "FSViewerBrowser.h"
 #import "FSViewerOutline.h"
 #import "FSViewerTable.h"
+#import "FilesViewController.h"
 #import "MacHgDocument.h"
 #import "FSNodeInfo.h"
 #import "FSViewerPaneCell.h"
@@ -81,7 +82,7 @@
 	[self observe:kBrowserDisplayPreferencesChanged from:nil byCalling:@selector(reloadDataSin)];
 	[self observe:kDifferencesDisplayPreferencesChanged from:nil byCalling:@selector(regenerateDifferencesInWebview)];
 	
-	[parentController awakeFromNib];	// The parents must ensure that the internals of awakeFromNib only ever happen once.
+	[parentController setMyDocumentFromParent];	// Set up the parent's myDocument since the partent's awakeFromNib has not yet been called.
 	rootNodeInfo_ = nil;
 	FSViewerNum viewerNum = [[NSUserDefaults standardUserDefaults] integerForKey:[self viewerAutoSaveName]];
 	if (viewerNum == eFilesNoView)

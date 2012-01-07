@@ -67,20 +67,17 @@
 
 - (id) initWithFrame:(NSRect)frameRect
 {
-	awake_ = NO;
 	return [super initWithFrame:frameRect];
+}
+
+- (void) setMyDocumentFromParent
+{
+	myDocument = [parentContoller myDocument];
 }
 
 - (void) awakeFromNib
 {
-	@synchronized(self)
-	{
-		if (awake_)
-			return;
-		awake_ = YES;
-	}
-
-	myDocument = [parentContoller myDocument];
+	[self setMyDocumentFromParent];
 	[self observe:kRepositoryDataIsNew		from:[self myDocument]  byCalling:@selector(repositoryDataIsNew)];
 	[FilesViewBrowserSegement setState:NO];
 	[FilesViewOutlineSegement setState:NO];

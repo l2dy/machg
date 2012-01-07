@@ -79,20 +79,17 @@
 
 - (id) initWithFrame:(NSRect)frameRect
 {
-	awake_ = NO;
 	return [super initWithFrame:frameRect];
+}
+
+- (void) setMyDocumentFromParent
+{
+	myDocument = [parentController myDocument];
 }
 
 - (void) awakeFromNib
 {
-	@synchronized(self)
-	{
-		if (awake_)
-			return;
-		awake_ = YES;
-	}
-
-	myDocument = [parentController myDocument];
+	[self setMyDocumentFromParent];
 	[self openSplitViewPanesToDefaultHeights: self];
 
 	[theFSViewer setAreNodesVirtual:YES];
