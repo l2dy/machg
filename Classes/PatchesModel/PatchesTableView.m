@@ -414,21 +414,14 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 - (void) disableHunk:(NSString*)hunkNumber forFile:(NSString*)fileName 
 {
 	NSMutableDictionary* dict = [[self selectedPatch] excludedPatchHunksForFilePath];
-	NSMutableSet* set = [dict valueForKey:fileName];
-	if (!set)
-	{
-		set = [[NSMutableSet alloc]init];
-		[dict setValue:set forKey:fileName];
-	}
+	NSMutableSet* set = [dict objectForKey:fileName addingIfNil:[NSMutableSet class]];
 	[set addObject:hunkNumber];
 }
 
 - (void) enableHunk:(NSString*)hunkNumber forFile:(NSString*)fileName 
 {
 	NSMutableDictionary* dict = [[self selectedPatch] excludedPatchHunksForFilePath];
-	NSMutableSet* set = [dict valueForKey:fileName];
-	if (!set)
-		return;
+	NSMutableSet* set = [dict objectForKey:fileName];
 	[set removeObject:hunkNumber];
 }
 
@@ -437,7 +430,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 	WebScriptObject* script = [detailedPatchWebView windowScriptObject];
 	NSMutableDictionary* dict = [[self selectedPatch] excludedPatchHunksForFilePath];
 	for (NSString* file in [dict allKeys])
-		for (NSString* hunkNumber in [dict valueForKey:file])
+		for (NSString* hunkNumber in [dict objectForKey:file])
 		{
 			NSArray* excludeViewHunkStatusArgs = [NSArray arrayWithObjects:file, hunkNumber, nil];
 			[script callWebScriptMethod:@"excludeViewHunkStatus" withArguments:excludeViewHunkStatusArgs];

@@ -317,11 +317,8 @@ static NSInteger closestFreeIndex2(NSIndexSet* indexes1, NSIndexSet* indexes2, N
 	for (NSInteger r = [line lowRev]; r <= [line highRev]; r++)
 	{
 		NSNumber* revision = intAsNumber(r);
-		NSMutableArray* lines = [revisionNumberToLineSegments_ objectForKey:revision];
-		if (!lines)
-			[revisionNumberToLineSegments_ setObject:[NSMutableArray arrayWithObject:line] forKey:revision];
-		else
-			[lines addObject:line];
+		NSMutableArray* lines = [revisionNumberToLineSegments_ objectForKey:revision addingIfNil:[NSMutableArray class]];
+		[lines addObject:line];
 	}		
 }
 

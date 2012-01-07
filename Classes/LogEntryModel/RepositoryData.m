@@ -223,12 +223,7 @@ static void addLabelToDictionary(NSMutableDictionary* revisionToLabelArray, Labe
 	if (!rev)
 		return;
 
-	NSMutableArray* labelArray = [revisionToLabelArray objectForKey:rev];
-	if (!labelArray)
-	{
-		labelArray = [[NSMutableArray alloc]init];
-		[revisionToLabelArray setObject:labelArray forKey:rev];
-	}
+	NSMutableArray* labelArray = [revisionToLabelArray objectForKey:rev addingIfNil:[NSMutableArray class]];
 	[labelArray addObject:label];
 }
 
