@@ -1384,6 +1384,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 - (void) copyValueOfKey:(id)aKey from:(NSDictionary*)aDict			{ id val = [aDict objectForKey:aKey]; if (val) [self setObject:val forKey:aKey]; }
 - (void) synchronizedSetObject:(id)value forIntKey:(NSInteger)key	{ @synchronized(self) { [self setObject:value forKey:intAsNumber(key)]; }; }
 - (void) setObject:(id)value forIntKey:(NSInteger)key				{ [self setObject:value forKey:intAsNumber(key)]; }
+- (id)	 objectForKey:(id)key addingIfNil:(Class)class				{ id val = [self objectForKey:key]; if (!val) { val = [[class performSelector:@selector(alloc)] init]; [self setObject:val forKey:key]; } return val; }
 @end
 
 

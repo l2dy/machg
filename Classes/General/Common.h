@@ -1071,6 +1071,7 @@ typedef BOOL (^ArrayFilterBlock)(id);
 - (void)	copyValueOfKey:(id)aKey from:(NSDictionary*)aDict;
 - (void)	synchronizedSetObject:(id)value forIntKey:(NSInteger)key;
 - (void)	setObject:(id)value forIntKey:(NSInteger)key;
+- (id)		objectForKey:(id)key addingIfNil:(Class)class;
 @end
 
 
