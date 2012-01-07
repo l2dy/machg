@@ -567,6 +567,44 @@
 // MARK:  Webview Handling
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+
+- (void) disableHunk:(NSString*)hunkNumber forFile:(NSString*)fileName 
+{
+	MacHgDocument* myDocument = [self myDocument];
+	NSString* root = [myDocument absolutePathOfRepositoryRoot];
+	NSMutableDictionary* repositoryExclusions = [[myDocument hunkExclusions] objectForKey:root addingIfNil:[NSMutableDictionary class]];
+	NSMutableSet* set = [repositoryExclusions objectForKey:fileName addingIfNil:[NSMutableSet class]];
+	[set addObject:hunkNumber];
+}
+
+- (void) enableHunk:(NSString*)hunkNumber forFile:(NSString*)fileName 
+{
+	MacHgDocument* myDocument = [self myDocument];
+	NSString* root = [myDocument absolutePathOfRepositoryRoot];
+	NSMutableDictionary* repositoryExclusions = [[myDocument hunkExclusions] objectForKey:root];
+	NSMutableSet* set = [repositoryExclusions objectForKey:fileName];
+	[set removeObject:hunkNumber];
+}
+
+- (void) excludeHunksAccordingToModel
+{
+	WebScriptObject* script = [detailedDiffWebView windowScriptObject];
+	MacHgDocument* myDocument = [self myDocument];
+	NSString* root = [myDocument absolutePathOfRepositoryRoot];
+	NSMutableDictionary* repositoryExclusions = [[myDocument hunkExclusions] objectForKey:root];
+	NSArray* selectedPaths = [self absolutePathsOfSelectedFilesInBrowser];
+	for (NSString* path in selectedPaths)
+	{
+		NSString* file = pathDifference(root,path);
+		for (NSString* hunkNumber in [repositoryExclusions objectForKey:file])
+		{
+			NSArray* excludeViewHunkStatusArgs = [NSArray arrayWithObjects:file, hunkNumber, nil];
+			[script callWebScriptMethod:@"excludeViewHunkStatus" withArguments:excludeViewHunkStatusArgs];
+		}
+	}
+}
+
+
 - (NSNumber*) fontSizeOfDifferencesWebview
 {
 	return [NSNumber numberWithFloat:FontSizeOfDifferencesWebviewFromDefaults()];
@@ -575,11 +613,17 @@
 + (NSString *)webScriptNameForSelector:(SEL)sel
 {
     // change the javascript name from 'disableHunk_forFile' to 'disableHunkForFile' etc...
-	if (sel == @selector(fontSizeOfDifferencesWebview))	return @"fontSizeOfDifferencesWebview";	
+	if (sel == @selector(disableHunk:forFile:))			return @"disableHunkForFileName";
+	if (sel == @selector(enableHunk:forFile:))			return @"enableHunkForFileName";
+	if (sel == @selector(excludeHunksAccordingToModel))	return @"excludeHunksAccordingToModel";
+	if (sel == @selector(fontSizeOfDifferencesWebview))	return @"fontSizeOfDifferencesWebview";
 	return nil;
 }
 + (BOOL)isSelectorExcludedFromWebScript:(SEL)sel
 {
+	if (sel == @selector(disableHunk:forFile:))			return NO;
+	if (sel == @selector(enableHunk:forFile:))			return NO;
+	if (sel == @selector(excludeHunksAccordingToModel))	return NO;
     if (sel == @selector(fontSizeOfDifferencesWebview)) return NO;
     return YES;
 }

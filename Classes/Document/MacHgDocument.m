@@ -112,6 +112,7 @@
 @synthesize mercurialTaskSerialQueue  = mercurialTaskSerialQueue_;
 @synthesize events      = events_;
 @synthesize connections = connections_;
+@synthesize hunkExclusions = hunkExclusions_;
 @synthesize toolbarSearchField = toolbarSearchField_;
 @synthesize toolbarSearchFieldCategory = toolbarSearchFieldCategory_;
 @synthesize toolbarSearchFieldQueryIsValid = toolbarSearchFieldQueryIsValid_;
@@ -188,12 +189,14 @@
 		[sidebar_ restoreSavedExpandedness];
 		[sidebar_ reloadData];
 		connections_ = loadedDataProxy_->loadedConnections;
+		hunkExclusions_ = loadedDataProxy_->loadedHunkExclusions;
 		// loadedDataProxy_ = nil;		// We no longer need this have it collected
 	}
 	else
 	{
 		[self populateOutlineContents];
 		connections_ = [[NSMutableDictionary alloc]init];
+		hunkExclusions_ = [[NSMutableDictionary alloc]init];
 	}
 	[self actionSwitchViewToBackingView:self];
 }
@@ -1187,6 +1190,7 @@
 	
     [archiver encodeObject:sidebar_ forKey: @"sidebar"];
 	[archiver encodeObject:connections_ forKey:@"connections"];
+	[archiver encodeObject:hunkExclusions_ forKey:@"hunkExclusions"];
     [archiver encodeInt:currentPane_ forKey:@"currentPane"];
 
     [archiver finishEncoding];
@@ -1210,12 +1214,18 @@
 	{
 		NSKeyedUnarchiver* archiver = [[NSKeyedUnarchiver alloc] initForReadingWithData: data];
 
-		loadedDataProxy_->loadedSidebar     = [archiver decodeObjectForKey:@"sidebar"];
-		loadedDataProxy_->loadedConnections = [archiver decodeObjectForKey:@"connections"];
-		loadedDataProxy_->loadedCurrentPane = [archiver decodeIntForKey:@"currentPane"];
-
-		if (!loadedDataProxy_->loadedConnections)
-			loadedDataProxy_->loadedConnections = [[NSMutableDictionary alloc]init];
+		loadedDataProxy_->loadedSidebar			= [archiver decodeObjectForKey:@"sidebar"];
+		loadedDataProxy_->loadedConnections		= [archiver decodeObjectForKey:@"connections"];
+		loadedDataProxy_->loadedCurrentPane		= [archiver decodeIntForKey:@"currentPane"];
+		@try {
+			loadedDataProxy_->loadedHunkExclusions	= [archiver decodeObjectForKey:@"hunkExclusions"];		
+		}
+		@catch (NSException * e) {
+			loadedDataProxy_->loadedHunkExclusions = [[NSMutableDictionary alloc]init];
+		}
+		
+		if (!loadedDataProxy_->loadedConnections)	 loadedDataProxy_->loadedConnections    = [[NSMutableDictionary alloc]init];
+		if (!loadedDataProxy_->loadedHunkExclusions) loadedDataProxy_->loadedHunkExclusions = [[NSMutableDictionary alloc]init];
 	}
 	@catch (NSException* e)
 	{

@@ -262,7 +262,7 @@ var highlightDiff = function(diff, element, callbacks)
 			line2 += "...\n";
 			var encodedFileNamePlusHunk = encodeURIComponent(endname+':'+hunk_index);
 			diffContent += '<div class="hunk" id="hunk-index-' + hunk_index + '"><div ' + sindex + 'class="hunkheader">' + l +
-			'</div>';
+			'<span class="includehunk"><input type="checkbox" class="hunkselector" checked="yes" onclick="handleHunkStatusClick(event)" id="' + encodedFileNamePlusHunk + '">include</input></span></div>';
 		}
 		else if (firstChar == " ")
 		{

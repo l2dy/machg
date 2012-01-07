@@ -138,7 +138,10 @@
 	
 	NSMutableDictionary*		connections_;			// Storage for option values of connections (push, pull, incoming,
 														// outgoing, etc) between one repositories and another
-		
+
+	NSMutableDictionary*		hunkExclusions_;		// Storage for which hunks are being excluded from commits. Maps
+														// (NSString*)repoRoot-> (NSMutableDictionary*)filePaths -> (NSString*)hunkHash
+
 	PaneViewNum					currentPane_;			// The current Pane being shown by the document
 
 	RepositoryData*				repositoryData_;		// This is the current collection of log entries (the entries which make up the current repository)
@@ -157,6 +160,7 @@
 @property (nonatomic, assign) Sidebar*				sidebar;
 @property (nonatomic, assign) NSWindow*				mainWindow;
 @property (nonatomic, assign) NSMutableDictionary*	connections;
+@property (nonatomic, assign) NSMutableDictionary*	hunkExclusions;
 @property (readonly,  assign) ProcessListController* theProcessListController;
 @property (readonly,  assign) dispatch_queue_t		refreshBrowserSerialQueue;
 @property (readonly,  assign) dispatch_queue_t		mercurialTaskSerialQueue;
@@ -436,6 +440,7 @@
   @public
 	Sidebar*				loadedSidebar;
 	NSMutableDictionary*	loadedConnections;
+	NSMutableDictionary*	loadedHunkExclusions;
 	NSInteger				loadedCurrentPane;
 }
 
