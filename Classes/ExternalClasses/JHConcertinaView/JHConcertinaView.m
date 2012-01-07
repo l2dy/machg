@@ -49,6 +49,8 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 	return pane;
 }
 
+- (BOOL) isOpaque { return YES; }
+
 - (void) adjustPaneAndDivider
 {
 	CGFloat selfHeight    = self.bounds.size.height;	
@@ -229,6 +231,7 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 {
 	return [arrayOfConcertinaPanes objectAtIndex:paneNumber];
 }
+
 
 - (void) mouseDown:(NSEvent*)theEvent
 {	
@@ -453,6 +456,7 @@ static inline CGFloat total(CGFloat* array, NSInteger count)
 }
 
 
+- (BOOL) isOpaque { return YES; }
 
 
 
