@@ -17,6 +17,7 @@
 	NSMutableArray* hunks;
 	NSMutableSet* hunkHashes;
 }
++ (FilePatch*) filePatchWithPath:(NSString*)path andHeader:(NSString*)header;
 - (void) finishHunk:(NSMutableArray*)lines;
 - (NSString*) hashHunk:(NSString*)hunk;
 - (NSString*) filterFilePatchWithExclusions:(NSSet*)excludedHunks;

@@ -13,16 +13,25 @@
 
 
 @implementation FilePatch
-- (id)init
+
+- (id) initWithPath:(NSString*)path andHeader:(NSString*)header
 {
-    self = [super init];
+	self = [super init];
     if (self)
 	{
+		filePath = path;
+		filePatchHeader = header;
 		hunks = [[NSMutableArray alloc]init];
 		hunkHashes = [[NSMutableSet alloc]init];
     }
     return self;
 }
+
++ (FilePatch*) filePatchWithPath:(NSString*)path andHeader:(NSString*)header
+{
+	return [[FilePatch alloc] initWithPath:path andHeader:header];
+}
+
 
 - (NSString*) hashHunk:(NSString*)hunk
 {
@@ -56,7 +65,7 @@
 
 	// When some (or all) parts of this file patch are excluded
 	BOOL containsIncludedHunk = NO;
-	NSInteger hunkCounter = 0;
+	NSInteger hunkCounter = 1;
 	for (NSString* hunk in hunks)
 	{
 		if (![excludedHunks containsObject:intAsString(hunkCounter)])
@@ -279,25 +288,35 @@
 		NSString* line = [lines objectAtIndex:i];
 		
 		// If we hit the diff header of a new file set the 'currentFile' and copy the header lines over to the result.
-		if ([line isMatchedByRegex:@"^diff.*"] && i+2< [lines count])
+		NSString* filePath = nil;
+		if ([line getCapturesWithRegexAndTrimedComponents:@"^diff(?: --git)?\\s*a/(.*) b/(.*)" firstComponent:&filePath] && i+2< [lines count])
 		{
-			NSString* minusLine = [lines objectAtIndex:i+1];
-			NSString* addLine   = [lines objectAtIndex:i+2];
-			NSString* filePath = nil;
-			if ([minusLine isMatchedByRegex:@"^---.*"])
-				if ([addLine getCapturesWithRegexAndTrimedComponents:@"^\\+\\+\\+\\s*b/(.*)"  firstComponent:&filePath])
-					if (IsNotEmpty(filePath))
-					{
-						// We found a valid header, add to our colorized string and advance through the header
-						[currentFilePatch finishHunk:hunkLines];
-						currentFilePatch = [[FilePatch alloc]init];
-						currentFilePatch->filePath = filePath;
-						currentFilePatch->filePatchHeader = fstr(@"@%@%@%", line, minusLine, addLine);
-						[filePatchForFilePath_ setObject:currentFilePatch forKey:filePath];
-						[filePatches_ addObject:currentFilePatch];
-						i += 2;
-						continue;
-					}
+			NSMutableString* header = [[NSMutableString alloc]init];
+			[header appendString:line];
+
+			NSInteger j = i+1;
+			NSInteger headerLineCount = 0;
+			for (;j < [lines count] ; j++)
+			{
+				NSString* jline = [lines objectAtIndex:j];
+				if ([jline isMatchedByRegex:@"^(---)|(\\+\\+\\+)|(rename) "])
+					 headerLineCount++;
+				else if ([jline isMatchedByRegex:@"(^@@.*)|(^diff .*)"])
+					break;
+				[header appendString:jline];
+			}
+			if (headerLineCount < 2)
+				DebugLog(@"Bad header parse:\n %@", header);
+			if (IsNotEmpty(filePath))
+			{
+				// We found a valid header, add to our colorized string and advance through the header
+				[currentFilePatch finishHunk:hunkLines];
+				currentFilePatch = [FilePatch filePatchWithPath:filePath andHeader:header];
+				[filePatchForFilePath_ setObject:currentFilePatch forKey:filePath];
+				[filePatches_ addObject:currentFilePatch];
+				i = j-1;
+				continue;
+			}
 		}
 		
 		if ([line isMatchedByRegex:@"^@@.*"])
@@ -334,6 +353,8 @@
 	importBranchOption_ = YES;
 	guessRenames_ = YES;
 	excludedPatchHunksForFilePath_ = [[NSMutableDictionary alloc]init];
+	filePatchForFilePath_ = [[NSMutableDictionary alloc]init];
+	filePatches_ = [[NSMutableArray alloc]init];
 	
 	static NSString* linebreak = nil;
 	static NSString* headerRegEx = nil;
