@@ -9,6 +9,23 @@
 
 #import <Cocoa/Cocoa.h>
 
+@interface FilePatch : NSObject
+{
+  @public
+	NSString* filePath;
+	NSString* filePatchHeader;
+	NSMutableArray* hunks;
+	NSMutableSet* hunkHashes;
+}
+- (void) finishHunk:(NSMutableArray*)lines;
+- (NSString*) hashHunk:(NSString*)hunk;
+- (NSString*) filterFilePatchWithExclusions:(NSSet*)excludedHunks;
+@end
+
+
+
+
+
 @interface PatchData : NSObject
 {
 	NSString* path_;
@@ -18,9 +35,13 @@
 	NSString* parent_;
 	NSString* nodeID_;
 	NSString* patchBody_;
+
+	// Note don't be confused between these file paths (of the source code being patched) and
+	// the path to the actual patch	
+
 	NSMutableDictionary* excludedPatchHunksForFilePath_;	// Map of (NSString*)sourceCodeFilePath -> (NSMutableSet*)of(NSString*)excludedHunkNumber
-															// Note don't be confused between these file paths (of the source code being patched) and
-															// the path to the actual patch
+	NSMutableDictionary* filePatchForFilePath_;				// Map of (NSString*)sourceCodeFilePath -> (FilePatch*)patch (mirrors filePatches_)
+	NSMutableArray* filePatches_;							// Array of (FilePatch*)patch (mirrors filePatchForFilePath_)
 	
 	BOOL	  forceOption_;
 	BOOL	  exactOption_;

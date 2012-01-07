@@ -12,7 +12,65 @@
 #import "TaskExecutions.h"
 
 
+@implementation FilePatch
+- (id)init
+{
+    self = [super init];
+    if (self)
+	{
+		hunks = [[NSMutableArray alloc]init];
+		hunkHashes = [[NSMutableSet alloc]init];
+    }
+    return self;
+}
 
+- (NSString*) hashHunk:(NSString*)hunk
+{
+	NSString* saltedString = fstr(@"%@:%@", nonNil(filePath), nonNil([hunk SHA1HashString]));
+	return [saltedString SHA1HashString];
+}
+
+- (void) finishHunk:(NSMutableArray*)lines
+{
+	if (IsEmpty(lines))
+		return;
+	NSString* hunk = [lines componentsJoinedByString:@""];
+	[hunks addObject:hunk];
+	[hunkHashes addObject:[self hashHunk:hunk]];
+	[lines removeAllObjects];
+}
+
+- (NSString*) filterFilePatchWithExclusions:(NSSet*)excludedHunks
+{
+	NSMutableString* filteredFilePatch = [[NSMutableString alloc] init];
+
+	[filteredFilePatch appendString:filePatchHeader];
+
+	// The normal case when this file patch is not filtered at all
+	if (IsEmpty(excludedHunks))
+	{
+		for (NSString* hunk in hunks)
+				[filteredFilePatch appendString:hunk];		
+		return filteredFilePatch;
+	}
+
+	// When some (or all) parts of this file patch are excluded
+	BOOL containsIncludedHunk = NO;
+	NSInteger hunkCounter = 0;
+	for (NSString* hunk in hunks)
+	{
+		if (![excludedHunks containsObject:intAsString(hunkCounter)])
+		{
+			containsIncludedHunk = YES;
+			[filteredFilePatch appendString:hunk];
+		}
+		hunkCounter++;
+	}
+	
+	return containsIncludedHunk ? filteredFilePatch : nil;
+}
+
+@end
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -186,24 +244,28 @@
 }
 
 
-- (BOOL) hunkIsExcludedForFile:(NSString*)currentFIle andHunk:(NSInteger)currentHunk
-{
-	if (!currentFIle)
-		return NO;
-	NSSet* hunkSet = [excludedPatchHunksForFilePath_ objectForKey:currentFIle];
-	return hunkSet ? [hunkSet containsObject:intAsString(currentHunk)] : NO;
-}
-
 - (NSString*) patchBodyFiltered
 {
+	NSMutableString* finalString = [[NSMutableString alloc] init];
+	for (FilePatch* fp in filePatches_)
+		if (fp)
+		{
+			NSString* filteredFilePatch = [fp filterFilePatchWithExclusions:[excludedPatchHunksForFilePath_ objectForKey:fp->filePath]];
+			if (filteredFilePatch)
+				[finalString appendString:filteredFilePatch];
+		}
+	return finalString;
+}
+
+
+-(void) parseBodyIntoFilePatches
+{
 	if (!patchBody_)
-		return nil;
+		return;
 	
-	NSString* currentFile = nil;
-	NSInteger currentHunkNumber = 0;
-		
-	NSMutableArray* newLines = [[NSMutableArray alloc]init];
-	NSMutableArray* lines = [[NSMutableArray alloc]init];
+	FilePatch* currentFilePatch = nil;	
+	NSMutableArray* hunkLines = [[NSMutableArray alloc]init];	// The array of lines which go into the current hunk
+	NSMutableArray* lines = [[NSMutableArray alloc]init];		// The patchBody broken into it's lines (each line includes the line ending)
 	NSInteger start = 0;
 	while (start < [patchBody_ length])
 	{
@@ -215,7 +277,7 @@
 	for (NSInteger i = 0; i < [lines count] ; i++)
 	{
 		NSString* line = [lines objectAtIndex:i];
-
+		
 		// If we hit the diff header of a new file set the 'currentFile' and copy the header lines over to the result.
 		if ([line isMatchedByRegex:@"^diff.*"] && i+2< [lines count])
 		{
@@ -227,48 +289,25 @@
 					if (IsNotEmpty(filePath))
 					{
 						// We found a valid header, add to our colorized string and advance through the header
-						currentFile = filePath;
-						currentHunkNumber = 0;
-						[newLines addObject:line followedBy:minusLine followedBy:addLine];
+						[currentFilePatch finishHunk:hunkLines];
+						currentFilePatch = [[FilePatch alloc]init];
+						currentFilePatch->filePath = filePath;
+						currentFilePatch->filePatchHeader = fstr(@"@%@%@%", line, minusLine, addLine);
+						[filePatchForFilePath_ setObject:currentFilePatch forKey:filePath];
+						[filePatches_ addObject:currentFilePatch];
 						i += 2;
 						continue;
 					}
 		}
-
+		
 		if ([line isMatchedByRegex:@"^@@.*"])
-			currentHunkNumber++;
-
-		if (![self hunkIsExcludedForFile:currentFile andHunk:currentHunkNumber])
-			[newLines addObject:line];
+			[currentFilePatch finishHunk:hunkLines];
+		
+		[hunkLines addObject:line];
 	}
-	
-	// Prune diffs which have no hunks
-	NSMutableString* finalString = [[NSMutableString alloc] init];
-	for (NSInteger i = 0; i < [newLines count] ; i++)
-	{
-		NSString* line = [newLines objectAtIndex:i];
 
-		if ([line isMatchedByRegex:@"^diff.*"])
-		{
-			if (i+3 >= [newLines count])
-				return finalString;
-			NSString* minusLine = [newLines objectAtIndex:i+1];
-			NSString* addLine   = [newLines objectAtIndex:i+2];
-			NSString* diffLine  = [newLines objectAtIndex:i+3];
-			if ([minusLine isMatchedByRegex:@"^---.*"] && [addLine isMatchedByRegex:@"^\\+\\+\\+.*"] && [diffLine isMatchedByRegex:@"^diff.*"])
-			{
-				i += 2;
-				continue;
-			}
-		}
-		[finalString appendString:line];
-	}
-	
-	return finalString;
+	[currentFilePatch finishHunk:hunkLines];	
 }
-
-
-
 
 
 // Parse something like (without the indent):
@@ -318,13 +357,17 @@
 	if ([parts count] <= 2)
 	{
 		patchBody_ = contents;
+		[self parseBodyIntoFilePatches];
 		return self;
 	}
 
 	patchBody_ = trimString([parts objectAtIndex:2]);
 	NSString* header  = trimString([parts objectAtIndex:1]);
 	if (!header)
+	{
+		[self parseBodyIntoFilePatches];
 		return self;
+	}
 
 	parts = [header captureComponentsMatchedByRegex:authorRegEx options:RKLMultiline range:NSMaxiumRange error:NULL];
 	if ([parts count] >= 1)
@@ -354,6 +397,7 @@
 	if ([parts count] >= 1)
 		commitMessage_ = trimString([parts objectAtIndex:1]);
 	
+	[self parseBodyIntoFilePatches];
 	return self;
 }
 
