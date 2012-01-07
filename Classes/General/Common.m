@@ -9,6 +9,7 @@
 
 #import "Common.h"
 #import "RegexKitLite.h"
+#import <CommonCrypto/CommonDigest.h> // for SHA1String
 
 
 
@@ -1035,6 +1036,23 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	unichar lastChar = [self characterAtIndex:[self length]-1];
 	return (lastChar == '\n' || lastChar == '\r');
 }
+
+- (NSString*) SHA1HashString
+{
+	const char *cstr = [self UTF8String];
+	unsigned char result[20];
+	CC_SHA1(cstr, strlen(cstr), result);
+	
+	return [NSString stringWithFormat:
+			@"%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X%02X",
+			result[0], result[1], result[2], result[3], 
+			result[4], result[5], result[6], result[7],
+			result[8], result[9], result[10], result[11],
+			result[12], result[13], result[14], result[15],
+			result[16], result[17], result[18], result[19]
+			];  
+}
+
 @end
 
 

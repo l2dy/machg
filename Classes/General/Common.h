@@ -975,11 +975,12 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 
 // MARK: -
-@interface NSString ( NSStringPlusComparisons )
+@interface NSString ( NSStringPlusExtensions )
 - (BOOL)	isNotEqualToString:(NSString*)aString;
 - (BOOL)	differsOnlyInCaseFrom:(NSString*)aString;
 - (NSComparisonResult)caseInsensitiveNumericCompare:(NSString*)aString;
 - (BOOL)	endsWithNewLine;
+- (NSString*) SHA1HashString;
 @end
 
 
