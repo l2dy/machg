@@ -997,8 +997,13 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	[[NSUserDefaultsController sharedUserDefaultsController] revertToInitialValues:nil];
 }
 
-- (IBAction) resetPreferences:(id)sender	{ [AppController resetUserPreferences]; }
-- (IBAction) showPreferences:(id)sender		{ [[PreferenceController sharedPrefsWindowController] showWindow:nil]; }
+- (IBAction) resetPreferences:(id)sender			{ [AppController resetUserPreferences]; }
+- (IBAction) showPreferences:(id)sender				{ [[PreferenceController sharedPrefsWindowController] showWindow:nil]; }
+- (IBAction) showAppearancesPreferences:(id)sender
+{
+	[[PreferenceController sharedPrefsWindowController] showWindow:nil];
+	[[PreferenceController sharedPrefsWindowController] switchToViewForIdentifier:@"Appearance" animate:NO];
+}
 
 - (NSArray*) annotationOptionsFromDefaults
 {

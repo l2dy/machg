@@ -220,6 +220,7 @@
 		96D2608012FE420700EB6B70 /* getHTTPSfingerprint.py in Resources */ = {isa = PBXBuildFile; fileRef = 96D2607F12FE420700EB6B70 /* getHTTPSfingerprint.py */; };
 		96D49BB114A47A9B00171F63 /* tb-HistoryViewPane.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D49BB014A47A9B00171F63 /* tb-HistoryViewPane.png */; };
 		96D5FFF81114E83900EE672E /* MyWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D5FFF71114E83900EE672E /* MyWindowController.m */; };
+		96DB12A414B25B1D00710B9A /* AppearancePreferencesMono.png in Resources */ = {isa = PBXBuildFile; fileRef = 96DB12A314B25B1D00710B9A /* AppearancePreferencesMono.png */; };
 		96DB336510D43BCB00BB5B08 /* DifferencesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96DB336310D43BCB00BB5B08 /* DifferencesView.xib */; };
 		96DCCC1E10CD41B100C843C9 /* fmdiff.sh in Resources */ = {isa = PBXBuildFile; fileRef = 96DCCC1B10CD41B100C843C9 /* fmdiff.sh */; };
 		96DCCC1F10CD41B100C843C9 /* localhg in Resources */ = {isa = PBXBuildFile; fileRef = 96DCCC1C10CD41B100C843C9 /* localhg */; };
@@ -575,6 +576,7 @@
 		96D49BB014A47A9B00171F63 /* tb-HistoryViewPane.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tb-HistoryViewPane.png"; sourceTree = "<group>"; };
 		96D5FFF61114E83900EE672E /* MyWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyWindowController.h; path = Classes/Document/MyWindowController.h; sourceTree = "<group>"; };
 		96D5FFF71114E83900EE672E /* MyWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MyWindowController.m; path = Classes/Document/MyWindowController.m; sourceTree = "<group>"; };
+		96DB12A314B25B1D00710B9A /* AppearancePreferencesMono.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AppearancePreferencesMono.png; sourceTree = "<group>"; };
 		96DB336410D43BCB00BB5B08 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/DifferencesView.xib; sourceTree = SOURCE_ROOT; };
 		96DCCC1B10CD41B100C843C9 /* fmdiff.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = fmdiff.sh; path = scripts/fmdiff.sh; sourceTree = SOURCE_ROOT; };
 		96DCCC1C10CD41B100C843C9 /* localhg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = localhg; path = scripts/localhg; sourceTree = SOURCE_ROOT; };
@@ -1231,6 +1233,7 @@
 		9637C8B9118E9C030000C14B /* DividerItems */ = {
 			isa = PBXGroup;
 			children = (
+				96DB12A314B25B1D00710B9A /* AppearancePreferencesMono.png */,
 				9637C8BA118E9C030000C14B /* DividerBackground18.png */,
 				9637C8BB118E9C030000C14B /* DividerBackground24.png */,
 				9637C8BC118E9C030000C14B /* DividerThumb.png */,
@@ -1905,6 +1908,7 @@
 				96D003C214ABDF74007E53C8 /* SidebarClose.png in Resources */,
 				960FF39714ADB4F900A66857 /* SidebarOpen.png in Resources */,
 				969386DC14B097C600C2C307 /* Webviews in Resources */,
+				96DB12A414B25B1D00710B9A /* AppearancePreferencesMono.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
