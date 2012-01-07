@@ -24,9 +24,9 @@
     <object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
       <bool key="EncodedWithXMLCoder">YES</bool>
       <integer value="328"/>
-      <integer value="222"/>
-      <integer value="193"/>
       <integer value="249"/>
+      <integer value="222"/>
+      <integer value="230"/>
     </object>
     <object class="NSArray" key="IBDocument.PluginDependencies">
       <bool key="EncodedWithXMLCoder">YES</bool>
@@ -3719,7 +3719,7 @@
             <object class="IBToolTipAttribute" key="NS.object.0">
               <string key="name">ToolTip</string>
               <reference key="object" ref="589549321"/>
-              <string key="toolTip">Delete Selected Label </string>
+              <string key="toolTip">Outline View</string>
             </object>
           </object>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3731,7 +3731,7 @@
             <object class="IBToolTipAttribute" key="NS.object.0">
               <string key="name">ToolTip</string>
               <reference key="object" ref="593147930"/>
-              <string key="toolTip">Add Revision Label…</string>
+              <string key="toolTip">Browser View</string>
             </object>
           </object>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3745,7 +3745,7 @@
             <object class="IBToolTipAttribute" key="NS.object.0">
               <string key="name">ToolTip</string>
               <reference key="object" ref="60214963"/>
-              <string key="toolTip">Delete Selected Label </string>
+              <string key="toolTip">Table View</string>
             </object>
           </object>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3914,7 +3914,7 @@
             <object class="IBToolTipAttribute" key="NS.object.0">
               <string key="name">ToolTip</string>
               <reference key="object" ref="915324028"/>
-              <string key="toolTip">Add Revision Label…</string>
+              <string key="toolTip">Differences Appearance</string>
             </object>
           </object>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
