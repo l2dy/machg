@@ -121,7 +121,6 @@ NSString* const MHGLogEntryTableParentHighlightColor		= @"LogEntryTableParentHig
 NSString* const MHGLogEntryTableTagHighlightColor			= @"LogEntryTableTagHighlightColor";
 NSString* const MHGLoggingLevelForHGCommands				= @"LoggingLevelForHGCommands";
 NSString* const MHGMacHgLogFileLocation						= @"MacHgLogFileLocation";
-NSString* const MHGDifferencesFileCountCutoff				= @"DifferencesFileCountCutoff";
 NSString* const MHGNumContextLinesForDifferencesWebview 	= @"NumContextLinesForDifferencesWebview";
 NSString* const MHGOnActivationOpen							= @"OnApplicationActivationOpenWhat";
 NSString* const MHGRequireVerifiedServerCertificates		= @"RequireVerifiedServerCertificates";
@@ -141,7 +140,6 @@ NSString* const MHGToolNameForDiffing						= @"ToolNameForDiffing";
 NSString* const MHGToolNameForMerging						= @"ToolNameForMerging";
 NSString* const MHGUseWhichToolForDiffing					= @"UseWhichToolForDiffing";
 NSString* const MHGUseWhichToolForMerging					= @"UseWhichToolForMerging";
-NSString* const MHGViewsHaveIndependentSizes				= @"ViewsHaveIndependentSizes";
 NSString* const MHGWarnAboutBadMercurialConfiguration   	= @"WarnAboutBadMercurialConfiguration";
 
 
@@ -200,7 +198,6 @@ BOOL		ShowRemovedFilesInBrowserFromDefaults()					{ return boolFromDefaultsForKe
 BOOL		ShowResolvedFilesInBrowserFromDefaults()				{ return boolFromDefaultsForKey(MHGShowResolvedFilesInBrowser); }
 BOOL		ShowUnresolvedFilesInBrowserFromDefaults()				{ return boolFromDefaultsForKey(MHGShowUnresolvedFilesInBrowser); }
 BOOL		ShowUntrackedFilesInBrowserFromDefaults()				{ return boolFromDefaultsForKey(MHGShowUntrackedFilesInBrowser); }
-BOOL		ViewsHaveIndependentSizesFromDefaults()					{ return boolFromDefaultsForKey(MHGViewsHaveIndependentSizes); }
 BOOL		WarnAboutBadMercurialConfigurationFromDefaults()		{ return boolFromDefaultsForKey(MHGWarnAboutBadMercurialConfiguration); }
 
 
@@ -239,7 +236,6 @@ OnActivationOpenWhatOption	OnActivationOpenFromDefaults()		    { return enumFrom
 ToolForDiffing				UseWhichToolForDiffingFromDefaults()    { return enumFromDefaultsForKey(MHGUseWhichToolForDiffing); }
 ToolForMerging				UseWhichToolForMergingFromDefaults()    { return enumFromDefaultsForKey(MHGUseWhichToolForMerging); }
 FSViewerNumberDefaultOption	DefaultFilesViewFromDefaults()		    { return enumFromDefaultsForKey(MHGDefaultFilesView); }
-DifferencesCutoffOption		DifferencesFileCountCutoffFromDefaults(){ return enumFromDefaultsForKey(MHGDifferencesFileCountCutoff); }
 
 
 

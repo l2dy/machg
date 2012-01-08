@@ -183,15 +183,6 @@ typedef enum
 
 typedef enum
 {
-	eDifferencesCutoffFiles5		= 0x0,
-	eDifferencesCutoffFiles10		= 0x1,
-	eDifferencesCutoffFiles20		= 0x2,
-	eDifferencesCutoffFilesNoLimit  = 0x3,
-} DifferencesCutoffOption;
-
-
-typedef enum
-{
 	eUseNothingForDiffs		 = -1,
 	eUseFileMergeForDiffs	 = 0,
 	eUseAraxisMergeForDiffs  = 1,
@@ -486,7 +477,6 @@ extern NSString* const MHGDisplayWarningForRollbackFiles;
 extern NSString* const MHGDisplayWarningForTagRemoval;
 extern NSString* const MHGDisplayWarningForUntrackingFiles;
 extern NSString* const MHGDisplayWarningForUpdating;
-extern NSString* const MHGDifferencesFileCountCutoff;
 extern NSString* const MHGFontSizeOfBrowserItems;
 extern NSString* const MHGFontSizeOfDifferencesWebview;
 extern NSString* const MHGHandleCommandDefaults;
@@ -522,7 +512,6 @@ extern NSString* const MHGToolNameForDiffing;
 extern NSString* const MHGToolNameForMerging;
 extern NSString* const MHGUseWhichToolForDiffing;
 extern NSString* const MHGUseWhichToolForMerging;
-extern NSString* const MHGViewsHaveIndependentSizes;
 extern NSString* const MHGWarnAboutBadMercurialConfiguration;
 
 
@@ -571,7 +560,6 @@ BOOL		ShowRemovedFilesInBrowserFromDefaults();
 BOOL		ShowResolvedFilesInBrowserFromDefaults();
 BOOL		ShowUnresolvedFilesInBrowserFromDefaults();
 BOOL		ShowUntrackedFilesInBrowserFromDefaults();
-BOOL		ViewsHaveIndependentSizesFromDefaults();
 BOOL		WarnAboutBadMercurialConfigurationFromDefaults();
 
 
@@ -607,7 +595,6 @@ OnActivationOpenWhatOption		OnActivationOpenFromDefaults();
 ToolForDiffing					UseWhichToolForDiffingFromDefaults();
 ToolForMerging					UseWhichToolForMergingFromDefaults();
 FSViewerNumberDefaultOption		DefaultFilesViewFromDefaults();
-DifferencesCutoffOption			DifferencesFileCountCutoffFromDefaults();
 
 BrowserDoubleClickAction		browserBehaviourDoubleClick();
 BrowserDoubleClickAction		browserBehaviourCommandDoubleClick();
