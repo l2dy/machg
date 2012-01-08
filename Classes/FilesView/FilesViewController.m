@@ -16,6 +16,7 @@
 #import "RenameFileSheetController.h"
 #import "TaskExecutions.h"
 #import "RepositoryData.h"
+#import "JHConcertinaView.h"
 
 
 
@@ -146,6 +147,16 @@
 - (void) repositoryDataIsNew					{ [theFSViewer repositoryDataIsNew]; }
 
 - (IBAction) refreshBrowserContent:(id)sender	{ return [myDocument refreshBrowserContent:myDocument]; }
+
+- (void) restoreConcertinaSplitViewPositions
+{
+	if (IsNotEmpty([concertinaView autosavePositionName]))
+		return;
+	NSString* fileName = [myDocument documentNameForAutosave];
+	NSString* autoSaveNameForConcertina = fstr(@"File:%@:FilesViewConcertinaPositions", fileName);
+	[concertinaView setAutosavePositionName:autoSaveNameForConcertina];
+	[concertinaView restorePositionsFromDefaults];	
+}
 
 
 
@@ -437,7 +448,6 @@ const CGFloat  expandedWidth = 146;	// This is the width of the view in its expa
 	[viewAnimation setDelegate:self];
 	
 	[self maximize:self];
-
 }
 
 - (CGFloat) targetDividerPosition					{ return self.frame.size.width - (minimized ? collapsedWidth : expandedWidth); }
@@ -462,6 +472,7 @@ const CGFloat  expandedWidth = 146;	// This is the width of the view in its expa
 	[viewAnimation setViewAnimations:animationArray];
 	[viewAnimation startAnimation];	
 }
+
 
 
 
@@ -502,6 +513,8 @@ const CGFloat  expandedWidth = 146;	// This is the width of the view in its expa
 	
 	[statusSidebarContent setContentView:collapsedStatusSidebarGroup];
 }
+
+
 
 
 
@@ -553,7 +566,7 @@ const CGFloat  expandedWidth = 146;	// This is the width of the view in its expa
 	[self adjustSubviews];
 }
 
-- (void)splitViewDidResizeSubviews:(NSNotification*)notification
+- (void) splitViewDidResizeSubviews:(NSNotification*)notification
 {
 	[self display];
 }

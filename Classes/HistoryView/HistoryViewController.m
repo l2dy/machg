@@ -95,7 +95,6 @@
 
 	[self openSplitViewPaneToDefaultHeight: self];
 	NSString* fileName = [myDocument documentNameForAutosave];
-	[concertinaView setAutosaveName:fstr(@"File:%@:HistoryViewSplitPositions", fileName)];
 	[logTableView setAutosaveTableColumns:YES];
 	[logTableView setAutosaveName:fstr(@"File:%@:HistoryTableViewColumnPositions", fileName)];
 	[logTableView resetTable:self];
@@ -106,6 +105,17 @@
 	[logTableView setDoubleAction:@selector(diffSelectedRevisions:)];
 	
 	[[myDocument mainWindow] makeFirstResponder:logTableView];
+}
+
+
+- (void) restoreConcertinaSplitViewPositions
+{
+	if (IsNotEmpty([concertinaView autosavePositionName]))
+		return;
+	NSString* fileName = [myDocument documentNameForAutosave];
+	NSString* autoSaveNameForConcertina = fstr(@"File:%@:HistoryViewConcertinaPositions", fileName);
+	[concertinaView setAutosavePositionName:autoSaveNameForConcertina];
+	[concertinaView restorePositionsFromDefaults];	
 }
 
 

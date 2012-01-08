@@ -79,6 +79,7 @@
 - (NSString*) searchCaption;
 - (IBAction) refreshHistoryView:(id)sender;
 - (IBAction) resetHistoryView:(id)sender;
+- (void)	 restoreConcertinaSplitViewPositions;
 - (void)	 scrollToSelected;
 
 

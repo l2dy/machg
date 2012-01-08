@@ -49,8 +49,9 @@
 	IBOutlet FilesViewController* parentContoller;
 	IBOutlet FSViewer*		theFSViewer;
 	IBOutlet StatusSidebarSplitView*	statusSidebarSplitView;
-	IBOutlet NSImageView*	nodeIconWell;	// Image well showing the selected items icon.
-	IBOutlet NSTextField*	nodeInspector;	// Text field showing the selected items attributes.
+	IBOutlet JHConcertinaView*	concertinaView;	// Main concertina view containing the sub panes.
+	IBOutlet NSImageView*	nodeIconWell;		// Image well showing the selected items icon.
+	IBOutlet NSTextField*	nodeInspector;		// Text field showing the selected items attributes.
 	IBOutlet NSButton*		FilesViewBrowserSegement;
 	IBOutlet NSButton*		FilesViewOutlineSegement;
 	IBOutlet NSButton*		FilesViewTableSegement;
@@ -66,6 +67,7 @@
 
 - (void)	 didSwitchViewTo:(FSViewerNum)viewNumber;
 - (IBAction) refreshBrowserContent:(id)sender;
+- (void)	 restoreConcertinaSplitViewPositions;
 
 
 // Actions

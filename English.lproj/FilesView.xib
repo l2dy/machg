@@ -23,10 +23,10 @@
     </object>
     <object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
       <bool key="EncodedWithXMLCoder">YES</bool>
-      <integer value="328"/>
-      <integer value="249"/>
-      <integer value="222"/>
       <integer value="230"/>
+      <integer value="328"/>
+      <integer value="222"/>
+      <integer value="249"/>
     </object>
     <object class="NSArray" key="IBDocument.PluginDependencies">
       <bool key="EncodedWithXMLCoder">YES</bool>
@@ -2551,6 +2551,14 @@
           </object>
           <int key="connectionID">338</int>
         </object>
+        <object class="IBConnectionRecord">
+          <object class="IBOutletConnection" key="connection">
+            <string key="label">concertinaView</string>
+            <reference key="source" ref="453712496"/>
+            <reference key="destination" ref="580918613"/>
+          </object>
+          <int key="connectionID">339</int>
+        </object>
       </object>
       <object class="IBMutableOrderedSet" key="objectRecords">
         <object class="NSArray" key="orderedObjects">
@@ -3970,7 +3978,7 @@
         </object>
       </object>
       <nil key="sourceID"/>
-      <int key="maxID">338</int>
+      <int key="maxID">339</int>
     </object>
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -4491,6 +4499,7 @@
               <string>FilesViewBrowserSegement</string>
               <string>FilesViewOutlineSegement</string>
               <string>FilesViewTableSegement</string>
+              <string>concertinaView</string>
               <string>nodeIconWell</string>
               <string>nodeInspector</string>
               <string>parentContoller</string>
@@ -4502,6 +4511,7 @@
               <string>NSButton</string>
               <string>NSButton</string>
               <string>NSButton</string>
+              <string>JHConcertinaView</string>
               <string>NSImageView</string>
               <string>NSTextField</string>
               <string>FilesViewController</string>
@@ -4516,6 +4526,7 @@
               <string>FilesViewBrowserSegement</string>
               <string>FilesViewOutlineSegement</string>
               <string>FilesViewTableSegement</string>
+              <string>concertinaView</string>
               <string>nodeIconWell</string>
               <string>nodeInspector</string>
               <string>parentContoller</string>
@@ -4535,6 +4546,10 @@
               <object class="IBToOneOutletInfo">
                 <string key="name">FilesViewTableSegement</string>
                 <string key="candidateClassName">NSButton</string>
+              </object>
+              <object class="IBToOneOutletInfo">
+                <string key="name">concertinaView</string>
+                <string key="candidateClassName">JHConcertinaView</string>
               </object>
               <object class="IBToOneOutletInfo">
                 <string key="name">nodeIconWell</string>

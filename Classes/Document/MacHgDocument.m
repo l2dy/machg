@@ -507,9 +507,8 @@
 - (void) recordWindowFrameToDefaults
 {
 	NSString* fileName = [self documentNameForAutosave];
-	BOOL independent = ViewsHaveIndependentSizesFromDefaults();
-	NSString* originKeyForAutoSave = independent ? fstr(@"File:%@:originPos", fileName) : @"General:OriginPos";
-	NSString* rectKeyForAutoSave   = independent ? fstr(@"File:%@:windowPosForView%d", fileName, currentPane_) : @"General:windowPosForView";
+	NSString* originKeyForAutoSave = fstr(@"File:%@:originPos", fileName);
+	NSString* rectKeyForAutoSave   = fstr(@"File:%@:windowPosForView", fileName);
 	NSRect frm = [mainWindow_ frame];
 	NSString* topLeftOriginString = NSStringFromPoint(NSMakePoint(NSMinX(frm), NSMaxY(frm)));	// Record window origin top left
 	NSString* rectString = NSStringFromRect(frm);
@@ -520,9 +519,8 @@
 - (NSRect) getWindowFrameFromDefaults
 {
 	NSString* fileName = [self documentNameForAutosave];
-	BOOL independent = ViewsHaveIndependentSizesFromDefaults();
-	NSString* originKeyForAutoSave = independent ? fstr(@"File:%@:originPos", fileName) : @"General:OriginPos";
-	NSString* rectKeyForAutoSave   = independent ? fstr(@"File:%@:windowPosForView%d", fileName, currentPane_) : @"General:windowPosForView";
+	NSString* originKeyForAutoSave = fstr(@"File:%@:originPos", fileName);
+	NSString* rectKeyForAutoSave   = fstr(@"File:%@:windowPosForView", fileName);
 	NSString* topLeftOriginString  = [[NSUserDefaults standardUserDefaults] objectForKey:originKeyForAutoSave];
 	NSString* rectString           = [[NSUserDefaults standardUserDefaults] objectForKey:rectKeyForAutoSave];
 	if (!topLeftOriginString || !rectString)
@@ -639,28 +637,22 @@
 
 	NSView* newView = [self paneView:newPaneNum];
 	NSRect newFrame = [self newWindowFrameWhenSwitchingContentTo:[newView frame]];	// Figure out new frame size
-	[NSAnimationContext beginGrouping];												// Using an animation grouping because we may be changing the duration
-
-	// With the shift key down, do slow-mo animation
-	if ([[NSApp currentEvent] modifierFlags] & NSShiftKeyMask)
-	    [[NSAnimationContext currentContext] setDuration:1.0];
-	if (![mainWindow_ isVisible])
-		[[NSAnimationContext currentContext] setDuration:0.0];
 	
-	// Call the animator instead of the view / window directly to switch the view out.
-	[[mainContentBox animator] setContentView:newView];
-	[[mainWindow_ animator] setFrame:newFrame display:YES];
+	[mainContentBox setContentView:newView];
+	[mainWindow_ setFrame:newFrame display:YES];
 
-	// After the animation has finished the selected rows in the logtables might actually be out of visible range due to the
-	// resizing of the frame. Thus at the end of the animation make sure you can see the current selection.
+	// After the pane switch the selected rows in the logtables might actually be out of visible range due to the resizing of the
+	// frame. Thus after the switch make sure you can see the current selection. Also once the target pane has been set to the
+	// correct size we can restore and split view positions. 
 	switch (newPaneNum)
 	{
-        case eDifferencesView:  [NSTimer scheduledTimerWithTimeInterval:[[NSAnimationContext currentContext] duration] target:[self theDifferencesView]	selector:@selector(scrollToSelected) userInfo:nil repeats:NO]; break;
-        case eHistoryView:      [NSTimer scheduledTimerWithTimeInterval:[[NSAnimationContext currentContext] duration] target:[self theHistoryView]		selector:@selector(scrollToSelected) userInfo:nil repeats:NO]; break;
+		case eFilesView:		[[self theFilesView]   restoreConcertinaSplitViewPositions];	break;
+        case eHistoryView:      [[self theHistoryView] restoreConcertinaSplitViewPositions];
+								[[self theHistoryView] scrollToSelected];						break;
+        case eDifferencesView:  [[self theDifferencesView] scrollToSelected];					break;
         default:                break;
 	}
 
-	[NSAnimationContext endGrouping];
 	[self recordWindowFrameToDefaults];
 	if ([self quicklookPreviewIsVisible])
 		[[QLPreviewPanel sharedPreviewPanel] reloadData];
