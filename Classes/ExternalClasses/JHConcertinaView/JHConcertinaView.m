@@ -23,8 +23,30 @@
 
 #import "JHConcertinaView.h"
 
-static inline CGFloat square(CGFloat f) { return f*f; }
+static inline CGFloat square(CGFloat f)									{ return f*f; }
+static inline CGFloat lowest(CGFloat val)								{ return (val > 0) ? floor(val) : ceil(val); }
 static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val < min) return min; if (val > max) return max; return val; }
+
+static inline BOOL IsEmpty(id thing)
+{
+    return
+	thing == nil ||
+	([thing respondsToSelector:@selector(length)] && [(NSData*)thing length] == 0) ||
+	([thing respondsToSelector:@selector(count)]  && [(NSArray*)thing count] == 0);
+}
+
+static inline NSString* fstr(NSString* format, ...)
+{
+    va_list args;
+    va_start(args, format);
+    NSString* string = [[NSString alloc] initWithFormat:format arguments:args];
+    va_end(args);
+    return string;
+}
+
+
+
+
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
@@ -183,7 +205,7 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 @implementation JHConcertinaView
 
 - (void) awakeFromNib
-{	
+{
 	NSMutableArray* panes = [[NSMutableArray alloc]init];
 	
 	JHConcertinaSubView* pane;
@@ -224,6 +246,9 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 	dividerDragNumber = -1;
 
 	[self setDelegate:self];
+	awake_ = YES;
+	[self restorePositionsFromDefaults];
+	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(savePositionsToDefaults) name:NSSplitViewDidResizeSubviewsNotification object:self];
 }
 
 
@@ -373,7 +398,6 @@ static inline CGFloat total(CGFloat* array, NSInteger count)
 
 - (void) splitView:(NSSplitView*)splitView resizeSubviewsWithOldSize:(NSSize)oldSize
 {
-	
 	NSInteger count = [arrayOfConcertinaPanes count];
 
 	CGFloat dividerHeights[count];	// The array of the heights of the dividers (this is constant)
@@ -384,45 +408,57 @@ static inline CGFloat total(CGFloat* array, NSInteger count)
 		dividerHeights[i] = [[self pane:i] dividerHeight];
 
 	// Make sure the total height is at least as big as the the divider heights.
-	if (self.frame.size.height < total(dividerHeights, count))
+	CGFloat totalDividerHeights = total(dividerHeights, count); 
+	if (self.frame.size.height < totalDividerHeights)
 	{
 		NSRect newFrame = [self frame];
 		newFrame.origin.y = 0;
-		newFrame.size.height = total(dividerHeights, count);
+		newFrame.size.height = totalDividerHeights;
 		[self setFrame:newFrame];
 	}
 
-	CGFloat  oldTotalHeight = oldSize.height;
-	CGFloat goalTotalHeight = self.frame.size.height;
-
 	// Initilize Pane heights by inserting / deleting the extra space into the first pane
 	for (int i = 0; i<count; i++)
-		paneHeights[i] = [[self pane:i] height];
-	paneHeights[0] += (goalTotalHeight - oldTotalHeight);
-	for (int i = 0; i<count; i++)
-		paneHeights[i] = constrain(paneHeights[i], dividerHeights[i], CGFLOAT_MAX);
-	
+		paneHeights[i] = constrain([[self pane:i] height], dividerHeights[i], CGFLOAT_MAX);	
 	
 	// Iterate until we adjust the paneHeights to yeild the new goal total height
-	while (total(paneHeights, count) != goalTotalHeight)
+	CGFloat goalTotalHeight = self.frame.size.height;
+	while (YES)
 	{
 		CGFloat totalPaneHeights = total(paneHeights, count);
 		CGFloat diff = goalTotalHeight - totalPaneHeights;
+		if (diff == 0)
+			break;
 
+		CGFloat totalContentHeight = totalPaneHeights - totalDividerHeights;
 		BOOL adjusted = NO;
 		for (int i = 0; i<count; i++)
 			if (paneHeights[i] > dividerHeights[i])
 			{
-				paneHeights[i] += diff;
-				adjusted = YES;
-				break;
+				CGFloat change = lowest(diff * (paneHeights[i] - dividerHeights[i]) / totalContentHeight);
+				paneHeights[i] += change;
+				adjusted |= (change != 0);
+				diff -= change;
 			}
-
-		if (!adjusted && diff > 0)
-			paneHeights[1] += diff;
-
+		
+		if (!adjusted)
+			for (int i = 0; i<count; i++)
+				if (paneHeights[i] > dividerHeights[i])
+				{
+					CGFloat available = paneHeights[i] - dividerHeights[i];
+					CGFloat change = (diff > 0) ? diff : -MIN(-diff, available);
+					paneHeights[i] += change;
+					adjusted = YES;
+					diff -= change;
+					if (diff ==0)
+						break;					
+				}
+		
 		for (int i = 0; i<count; i++)
 			paneHeights[i] = constrain(paneHeights[i], dividerHeights[i], CGFLOAT_MAX);
+		
+		if (!adjusted)
+			break;
 	}
 	
 	CGFloat width = [self frame].size.width;
@@ -433,8 +469,12 @@ static inline CGFloat total(CGFloat* array, NSInteger count)
 	{
 		NSRect paneFrame = NSMakeRect(0, yOffset, width, paneHeights[i]);
 		yOffset += paneHeights[i];
-		[[self pane:i] setFrame:paneFrame];
-		[[self pane:i] needsDisplay];
+		JHConcertinaSubView* ithPane = [self pane:i];
+		if (!NSEqualRects(ithPane.frame, paneFrame))
+		{
+			[ithPane setFrame:paneFrame];
+			[ithPane setNeedsDisplay:YES];
+		}
 	}
 }
 
@@ -459,5 +499,48 @@ static inline CGFloat total(CGFloat* array, NSInteger count)
 - (BOOL) isOpaque { return YES; }
 
 
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  SplitView Autosaving
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (NSString*) autosavePositionName					{ return autosavePoistionName_; }
+- (void) setAutosavePositionName:(NSString*)name	{ autosavePoistionName_ = name; }
+
+- (void) savePositionsToDefaults
+{
+	if (!autosavePoistionName_ || !awake_)
+		return;
+	NSMutableDictionary* dict = [[NSMutableDictionary alloc]init];
+	NSInteger count = [arrayOfConcertinaPanes count];	
+	for (int i = 0; i<count; i++)
+		[dict setObject:NSStringFromRect([[self pane:i] frame]) forKey:fstr(@"pane%d",i)];
+	[[NSUserDefaults standardUserDefaults] setObject:dict forKey:autosavePoistionName_];	
+}
+
+- (void) restorePositionsFromDefaults
+{
+	if (!awake_)
+		return;
+	NSDictionary* dict = autosavePoistionName_ ? [[NSUserDefaults standardUserDefaults] dictionaryForKey:autosavePoistionName_] : nil;
+	if (!dict)
+		return;
+
+	NSInteger count = [arrayOfConcertinaPanes count];
+	for (int i = 0; i<count; i++)
+	{
+		NSString* paneFrameString = [dict objectForKey:fstr(@"pane%d",i)];
+		if (paneFrameString)
+		{
+			[[self pane:i] setFrame:NSRectFromString(paneFrameString)];
+			[[self pane:i] setNeedsDisplay:YES];
+		}
+	}
+	[self splitView:self resizeSubviewsWithOldSize:self.frame.size];
+	[self setNeedsDisplay:YES];
+}
 
 @end

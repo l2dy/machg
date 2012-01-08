@@ -52,9 +52,19 @@
 	IBOutlet NSView*	contentView4;
 
 	NSArray*			arrayOfConcertinaPanes;		// Array of JHConcertinaSubView
-	NSInteger			dividerDragNumber;			// Which divider is currently being dragged. -1 is no divider	
+	NSInteger			dividerDragNumber;			// Which divider is currently being dragged. -1 is no divider
+	NSString*			autosavePoistionName_;
+	BOOL				awake_;
 }
 
 - (JHConcertinaSubView*) pane:(NSInteger)paneNumber;
 - (BOOL)isSubviewCollapsed:(NSView*)subview;
+
+
+// Position Autosaving
+- (void) restorePositionsFromDefaults;
+- (void) savePositionsToDefaults;
+- (NSString*) autosavePositionName;
+- (void) setAutosavePositionName:(NSString*)name;
+
 @end
