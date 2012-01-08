@@ -794,6 +794,7 @@ static inline NSString* dupString(NSString* str)		{ return str ? [NSString strin
 																								// determine at run time
 
 static inline NSInteger constrainInteger(NSInteger val, NSInteger min, NSInteger max)	{ if (val < min) return min; if (val > max) return max; return val; }
+static inline CGFloat   constrainFloat(  CGFloat   val, CGFloat   min, CGFloat   max)	{ if (val < min) return min; if (val > max) return max; return val; }
 
 static inline BOOL theSameNumbers(NSNumber* a, NSNumber* b)	{ return (!a && !b) || (a && b && [a isEqualToNumber:b]); }
 static inline BOOL theSameStrings(NSString* a, NSString* b)	{ return (!a && !b) || (a && b && [a isEqualToString:b]); }
