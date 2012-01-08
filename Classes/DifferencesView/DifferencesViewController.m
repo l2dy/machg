@@ -619,5 +619,25 @@
 - (CGFloat)splitView:(NSSplitView*)splitView constrainMinCoordinate:(CGFloat)proposedMinimumPosition ofSubviewAt:(NSInteger)dividerIndex	{ return 100.0; }
 - (CGFloat)splitView:(NSSplitView*)splitView constrainSplitPosition:(CGFloat)proposedPosition		 ofSubviewAt:(NSInteger)dividerIndex	{ return constrainFloat(proposedPosition, 100.0, self.frame.size.height-100.0); }
 
+- (CGFloat) dividerThickness { return 4.0; }
+
+- (void) drawDividerInRect:(NSRect)aRect
+{
+	static NSColor* topBoarderColor = nil;
+	static NSColor* fillStartingColor = nil;
+	static NSColor* fillEndingColor   = nil;
+	static NSGradient* gradient = nil;
+	if (!fillStartingColor)
+	{
+		topBoarderColor   = [NSColor colorWithDeviceRed:158.0/255.0 green:169.0/255.0 blue:180.0/255.0 alpha:1.0];
+		fillStartingColor = [NSColor colorWithDeviceRed:215.0/255.0 green:220.0/255.0 blue:223.0/255.0 alpha:1.0];
+		fillEndingColor   = [NSColor colorWithDeviceRed:198.0/255.0 green:209.0/255.0 blue:220.0/255.0 alpha:1.0];
+		gradient          = [[NSGradient alloc] initWithStartingColor:fillStartingColor endingColor:fillEndingColor];
+	}
+	
+	[gradient drawInRect:aRect angle:90];
+	[topBoarderColor bwDrawPixelThickLineAtPosition:3 withInset:0 inRect:aRect inView:self horizontal:YES flip:YES];
+}
+
 @end
 
