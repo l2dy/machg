@@ -196,7 +196,9 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 	[sheetConfirmationInformativeMessageTextField setAttributedStringValue:[sheetInformativeMessageTextField attributedStringValue]];
 	[self setWindow:theCollapseConfirmationSheet];
 	[NSApp beginSheet:theCollapseConfirmationSheet  modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[[[sheetConfirmationInformativeMessageTextField enclosingScrollView] contentView] scrollToPoint:NSMakePoint(0,0)];
 }
+
 - (IBAction) sheetButtonOkForCollapseConfirmationSheet:(id)sender
 {
 	[theCollapseConfirmationSheet makeFirstResponder:theCollapseConfirmationSheet];	// Make the text fields of the sheet commit any changes they currently have
