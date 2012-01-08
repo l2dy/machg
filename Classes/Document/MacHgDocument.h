@@ -13,23 +13,9 @@
 #import "FSViewer.h"
 #import <Quartz/Quartz.h>	// Quartz framework provides the QLPreviewPanel public API
 
+@class SidebarSplitView;
 @class LoadedInitializationData;
 @protocol MonitorFSEventListenerProtocol;
-
-
-@interface RepositoryPaths : NSObject
-{
-	NSArray* absolutePaths_;	// an array of absolute path NSStrings
-	NSString* rootPath_;		// the absolute root of the repository
-}
-
-@property (readwrite,assign) NSArray*		absolutePaths;
-@property (readwrite,assign) NSString*		rootPath;
-
-+ (RepositoryPaths*) fromPaths:(NSArray*)theAbsolutePaths withRootPath:(NSString*)theRootPath;
-+ (RepositoryPaths*) fromPath:(NSString*)absolutePath     withRootPath:(NSString*)theRootPath;
-+ (RepositoryPaths*) fromRootPath:(NSString*)theRootPath;
-@end
 
 
 
@@ -44,7 +30,7 @@
 {
 	IBOutlet NSBox*					mainContentBox;				// This is the view into which the panes will be attached.
 	IBOutlet Sidebar*				sidebar_;					// The sidebar containing all of the repository references in the document
-	IBOutlet BWSplitView*			mainSplitView;				// The splitview containing the sidebar on the lhs and the pane on the rhs
+	IBOutlet SidebarSplitView*		mainSplitView;				// The splitview containing the sidebar on the lhs and the pane on the rhs
 	IBOutlet NSWindow*				mainWindow_;
 	IBOutlet ThickSplitView*		sidebarAndInformation_;		// The thick split view inside the lhs sidebar as a whole.
 	IBOutlet NSSearchField*			toolbarSearchField_;		// This is the search field inside the toolbar item inside the toolbar.
@@ -436,6 +422,14 @@
 @end
 
 
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: LoadedInitializationData
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
 @interface LoadedInitializationData : NSObject
 {
   @public
@@ -446,3 +440,44 @@
 }
 
 @end
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: SidebarSplitView
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+@interface SidebarSplitView : NSSplitView <NSSplitViewDelegate>
+{
+	IBOutlet NSView*	sidebarGroup;
+	IBOutlet NSView*	contentGroup;
+	IBOutlet NSView*	resizeThumb;
+}
+@end
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: RepositoryPaths
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+@interface RepositoryPaths : NSObject
+{
+	NSArray* absolutePaths_;	// an array of absolute path NSStrings
+	NSString* rootPath_;		// the absolute root of the repository
+}
+
+@property (readwrite,assign) NSArray*		absolutePaths;
+@property (readwrite,assign) NSString*		rootPath;
+
++ (RepositoryPaths*) fromPaths:(NSArray*)theAbsolutePaths withRootPath:(NSString*)theRootPath;
++ (RepositoryPaths*) fromPath:(NSString*)absolutePath     withRootPath:(NSString*)theRootPath;
++ (RepositoryPaths*) fromRootPath:(NSString*)theRootPath;
+@end
+

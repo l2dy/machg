@@ -12,6 +12,7 @@
 #import "LogTableView.h"
 #import "FSViewer.h"
 
+@class DifferencesSplitView;
 
 
 
@@ -46,7 +47,7 @@
 	IBOutlet DifferencesViewController*  parentController;
 	MacHgDocument*				myDocument;
 
-	IBOutlet BWSplitView*		mainSplitView;
+	IBOutlet DifferencesSplitView*	mainSplitView;
 
 	IBOutlet NSTextField*		baseHeaderMessage;
 	IBOutlet NSTextField*		compareHeaderMessage;
@@ -92,8 +93,9 @@
 @property (readwrite,assign) MacHgDocument*  myDocument;
 @property (readwrite,assign) FSViewer*  theFSViewer;
 
-- (void) unload;
 
+- (void)		restoreDifferencesSplitViewPositions;
+- (void)		unload;
 
 
 - (IBAction)	validateButtons:(id)sender;
@@ -144,3 +146,21 @@
 
 
 @end
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: DifferencesSplitView
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+@interface DifferencesSplitView : NSSplitView <NSSplitViewDelegate>
+{
+	IBOutlet NSView*	logTablesGroup;
+	IBOutlet NSView*	filesViewerGroup;
+}
+
+@end
+

@@ -123,8 +123,6 @@
 		9637C8C9118E9C5A0000C14B /* NSString+SymlinksAndAliases.m in Sources */ = {isa = PBXBuildFile; fileRef = 9637C8C8118E9C5A0000C14B /* NSString+SymlinksAndAliases.m */; };
 		963D3F2B10E7A24D00FD536D /* ProcessListController.m in Sources */ = {isa = PBXBuildFile; fileRef = 963D3F2A10E7A24D00FD536D /* ProcessListController.m */; };
 		963DBC8510C7CEF600189853 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 963DBC8410C7CEF600189853 /* main.m */; };
-		963DBD5810C7D03100189853 /* BWToolkitFramework.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 963DBD5710C7D03100189853 /* BWToolkitFramework.framework */; };
-		963DBD5C10C7D06400189853 /* BWToolkitFramework.framework in Copy Files (Frameworks) */ = {isa = PBXBuildFile; fileRef = 963DBD5710C7D03100189853 /* BWToolkitFramework.framework */; };
 		963DBDBB10C7D34A00189853 /* Common.m in Sources */ = {isa = PBXBuildFile; fileRef = 963DBDBA10C7D34A00189853 /* Common.m */; };
 		963DBE1210C7D54800189853 /* Sidebar.m in Sources */ = {isa = PBXBuildFile; fileRef = 963DBE0B10C7D54800189853 /* Sidebar.m */; };
 		963DBE1310C7D54800189853 /* SidebarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 963DBE0D10C7D54800189853 /* SidebarCell.m */; };
@@ -222,6 +220,10 @@
 		96D5FFF81114E83900EE672E /* MyWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D5FFF71114E83900EE672E /* MyWindowController.m */; };
 		96DB12A414B25B1D00710B9A /* AppearancePreferencesMono.png in Resources */ = {isa = PBXBuildFile; fileRef = 96DB12A314B25B1D00710B9A /* AppearancePreferencesMono.png */; };
 		96DB336510D43BCB00BB5B08 /* DifferencesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96DB336310D43BCB00BB5B08 /* DifferencesView.xib */; };
+		96DC134A14B92A9700A6E61B /* VerticalDividerThumb.png in Resources */ = {isa = PBXBuildFile; fileRef = 96DC134914B92A9700A6E61B /* VerticalDividerThumb.png */; };
+		96DC149914B95D6900A6E61B /* StandardSplitView.m in Sources */ = {isa = PBXBuildFile; fileRef = 96DC149814B95D6900A6E61B /* StandardSplitView.m */; };
+		96DC168314BA0EDF00A6E61B /* PopupActionButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 96DC168214BA0EDF00A6E61B /* PopupActionButton.m */; };
+		96DC18A514BACCE000A6E61B /* AddDropButtonSizeSmall.png in Resources */ = {isa = PBXBuildFile; fileRef = 96DC18A414BACCE000A6E61B /* AddDropButtonSizeSmall.png */; };
 		96DCCC1E10CD41B100C843C9 /* fmdiff.sh in Resources */ = {isa = PBXBuildFile; fileRef = 96DCCC1B10CD41B100C843C9 /* fmdiff.sh */; };
 		96DCCC1F10CD41B100C843C9 /* localhg in Resources */ = {isa = PBXBuildFile; fileRef = 96DCCC1C10CD41B100C843C9 /* localhg */; };
 		96DCCC2010CD41B100C843C9 /* spawnshellatpath in Resources */ = {isa = PBXBuildFile; fileRef = 96DCCC1D10CD41B100C843C9 /* spawnshellatpath */; };
@@ -251,7 +253,6 @@
 			dstSubfolderSpec = 10;
 			files = (
 				962ED0B61187887C0072211F /* Sparkle.framework in Copy Files (Frameworks) */,
-				963DBD5C10C7D06400189853 /* BWToolkitFramework.framework in Copy Files (Frameworks) */,
 			);
 			name = "Copy Files (Frameworks)";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -434,7 +435,6 @@
 		963D3F2910E7A24D00FD536D /* ProcessListController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ProcessListController.h; sourceTree = "<group>"; };
 		963D3F2A10E7A24D00FD536D /* ProcessListController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = ProcessListController.m; sourceTree = "<group>"; };
 		963DBC8410C7CEF600189853 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = main.m; path = Classes/main.m; sourceTree = "<group>"; };
-		963DBD5710C7D03100189853 /* BWToolkitFramework.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = BWToolkitFramework.framework; path = LinkedLibraries/BWToolkit/BWToolkitFramework.framework; sourceTree = "<group>"; };
 		963DBDB910C7D34A00189853 /* Common.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Common.h; sourceTree = "<group>"; };
 		963DBDBA10C7D34A00189853 /* Common.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Common.m; sourceTree = "<group>"; };
 		963DBE0B10C7D54800189853 /* Sidebar.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = Sidebar.m; sourceTree = "<group>"; };
@@ -578,6 +578,12 @@
 		96D5FFF71114E83900EE672E /* MyWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MyWindowController.m; path = Classes/Document/MyWindowController.m; sourceTree = "<group>"; };
 		96DB12A314B25B1D00710B9A /* AppearancePreferencesMono.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AppearancePreferencesMono.png; sourceTree = "<group>"; };
 		96DB336410D43BCB00BB5B08 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/DifferencesView.xib; sourceTree = SOURCE_ROOT; };
+		96DC134914B92A9700A6E61B /* VerticalDividerThumb.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = VerticalDividerThumb.png; sourceTree = "<group>"; };
+		96DC149714B95D6900A6E61B /* StandardSplitView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StandardSplitView.h; sourceTree = "<group>"; };
+		96DC149814B95D6900A6E61B /* StandardSplitView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StandardSplitView.m; sourceTree = "<group>"; };
+		96DC168114BA0EDF00A6E61B /* PopupActionButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopupActionButton.h; sourceTree = "<group>"; };
+		96DC168214BA0EDF00A6E61B /* PopupActionButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopupActionButton.m; sourceTree = "<group>"; };
+		96DC18A414BACCE000A6E61B /* AddDropButtonSizeSmall.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = AddDropButtonSizeSmall.png; path = ButtonIcons/AddDropButtonSizeSmall.png; sourceTree = "<group>"; };
 		96DCCC1B10CD41B100C843C9 /* fmdiff.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = fmdiff.sh; path = scripts/fmdiff.sh; sourceTree = SOURCE_ROOT; };
 		96DCCC1C10CD41B100C843C9 /* localhg */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; name = localhg; path = scripts/localhg; sourceTree = SOURCE_ROOT; };
 		96DCCC1D10CD41B100C843C9 /* spawnshellatpath */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; name = spawnshellatpath; path = scripts/spawnshellatpath; sourceTree = SOURCE_ROOT; };
@@ -614,7 +620,6 @@
 			files = (
 				43901158135E851B0004EB98 /* Cocoa.framework in Frameworks */,
 				43901159135E851B0004EB98 /* WebKit.framework in Frameworks */,
-				963DBD5810C7D03100189853 /* BWToolkitFramework.framework in Frameworks */,
 				9624175E1180A3570077F655 /* QuartzCore.framework in Frameworks */,
 				962ED0AC1187885A0072211F /* Sparkle.framework in Frameworks */,
 				969BDE151196B347007AA6D9 /* ScriptingBridge.framework in Frameworks */,
@@ -745,7 +750,6 @@
 			isa = PBXGroup;
 			children = (
 				962ED0AB1187885A0072211F /* Sparkle.framework */,
-				963DBD5710C7D03100189853 /* BWToolkitFramework.framework */,
 			);
 			name = "Third Party Frameworks";
 			sourceTree = "<group>";
@@ -910,6 +914,7 @@
 		961D5167115BC11A0064A4DA /* ButtonIcons */ = {
 			isa = PBXGroup;
 			children = (
+				96DC18A414BACCE000A6E61B /* AddDropButtonSizeSmall.png */,
 				96138846116B437D0022F368 /* ActionDrop.png */,
 				9637C8C2118E9C300000C14B /* ActionDropButtonSizeSmall.png */,
 				9610639A117C6E4000FF7EB2 /* ActionDrop24.png */,
@@ -1241,6 +1246,7 @@
 				96D001D914AA68A5007E53C8 /* FilesViewOutline.png */,
 				96D001DA14AA68A5007E53C8 /* FilesViewTable.png */,
 				9637C8BD118E9C030000C14B /* SmallDividerThumb.png */,
+				96DC134914B92A9700A6E61B /* VerticalDividerThumb.png */,
 			);
 			path = DividerItems;
 			sourceTree = "<group>";
@@ -1369,12 +1375,14 @@
 				96E3E6191477CD820077503D /* GradientBox */,
 				9606EE15115670FD00968DE8 /* Help Button */,
 				9672AC57114B796A00312CE2 /* OptionController */,
+				96DC168014BA0EDF00A6E61B /* PopupActionButton */,
 				96DF426211B48DC700D986FF /* RadialGradiantBox */,
 				96DF436E11B5209C00D986FF /* RelativePositionedBox */,
 				9672AC5A114B796A00312CE2 /* ResultsWindow */,
 				9672AC5D114B796A00312CE2 /* SingleTimedQueue */,
 				9618B3501349B6CA00C38570 /* ScrollToChangesetPanelController */,
 				9637C8B0118E9BB40000C14B /* ScrollToForLogTable */,
+				96DC149614B95D6900A6E61B /* StandardSplitView */,
 				96F5A4DB11A8185800707404 /* TextButtonCell */,
 				9672AC60114B796A00312CE2 /* Titled Button */,
 			);
@@ -1656,6 +1664,24 @@
 			name = Badges;
 			sourceTree = "<group>";
 		};
+		96DC149614B95D6900A6E61B /* StandardSplitView */ = {
+			isa = PBXGroup;
+			children = (
+				96DC149714B95D6900A6E61B /* StandardSplitView.h */,
+				96DC149814B95D6900A6E61B /* StandardSplitView.m */,
+			);
+			path = StandardSplitView;
+			sourceTree = "<group>";
+		};
+		96DC168014BA0EDF00A6E61B /* PopupActionButton */ = {
+			isa = PBXGroup;
+			children = (
+				96DC168114BA0EDF00A6E61B /* PopupActionButton.h */,
+				96DC168214BA0EDF00A6E61B /* PopupActionButton.m */,
+			);
+			path = PopupActionButton;
+			sourceTree = "<group>";
+		};
 		96DCCC1A10CD41B100C843C9 /* scripts */ = {
 			isa = PBXGroup;
 			children = (
@@ -1909,6 +1935,8 @@
 				960FF39714ADB4F900A66857 /* SidebarOpen.png in Resources */,
 				969386DC14B097C600C2C307 /* Webviews in Resources */,
 				96DB12A414B25B1D00710B9A /* AppearancePreferencesMono.png in Resources */,
+				96DC134A14B92A9700A6E61B /* VerticalDividerThumb.png in Resources */,
+				96DC18A514BACCE000A6E61B /* AddDropButtonSizeSmall.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2029,6 +2057,8 @@
 				96D05C9414945900000D513E /* FSViewerTable.m in Sources */,
 				96C8964A149F4106007F7831 /* CTBadge.m in Sources */,
 				968D76E114A66A85007E6AA2 /* JHConcertinaView.m in Sources */,
+				96DC149914B95D6900A6E61B /* StandardSplitView.m in Sources */,
+				96DC168314BA0EDF00A6E61B /* PopupActionButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

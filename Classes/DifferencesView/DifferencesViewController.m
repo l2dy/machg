@@ -71,12 +71,6 @@
 
 
 
-
-
-- (IBAction) openSplitViewPanesToDefaultHeights: (id)sender
-{
-}
-
 - (id) initWithFrame:(NSRect)frameRect
 {
 	return [super initWithFrame:frameRect];
@@ -90,8 +84,6 @@
 - (void) awakeFromNib
 {
 	[self setMyDocumentFromParent];
-	[self openSplitViewPanesToDefaultHeights: self];
-
 	[theFSViewer setAreNodesVirtual:YES];
 	[mainSplitView setPosition:400 ofDividerAtIndex:0];
 	
@@ -108,6 +100,15 @@
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	if (rootPath)
 		[theFSViewer refreshBrowserPaths:[RepositoryPaths fromRootPath:rootPath] finishingBlock:nil];
+}
+
+- (void) restoreDifferencesSplitViewPositions
+{
+	if (IsNotEmpty([mainSplitView autosaveName]))
+		return;
+	NSString* fileName = [myDocument documentNameForAutosave];
+	NSString* autoSaveNameForSplitView = fstr(@"File:%@:DiffrencesViewMainSplitViewPosition", fileName);
+	[mainSplitView setAutosaveName:autoSaveNameForSplitView];
 }
 
 - (BOOL) controlsMainFSViewer	{ return NO; }
@@ -597,3 +598,26 @@
 
 
 @end
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: DifferencesSplitView
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+
+@implementation DifferencesSplitView
+
+- (void) awakeFromNib
+{
+	[self setDelegate:self];
+}
+
+- (CGFloat)splitView:(NSSplitView*)splitView constrainMaxCoordinate:(CGFloat)proposedMaximumPosition ofSubviewAt:(NSInteger)dividerIndex	{ return self.frame.size.height-100.0; }
+- (CGFloat)splitView:(NSSplitView*)splitView constrainMinCoordinate:(CGFloat)proposedMinimumPosition ofSubviewAt:(NSInteger)dividerIndex	{ return 100.0; }
+- (CGFloat)splitView:(NSSplitView*)splitView constrainSplitPosition:(CGFloat)proposedPosition		 ofSubviewAt:(NSInteger)dividerIndex	{ return constrainFloat(proposedPosition, 100.0, self.frame.size.height-100.0); }
+
+@end
+

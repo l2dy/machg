@@ -61,35 +61,6 @@
 
 
 
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
-// MARK: RepositoryPaths
-// -----------------------------------------------------------------------------------------------------------------------------------------
-
-@implementation RepositoryPaths : NSObject
-
-@synthesize absolutePaths = absolutePaths_;
-@synthesize rootPath = rootPath_;
-
-+ (RepositoryPaths*) fromPaths:(NSArray*)theAbsolutePaths withRootPath:(NSString*)theRootPath
-{
-	RepositoryPaths* repositoryPaths = [RepositoryPaths alloc];
-	[repositoryPaths setAbsolutePaths:theAbsolutePaths];
-	[repositoryPaths setRootPath:theRootPath];
-	return repositoryPaths;
-}
-+ (RepositoryPaths*) fromPath:(NSString*)absolutePath  withRootPath:(NSString*)theRootPath
-{
-	RepositoryPaths* repositoryPaths = [RepositoryPaths alloc];
-	[repositoryPaths setAbsolutePaths:[NSArray arrayWithObject:absolutePath]];
-	[repositoryPaths setRootPath:theRootPath];
-	return repositoryPaths;
-}
-+ (RepositoryPaths*) fromRootPath:(NSString*)theRootPath { return [RepositoryPaths fromPath:theRootPath withRootPath:theRootPath]; }
-@end
-
-
-
 @interface MacHgDocument (PrivateAPI)
 - (void) initializeRepositoryData;
 - (void) populateOutlineContents;
@@ -218,12 +189,12 @@
 	
 	currentPane_ = -1;
 	[informationAndActivityBox_ setContentView:informationBox_];
-	[mainContentBox setWantsLayer:NO];		// We don't do cross fades since it speeds things up not to have the animation on. THe
+	[mainContentBox setWantsLayer:NO];		// We don't do cross fades since it speeds things up not to have the animation on. The
 											// frames are still animated when going from one view to another.
-	[mainSplitView setPosition:200 ofDividerAtIndex:0];
 	[[mainWindow_ windowController] setShouldCascadeWindows: NO];
 	NSString* fileName = [self documentNameForAutosave];
 	[sidebarAndInformation_ setAutosaveName:fstr(@"File:%@:LHSSidebarSplitPosition", fileName)];
+	[mainSplitView setAutosaveName:fstr(@"File:%@:LHSMainSidebarSplitPosition", fileName)];
 
 	// Set up search field and set size of NSMenuItems (I can't seem to find a way to do this through IB)
 	toolbarSearchFieldCategory_ = eSearchByKeyword;
@@ -649,7 +620,8 @@
 		case eFilesView:		[[self theFilesView]   restoreConcertinaSplitViewPositions];	break;
         case eHistoryView:      [[self theHistoryView] restoreConcertinaSplitViewPositions];
 								[[self theHistoryView] scrollToSelected];						break;
-        case eDifferencesView:  [[self theDifferencesView] scrollToSelected];					break;
+        case eDifferencesView:  [[self theDifferencesView] restoreDifferencesSplitViewPositions];
+								[[self theDifferencesView] scrollToSelected];					break;
         default:                break;
 	}
 
@@ -2525,6 +2497,83 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 
 
 
-#pragma mark -
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: LoadedInitializationData
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+
 @implementation  LoadedInitializationData
+@end
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: SidebarSplitView
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+
+@implementation SidebarSplitView
+
+- (void) awakeFromNib
+{
+	[self setDelegate:self];
+}
+
+- (CGFloat)splitView:(NSSplitView*)splitView constrainMaxCoordinate:(CGFloat)proposedMaximumPosition ofSubviewAt:(NSInteger)dividerIndex	{ return 400.0; }
+- (CGFloat)splitView:(NSSplitView*)splitView constrainMinCoordinate:(CGFloat)proposedMinimumPosition ofSubviewAt:(NSInteger)dividerIndex	{ return 150.0; }
+- (CGFloat)splitView:(NSSplitView*)splitView constrainSplitPosition:(CGFloat)proposedPosition		 ofSubviewAt:(NSInteger)dividerIndex	{ return constrainFloat(proposedPosition, 150.0, 400.0); }
+
+- (void) splitView:(NSSplitView*)splitView resizeSubviewsWithOldSize:(NSSize)oldSize
+{	
+	NSRect sidebarGroupFrame	= [sidebarGroup frame];
+	NSRect contentGroupFrame	= [contentGroup frame];
+	sidebarGroupFrame.size.width = constrainFloat(sidebarGroupFrame.size.width, 150.0, 400.0);
+	contentGroupFrame.size.width = self.frame.size.width - sidebarGroupFrame.size.width;
+	contentGroupFrame.origin.x = sidebarGroupFrame.size.width;
+	[contentGroup setFrame:contentGroupFrame];
+	[sidebarGroup setFrame:sidebarGroupFrame];
+	[self adjustSubviews];
+}
+
+- (NSRect) splitView:(NSSplitView*)splitView additionalEffectiveRectOfDividerAtIndex:(NSInteger)dividerIndex
+{
+	return [resizeThumb convertRect:[resizeThumb bounds] toView:splitView]; 
+}
+
+@end
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: RepositoryPaths
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+
+@implementation RepositoryPaths
+
+@synthesize absolutePaths = absolutePaths_;
+@synthesize rootPath = rootPath_;
+
++ (RepositoryPaths*) fromPaths:(NSArray*)theAbsolutePaths withRootPath:(NSString*)theRootPath
+{
+	RepositoryPaths* repositoryPaths = [RepositoryPaths alloc];
+	[repositoryPaths setAbsolutePaths:theAbsolutePaths];
+	[repositoryPaths setRootPath:theRootPath];
+	return repositoryPaths;
+}
++ (RepositoryPaths*) fromPath:(NSString*)absolutePath  withRootPath:(NSString*)theRootPath
+{
+	RepositoryPaths* repositoryPaths = [RepositoryPaths alloc];
+	[repositoryPaths setAbsolutePaths:[NSArray arrayWithObject:absolutePath]];
+	[repositoryPaths setRootPath:theRootPath];
+	return repositoryPaths;
+}
++ (RepositoryPaths*) fromRootPath:(NSString*)theRootPath { return [RepositoryPaths fromPath:theRootPath withRootPath:theRootPath]; }
 @end

@@ -12,9 +12,7 @@
     </object>
     <array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
       <integer value="843"/>
-      <integer value="838"/>
-      <integer value="850"/>
-      <integer value="1023"/>
+      <integer value="861"/>
     </array>
     <array key="IBDocument.PluginDependencies">
       <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -34,7 +32,7 @@
         <bool key="NSSharedInstance">YES</bool>
       </object>
       <object class="NSView" id="945562250">
-        <reference key="NSNextResponder"/>
+        <nil key="NSNextResponder"/>
         <int key="NSvFlags">256</int>
         <array class="NSMutableArray" key="NSSubviews">
           <object class="NSSplitView" id="470152575">
@@ -46,7 +44,6 @@
           </object>
         </array>
         <string key="NSFrameSize">{822, 631}</string>
-        <reference key="NSSuperview"/>
       </object>
       <object class="NSMenu" id="886653824">
         <string key="NSTitle"/>
@@ -677,7 +674,7 @@
         <reference key="NSContentView" ref="386087576"/>
       </object>
       <object class="NSCustomView" id="192058997">
-        <reference key="NSNextResponder"/>
+        <nil key="NSNextResponder"/>
         <int key="NSvFlags">274</int>
         <array class="NSMutableArray" key="NSSubviews">
           <object class="NSBox" id="48728709">
@@ -1078,17 +1075,15 @@
             <reference key="NSHScroller" ref="258795551"/>
             <reference key="NSContentView" ref="776908956"/>
             <reference key="NSHeaderClipView" ref="776487323"/>
-            <reference key="NSCornerView" ref="270703659"/>
             <bytes key="NSScrollAmts">QSAAAEEgAABBmAAAQZgAAA</bytes>
           </object>
         </array>
         <string key="NSFrameSize">{823, 610}</string>
-        <reference key="NSSuperview"/>
         <string key="NSReuseIdentifierKey">_NS:1109</string>
         <string key="NSClassName">NSView</string>
       </object>
       <object class="NSBox" id="957515287">
-        <nil key="NSNextResponder"/>
+        <reference key="NSNextResponder"/>
         <int key="NSvFlags">10</int>
         <array class="NSMutableArray" key="NSSubviews">
           <object class="NSView" id="951636192">
@@ -1134,20 +1129,24 @@
                       <object class="NSButton" id="54953186">
                         <reference key="NSNextResponder" ref="734468445"/>
                         <int key="NSvFlags">265</int>
-                        <string key="NSFrame">{{4, 2}, {32, 25}}</string>
+                        <string key="NSFrame">{{4, -2}, {32, 28}}</string>
                         <reference key="NSSuperview" ref="734468445"/>
                         <bool key="NSEnabled">YES</bool>
                         <object class="NSButtonCell" key="NSCell" id="87353079">
                           <int key="NSCellFlags">-2080244224</int>
-                          <int key="NSCellFlags2">134348800</int>
+                          <int key="NSCellFlags2">134217728</int>
                           <string key="NSContents"/>
-                          <reference key="NSSupport" ref="26"/>
+                          <object class="NSFont" key="NSSupport" id="1034810104">
+                            <string key="NSName">LucidaGrande</string>
+                            <double key="NSSize">13</double>
+                            <int key="NSfFlags">1040</int>
+                          </object>
                           <reference key="NSControlView" ref="54953186"/>
-                          <int key="NSButtonFlags">-2038677249</int>
+                          <int key="NSButtonFlags">-2030288641</int>
                           <int key="NSButtonFlags2">34</int>
                           <object class="NSCustomResource" key="NSNormalImage">
                             <string key="NSClassName">NSImage</string>
-                            <string key="NSResourceName">ActionDrop24</string>
+                            <string key="NSResourceName">ActionDropButtonSizeSmall</string>
                           </object>
                           <string key="NSAlternateContents"/>
                           <string key="NSKeyEquivalent"/>
@@ -1194,11 +1193,7 @@
                   <int key="NSCellFlags">68288064</int>
                   <int key="NSCellFlags2">272630784</int>
                   <string key="NSContents">History</string>
-                  <object class="NSFont" key="NSSupport" id="1034810104">
-                    <string key="NSName">LucidaGrande</string>
-                    <double key="NSSize">13</double>
-                    <int key="NSfFlags">1040</int>
-                  </object>
+                  <reference key="NSSupport" ref="1034810104"/>
                   <reference key="NSControlView" ref="233500455"/>
                   <reference key="NSBackgroundColor" ref="148478507"/>
                   <reference key="NSTextColor" ref="490767243"/>
@@ -1210,6 +1205,7 @@
           </object>
         </array>
         <string key="NSFrameSize">{824, 24}</string>
+        <reference key="NSSuperview"/>
         <string key="NSOffsets">{0, 0}</string>
         <object class="NSTextFieldCell" key="NSTitleCell">
           <int key="NSCellFlags">67239424</int>
@@ -1408,7 +1404,7 @@
         </object>
       </object>
       <object class="NSBox" id="944921791">
-        <reference key="NSNextResponder"/>
+        <nil key="NSNextResponder"/>
         <int key="NSvFlags">10</int>
         <array class="NSMutableArray" key="NSSubviews">
           <object class="NSView" id="958889504">
@@ -1570,7 +1566,6 @@
           </object>
         </array>
         <string key="NSFrameSize">{824, 24}</string>
-        <reference key="NSSuperview"/>
         <string key="NSOffsets">{0, 0}</string>
         <object class="NSTextFieldCell" key="NSTitleCell">
           <int key="NSCellFlags">67239424</int>
@@ -2979,6 +2974,7 @@
             <string key="mainMenuRevertAllFiles:">id</string>
             <string key="mainMenuStripChangesets:">id</string>
             <string key="refreshHistoryView:">id</string>
+            <string key="resetHistoryView:">id</string>
             <string key="toolbarCommitFiles:">id</string>
             <string key="toolbarDiffFiles:">id</string>
             <string key="toolbarRevertFiles:">id</string>
@@ -3062,6 +3058,10 @@
             </object>
             <object class="IBActionInfo" key="refreshHistoryView:">
               <string key="name">refreshHistoryView:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="resetHistoryView:">
+              <string key="name">resetHistoryView:</string>
               <string key="candidateClassName">id</string>
             </object>
             <object class="IBActionInfo" key="toolbarCommitFiles:">
@@ -3222,6 +3222,7 @@
           <dictionary class="NSMutableDictionary" key="actions">
             <string key="labelTableDoubleClick:">id</string>
             <string key="labelTableSingleClick:">id</string>
+            <string key="refreshTable:">id</string>
             <string key="resetTable:">id</string>
           </dictionary>
           <dictionary class="NSMutableDictionary" key="actionInfosByName">
@@ -3231,6 +3232,10 @@
             </object>
             <object class="IBActionInfo" key="labelTableSingleClick:">
               <string key="name">labelTableSingleClick:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="refreshTable:">
+              <string key="name">refreshTable:</string>
               <string key="candidateClassName">id</string>
             </object>
             <object class="IBActionInfo" key="resetTable:">
@@ -3712,7 +3717,7 @@
             <string key="informationAndActivityBox_">NSBox</string>
             <string key="informationBox_">NSBox</string>
             <string key="mainContentBox">NSBox</string>
-            <string key="mainSplitView">BWSplitView</string>
+            <string key="mainSplitView">SidebarSplitView</string>
             <string key="mainWindow_">NSWindow</string>
             <string key="sidebarAndInformation_">ThickSplitView</string>
             <string key="sidebar_">Sidebar</string>
@@ -3739,7 +3744,7 @@
             </object>
             <object class="IBToOneOutletInfo" key="mainSplitView">
               <string key="name">mainSplitView</string>
-              <string key="candidateClassName">BWSplitView</string>
+              <string key="candidateClassName">SidebarSplitView</string>
             </object>
             <object class="IBToOneOutletInfo" key="mainWindow_">
               <string key="name">mainWindow_</string>
@@ -3782,7 +3787,7 @@
               <string key="candidateClassName">NSView</string>
             </object>
           </dictionary>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
+          <object class="IBClassDescriptionSource" key="sourceIdentifier" id="756485161">
             <string key="majorKey">IBProjectSource</string>
             <string key="minorKey">Classes/Document/MacHgDocument.h</string>
           </object>
@@ -3994,6 +3999,30 @@
           </object>
         </object>
         <object class="IBPartialClassDescription">
+          <string key="className">SidebarSplitView</string>
+          <string key="superclassName">NSSplitView</string>
+          <dictionary class="NSMutableDictionary" key="outlets">
+            <string key="contentGroup">NSView</string>
+            <string key="resizeThumb">NSView</string>
+            <string key="sidebarGroup">NSView</string>
+          </dictionary>
+          <dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+            <object class="IBToOneOutletInfo" key="contentGroup">
+              <string key="name">contentGroup</string>
+              <string key="candidateClassName">NSView</string>
+            </object>
+            <object class="IBToOneOutletInfo" key="resizeThumb">
+              <string key="name">resizeThumb</string>
+              <string key="candidateClassName">NSView</string>
+            </object>
+            <object class="IBToOneOutletInfo" key="sidebarGroup">
+              <string key="name">sidebarGroup</string>
+              <string key="candidateClassName">NSView</string>
+            </object>
+          </dictionary>
+          <reference key="sourceIdentifier" ref="756485161"/>
+        </object>
+        <object class="IBPartialClassDescription">
           <string key="className">ThickSplitView</string>
           <string key="superclassName">NSSplitView</string>
           <object class="IBClassDescriptionSource" key="sourceIdentifier">
@@ -4003,25 +4032,6 @@
         </object>
       </array>
       <array class="NSMutableArray" key="referencedPartialClassDescriptionsV3.2+">
-        <object class="IBPartialClassDescription">
-          <string key="className">BWSplitView</string>
-          <string key="superclassName">NSSplitView</string>
-          <object class="NSMutableDictionary" key="actions">
-            <string key="NS.key.0">toggleCollapse:</string>
-            <string key="NS.object.0">id</string>
-          </object>
-          <object class="NSMutableDictionary" key="actionInfosByName">
-            <string key="NS.key.0">toggleCollapse:</string>
-            <object class="IBActionInfo" key="NS.object.0">
-              <string key="name">toggleCollapse:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-          </object>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">BWToolkitFramework.framework/Headers/BWSplitView.h</string>
-          </object>
-        </object>
         <object class="IBPartialClassDescription">
           <string key="className">NSActionCell</string>
           <string key="superclassName">NSCell</string>
@@ -4071,13 +4081,6 @@
           <object class="IBClassDescriptionSource" key="sourceIdentifier">
             <string key="majorKey">IBFrameworkSource</string>
             <string key="minorKey">AppKit.framework/Headers/NSUserInterfaceItemSearching.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSApplication</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">BWToolkitFramework.framework/Headers/NSApplication+BWAdditions.h</string>
           </object>
         </object>
         <object class="IBPartialClassDescription">
@@ -4787,13 +4790,6 @@
           <reference key="sourceIdentifier" ref="220128460"/>
         </object>
         <object class="IBPartialClassDescription">
-          <string key="className">NSView</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">BWToolkitFramework.framework/Headers/NSView+BWAdditions.h</string>
-          </object>
-        </object>
-        <object class="IBPartialClassDescription">
           <string key="className">NSViewController</string>
           <string key="superclassName">NSResponder</string>
           <object class="NSMutableDictionary" key="outlets">
@@ -4834,13 +4830,6 @@
             <string key="minorKey">AppKit.framework/Headers/NSWindowScripting.h</string>
           </object>
         </object>
-        <object class="IBPartialClassDescription">
-          <string key="className">NSWindow</string>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBFrameworkSource</string>
-            <string key="minorKey">BWToolkitFramework.framework/Headers/NSWindow+BWAdditions.h</string>
-          </object>
-        </object>
       </array>
     </object>
     <int key="IBDocument.localizationMode">0</int>
@@ -4853,7 +4842,7 @@
     <string key="IBDocument.LastKnownRelativeProjectPath">../MacHg.xcodeproj</string>
     <int key="IBDocument.defaultPropertyAccessControl">3</int>
     <dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-      <string key="ActionDrop24">{32, 25}</string>
+      <string key="ActionDropButtonSizeSmall">{18, 11}</string>
       <string key="DiffButton">{12, 15}</string>
       <string key="DividerBackground24">{1, 24}</string>
       <string key="DividerThumb">{11, 10}</string>
