@@ -18,15 +18,24 @@
 {
 	static NSColor* fillStartingColor = nil;
 	static NSColor* fillEndingColor   = nil;
-	static NSGradient* gradient = nil;
+	static NSGradient* horizontalGradient = nil;
+	static NSGradient* verticalGradient = nil;
 	if (!fillStartingColor)
 	{
-		fillStartingColor = [NSColor colorWithDeviceRed:225.0/255.0 green:230.0/255.0 blue:233.0/255.0 alpha:1.0];
-		fillEndingColor   = [NSColor colorWithDeviceRed:208.0/255.0 green:219.0/255.0 blue:230.0/255.0 alpha:1.0];
-		gradient          = [[NSGradient alloc] initWithStartingColor:fillStartingColor endingColor:fillEndingColor];
+		fillStartingColor  = [NSColor colorWithDeviceRed:225.0/255.0 green:230.0/255.0 blue:233.0/255.0 alpha:1.0];
+		fillEndingColor    = [NSColor colorWithDeviceRed:208.0/255.0 green:219.0/255.0 blue:230.0/255.0 alpha:1.0];
+		horizontalGradient = [[NSGradient alloc] initWithStartingColor:fillStartingColor endingColor:fillEndingColor];
+		CGFloat locations[3];
+		locations[0] = 0.0;
+		locations[1] = 0.5;
+		locations[2] = 1.0;
+		NSArray* colors = [NSArray arrayWithObjects:fillStartingColor, fillEndingColor, fillStartingColor, nil];
+		verticalGradient   = [[NSGradient alloc] initWithColors:colors atLocations:locations colorSpace:[NSColorSpace deviceRGBColorSpace]];
 	}
-	
-	[gradient drawInRect:aRect angle:90];	
+	if ([self isVertical])
+		[verticalGradient drawInRect:aRect angle:0];
+	else
+		[horizontalGradient drawInRect:aRect angle:90];	
 }
 
 
