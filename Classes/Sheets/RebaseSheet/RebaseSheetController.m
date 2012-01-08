@@ -323,10 +323,25 @@
 
 // MARK: -
 
-@implementation NoDividerSplitView
+@implementation ClippedStandardSplitView
+
+- (void) awakeFromNib
+{
+	[self setDelegate:self];
+}
+
+- (CGFloat)splitView:(NSSplitView*)splitView constrainMaxCoordinate:(CGFloat)proposedMaximumPosition ofSubviewAt:(NSInteger)dividerIndex	{ return self.frame.size.width-200.0; }
+- (CGFloat)splitView:(NSSplitView*)splitView constrainMinCoordinate:(CGFloat)proposedMinimumPosition ofSubviewAt:(NSInteger)dividerIndex	{ return 200.0; }
+- (CGFloat)splitView:(NSSplitView*)splitView constrainSplitPosition:(CGFloat)proposedPosition		 ofSubviewAt:(NSInteger)dividerIndex	{ return constrainFloat(proposedPosition, 200.0, self.frame.size.width-200.0); }
+
 - (void) drawDividerInRect:(NSRect)aRect
 {
+	NSRect slice;
+	NSRect clippedRect;
+	NSDivideRect(aRect, &slice, &clippedRect, 20, NSMinYEdge);
+	[super drawDividerInRect:clippedRect];
 }
+
 @end
 
 

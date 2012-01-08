@@ -10,6 +10,7 @@
 #import <Cocoa/Cocoa.h>
 #import "Common.h"
 #import "LogTableView.h"
+#import "StandardSplitView.h"
 
 @interface RebaseSheetController : BaseSheetWindowController < ControllerForLogTableView >
 {
@@ -61,9 +62,8 @@
 @end
 
 
-@interface NoDividerSplitView : NSSplitView
+@interface ClippedStandardSplitView : StandardSplitView <NSSplitViewDelegate>
 {
 }
-- (void) drawDividerInRect:(NSRect)aRect;
 @end
 
