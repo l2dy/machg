@@ -637,9 +637,9 @@
 // MARK:  Drag & Drop
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BOOL) writeRowsWithIndexes:(NSIndexSet*)rowIndexes inColumn:(NSInteger)column toPasteboard:(NSPasteboard*)pasteboard
+- (BOOL) writePaths:(NSArray*)paths toPasteboard:(NSPasteboard*)pasteboard
 {
-	return [parentController writeRowsWithIndexes:rowIndexes inColumn:column toPasteboard:pasteboard];	// The parent handles writing out the pasteboard items
+	return [parentController writePaths:paths toPasteboard:pasteboard];	// The parent handles writing out the pasteboard items
 }
 
 

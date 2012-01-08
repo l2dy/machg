@@ -169,6 +169,25 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
+// MARK:  Delegates Drag & Drop
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (NSDragOperation) draggingSourceOperationMaskForLocal:(BOOL)isLocal						{ return NSDragOperationCopy | NSDragOperationLink; }
+
+- (BOOL) canDragRowsWithIndexes:(NSIndexSet *)rowIndexes atPoint:(NSPoint)mouseDownPoint	{ return YES; }
+- (BOOL) outlineView:(NSOutlineView*)outlineView  writeItems:(NSArray*)items  toPasteboard:(NSPasteboard*)pasteboard
+{
+	NSMutableArray* paths = [[NSMutableArray alloc] init];
+	for (FSNodeInfo* node in items)
+		[paths addObject:[node absolutePath]];
+	return [parentViewer_ writePaths:paths toPasteboard:pasteboard];	// The parent handles writing out the pasteboard items
+}
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
 // MARK: Save and Restore Outline state
 // -----------------------------------------------------------------------------------------------------------------------------------------
 

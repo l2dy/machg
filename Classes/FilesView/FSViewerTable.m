@@ -217,82 +217,19 @@
 // MARK:  Delegates Drag & Drop
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-//- (NSDragOperation) draggingSourceOperationMaskForLocal:(BOOL)isLocal  { return NSDragOperationMove; }
-//
-//
-//- (BOOL) tableView:(NSTableView*)tv writeRowsWithIndexes:(NSIndexSet*)rowIndexes toPasteboard:(NSPasteboard*)pboard
-//{
-//    // Copy the row numbers to the pasteboard.
-//    NSData* data = [NSKeyedArchiver archivedDataWithRootObject:rowIndexes];
-//    [pboard declareTypes:[NSArray arrayWithObject:kPatchesTablePBoardType] owner:self];
-//    [pboard setData:data forType:kPatchesTablePBoardType];
-//    return YES;
-//}
-//
-//- (NSDragOperation) tableView:(NSTableView*)tv validateDrop:(id <NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)op
-//{
-//    // Add code here to validate the drop
-//	NSPasteboard* pboard = [info draggingPasteboard];	// get the pasteboard
-//	if ([pboard availableTypeFromArray:[NSArray arrayWithObject:kPatchesTablePBoardType]])
-//	{
-//		if (op == NSTableViewDropAbove)
-//			return NSDragOperationMove;
-//	}
-//	else if ([pboard availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]])
-//	{
-//		NSArray* filenames = [pboard propertyListForType:NSFilenamesPboardType];
-//		NSArray* resolvedFilenames = [filenames resolveSymlinksAndAliasesInPaths];
-//		for (NSString* file in resolvedFilenames)
-//			if (pathIsExistentFile(file))
-//				return NSDragOperationCopy;
-//	}
-//	
-//	return NSDragOperationNone;
-//}
-//
-//- (BOOL) tableView:(NSTableView*)aTableView acceptDrop:(id <NSDraggingInfo>)info row:(NSInteger)dropRow dropOperation:(NSTableViewDropOperation)operation
-//{
-//    NSPasteboard* pboard = [info draggingPasteboard];
-//	if ([pboard availableTypeFromArray:[NSArray arrayWithObject:kPatchesTablePBoardType]])
-//	{
-//		NSData* rowData = [pboard dataForType:kPatchesTablePBoardType];
-//		NSIndexSet* rowIndexes = [NSKeyedUnarchiver unarchiveObjectWithData:rowData];
-//		NSMutableArray* newTableData = [[NSMutableArray alloc] initWithArray:patchesTableData_];
-//		[newTableData removeObjectsAtIndexes:rowIndexes];
-//		NSArray* patchesToMove = [patchesTableData_ objectsAtIndexes:rowIndexes];
-//		NSInteger rowsRemovedBeforeDropRow = [rowIndexes countOfIndexesInRange:NSMakeRange(0, dropRow)];
-//		NSIndexSet* insertionIndexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(dropRow - rowsRemovedBeforeDropRow, [rowIndexes count])];
-//		[newTableData insertObjects:patchesToMove atIndexes:insertionIndexes];
-//		patchesTableData_ = newTableData;
-//		[self reloadData];
-//		[self selectRowIndexes:insertionIndexes byExtendingSelection:NO];
-//		[parentController patchesDidChange];
-//		return YES;
-//	}
-//	
-//	if ([pboard availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]])
-//	{
-//		NSArray* filenames = [pboard propertyListForType:NSFilenamesPboardType];
-//		NSArray* resolvedFilenames = [filenames resolveSymlinksAndAliasesInPaths];
-//		NSMutableArray* newPatches = [[NSMutableArray alloc]init];
-//		for (NSString* path in resolvedFilenames)
-//			if (pathIsExistentFile(path))
-//			{
-//				PatchData* patch = [PatchData patchDataFromFilePath:path];
-//				[newPatches addObject:patch];
-//			}
-//		NSMutableArray* newTableData = [[NSMutableArray alloc] initWithArray:patchesTableData_];
-//		NSIndexSet* insertionIndexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(dropRow, [newPatches count])];
-//		[newTableData insertObjects:newPatches atIndexes:insertionIndexes];
-//		patchesTableData_ = newTableData;
-//		[self reloadData];
-//		[self selectRowIndexes:insertionIndexes byExtendingSelection:NO];
-//		[parentController patchesDidChange];
-//		return YES;
-//	}
-//	
-//	return NO;
-//}
+- (NSDragOperation) draggingSourceOperationMaskForLocal:(BOOL)isLocal		{ return NSDragOperationCopy | NSDragOperationLink; }
+
+- (BOOL) tableView:(NSTableView*)tv writeRowsWithIndexes:(NSIndexSet*)rowIndexes toPasteboard:(NSPasteboard*)pasteboard
+{
+	NSMutableArray* paths = [[NSMutableArray alloc] init];
+	[rowIndexes enumerateIndexesUsingBlock:^(NSUInteger row, BOOL* stop) {
+		FSNodeInfo* node = [[self leafNodeForTableRow] objectAtIndex:row];
+		[paths addObject:[node absolutePath]];
+	}];
+	return [parentViewer_ writePaths:paths toPasteboard:pasteboard];	// The parent handles writing out the pasteboard items
+}
+
+
 
 
 @end

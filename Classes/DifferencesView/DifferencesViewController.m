@@ -507,7 +507,7 @@
 }
 
 
-- (BOOL) writeRowsWithIndexes:(NSIndexSet*)rowIndexes inColumn:(NSInteger)column toPasteboard:(NSPasteboard*)pasteboard
+- (BOOL) writePaths:(NSArray*)paths toPasteboard:(NSPasteboard*)pasteboard
 {
 	NSNumber* compareRev       = [compareLogTableView selectedRevision];
 	if (IsEmpty(compareRev))
@@ -516,10 +516,8 @@
 	NSString* compareChangeset = isNotIncompleteRev ? [[compareLogTableView selectedEntry] changeset] : nil;
 
 	NSMutableArray* pathsOfCachedItems = [[NSMutableArray alloc] init];
-	for (NSInteger row = [rowIndexes firstIndex]; row != NSNotFound; row = [rowIndexes indexGreaterThanIndex: row])
+	for (NSString* path in paths)
 	{
-		FSNodeInfo* node = [[theFSViewer theFilesBrowser] itemAtRow:row inColumn:column];
-		NSString* path = [node absolutePath];
 		NSString* pathOfCachedCopy = [myDocument loadCachedCopyOfPath:path forChangeset:compareChangeset];
 		[pathsOfCachedItems addObjectIfNonNil:pathOfCachedCopy];
 	}

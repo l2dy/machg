@@ -233,18 +233,10 @@
 	return newLines;
 }
 
-- (BOOL) writeRowsWithIndexes:(NSIndexSet*)rowIndexes inColumn:(NSInteger)column toPasteboard:(NSPasteboard*)pasteboard
+- (BOOL) writePaths:(NSArray*)paths toPasteboard:(NSPasteboard*)pasteboard
 {
-	NSMutableArray* paths = [[NSMutableArray alloc] init];
-	for (NSInteger row = [rowIndexes firstIndex]; row != NSNotFound; row = [rowIndexes indexGreaterThanIndex: row])
-	{
-		FSNodeInfo* node = [[theFSViewer theFilesBrowser] itemAtRow:row inColumn:column];
-		[paths addObject:[node absolutePath]];
-	}
-
 	[pasteboard declareTypes:[NSArray arrayWithObject:NSFilenamesPboardType] owner:self];
-	[pasteboard setPropertyList:paths forType:NSFilenamesPboardType];
-	
+	[pasteboard setPropertyList:paths forType:NSFilenamesPboardType];	
 	return IsNotEmpty(paths) ? YES : NO;
 }
 

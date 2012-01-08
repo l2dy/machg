@@ -248,8 +248,16 @@
 - (BOOL)browser:(NSBrowser*)browser canDragRowsWithIndexes:(NSIndexSet*)rowIndexes inColumn:(NSInteger)column withEvent:(NSEvent*)event				{ return YES; }
 - (BOOL)browser:(NSBrowser*)browser   writeRowsWithIndexes:(NSIndexSet*)rowIndexes inColumn:(NSInteger)column toPasteboard:(NSPasteboard*)pasteboard
 {
-	return [parentViewer_ writeRowsWithIndexes:rowIndexes inColumn:column toPasteboard:pasteboard];	// The parent handles writing out the pasteboard items
+	NSMutableArray* paths = [[NSMutableArray alloc] init];
+	[rowIndexes enumerateIndexesUsingBlock:^(NSUInteger row, BOOL* stop) {
+		FSNodeInfo* node = [self itemAtRow:row inColumn:column];
+		[paths addObject:[node absolutePath]];
+	}];
+	return [parentViewer_ writePaths:paths toPasteboard:pasteboard];	// The parent handles writing out the pasteboard items
 }
+
+
+
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------

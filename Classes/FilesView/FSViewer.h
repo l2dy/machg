@@ -20,7 +20,7 @@
 @protocol ControllerForFSViewer <NSObject>
 - (NSArray*)		statusLinesForPaths:(NSArray*)absolutePaths withRootPath:(NSString*)rootPath;
 - (NSArray*)		resolveStatusLines: (NSArray*)absolutePaths withRootPath:(NSString*)rootPath;
-- (BOOL)			writeRowsWithIndexes:(NSIndexSet*)rowIndexes inColumn:(NSInteger)column toPasteboard:(NSPasteboard*)pasteboard;	// dragging support
+- (BOOL)			writePaths:(NSArray*)paths toPasteboard:(NSPasteboard*)pasteboard;	// dragging support
 - (MacHgDocument*)	myDocument;
 - (void)			setMyDocumentFromParent;
 - (void)			didSwitchViewTo:(FSViewerNum)viewNumber;
@@ -184,7 +184,7 @@
 
 
 // Drag and Drop
-- (BOOL)		writeRowsWithIndexes:(NSIndexSet*)rowIndexes inColumn:(NSInteger)column toPasteboard:(NSPasteboard*)pasteboard;
+- (BOOL)		writePaths:(NSArray*)paths toPasteboard:(NSPasteboard*)pasteboard;	// dragging support
 
 
 // Refresh / Regenrate Browser
