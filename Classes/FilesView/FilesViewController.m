@@ -137,11 +137,17 @@
 // MARK:  Refreshing
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void)	 didSwitchViewTo:(FSViewerNum)viewNumber
+- (void) updateFilesViewButtonSelector
 {
-	[FilesViewBrowserSegement setState:(viewNumber == eFilesBrowser)];
-	[FilesViewOutlineSegement setState:(viewNumber == eFilesOutline)];
-	[FilesViewTableSegement   setState:(viewNumber == eFilesTable)];
+	FSViewerNum currentViewNumber = [theFSViewer currentFSViewerPaneNum];
+	[FilesViewBrowserSegement setState:(currentViewNumber == eFilesBrowser)];
+	[FilesViewOutlineSegement setState:(currentViewNumber == eFilesOutline)];
+	[FilesViewTableSegement   setState:(currentViewNumber == eFilesTable)];
+}
+
+- (void) didSwitchViewTo:(FSViewerNum)viewNumber
+{
+	[self updateFilesViewButtonSelector];
 }
 
 - (void) repositoryDataIsNew					{ [theFSViewer repositoryDataIsNew]; }

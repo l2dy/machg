@@ -65,6 +65,7 @@
 - (void)	 prepareToOpenFilesView;
 - (NSInteger) numberOfQuickLookPreviewItems;
 
+- (void)	 updateFilesViewButtonSelector;
 - (void)	 didSwitchViewTo:(FSViewerNum)viewNumber;
 - (IBAction) refreshBrowserContent:(id)sender;
 - (void)	 restoreConcertinaSplitViewPositions;
