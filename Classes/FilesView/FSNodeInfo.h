@@ -81,7 +81,7 @@
 
 // Icons for Nodes
 - (NSImage*)	iconImageOfSize:(NSSize)size;		// this is the icon of the file (eg a xcode document icon, or xcode icon for a .h file, etc.)
-- (NSArray*)	notableIconImages;
+- (NSImage*)	combinedIconImage;
 
 
 // Computed Properties on Trees

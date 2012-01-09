@@ -648,6 +648,25 @@ extern NSColor*			missingSidebarSelectedColor;
 
 
 
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Icon sizes
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+#define ICON_INSET_VERT		 2.0	// The size of empty space between the icon end the top/bottom of the cell
+#define ICON_SIZE			16.0	// Our Icons are ICON_SIZE x ICON_SIZE
+#define ICON_INSET_HORIZ 	 4.0	// Distance to inset the icon from the left edge.
+#define ICON_INTERSPACING	 5.0	// Distance between the status icons and the file icon if the file icon is present.
+#define ICON_TEXT_SPACING	 4.0	// Distance between the end of the icon and the text part
+#define IconOverlapCompression 3	// This controls how squished the icons look when there are multiple icons representing the
+									// status of a directory. With this setting just a 3rd of an icon pokes out behind the icon in
+									// front of it. This looks to be a nice balance between composite images not being too large
+									// and still seeing the multiple icons which make up the status.
+
+
+
+
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 // MARK: Processes

@@ -12,11 +12,6 @@
 #import "AppController.h"
 #import "FSViewer.h"
 
-#define iconOverlapCompression 3	// This controls how squished the icons look when there are multiple icons representing the
-									// status of a directory. With this setting just a 3rd of an icon pokes out behind the icon in
-									// front of it. This looks to be a nice balance between composite images not being too large
-									// and still seeing the multiple icons which make up the status.
-
 
 
 
@@ -133,22 +128,24 @@
 }
 
 
-- (CGFloat) iconRowSize
+- (CGFloat) iconRowWidth
 {
 	int iconCount = parentNodeInfo ? [parentNodeInfo maxIconCountOfSubitems] : 1;
-	return ICON_SIZE + floor(ICON_SIZE * (iconCount - 1)/iconOverlapCompression);
+	return ICON_SIZE + floor(ICON_SIZE * (iconCount - 1)/IconOverlapCompression);
 }
 
 
 - (void) drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView*)controlView
 {
-	NSArray* icons = [nodeInfo notableIconImages];
+	NSImage* combinedIcon = [nodeInfo combinedIconImage];
 	NSSize imageSize = NSMakeSize(ICON_SIZE, ICON_SIZE);
 	NSRect imageFrame, textFrame;
 	
 	// Divide the cell into 2 parts, the image part (on the left) and the text part.
 	
-	NSDivideRect(cellFrame, &imageFrame, &textFrame, ICON_INSET_HORIZ + [self iconRowSize] + (fileIcon ? ICON_INTERSPACING + ICON_SIZE: 0) + ICON_TEXT_SPACING, NSMinXEdge);
+	CGFloat iconRowWidth = [self iconRowWidth];
+	
+	NSDivideRect(cellFrame, &imageFrame, &textFrame, ICON_INSET_HORIZ + iconRowWidth + (fileIcon ? ICON_INTERSPACING + ICON_SIZE: 0) + ICON_TEXT_SPACING, NSMinXEdge);
 	imageFrame.origin.x += ICON_INSET_HORIZ;
 	imageFrame.size = imageSize;
 	
@@ -159,22 +156,15 @@
 	
 	[self setDrawsBackground:NO];
 
+	NSPoint originC = NSMakePoint(imageFrame.origin.x + iconRowWidth - combinedIcon.size.width, imageFrame.origin.y);
 	// If we have fewer icons than the maximum, then inset the origin accordingly so that the icons are right aligned
-	imageFrame.origin.x += (((CGFloat)(parentNodeInfo ? [parentNodeInfo maxIconCountOfSubitems] : 1)) - ((CGFloat)[icons count])) * ICON_SIZE / iconOverlapCompression;
-
-
-	for (NSImage* icon in icons)
-	{
-		[icon compositeToPoint:imageFrame.origin operation:NSCompositeSourceOver fraction:1.0];
-		imageFrame.origin.x += imageSize.width / iconOverlapCompression;
-	}
+	[combinedIcon compositeToPoint:originC operation:NSCompositeSourceOver fraction:1.0];
 
 	// If we are including file icons then draw it after the status icon
 	if (fileIcon)
 	{
-		imageFrame.origin.x -= imageSize.width / iconOverlapCompression;
-		imageFrame.origin.x += ICON_SIZE + ICON_INTERSPACING;
-		[fileIcon compositeToPoint:imageFrame.origin operation:NSCompositeSourceOver fraction:1.0];
+		NSPoint originF = NSMakePoint(imageFrame.origin.x + iconRowWidth + ICON_INTERSPACING, imageFrame.origin.y);
+		[fileIcon compositeToPoint:originF operation:NSCompositeSourceOver fraction:1.0];
 	}
 	
 	// Have NSBrowserCell kindly draw the text part, since it knows how to do that for us, no need to re-invent what it knows how to do.
@@ -190,9 +180,9 @@
 	// If we do need an expansion frame, the rect will be non-empty. We need to move it over, and shrink it, since we won't be drawing the icon in it
 	if (!NSIsEmptyRect(expansionFrame))
 	{
-		CGFloat iconsSize = [self iconRowSize];
-		expansionFrame.origin.x   = expansionFrame.origin.x   +  iconsSize + ICON_INSET_HORIZ  + ICON_TEXT_SPACING;
-		expansionFrame.size.width = expansionFrame.size.width - (iconsSize + ICON_TEXT_SPACING + ICON_INSET_HORIZ / 2.0);
+		CGFloat iconsWidth = [self iconRowWidth];
+		expansionFrame.origin.x   = expansionFrame.origin.x   +  iconsWidth + ICON_INSET_HORIZ  + ICON_TEXT_SPACING;
+		expansionFrame.size.width = expansionFrame.size.width - (iconsWidth + ICON_TEXT_SPACING + ICON_INSET_HORIZ / 2.0);
 	}
 	return expansionFrame;
 }

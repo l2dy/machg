@@ -288,6 +288,33 @@
 	return icons;
 }
 
+- (NSImage*) combinedIconImage
+{
+	static NSMutableDictionary* cachedIcons = nil;
+	if (!cachedIcons)
+		cachedIcons = [[NSMutableDictionary alloc] init];
+	NSNumber* theKey = [NSNumber numberWithInt:[self hgStatus]];
+
+	NSImage* cached = [cachedIcons objectForKey:theKey];
+	if (cached)
+		return cached;
+	
+	NSArray* icons = [self notableIconImages];
+	CGFloat hsize = ICON_SIZE + ceil(ICON_SIZE * ([icons count] - 1)/IconOverlapCompression);
+	NSImage* combinedImage = [[NSImage alloc] initWithSize:NSMakeSize(hsize,  ICON_SIZE)];
+	NSRect imageFrame = NSMakeRect(0, 0, ICON_SIZE, ICON_SIZE);
+	[combinedImage lockFocus];
+	for (NSImage* icon in icons)
+	{
+		[icon compositeToPoint:imageFrame.origin operation:NSCompositeSourceOver fraction:1.0];
+		imageFrame.origin.x += ICON_SIZE / IconOverlapCompression;
+	}
+	[combinedImage unlockFocus];
+	
+	[cachedIcons setObject:combinedImage forKey:theKey];
+	return combinedImage;
+}
+
 
 - (int) directoryDecorationIconCountForNodeInfo
 {
