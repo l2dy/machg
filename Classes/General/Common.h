@@ -250,6 +250,14 @@ typedef enum
 
 typedef enum
 {
+	eCommitCheckStateOff	 = 0,
+	eCommitCheckStatePartial = 1<<1,
+	eCommitCheckStateOn      = 1<<2
+} CommitCheckBoxState;
+
+
+typedef enum
+{
 	eNoLabelType	 = 0,
 	eLocalTag		 = 1<<1,
 	eGlobalTag		 = 1<<2,
