@@ -216,6 +216,7 @@
 		96DF437111B5209C00D986FF /* RelativePositionedBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 96DF437011B5209C00D986FF /* RelativePositionedBox.m */; };
 		96DF546411B83E1E00D986FF /* LocalMercurial in Copy Files (Mercurial) */ = {isa = PBXBuildFile; fileRef = 96DF51E211B83DF900D986FF /* LocalMercurial */; };
 		96DF581611BFC71A00D986FF /* MacHgDocumentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96DF581511BFC71A00D986FF /* MacHgDocumentController.m */; };
+		96E3E61C1477CD820077503D /* GradientBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 96E3E61B1477CD820077503D /* GradientBox.m */; };
 		96F5A4DE11A8185800707404 /* TextButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96F5A4DD11A8185800707404 /* TextButtonCell.m */; };
 		96F5A4FA11A81B5B00707404 /* DiffTextButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96F5A4F911A81B5B00707404 /* DiffTextButtonCell.m */; };
 		96F5A70D11A879F100707404 /* LabelTextButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96F5A70C11A879F100707404 /* LabelTextButtonCell.m */; };
@@ -553,6 +554,8 @@
 		96DF51E211B83DF900D986FF /* LocalMercurial */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LocalMercurial; sourceTree = "<group>"; };
 		96DF581411BFC71A00D986FF /* MacHgDocumentController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MacHgDocumentController.h; path = Classes/Document/MacHgDocumentController.h; sourceTree = "<group>"; };
 		96DF581511BFC71A00D986FF /* MacHgDocumentController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MacHgDocumentController.m; path = Classes/Document/MacHgDocumentController.m; sourceTree = "<group>"; };
+		96E3E61A1477CD820077503D /* GradientBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GradientBox.h; sourceTree = "<group>"; };
+		96E3E61B1477CD820077503D /* GradientBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GradientBox.m; sourceTree = "<group>"; };
 		96F5A4DC11A8185800707404 /* TextButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextButtonCell.h; sourceTree = "<group>"; };
 		96F5A4DD11A8185800707404 /* TextButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextButtonCell.m; sourceTree = "<group>"; };
 		96F5A4F811A81B5B00707404 /* DiffTextButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DiffTextButtonCell.h; sourceTree = "<group>"; };
@@ -1333,6 +1336,7 @@
 				9672ADCA114BD22A00312CE2 /* CommandKeyTextField */,
 				9672AC51114B796A00312CE2 /* ConnectionValidation */,
 				9672AC54114B796A00312CE2 /* DsiclosureBoxController */,
+				96E3E6191477CD820077503D /* GradientBox */,
 				9606EE15115670FD00968DE8 /* Help Button */,
 				9672AC57114B796A00312CE2 /* OptionController */,
 				96DF426211B48DC700D986FF /* RadialGradiantBox */,
@@ -1607,6 +1611,15 @@
 				96DF437011B5209C00D986FF /* RelativePositionedBox.m */,
 			);
 			path = RelativePositionedBox;
+			sourceTree = "<group>";
+		};
+		96E3E6191477CD820077503D /* GradientBox */ = {
+			isa = PBXGroup;
+			children = (
+				96E3E61A1477CD820077503D /* GradientBox.h */,
+				96E3E61B1477CD820077503D /* GradientBox.m */,
+			);
+			path = GradientBox;
 			sourceTree = "<group>";
 		};
 		96F5A4DB11A8185800707404 /* TextButtonCell */ = {
@@ -1911,6 +1924,7 @@
 				96000A551353E4E7005FD1BC /* BDSKTask.m in Sources */,
 				96000A561353E4E7005FD1BC /* TLMTask.m in Sources */,
 				96631773136DF9A600A72689 /* AboutWindowController.m in Sources */,
+				96E3E61C1477CD820077503D /* GradientBox.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
