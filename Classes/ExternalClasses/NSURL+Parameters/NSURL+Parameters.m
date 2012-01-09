@@ -76,7 +76,7 @@
 		[string appendString:ESCAPE_STRING(query)];
 	}
 	
-	return [[NSURL URLWithString:string] standardizedURL];
+	return [NSURL URLWithString:string];
 }
 
 - (NSString*) passwordByReplacingPercentEscapes
