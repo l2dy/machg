@@ -12,6 +12,7 @@
     </dictionary>
     <array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
       <integer value="385"/>
+      <integer value="312"/>
     </array>
     <array key="IBDocument.PluginDependencies">
       <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -697,7 +698,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
         </object>
       </object>
       <object class="NSBox" id="985775062">
-        <nil key="NSNextResponder"/>
+        <reference key="NSNextResponder"/>
         <int key="NSvFlags">10</int>
         <array class="NSMutableArray" key="NSSubviews">
           <object class="NSView" id="213920446">
@@ -717,6 +718,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
                 </set>
                 <string key="NSFrame">{{-1, 0}, {806, 18}}</string>
                 <reference key="NSSuperview" ref="213920446"/>
+                <reference key="NSWindow"/>
                 <bool key="NSEnabled">YES</bool>
                 <object class="NSImageCell" key="NSCell" id="795755876">
                   <int key="NSCellFlags">130560</int>
@@ -734,6 +736,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
                 <int key="NSvFlags">268</int>
                 <string key="NSFrame">{{12, 2}, {100, 14}}</string>
                 <reference key="NSSuperview" ref="213920446"/>
+                <reference key="NSWindow"/>
                 <bool key="NSEnabled">YES</bool>
                 <object class="NSTextFieldCell" key="NSCell" id="513405965">
                   <int key="NSCellFlags">68288064</int>
@@ -758,6 +761,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
                 </set>
                 <string key="NSFrame">{{786, 4}, {11, 10}}</string>
                 <reference key="NSSuperview" ref="213920446"/>
+                <reference key="NSWindow"/>
                 <bool key="NSEnabled">YES</bool>
                 <object class="NSImageCell" key="NSCell" id="56093851">
                   <int key="NSCellFlags">130560</int>
@@ -773,12 +777,24 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
                 </object>
                 <bool key="NSEditable">YES</bool>
               </object>
+              <object class="NSCustomView" id="537735195">
+                <reference key="NSNextResponder" ref="213920446"/>
+                <int key="NSvFlags">4370</int>
+                <string key="NSFrame">{{110, 0}, {695, 18}}</string>
+                <reference key="NSSuperview" ref="213920446"/>
+                <reference key="NSWindow"/>
+                <string key="NSReuseIdentifierKey">_NS:1109</string>
+                <string key="NSClassName">ShowResizeUpDownCursorView</string>
+              </object>
             </array>
             <string key="NSFrameSize">{804, 18}</string>
             <reference key="NSSuperview" ref="985775062"/>
+            <reference key="NSWindow"/>
           </object>
         </array>
         <string key="NSFrameSize">{804, 18}</string>
+        <reference key="NSSuperview"/>
+        <reference key="NSWindow"/>
         <string key="NSOffsets">{0, 0}</string>
         <object class="NSTextFieldCell" key="NSTitleCell">
           <int key="NSCellFlags">67239424</int>
@@ -807,7 +823,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
         </object>
       </object>
       <object class="NSBox" id="791433854">
-        <nil key="NSNextResponder"/>
+        <reference key="NSNextResponder"/>
         <int key="NSvFlags">10</int>
         <array class="NSMutableArray" key="NSSubviews">
           <object class="NSView" id="542124661">
@@ -880,12 +896,21 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
                 </object>
                 <bool key="NSEditable">YES</bool>
               </object>
+              <object class="NSCustomView" id="85090020">
+                <reference key="NSNextResponder" ref="542124661"/>
+                <int key="NSvFlags">4370</int>
+                <string key="NSFrame">{{89, -3}, {716, 24}}</string>
+                <reference key="NSSuperview" ref="542124661"/>
+                <string key="NSReuseIdentifierKey">_NS:1109</string>
+                <string key="NSClassName">ShowResizeUpDownCursorView</string>
+              </object>
             </array>
             <string key="NSFrameSize">{804, 18}</string>
             <reference key="NSSuperview" ref="791433854"/>
           </object>
         </array>
         <string key="NSFrameSize">{804, 18}</string>
+        <reference key="NSSuperview"/>
         <string key="NSOffsets">{0, 0}</string>
         <object class="NSTextFieldCell" key="NSTitleCell">
           <int key="NSCellFlags">67239424</int>
@@ -2293,6 +2318,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
               <reference ref="437058743"/>
               <reference ref="459390476"/>
               <reference ref="681743095"/>
+              <reference ref="537735195"/>
             </array>
             <reference key="parent" ref="0"/>
             <string key="objectName">Divider 2 (Files To Commit)</string>
@@ -2343,6 +2369,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
               <reference ref="718725026"/>
               <reference ref="303629335"/>
               <reference ref="679992261"/>
+              <reference ref="85090020"/>
             </array>
             <reference key="parent" ref="0"/>
             <string key="objectName">Divider 3 (Files Details)</string>
@@ -2583,6 +2610,16 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
             <reference key="object" ref="606271852"/>
             <reference key="parent" ref="847774779"/>
           </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">393</int>
+            <reference key="object" ref="537735195"/>
+            <reference key="parent" ref="985775062"/>
+          </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">394</int>
+            <reference key="object" ref="85090020"/>
+            <reference key="parent" ref="791433854"/>
+          </object>
         </array>
       </object>
       <dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -2758,6 +2795,16 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
         <string key="391.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="392.CustomClassName">CommitFilesTableImageCell</string>
         <string key="392.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+        <string key="393.IBEditorWindowLastContentRect">{{0, 1053}, {402, 24}}</string>
+        <string key="393.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+        <object class="NSAffineTransform" key="393.IBViewBoundsToFrameTransform">
+          <bytes key="NSTransformStruct">AUMKAAAAAAAAA</bytes>
+        </object>
+        <string key="394.IBEditorWindowLastContentRect">{{0, 1053}, {402, 24}}</string>
+        <string key="394.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+        <object class="NSAffineTransform" key="394.IBViewBoundsToFrameTransform">
+          <bytes key="NSTransformStruct">AUMKAAAAAAAAA</bytes>
+        </object>
         <string key="41.IBEditorWindowLastContentRect">{{193, 317}, {845, 833}}</string>
         <string key="41.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="41.IBWindowTemplateEditedContentRect">{{193, 317}, {845, 833}}</string>
@@ -2794,7 +2841,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
       <nil key="activeLocalization"/>
       <dictionary class="NSMutableDictionary" key="localizations"/>
       <nil key="sourceID"/>
-      <int key="maxID">392</int>
+      <int key="maxID">394</int>
     </object>
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3045,7 +3092,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
               <string key="candidateClassName">NSView</string>
             </object>
           </dictionary>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
+          <object class="IBClassDescriptionSource" key="sourceIdentifier" id="816103611">
             <string key="majorKey">IBProjectSource</string>
             <string key="minorKey">Classes/ExternalClasses/JHConcertinaView/JHConcertinaView.h</string>
           </object>
@@ -3080,6 +3127,11 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
         <object class="IBPartialClassDescription">
           <string key="className">NSWindow</string>
           <reference key="sourceIdentifier" ref="1018491652"/>
+        </object>
+        <object class="IBPartialClassDescription">
+          <string key="className">ShowResizeUpDownCursorView</string>
+          <string key="superclassName">NSView</string>
+          <reference key="sourceIdentifier" ref="816103611"/>
         </object>
         <object class="IBPartialClassDescription">
           <string key="className">StandardSplitView</string>

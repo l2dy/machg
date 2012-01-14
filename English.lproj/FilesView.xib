@@ -21,11 +21,10 @@
     </object>
     <object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
       <bool key="EncodedWithXMLCoder">YES</bool>
-      <integer value="193"/>
-      <integer value="222"/>
-      <integer value="328"/>
       <integer value="249"/>
       <integer value="316"/>
+      <integer value="193"/>
+      <integer value="201"/>
     </object>
     <object class="NSArray" key="IBDocument.PluginDependencies">
       <bool key="EncodedWithXMLCoder">YES</bool>
@@ -53,7 +52,7 @@
         <string key="NSClassName">NSApplication</string>
       </object>
       <object class="NSCustomView" id="453712496">
-        <reference key="NSNextResponder"/>
+        <nil key="NSNextResponder"/>
         <int key="NSvFlags">274</int>
         <object class="NSMutableArray" key="NSSubviews">
           <bool key="EncodedWithXMLCoder">YES</bool>
@@ -165,7 +164,6 @@
           </object>
         </object>
         <string key="NSFrameSize">{902, 671}</string>
-        <reference key="NSSuperview"/>
         <string key="NSClassName">FilesView</string>
       </object>
       <object class="NSUserDefaultsController" id="69413389">
@@ -612,7 +610,7 @@
                     <reference key="NSSuperview" ref="417462929"/>
                   </object>
                 </object>
-                <string key="NSFrame">{{60, 1}, {107, 22}}</string>
+                <string key="NSFrame">{{67, 1}, {107, 22}}</string>
                 <reference key="NSSuperview" ref="310906602"/>
                 <string key="NSOffsets">{0, 0}</string>
                 <object class="NSTextFieldCell" key="NSTitleCell">
@@ -818,6 +816,14 @@
                   <bool key="NSAnimates">NO</bool>
                 </object>
                 <bool key="NSEditable">YES</bool>
+              </object>
+              <object class="NSCustomView" id="989330802">
+                <reference key="NSNextResponder" ref="434657946"/>
+                <int key="NSvFlags">4370</int>
+                <string key="NSFrame">{{138, 0}, {688, 24}}</string>
+                <reference key="NSSuperview" ref="434657946"/>
+                <string key="NSReuseIdentifierKey">_NS:1109</string>
+                <string key="NSClassName">ShowResizeUpDownCursorView</string>
               </object>
             </object>
             <string key="NSFrameSize">{824, 24}</string>
@@ -2786,6 +2792,7 @@
               <reference ref="980196792"/>
               <reference ref="209841539"/>
               <reference ref="286460170"/>
+              <reference ref="989330802"/>
             </object>
             <reference key="parent" ref="0"/>
             <string key="objectName">Concertina Divider2</string>
@@ -3468,6 +3475,11 @@
             <reference key="object" ref="666266306"/>
             <reference key="parent" ref="328341118"/>
           </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">342</int>
+            <reference key="object" ref="989330802"/>
+            <reference key="parent" ref="1029795173"/>
+          </object>
         </object>
       </object>
       <object class="NSMutableDictionary" key="flattenedProperties">
@@ -3617,6 +3629,9 @@
           <string>340.IBPluginDependency</string>
           <string>340.IBViewBoundsToFrameTransform</string>
           <string>341.IBPluginDependency</string>
+          <string>342.IBEditorWindowLastContentRect</string>
+          <string>342.IBPluginDependency</string>
+          <string>342.IBViewBoundsToFrameTransform</string>
           <string>35.IBPluginDependency</string>
           <string>36.IBPluginDependency</string>
           <string>37.IBPluginDependency</string>
@@ -3649,7 +3664,7 @@
         <object class="NSMutableArray" key="dict.values">
           <bool key="EncodedWithXMLCoder">YES</bool>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>{{399, 145}, {902, 671}}</string>
+          <string>{{324, 145}, {902, 671}}</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>{{339, 633}, {672, 479}}</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3701,7 +3716,7 @@
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>{{21, 1098}, {824, 24}}</string>
+          <string>{{605, 1048}, {824, 24}}</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <object class="NSAffineTransform">
             <bytes key="NSTransformStruct">Ab+AAABDlIAAA</bytes>
@@ -3937,6 +3952,9 @@
             <bytes key="NSTransformStruct">P4AAAL+AAABBiAAAxABAAA</bytes>
           </object>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+          <string>{{0, 1053}, {402, 24}}</string>
+          <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+          <object class="NSAffineTransform"/>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3983,7 +4001,7 @@
         </object>
       </object>
       <nil key="sourceID"/>
-      <int key="maxID">341</int>
+      <int key="maxID">342</int>
     </object>
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -4729,7 +4747,7 @@
               </object>
             </object>
           </object>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
+          <object class="IBClassDescriptionSource" key="sourceIdentifier" id="834330733">
             <string key="majorKey">IBProjectSource</string>
             <string key="minorKey">Classes/ExternalClasses/JHConcertinaView/JHConcertinaView.h</string>
           </object>
@@ -5606,6 +5624,11 @@
             <string key="majorKey">IBProjectSource</string>
             <string key="minorKey">Classes/Sidebar/ProcessListController.h</string>
           </object>
+        </object>
+        <object class="IBPartialClassDescription">
+          <string key="className">ShowResizeUpDownCursorView</string>
+          <string key="superclassName">NSView</string>
+          <reference key="sourceIdentifier" ref="834330733"/>
         </object>
         <object class="IBPartialClassDescription">
           <string key="className">Sidebar</string>
