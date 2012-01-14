@@ -116,6 +116,8 @@
 	FSViewerTable*		theFilesTable_;
 	FSViewerNum			currentFSViewerPane_;			// The current style of viewing the files, ie browser, outline, or table
 
+	NSInteger			currentDifferencesRegenerationNumber_;	// When we regenerating the differences for the WebView we need to
+																// track if the returned results are still valid. 
 	dispatch_once_t		theFilesBrowserInitilizer_;
 	dispatch_once_t		theFilesOutlineInitilizer_;
 	dispatch_once_t		theFilesTableInitilizer_;	

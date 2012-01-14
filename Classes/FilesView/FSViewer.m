@@ -630,6 +630,56 @@
 }
 + (BOOL)isKeyExcludedFromWebScript:(const char *)name { return NO; }
 
+- (void) putUpGeneratingDifferencesNotice:(NSTimer*)theTimer
+{
+	ShellTaskController* theTaskContoller = [theTimer userInfo];
+	if ([[theTaskContoller shellTask] isRunning])
+	{
+		WebScriptObject* script = [detailedDiffWebView windowScriptObject];
+		[script callWebScriptMethod:@"showMessage" withArguments:[NSArray arrayWithObject:@"Generating Differences..."]];
+	}
+}
+
+- (void) regenerateDifferencesInWebview
+{
+	WebScriptObject* script = [detailedDiffWebView windowScriptObject];
+	[script setValue:self forKey:@"machgFSViewer"];
+	[script callWebScriptMethod:@"changeFontSizeToMacHgDefaults" withArguments:nil];
+	
+	NSArray* selectedPaths = [self absolutePathsOfSelectedFilesInBrowser];
+	if (IsEmpty(selectedPaths))
+	{
+		[script callWebScriptMethod:@"showMessage" withArguments:[NSArray arrayWithObject:@""]];
+		return;
+	}
+	
+	NSInteger currentTaskNumber;
+	@synchronized(self)
+	{
+		currentDifferencesRegenerationNumber_++;
+		currentTaskNumber = currentDifferencesRegenerationNumber_;
+	}
+	NSString* rootPath = [self absolutePathOfRepositoryRoot];
+	NSMutableArray* argsDiff = [NSMutableArray arrayWithObjects:@"diff", nil];
+	[argsDiff addObject:@"--unified" followedBy:fstr(@"%d",NumContextLinesForDifferencesWebviewFromDefaults())];
+	[argsDiff addObjectsFromArray:selectedPaths];
+	ShellTaskController* currentDifferencesTaskController = [[ShellTaskController alloc]init];
+	[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(putUpGeneratingDifferencesNotice:) userInfo:currentDifferencesTaskController repeats:NO];
+	dispatch_async(globalQueue(), ^{
+		ExecutionResult* diffResult = [TaskExecutions executeMercurialWithArgs:argsDiff  fromRoot:rootPath logging:eLoggingNone  withDelegate:currentDifferencesTaskController];
+		NSArray* showDiffArgs = [NSArray arrayWithObject:diffResult.outStr];
+		dispatch_async(mainQueue(), ^{
+			if (currentTaskNumber == currentDifferencesRegenerationNumber_)
+			{
+				WebScriptObject* script = [detailedDiffWebView windowScriptObject];
+				[script callWebScriptMethod:@"showDiff" withArguments:showDiffArgs];
+			}
+		});
+	});
+}
+
+
+
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -803,34 +853,6 @@
 
 - (void) updateCurrentPreviewImage { [parentController updateCurrentPreviewImage]; }
 
-
-- (void) regenerateDifferencesInWebview
-{
-	WebScriptObject* script = [detailedDiffWebView windowScriptObject];
-	[script setValue:self forKey:@"machgFSViewer"];
-	[script callWebScriptMethod:@"changeFontSizeToMacHgDefaults" withArguments:nil];
-
-	NSArray* selectedPaths = [self absolutePathsOfSelectedFilesInBrowser];
-	if (IsEmpty(selectedPaths))
-	{
-		[script callWebScriptMethod:@"showMessage" withArguments:[NSArray arrayWithObject:@""]];
-		return;
-	}
-
-	NSString* rootPath = [self absolutePathOfRepositoryRoot];
-	NSMutableArray* argsDiff = [NSMutableArray arrayWithObjects:@"diff", nil];
-	[argsDiff addObject:@"--unified" followedBy:fstr(@"%d",NumContextLinesForDifferencesWebviewFromDefaults())];
-	[argsDiff addObjectsFromArray:selectedPaths];
-	[script callWebScriptMethod:@"showMessage" withArguments:[NSArray arrayWithObject:@"Generating Differences..."]];
-	dispatch_async(globalQueue(), ^{
-		ExecutionResult* diffResult = [TaskExecutions executeMercurialWithArgs:argsDiff  fromRoot:rootPath];
-		NSArray* showDiffArgs = [NSArray arrayWithObject:diffResult.outStr];
-		dispatch_async(mainQueue(), ^{
-			WebScriptObject* script = [detailedDiffWebView windowScriptObject];
-			[script callWebScriptMethod:@"showDiff" withArguments:showDiffArgs];
-		});
-	});
-}
 
 - (void) viewerSelectionDidChange:(NSNotification*)notification
 {
