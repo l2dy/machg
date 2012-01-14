@@ -39,3 +39,17 @@
 
 @property (readwrite,assign) NSImage*		fileIcon;
 @end
+
+
+@interface FSViewerPaneCheckedIconedCell : NSButtonCell
+{
+	FSNodeInfo* nodeInfo;
+	FSNodeInfo* parentNodeInfo;
+	NSImage*	fileIcon;
+}
+@property (readwrite,assign) FSNodeInfo*	nodeInfo;
+@property (readwrite,assign) FSNodeInfo*	parentNodeInfo;
+@property (readwrite,assign) NSImage*		fileIcon;
+
+- (void)		loadCellContents;
+@end

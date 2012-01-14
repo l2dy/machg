@@ -13,6 +13,31 @@
 #import "FSViewer.h"
 
 
+NSDictionary* fsStringAttributes(FSNodeInfo* nodeInfo);
+void commonLoadCellContents(NSCell* cell)
+{
+	NSString* stringValue = [cell stringValue];
+	FSNodeInfo* nodeInfo = [cell performSelectorIfPossible:@selector(nodeInfo)];
+	if (!stringValue || !nodeInfo)
+		return;
+
+	// Set the text part.  FSNode will format the string (underline, bold, etc...) based on various properties of the file.
+	NSAttributedString* attrStringValue = [NSAttributedString string:stringValue withAttributes:fsStringAttributes(nodeInfo)];
+	[cell setAttributedStringValue:attrStringValue];
+	
+	// If we don't have access to the file, make sure the user can't select it!
+	[cell setEnabled:[nodeInfo isReadable]];
+	[cell setBackgroundStyle:NSBackgroundStyleLight];
+	[cell setHighlighted:NO];
+	if ([cell respondsToSelector:@selector(setFileIcon:)])
+	{
+		NSImage* theFileIcon = nil;
+		if (DisplayFileIconsInBrowserFromDefaults())
+			theFileIcon = [nodeInfo iconImageOfSize:NSMakeSize(ICON_SIZE, ICON_SIZE)];
+		[(id)cell setFileIcon:theFileIcon];
+	}
+}
+
 
 
 
@@ -27,65 +52,11 @@
 @synthesize nodeInfo;
 @synthesize parentNodeInfo;
 
-- (NSDictionary*) fsStringAttributes
-{
-	// Cache the two common attribute cases to help improve speed. This will be called a lot, and helps improve performance.
-	static NSDictionary* standardAttributes = nil;
-	static NSDictionary* italicAttributes   = nil;
-	static NSDictionary* virtualAttributes  = nil;
-	static NSDictionary* dirtyAttributes    = nil;
-	static NSDictionary* grayedAttributes   = nil;
-	static float storedFontSizeofBrowserItems = 0.0;
-	
-	if (standardAttributes == nil || storedFontSizeofBrowserItems != fontSizeOfBrowserItemsFromDefaults())
-	{
-		storedFontSizeofBrowserItems = fontSizeOfBrowserItemsFromDefaults();
-		NSFontManager* fontManager   = [NSFontManager sharedFontManager];
-		NSMutableParagraphStyle* ps  = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-		[ps setLineBreakMode:NSLineBreakByTruncatingMiddle];
-		NSFont* textFont = [NSFont fontWithName:@"Verdana" size:storedFontSizeofBrowserItems];
-		NSColor* greyColor = [NSColor grayColor];
-		NSFont* italicTextFont = [fontManager convertFont:textFont toHaveTrait:NSItalicFontMask];
-		NSFont* boldTextFont   = [fontManager convertFont:textFont toHaveTrait:NSBoldFontMask];
-		
-		standardAttributes = [NSDictionary dictionaryWithObjectsAndKeys: textFont,       NSFontAttributeName, ps, NSParagraphStyleAttributeName, nil];
-		italicAttributes   = [NSDictionary dictionaryWithObjectsAndKeys: italicTextFont, NSFontAttributeName, ps, NSParagraphStyleAttributeName, nil];
-		grayedAttributes   = [NSDictionary dictionaryWithObjectsAndKeys: textFont,       NSFontAttributeName, greyColor, NSForegroundColorAttributeName, ps, NSParagraphStyleAttributeName, nil];
-		dirtyAttributes    = [NSDictionary dictionaryWithObjectsAndKeys: boldTextFont,   NSFontAttributeName, greyColor, NSForegroundColorAttributeName, ps, NSParagraphStyleAttributeName, nil];
-		virtualAttributes  = [NSDictionary dictionaryWithObjectsAndKeys: italicTextFont, NSFontAttributeName, ps, NSParagraphStyleAttributeName, nil];
-	}
-	
-	if ([nodeInfo isDirty])
-		return dirtyAttributes;
-	
-	if ([[nodeInfo parentFSViewer] areNodesVirtual])
-		return virtualAttributes;
-	
-	if ([nodeInfo isLink])
-		return italicAttributes;
-	
-	if ([nodeInfo hgStatus] == eHGStatusIgnored)
-		return grayedAttributes;
-	
-	return standardAttributes;
-}
 
 
 - (void) loadCellContents
 {
-	// Given a particular FSNodeInfo object set up our display properties.
-	NSString* stringValue = [self stringValue];
-	if (!stringValue)
-		return;
-	
-	// Set the text part.  FSNode will format the string (underline, bold, etc...) based on various properties of the file.
-	NSAttributedString* attrStringValue = [NSAttributedString string:stringValue withAttributes:[self fsStringAttributes]];
-	[self setAttributedStringValue:attrStringValue];
-	
-	// If we don't have access to the file, make sure the user can't select it!
-	[self setEnabled:[nodeInfo isReadable]];
-	[self setBackgroundStyle:NSBackgroundStyleLight];
-	[self setHighlighted:NO];	
+	commonLoadCellContents(self);
 }
 	
 @end
@@ -101,20 +72,6 @@
 @implementation FSViewerPaneIconedCell
 
 @synthesize fileIcon;
-
-- (void) loadCellContents
-{
-	[super loadCellContents];
-	
-	if (DisplayFileIconsInBrowserFromDefaults())
-	{
-		NSSize imageSize = NSMakeSize(ICON_SIZE, ICON_SIZE);
-		NSImage* theFileIcon = [nodeInfo iconImageOfSize:imageSize];
-		[self setFileIcon:theFileIcon];
-	}
-	else
-		[self setFileIcon:nil];
-}
 
 
 - (NSSize) cellSizeForBounds:(NSRect)aRect
@@ -196,4 +153,65 @@
 
 @end
 
+
+
+@implementation FSViewerPaneCheckedIconedCell : NSButtonCell
+
+@synthesize nodeInfo;
+@synthesize parentNodeInfo;
+@synthesize fileIcon;
+
+
+- (void) loadCellContents { commonLoadCellContents(self); }
+
+@end
+
+
+
+
+
+
+
+NSDictionary* fsStringAttributes(FSNodeInfo* nodeInfo)
+{
+	// Cache the two common attribute cases to help improve speed. This will be called a lot, and helps improve performance.
+	static NSDictionary* standardAttributes = nil;
+	static NSDictionary* italicAttributes   = nil;
+	static NSDictionary* virtualAttributes  = nil;
+	static NSDictionary* dirtyAttributes    = nil;
+	static NSDictionary* grayedAttributes   = nil;
+	static float storedFontSizeofBrowserItems = 0.0;
+	
+	if (standardAttributes == nil || storedFontSizeofBrowserItems != fontSizeOfBrowserItemsFromDefaults())
+	{
+		storedFontSizeofBrowserItems = fontSizeOfBrowserItemsFromDefaults();
+		NSFontManager* fontManager   = [NSFontManager sharedFontManager];
+		NSMutableParagraphStyle* ps  = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+		[ps setLineBreakMode:NSLineBreakByTruncatingMiddle];
+		NSFont* textFont = [NSFont fontWithName:@"Verdana" size:storedFontSizeofBrowserItems];
+		NSColor* greyColor = [NSColor grayColor];
+		NSFont* italicTextFont = [fontManager convertFont:textFont toHaveTrait:NSItalicFontMask];
+		NSFont* boldTextFont   = [fontManager convertFont:textFont toHaveTrait:NSBoldFontMask];
+		
+		standardAttributes = [NSDictionary dictionaryWithObjectsAndKeys: textFont,       NSFontAttributeName, ps, NSParagraphStyleAttributeName, nil];
+		italicAttributes   = [NSDictionary dictionaryWithObjectsAndKeys: italicTextFont, NSFontAttributeName, ps, NSParagraphStyleAttributeName, nil];
+		grayedAttributes   = [NSDictionary dictionaryWithObjectsAndKeys: textFont,       NSFontAttributeName, greyColor, NSForegroundColorAttributeName, ps, NSParagraphStyleAttributeName, nil];
+		dirtyAttributes    = [NSDictionary dictionaryWithObjectsAndKeys: boldTextFont,   NSFontAttributeName, greyColor, NSForegroundColorAttributeName, ps, NSParagraphStyleAttributeName, nil];
+		virtualAttributes  = [NSDictionary dictionaryWithObjectsAndKeys: italicTextFont, NSFontAttributeName, ps, NSParagraphStyleAttributeName, nil];
+	}
+	
+	if ([nodeInfo isDirty])
+		return dirtyAttributes;
+	
+	if ([[nodeInfo parentFSViewer] areNodesVirtual])
+		return virtualAttributes;
+	
+	if ([nodeInfo isLink])
+		return italicAttributes;
+	
+	if ([nodeInfo hgStatus] == eHGStatusIgnored)
+		return grayedAttributes;
+	
+	return standardAttributes;
+}
 
