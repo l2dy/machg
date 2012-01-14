@@ -809,6 +809,9 @@ static inline int		numberAsInt(NSNumber* num)		{ return [num intValue]; }
 static inline NSNumber*	floatAsNumber(float f)			{ return [NSNumber numberWithFloat:f]; }
 static inline float		numberAsFloat(NSNumber* num)	{ return [num floatValue]; }
 
+static inline NSNumber*	boolAsNumber(bool b)			{ return [NSNumber numberWithBool:b]; }
+static inline BOOL		numberAsBool(NSNumber* num)		{ return [num boolValue]; }
+
 static inline NSString*	numberAsString(NSNumber* num)	{ return [num stringValue]; }
 static inline NSNumber*	stringAsNumber(NSString* str)	{ return [NSNumber numberWithInt:[str intValue]]; }
 
