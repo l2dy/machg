@@ -13,6 +13,14 @@
 @class JHConcertinaSubView;
 
 
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  JHConcertinaView and JHConcertinaSubView
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
 @interface JHConcertinaSubView : NSView
 {
 	NSView*		divider;
@@ -28,8 +36,9 @@
 
 
 // Accessors
+- (NSView*) divider;
+- (NSView*) content;
 - (CGFloat) dividerHeight;
-- (CGFloat) dividerWidth;
 - (CGFloat) contentHeight;
 - (CGFloat) height;
 - (BOOL)	clickIsInsideDivider:(NSEvent*)theEvent;
@@ -58,7 +67,9 @@
 }
 
 - (JHConcertinaSubView*) pane:(NSInteger)paneNumber;
-- (BOOL)isSubviewCollapsed:(NSView*)subview;
+- (BOOL) isSubviewCollapsed:(NSView*)subview;
+- (BOOL) spaceAbove:(JHConcertinaSubView*)subview;
+- (BOOL) spaceInAndBelow:(JHConcertinaSubView*)subview;
 
 
 // Position Autosaving
@@ -68,3 +79,18 @@
 - (void) setAutosavePositionName:(NSString*)name;
 
 @end
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  ShowResizeUpDownCursorView
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+// This is a simple complementary view to the concertina view which will overrride addCursorRect:cursor so that mouse tracking
+// within this region shows an upDownResize cursor 
+@interface ShowResizeUpDownCursorView : NSView
+@end
+

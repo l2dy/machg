@@ -44,7 +44,28 @@ static inline NSString* fstr(NSString* format, ...)
     return string;
 }
 
+NSView* enclosingViewOfClass(NSView* view, Class class)
+{
+	NSView* theView = view;
+	while(theView)
+	{
+		if ([theView isKindOfClass:class])
+			return theView;
+		theView = [theView superview];
+	}
+	return nil;
+}
 
+static NSCursor* cursorForSpaceAboveAndBelow(BOOL spaceAbove, BOOL spaceInAndBelow)
+{
+	if (spaceAbove && spaceInAndBelow)
+		return [NSCursor resizeUpDownCursor];
+	if (!spaceAbove && spaceInAndBelow)
+		return [NSCursor resizeDownCursor];
+	if (spaceAbove && !spaceInAndBelow)
+		return [NSCursor resizeUpCursor];	
+	return [NSCursor arrowCursor];
+}
 
 
 
@@ -108,9 +129,9 @@ static inline NSString* fstr(NSString* format, ...)
 // MARK:  Accessors
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+- (NSView*) divider			 { return divider; }
+- (NSView*) content			 { return content; }
 - (CGFloat) dividerHeight	 { return divider.frame.size.height; }
-- (CGFloat) dividerWidth	 { return divider.frame.size.width; }
-
 - (CGFloat) contentHeight	 { return [self height] - [self dividerHeight]; }
 - (CGFloat) height			 { return self.frame.size.height; }
 - (void)	setOldPaneHeight { oldPaneHeight = MAX([self height], 100); };
@@ -305,8 +326,10 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 	if (dividerDragNumber < 0)
 		return;
 
+	JHConcertinaSubView* draggedSubpane = [self pane:dividerDragNumber];
+	NSView* draggedDivider = [draggedSubpane divider];
+
 	CGFloat dividerAnchors[count];
-	
 	for (int i = 0; i<count; i++)
 		dividerAnchors[i] = [[self pane:i] frame].origin.y;
 
@@ -316,6 +339,7 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 		if ([event type] == NSLeftMouseUp)
 		{
 			dividerDragNumber = -1;
+			[[self window] invalidateCursorRectsForView:draggedDivider];
 			return;
 		}
 		if ([event type] != NSLeftMouseDragged)
@@ -362,6 +386,11 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 					break;
 			}
 		}
+
+		BOOL spaceAbove      = [self spaceAbove:draggedSubpane];
+		BOOL spaceInAndBelow = [self spaceInAndBelow:draggedSubpane];
+		NSCursor* cursor = cursorForSpaceAboveAndBelow(spaceAbove, spaceInAndBelow);
+		[cursor set];
     }
 }
 
@@ -417,9 +446,14 @@ static inline CGFloat total(CGFloat* array, NSInteger count)
 		[self setFrame:newFrame];
 	}
 
+	BOOL initiallyCollapsed[count];
+	
 	// Initilize Pane heights by inserting / deleting the extra space into the first pane
 	for (int i = 0; i<count; i++)
-		paneHeights[i] = constrain([[self pane:i] height], dividerHeights[i], CGFLOAT_MAX);	
+	{
+		paneHeights[i] = constrain([[self pane:i] height], dividerHeights[i], CGFLOAT_MAX);
+		initiallyCollapsed[i] = paneHeights[i] <= dividerHeights[i];
+	}
 	
 	// Iterate until we adjust the paneHeights to yeild the new goal total height
 	CGFloat goalTotalHeight = self.frame.size.height;
@@ -496,6 +530,35 @@ static inline CGFloat total(CGFloat* array, NSInteger count)
 }
 
 
+// Reports whether the divider in the passed in subpane be dragged further up
+- (BOOL) spaceAbove:(JHConcertinaSubView*)subview
+{
+	for (JHConcertinaSubView* pane in arrayOfConcertinaPanes)
+	{
+		if (pane == subview)
+			return NO;
+		if ([pane contentHeight] > 0)
+			return YES;
+	}
+	return NO;
+}
+
+// Reports whether the divider in the passed in subpane be dragged further down
+- (BOOL) spaceInAndBelow:(JHConcertinaSubView*)subview
+{
+	BOOL found = NO;
+	for (JHConcertinaSubView* pane in arrayOfConcertinaPanes)
+	{
+		found |= (pane == subview);
+		if (!found)
+			continue;
+		if ([pane contentHeight] > 0)
+			return YES;
+	}
+	return NO;
+}
+
+
 - (BOOL) isOpaque { return YES; }
 
 
@@ -543,4 +606,28 @@ static inline CGFloat total(CGFloat* array, NSInteger count)
 	[self setNeedsDisplay:YES];
 }
 
+@end
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  SplitView Autosaving
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+
+@implementation ShowResizeUpDownCursorView
+- (void)resetCursorRects
+{
+	JHConcertinaSubView* subView = (JHConcertinaSubView*)enclosingViewOfClass(self, [JHConcertinaSubView class]);
+	JHConcertinaView* parentConcertinaView = (JHConcertinaView*)enclosingViewOfClass(self, [JHConcertinaView class]);
+	if (!parentConcertinaView)
+		[self addCursorRect:[self bounds] cursor:[NSCursor resizeUpDownCursor]];
+	BOOL spaceAbove      = [parentConcertinaView spaceAbove:subView];
+	BOOL spaceInAndBelow = [parentConcertinaView spaceInAndBelow:subView];
+	NSCursor* cursor = cursorForSpaceAboveAndBelow(spaceAbove, spaceInAndBelow);
+	[self addCursorRect:[self bounds] cursor:cursor];
+}
 @end
