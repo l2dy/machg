@@ -429,7 +429,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		
 		// If we found a user name in the user ~/.hgrc file but not the application support then copy the user name to the application
 		// support file.
-		if (!IsEmpty(result.outStr))
+		if (IsNotEmpty(result.outStr))
 		{
 			NSFileManager* fileManager = [NSFileManager defaultManager];
 			NSString* macHgHGRCpath = fstr(@"%@/hgrc", applicationSupportFolder());
@@ -474,7 +474,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 
 - (void) checkForMercurialWarningsAndErrors
 {
-	NSArray* versionArgs = [NSArray arrayWithObject:@"version"];
+	NSArray* versionArgs = [NSArray arrayWithObjects: @"--header", @"version", nil];
 	NSString* hgBinary = executableLocationHG();
 	ExecutionResult* results = [ShellTask execute:hgBinary withArgs:versionArgs withEnvironment:[TaskExecutions environmentForHg]];
 	if ([results hasWarnings] && WarnAboutBadMercurialConfigurationFromDefaults())
