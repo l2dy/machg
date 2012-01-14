@@ -12,6 +12,23 @@
 			var element = $("diff");
 			element.innerHTML = "<p class='message'>" + msg + "</p>";
 		}
+        var showGeneratingMessage = function(msg) {
+   			var element = $("diff");
+			element.innerHTML = "<span class='message'>" + msg + "</span>" + " <div class='spinner'>"+
+				"<div class='bar1'></div>"+
+				"<div class='bar2'></div>"+
+				"<div class='bar3'></div>"+
+				"<div class='bar4'></div>"+
+				"<div class='bar5'></div>"+
+				"<div class='bar6'></div>"+
+				"<div class='bar7'></div>"+
+				"<div class='bar8'></div>"+
+				"<div class='bar9'></div>"+
+				"<div class='bar10'></div>"+
+				"<div class='bar11'></div>"+
+				"<div class='bar12'></div>"+
+			  "</div>";
+        }
 		var changeFontSizeToMacHgDefaults = function() {
 			var existingSheet = document.getElementById("dynamicStyle");
 			if (!existingSheet) {

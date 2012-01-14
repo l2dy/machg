@@ -21,6 +21,7 @@
 #import "MonitorFSEvents.h"
 #import "RepositoryData.h"
 #import "ShellHere.h"
+#import "JHConcertinaView.h"
 
 
 
@@ -636,7 +637,7 @@
 	if ([[theTaskContoller shellTask] isRunning])
 	{
 		WebScriptObject* script = [detailedDiffWebView windowScriptObject];
-		[script callWebScriptMethod:@"showMessage" withArguments:[NSArray arrayWithObject:@"Generating Differences..."]];
+		[script callWebScriptMethod:@"showGeneratingMessage" withArguments:[NSArray arrayWithObject:@"Generating Differences "]];
 	}
 }
 
@@ -645,6 +646,11 @@
 	WebScriptObject* script = [detailedDiffWebView windowScriptObject];
 	[script setValue:self forKey:@"machgFSViewer"];
 	[script callWebScriptMethod:@"changeFontSizeToMacHgDefaults" withArguments:nil];
+	
+	JHConcertinaSubView* subView = (JHConcertinaSubView*)[detailedDiffWebView enclosingViewOfClass:[JHConcertinaSubView class]];
+	JHConcertinaView* parentConcertinaView = (JHConcertinaView*)[subView enclosingViewOfClass:[JHConcertinaView class]];
+	if (parentConcertinaView && [parentConcertinaView isSubviewCollapsed:subView])
+		return;
 	
 	NSArray* selectedPaths = [self absolutePathsOfSelectedFilesInBrowser];
 	if (IsEmpty(selectedPaths))
@@ -667,12 +673,16 @@
 	[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(putUpGeneratingDifferencesNotice:) userInfo:currentDifferencesTaskController repeats:NO];
 	dispatch_async(globalQueue(), ^{
 		ExecutionResult* diffResult = [TaskExecutions executeMercurialWithArgs:argsDiff  fromRoot:rootPath logging:eLoggingNone  withDelegate:currentDifferencesTaskController];
-		NSArray* showDiffArgs = [NSArray arrayWithObject:diffResult.outStr];
+		BOOL empty = IsEmpty(diffResult.outStr);
+		NSArray* diffResultAsArg = [NSArray arrayWithObject:diffResult.outStr];
 		dispatch_async(mainQueue(), ^{
 			if (currentTaskNumber == currentDifferencesRegenerationNumber_)
 			{
 				WebScriptObject* script = [detailedDiffWebView windowScriptObject];
-				[script callWebScriptMethod:@"showDiff" withArguments:showDiffArgs];
+				if (!empty)
+					[script callWebScriptMethod:@"showDiff" withArguments:diffResultAsArg];
+				else
+					[script callWebScriptMethod:@"showMessage" withArguments:[NSArray arrayWithObject:@""]];
 			}
 		});
 	});
