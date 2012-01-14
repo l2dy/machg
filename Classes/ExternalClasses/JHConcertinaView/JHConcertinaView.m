@@ -219,7 +219,7 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 // MARK: -
 
 @interface JHConcertinaView (PrivateAPI)
-- (void) doDividerDragLoop:(NSEvent*)theEvent;
+- (void) doDragLoopOfDivider:(NSInteger)dividerDragIndex withEvent:(NSEvent*)theEvent;
 @end
 
 
@@ -263,8 +263,6 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 	for (JHConcertinaSubView* pane in arrayOfConcertinaPanes)
 		[pane setOldPaneHeight];
 
-	
-	dividerDragNumber = -1;
 
 	[self setDelegate:self];
 	awake_ = YES;
@@ -280,37 +278,35 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 
 
 - (void) mouseDown:(NSEvent*)theEvent
-{	
+{
+	NSInteger dividerDragIndex = NSNotFound;
 	for (JHConcertinaSubView* pane in arrayOfConcertinaPanes)
-	{
-		if (![pane clickIsInsideDivider:theEvent])
-			continue;
-
-		// Look for double clicks in the divider's, and if we only have a single click figure out if we are dragging.
-		NSInteger index = [arrayOfConcertinaPanes indexOfObject:pane];
-		if ([theEvent clickCount] > 1)
+		if ([pane clickIsInsideDivider:theEvent])
 		{
-			NSMutableArray* otherPanes = [arrayOfConcertinaPanes mutableCopy];
-			[otherPanes removeObject:pane];
-			if ([pane contentHeight] == 0)
-				[pane expandPaneTakingSpaceFromPanes:otherPanes];
-			else
-				[pane collapsePaneGivingSpaceToPanes:otherPanes];
-			[self splitView:self resizeSubviewsWithOldSize:[self frame].size];
-			return;
+			dividerDragIndex = [arrayOfConcertinaPanes indexOfObject:pane];
+			break;
 		}
-		dividerDragNumber = index;
-		break;
-	}
-	
-	// If we are dragging do the drag loop until the mouse is let up.
-	if (dividerDragNumber > 0)
+
+	if (dividerDragIndex == NSNotFound)
 	{
-		[self doDividerDragLoop:theEvent];
+		[super mouseDown:theEvent];
 		return;
 	}
-	
-	[super mouseDown:theEvent];
+
+	// If the divider was single clicked then drag it otherwise animate a collapse / expand of the divider's content
+	if ([theEvent clickCount] <= 1)
+		[self doDragLoopOfDivider:dividerDragIndex withEvent:theEvent];
+	else
+	{
+		NSMutableArray* otherPanes = [arrayOfConcertinaPanes mutableCopy];
+		JHConcertinaSubView* pane = [self pane:dividerDragIndex];
+		[otherPanes removeObject:pane];
+		if ([pane contentHeight] == 0)
+			[pane expandPaneTakingSpaceFromPanes:otherPanes];
+		else
+			[pane collapsePaneGivingSpaceToPanes:otherPanes];
+		[self splitView:self resizeSubviewsWithOldSize:[self frame].size];
+	}
 }
 
 
@@ -318,15 +314,15 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 // will never be called when you are dragging a divider since NSSplitView will be swallowing the events. Thus we do the same
 // thing here. This complication is necessary since we want to be able to drag one divider past another and have both dividers
 // move. The UI is just better this way. When playing with it before I was frustrated by this lack of movement and this fixes it.
-- (void) doDividerDragLoop:(NSEvent*)theEvent
+- (void) doDragLoopOfDivider:(NSInteger)dividerDragIndex withEvent:(NSEvent*)theEvent
 {
 	CGFloat mouseAnchor = [theEvent locationInWindow].y;
 	NSInteger count = [arrayOfConcertinaPanes count];
 	
-	if (dividerDragNumber < 0)
+	if (dividerDragIndex < 0)
 		return;
 
-	JHConcertinaSubView* draggedSubpane = [self pane:dividerDragNumber];
+	JHConcertinaSubView* draggedSubpane = [self pane:dividerDragIndex];
 	NSView* draggedDivider = [draggedSubpane divider];
 
 	CGFloat dividerAnchors[count];
@@ -338,7 +334,6 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 		NSEvent* event = [[self window] nextEventMatchingMask:NSLeftMouseUpMask | NSLeftMouseDraggedMask];
 		if ([event type] == NSLeftMouseUp)
 		{
-			dividerDragNumber = -1;
 			[[self window] invalidateCursorRectsForView:draggedDivider];
 			return;
 		}
@@ -348,7 +343,7 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 		CGFloat newMouse = [event locationInWindow].y;
 		CGFloat diffMouse = newMouse - mouseAnchor;
 
-		const NSInteger i = dividerDragNumber;
+		const NSInteger i = dividerDragIndex;
 		CGFloat diffDivider = dividerAnchors[i] - [[self pane:i] frame].origin.y;
 		CGFloat diff = (diffMouse - diffDivider);
 		if (fabs(diff) < 1)
@@ -392,13 +387,6 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 		NSCursor* cursor = cursorForSpaceAboveAndBelow(spaceAbove, spaceInAndBelow);
 		[cursor set];
     }
-}
-
-
-- (void) mouseUp:(NSEvent*)theEvent
-{
-	dividerDragNumber = -1;
-	[super mouseUp:theEvent];
 }
 
 

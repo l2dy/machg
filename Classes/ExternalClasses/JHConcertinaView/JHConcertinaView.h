@@ -61,7 +61,6 @@
 	IBOutlet NSView*	contentView4;
 
 	NSArray*			arrayOfConcertinaPanes;		// Array of JHConcertinaSubView
-	NSInteger			dividerDragNumber;			// Which divider is currently being dragged. -1 is no divider
 	NSString*			autosavePoistionName_;
 	BOOL				awake_;
 }
