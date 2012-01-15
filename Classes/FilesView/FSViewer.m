@@ -645,7 +645,7 @@
 - (void) regenerateDifferencesInWebview
 {
 	WebScriptObject* script = [detailedDiffWebView windowScriptObject];
-	[script setValue:self forKey:@"machgFSViewer"];
+	[script setValue:self forKey:@"machgWebviewController"];
 	[script callWebScriptMethod:@"changeFontSizeToMacHgDefaults" withArguments:nil];
 	
 	JHConcertinaSubView* subView = (JHConcertinaSubView*)[detailedDiffWebView enclosingViewOfClass:[JHConcertinaSubView class]];

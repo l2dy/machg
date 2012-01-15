@@ -81,7 +81,7 @@
 	NSURL* patchDetailURL = [NSURL fileURLWithPath:fstr(@"%@/Webviews/htmlForImport/%@",[[NSBundle mainBundle] resourcePath], @"index.html")];
 	[[detailedPatchWebView mainFrame] loadRequest:[NSURLRequest requestWithURL:patchDetailURL]];
 
-	[[detailedPatchWebView windowScriptObject] setValue:self forKey:@"macHgPatchesTableView"];
+	[[detailedPatchWebView windowScriptObject] setValue:self forKey:@"machgWebviewController"];
 	
 	[self setRowHeight:30];
 }
@@ -260,7 +260,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 - (void) tableViewSelectionDidChange:(NSNotification*)aNotification
 {
 	WebScriptObject* script = [detailedPatchWebView windowScriptObject];
-	[script setValue:self forKey:@"macHgPatchesTableView"];
+	[script setValue:self forKey:@"machgWebviewController"];
 	NSInteger selectedRowCount = [[self selectedRowIndexes] count];
 	if (selectedRowCount == 0)
 	{
