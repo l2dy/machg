@@ -2,7 +2,7 @@ body {
 	margin: 0;
 	margin-top: 5px;
 	width: 100%;
-	font: small 'Lucida Grande', Arial;
+	font-family: small 'Lucida Grande', Arial;
 }
 
 .diff .file {
@@ -17,54 +17,111 @@ body {
 	float: right;
 }
 
-.diff .file .fileHeader {
+.file .fileHeader {
 	margin-top: -5px;
 	padding-bottom: 1px;
 	font-weight: bold;
 }
 
-.diff .file .diffcontent {
+.file .diffcontent {
 	white-space: pre;
-	font-family: Monaco;
+	font: Monaco;
 }
 
-.diff .file .diffcontent .lineno {
-	float: left;
-	padding-left: 2px;
-	padding-right: 2px;
+.lineno {
 	background-color: #ECECEC;
 	color: #A9A9A9;
-	border: 1px solid #DDDDDD;
+	padding-left: 2px;
+	padding-right: 2px;
 	text-align: right;
 }
 
-.diff .file .diffcontent .lines {
+div.lineno {
+	float: left;
+	border: 1px solid #DDDDDD;
+}
+
+.diffcontent td {
+    padding: 0px;
+    vertical-align: baseline;
+}
+
+td.lineno {        
+    border-right: 1px solid #DDDDDD;
+    border-left: 1px solid #DDDDDD;
+}
+
+.diffcontent .lines {
 	overflow: auto;
 }
 
+
+/* side by side table layout */
+
+table.diffcontent {
+    border-collapse:collapse;
+    font-family: Consolas, "Liberation Mono", Monaco, "Lucida Console", monospace;
+    font-size:inherit;
+    border-style: none;
+    border-spacing: 0px;
+    padding:0px;
+    width: 100%;
+}
+
+.difftruncate table.diffcontent {
+    table-layout:fixed;
+}
+
+.difftruncate td {
+    white-space:pre;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    padding-left: 0.3em;
+    text-indent: 0px;
+}
+
+
+.diffwrap table.diffcontent {
+    table-layout:auto;
+}
+
+.diffwrap td {
+    white-space:pre-wrap;
+    padding-left: 2.3em;
+    text-indent: -2em;
+}
+
+
+td.lineno {
+	padding-left: 2px;
+	padding-right: 2px;
+    text-indent:0px;
+}
+
+
 /* @group Hunk */
 
-.hunk > .hunkheader {
+.hunk .hunkheader {
   background-color: #f7f7f7;
   color: #bbb;
 }
 
 
-.hunk > .delline {
+.hunk .delline {
   background-color: #FEE;
   color: #B00;
 }
 
-.hunk > .addline {
+.hunk .addline {
   background-color: #DFD;
   color: #080;
 }
 
-.hunk > .noopline {
+.hunk .noopline {
   background-color: #f4f8fc;
 }
 
-.hunk > .whitespace {
+.hunk .whitespace {
 	background-color: rgba(255,0,0,0.5);
 }
 
@@ -73,29 +130,29 @@ body {
 
 /* @group DisabledHunk */
 
-.disabledhunk > .hunkheader {
+.disabledhunk .hunkheader {
   background-color: #f7f7f7;
   color: #a1a1a1;
 }
 
 
-.disabledhunk > .delline {
+.disabledhunk .delline {
   background-color: #e5e5e5;
   color: #7c7c7c;
 }
 
-.disabledhunk > .addline {
+.disabledhunk .addline {
   background-color: #e5e5e5;
   color: #7c7c7c;
 }
 
-.disabledhunk > .noopline {
+.disabledhunk .noopline {
   background-color: #f1f1f1;
   color: #7c7c7c;
 
 }
 
-.disabledhunk > .whitespace {
+.disabledhunk .whitespace {
   background-color: #f1f1f1;
 }
 
@@ -111,6 +168,9 @@ body {
 	padding-top: 3em;
 	padding-left: 2em;
 }
+
+
+/* @group Spinners */
 
 div.spinner {
   position: relative;
@@ -151,3 +211,5 @@ div.spinner div.bar12 {-webkit-transform:rotate(330deg) translate(0, -142%); -we
   from {opacity: 1;}
   to {opacity: 0.25;}
 }
+
+/* @end */

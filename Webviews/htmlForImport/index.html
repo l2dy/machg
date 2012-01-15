@@ -3,10 +3,10 @@
 	<title>Details for commit</title>
 	<link rel="stylesheet" href="../common/diff.css" type="text/css" media="screen" title="no title" charset="utf-8">
 	<script src="../common/common.js" type="text/javascript" charset="utf-8"></script>
-	<script src="diffHighlighter.js" type="text/javascript" charset="utf-8"></script>
+	<script src="../common/diffHighlighter.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript" charset="utf-8">
 		var showDiff = function(diff) {
-			highlightDiff(diff, $("diff"));
+			createUnifiedDiff(diff, $("diff"));
 		}
 		var showMessage = function(msg) {
 			var element = $("diff");
