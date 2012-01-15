@@ -64,6 +64,7 @@
 	IBOutlet NSView*	contentView4;
 
 	NSArray*			arrayOfConcertinaPanes;		// Array of JHConcertinaSubView
+	NSArray*			oldCollapsedStates_;		// Array of BOOL as NSNumber;
 	NSString*			autosavePoistionName_;
 	BOOL				awake_;
 }
@@ -105,3 +106,16 @@
 @interface ShowResizeUpDownCursorView : NSView
 @end
 
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Constants
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+extern NSString* const kConcertinaViewContentDidCollapse;	// The content subview of the concertina got squished up so that it's
+															// content height is zero. 
+extern NSString* const kConcertinaViewContentDidUncollapse;	// The content subview of the concertina got unsquished up so that
+															// it's content height is no longer zero. 

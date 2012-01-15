@@ -27,6 +27,9 @@ static inline CGFloat square(CGFloat f)									{ return f*f; }
 static inline CGFloat lowest(CGFloat val)								{ return (val > 0) ? floor(val) : ceil(val); }
 static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val < min) return min; if (val > max) return max; return val; }
 
+static inline NSNumber*	boolAsNumber(bool b)							{ return [NSNumber numberWithBool:b]; }
+static inline BOOL		numberAsBool(NSNumber* num)						{ return [num boolValue]; }
+
 static inline BOOL IsEmpty(id thing)
 {
     return
@@ -66,6 +69,11 @@ static NSCursor* cursorForSpaceAboveAndBelow(BOOL spaceAbove, BOOL spaceInAndBel
 		return [NSCursor resizeUpCursor];	
 	return [NSCursor arrowCursor];
 }
+
+NSString* const kConcertinaViewContentDidCollapse   = @"ConcertinaViewContentDidCollapse";
+NSString* const kConcertinaViewContentDidUncollapse = @"ConcertinaViewContentDidUncollapse";
+
+
 
 
 
@@ -216,6 +224,9 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 
 @interface JHConcertinaView (PrivateAPI)
 - (void) doDragLoopOfDivider:(NSInteger)dividerDragIndex withEvent:(NSEvent*)theEvent;
+- (void) recordCollapsedState;
+- (void) postDidUncollapse:(NSView*)contentSubview;
+- (void) postDidCollapse:(NSView*)contentSubview;
 @end
 
 
@@ -259,11 +270,42 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 	for (JHConcertinaSubView* pane in arrayOfConcertinaPanes)
 		[pane initOldPaneHeight];
 
+	[self recordCollapsedState];
 
 	[self setDelegate:self];
 	awake_ = YES;
 	[self restorePositionsFromDefaults];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(savePositionsToDefaults) name:NSSplitViewDidResizeSubviewsNotification object:self];
+}
+
+- (void) recordCollapsedState
+{
+	NSMutableArray* oldCollapsedState = [[NSMutableArray alloc]init];
+	for (JHConcertinaSubView* pane in arrayOfConcertinaPanes)
+		[oldCollapsedState addObject:boolAsNumber([pane contentHeight]<=0)];
+	oldCollapsedStates_ = [NSArray arrayWithArray:oldCollapsedState];	
+}
+
+- (void) updateCollapseState
+{
+	NSInteger count = [arrayOfConcertinaPanes count];
+	BOOL savedCollapseStateExists = [oldCollapsedStates_ count] == count;
+	BOOL recordNewCollapseSate = !savedCollapseStateExists;
+	if (savedCollapseStateExists)
+		for (int i = 0; i<count; i++)
+		{
+			JHConcertinaSubView* ithPane = [self pane:i];
+			BOOL initiallyCollapsed = numberAsBool([oldCollapsedStates_ objectAtIndex:i]);
+			BOOL collapsed = [ithPane contentHeight] <= 0;
+			recordNewCollapseSate |= (collapsed != initiallyCollapsed);
+			if (collapsed && !initiallyCollapsed)
+				[self postDidCollapse:[ithPane content]];
+			else if (!collapsed && initiallyCollapsed)
+				[self postDidUncollapse:[ithPane content]];
+		}
+	
+	if (recordNewCollapseSate)
+		[self recordCollapsedState];
 }
 
 
@@ -414,6 +456,9 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 // MARK:  SplitView Collapsing Delegates
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+- (void)	postDidUncollapse:(NSView*)contentSubview	{ [[NSNotificationCenter defaultCenter] postNotificationName:kConcertinaViewContentDidUncollapse object:contentSubview]; }
+- (void)	postDidCollapse:(NSView*)contentSubview		{ [[NSNotificationCenter defaultCenter] postNotificationName:kConcertinaViewContentDidCollapse	 object:contentSubview]; }
+
 - (BOOL)	splitView:(NSSplitView*)splitView  shouldCollapseSubview:(NSView*)subview forDoubleClickOnDividerAtIndex:(NSInteger)dividerIndex	{ return NO; }
 - (BOOL)	splitView:(NSSplitView*)splitView  canCollapseSubview:(NSView*)subview	{ return NO; }
 
@@ -514,6 +559,8 @@ static inline CGFloat total(CGFloat* array, NSInteger count)
 			[ithPane setNeedsDisplay:YES];
 		}
 	}
+	
+	[self updateCollapseState];
 }
 
 
@@ -527,8 +574,9 @@ static inline CGFloat total(CGFloat* array, NSInteger count)
 
 - (BOOL)isSubviewCollapsed:(NSView*)subview
 {
+	JHConcertinaSubView* concertinaSubView = (JHConcertinaSubView*)enclosingViewOfClass(subview, [JHConcertinaSubView class]);
 	for (JHConcertinaSubView* pane in arrayOfConcertinaPanes)
-		if (pane == subview)
+		if (pane == concertinaSubView)
 			return [pane contentHeight] == 0;
 	return NO;
 }
