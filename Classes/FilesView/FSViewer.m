@@ -756,13 +756,16 @@
 - (void) refreshBrowserPaths:(RepositoryPaths*)changes finishingBlock:(BlockProcess)theBlock
 {
 	NSString* rootPath = [changes rootPath];
-	NSArray* absoluteChangedPaths = pruneDisallowedPaths([changes absolutePaths]);
+	NSArray* absoluteChangedPaths = pruneDisallowedPaths(pruneContainedPaths([changes absolutePaths]));
 	if (IsEmpty(absoluteChangedPaths) || !pathIsExistentDirectory(rootPath))
 	{
 		if (theBlock)
 			theBlock();
 		return;
 	}
+	NSArray* canonicalizedSelectedPaths = pruneContainedPaths([self absolutePathsOfSelectedFilesInBrowser]);
+	NSArray* combined = [canonicalizedSelectedPaths arrayByAddingObjectsFromArray:absoluteChangedPaths];
+	BOOL changesInSelectedPaths = [pruneContainedPaths(combined) count] != [combined count];
 
 	ProcessListController* theProcessListController = [[self myDocument] theProcessListController];
 	NSNumber* processNum = [theProcessListController addProcessIndicator:@"Refresh Browser Data"];
@@ -828,6 +831,8 @@
 			}
 
 			[theProcessListController removeProcessIndicator:processNum];
+			if (changesInSelectedPaths)
+				[self regenerateDifferencesInWebview];
 		});
 
 		dispatchGroupWaitTime(group, 5.0);	// Wait for the main queue to finish. Thus any refreshes have to wait for the new
