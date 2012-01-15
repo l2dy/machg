@@ -982,7 +982,12 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	// load the default values for the user defaults
 	NSString*	  userDefaultsValuesPath = [[NSBundle mainBundle] pathForResource:@"UserDefaults" ofType:@"plist"];
 	NSDictionary* userDefaultsValuesDict = [NSDictionary dictionaryWithContentsOfFile:userDefaultsValuesPath];
-	
+#ifdef DEBUG
+	NSMutableDictionary* allowWebKitInspection = [userDefaultsValuesDict mutableCopy];
+	[allowWebKitInspection setObject:[NSNumber numberWithBool:YES] forKey:@"WebKitDeveloperExtras"];
+	userDefaultsValuesDict = allowWebKitInspection;
+#endif
+
 	// set them in the standard user defaults
 	[[NSUserDefaults standardUserDefaults] registerDefaults:userDefaultsValuesDict];
 }
