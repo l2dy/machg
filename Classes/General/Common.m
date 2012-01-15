@@ -425,18 +425,26 @@ NSArray* pruneDisallowedPaths(NSArray* paths)
 }
 
 
-// Assumes all paths are directories and there are no duplicates
 NSArray* pruneContainedPaths(NSArray* paths)
 {
+	// We jump through a few hoops here to ensure we don't have an n^2 algorithm and instead have a nearly linear algorithm. It
+	// depends of course on fast sorting. 
+	NSArray* sortedByLength = [paths sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
 	NSMutableArray* pruned = [[NSMutableArray alloc]init];
-	for (NSString* path in paths)
+	NSString* currentBase = nil;
+	for (NSString* path in sortedByLength)
 	{
-		BOOL includePath = YES;
-		for (NSString* compare in paths)
-			if ([path hasPrefix:compare] && [path isNotEqualTo:compare])
-				includePath = NO;
-		if (includePath)
-			[pruned addObject:path];
+		if (currentBase && [path hasPrefix:currentBase])
+		{
+			NSInteger currentBaseLength = [currentBase length];
+			if ([path length] <= [currentBase length])
+				continue;
+			if ([currentBase characterAtIndex:currentBaseLength-1]=='/' || [path characterAtIndex:currentBaseLength]=='/')
+				continue;
+		}
+		else
+			currentBase = path;
+		[pruned addObject:path];
 	}
 	return pruned;
 }
