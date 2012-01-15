@@ -1814,10 +1814,15 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 - (NSArray*) selectedItems
 {
 	NSMutableArray* nodes = [[NSMutableArray alloc]init];
-	NSIndexSet* rows = [self selectedRowIndexes];
-	[rows enumerateIndexesUsingBlock:^(NSUInteger row, BOOL* stop) {
-		[nodes addObjectIfNonNil:[self itemAtRow:row]];
-	}];	
+	
+	// We need to only call itemAtRow on the main thread. Bad things seem to happen if we don't...
+	__block NSIndexSet* rows;
+	dispatchSpliced(mainQueue(), ^{
+		rows = [self selectedRowIndexes];
+		[rows enumerateIndexesUsingBlock:^(NSUInteger row, BOOL* stop) {
+			[nodes addObjectIfNonNil:[self itemAtRow:row]];
+		}];
+	});
 	return nodes;	
 }
 
