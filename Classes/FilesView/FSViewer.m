@@ -82,6 +82,7 @@
 {
 	[self observe:kBrowserDisplayPreferencesChanged from:nil byCalling:@selector(reloadDataSin)];
 	[self observe:kDifferencesDisplayPreferencesChanged from:nil byCalling:@selector(regenerateDifferencesInWebview)];
+	[self observe:kConcertinaViewContentDidUncollapse	from:detailedDiffWebView byCalling:@selector(regenerateDifferencesInWebview)];
 	
 	[parentController setMyDocumentFromParent];	// Set up the parent's myDocument since the partent's awakeFromNib has not yet been called.
 	rootNodeInfo_ = nil;
