@@ -312,7 +312,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	NSIndexSet* rows = [self selectedRowIndexes];
 	NSMutableArray* entries = [[NSMutableArray alloc]init];
 	for (NSInteger row = [rows firstIndex]; row != NSNotFound; row = [rows indexGreaterThanIndex: row])
-		[entries addObject:[self entryForTableRow:row]];
+		[entries addObjectIfNonNil:[self entryForTableRow:row]];
 	return entries;
 }
 - (NSArray*) chosenRevisions
