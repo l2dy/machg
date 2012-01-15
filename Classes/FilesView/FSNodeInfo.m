@@ -16,7 +16,7 @@
 @implementation FSNodeInfo
 
 @synthesize parentFSViewer;
-@synthesize relativePath;
+@synthesize relativePathComponent;
 @synthesize absolutePath;
 @synthesize childNodes;
 @synthesize sortedChildNodeKeys;
@@ -66,7 +66,7 @@
 - (BOOL)		isDirty				{ return bitsInCommon(hgStatus, eHGStatusDirty); }
 - (BOOL)		isReadable			{ return [[NSFileManager defaultManager] isReadableFileAtPath:absolutePath]; }
 - (NSString*)	fsType				{ return [self isDirectory] ? @"Directory" : @"Non-Directory"; }
-- (NSString*)	lastPathComponent	{ return [relativePath lastPathComponent]; }
+- (NSString*)	lastPathComponent	{ return [relativePathComponent lastPathComponent]; }
 
 
 
@@ -154,7 +154,7 @@
 
 - (FSNodeInfo*) initRootNodeAtAbsolutePath: (NSString*)theAbsolutePath
 {
-	relativePath = theAbsolutePath;
+	relativePathComponent = theAbsolutePath;
 	absolutePath = theAbsolutePath;
 	childNodes = nil;
 	sortedChildNodeKeys = nil;
@@ -165,8 +165,8 @@
 - (FSNodeInfo*) initNewWithParent:(FSNodeInfo*)parent atRelativePath:(NSString*)path withParentViewer:(FSViewer*)viewer
 {
 	parentFSViewer = viewer;
-	relativePath = path;
-	absolutePath = [[parent absolutePath] stringByAppendingPathComponent:relativePath];
+	relativePathComponent = path;
+	absolutePath = [[parent absolutePath] stringByAppendingPathComponent:relativePathComponent];
 	childNodes = nil;
 	sortedChildNodeKeys = nil;
 	haveComputedTheProperties = NO;
@@ -179,7 +179,7 @@
 - (FSNodeInfo*) initWithNode:(FSNodeInfo*)node
 {
 	parentFSViewer = [node parentFSViewer];
-	relativePath = [node relativePath];
+	relativePathComponent = [node relativePathComponent];
 	absolutePath = [node absolutePath];
 	childNodes = [[node childNodes] mutableCopy];
 	sortedChildNodeKeys = nil;
@@ -462,7 +462,7 @@
 	FSNodeInfo* childNode = [enumerator nextObject];
 	while (childNode)
 	{
-		[[copiedNode childNodes] setObject:[childNode deepCopyAndDirtify] forKey:[childNode relativePath]];
+		[[copiedNode childNodes] setObject:[childNode deepCopyAndDirtify] forKey:[childNode relativePathComponent]];
 		childNode = [enumerator nextObject];
 	}
 	return copiedNode;
@@ -489,7 +489,7 @@
 			if (IsEmpty(component))
 				break;
 			FSNodeInfo* copiedNode = [node haveComputedTheProperties] ? [[FSNodeInfo alloc] initWithNode:node] : node;	// If we have already copied the node we don't need to copy it again
-			[[parent childNodes] setObject:copiedNode forKey:[copiedNode relativePath]];
+			[[parent childNodes] setObject:copiedNode forKey:[copiedNode relativePathComponent]];
 			
 			FSNodeInfo* childNode = [[copiedNode childNodes] objectForKey:component];
 			if (!childNode)
@@ -501,7 +501,7 @@
 			continue;
 
 		// We have arrived at the place we should do a deep copy and dirtify of the tree
-		[[parent childNodes] setObject:[node deepCopyAndDirtify] forKey:[node relativePath]];
+		[[parent childNodes] setObject:[node deepCopyAndDirtify] forKey:[node relativePathComponent]];
 	}
 	[newRoot computeProperties];
 	return newRoot;
@@ -532,7 +532,7 @@
 			if (IsEmpty(component))
 				break;
 			FSNodeInfo* copiedNode = [node haveComputedTheProperties] ? [[FSNodeInfo alloc] initWithNode:node] : node;	// If we have already copied the node we don't need to copy it again
-			[[parent childNodes] setObject:copiedNode forKey:[copiedNode relativePath]];
+			[[parent childNodes] setObject:copiedNode forKey:[copiedNode relativePathComponent]];
 
 			FSNodeInfo* childNode = [[copiedNode childNodes] objectForKey:component];
 			if (!childNode)
@@ -545,14 +545,14 @@
 			continue;
 		
 		// We have arrived at the place we should prune the tree
-		[[parent childNodes] removeObjectForKey:[node relativePath]];
+		[[parent childNodes] removeObjectForKey:[node relativePathComponent]];
 		
 		// We need to prune directories which only contained this one path and are now empty
 		FSNodeInfo* folder = [parentChain popLast];
 		while (folder && [[folder childNodes] count] == 0)
 		{
 			FSNodeInfo* parentOfFolder = [parentChain popLast];
-			[[parentOfFolder childNodes] removeObjectForKey:[folder relativePath]];
+			[[parentOfFolder childNodes] removeObjectForKey:[folder relativePathComponent]];
 			folder = parentOfFolder;
 		}
 	}
@@ -564,7 +564,7 @@
 
 - (NSString*) description
 {
-	return fstr(@"FSNodeInfo: %@:%@, status = %d", relativePath, absolutePath, hgStatus);
+	return fstr(@"FSNodeInfo: %@:%@, status = %d", relativePathComponent, absolutePath, hgStatus);
 }
 
 

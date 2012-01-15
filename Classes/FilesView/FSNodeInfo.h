@@ -22,7 +22,7 @@
 {
   @private
 	FSViewer*	parentFSViewer;				// The parent FSViewer which this node belongs to
-	NSString*   relativePath;				// Path component relative to the parent.
+	NSString*   relativePathComponent;		// Path component relative to the parent.
 	NSString*   absolutePath;
 	NSMutableDictionary* childNodes;		// map of pathComponent -> childNode
 	NSArray*	sortedChildNodeKeys;		// sorted array of all the keys of childNodes
@@ -38,7 +38,7 @@
 }
 
 @property (readwrite,assign) FSViewer* parentFSViewer;
-@property (readonly, assign) NSString* relativePath;
+@property (readonly, assign) NSString* relativePathComponent;
 @property (readwrite,assign) NSString* absolutePath;
 @property (readwrite,assign) NSMutableDictionary* childNodes;
 @property (readwrite,assign) NSArray* sortedChildNodeKeys;

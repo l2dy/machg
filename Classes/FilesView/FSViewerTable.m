@@ -154,7 +154,7 @@
 {
 	FSNodeInfo* node = [[self leafNodeForTableRow] objectAtIndex:requestedRow];
 	if ([[aTableColumn identifier] isEqualToString:@"name"])
-		return [node relativePath];
+		return [node relativePathComponent];
 	if ([[aTableColumn identifier] isEqualToString:@"path"])
 	{
 		NSString* root = [[parentViewer_ rootNodeInfo] absolutePath];
