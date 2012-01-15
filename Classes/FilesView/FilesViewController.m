@@ -35,7 +35,9 @@
 - (FilesViewController*) initFilesViewControllerWithDocument:(MacHgDocument*)doc
 {
 	myDocument = doc;
-	[NSBundle loadNibNamed:@"FilesView" owner:self];
+	dispatchSpliced(mainQueue(), ^{
+		[NSBundle loadNibNamed:@"FilesView" owner:self];
+	});
 	return self;
 }
 
