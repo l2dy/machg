@@ -180,6 +180,13 @@ typedef enum
 	eFilesTableDefault		= 0x02
 } FSViewerNumberDefaultOption;
 
+typedef enum
+{
+	eWebviewDiffStyleUnfied				 = 0x0,
+	eWebviewDiffStyleSideBySideWrapped   = 0x01,
+	eWebviewDiffStyleSideBySideTruncated = 0x02
+} WebviewDiffStyleOption;
+
 
 typedef enum
 {
@@ -462,6 +469,7 @@ extern NSString* const MHGDefaultAnnotationOptionUser;
 extern NSString* const MHGDefaultFilesView;
 extern NSString* const MHGDefaultHGIgnoreContents;
 extern NSString* const MHGDefaultWorkspacePath;
+extern NSString* const MHGDifferencesWebviewDiffStyle;
 extern NSString* const MHGDisplayFileIconsInBrowser;
 extern NSString* const MHGDisplayResultsOfAddRemoveRenameFiles;
 extern NSString* const MHGDisplayResultsOfMerging;
@@ -603,6 +611,7 @@ OnActivationOpenWhatOption		OnActivationOpenFromDefaults();
 ToolForDiffing					UseWhichToolForDiffingFromDefaults();
 ToolForMerging					UseWhichToolForMergingFromDefaults();
 FSViewerNumberDefaultOption		DefaultFilesViewFromDefaults();
+WebviewDiffStyleOption			DifferencesWebviewDiffStyleFromDefaults();
 
 BrowserDoubleClickAction		browserBehaviourDoubleClick();
 BrowserDoubleClickAction		browserBehaviourCommandDoubleClick();

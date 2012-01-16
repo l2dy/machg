@@ -83,6 +83,7 @@ NSString* const MHGDefaultAnnotationOptionUser				= @"DefaultAnnotationOptionUse
 NSString* const MHGDefaultFilesView							= @"DefaultFilesView";
 NSString* const MHGDefaultHGIgnoreContents              	= @"DefaultHGIgnoreContents";
 NSString* const MHGDefaultWorkspacePath						= @"DefaultWorkspacePath";
+NSString* const MHGDifferencesWebviewDiffStyle				= @"DifferencesWebviewDiffStyle";
 NSString* const MHGDisplayFileIconsInBrowser				= @"DisplayFileIconsInBrowser";
 NSString* const MHGDisplayResultsOfAddRemoveRenameFiles		= @"DisplayResultsOfAddRemoveRenameFiles";
 NSString* const MHGDisplayResultsOfMerging					= @"DisplayResultsOfMerging";
@@ -236,6 +237,7 @@ OnActivationOpenWhatOption	OnActivationOpenFromDefaults()		    { return enumFrom
 ToolForDiffing				UseWhichToolForDiffingFromDefaults()    { return enumFromDefaultsForKey(MHGUseWhichToolForDiffing); }
 ToolForMerging				UseWhichToolForMergingFromDefaults()    { return enumFromDefaultsForKey(MHGUseWhichToolForMerging); }
 FSViewerNumberDefaultOption	DefaultFilesViewFromDefaults()		    { return enumFromDefaultsForKey(MHGDefaultFilesView); }
+WebviewDiffStyleOption    DifferencesWebviewDiffStyleFromDefaults() { return enumFromDefaultsForKey(MHGDifferencesWebviewDiffStyle); }
 
 
 

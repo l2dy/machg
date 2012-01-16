@@ -43,6 +43,8 @@
 .DS_Store</string>
 	<key>DefaultWorkspacePath</key>
 	<string>~</string>
+	<key>DifferencesWebviewDiffStyle</key>
+	<integer>1</integer>
 	<key>DisplayFileIconsInBrowser</key>
 	<true/>
 	<key>DisplayResultsOfAddRemoveRenameFiles</key>
