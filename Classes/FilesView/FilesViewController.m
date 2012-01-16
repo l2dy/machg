@@ -17,6 +17,7 @@
 #import "TaskExecutions.h"
 #import "RepositoryData.h"
 #import "JHConcertinaView.h"
+#import "MAAttachedWindow.h"
 
 
 
@@ -164,6 +165,58 @@
 	NSString* autoSaveNameForConcertina = fstr(@"File:%@:FilesViewConcertinaPositions", fileName);
 	[concertinaView setAutosavePositionName:autoSaveNameForConcertina];
 	[concertinaView restorePositionsFromDefaults];	
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Differnces Mini Preferences Window
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (IBAction) differencesDisplayPreferencesChanged:(id)sender { [self postNotificationWithName:kDifferencesDisplayPreferencesChanged]; }
+
+- (IBAction) toggleAttachedDifferencesPreferencesWindow:(id)sender
+{
+	// Attach/detach window
+    if (!attachedDifferencesPreferenceWindow)
+	{
+        NSPoint buttonPoint = NSMakePoint(NSMaxX([DifferencesViewTogglePreferences frame]) - 2.0,
+                                          NSMidY([DifferencesViewTogglePreferences frame]) + 3.0);
+		NSPoint pointInWindow = [DifferencesViewTogglePreferences convertPoint:buttonPoint toView:nil];
+        attachedDifferencesPreferenceWindow = [[MAAttachedWindow alloc] initWithView:preferencesViewForAttachedWindow 
+																	 attachedToPoint:pointInWindow 
+																			inWindow:[DifferencesViewTogglePreferences window] 
+																			  onSide:MAPositionRightTop 
+																		  atDistance:2.0];
+        [attachedDifferencesPreferenceWindow setBorderColor:[NSColor colorWithDeviceWhite:0.9 alpha:1.0]];
+        [attachedDifferencesPreferenceWindow setBackgroundColor:[NSColor colorWithDeviceWhite:0.93 alpha:1.0]];
+        [attachedDifferencesPreferenceWindow setViewMargin:3.0];
+        [attachedDifferencesPreferenceWindow setBorderWidth:1.0];
+        [attachedDifferencesPreferenceWindow setCornerRadius:5.0];
+        [attachedDifferencesPreferenceWindow setHasArrow:YES];
+        [attachedDifferencesPreferenceWindow setDrawsRoundCornerBesideArrow:YES];
+        [attachedDifferencesPreferenceWindow setArrowBaseWidth:20];
+        [attachedDifferencesPreferenceWindow setArrowHeight:10];
+		[attachedDifferencesPreferenceWindow setDelegate:self];
+        [[self window] addChildWindow:attachedDifferencesPreferenceWindow ordered:NSWindowAbove];
+		[attachedDifferencesPreferenceWindow makeKeyWindow];
+    }
+	else
+	{
+        [[self window] removeChildWindow:attachedDifferencesPreferenceWindow];
+        [attachedDifferencesPreferenceWindow orderOut:self];
+        [attachedDifferencesPreferenceWindow release];
+        attachedDifferencesPreferenceWindow = nil;
+    }
+}
+
+- (void) windowDidResignKey:(NSNotification*)notification
+{
+	if ([notification object] == attachedDifferencesPreferenceWindow)
+		[self toggleAttachedDifferencesPreferencesWindow:self];
 }
 
 
@@ -412,6 +465,7 @@
 	if (theAction == @selector(mainMenuOpenSelectedFilesInFinder:))		return [myDocument localRepoIsSelectedAndReady] && [theFSViewer nodesAreChosen];
 	if (theAction == @selector(mainMenuRevealSelectedFilesInFinder:))	return [myDocument localRepoIsSelectedAndReady];
 	if (theAction == @selector(mainMenuOpenTerminalHere:))				return [myDocument localRepoIsSelectedAndReady];
+	if (theAction == @selector(differencesDisplayPreferencesChanged:))	return YES;
 
 	return NO;
 }

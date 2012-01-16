@@ -11,6 +11,7 @@
 #import "Common.h"
 #import "FSViewer.h"
 @class StatusSidebarSplitView;
+@class MAAttachedWindow;
 
 
 
@@ -44,7 +45,7 @@
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 
-@interface FilesView : NSView <AccessesDocument, ControllerForFSViewer, NSUserInterfaceValidations>
+@interface FilesView : NSView <AccessesDocument, ControllerForFSViewer, NSUserInterfaceValidations, NSWindowDelegate>
 {
 	IBOutlet FilesViewController* parentContoller;
 	IBOutlet FSViewer*		theFSViewer;
@@ -55,7 +56,11 @@
 	IBOutlet NSButton*		FilesViewBrowserSegement;
 	IBOutlet NSButton*		FilesViewOutlineSegement;
 	IBOutlet NSButton*		FilesViewTableSegement;
+	IBOutlet NSButton*		DifferencesViewTogglePreferences;
 	MacHgDocument*			myDocument;
+	
+	IBOutlet NSView*		preferencesViewForAttachedWindow;
+    MAAttachedWindow*		attachedDifferencesPreferenceWindow;
 }
 
 @property (readwrite,assign) MacHgDocument*	myDocument;
@@ -74,6 +79,8 @@
 // Actions
 - (IBAction) browserAction:(id)browser;			// Respond to a single click or a key down event
 - (IBAction) browserDoubleAction:(id)browser;	// Respond to a double click
+- (IBAction) differencesDisplayPreferencesChanged:(id)sender;	// Respond to a change in the display preferences
+- (IBAction) toggleAttachedDifferencesPreferencesWindow:(id)sender;
 
 @end
 
