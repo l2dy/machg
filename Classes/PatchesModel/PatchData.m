@@ -242,35 +242,42 @@ static NSString* htmlize(NSString* hunk)
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK:  PatchRecord
+// MARK:  PatchData
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-#define NSMaxiumRange    ((NSRange){.location= 0UL, .length= NSUIntegerMax})
 
-@implementation PatchRecord
+@interface PatchData (PrivateAPI)
+-(void) parseBodyIntoFilePatches;
+@end
 
-@synthesize path = path_;
-@synthesize nodeID = nodeID_;
-@synthesize patchBody = patchBody_;
+@implementation PatchData
+
 @synthesize excludedPatchHunksForFilePath = excludedPatchHunksForFilePath_;
-@synthesize forceOption = forceOption_;
-@synthesize exactOption = exactOption_;
-@synthesize dontCommitOption = dontCommitOption_;
-@synthesize importBranchOption = importBranchOption_;
-@synthesize guessRenames = guessRenames_;
-@synthesize authorIsModified = authorIsModified_;
-@synthesize dateIsModified = dateIsModified_;
-@synthesize commitMessageIsModified = commitMessageIsModified_;
-@synthesize parentIsModified = parentIsModified_;
-
-
-
+@synthesize patchBody = patchBody_;
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 // MARK:  Initialization
 // -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (PatchData*) initWithDiffContents:(NSString*)contents
+{
+	excludedPatchHunksForFilePath_ = [[NSMutableDictionary alloc]init];
+	filePatchForFilePath_ = [[NSMutableDictionary alloc]init];
+	filePatches_ = [[NSMutableArray alloc]init];
+	patchBody_ = contents;
+	[self parseBodyIntoFilePatches];
+	return self;
+}
+
++ (PatchData*) patchDataFromDiffContents:(NSString*)diff
+{
+	return [[PatchData alloc] initWithDiffContents:diff];
+}
+
+
+
 
 //	syntax "patch" "\.(patch|diff)$"
 //	color brightgreen "^\+.*"
@@ -357,12 +364,12 @@ static NSString* htmlize(NSString* hunk)
 		[diffStatHeader	setObject:[NSFont fontWithName:@"Monaco"  size:15] forKey:NSFontAttributeName];
 	}
 
-	ExecutionResult* result = [ShellTask execute:@"/usr/bin/diffstat" withArgs:[NSArray arrayWithObjects:path_, nil] withEnvironment:[TaskExecutions environmentForHg]];
-	if ([result hasNoErrors])
-	{
-		[colorized appendAttributedString:[NSAttributedString string:@"Patch Statistics\n" withAttributes:diffStatHeader]];
-		[colorized appendAttributedString:[NSAttributedString string:result.outStr withAttributes:diffStatLine]];
-	}
+	//ExecutionResult* result = [ShellTask execute:@"/usr/bin/diffstat" withArgs:[NSArray arrayWithObjects:path_, nil] withEnvironment:[TaskExecutions environmentForHg]];
+	//if ([result hasNoErrors])
+	//{
+	//	[colorized appendAttributedString:[NSAttributedString string:@"Patch Statistics\n" withAttributes:diffStatHeader]];
+	//	[colorized appendAttributedString:[NSAttributedString string:result.outStr withAttributes:diffStatLine]];
+	//}
 
 	
 	NSMutableArray* lines = [[NSMutableArray alloc]init];
@@ -500,6 +507,34 @@ static NSString* htmlize(NSString* hunk)
 	[currentFilePatch finishHunk:hunkLines];	
 }
 
+@end
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  PatchRecord
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+#define NSMaxiumRange    ((NSRange){.location= 0UL, .length= NSUIntegerMax})
+
+@implementation PatchRecord
+
+@synthesize path = path_;
+@synthesize nodeID = nodeID_;
+@synthesize patchData = patchData_;
+@synthesize forceOption = forceOption_;
+@synthesize exactOption = exactOption_;
+@synthesize dontCommitOption = dontCommitOption_;
+@synthesize importBranchOption = importBranchOption_;
+@synthesize guessRenames = guessRenames_;
+@synthesize authorIsModified = authorIsModified_;
+@synthesize dateIsModified = dateIsModified_;
+@synthesize commitMessageIsModified = commitMessageIsModified_;
+@synthesize parentIsModified = parentIsModified_;
+
+
 
 // Parse something like (without the indent):
 //	# HG changeset patch
@@ -524,9 +559,6 @@ static NSString* htmlize(NSString* hunk)
 	dontCommitOption_ = NO;
 	importBranchOption_ = YES;
 	guessRenames_ = YES;
-	excludedPatchHunksForFilePath_ = [[NSMutableDictionary alloc]init];
-	filePatchForFilePath_ = [[NSMutableDictionary alloc]init];
-	filePatches_ = [[NSMutableArray alloc]init];
 	
 	static NSString* linebreak = nil;
 	static NSString* headerRegEx = nil;
@@ -549,18 +581,14 @@ static NSString* htmlize(NSString* hunk)
 	NSArray* parts = [contents captureComponentsMatchedByRegex:headerRegEx options:RKLDotAll range:NSMaxiumRange error:NULL];
 	if ([parts count] <= 2)
 	{
-		patchBody_ = contents;
-		[self parseBodyIntoFilePatches];
+		patchData_ = [PatchData patchDataFromDiffContents:contents];
 		return self;
 	}
 
-	patchBody_ = trimString([parts objectAtIndex:2]);
+	patchData_ = [PatchData patchDataFromDiffContents:trimString([parts objectAtIndex:2])];
 	NSString* header  = trimString([parts objectAtIndex:1]);
 	if (!header)
-	{
-		[self parseBodyIntoFilePatches];
 		return self;
-	}
 
 	parts = [header captureComponentsMatchedByRegex:authorRegEx options:RKLMultiline range:NSMaxiumRange error:NULL];
 	if ([parts count] >= 1)
@@ -590,24 +618,19 @@ static NSString* htmlize(NSString* hunk)
 	if ([parts count] >= 1)
 		commitMessage_ = trimString([parts objectAtIndex:1]);
 	
-	[self parseBodyIntoFilePatches];
 	return self;
 }
 
 
-+ (PatchRecord*) patchDataFromFilePath:(NSString*)path
++ (PatchRecord*) patchRecordFromFilePath:(NSString*)path
 {
-	NSString* patchContents = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
-	if (!patchContents)
+	NSString* patchRecordContents = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
+	if (!patchRecordContents)
 		return nil;
 
-	return [[PatchRecord alloc] initWithFilePath:path contents:patchContents];
+	return [[PatchRecord alloc] initWithFilePath:path contents:patchRecordContents];
 }
 
-+ (PatchRecord*) patchDataFromDiffString:(NSString*)diff
-{
-	return [[PatchRecord alloc] initWithFilePath:nil contents:diff];
-}
 
 
 
@@ -615,10 +638,11 @@ static NSString* htmlize(NSString* hunk)
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK:  Quieres
+// MARK:  Queries
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (NSString*) patchName							{ return [path_ lastPathComponent]; }
+- (NSString*) patchBody							{ return [patchData_ patchBody]; }
 - (NSString*) author							{ return author_; }
 - (NSString*) date								{ return date_; }
 - (NSString*) commitMessage						{ return commitMessage_; }

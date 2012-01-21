@@ -680,7 +680,7 @@ static NSString* stringOfDifferencesWebviewDiffStyle()
 	dispatch_async(globalQueue(), ^{
 		ExecutionResult* diffResult = [TaskExecutions executeMercurialWithArgs:argsDiff  fromRoot:rootPath logging:eLoggingNone  withDelegate:currentDifferencesTaskController];
 		BOOL empty = IsEmpty(diffResult.outStr);
-		PatchRecord* patchData = !empty ? [PatchRecord patchDataFromDiffString:diffResult.outStr] : nil;
+		PatchData* patchData = !empty ? [PatchData patchDataFromDiffContents:diffResult.outStr] : nil;
 		NSString* htmlizedDiffString = [patchData patchBodyHTMLized];
 		
 		dispatch_async(mainQueue(), ^{

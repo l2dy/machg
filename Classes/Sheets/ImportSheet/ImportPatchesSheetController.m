@@ -68,7 +68,7 @@
 	//	for (int i = 1; i<10; i++)
 	//	{
 	//		NSString* patchPath = fstr(@"/Volumes/QuickSilver/Development/sandbox/myrepo/myrepo-feature0%d.patch", i);
-	//		PatchData* patch = [PatchData patchDataFromFilePath:patchPath];
+	//		PatchRecord* patch = [PatchRecord patchRecordFromFilePath:patchPath];
 	//		[newPatches addObject:patch];
 	//	}
 	//	[patchesTable addPatches:newPatches];
@@ -98,7 +98,7 @@
 		NSMutableArray* newPatches = [[NSMutableArray alloc]init];
 		for (NSURL* pathURL in fileURLs)
 		{
-			PatchRecord* patch = [PatchRecord patchDataFromFilePath:[pathURL path]];
+			PatchRecord* patch = [PatchRecord patchRecordFromFilePath:[pathURL path]];
 			[newPatches addObject:patch];
 		}
 		[patchesTable addPatches:newPatches];
@@ -149,9 +149,9 @@
 }
 
 
-- (NSString*) filteredPatch:(PatchRecord*)patch
+- (NSString*) filteredPatchBody:(PatchRecord*)patch
 {
-	NSString* filteredPatchString = trimString([patch patchBodyFiltered]);
+	NSString* filteredPatchBodyString = trimString([[patch patchData] patchBodyFiltered]);
 	
 	// Create a temporary file
 	NSString* tempFilePath = tempFilePathWithTemplate(@"MacHgFilteredPatch.XXXXXX");
@@ -162,7 +162,7 @@
 	}
 	
 	NSError* err = nil;
-	[filteredPatchString writeToFile:tempFilePath atomically:YES encoding:NSUTF8StringEncoding error:&err];
+	[filteredPatchBodyString writeToFile:tempFilePath atomically:YES encoding:NSUTF8StringEncoding error:&err];
 	return tempFilePath;
 }
 
@@ -186,7 +186,7 @@
 		if (!patch)
 			break;
 
-		BOOL willFilterPatch = IsNotEmpty([patch excludedPatchHunksForFilePath]);
+		BOOL willFilterPatch = IsNotEmpty([[patch patchData] excludedPatchHunksForFilePath]);
 		if ([patch authorIsModified]        || willFilterPatch)		[argsImport addObject:@"--user"    followedBy:[patch author]];
 		if ([patch dateIsModified]          || willFilterPatch)		[argsImport addObject:@"--date"    followedBy:[patch date]];
 		if ([patch commitMessageIsModified] || willFilterPatch)		[argsImport addObject:@"--message" followedBy:[patch commitMessage]];
@@ -197,7 +197,7 @@
 		if (guessRenames_)											[argsImport addObject:@"--similarity" followedBy:intAsString(constrainInteger((int)round(100 * guessSimilarityFactor_), 0, 100))];
 		NSString* patchPath = [patch path];
 		if (willFilterPatch)
-			patchPath = [self filteredPatch:patch];
+			patchPath = [self filteredPatchBody:patch];
 		[argsImport addObject:patchPath];
 		ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsImport  fromRoot:rootPath];
 		if ([result hasWarnings])

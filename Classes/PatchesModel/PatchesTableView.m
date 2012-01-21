@@ -386,7 +386,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 		for (NSString* path in resolvedFilenames)
 			if (pathIsExistentFile(path))
 			{
-				PatchRecord* patch = [PatchRecord patchDataFromFilePath:path];
+				PatchRecord* patch = [PatchRecord patchRecordFromFilePath:path];
 				[newPatches addObject:patch];
 			}
 		NSMutableArray* newTableData = [[NSMutableArray alloc] initWithArray:patchesTableData_];
@@ -413,14 +413,14 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 
 - (void) disableHunk:(NSString*)hunkNumber forFile:(NSString*)fileName 
 {
-	NSMutableDictionary* dict = [[self selectedPatch] excludedPatchHunksForFilePath];
+	NSMutableDictionary* dict = [[[self selectedPatch] patchData] excludedPatchHunksForFilePath];
 	NSMutableSet* set = [dict objectForKey:fileName addingIfNil:[NSMutableSet class]];
 	[set addObject:hunkNumber];
 }
 
 - (void) enableHunk:(NSString*)hunkNumber forFile:(NSString*)fileName 
 {
-	NSMutableDictionary* dict = [[self selectedPatch] excludedPatchHunksForFilePath];
+	NSMutableDictionary* dict = [[[self selectedPatch] patchData] excludedPatchHunksForFilePath];
 	NSMutableSet* set = [dict objectForKey:fileName];
 	[set removeObject:hunkNumber];
 }
@@ -428,7 +428,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 - (void) excludeHunksAccordingToModel
 {
 	WebScriptObject* script = [detailedPatchWebView windowScriptObject];
-	NSMutableDictionary* dict = [[self selectedPatch] excludedPatchHunksForFilePath];
+	NSMutableDictionary* dict = [[[self selectedPatch] patchData] excludedPatchHunksForFilePath];
 	for (NSString* file in [dict allKeys])
 		for (NSString* hunkNumber in [dict objectForKey:file])
 		{

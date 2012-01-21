@@ -9,6 +9,15 @@
 
 #import <Cocoa/Cocoa.h>
 
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  FilePatch
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
 @interface FilePatch : NSObject
 {
   @public
@@ -28,6 +37,42 @@
 
 
 
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  PatchData
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+@interface PatchData : NSObject
+{
+	// Note don't be confused between these file paths (of the source code being patched) and
+	// the path to the actual patch	
+	
+	NSMutableDictionary* excludedPatchHunksForFilePath_;	// Map of (NSString*)sourceCodeFilePath -> (NSMutableSet*)of(NSString*)excludedHunkNumber
+	NSMutableDictionary* filePatchForFilePath_;				// Map of (NSString*)sourceCodeFilePath -> (FilePatch*)patch (mirrors filePatches_)
+	NSMutableArray* filePatches_;							// Array of (FilePatch*)patch (mirrors filePatchForFilePath_)
+	NSString*		patchBody_;
+}	
+@property (readonly,assign) NSString* patchBody;
+@property (readonly,assign) NSMutableDictionary* excludedPatchHunksForFilePath;
+
++ (PatchData*) patchDataFromDiffContents:(NSString*)diff;
+
+- (NSAttributedString*) patchBodyColorized;
+
+- (NSString*) patchBodyFiltered;
+- (NSString*) patchBodyHTMLized;
+
+@end
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  PatchRecord
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
 @interface PatchRecord : NSObject
 {
 	NSString* path_;
@@ -36,14 +81,7 @@
 	NSString* commitMessage_;
 	NSString* parent_;
 	NSString* nodeID_;
-	NSString* patchBody_;
-
-	// Note don't be confused between these file paths (of the source code being patched) and
-	// the path to the actual patch	
-
-	NSMutableDictionary* excludedPatchHunksForFilePath_;	// Map of (NSString*)sourceCodeFilePath -> (NSMutableSet*)of(NSString*)excludedHunkNumber
-	NSMutableDictionary* filePatchForFilePath_;				// Map of (NSString*)sourceCodeFilePath -> (FilePatch*)patch (mirrors filePatches_)
-	NSMutableArray* filePatches_;							// Array of (FilePatch*)patch (mirrors filePatchForFilePath_)
+	PatchData* patchData_;
 	
 	BOOL	  forceOption_;
 	BOOL	  exactOption_;
@@ -51,17 +89,16 @@
 	BOOL	  importBranchOption_;
 	BOOL	  guessRenames_;
 
-	// If the PatchData is interactively modified keep track of which values have changed.
+	// If the PatchRecord is interactively modified, then keep track of which values have changed.
 	BOOL	  authorIsModified_;
 	BOOL	  dateIsModified_;
 	BOOL	  commitMessageIsModified_;
 	BOOL	  parentIsModified_;
 }
 
-@property (readwrite,assign) NSString*	path;
-@property (readwrite,assign) NSString*	nodeID;
-@property (readwrite,assign) NSString*	patchBody;
-@property (readwrite,assign) NSMutableDictionary* excludedPatchHunksForFilePath;
+@property (readonly,assign) NSString*	path;
+@property (readonly,assign) NSString*	nodeID;
+@property (readonly,assign) PatchData*	patchData;
 @property BOOL forceOption;
 @property BOOL exactOption;
 @property BOOL dontCommitOption;
@@ -72,8 +109,7 @@
 @property BOOL commitMessageIsModified;
 @property BOOL parentIsModified;
 
-+ (PatchRecord*) patchDataFromFilePath:(NSString*)path;
-+ (PatchRecord*) patchDataFromDiffString:(NSString*)diff;
++ (PatchRecord*) patchRecordFromFilePath:(NSString*)path;
 
 - (BOOL) commitOption;
 - (void) setCommitOption:(BOOL)value;
@@ -87,12 +123,8 @@
 - (void) setCommitMessage:(NSString*)message;
 - (void) setParent:(NSString*)parent;
 - (NSString*) patchName;
+- (NSString*) patchBody;
 
 - (BOOL) isModified;
-
-- (NSAttributedString*) patchBodyColorized;
-
-- (NSString*) patchBodyFiltered;
-- (NSString*) patchBodyHTMLized;
 
 @end
