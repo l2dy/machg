@@ -234,6 +234,18 @@ static NSString* htmlize(NSString* hunk)
 }
 
 
+- (NSString *)description
+{
+	NSMutableString* filteredFilePatch = [NSMutableString stringWithString:filePatchHeader];
+	
+	for (int i = 0; i<[hunks count]; i++)
+	{
+		[filteredFilePatch appendString:fstr(@"######## %@ ########\n", [hunkHashes objectAtIndex:i])];
+		[filteredFilePatch appendString:[hunks objectAtIndex:i]];		
+	}
+	return filteredFilePatch;
+}
+
 @end
 
 
@@ -441,6 +453,20 @@ static NSString* htmlize(NSString* hunk)
 			NSString* htmlizedFilePatch = [filePatch htmlizedFilePatch];
 			if (htmlizedFilePatch)
 				[finalString appendString:htmlizedFilePatch];
+		}
+	return finalString;
+}
+
+
+- (NSString *)description
+{
+	NSMutableString* finalString = [[NSMutableString alloc] init];
+	for (FilePatch* filePatch in filePatches_)
+		if (filePatch)
+		{
+			NSString* desc = [filePatch description];
+			if (desc)
+				[finalString appendString:desc];
 		}
 	return finalString;
 }
