@@ -608,18 +608,12 @@
 }
 
 
-- (NSNumber*) fontSizeOfDifferencesWebview
-{
-	return [NSNumber numberWithFloat:FontSizeOfDifferencesWebviewFromDefaults()];
-}
-
 + (NSString *)webScriptNameForSelector:(SEL)sel
 {
     // change the javascript name from 'disableHunk_forFile' to 'disableHunkForFile' etc...
 	if (sel == @selector(disableHunk:forFile:))			return @"disableHunkForFileName";
 	if (sel == @selector(enableHunk:forFile:))			return @"enableHunkForFileName";
 	if (sel == @selector(excludeHunksAccordingToModel))	return @"excludeHunksAccordingToModel";
-	if (sel == @selector(fontSizeOfDifferencesWebview))	return @"fontSizeOfDifferencesWebview";
 	return nil;
 }
 + (BOOL)isSelectorExcludedFromWebScript:(SEL)sel
@@ -627,7 +621,6 @@
 	if (sel == @selector(disableHunk:forFile:))			return NO;
 	if (sel == @selector(enableHunk:forFile:))			return NO;
 	if (sel == @selector(excludeHunksAccordingToModel))	return NO;
-    if (sel == @selector(fontSizeOfDifferencesWebview)) return NO;
     return YES;
 }
 + (BOOL)isKeyExcludedFromWebScript:(const char *)name { return NO; }
@@ -642,11 +635,22 @@
 	}
 }
 
+static NSString* stringOfDifferencesWebviewDiffStyle()
+{
+	switch (DifferencesWebviewDiffStyleFromDefaults())
+	{
+		case 	eWebviewDiffStyleUnfied:				return @"WebviewDiffStyleUnfied";
+		case	eWebviewDiffStyleSideBySideWrapped:		return @"WebviewDiffStyleSideBySideWrapped";
+		case	eWebviewDiffStyleSideBySideTruncated:	return @"WebviewDiffStyleSideBySideTruncated";
+	}
+	return @"";
+}
+
 - (void) regenerateDifferencesInWebview
 {
 	WebScriptObject* script = [detailedDiffWebView windowScriptObject];
 	[script setValue:self forKey:@"machgWebviewController"];
-	[script callWebScriptMethod:@"changeFontSizeToMacHgDefaults" withArguments:nil];
+	[script callWebScriptMethod:@"changeFontSizeOfDiff" withArguments:[NSArray arrayWithObject:fstr(@"%f",FontSizeOfDifferencesWebviewFromDefaults())]];
 	
 	JHConcertinaSubView* subView = (JHConcertinaSubView*)[detailedDiffWebView enclosingViewOfClass:[JHConcertinaSubView class]];
 	JHConcertinaView* parentConcertinaView = (JHConcertinaView*)[subView enclosingViewOfClass:[JHConcertinaView class]];
@@ -675,13 +679,14 @@
 	dispatch_async(globalQueue(), ^{
 		ExecutionResult* diffResult = [TaskExecutions executeMercurialWithArgs:argsDiff  fromRoot:rootPath logging:eLoggingNone  withDelegate:currentDifferencesTaskController];
 		BOOL empty = IsEmpty(diffResult.outStr);
-		NSArray* diffResultAsArg = [NSArray arrayWithObject:diffResult.outStr];
+		
 		dispatch_async(mainQueue(), ^{
 			if (currentTaskNumber == currentDifferencesRegenerationNumber_)
 			{
+				NSArray* showDiffArgs = [NSArray arrayWithObjects:diffResult.outStr, fstr(@"%fpx",fontSizeOfBrowserItemsFromDefaults()), stringOfDifferencesWebviewDiffStyle(), nil];
 				WebScriptObject* script = [detailedDiffWebView windowScriptObject];
 				if (!empty)
-					[script callWebScriptMethod:@"showDiff" withArguments:diffResultAsArg];
+					[script callWebScriptMethod:@"showDiff" withArguments:showDiffArgs];
 				else
 					[script callWebScriptMethod:@"showMessage" withArguments:[NSArray arrayWithObject:@""]];
 			}

@@ -293,7 +293,7 @@ var createSideBySideDiff = function(diff, element, callbacks)
 	finishContent();
 	
 	// This takes about 7ms
-	element.innerHTML = '<div id="WrappingStyle" class="diffwrap">' + finalContent + '</div>';
+	element.innerHTML = finalContent;
 	
 	// TODO: Replace this with a performance pref call
 	if (false)

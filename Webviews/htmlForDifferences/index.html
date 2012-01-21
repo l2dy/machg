@@ -5,8 +5,20 @@
 	<script src="../common/common.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../common/diffHighlighter.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript" charset="utf-8">
-		var showDiff = function(diff) {
-			createSideBySideDiff(diff, $("diff"));
+		var showDiff = function(diff, size, diffStyle) {
+		    $("WrappingStyle").style.fontSize = size;
+		    if (diffStyle == "WebviewDiffStyleUnfied")
+			    createUnifiedDiff(diff, $("diff"));
+		    else if (diffStyle == "WebviewDiffStyleSideBySideWrapped")
+		    {
+	    	    $("WrappingStyle").className = "diffwrap";
+			    createSideBySideDiff(diff, $("diff"));
+			}
+		    else if (diffStyle == "WebviewDiffStyleSideBySideTruncated")
+		    {
+	    	    $("WrappingStyle").className = "difftruncate";
+			    createSideBySideDiff(diff, $("diff"));
+			}
 		}
 		var showMessage = function(msg) {
 			var element = $("diff");
@@ -29,20 +41,13 @@
 				"<div class='bar12'></div>"+
 			  "</div>";
         }
-		var changeFontSizeToMacHgDefaults = function() {
-			var existingSheet = $("dynamicStyle");
-			if (!existingSheet) {
-				var sheet = document.createElement('style')
-				sheet.id = "dynamicStyle"
-				document.body.appendChild(sheet);
-				existingSheet = sheet;
-			}
-			var size = machgWebviewController.fontSizeOfDifferencesWebview();
-			existingSheet.innerHTML = "body {font-size: "+size+"px;}";
+		var changeFontSizeOfDiff = function(size) {
+		    $("diff").style.fontSize = size+"px";
 		}
 	</script>
 </head>
 
 <body onload="changeFontSizeToMacHgDefaults()">
-	<div id='diff'></div>
+    <div id="WrappingStyle" class="diffwrap"> 
+	    <div id='diff'></div></div>
 </body>
