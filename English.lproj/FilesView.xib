@@ -21,7 +21,7 @@
     </object>
     <object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
       <bool key="EncodedWithXMLCoder">YES</bool>
-      <integer value="343"/>
+      <integer value="373"/>
       <integer value="249"/>
       <integer value="316"/>
       <integer value="193"/>
@@ -168,6 +168,10 @@
         <string key="NSClassName">FilesView</string>
       </object>
       <object class="NSUserDefaultsController" id="69413389">
+        <object class="NSMutableArray" key="NSDeclaredKeys">
+          <bool key="EncodedWithXMLCoder">YES</bool>
+          <string>DifferencesWebviewDiffStyle</string>
+        </object>
         <bool key="NSSharedInstance">YES</bool>
       </object>
       <object class="NSMenu" id="1040381362">
@@ -3029,6 +3033,30 @@
           </object>
           <int key="connectionID">391</int>
         </object>
+        <object class="IBConnectionRecord">
+          <object class="IBBindingConnection" key="connection">
+            <string key="label">selectedIndex: values.DifferencesWebviewDiffStyle</string>
+            <reference key="source" ref="369066997"/>
+            <reference key="destination" ref="69413389"/>
+            <object class="NSNibBindingConnector" key="connector">
+              <reference key="NSSource" ref="369066997"/>
+              <reference key="NSDestination" ref="69413389"/>
+              <string key="NSLabel">selectedIndex: values.DifferencesWebviewDiffStyle</string>
+              <string key="NSBinding">selectedIndex</string>
+              <string key="NSKeyPath">values.DifferencesWebviewDiffStyle</string>
+              <int key="NSNibBindingConnectorVersion">2</int>
+            </object>
+          </object>
+          <int key="connectionID">392</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">differencesDisplayPreferencesChanged:</string>
+            <reference key="source" ref="453712496"/>
+            <reference key="destination" ref="35262477"/>
+          </object>
+          <int key="connectionID">393</int>
+        </object>
       </object>
       <object class="IBMutableOrderedSet" key="objectRecords">
         <object class="NSArray" key="orderedObjects">
@@ -4729,7 +4757,7 @@
         </object>
       </object>
       <nil key="sourceID"/>
-      <int key="maxID">391</int>
+      <int key="maxID">393</int>
     </object>
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <object class="NSMutableArray" key="referencedPartialClassDescriptions">
