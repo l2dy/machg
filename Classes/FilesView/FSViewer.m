@@ -22,6 +22,7 @@
 #import "RepositoryData.h"
 #import "ShellHere.h"
 #import "JHConcertinaView.h"
+#import "PatchData.h"
 
 
 
@@ -679,11 +680,13 @@ static NSString* stringOfDifferencesWebviewDiffStyle()
 	dispatch_async(globalQueue(), ^{
 		ExecutionResult* diffResult = [TaskExecutions executeMercurialWithArgs:argsDiff  fromRoot:rootPath logging:eLoggingNone  withDelegate:currentDifferencesTaskController];
 		BOOL empty = IsEmpty(diffResult.outStr);
+		PatchData* patchData = !empty ? [PatchData patchDataFromDiffString:diffResult.outStr] : nil;
+		NSString* htmlizedDiffString = [patchData patchBodyHTMLized];
 		
 		dispatch_async(mainQueue(), ^{
 			if (currentTaskNumber == currentDifferencesRegenerationNumber_)
 			{
-				NSArray* showDiffArgs = [NSArray arrayWithObjects:diffResult.outStr, fstr(@"%fpx",fontSizeOfBrowserItemsFromDefaults()), stringOfDifferencesWebviewDiffStyle(), nil];
+				NSArray* showDiffArgs = [NSArray arrayWithObjects:htmlizedDiffString, fstr(@"%f",FontSizeOfDifferencesWebviewFromDefaults()), stringOfDifferencesWebviewDiffStyle(), nil];
 				WebScriptObject* script = [detailedDiffWebView windowScriptObject];
 				if (!empty)
 					[script callWebScriptMethod:@"showDiff" withArguments:showDiffArgs];

@@ -12,7 +12,7 @@ var safeShift = function(v)
     return (v.length > 0) ? v.shift() : "";
 }
 
-var createSideBySideDiff = function(diff, element, callbacks)
+var createSideBySideDiff = function(diff, element, size, callbacks)
 {
 	if (!diff || diff == "")
 		return;
@@ -21,7 +21,7 @@ var createSideBySideDiff = function(diff, element, callbacks)
 		callbacks = {};
 	var start = new Date().getTime();
 	element.className = "diff"
-	var content = diff.escapeHTML().replace(/\t/g, "    ");;
+	var content = diff.replace(/\t/g, "    ");
 	
 	var file_index = 0;
 	var hunk_index = 0;
@@ -43,6 +43,8 @@ var createSideBySideDiff = function(diff, element, callbacks)
 	var mode_change = false;
 	var old_mode = "";
 	var new_mode = "";
+	
+	var colSizeForLineNumber = parseInt(size)*3.0 + 10;
 	
 	var hunk_start_line_1 = -1;
 	var hunk_start_line_2 = -1;
@@ -125,8 +127,9 @@ var createSideBySideDiff = function(diff, element, callbacks)
 		
 		if (!binary && (diffContent != ""))
 		{
+			
 			finalContent +=
-			'<table class="diffcontent"><col width="50px" /><col width="50%" /><col width="50px" /><col width="50%" />' +
+			'<table class="diffcontent"><col width="'+colSizeForLineNumber+'px" /><col width="50%" /><col width="'+colSizeForLineNumber+'px" /><col width="50%" />' +
 			diffContent +
 			'</table>';
 		}
@@ -255,12 +258,12 @@ var createSideBySideDiff = function(diff, element, callbacks)
 		if (firstChar == "+")
 		{			
 			rightLineNumbers.push(++hunk_start_line_2);
-			rightLines.push(l);
+			rightLines.push(l.slice(1));
 		}
 		else if (firstChar == "-")
 		{
 			leftLineNumbers.push(++hunk_start_line_1);
-			leftLines.push(l);
+			leftLines.push(l.slice(1));
 		}
 		else if (firstChar == "@")
 		{
@@ -285,7 +288,7 @@ var createSideBySideDiff = function(diff, element, callbacks)
 		else if (firstChar == " ")
 		{
 		    finishRun();
-		    diffContent += '<tr><td class="lineno">'+ ++hunk_start_line_1+'</td><td class="noopline">'+l+'</td><td class="lineno">'+ ++hunk_start_line_2+'</td><td class="noopline">'+l+'</td></tr>';
+		    diffContent += '<tr><td class="lineno">'+ ++hunk_start_line_1+'</td><td class="noopline">'+l.slice(1)+'</td><td class="lineno">'+ ++hunk_start_line_2+'</td><td class="noopline">'+l.slice(1)+'</td></tr>';
 		}
 		lindex++;
 	}
@@ -305,7 +308,7 @@ var createSideBySideDiff = function(diff, element, callbacks)
 
 
 
-var createUnifiedDiff = function(diff, element, callbacks)
+var createUnifiedDiff = function(diff, element, size, callbacks)
 {
 	if (!diff || diff == "")
 		return;
@@ -314,7 +317,7 @@ var createUnifiedDiff = function(diff, element, callbacks)
 		callbacks = {};
 	var start = new Date().getTime();
 	element.className = "diff"
-	var content = diff.escapeHTML().replace(/\t/g, "    ");;
+	var content = diff.replace(/\t/g, "    ");
 	
 	var file_index = 0;
 	var hunk_index = 0;

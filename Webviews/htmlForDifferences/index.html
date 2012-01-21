@@ -6,18 +6,18 @@
 	<script src="../common/diffHighlighter.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript" charset="utf-8">
 		var showDiff = function(diff, size, diffStyle) {
-		    $("WrappingStyle").style.fontSize = size;
+		    $("WrappingStyle").style.fontSize = size+"px";
 		    if (diffStyle == "WebviewDiffStyleUnfied")
-			    createUnifiedDiff(diff, $("diff"));
+			    createUnifiedDiff(diff, $("diff"), size);
 		    else if (diffStyle == "WebviewDiffStyleSideBySideWrapped")
 		    {
 	    	    $("WrappingStyle").className = "diffwrap";
-			    createSideBySideDiff(diff, $("diff"));
+			    createSideBySideDiff(diff, $("diff"), size);
 			}
 		    else if (diffStyle == "WebviewDiffStyleSideBySideTruncated")
 		    {
 	    	    $("WrappingStyle").className = "difftruncate";
-			    createSideBySideDiff(diff, $("diff"));
+			    createSideBySideDiff(diff, $("diff"), size);
 			}
 		}
 		var showMessage = function(msg) {
@@ -47,7 +47,7 @@
 	</script>
 </head>
 
-<body onload="changeFontSizeToMacHgDefaults()">
+<body>
     <div id="WrappingStyle" class="diffwrap"> 
 	    <div id='diff'></div></div>
 </body>

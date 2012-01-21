@@ -25,7 +25,8 @@ body {
 
 .file .diffcontent {
 	white-space: pre;
-	font: Monaco;
+    font-family: Consolas, "Liberation Mono", Monaco, "Lucida Console", monospace;
+    font-size:inherit;
 }
 
 .lineno {
@@ -60,8 +61,6 @@ td.lineno {
 
 table.diffcontent {
     border-collapse:collapse;
-    font-family: Consolas, "Liberation Mono", Monaco, "Lucida Console", monospace;
-    font-size:inherit;
     border-style: none;
     border-spacing: 0px;
     padding:0px;
@@ -108,14 +107,24 @@ td.lineno {
 
 
 .hunk .delline {
-  background-color: #FEE;
-  color: #B00;
+  background-color: #FAEAEA;
+  color: #800;
+}
+.hunk .delline delete {
+  background-color: #F0B0B0;
+  color: #A00;
 }
 
+
 .hunk .addline {
-  background-color: #DFD;
+  background-color: #E0FAE0;
   color: #080;
 }
+.hunk .addline insert {
+  background-color: #A0F0A0;
+  color: #070;
+}
+
 
 .hunk .noopline {
   background-color: #f4f8fc;

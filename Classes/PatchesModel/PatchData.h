@@ -21,6 +21,7 @@
 - (void) finishHunk:(NSMutableArray*)lines;
 - (NSString*) hashHunk:(NSString*)hunk;
 - (NSString*) filterFilePatchWithExclusions:(NSSet*)excludedHunks;
+- (NSString*) htmlizedFilePatch;
 @end
 
 
@@ -72,6 +73,7 @@
 @property BOOL parentIsModified;
 
 + (PatchData*) patchDataFromFilePath:(NSString*)path;
++ (PatchData*) patchDataFromDiffString:(NSString*)diff;
 
 - (BOOL) commitOption;
 - (void) setCommitOption:(BOOL)value;
@@ -91,5 +93,6 @@
 - (NSAttributedString*) patchBodyColorized;
 
 - (NSString*) patchBodyFiltered;
+- (NSString*) patchBodyHTMLized;
 
 @end

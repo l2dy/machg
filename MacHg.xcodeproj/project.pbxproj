@@ -155,6 +155,12 @@
 		9673CD4A12D148C70043929D /* Quartz.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9673CD4912D148C70043929D /* Quartz.framework */; };
 		9673D08012D1C99A0043929D /* Quicklook.png in Resources */ = {isa = PBXBuildFile; fileRef = 9673D07F12D1C99A0043929D /* Quicklook.png */; };
 		968D76E114A66A85007E6AA2 /* JHConcertinaView.m in Sources */ = {isa = PBXBuildFile; fileRef = 968D76E014A66A85007E6AA2 /* JHConcertinaView.m */; };
+		968FFA0514CB5815004D4444 /* DiffMatchPatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 968FF9F914CB5815004D4444 /* DiffMatchPatch.m */; };
+		968FFA0614CB5815004D4444 /* DiffMatchPatchCFUtilities.c in Sources */ = {isa = PBXBuildFile; fileRef = 968FF9FA14CB5815004D4444 /* DiffMatchPatchCFUtilities.c */; };
+		968FFA0714CB5815004D4444 /* NSMutableDictionary+DMPExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 968FF9FE14CB5815004D4444 /* NSMutableDictionary+DMPExtensions.m */; };
+		968FFA0814CB5815004D4444 /* NSString+JavaSubstring.m in Sources */ = {isa = PBXBuildFile; fileRef = 968FFA0014CB5815004D4444 /* NSString+JavaSubstring.m */; };
+		968FFA0914CB5815004D4444 /* NSString+UnicharUtilities.m in Sources */ = {isa = PBXBuildFile; fileRef = 968FFA0214CB5815004D4444 /* NSString+UnicharUtilities.m */; };
+		968FFA0A14CB5815004D4444 /* NSString+UriCompatibility.m in Sources */ = {isa = PBXBuildFile; fileRef = 968FFA0414CB5815004D4444 /* NSString+UriCompatibility.m */; };
 		969064EC11601E2400F30915 /* MonitorFSEvents.m in Sources */ = {isa = PBXBuildFile; fileRef = 969064EB11601E2400F30915 /* MonitorFSEvents.m */; };
 		969386DC14B097C600C2C307 /* Webviews in Resources */ = {isa = PBXBuildFile; fileRef = 969386CE14B097C600C2C307 /* Webviews */; };
 		9693CFC1129D82DF0064DAB9 /* LogRecord.m in Sources */ = {isa = PBXBuildFile; fileRef = 9693CFC0129D82DF0064DAB9 /* LogRecord.m */; };
@@ -484,6 +490,19 @@
 		9673D07F12D1C99A0043929D /* Quicklook.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = Quicklook.png; path = Images/ToolbarItems/Quicklook.png; sourceTree = SOURCE_ROOT; };
 		968D76DF14A66A85007E6AA2 /* JHConcertinaView.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JHConcertinaView.h; sourceTree = "<group>"; };
 		968D76E014A66A85007E6AA2 /* JHConcertinaView.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JHConcertinaView.m; sourceTree = "<group>"; };
+		968FF9F814CB5815004D4444 /* DiffMatchPatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DiffMatchPatch.h; sourceTree = "<group>"; };
+		968FF9F914CB5815004D4444 /* DiffMatchPatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DiffMatchPatch.m; sourceTree = "<group>"; };
+		968FF9FA14CB5815004D4444 /* DiffMatchPatchCFUtilities.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = DiffMatchPatchCFUtilities.c; sourceTree = "<group>"; };
+		968FF9FB14CB5815004D4444 /* DiffMatchPatchCFUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DiffMatchPatchCFUtilities.h; sourceTree = "<group>"; };
+		968FF9FC14CB5815004D4444 /* MinMaxMacros.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MinMaxMacros.h; sourceTree = "<group>"; };
+		968FF9FD14CB5815004D4444 /* NSMutableDictionary+DMPExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSMutableDictionary+DMPExtensions.h"; sourceTree = "<group>"; };
+		968FF9FE14CB5815004D4444 /* NSMutableDictionary+DMPExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSMutableDictionary+DMPExtensions.m"; sourceTree = "<group>"; };
+		968FF9FF14CB5815004D4444 /* NSString+JavaSubstring.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+JavaSubstring.h"; sourceTree = "<group>"; };
+		968FFA0014CB5815004D4444 /* NSString+JavaSubstring.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+JavaSubstring.m"; sourceTree = "<group>"; };
+		968FFA0114CB5815004D4444 /* NSString+UnicharUtilities.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+UnicharUtilities.h"; sourceTree = "<group>"; };
+		968FFA0214CB5815004D4444 /* NSString+UnicharUtilities.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+UnicharUtilities.m"; sourceTree = "<group>"; };
+		968FFA0314CB5815004D4444 /* NSString+UriCompatibility.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSString+UriCompatibility.h"; sourceTree = "<group>"; };
+		968FFA0414CB5815004D4444 /* NSString+UriCompatibility.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSString+UriCompatibility.m"; sourceTree = "<group>"; };
 		969064EA11601E2400F30915 /* MonitorFSEvents.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MonitorFSEvents.h; sourceTree = "<group>"; };
 		969064EB11601E2400F30915 /* MonitorFSEvents.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MonitorFSEvents.m; sourceTree = "<group>"; };
 		969386CE14B097C600C2C307 /* Webviews */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Webviews; sourceTree = "<group>"; };
@@ -1122,6 +1141,7 @@
 			children = (
 				96C89643149F4106007F7831 /* CTBadge */,
 				96FF035E11991C21006EC616 /* DBPrefsWindowController */,
+				968FF9F714CB5815004D4444 /* DiffMatchPatch */,
 				9631D05B1107A7E90007FDF2 /* DTCPathView */,
 				9605BBCD119C0D7D002EEA47 /* EMKeychainItem */,
 				968D76DE14A66A85007E6AA2 /* JHConcertinaView */,
@@ -1461,6 +1481,26 @@
 				968D76E014A66A85007E6AA2 /* JHConcertinaView.m */,
 			);
 			path = JHConcertinaView;
+			sourceTree = "<group>";
+		};
+		968FF9F714CB5815004D4444 /* DiffMatchPatch */ = {
+			isa = PBXGroup;
+			children = (
+				968FF9F814CB5815004D4444 /* DiffMatchPatch.h */,
+				968FF9F914CB5815004D4444 /* DiffMatchPatch.m */,
+				968FF9FA14CB5815004D4444 /* DiffMatchPatchCFUtilities.c */,
+				968FF9FB14CB5815004D4444 /* DiffMatchPatchCFUtilities.h */,
+				968FF9FC14CB5815004D4444 /* MinMaxMacros.h */,
+				968FF9FD14CB5815004D4444 /* NSMutableDictionary+DMPExtensions.h */,
+				968FF9FE14CB5815004D4444 /* NSMutableDictionary+DMPExtensions.m */,
+				968FF9FF14CB5815004D4444 /* NSString+JavaSubstring.h */,
+				968FFA0014CB5815004D4444 /* NSString+JavaSubstring.m */,
+				968FFA0114CB5815004D4444 /* NSString+UnicharUtilities.h */,
+				968FFA0214CB5815004D4444 /* NSString+UnicharUtilities.m */,
+				968FFA0314CB5815004D4444 /* NSString+UriCompatibility.h */,
+				968FFA0414CB5815004D4444 /* NSString+UriCompatibility.m */,
+			);
+			path = DiffMatchPatch;
 			sourceTree = "<group>";
 		};
 		969064E811601E2400F30915 /* MonitorFSEvents */ = {
@@ -2059,6 +2099,12 @@
 				968D76E114A66A85007E6AA2 /* JHConcertinaView.m in Sources */,
 				96DC149914B95D6900A6E61B /* StandardSplitView.m in Sources */,
 				96DC168314BA0EDF00A6E61B /* PopupActionButton.m in Sources */,
+				968FFA0514CB5815004D4444 /* DiffMatchPatch.m in Sources */,
+				968FFA0614CB5815004D4444 /* DiffMatchPatchCFUtilities.c in Sources */,
+				968FFA0714CB5815004D4444 /* NSMutableDictionary+DMPExtensions.m in Sources */,
+				968FFA0814CB5815004D4444 /* NSString+JavaSubstring.m in Sources */,
+				968FFA0914CB5815004D4444 /* NSString+UnicharUtilities.m in Sources */,
+				968FFA0A14CB5815004D4444 /* NSString+UriCompatibility.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
