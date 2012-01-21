@@ -51,7 +51,7 @@
 @class LabelsTableView;
 
 // Patches
-@class PatchData;
+@class PatchRecord;
 @class PatchesTableView;
 
 // Processes

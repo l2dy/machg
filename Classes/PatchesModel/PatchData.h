@@ -28,7 +28,7 @@
 
 
 
-@interface PatchData : NSObject
+@interface PatchRecord : NSObject
 {
 	NSString* path_;
 	NSString* author_;
@@ -72,8 +72,8 @@
 @property BOOL commitMessageIsModified;
 @property BOOL parentIsModified;
 
-+ (PatchData*) patchDataFromFilePath:(NSString*)path;
-+ (PatchData*) patchDataFromDiffString:(NSString*)diff;
++ (PatchRecord*) patchDataFromFilePath:(NSString*)path;
++ (PatchRecord*) patchDataFromDiffString:(NSString*)diff;
 
 - (BOOL) commitOption;
 - (void) setCommitOption:(BOOL)value;

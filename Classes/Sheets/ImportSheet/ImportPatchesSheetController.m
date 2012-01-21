@@ -98,7 +98,7 @@
 		NSMutableArray* newPatches = [[NSMutableArray alloc]init];
 		for (NSURL* pathURL in fileURLs)
 		{
-			PatchData* patch = [PatchData patchDataFromFilePath:[pathURL path]];
+			PatchRecord* patch = [PatchRecord patchDataFromFilePath:[pathURL path]];
 			[newPatches addObject:patch];
 		}
 		[patchesTable addPatches:newPatches];
@@ -149,7 +149,7 @@
 }
 
 
-- (NSString*) filteredPatch:(PatchData*)patch
+- (NSString*) filteredPatch:(PatchRecord*)patch
 {
 	NSString* filteredPatchString = trimString([patch patchBodyFiltered]);
 	
@@ -182,7 +182,7 @@
 			canClose = YES;
 			break;
 		}
-		PatchData* patch = [[patchesTable patches] firstObject];
+		PatchRecord* patch = [[patchesTable patches] firstObject];
 		if (!patch)
 			break;
 

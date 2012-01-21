@@ -99,12 +99,12 @@
 // MARK:  Quieres
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BOOL)	   patchIsSelected	{ return 0 <= [self selectedRow] && [self selectedRow] < [patchesTableData_ count]; }
-- (BOOL)	   patchIsClicked	{ return [self clickedRow] != -1; }
-- (PatchData*) selectedPatch	{ return [self patchIsSelected] ? [patchesTableData_ objectAtIndex:[self selectedRow]] : nil; }
-- (PatchData*) clickedPatch		{ return [self patchIsClicked]  ? [patchesTableData_ objectAtIndex:[self clickedRow]]  : nil; }
-- (PatchData*) chosenPatch		{ PatchData* ans = [self clickedPatch]; return ans ? ans : [self selectedPatch]; }
-- (NSArray*)   patches			{ return patchesTableData_; }
+- (BOOL)		 patchIsSelected { return 0 <= [self selectedRow] && [self selectedRow] < [patchesTableData_ count]; }
+- (BOOL)		 patchIsClicked	 { return [self clickedRow] != -1; }
+- (PatchRecord*) selectedPatch	 { return [self patchIsSelected] ? [patchesTableData_ objectAtIndex:[self selectedRow]] : nil; }
+- (PatchRecord*) clickedPatch	 { return [self patchIsClicked]  ? [patchesTableData_ objectAtIndex:[self clickedRow]]  : nil; }
+- (PatchRecord*) chosenPatch	 { PatchRecord* ans = [self clickedPatch]; return ans ? ans : [self selectedPatch]; }
+- (NSArray*)     patches		 { return patchesTableData_; }
 
 
 
@@ -177,7 +177,7 @@
 	return patchesTableData_;
 }
 
-- (NSInteger) tableRowForPatch:(PatchData*)patch
+- (NSInteger) tableRowForPatch:(PatchRecord*)patch
 {
 	if (!patch)
 		return NSNotFound;
@@ -210,7 +210,7 @@
 
 - (id) tableView:(NSTableView*)aTableView objectValueForTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)requestedRow
 {
-	PatchData* patch = [[self patchesTableData] objectAtIndex:requestedRow];
+	PatchRecord* patch = [[self patchesTableData] objectAtIndex:requestedRow];
 	NSString* requestedColumn = [aTableColumn identifier];
 
 	id value = [patch valueForKey:requestedColumn];
@@ -219,7 +219,7 @@
 
 - (void) tableView:(NSTableView*)aTableView setObjectValue:(id)anObject forTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
 {
-	PatchData* clickedPatch = [[self patchesTableData] objectAtIndex:rowIndex];
+	PatchRecord* clickedPatch = [[self patchesTableData] objectAtIndex:rowIndex];
 	NSString* columnIdentifier = [aTableColumn identifier];
 	[clickedPatch setValue:anObject forKey:columnIdentifier];
 
@@ -227,7 +227,7 @@
     unsigned flags = [currentEvent modifierFlags];
 	if (flags & NSAlternateKeyMask)
 		if ([columnIdentifier isEqualToString:@"forceOption"] || [columnIdentifier isEqualToString:@"exactOption"] || [columnIdentifier isEqualToString:@"commitOption"] || [columnIdentifier isEqualToString:@"importBranchOption"])
-			for (PatchData* patch in patchesTableData_)
+			for (PatchRecord* patch in patchesTableData_)
 				[patch setValue:anObject forKey:columnIdentifier];
 	[self reloadData];
 }
@@ -386,7 +386,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 		for (NSString* path in resolvedFilenames)
 			if (pathIsExistentFile(path))
 			{
-				PatchData* patch = [PatchData patchDataFromFilePath:path];
+				PatchRecord* patch = [PatchRecord patchDataFromFilePath:path];
 				[newPatches addObject:patch];
 			}
 		NSMutableArray* newTableData = [[NSMutableArray alloc] initWithArray:patchesTableData_];
@@ -469,7 +469,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 
 - (NSColor*) cellBackingColor
 {
-	PatchData* patch = [self patch];
+	PatchRecord* patch = [self patch];
 	if (![patch isModified])
 		return nil;
 	

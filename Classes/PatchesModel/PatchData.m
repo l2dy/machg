@@ -247,7 +247,7 @@ static NSString* htmlize(NSString* hunk)
 // MARK: -
 #define NSMaxiumRange    ((NSRange){.location= 0UL, .length= NSUIntegerMax})
 
-@implementation PatchData
+@implementation PatchRecord
 
 @synthesize path = path_;
 @synthesize nodeID = nodeID_;
@@ -512,7 +512,7 @@ static NSString* htmlize(NSString* hunk)
 //  diff ...
 //  ...
 
-- (PatchData*) initWithFilePath:(NSString*)path contents:(NSString*)contents
+- (PatchRecord*) initWithFilePath:(NSString*)path contents:(NSString*)contents
 {
 	path_ = path;
 	author_ = @"";
@@ -595,18 +595,18 @@ static NSString* htmlize(NSString* hunk)
 }
 
 
-+ (PatchData*) patchDataFromFilePath:(NSString*)path
++ (PatchRecord*) patchDataFromFilePath:(NSString*)path
 {
 	NSString* patchContents = [NSString stringWithContentsOfFile:path encoding:NSUTF8StringEncoding error:nil];
 	if (!patchContents)
 		return nil;
 
-	return [[PatchData alloc] initWithFilePath:path contents:patchContents];
+	return [[PatchRecord alloc] initWithFilePath:path contents:patchContents];
 }
 
-+ (PatchData*) patchDataFromDiffString:(NSString*)diff
++ (PatchRecord*) patchDataFromDiffString:(NSString*)diff
 {
-	return [[PatchData alloc] initWithFilePath:nil contents:diff];
+	return [[PatchRecord alloc] initWithFilePath:nil contents:diff];
 }
 
 

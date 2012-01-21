@@ -23,23 +23,23 @@
 	IBOutlet id	<ControllerForPatchesTableView> parentController;	// Controlling class should be an object which is controlling a sheet or a
 																	// window controller.
 	
-	IBOutlet WebView*		detailedPatchWebView;					// This is the field where the details of the patch are displayed.
+	IBOutlet WebView*	detailedPatchWebView;					// This is the field where the details of the patch are displayed.
 
-	NSArray*				patchesTableData_;						// The array of ordered patches (tags, branches, bookmarks) which
+	NSArray*			patchesTableData_;						// The array of ordered patches (tags, branches, bookmarks) which
 																	// backs the PatchesTableView
 }
 
-- (MacHgDocument*)			myDocument;
-- (void)					unload;
+- (MacHgDocument*)		myDocument;
+- (void)				unload;
 
 
 // Quieres
-- (BOOL)		patchIsSelected;
-- (BOOL)		patchIsClicked;
-- (PatchData*)	selectedPatch;
-- (PatchData*)	clickedPatch;
-- (PatchData*)	chosenPatch;
-- (NSArray*)	patches;
+- (BOOL)			patchIsSelected;
+- (BOOL)			patchIsClicked;
+- (PatchRecord*)	selectedPatch;
+- (PatchRecord*)	clickedPatch;
+- (PatchRecord*)	chosenPatch;
+- (NSArray*)		patches;
 
 // Actions
 - (IBAction) resetTable:(id)sender;
@@ -67,11 +67,11 @@
 @interface PatchesTableCell : NSTextFieldCell
 {
 	NSTableColumn*	patchesTableColumn_;
-	PatchData*		patch_;
+	PatchRecord*	patch_;
 	BOOL			isEditingOrSelecting_;
 }
 @property (assign,readwrite) NSTableColumn*	patchesTableColumn;
-@property (assign,readwrite) PatchData*		patch;
+@property (assign,readwrite) PatchRecord*	patch;
 @end
 
 
@@ -87,10 +87,10 @@
 @interface PatchesTableButtonCell : NSButtonCell
 {
 	IBOutlet NSTextField* buttonMessage;
-	NSTableColumn* patchesTableColumn_;
-	PatchData*	   patch_;
+	NSTableColumn*		  patchesTableColumn_;
+	PatchRecord*		  patch_;
 }
 @property (assign,readwrite) NSTableColumn*	patchesTableColumn;
-@property (assign,readwrite) PatchData*		patch;
+@property (assign,readwrite) PatchRecord*	patch;
 
 @end
