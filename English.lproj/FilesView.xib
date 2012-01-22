@@ -1652,7 +1652,7 @@
             <bool key="NSEnabled">YES</bool>
             <object class="NSButtonCell" key="NSCell" id="921888795">
               <int key="NSCellFlags">-2080244224</int>
-              <int key="NSCellFlags2">163840</int>
+              <int key="NSCellFlags2">16941056</int>
               <string key="NSContents">Up to date</string>
               <reference key="NSSupport" ref="26"/>
               <reference key="NSControlView" ref="826835531"/>
