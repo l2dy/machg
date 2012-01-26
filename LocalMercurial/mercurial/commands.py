@@ -1171,6 +1171,11 @@ def commit(ui, repo, *pats, **opts):
         # Let --subrepos on the command line overide config setting.
         ui.setconfig('ui', 'commitsubrepos', True)
 
+    # if -X .hgsub is specified then ignore subrepos completely
+    excluded = opts.get('exclude')
+    if excluded and ('.hgsub' in excluded):
+            ui.setconfig('ui', 'excludesubrepos', True)
+
     extra = {}
     if opts.get('close_branch'):
         if repo['.'].node() not in repo.branchheads():
