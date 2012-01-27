@@ -73,14 +73,12 @@
 	// Note don't be confused between these file paths (of the source code being patched) and
 	// the path to the actual patch	
 	
-	NSMutableDictionary* excludedPatchHunksForFilePath_;	// Map of (NSString*)sourceCodeFilePath -> (NSMutableSet*)of(NSString*)excludedHunkNumber
 	NSMutableDictionary* filePatchForFilePath_;				// Map of (NSString*)sourceCodeFilePath -> (FilePatch*)patch (mirrors filePatches_)
 	NSMutableArray* filePatches_;							// Array of (FilePatch*)patch (mirrors filePatchForFilePath_)
 	NSString*		patchBody_;
 }	
 @property (readonly,assign) NSString* patchBody;
 @property (readonly,assign) NSMutableArray* filePatches;
-@property (readonly,assign) NSMutableDictionary* excludedPatchHunksForFilePath;
 
 + (PatchData*) patchDataFromDiffContents:(NSString*)diff;
 

@@ -319,7 +319,6 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 
 @implementation PatchData
 
-@synthesize excludedPatchHunksForFilePath = excludedPatchHunksForFilePath_;
 @synthesize patchBody = patchBody_;
 @synthesize filePatches = filePatches_;
 
@@ -331,7 +330,6 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 
 - (PatchData*) initWithDiffContents:(NSString*)contents
 {
-	excludedPatchHunksForFilePath_ = [[NSMutableDictionary alloc]init];
 	filePatchForFilePath_ = [[NSMutableDictionary alloc]init];
 	filePatches_ = [[NSMutableArray alloc]init];
 	patchBody_ = contents;
@@ -647,7 +645,7 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 	for (FilePatch* filePatch in filePatches_)
 		if (filePatch)
 		{
-			NSString* filteredFilePatch = [filePatch filePatchFilteredByExclusions:[excludedPatchHunksForFilePath_ objectForKey:[filePatch filePath]]];
+			NSString* filteredFilePatch = [filePatch filePatchFilteredByExclusions:[repositoryExclusions objectForKey:[filePatch filePath]]];
 			if (filteredFilePatch)
 				[finalString appendString:filteredFilePatch];
 		}
