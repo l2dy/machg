@@ -1057,6 +1057,12 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 
 // MARK: -
+@interface NSTimer ( NSTimerPlusUtilities )
+- (void)	  synchronizedInvalidate;
+@end
+
+
+// MARK: -
 @interface NSIndexSet ( NSIndexSetPlusAccessors )
 - (BOOL)	intersectsIndexes:(NSIndexSet*)indexSet;
 - (BOOL)	freeOfIndex:(NSInteger)index;

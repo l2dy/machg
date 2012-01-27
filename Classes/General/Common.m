@@ -1250,6 +1250,17 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 @end
 
 
+// MARK: -
+@implementation NSTimer ( NSTimerPlusUtilities )
+- (void) synchronizedInvalidate
+{
+	@synchronized(self)
+	{
+		[self invalidate];
+	}
+}
+@end
+
 
 
 // MARK: -
