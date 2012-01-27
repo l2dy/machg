@@ -34,6 +34,11 @@
 	// and then the dispatch_async firing with a nil block which causes a lock.
 	BlockProcess theBlock = block_;
 	block_ = nil;
+	@synchronized(theTimer)
+	{
+		if (![theTimer isValid] || numberAsInt([theTimer userInfo]) != operationNumber_)
+			return;
+	}
 	if (theBlock)
 		dispatch_async(dispatchQueue_, theBlock);
 }
@@ -43,32 +48,37 @@
 - (NSInteger) addBlockOperation:(BlockProcess)block withDelay:(NSTimeInterval)delay
 {
 	//DebugLog(@"adding block to single timed queue %@", descriptiveQueueName_);
-	[timer_ invalidate];
+	[timer_ synchronizedInvalidate];
 	block_ = [block copy];
-	if (!suspended_)
-		dispatchSpliced(mainQueue(), ^{
-			timer_ = [NSTimer scheduledTimerWithTimeInterval:delay target:self selector:@selector(executeTheBlock:) userInfo:nil repeats:NO];
-		});
-	return operationNumber_++;
+
+	NSInteger newOperationNumber = ++operationNumber_;
+	if (suspended_)
+		return newOperationNumber;
+
+	dispatch_async(mainQueue(), ^{
+		NSNumber* number = intAsNumber(newOperationNumber);
+		timer_ = [NSTimer scheduledTimerWithTimeInterval:delay target:self selector:@selector(executeTheBlock:) userInfo:number repeats:NO];
+	});
+	return newOperationNumber;
 }
 
 - (void) invalidateBlocksOnQueue
 {
-	[timer_ invalidate];
+	[timer_ synchronizedInvalidate];
 	block_ = nil;
 }
 
 - (void) suspendQueue
 {
-	[timer_ invalidate];
+	[timer_ synchronizedInvalidate];
 	suspended_ = YES;
 }
 
 - (void) resetTimer
 {
-	[timer_ invalidate];
+	[timer_ synchronizedInvalidate];
 	if (!suspended_)
-		dispatchSpliced(mainQueue(), ^{
+		dispatch_async(mainQueue(), ^{
 			timer_ = [NSTimer scheduledTimerWithTimeInterval:delay_ target:self selector:@selector(executeTheBlock:) userInfo:nil repeats:NO];
 		});	
 }
