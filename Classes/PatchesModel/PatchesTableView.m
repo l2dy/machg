@@ -433,9 +433,8 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 	NSDictionary* exclusions = [[parentController hunkExclusions] repositoryExclusionsForRoot:root];
 	for (NSString* path in [exclusions allKeys])
 	{
-		NSString* file = pathDifference(root,path);
-		NSSet* exclusions = [[parentController hunkExclusions] exclusionsForRoot:root andFile:file];
-		for (NSString* hunkHash in exclusions)
+		NSSet* exclusionsSet = [[parentController hunkExclusions] exclusionsForRoot:root andFile:path];
+		for (NSString* hunkHash in exclusionsSet)
 		{
 			NSArray* excludeViewHunkStatusArgs = [NSArray arrayWithObjects:hunkHash, nil];
 			[script callWebScriptMethod:@"excludeViewHunkStatus" withArguments:excludeViewHunkStatusArgs];

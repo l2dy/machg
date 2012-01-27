@@ -596,8 +596,8 @@
 	for (NSString* path in selectedPaths)
 	{
 		NSString* file = pathDifference(root,path);
-		NSSet* exclusions = [[myDocument hunkExclusions] exclusionsForRoot:root andFile:file];
-		for (NSString* hunkHash in exclusions)
+		NSSet* exclusionsSet = [[myDocument hunkExclusions] exclusionsForRoot:root andFile:file];
+		for (NSString* hunkHash in exclusionsSet)
 		{
 			NSArray* excludeViewHunkStatusArgs = [NSArray arrayWithObjects:hunkHash, nil];
 			[script callWebScriptMethod:@"excludeViewHunkStatus" withArguments:excludeViewHunkStatusArgs];
