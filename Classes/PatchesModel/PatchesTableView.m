@@ -55,10 +55,7 @@
 {
 	self = [super init];
 	if (self)
-	{
 		patchesTableData_ = nil;
-		hunkExclusions_ = [[HunkExclusions alloc]init];
-	}
     
 	return self;
 }
@@ -418,14 +415,14 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 {
 	MacHgDocument* myDocument = [self myDocument];
 	NSString* root = [myDocument absolutePathOfRepositoryRoot];
-	[hunkExclusions_ disableHunk:hunkHash forRoot:root andFile:fileName];
+	[[parentController hunkExclusions] disableHunk:hunkHash forRoot:root andFile:fileName];
 }
 
 - (void) enableHunk:(NSString*)hunkHash forFile:(NSString*)fileName 
 {
 	MacHgDocument* myDocument = [self myDocument];
 	NSString* root = [myDocument absolutePathOfRepositoryRoot];
-	[hunkExclusions_ enableHunk:hunkHash forRoot:root andFile:fileName];
+	[[parentController hunkExclusions] enableHunk:hunkHash forRoot:root andFile:fileName];
 }
 
 - (void) excludeHunksAccordingToModel
@@ -433,11 +430,11 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 	WebScriptObject* script = [detailedPatchWebView windowScriptObject];
 	MacHgDocument* myDocument = [self myDocument];
 	NSString* root = [myDocument absolutePathOfRepositoryRoot];
-	NSDictionary* exclusions = [hunkExclusions_ repositoryExclusionsForRoot:root];
+	NSDictionary* exclusions = [[parentController hunkExclusions] repositoryExclusionsForRoot:root];
 	for (NSString* path in [exclusions allKeys])
 	{
 		NSString* file = pathDifference(root,path);
-		NSSet* exclusions = [hunkExclusions_ exclusionsForRoot:root andFile:file];
+		NSSet* exclusions = [[parentController hunkExclusions] exclusionsForRoot:root andFile:file];
 		for (NSString* hunkHash in exclusions)
 		{
 			NSArray* excludeViewHunkStatusArgs = [NSArray arrayWithObjects:hunkHash, nil];

@@ -14,6 +14,7 @@
 @protocol ControllerForPatchesTableView <NSObject>
 - (MacHgDocument*)	myDocument;
 - (void)			patchesDidChange;
+- (HunkExclusions*) hunkExclusions;
 @end
 
 // This class is a subclass of NSTableView which is its own data source and own delegate. It turned out it's easier this way. And
@@ -26,9 +27,7 @@
 	IBOutlet WebView*	detailedPatchWebView;			// This is the field where the details of the patch are displayed.
 
 	NSArray*			patchesTableData_;				// The array of ordered patches (tags, branches, bookmarks) which
-														// backs the PatchesTableView
-	
-	HunkExclusions*		hunkExclusions_;				// Storage of which hunks in the patches are disabled	
+														// backs the PatchesTableView	
 }
 
 - (MacHgDocument*)		myDocument;

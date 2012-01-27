@@ -25,6 +25,7 @@
 	IBOutlet NSTextField*		importSheetTitle;
 	IBOutlet NSButton*			okButton;
 
+	HunkExclusions*				hunkExclusions_;			// Storage of which hunks in the patches are disabled	
 	BOOL						guessRenames_;
 	float						guessSimilarityFactor_;
 }
@@ -32,6 +33,7 @@
 @property (readwrite,assign) MacHgDocument* myDocument;
 @property BOOL								guessRenames;
 @property float								guessSimilarityFactor;
+@property (readonly,assign) HunkExclusions* hunkExclusions;
 
 
 - (ImportPatchesSheetController*) initImportPatchesSheetControllerWithDocument:(MacHgDocument*)doc;

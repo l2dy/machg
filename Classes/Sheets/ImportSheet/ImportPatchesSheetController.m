@@ -12,6 +12,7 @@
 #import "TaskExecutions.h"
 #import "HistoryViewController.h"
 #import "PatchData.h"
+#import "HunkExclusions.h"
 
 
 
@@ -31,6 +32,7 @@
 
 @synthesize guessRenames = guessRenames_;
 @synthesize guessSimilarityFactor = guessSimilarityFactor_;
+@synthesize hunkExclusions = hunkExclusions_;
 @synthesize myDocument;
 
 
@@ -46,6 +48,7 @@
 {
 	myDocument = doc;
 	[NSBundle loadNibNamed:@"ImportPatchesSheet" owner:self];
+	hunkExclusions_ = [[HunkExclusions alloc]init];
 	return self;
 }
 
