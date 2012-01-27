@@ -346,10 +346,10 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 		BOOL parentsChanged   = !theSameNumbers(newParent1Revision, oldParent1Revision)  || !theSameNumbers(newParent2Revision, oldParent2Revision) ||
 							    !theSameStrings(newParent1Changeset,oldParent1Changeset) || !theSameStrings(newParent2Changeset,oldParent2Changeset);
 		BOOL labelsChanged    = labelArrayDictionariesAreEqual(revisionNumberToLabels_, newRevisionToLabels);
-		NSString* browserRoot = [[myDocument theFSViewer] absolutePathOfRepositoryRoot];
-		BOOL rootChanged      = !browserRoot || !rootPath_ || [browserRoot isNotEqualToString:rootPath_];
 		
 		dispatch_async(mainQueue(), ^{
+			NSString* browserRoot = [[myDocument theFSViewer] absolutePathOfRepositoryRoot];
+			BOOL rootChanged      = !browserRoot || !rootPath_ || [browserRoot isNotEqualToString:rootPath_];
 			BOOL incompleteRevisionChanged;
 			@synchronized(self)
 			{
