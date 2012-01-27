@@ -152,24 +152,6 @@
 }
 
 
-- (NSString*) filteredPatchBody:(PatchRecord*)patch
-{
-	NSString* filteredPatchBodyString = trimString([[patch patchData] patchBodyFiltered]);
-	
-	// Create a temporary file
-	NSString* tempFilePath = tempFilePathWithTemplate(@"MacHgFilteredPatch.XXXXXX");
-	if (!tempFilePath)
-	{
-		NSRunAlertPanel(@"Temporary File", @"MacHg could not create a temporary file for the filtered patch. Falling back to importing the original patch.", @"OK", nil, nil);
-		return [patch path];
-	}
-	
-	NSError* err = nil;
-	[filteredPatchBodyString writeToFile:tempFilePath atomically:YES encoding:NSUTF8StringEncoding error:&err];
-	return tempFilePath;
-}
-
-
 - (IBAction) sheetButtonOk:(id)sender
 {
 	[theImportPatchesSheet makeFirstResponder:theImportPatchesSheet];	// Make the fields of the sheet commit any changes they currently have
@@ -189,7 +171,7 @@
 		if (!patch)
 			break;
 
-		BOOL willFilterPatch = IsNotEmpty([[patch patchData] excludedPatchHunksForFilePath]);
+		BOOL willFilterPatch = IsNotEmpty([hunkExclusions_ repositoryExclusionsForRoot:rootPath]);
 		if ([patch authorIsModified]        || willFilterPatch)		[argsImport addObject:@"--user"    followedBy:[patch author]];
 		if ([patch dateIsModified]          || willFilterPatch)		[argsImport addObject:@"--date"    followedBy:[patch date]];
 		if ([patch commitMessageIsModified] || willFilterPatch)		[argsImport addObject:@"--message" followedBy:[patch commitMessage]];
@@ -198,9 +180,11 @@
 		if ([patch importBranchOption])								[argsImport addObject:@"--import-branch"];
 		if ([patch dontCommitOption])								[argsImport addObject:@"--no-commit"];
 		if (guessRenames_)											[argsImport addObject:@"--similarity" followedBy:intAsString(constrainInteger((int)round(100 * guessSimilarityFactor_), 0, 100))];
+
+		PatchData* patchData = [patch patchData];
 		NSString* patchPath = [patch path];
 		if (willFilterPatch)
-			patchPath = [self filteredPatchBody:patch];
+			patchPath = [patchData tempFileWithPatchBodyFilteredBy:hunkExclusions_ withRoot:rootPath];
 		[argsImport addObject:patchPath];
 		ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsImport  fromRoot:rootPath];
 		if ([result hasWarnings])

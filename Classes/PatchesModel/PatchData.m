@@ -11,6 +11,7 @@
 #import "PatchData.h"
 #import "DiffMatchPatch.h"
 #import "TaskExecutions.h"
+#import "HunkExclusions.h"
 
 
 
@@ -198,15 +199,17 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 	return processedString;
 }
 
+- (NSString*) hunkString
+{
+	NSMutableString* builtHunkString = [[NSMutableString alloc]initWithString:hunkHeader];
+	for (NSString* line in hunkBodyLines)
+		[builtHunkString appendString:line];
+	return builtHunkString;
+}
+
 - (NSString*) description
 {
-	NSMutableString* desc = [[NSMutableString alloc]init];
-
-	[desc appendString:fstr(@"######## %@ ########\n", hunkHash)];
-	[desc appendString:hunkHeader];
-	for (NSString* line in hunkBodyLines)
-		[desc appendString:line];
-	return desc;
+	return fstr(@"######## %@ ########\n%@", hunkHash,[self hunkString]);
 }
 
 @end
@@ -256,32 +259,21 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 	[hunkHashesSet addObject:[hunk hunkHash]];
 }
 
-- (NSString*) filterFilePatchWithExclusions:(NSSet*)excludedHunks
+- (NSString*) filePatchFilteredByExclusions:(NSSet*)excludedHunks
 {
-	NSMutableString* filteredFilePatch = [NSMutableString stringWithString:filePatchHeader];
-
 	// The normal case when this file patch is not filtered at all
-	if (IsEmpty(excludedHunks))
-	{
-		for (NSString* hunk in hunks)
-			[filteredFilePatch appendString:hunk];		
-		return filteredFilePatch;
-	}
+	if (IsEmpty(excludedHunks) || ![excludedHunks intersectsSet:[self hunkHashesSet]])
+		return [self filePatchString];
+	if ([[self hunkHashesSet] isSubsetOfSet:excludedHunks])
+		return nil;
 
-	// When some (or all) parts of this file patch are excluded
-	BOOL containsIncludedHunk = NO;
-	NSInteger hunkCounter = 1;
-	for (NSString* hunk in hunks)
+	NSMutableString* filteredFilePatch = [NSMutableString stringWithString:filePatchHeader];
+	for (HunkObject* hunk in hunks)
 	{
-		if (![excludedHunks containsObject:intAsString(hunkCounter)])
-		{
-			containsIncludedHunk = YES;
-			[filteredFilePatch appendString:hunk];
-		}
-		hunkCounter++;
+		if (![excludedHunks containsObject:[hunk hunkHash]])
+			[filteredFilePatch appendString:[hunk hunkString]];
 	}
-	
-	return containsIncludedHunk ? filteredFilePatch : nil;
+	return filteredFilePatch;
 }
 
 
@@ -293,6 +285,13 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 	return builtPatch;
 }
 
+- (NSString*) filePatchString
+{
+	NSMutableString* builtPatch = [NSMutableString stringWithString:filePatchHeader];
+	for (HunkObject* hunk in hunks)
+		[builtPatch appendString:[hunk hunkString]];
+	return builtPatch;
+}
 
 - (NSString*) description
 {
@@ -348,171 +347,6 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 
 
 
-//	syntax "patch" "\.(patch|diff)$"
-//	color brightgreen "^\+.*"
-//	color green "^\+\+\+.*"
-//	color lightBlue "^ .*"
-//	color lightRed "^-.*"
-//	color red "^---.*"
-//	color brightyellow "^@@.*"
-//	color magenta "^diff.*"
-
-- (NSAttributedString*) patchBodyColorized
-{
-	NSMutableAttributedString* colorized = [[NSMutableAttributedString alloc]init];
-	if (!patchBody_)
-		return colorized;
-	
-	static NSMutableDictionary* lightGreen = nil;
-	static NSMutableDictionary* green = nil;
-	static NSMutableDictionary* lightBlue = nil;
-	static NSMutableDictionary* lightRed = nil;
-	static NSMutableDictionary* red = nil;
-	static NSMutableDictionary* normal = nil;
-	static NSMutableDictionary* linePart = nil;
-	static NSMutableDictionary* hunkPart = nil;
-	static NSMutableDictionary* headerLine = nil;
-	static NSMutableDictionary* diffStatLine = nil;
-	static NSMutableDictionary* diffStatHeader = nil;
-	static NSMutableDictionary* magenta = nil;
-
-	if (!lightGreen)
-	{
-		
-		static NSDictionary* theDictionary = nil;
-
-		NSFont* font = [NSFont fontWithName:@"Monaco"  size:9];
-		NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-		[paragraphStyle setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
-		float charWidth = [[font screenFontWithRenderingMode:NSFontDefaultRenderingMode] advancementForGlyph:(NSGlyph) ' '].width;
-		[paragraphStyle setDefaultTabInterval:(charWidth * 4)];
-		[paragraphStyle setTabStops:[NSArray array]];
-		theDictionary = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil];
-		
-		lightGreen		= [theDictionary mutableCopy];
-		lightBlue		= [theDictionary mutableCopy];
-		lightRed		= [theDictionary mutableCopy];
-		green			= [theDictionary mutableCopy];
-		red				= [theDictionary mutableCopy];
-		linePart		= [theDictionary mutableCopy];
-		hunkPart		= [theDictionary mutableCopy];
-		magenta			= [theDictionary mutableCopy];
-		headerLine		= [theDictionary mutableCopy];
-		diffStatLine	= [theDictionary mutableCopy];
-		diffStatHeader	= [theDictionary mutableCopy];
-		normal			= [theDictionary mutableCopy];
-
-		[lightGreen		setObject:rgbColor255(221.0, 255.0, 221.0) forKey:NSBackgroundColorAttributeName];
-		[lightBlue		setObject:rgbColor255(202.0, 238.0, 255.0) forKey:NSBackgroundColorAttributeName];
-		[lightRed		setObject:rgbColor255(255.0, 221.0, 221.0) forKey:NSBackgroundColorAttributeName];
-		[green			setObject:rgbColor255(160.0, 255.0, 160.0) forKey:NSBackgroundColorAttributeName];
-		[red			setObject:rgbColor255(255.0, 160.0, 160.0) forKey:NSBackgroundColorAttributeName];
-		[linePart		setObject:rgbColor255(240.0, 240.0, 240.0) forKey:NSBackgroundColorAttributeName];
-		[linePart		setObject:rgbColor255(128.0, 128.0, 128.0) forKey:NSForegroundColorAttributeName];
-		[hunkPart		setObject:rgbColor255(234.0, 242.0, 245.0) forKey:NSBackgroundColorAttributeName];
-		[hunkPart		setObject:rgbColor255(128.0, 128.0, 128.0) forKey:NSForegroundColorAttributeName];
-		[headerLine		setObject:rgbColor255(230.0, 230.0, 230.0) forKey:NSBackgroundColorAttributeName];
-		[headerLine		setObject:rgbColor255(128.0, 128.0, 128.0) forKey:NSForegroundColorAttributeName];
-		[diffStatLine	setObject:rgbColor255(255.0, 253.0, 217.0) forKey:NSBackgroundColorAttributeName];
-		[diffStatLine	setObject:rgbColor255(128.0, 128.0, 128.0) forKey:NSForegroundColorAttributeName];
-		[diffStatHeader setObject:rgbColor255(255.0, 253.0, 200.0) forKey:NSBackgroundColorAttributeName];
-		[diffStatHeader setObject:rgbColor255(128.0, 128.0, 128.0) forKey:NSForegroundColorAttributeName];
-		[magenta		setObject:rgbColor255(255.0, 200.0, 255.0) forKey:NSBackgroundColorAttributeName];
-		[normal			setObject:rgbColor255(248.0, 248.0, 255.0) forKey:NSBackgroundColorAttributeName];
-
-		NSMutableParagraphStyle* hunkParagraphStyle = [paragraphStyle mutableCopy];
-		[hunkParagraphStyle setParagraphSpacingBefore:20];
-		[hunkPart		setObject:hunkParagraphStyle forKey:NSParagraphStyleAttributeName];
-		
-		
-		NSMutableParagraphStyle* headerParagraphStyle = [paragraphStyle mutableCopy];
-		[headerParagraphStyle setParagraphSpacingBefore:30];
-		[headerLine		setObject:[NSFont fontWithName:@"Monaco"  size:15] forKey:NSFontAttributeName];
-		[headerLine		setObject:headerParagraphStyle forKey:NSParagraphStyleAttributeName];
-
-		[diffStatHeader	setObject:[NSFont fontWithName:@"Monaco"  size:15] forKey:NSFontAttributeName];
-	}
-
-	//ExecutionResult* result = [ShellTask execute:@"/usr/bin/diffstat" withArgs:[NSArray arrayWithObjects:path_, nil] withEnvironment:[TaskExecutions environmentForHg]];
-	//if ([result hasNoErrors])
-	//{
-	//	[colorized appendAttributedString:[NSAttributedString string:@"Patch Statistics\n" withAttributes:diffStatHeader]];
-	//	[colorized appendAttributedString:[NSAttributedString string:result.outStr withAttributes:diffStatLine]];
-	//}
-
-	
-	NSMutableArray* lines = [[NSMutableArray alloc]init];
-	NSInteger start = 0;
-	while (start < [patchBody_ length])
-	{
-		NSRange nextLine = [patchBody_ lineRangeForRange:NSMakeRange(start, 1)];
-		[lines addObject:[patchBody_ substringWithRange:nextLine]];
-		start = nextLine.location + nextLine.length;
-	}
-	
-	for (NSInteger i = 0; i < [lines count] ; i++)
-	{
-		NSString* line = [lines objectAtIndex:i];
-		
-		// Detect the header of
-		// diff ...
-		// --- ...
-		// +++ b/<fileName>
-		if ([line isMatchedByRegex:@"^diff.*"] && i+2< [lines count])
-		{
-			NSString* minusLine = [lines objectAtIndex:i+1];
-			NSString* addLine   = [lines objectAtIndex:i+2];
-			NSString* filePath = nil;
-			if ([minusLine isMatchedByRegex:@"^---.*"])
-				if ([addLine getCapturesWithRegexAndTrimedComponents:@"^\\+\\+\\+\\s*b/(.*)"  firstComponent:&filePath])
-					if (IsNotEmpty(filePath))
-					{
-						// We found a valid header, add to our colorized string and advance through the header
-						filePath = fstr(@"%@\n",filePath);	// newline terminate the path
-						[colorized appendAttributedString:[NSAttributedString string:filePath withAttributes:headerLine]];
-						i += 2;
-						continue;
-					}
-		}
-		
-		     if ([line isMatchedByRegex:@"^\\+\\+\\+.*"])	[colorized appendAttributedString:[NSAttributedString string:line withAttributes:linePart]];
-		else if ([line isMatchedByRegex:@"^\\+.*"])			[colorized appendAttributedString:[NSAttributedString string:line withAttributes:lightGreen]];
-		else if ([line isMatchedByRegex:@"^ .*"])			[colorized appendAttributedString:[NSAttributedString string:line withAttributes:normal]];
-		else if ([line isMatchedByRegex:@"^---.*"])			[colorized appendAttributedString:[NSAttributedString string:line withAttributes:linePart]];
-		else if ([line isMatchedByRegex:@"^-.*"])			[colorized appendAttributedString:[NSAttributedString string:line withAttributes:lightRed]];
-		else if ([line isMatchedByRegex:@"^@@.*"])			[colorized appendAttributedString:[NSAttributedString string:line withAttributes:hunkPart]];
-		else												[colorized appendAttributedString:[NSAttributedString string:line withAttributes:normal]];
-	}
-	return colorized;
-}
-
-
-- (NSString*) patchBodyFiltered
-{
-	NSMutableString* finalString = [[NSMutableString alloc] init];
-	for (FilePatch* filePatch in filePatches_)
-		if (filePatch)
-		{
-			NSString* filteredFilePatch = [filePatch filterFilePatchWithExclusions:[excludedPatchHunksForFilePath_ objectForKey:[filePatch filePath]]];
-			if (filteredFilePatch)
-				[finalString appendString:filteredFilePatch];
-		}
-	return finalString;
-}
-
-
-- (NSString*) patchBodyHTMLized
-{
-	NSMutableString* finalString = [[NSMutableString alloc] init];
-	for (FilePatch* filePatch in filePatches_)
-		if (filePatch)
-		{
-			NSString* htmlizedFilePatch = [filePatch htmlizedFilePatch];
-			if (htmlizedFilePatch)
-				[finalString appendString:htmlizedFilePatch];
-		}
-	return finalString;
-}
 
 
 - (NSString*) description
@@ -604,6 +438,238 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 
 	[self finishHunkObjectWithLines:hunkLines];
 }
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Patch Presentation
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+
+//	syntax "patch" "\.(patch|diff)$"
+//	color brightgreen "^\+.*"
+//	color green "^\+\+\+.*"
+//	color lightBlue "^ .*"
+//	color lightRed "^-.*"
+//	color red "^---.*"
+//	color brightyellow "^@@.*"
+//	color magenta "^diff.*"
+
+- (NSAttributedString*) patchBodyColorized
+{
+	NSMutableAttributedString* colorized = [[NSMutableAttributedString alloc]init];
+	if (!patchBody_)
+		return colorized;
+	
+	static NSMutableDictionary* lightGreen = nil;
+	static NSMutableDictionary* green = nil;
+	static NSMutableDictionary* lightBlue = nil;
+	static NSMutableDictionary* lightRed = nil;
+	static NSMutableDictionary* red = nil;
+	static NSMutableDictionary* normal = nil;
+	static NSMutableDictionary* linePart = nil;
+	static NSMutableDictionary* hunkPart = nil;
+	static NSMutableDictionary* headerLine = nil;
+	static NSMutableDictionary* diffStatLine = nil;
+	static NSMutableDictionary* diffStatHeader = nil;
+	static NSMutableDictionary* magenta = nil;
+	
+	if (!lightGreen)
+	{
+		
+		static NSDictionary* theDictionary = nil;
+		
+		NSFont* font = [NSFont fontWithName:@"Monaco"  size:9];
+		NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
+		[paragraphStyle setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
+		float charWidth = [[font screenFontWithRenderingMode:NSFontDefaultRenderingMode] advancementForGlyph:(NSGlyph) ' '].width;
+		[paragraphStyle setDefaultTabInterval:(charWidth * 4)];
+		[paragraphStyle setTabStops:[NSArray array]];
+		theDictionary = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil];
+		
+		lightGreen		= [theDictionary mutableCopy];
+		lightBlue		= [theDictionary mutableCopy];
+		lightRed		= [theDictionary mutableCopy];
+		green			= [theDictionary mutableCopy];
+		red				= [theDictionary mutableCopy];
+		linePart		= [theDictionary mutableCopy];
+		hunkPart		= [theDictionary mutableCopy];
+		magenta			= [theDictionary mutableCopy];
+		headerLine		= [theDictionary mutableCopy];
+		diffStatLine	= [theDictionary mutableCopy];
+		diffStatHeader	= [theDictionary mutableCopy];
+		normal			= [theDictionary mutableCopy];
+		
+		[lightGreen		setObject:rgbColor255(221.0, 255.0, 221.0) forKey:NSBackgroundColorAttributeName];
+		[lightBlue		setObject:rgbColor255(202.0, 238.0, 255.0) forKey:NSBackgroundColorAttributeName];
+		[lightRed		setObject:rgbColor255(255.0, 221.0, 221.0) forKey:NSBackgroundColorAttributeName];
+		[green			setObject:rgbColor255(160.0, 255.0, 160.0) forKey:NSBackgroundColorAttributeName];
+		[red			setObject:rgbColor255(255.0, 160.0, 160.0) forKey:NSBackgroundColorAttributeName];
+		[linePart		setObject:rgbColor255(240.0, 240.0, 240.0) forKey:NSBackgroundColorAttributeName];
+		[linePart		setObject:rgbColor255(128.0, 128.0, 128.0) forKey:NSForegroundColorAttributeName];
+		[hunkPart		setObject:rgbColor255(234.0, 242.0, 245.0) forKey:NSBackgroundColorAttributeName];
+		[hunkPart		setObject:rgbColor255(128.0, 128.0, 128.0) forKey:NSForegroundColorAttributeName];
+		[headerLine		setObject:rgbColor255(230.0, 230.0, 230.0) forKey:NSBackgroundColorAttributeName];
+		[headerLine		setObject:rgbColor255(128.0, 128.0, 128.0) forKey:NSForegroundColorAttributeName];
+		[diffStatLine	setObject:rgbColor255(255.0, 253.0, 217.0) forKey:NSBackgroundColorAttributeName];
+		[diffStatLine	setObject:rgbColor255(128.0, 128.0, 128.0) forKey:NSForegroundColorAttributeName];
+		[diffStatHeader setObject:rgbColor255(255.0, 253.0, 200.0) forKey:NSBackgroundColorAttributeName];
+		[diffStatHeader setObject:rgbColor255(128.0, 128.0, 128.0) forKey:NSForegroundColorAttributeName];
+		[magenta		setObject:rgbColor255(255.0, 200.0, 255.0) forKey:NSBackgroundColorAttributeName];
+		[normal			setObject:rgbColor255(248.0, 248.0, 255.0) forKey:NSBackgroundColorAttributeName];
+		
+		NSMutableParagraphStyle* hunkParagraphStyle = [paragraphStyle mutableCopy];
+		[hunkParagraphStyle setParagraphSpacingBefore:20];
+		[hunkPart		setObject:hunkParagraphStyle forKey:NSParagraphStyleAttributeName];
+		
+		
+		NSMutableParagraphStyle* headerParagraphStyle = [paragraphStyle mutableCopy];
+		[headerParagraphStyle setParagraphSpacingBefore:30];
+		[headerLine		setObject:[NSFont fontWithName:@"Monaco"  size:15] forKey:NSFontAttributeName];
+		[headerLine		setObject:headerParagraphStyle forKey:NSParagraphStyleAttributeName];
+		
+		[diffStatHeader	setObject:[NSFont fontWithName:@"Monaco"  size:15] forKey:NSFontAttributeName];
+	}
+	
+	//ExecutionResult* result = [ShellTask execute:@"/usr/bin/diffstat" withArgs:[NSArray arrayWithObjects:path_, nil] withEnvironment:[TaskExecutions environmentForHg]];
+	//if ([result hasNoErrors])
+	//{
+	//	[colorized appendAttributedString:[NSAttributedString string:@"Patch Statistics\n" withAttributes:diffStatHeader]];
+	//	[colorized appendAttributedString:[NSAttributedString string:result.outStr withAttributes:diffStatLine]];
+	//}
+	
+	
+	NSMutableArray* lines = [[NSMutableArray alloc]init];
+	NSInteger start = 0;
+	while (start < [patchBody_ length])
+	{
+		NSRange nextLine = [patchBody_ lineRangeForRange:NSMakeRange(start, 1)];
+		[lines addObject:[patchBody_ substringWithRange:nextLine]];
+		start = nextLine.location + nextLine.length;
+	}
+	
+	for (NSInteger i = 0; i < [lines count] ; i++)
+	{
+		NSString* line = [lines objectAtIndex:i];
+		
+		// Detect the header of
+		// diff ...
+		// --- ...
+		// +++ b/<fileName>
+		if ([line isMatchedByRegex:@"^diff.*"] && i+2< [lines count])
+		{
+			NSString* minusLine = [lines objectAtIndex:i+1];
+			NSString* addLine   = [lines objectAtIndex:i+2];
+			NSString* filePath = nil;
+			if ([minusLine isMatchedByRegex:@"^---.*"])
+				if ([addLine getCapturesWithRegexAndTrimedComponents:@"^\\+\\+\\+\\s*b/(.*)"  firstComponent:&filePath])
+					if (IsNotEmpty(filePath))
+					{
+						// We found a valid header, add to our colorized string and advance through the header
+						filePath = fstr(@"%@\n",filePath);	// newline terminate the path
+						[colorized appendAttributedString:[NSAttributedString string:filePath withAttributes:headerLine]];
+						i += 2;
+						continue;
+					}
+		}
+		
+		if ([line isMatchedByRegex:@"^\\+\\+\\+.*"])	[colorized appendAttributedString:[NSAttributedString string:line withAttributes:linePart]];
+		else if ([line isMatchedByRegex:@"^\\+.*"])			[colorized appendAttributedString:[NSAttributedString string:line withAttributes:lightGreen]];
+		else if ([line isMatchedByRegex:@"^ .*"])			[colorized appendAttributedString:[NSAttributedString string:line withAttributes:normal]];
+		else if ([line isMatchedByRegex:@"^---.*"])			[colorized appendAttributedString:[NSAttributedString string:line withAttributes:linePart]];
+		else if ([line isMatchedByRegex:@"^-.*"])			[colorized appendAttributedString:[NSAttributedString string:line withAttributes:lightRed]];
+		else if ([line isMatchedByRegex:@"^@@.*"])			[colorized appendAttributedString:[NSAttributedString string:line withAttributes:hunkPart]];
+		else												[colorized appendAttributedString:[NSAttributedString string:line withAttributes:normal]];
+	}
+	return colorized;
+}
+
+
+
+- (NSString*) patchBodyHTMLized
+{
+	NSMutableString* finalString = [[NSMutableString alloc] init];
+	for (FilePatch* filePatch in filePatches_)
+		if (filePatch)
+		{
+			NSString* htmlizedFilePatch = [filePatch htmlizedFilePatch];
+			if (htmlizedFilePatch)
+				[finalString appendString:htmlizedFilePatch];
+		}
+	return finalString;
+}
+
+- (NSString*) patchBodyString
+{
+	NSMutableString* finalString = [[NSMutableString alloc] init];
+	for (FilePatch* filePatch in filePatches_)
+		if (filePatch)
+		{
+			NSString* filePatchString = [filePatch filePatchString];
+			if (filePatchString)
+				[finalString appendString:filePatchString];
+		}
+	return finalString;
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Patch Filtering
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (BOOL) willFilterPatchFor:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root
+{
+	NSDictionary* repositoryExclusions = [hunkExclusions repositoryExclusionsForRoot:root];
+	for (FilePatch* filePatch in filePatches_)
+	{
+		NSSet* exclusionsSet = [repositoryExclusions objectForKey:filePatch];
+		if (exclusionsSet)
+			if ([exclusionsSet intersectsSet:[filePatch hunkHashesSet]])
+				return YES;
+	}
+	return NO;
+}
+
+- (NSString*) patchBodyFilteredBy:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root
+{
+	NSMutableString* finalString = [[NSMutableString alloc] init];
+	NSDictionary* repositoryExclusions = [hunkExclusions repositoryExclusionsForRoot:root];
+	if (IsEmpty(repositoryExclusions))
+		return [self patchBodyString];
+
+	for (FilePatch* filePatch in filePatches_)
+		if (filePatch)
+		{
+			NSString* filteredFilePatch = [filePatch filePatchFilteredByExclusions:[excludedPatchHunksForFilePath_ objectForKey:[filePatch filePath]]];
+			if (filteredFilePatch)
+				[finalString appendString:filteredFilePatch];
+		}
+	return finalString;
+}
+
+
+- (NSString*) tempFileWithPatchBodyFilteredBy:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root
+{
+	NSString* filteredPatchBody = [self patchBodyFilteredBy:hunkExclusions withRoot:root];
+	NSString* tempFilePath = tempFilePathWithTemplate(@"MacHgFilteredPatch.XXXXXX");
+	if (!tempFilePath)
+	{
+		NSRunAlertPanel(@"Temporary File", @"MacHg could not create a temporary file for the filtered patch. Aborting the operation.", @"OK", nil, nil);
+		return nil;
+	}
+	NSError* err = nil;
+	[filteredPatchBody writeToFile:tempFilePath atomically:YES encoding:NSUTF8StringEncoding error:&err];
+	[NSApp presentAnyErrorsAndClear:&err];
+	return tempFilePath;	
+}
+
 
 @end
 

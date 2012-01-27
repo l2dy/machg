@@ -25,7 +25,8 @@
 @property (readonly,assign) NSString* hunkHash;
 
 + (HunkObject*) hunkObjectWithLines:(NSMutableArray*)lines andParentFilePatch:(FilePatch*)parentFilePatch;
-- (NSString*)   htmlizedHunk;
+- (NSString*)   htmlizedHunk;	// The hunk header and hunk body together, but with html insertions for hilighting the diff 
+- (NSString*)   hunkString;		// The hunk header and hunk body together
 @end
 
 
@@ -52,8 +53,9 @@
 + (FilePatch*) filePatchWithPath:(NSString*)path andHeader:(NSString*)header;
 - (void)	   addHunkObjectWithLines:(NSMutableArray*)lines;
 
-- (NSString*)  filterFilePatchWithExclusions:(NSSet*)excludedHunks;
-- (NSString*)  htmlizedFilePatch;
+- (NSString*)  filePatchFilteredByExclusions:(NSSet*)excludedHunks;	// The header and body but with the exculded hunks filtered out
+- (NSString*)  htmlizedFilePatch;									// The header and body, but with html insertions for highlighting the diff
+- (NSString*)  filePatchString;										// The header and body together
 
 @end
 
@@ -84,8 +86,12 @@
 
 - (NSAttributedString*) patchBodyColorized;
 
-- (NSString*) patchBodyFiltered;
 - (NSString*) patchBodyHTMLized;
+- (NSString*) patchBodyString;
+
+- (BOOL)      willFilterPatchFor:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root;				// Return YES if any of the hunks in any of the file patches are excluded
+- (NSString*) patchBodyFilteredBy:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root;				// Return the patch body filtering out the given exclusions
+- (NSString*) tempFileWithPatchBodyFilteredBy:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root;	// Create a temporary file with the patch filtered by the given exclusions 
 
 @end
 
@@ -100,7 +106,7 @@
 
 @interface PatchRecord : NSObject
 {
-	NSString* path_;
+	NSString* path_;		// This is the path to the patch file (and not anything to do with the paths in the patch.)
 	NSString* author_;
 	NSString* date_;
 	NSString* commitMessage_;
