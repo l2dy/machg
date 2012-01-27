@@ -110,11 +110,11 @@
 	for (FilePatch* filePatch in [patchData filePatches])
 		if (filePatch)
 		{
-			NSString* fileName = pathDifference(root,filePatch->filePath);
+			NSString* fileName = pathDifference(root, [filePatch filePath]);
 			NSMutableSet* currentSet = [repositoryExclusions objectForKey:fileName];
 			if (!currentSet)
 				continue;
-			NSSet* validHunkHases = filePatch->hunkHashesSet;
+			NSSet* validHunkHases = [filePatch hunkHashesSet];
 			[currentSet intersectSet:validHunkHases];
 			if (IsEmpty(currentSet))
 			{

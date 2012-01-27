@@ -10,6 +10,25 @@
 #import <Cocoa/Cocoa.h>
 
 
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  HunkObject
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+@interface HunkObject : NSObject
+{
+	FilePatch*  parentFilePatch;
+	NSString*   hunkHeader;
+	NSArray*    hunkBodyLines;
+	NSString*   hunkHash;
+}
+@property (readonly,assign) NSString* hunkHash;
+
++ (HunkObject*) hunkObjectWithLines:(NSMutableArray*)lines andParentFilePatch:(FilePatch*)parentFilePatch;
+- (NSString*)   htmlizedHunk;
+@end
+
+
 
 
 
@@ -20,17 +39,22 @@
 
 @interface FilePatch : NSObject
 {
-  @public
 	NSString* filePath;
 	NSString* filePatchHeader;
-	NSMutableArray* hunks;
-	NSMutableArray* hunkHashes;
-	NSMutableSet* hunkHashesSet;
+	NSMutableArray* hunks;			// An array of HunkObjects
+	NSMutableSet* hunkHashesSet;	// An array of the hases in the hunk Objects
 }
+@property (readonly,assign) NSString* filePath;
+@property (readonly,assign) NSString* filePatchHeader;
+@property (readonly,assign) NSMutableArray* hunks;
+@property (readonly,assign) NSMutableSet* hunkHashesSet;
+
 + (FilePatch*) filePatchWithPath:(NSString*)path andHeader:(NSString*)header;
-- (void) finishHunk:(NSMutableArray*)lines;
-- (NSString*) filterFilePatchWithExclusions:(NSSet*)excludedHunks;
-- (NSString*) htmlizedFilePatch;
+- (void)	   addHunkObjectWithLines:(NSMutableArray*)lines;
+
+- (NSString*)  filterFilePatchWithExclusions:(NSSet*)excludedHunks;
+- (NSString*)  htmlizedFilePatch;
+
 @end
 
 

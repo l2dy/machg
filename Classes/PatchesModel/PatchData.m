@@ -120,21 +120,67 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 }
 
 
-static NSString* htmlize(NSString* hunk, NSString* hash)
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  HunkObject
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+
+
+@implementation HunkObject
+
+@synthesize hunkHash;
+
+- (HunkObject*) initHunkObjectWithLines:(NSMutableArray*)lines andParentFilePatch:(FilePatch*)parent
 {
-	NSMutableArray* lines = [[NSMutableArray alloc]init];		// The patchBody broken into it's lines (each line includes the line ending)
-	NSInteger start = 0;
-	while (start < [hunk length])
-	{
-		NSRange nextLine = [hunk lineRangeForRange:NSMakeRange(start, 1)];
-		[lines addObject:[hunk substringWithRange:nextLine]];
-		start = nextLine.location + nextLine.length;
-	}
+	self = [super init];
+	if (!self || IsEmpty(lines))
+		return nil;
+
+	parentFilePatch = parent;
+	hunkHeader = [lines popFirst];
+	if (![hunkHeader isMatchedByRegex:@"^@@.*"])
+		DebugLog(@"Bad patch header");
+	hunkBodyLines = lines;
 	
+	// Compute hunkHash
+	NSMutableString* hashLines = [[NSMutableString alloc]init];
+	for (NSString* line in lines)
+		if ([line isMatchedByRegex:@"^(\\+|-).*"])
+			[hashLines appendString:line];	
+	NSString* saltedString = fstr(@"%@:%@", nonNil([parent filePath]), nonNil([hashLines SHA1HashString]));
+	hunkHash = [saltedString SHA1HashString];
+	if ([[parent hunkHashesSet] containsObject:hunkHash])
+	{
+		NSString* furtherSaltedHash = [hunkHash stringByAppendingString:intAsString([[parent hunkHashesSet] count])];
+		hunkHash = [furtherSaltedHash SHA1HashString];
+	}
+	return self;
+}
+
++ (HunkObject*) hunkObjectWithLines:(NSMutableArray*)lines andParentFilePatch:(FilePatch*)parentFilePatch
+{
+	return [[HunkObject alloc] initHunkObjectWithLines:lines andParentFilePatch:parentFilePatch];
+}
+
+- (NSString*)   htmlizedHunk
+{
 	NSMutableString* processedString = [[NSMutableString alloc]init];
+	
+	// Add the hash to the header
+	NSArray* split = splitTermination(hunkHeader);
+	if ([split count] > 1)
+		[processedString appendString:fstr(@"%@ %@%@", [split firstObject], nonNil(hunkHash), [split lastObject])];
+	else
+		[processedString appendString:hunkHeader];
+
+
 	NSMutableArray* leftLines	= [[NSMutableArray alloc]init];
 	NSMutableArray* rightLines	= [[NSMutableArray alloc]init];
-	for (NSString* line in lines)
+	for (NSString* line in hunkBodyLines)
 	{
 		if ([line isMatchedByRegex:@"^\\+.*"])
 			[rightLines addObject:[line substringWithRange:NSMakeRange(1,[line length]-1)]];
@@ -144,12 +190,6 @@ static NSString* htmlize(NSString* hunk, NSString* hash)
 		{
 			if (IsNotEmpty(leftLines) || IsNotEmpty(rightLines))
 				[processedString appendString:htmlizedDifference(leftLines, rightLines)];
-			if ([line isMatchedByRegex:@"^@@.*"])
-			{
-				NSArray* split = splitTermination(line);
-				if ([split count] > 1)
-					line = fstr(@"%@ %@%@", [split firstObject], hash, [split lastObject]);
-			}
 			[processedString appendString:encodeForHTML(line)];
 		}
 	}
@@ -157,6 +197,19 @@ static NSString* htmlize(NSString* hunk, NSString* hash)
 		[processedString appendString:htmlizedDifference(leftLines, rightLines)];
 	return processedString;
 }
+
+- (NSString*) description
+{
+	NSMutableString* desc = [[NSMutableString alloc]init];
+
+	[desc appendString:fstr(@"######## %@ ########\n", hunkHash)];
+	[desc appendString:hunkHeader];
+	for (NSString* line in hunkBodyLines)
+		[desc appendString:line];
+	return desc;
+}
+
+@end
 
 
 
@@ -170,6 +223,11 @@ static NSString* htmlize(NSString* hunk, NSString* hash)
 
 @implementation FilePatch
 
+@synthesize filePath;
+@synthesize filePatchHeader;
+@synthesize hunks;
+@synthesize hunkHashesSet;
+
 - (id) initWithPath:(NSString*)path andHeader:(NSString*)header
 {
 	self = [super init];
@@ -178,7 +236,6 @@ static NSString* htmlize(NSString* hunk, NSString* hash)
 		filePath = path;
 		filePatchHeader = header;
 		hunks = [[NSMutableArray alloc]init];
-		hunkHashes = [[NSMutableArray alloc]init];
 		hunkHashesSet = [[NSMutableSet alloc]init];
     }
     return self;
@@ -190,33 +247,13 @@ static NSString* htmlize(NSString* hunk, NSString* hash)
 }
 
 
-- (NSString*) finishHunk_hashHunk:(NSMutableArray*)lines
-{
-	NSMutableString* hashLines = [[NSMutableString alloc]init];
-	for (NSString* line in lines)
-		if ([line isMatchedByRegex:@"^(\\+|-).*"])
-			[hashLines appendString:line];	
-	NSString* saltedString = fstr(@"%@:%@", nonNil(filePath), nonNil([hashLines SHA1HashString]));
-	NSString* hash = [saltedString SHA1HashString];
-	if ([hunkHashesSet containsObject:hash])
-	{
-		NSString* furtherSaltedHash = [hash stringByAppendingString:intAsString([hunks count])];
-		hash = [furtherSaltedHash SHA1HashString];
-	}
-	return hash;
-}
-
-- (void) finishHunk:(NSMutableArray*)lines
+- (void) addHunkObjectWithLines:(NSMutableArray*)lines
 {
 	if (IsEmpty(lines))
 		return;
-
-	NSString* hash = [self finishHunk_hashHunk:lines];	
-	NSString* hunk = [lines componentsJoinedByString:@""];
+	HunkObject* hunk = [HunkObject hunkObjectWithLines:lines andParentFilePatch:self];
 	[hunks addObject:hunk];
-	[hunkHashes addObject:hash];
-	[hunkHashesSet addObject:hash];
-	[lines removeAllObjects];
+	[hunkHashesSet addObject:[hunk hunkHash]];
 }
 
 - (NSString*) filterFilePatchWithExclusions:(NSSet*)excludedHunks
@@ -250,27 +287,19 @@ static NSString* htmlize(NSString* hunk, NSString* hash)
 
 - (NSString*) htmlizedFilePatch
 {
-	NSMutableString* filteredFilePatch = [NSMutableString stringWithString:filePatchHeader];
-	for (NSInteger i = 0; i<[hunks count]; i++)
-	{
-		NSString* hunk = [hunks objectAtIndex:i];
-		NSString* hash = [hunkHashes objectAtIndex:i];
-		[filteredFilePatch appendString:htmlize(hunk, hash)];
-	}
-	return filteredFilePatch;
+	NSMutableString* builtPatch = [NSMutableString stringWithString:filePatchHeader];
+	for (HunkObject* hunk in hunks)
+		[builtPatch appendString:[hunk htmlizedHunk]];
+	return builtPatch;
 }
 
 
-- (NSString *)description
+- (NSString*) description
 {
-	NSMutableString* filteredFilePatch = [NSMutableString stringWithString:filePatchHeader];
-	
-	for (int i = 0; i<[hunks count]; i++)
-	{
-		[filteredFilePatch appendString:fstr(@"######## %@ ########\n", [hunkHashes objectAtIndex:i])];
-		[filteredFilePatch appendString:[hunks objectAtIndex:i]];		
-	}
-	return filteredFilePatch;
+	NSMutableString* desc = [NSMutableString stringWithString:filePatchHeader];
+	for (HunkObject* hunk in hunks)
+		[desc appendString:[hunk description]];
+	return desc;
 }
 
 @end
@@ -464,7 +493,7 @@ static NSString* htmlize(NSString* hunk, NSString* hash)
 	for (FilePatch* filePatch in filePatches_)
 		if (filePatch)
 		{
-			NSString* filteredFilePatch = [filePatch filterFilePatchWithExclusions:[excludedPatchHunksForFilePath_ objectForKey:filePatch->filePath]];
+			NSString* filteredFilePatch = [filePatch filterFilePatchWithExclusions:[excludedPatchHunksForFilePath_ objectForKey:[filePatch filePath]]];
 			if (filteredFilePatch)
 				[finalString appendString:filteredFilePatch];
 		}
@@ -486,7 +515,7 @@ static NSString* htmlize(NSString* hunk, NSString* hash)
 }
 
 
-- (NSString *)description
+- (NSString*) description
 {
 	NSMutableString* finalString = [[NSMutableString alloc] init];
 	for (FilePatch* filePatch in filePatches_)
@@ -499,13 +528,26 @@ static NSString* htmlize(NSString* hunk, NSString* hash)
 	return finalString;
 }
 
+- (void) finishHunkObjectWithLines:(NSMutableArray*)hunkLines
+{
+	FilePatch* currentFilePatch = [filePatches_ lastObject];
+	[currentFilePatch addHunkObjectWithLines:hunkLines];
+}
+
+- (void) startNewFilePatchForPath:(NSString*)filePath andHeader:(NSString*)filePatchHeader
+{
+	FilePatch* newFilePatch = [FilePatch filePatchWithPath:filePath andHeader:filePatchHeader];
+	if (!filePath || !newFilePatch)
+		return;
+	[filePatchForFilePath_ setObject:newFilePatch forKey:filePath];
+	[filePatches_ addObject:newFilePatch];
+}
 
 -(void) parseBodyIntoFilePatches
 {
 	if (!patchBody_)
 		return;
 	
-	FilePatch* currentFilePatch = nil;	
 	NSMutableArray* hunkLines = [[NSMutableArray alloc]init];	// The array of lines which go into the current hunk
 	NSMutableArray* lines = [[NSMutableArray alloc]init];		// The patchBody broken into it's lines (each line includes the line ending)
 	NSInteger start = 0;
@@ -520,11 +562,11 @@ static NSString* htmlize(NSString* hunk, NSString* hash)
 	{
 		NSString* line = [lines objectAtIndex:i];
 		
-		// If we hit the diff header of a new file set the 'currentFile' and copy the header lines over to the result.
+		// If we hit the diff header of a new file finish the current hunk and start a new filePatch and newHunk
 		NSString* filePath = nil;
 		if ([line getCapturesWithRegexAndTrimedComponents:@"^diff(?: --git)?\\s*a/(.*) b/(.*)" firstComponent:&filePath] && i+2< [lines count])
 		{
-			NSMutableString* header = [NSMutableString stringWithString:line];
+			NSMutableString* filePatchHeader = [NSMutableString stringWithString:line];
 
 			NSInteger j = i+1;
 			NSInteger headerLineCount = 0;
@@ -535,29 +577,32 @@ static NSString* htmlize(NSString* hunk, NSString* hash)
 					 headerLineCount++;
 				else if ([jline isMatchedByRegex:@"(^@@.*)|(^diff .*)"])
 					break;
-				[header appendString:jline];
+				[filePatchHeader appendString:jline];
 			}
 			if (headerLineCount < 2)
-				DebugLog(@"Bad header parse:\n %@", header);
+				DebugLog(@"Bad header parse:\n %@", filePatchHeader);
 			if (IsNotEmpty(filePath))
 			{
-				// We found a valid header, add to our colorized string and advance through the header
-				[currentFilePatch finishHunk:hunkLines];
-				currentFilePatch = [FilePatch filePatchWithPath:filePath andHeader:header];
-				[filePatchForFilePath_ setObject:currentFilePatch forKey:filePath];
-				[filePatches_ addObject:currentFilePatch];
+				// We found a valid header, add the current lines as a hunk to the current file patch, then start a new filePatch
+				[self finishHunkObjectWithLines:hunkLines];				
+				hunkLines = [[NSMutableArray alloc]init];
+				[self startNewFilePatchForPath:filePath andHeader:filePatchHeader];
 				i = j-1;
 				continue;
 			}
 		}
-		
+
+		// We found a hunk header so finish the current hunk object and start collecting lines for a new hunk
 		if ([line isMatchedByRegex:@"^@@.*"])
-			[currentFilePatch finishHunk:hunkLines];
+		{
+			[self finishHunkObjectWithLines:hunkLines];
+			hunkLines = [[NSMutableArray alloc]init];
+		}
 		
 		[hunkLines addObject:line];
 	}
 
-	[currentFilePatch finishHunk:hunkLines];	
+	[self finishHunkObjectWithLines:hunkLines];
 }
 
 @end
