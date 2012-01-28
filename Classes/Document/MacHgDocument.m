@@ -940,7 +940,7 @@
 
 	
 	// Files Contextual Menu
-	if (theAction == @selector(browserMenuOpenSelectedFilesInFinder:))	return [self localRepoIsSelectedAndReady] && [self nodesAreChosenInFiles];
+	if (theAction == @selector(viewerMenuOpenSelectedFilesInFinder:))	return [self localRepoIsSelectedAndReady] && [self nodesAreChosenInFiles];
 	if (theAction == @selector(browserMenuRevealSelectedFilesInFinder:))return [self localRepoIsSelectedAndReady];
 	if (theAction == @selector(browserMenuOpenTerminalHere:))			return [self localRepoIsSelectedAndReady];
 	// -------                                                       

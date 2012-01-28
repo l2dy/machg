@@ -21,11 +21,6 @@
     </object>
     <object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
       <bool key="EncodedWithXMLCoder">YES</bool>
-      <integer value="373"/>
-      <integer value="249"/>
-      <integer value="316"/>
-      <integer value="193"/>
-      <integer value="328"/>
     </object>
     <object class="NSArray" key="IBDocument.PluginDependencies">
       <bool key="EncodedWithXMLCoder">YES</bool>
@@ -168,10 +163,6 @@
         <string key="NSClassName">FilesView</string>
       </object>
       <object class="NSUserDefaultsController" id="69413389">
-        <object class="NSMutableArray" key="NSDeclaredKeys">
-          <bool key="EncodedWithXMLCoder">YES</bool>
-          <string>DifferencesWebviewDiffStyle</string>
-        </object>
         <bool key="NSSharedInstance">YES</bool>
       </object>
       <object class="NSMenu" id="1040381362">
@@ -455,7 +446,7 @@
         <bool key="AllowsUndo">YES</bool>
       </object>
       <object class="NSBox" id="156105479">
-        <reference key="NSNextResponder"/>
+        <nil key="NSNextResponder"/>
         <int key="NSvFlags">10</int>
         <object class="NSMutableArray" key="NSSubviews">
           <bool key="EncodedWithXMLCoder">YES</bool>
@@ -646,7 +637,6 @@
           </object>
         </object>
         <string key="NSFrameSize">{824, 24}</string>
-        <reference key="NSSuperview"/>
         <string key="NSOffsets">{0, 0}</string>
         <object class="NSTextFieldCell" key="NSTitleCell">
           <int key="NSCellFlags">67239424</int>
@@ -675,7 +665,7 @@
         </object>
       </object>
       <object class="NSBox" id="1029795173">
-        <reference key="NSNextResponder"/>
+        <nil key="NSNextResponder"/>
         <int key="NSvFlags">10</int>
         <object class="NSMutableArray" key="NSSubviews">
           <bool key="EncodedWithXMLCoder">YES</bool>
@@ -836,7 +826,6 @@
           </object>
         </object>
         <string key="NSFrameSize">{824, 24}</string>
-        <reference key="NSSuperview"/>
         <string key="NSOffsets">{0, 0}</string>
         <object class="NSTextFieldCell" key="NSTitleCell">
           <int key="NSCellFlags">67239424</int>
@@ -865,7 +854,7 @@
         </object>
       </object>
       <object class="NSCustomView" id="65581774">
-        <reference key="NSNextResponder"/>
+        <nil key="NSNextResponder"/>
         <int key="NSvFlags">268</int>
         <object class="NSMutableArray" key="NSSubviews">
           <bool key="EncodedWithXMLCoder">YES</bool>
@@ -1131,12 +1120,11 @@
           </object>
         </object>
         <string key="NSFrameSize">{39, 494}</string>
-        <reference key="NSSuperview"/>
         <string key="NSReuseIdentifierKey">_NS:1109</string>
         <string key="NSClassName">NSView</string>
       </object>
       <object class="NSCustomView" id="962846676">
-        <reference key="NSNextResponder"/>
+        <nil key="NSNextResponder"/>
         <int key="NSvFlags">268</int>
         <object class="NSMutableArray" key="NSSubviews">
           <bool key="EncodedWithXMLCoder">YES</bool>
@@ -1707,12 +1695,11 @@
           </object>
         </object>
         <string key="NSFrameSize">{146, 520}</string>
-        <reference key="NSSuperview"/>
         <string key="NSReuseIdentifierKey">_NS:1109</string>
         <string key="NSClassName">NSView</string>
       </object>
       <object class="NSCustomView" id="954096192">
-        <reference key="NSNextResponder"/>
+        <nil key="NSNextResponder"/>
         <int key="NSvFlags">268</int>
         <object class="NSMutableArray" key="NSSubviews">
           <bool key="EncodedWithXMLCoder">YES</bool>
@@ -2037,7 +2024,6 @@
           </object>
         </object>
         <string key="NSFrameSize">{346, 118}</string>
-        <reference key="NSSuperview"/>
         <string key="NSReuseIdentifierKey">_NS:1109</string>
         <string key="NSClassName">NSView</string>
       </object>
@@ -2300,14 +2286,6 @@
             <reference key="destination" ref="319268914"/>
           </object>
           <int key="connectionID">157</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBActionConnection" key="connection">
-            <string key="label">browserMenuOpenSelectedFilesInFinder:</string>
-            <reference key="source" ref="1003"/>
-            <reference key="destination" ref="722516753"/>
-          </object>
-          <int key="connectionID">158</int>
         </object>
         <object class="IBConnectionRecord">
           <object class="IBActionConnection" key="connection">
@@ -3056,6 +3034,14 @@
             <reference key="destination" ref="35262477"/>
           </object>
           <int key="connectionID">393</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">viewerMenuOpenSelectedFilesInFinder:</string>
+            <reference key="source" ref="1003"/>
+            <reference key="destination" ref="722516753"/>
+          </object>
+          <int key="connectionID">394</int>
         </object>
       </object>
       <object class="IBMutableOrderedSet" key="objectRecords">
@@ -4757,7 +4743,7 @@
         </object>
       </object>
       <nil key="sourceID"/>
-      <int key="maxID">393</int>
+      <int key="maxID">394</int>
     </object>
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -5079,9 +5065,9 @@
               <string>actionSwitchToFilesBrowser:</string>
               <string>actionSwitchToFilesOutline:</string>
               <string>actionSwitchToFilesTable:</string>
-              <string>browserMenuOpenSelectedFilesInFinder:</string>
               <string>browserMenuOpenTerminalHere:</string>
               <string>browserMenuRevealSelectedFilesInFinder:</string>
+              <string>viewerMenuOpenSelectedFilesInFinder:</string>
             </object>
             <object class="NSMutableArray" key="dict.values">
               <bool key="EncodedWithXMLCoder">YES</bool>
@@ -5100,9 +5086,9 @@
               <string>actionSwitchToFilesBrowser:</string>
               <string>actionSwitchToFilesOutline:</string>
               <string>actionSwitchToFilesTable:</string>
-              <string>browserMenuOpenSelectedFilesInFinder:</string>
               <string>browserMenuOpenTerminalHere:</string>
               <string>browserMenuRevealSelectedFilesInFinder:</string>
+              <string>viewerMenuOpenSelectedFilesInFinder:</string>
             </object>
             <object class="NSMutableArray" key="dict.values">
               <bool key="EncodedWithXMLCoder">YES</bool>
@@ -5119,15 +5105,15 @@
                 <string key="candidateClassName">id</string>
               </object>
               <object class="IBActionInfo">
-                <string key="name">browserMenuOpenSelectedFilesInFinder:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
                 <string key="name">browserMenuOpenTerminalHere:</string>
                 <string key="candidateClassName">id</string>
               </object>
               <object class="IBActionInfo">
                 <string key="name">browserMenuRevealSelectedFilesInFinder:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">viewerMenuOpenSelectedFilesInFinder:</string>
                 <string key="candidateClassName">id</string>
               </object>
             </object>

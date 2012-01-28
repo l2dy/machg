@@ -114,7 +114,7 @@
 {
 	switch (theActionEnum)
 	{
-		case eBrowserClickActionOpen:				return @selector(browserMenuOpenSelectedFilesInFinder:);
+		case eBrowserClickActionOpen:				return @selector(viewerMenuOpenSelectedFilesInFinder:);
 		case eBrowserClickActionRevealInFinder:		return @selector(browserMenuRevealSelectedFilesInFinder:);
 		case eBrowserClickActionDiff:				return @selector(mainMenuDiffSelectedFiles:);
 		case eBrowserClickActionAnnotate:			return @selector(mainMenuAnnotateSelectedFiles:);
@@ -391,7 +391,7 @@
 // MARK:  Contextual Menu actions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (IBAction) mainMenuOpenSelectedFilesInFinder:(id)sender		{ [theFSViewer browserMenuOpenSelectedFilesInFinder:sender]; }
+- (IBAction) mainMenuOpenSelectedFilesInFinder:(id)sender		{ [theFSViewer viewerMenuOpenSelectedFilesInFinder:sender]; }
 - (IBAction) mainMenuRevealSelectedFilesInFinder:(id)sender		{ [theFSViewer browserMenuRevealSelectedFilesInFinder:sender]; }
 - (IBAction) mainMenuOpenTerminalHere:(id)sender				{ [theFSViewer browserMenuOpenTerminalHere:sender]; }
 

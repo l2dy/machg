@@ -376,7 +376,7 @@
 // MARK: Menu Item Actions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (IBAction) browserMenuOpenSelectedFilesInFinder:(id)sender
+- (IBAction) viewerMenuOpenSelectedFilesInFinder:(id)sender
 {
 	NSArray* paths = [self absolutePathsOfChosenFiles];
 	for (NSString* path in paths)
