@@ -660,3 +660,20 @@ static NSString* stringFromItemCount(NSInteger theCount)
 }
 
 @end
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Utilities
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+NSArray* pathsOfFSNodes(NSArray* nodes)
+{
+	NSMutableArray* paths = [[NSMutableArray alloc]init];
+	for (FSNodeInfo* node in nodes)
+		[paths addObject:[node absolutePath]];
+	return paths;
+}

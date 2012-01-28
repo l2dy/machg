@@ -96,5 +96,6 @@
 @end
 
 
+// Utilities
 
-
+NSArray* pathsOfFSNodes(NSArray* nodes);
