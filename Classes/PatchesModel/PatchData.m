@@ -380,16 +380,9 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 	if (!patchBody_)
 		return;
 	
-	NSMutableArray* hunkLines = [[NSMutableArray alloc]init];	// The array of lines which go into the current hunk
-	NSMutableArray* lines = [[NSMutableArray alloc]init];		// The patchBody broken into it's lines (each line includes the line ending)
-	NSInteger start = 0;
-	while (start < [patchBody_ length])
-	{
-		NSRange nextLine = [patchBody_ lineRangeForRange:NSMakeRange(start, 1)];
-		[lines addObject:[patchBody_ substringWithRange:nextLine]];
-		start = nextLine.location + nextLine.length;
-	}
+	NSMutableArray* hunkLines = [[NSMutableArray alloc]init];		// The array of lines which go into the current hunk
 	
+	NSArray* lines = [patchBody_ stringDividedIntoLines];			// The patchBody broken into it's lines (each line includes the line ending)
 	for (NSInteger i = 0; i < [lines count] ; i++)
 	{
 		NSString* line = [lines objectAtIndex:i];
@@ -551,15 +544,7 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 	//}
 	
 	
-	NSMutableArray* lines = [[NSMutableArray alloc]init];
-	NSInteger start = 0;
-	while (start < [patchBody_ length])
-	{
-		NSRange nextLine = [patchBody_ lineRangeForRange:NSMakeRange(start, 1)];
-		[lines addObject:[patchBody_ substringWithRange:nextLine]];
-		start = nextLine.location + nextLine.length;
-	}
-	
+	NSArray* lines = [patchBody_ stringDividedIntoLines];			// The patchBody broken into it's lines (each line includes the line ending)	
 	for (NSInteger i = 0; i < [lines count] ; i++)
 	{
 		NSString* line = [lines objectAtIndex:i];
