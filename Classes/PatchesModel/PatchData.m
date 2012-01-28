@@ -667,7 +667,7 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 - (NSString*) tempFileWithPatchBodyFilteredBy:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root
 {
 	NSString* filteredPatchBody = [self patchBodyFilteredBy:hunkExclusions withRoot:root];
-	NSString* tempFilePath = tempFilePathWithTemplate(@"MacHgFilteredPatch.XXXXXX");
+	NSString* tempFilePath = tempFilePathWithTemplate(@"MacHgFilteredPatch.XXXXXXXXXX");
 	if (!tempFilePath)
 	{
 		NSRunAlertPanel(@"Temporary File", @"MacHg could not create a temporary file for the filtered patch. Aborting the operation.", @"OK", nil, nil);
@@ -679,6 +679,23 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 	return tempFilePath;	
 }
 
+
+- (NSArray*) pathsAffectedByExclusions:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root
+{
+	NSMutableArray* paths = [[NSMutableArray alloc]init];
+	NSDictionary* repositoryExclusions = [hunkExclusions repositoryExclusionsForRoot:root];
+	if (!repositoryExclusions)
+		return paths;
+	for (FilePatch* filePatch in filePatches_)
+		if (filePatch)
+		{
+			NSSet* exclusionsSet = [repositoryExclusions objectForKey:[filePatch filePath]];
+			if ([[filePatch hunkHashesSet] intersectsSet:exclusionsSet])
+				[paths addObject:[filePatch filePath]];
+		}
+	return paths;
+	
+}
 
 @end
 

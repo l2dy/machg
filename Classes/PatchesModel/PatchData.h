@@ -40,7 +40,7 @@
 
 @interface FilePatch : NSObject
 {
-	NSString* filePath;
+	NSString* filePath;				// The repository relative path which this patch applies to
 	NSString* filePatchHeader;
 	NSMutableArray* hunks;			// An array of HunkObjects
 	NSMutableSet* hunkHashesSet;	// An array of the hases in the hunk Objects
@@ -92,6 +92,7 @@
 - (BOOL)      willFilterPatchFor:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root;				// Return YES if any of the hunks in any of the file patches are excluded
 - (NSString*) patchBodyFilteredBy:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root;				// Return the patch body filtering out the given exclusions
 - (NSString*) tempFileWithPatchBodyFilteredBy:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root;	// Create a temporary file with the patch filtered by the given exclusions 
+- (NSArray*)  pathsAffectedByExclusions:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root;		// The paths of the file patches which are affected by the exclusions
 
 @end
 
