@@ -994,11 +994,13 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 - (void) observe:(NSString*)notificationName byCalling:(SEL)notificationSelector
 {
+	[self stopObserving:notificationName from:nil];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:notificationSelector name:notificationName object:nil];
 }
 
 - (void) observe:(NSString*)notificationName from:(id)notificationSender byCalling:(SEL)notificationSelector
 {
+	[self stopObserving:notificationName from:notificationSender];
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:notificationSelector name:notificationName object:notificationSender];
 }
 
