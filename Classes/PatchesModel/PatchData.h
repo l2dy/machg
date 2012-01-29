@@ -77,6 +77,7 @@
 	NSMutableDictionary* filePatchForFilePathDictionary_;	// Map of (NSString*)sourceCodeFilePath -> (FilePatch*)patch (mirrors filePatches_)
 	NSMutableArray* filePatches_;							// Array of (FilePatch*)patch (mirrors filePatchForFilePath_)
 	NSString*		patchBody_;
+	NSString*		cachedPatchBodyHTMLized_;
 }	
 @property (readonly,assign) NSString* patchBody;
 @property (readonly,assign) NSMutableArray* filePatches;

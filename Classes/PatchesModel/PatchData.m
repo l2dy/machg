@@ -635,6 +635,8 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 
 - (NSString*) patchBodyHTMLized
 {
+	if (cachedPatchBodyHTMLized_)
+		return cachedPatchBodyHTMLized_;
 	NSMutableString* finalString = [[NSMutableString alloc] init];
 	BOOL sublineDiffing = [self lineChangeCount] < 2000;
 	for (FilePatch* filePatch in filePatches_)
@@ -644,6 +646,7 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 			if (htmlizedFilePatch)
 				[finalString appendString:htmlizedFilePatch];
 		}
+	cachedPatchBodyHTMLized_ = finalString;
 	return finalString;
 }
 
