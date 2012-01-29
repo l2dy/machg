@@ -321,21 +321,29 @@ NSString* kAmendOption	 = @"amendOption";
 // MARK:  Actions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+- (NSArray*) argumentsForUserDataMessage
+{
+	NSString* theMessage = [commitMessageTextView string];
+	NSMutableArray* args = [NSMutableArray arrayWithObjects:@"--message", theMessage, nil];
+	if ([self committerOption] && IsNotEmpty([self committer]))
+		[args addObject:@"--user" followedBy:[self committer]];
+	if ([self dateOption] && IsNotEmpty([self date]))
+		[args addObject:@"--date" followedBy:[[self date] isodateDescription]];
+	return args;
+}
+
 - (void) sheetActionCommit:(NSArray*)pathsToCommit excluding:(NSArray*)excludedPaths
 {
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	[myDocument dispatchToMercurialQueuedWithDescription:@"Committing Files" process:^{
-		NSString* theMessage = [commitMessageTextView string];
-		NSMutableArray* args = [NSMutableArray arrayWithObjects:@"commit", @"--message", theMessage, nil];
-		
+		NSMutableArray* args = [NSMutableArray arrayWithObjects:@"commit", nil];
+
 		[myDocument registerPendingRefresh:pathsToCommit];
 		if (IsNotEmpty(excludedPaths) && ![myDocument inMergeState])
 			for (NSString* excludedPath in excludedPaths)
 				[args addObject:@"--exclude" followedBy:excludedPath];
-		if ([self committerOption] && IsNotEmpty([self committer]))
-			[args addObject:@"--user" followedBy:[self committer]];
-		if ([self dateOption] && IsNotEmpty([self date]))
-			[args addObject:@"--date" followedBy:[[self date] isodateDescription]];
+
+		[args addObjectsFromArray:[self argumentsForUserDataMessage]];
 		if (![myDocument inMergeState])
 			[args addObjectsFromArray:pathsToCommit];
 		
@@ -378,11 +386,7 @@ NSString* kAmendOption	 = @"amendOption";
 		[myDocument registerPendingRefresh:pathsToCommit];
 
 		NSMutableArray* qrefreshArgs = [NSMutableArray arrayWithObjects:@"qrefresh", @"--config", @"extensions.hgext.mq=", @"--short", nil];
-		if ([self committerOption] && IsNotEmpty([self committer]))
-			[qrefreshArgs addObject:@"--user" followedBy:[self committer]];
-		if ([self dateOption] && IsNotEmpty([self date]))
-			[qrefreshArgs addObject:@"--date" followedBy:[[self date] isodateDescription]];
-		[qrefreshArgs addObject:@"--message" followedBy:[commitMessageTextView string]];
+		[qrefreshArgs addObjectsFromArray:[self argumentsForUserDataMessage]];
 		[qrefreshArgs addObjectsFromArray:[self tableLeafPaths]];
 		ExecutionResult* qrefreshResult = [myDocument executeMercurialWithArgs:qrefreshArgs  fromRoot:rootPath  whileDelayingEvents:YES];
 		if ([qrefreshResult hasErrors])
