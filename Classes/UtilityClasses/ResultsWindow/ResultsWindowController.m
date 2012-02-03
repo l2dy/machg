@@ -17,29 +17,29 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 
 - (ResultsWindowController*) initWithMessage:(NSString*)message andResults:(NSAttributedString*)results andWindowTitle:(NSString*)windowTitle onScreen:(NSScreen*)screen
 {
-	[NSBundle loadNibNamed:@"ResultsWindow" owner:self];
-	[titleMessageTextField setStringValue:message];
-	[[resultsMessageTextView textStorage] setAttributedString:results];
-
-	NSSize titleSize = [[titleMessageTextField attributedStringValue] size];
-	NSSize resultsSize = [results size];
-	NSSize newSize;
-	
-	NSRect visibleFrame = [screen visibleFrame];
-	NSSize currentSize = [resultsMessageTextView frame].size;
-	NSRect f = [resultsWindow frame];
-	
-	CGFloat padH   = f.size.width  - currentSize.width;
-	CGFloat padV   = f.size.height - currentSize.height;
-	newSize.width  = constrain(MAX(resultsSize.width,  titleSize.width)  + 40, 50, visibleFrame.size.width  - 20 - padH);
-	newSize.height = constrain(MAX(resultsSize.height, titleSize.height) + 70, 50, visibleFrame.size.height - 20 - padV);
-
-	f.size.width   = (newSize.width  + padH);
-	f.size.height  = (newSize.height + padV);
-	f.origin.x     = constrain(f.origin.x, 10, MAX(visibleFrame.size.width  - newSize.width  - 20, 10));
-	f.origin.y     = constrain(f.origin.y, 10, MAX(visibleFrame.size.height - newSize.height - 20, 10));
-	
 	dispatch_async(mainQueue(), ^{
+		[NSBundle loadNibNamed:@"ResultsWindow" owner:self];
+		[titleMessageTextField setStringValue:message];
+		[[resultsMessageTextView textStorage] setAttributedString:results];
+
+		NSSize titleSize = [[titleMessageTextField attributedStringValue] size];
+		NSSize resultsSize = [results size];
+		NSSize newSize;
+		
+		NSRect visibleFrame = [screen visibleFrame];
+		NSSize currentSize = [resultsMessageTextView frame].size;
+		NSRect f = [resultsWindow frame];
+		
+		CGFloat padH   = f.size.width  - currentSize.width;
+		CGFloat padV   = f.size.height - currentSize.height;
+		newSize.width  = constrain(MAX(resultsSize.width,  titleSize.width)  + 40, 50, visibleFrame.size.width  - 20 - padH);
+		newSize.height = constrain(MAX(resultsSize.height, titleSize.height) + 70, 50, visibleFrame.size.height - 20 - padV);
+
+		f.size.width   = (newSize.width  + padH);
+		f.size.height  = (newSize.height + padV);
+		f.origin.x     = constrain(f.origin.x, 10, MAX(visibleFrame.size.width  - newSize.width  - 20, 10));
+		f.origin.y     = constrain(f.origin.y, 10, MAX(visibleFrame.size.height - newSize.height - 20, 10));
+	
 		[resultsWindow setFrame:f display:YES];
 		[resultsWindow setTitle:windowTitle];
 		[resultsWindow makeKeyAndOrderFront:self];
