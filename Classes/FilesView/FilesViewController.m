@@ -176,7 +176,7 @@
 // MARK:  Differnces Mini Preferences Window
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (IBAction) differencesDisplayPreferencesChanged:(id)sender { [self postNotificationWithName:kDifferencesDisplayPreferencesChanged]; }
+- (IBAction) differencesDisplayPreferencesChanged:(id)sender { [self postNotificationWithName:kFileDiffsDisplayPreferencesChanged]; }
 
 
 

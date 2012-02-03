@@ -402,7 +402,7 @@ extern NSString* const kLogEntriesDidChange;				// Some LogEntires which are par
 // Non-critical notifications
 extern NSString* const kBrowserDisplayPreferencesChanged;	// The user selected some preference or something so tables etc should
 															// update their visual appearance.
-extern NSString* const kDifferencesDisplayPreferencesChanged;// The user selected some preference or something so that the file
+extern NSString* const kFileDiffsDisplayPreferencesChanged; // The user selected some preference or something so that the file
 															// view differences should update their visual appearance. 
 
 extern NSString* const kCompatibleRepositoryChanged;		// A repository compatible to the current repository changed. (A push

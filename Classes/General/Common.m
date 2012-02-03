@@ -28,7 +28,7 @@ NSString* const kMacHgApp								= @"MacHgApp";
 
 // Notifications
 NSString* const kBrowserDisplayPreferencesChanged		= @"BrowserDisplayPreferencesChanged";
-NSString* const kDifferencesDisplayPreferencesChanged	= @"DifferencesDisplayPreferencesChanged";
+NSString* const kFileDiffsDisplayPreferencesChanged	    = @"FileDiffsDisplayPreferencesChanged";
 NSString* const kCommandKeyIsDown						= @"CommandKeyIsDown";
 NSString* const kCommandKeyIsUp							= @"CommandKeyIsUp";
 NSString* const kCompatibleRepositoryChanged			= @"CompatibleRepositoryChanged";
