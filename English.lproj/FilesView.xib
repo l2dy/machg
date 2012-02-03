@@ -21,6 +21,7 @@
     </object>
     <object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
       <bool key="EncodedWithXMLCoder">YES</bool>
+      <integer value="343"/>
     </object>
     <object class="NSArray" key="IBDocument.PluginDependencies">
       <bool key="EncodedWithXMLCoder">YES</bool>
@@ -397,7 +398,7 @@
         </object>
       </object>
       <object class="WebView" id="465768189">
-        <nil key="NSNextResponder"/>
+        <reference key="NSNextResponder"/>
         <int key="NSvFlags">4370</int>
         <object class="NSMutableSet" key="NSDragTypes">
           <bool key="EncodedWithXMLCoder">YES</bool>
@@ -420,7 +421,9 @@
             <string>public.url-name</string>
           </object>
         </object>
-        <string key="NSFrame">{{1, 1}, {795, 158}}</string>
+        <string key="NSFrameSize">{795, 158}</string>
+        <reference key="NSSuperview"/>
+        <reference key="NSWindow"/>
         <reference key="NSNextKeyView"/>
         <string key="FrameName"/>
         <string key="GroupName"/>
@@ -1699,7 +1702,7 @@
         <string key="NSClassName">NSView</string>
       </object>
       <object class="NSCustomView" id="954096192">
-        <nil key="NSNextResponder"/>
+        <reference key="NSNextResponder"/>
         <int key="NSvFlags">268</int>
         <object class="NSMutableArray" key="NSSubviews">
           <bool key="EncodedWithXMLCoder">YES</bool>
@@ -2024,6 +2027,7 @@
           </object>
         </object>
         <string key="NSFrameSize">{346, 118}</string>
+        <reference key="NSSuperview"/>
         <string key="NSReuseIdentifierKey">_NS:1109</string>
         <string key="NSClassName">NSView</string>
       </object>
@@ -2951,38 +2955,6 @@
           <int key="connectionID">372</int>
         </object>
         <object class="IBConnectionRecord">
-          <object class="IBActionConnection" key="connection">
-            <string key="label">differencesDisplayPreferencesChanged:</string>
-            <reference key="source" ref="453712496"/>
-            <reference key="destination" ref="681766178"/>
-          </object>
-          <int key="connectionID">388</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBActionConnection" key="connection">
-            <string key="label">differencesDisplayPreferencesChanged:</string>
-            <reference key="source" ref="453712496"/>
-            <reference key="destination" ref="388562179"/>
-          </object>
-          <int key="connectionID">389</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBActionConnection" key="connection">
-            <string key="label">differencesDisplayPreferencesChanged:</string>
-            <reference key="source" ref="453712496"/>
-            <reference key="destination" ref="133664646"/>
-          </object>
-          <int key="connectionID">390</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBActionConnection" key="connection">
-            <string key="label">differencesDisplayPreferencesChanged:</string>
-            <reference key="source" ref="453712496"/>
-            <reference key="destination" ref="20902287"/>
-          </object>
-          <int key="connectionID">391</int>
-        </object>
-        <object class="IBConnectionRecord">
           <object class="IBBindingConnection" key="connection">
             <string key="label">selectedIndex: values.DifferencesWebviewDiffStyle</string>
             <reference key="source" ref="369066997"/>
@@ -2997,14 +2969,6 @@
             </object>
           </object>
           <int key="connectionID">392</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBActionConnection" key="connection">
-            <string key="label">differencesDisplayPreferencesChanged:</string>
-            <reference key="source" ref="453712496"/>
-            <reference key="destination" ref="35262477"/>
-          </object>
-          <int key="connectionID">393</int>
         </object>
         <object class="IBConnectionRecord">
           <object class="IBActionConnection" key="connection">
@@ -3061,6 +3025,46 @@
             <reference key="destination" ref="954096192"/>
           </object>
           <int key="connectionID">404</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">fileDiffsDisplayPreferencesChanged:</string>
+            <reference key="source" ref="465768189"/>
+            <reference key="destination" ref="20902287"/>
+          </object>
+          <int key="connectionID">405</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">fileDiffsDisplayPreferencesChanged:</string>
+            <reference key="source" ref="465768189"/>
+            <reference key="destination" ref="681766178"/>
+          </object>
+          <int key="connectionID">406</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">fileDiffsDisplayPreferencesChanged:</string>
+            <reference key="source" ref="465768189"/>
+            <reference key="destination" ref="133664646"/>
+          </object>
+          <int key="connectionID">407</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">fileDiffsDisplayPreferencesChanged:</string>
+            <reference key="source" ref="465768189"/>
+            <reference key="destination" ref="388562179"/>
+          </object>
+          <int key="connectionID">408</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">fileDiffsDisplayPreferencesChanged:</string>
+            <reference key="source" ref="465768189"/>
+            <reference key="destination" ref="369066997"/>
+          </object>
+          <int key="connectionID">409</int>
         </object>
       </object>
       <object class="IBMutableOrderedSet" key="objectRecords">
@@ -4295,6 +4299,7 @@
           <string>316.IBPluginDependency</string>
           <string>317.IBPluginDependency</string>
           <string>325.CustomClassName</string>
+          <string>325.IBEditorWindowLastContentRect</string>
           <string>325.IBPluginDependency</string>
           <string>325.IBViewBoundsToFrameTransform</string>
           <string>328.IBPluginDependency</string>
@@ -4641,6 +4646,7 @@
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>PatchesWebview</string>
+          <string>{{0, 976}, {795, 158}}</string>
           <string>com.apple.WebKitIBPlugin</string>
           <object class="NSAffineTransform">
             <bytes key="NSTransformStruct">AT+AAAA/gAAAA</bytes>
@@ -4672,7 +4678,7 @@
           <string>{{0, 1053}, {402, 24}}</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <object class="NSAffineTransform"/>
-          <string>{{320, 263}, {346, 118}}</string>
+          <string>{{703, 229}, {346, 118}}</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <object class="NSAffineTransform">
@@ -4771,7 +4777,7 @@
         </object>
       </object>
       <nil key="sourceID"/>
-      <int key="maxID">404</int>
+      <int key="maxID">409</int>
     </object>
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -5207,14 +5213,10 @@
               <bool key="EncodedWithXMLCoder">YES</bool>
               <string>browserAction:</string>
               <string>browserDoubleAction:</string>
-              <string>differencesDisplayPreferencesChanged:</string>
               <string>refreshBrowserContent:</string>
-              <string>toggleAttachedDifferencesPreferencesWindow:</string>
             </object>
             <object class="NSMutableArray" key="dict.values">
               <bool key="EncodedWithXMLCoder">YES</bool>
-              <string>id</string>
-              <string>id</string>
               <string>id</string>
               <string>id</string>
               <string>id</string>
@@ -5226,9 +5228,7 @@
               <bool key="EncodedWithXMLCoder">YES</bool>
               <string>browserAction:</string>
               <string>browserDoubleAction:</string>
-              <string>differencesDisplayPreferencesChanged:</string>
               <string>refreshBrowserContent:</string>
-              <string>toggleAttachedDifferencesPreferencesWindow:</string>
             </object>
             <object class="NSMutableArray" key="dict.values">
               <bool key="EncodedWithXMLCoder">YES</bool>
@@ -5241,15 +5241,7 @@
                 <string key="candidateClassName">id</string>
               </object>
               <object class="IBActionInfo">
-                <string key="name">differencesDisplayPreferencesChanged:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
                 <string key="name">refreshBrowserContent:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
-                <string key="name">toggleAttachedDifferencesPreferencesWindow:</string>
                 <string key="candidateClassName">id</string>
               </object>
             </object>
@@ -6276,6 +6268,17 @@
         <object class="IBPartialClassDescription">
           <string key="className">PatchesWebview</string>
           <string key="superclassName">WebView</string>
+          <object class="NSMutableDictionary" key="actions">
+            <string key="NS.key.0">fileDiffsDisplayPreferencesChanged:</string>
+            <string key="NS.object.0">id</string>
+          </object>
+          <object class="NSMutableDictionary" key="actionInfosByName">
+            <string key="NS.key.0">fileDiffsDisplayPreferencesChanged:</string>
+            <object class="IBActionInfo" key="NS.object.0">
+              <string key="name">fileDiffsDisplayPreferencesChanged:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+          </object>
           <object class="NSMutableDictionary" key="outlets">
             <string key="NS.key.0">parentController</string>
             <string key="NS.object.0">id</string>

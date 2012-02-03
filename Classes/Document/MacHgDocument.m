@@ -951,6 +951,10 @@
 	if (theAction == @selector(mainMenuNoAction:))						return !showingSheet_ && ([sidebar_ selectedNode] ? YES : NO);
 	if (theAction == @selector(togglePreviewPanel:))					return [self validateAndSwitchMenuForPreviewSelectedFiles:anItem];
 	
+
+	// Miscellaneous actions
+	if (theAction == @selector(differencesDisplayPreferencesChanged:))	return YES;
+
 	// subclass of NSDocument, so invoke super's implementation
 	return [super validateUserInterfaceItem:anItem];
 }

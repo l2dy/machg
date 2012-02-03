@@ -42,4 +42,5 @@
 - (void) setBackingPatch:(PatchData*)patchData andFallbackMessage:(NSString*)fallbackMessage;
 - (void) setBackingPatch:(PatchData*)patchData andFallbackMessage:(NSString*)fallbackMessage withTaskNumber:(NSInteger)taskNumber;
 
+- (IBAction) fileDiffsDisplayPreferencesChanged:(id)sender;	// Respond to a change in the display preferences
 @end

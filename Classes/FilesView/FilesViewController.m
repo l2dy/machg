@@ -173,17 +173,6 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK:  Differnces Mini Preferences Window
-// -----------------------------------------------------------------------------------------------------------------------------------------
-
-- (IBAction) differencesDisplayPreferencesChanged:(id)sender { [self postNotificationWithName:kFileDiffsDisplayPreferencesChanged]; }
-
-
-
-
-
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
 // MARK:  FSBrowser Protocol Methods
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -429,7 +418,6 @@
 	if (theAction == @selector(mainMenuOpenSelectedFilesInFinder:))		return [myDocument localRepoIsSelectedAndReady] && [theFSViewer nodesAreChosen];
 	if (theAction == @selector(mainMenuRevealSelectedFilesInFinder:))	return [myDocument localRepoIsSelectedAndReady];
 	if (theAction == @selector(mainMenuOpenTerminalHere:))				return [myDocument localRepoIsSelectedAndReady];
-	if (theAction == @selector(differencesDisplayPreferencesChanged:))	return YES;
 
 	return NO;
 }
