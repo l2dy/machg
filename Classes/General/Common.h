@@ -1008,10 +1008,13 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 // MARK: -
 @interface NSString ( NSStringPlusExtensions )
+- (unichar) firstCharacter;
+- (unichar) lastCharacter;
 - (BOOL)	isNotEqualToString:(NSString*)aString;
 - (BOOL)	differsOnlyInCaseFrom:(NSString*)aString;
 - (NSComparisonResult)caseInsensitiveNumericCompare:(NSString*)aString;
 - (BOOL)	endsWithNewLine;
+- (NSArray*) stringDividedIntoLines;	// Each line includes the line ending if present
 - (NSString*) SHA1HashString;
 @end
 

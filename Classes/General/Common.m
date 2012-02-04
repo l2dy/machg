@@ -1042,7 +1042,9 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 // MARK: -
 @implementation NSString ( NSStringPlusComparisons )
 
-- (BOOL) isNotEqualToString:(NSString*)aString	  { return ![self isEqualToString:aString]; }
+- (unichar) firstCharacter						{ return [self characterAtIndex:0]; }
+- (unichar) lastCharacter						{ return [self characterAtIndex:[self length]-1]; }
+- (BOOL) isNotEqualToString:(NSString*)aString	{ return ![self isEqualToString:aString]; }
 - (BOOL) differsOnlyInCaseFrom:(NSString*)aString
 {
 	return
@@ -1058,8 +1060,23 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 {
 	if ([self length] <= 0)
 		return NO;
-	unichar lastChar = [self characterAtIndex:[self length]-1];
-	return (lastChar == '\n' || lastChar == '\r');
+	static NSCharacterSet* newLines = nil;
+	if (!newLines)
+		newLines = [NSCharacterSet newlineCharacterSet];
+	return [newLines characterIsMember:[self lastCharacter]];
+}
+
+- (NSArray*) stringDividedIntoLines
+{
+	NSMutableArray* lines = [[NSMutableArray alloc]init];
+	NSInteger start = 0;
+	while (start < [self length])
+	{
+		NSRange nextLine = [self lineRangeForRange:NSMakeRange(start, 1)];
+		[lines addObject:[self substringWithRange:nextLine]];
+		start = nextLine.location + nextLine.length;
+	}
+	return lines;
 }
 
 - (NSString*) SHA1HashString
@@ -1175,6 +1192,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	NSRange textRange =[self rangeOfString:str];
 	return textRange.location != NSNotFound;
 }
+
 @end
 
 
