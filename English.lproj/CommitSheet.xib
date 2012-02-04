@@ -610,11 +610,6 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
         <string key="NSClassName">DisclosureBoxController</string>
       </object>
       <object class="NSUserDefaultsController" id="102905480">
-        <array class="NSMutableArray" key="NSDeclaredKeys">
-          <string>FontSizeOfDifferencesWebview</string>
-          <string>NumContextLinesForDifferencesWebview</string>
-          <string>DifferencesWebviewDiffStyle</string>
-        </array>
         <bool key="NSSharedInstance">YES</bool>
       </object>
       <object class="NSBox" id="581617282">
@@ -905,7 +900,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
                       <object class="NSButton" id="1003274127">
                         <reference key="NSNextResponder" ref="297601957"/>
                         <int key="NSvFlags">268</int>
-                        <string key="NSFrame">{{4, -2}, {22, 26}}</string>
+                        <string key="NSFrame">{{4, -2}, {22, 22}}</string>
                         <reference key="NSSuperview" ref="297601957"/>
                         <bool key="NSEnabled">YES</bool>
                         <object class="NSButtonCell" key="NSCell" id="954875563">
@@ -919,10 +914,10 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
                           </object>
                           <reference key="NSControlView" ref="1003274127"/>
                           <int key="NSButtonFlags">-2033434369</int>
-                          <int key="NSButtonFlags2">162</int>
+                          <int key="NSButtonFlags2">34</int>
                           <object class="NSCustomResource" key="NSNormalImage">
                             <string key="NSClassName">NSImage</string>
-                            <string key="NSResourceName">AppearancePreferencesMono</string>
+                            <string key="NSResourceName">AppearancePreferencesMono18</string>
                           </object>
                           <string key="NSAlternateContents"/>
                           <string key="NSKeyEquivalent"/>
@@ -931,11 +926,11 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
                         </object>
                       </object>
                     </array>
-                    <string key="NSFrameSize">{32, 20}</string>
+                    <string key="NSFrameSize">{32, 16}</string>
                     <reference key="NSSuperview" ref="342887672"/>
                   </object>
                 </array>
-                <string key="NSFrame">{{83, -2}, {32, 20}}</string>
+                <string key="NSFrame">{{83, 1}, {32, 16}}</string>
                 <reference key="NSSuperview" ref="542124661"/>
                 <string key="NSOffsets">{0, 0}</string>
                 <object class="NSTextFieldCell" key="NSTitleCell">
@@ -4610,7 +4605,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
     <string key="IBDocument.LastKnownRelativeProjectPath">../MacHg.xcodeproj</string>
     <int key="IBDocument.defaultPropertyAccessControl">3</int>
     <dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
-      <string key="AppearancePreferencesMono">{17, 15}</string>
+      <string key="AppearancePreferencesMono18">{17, 14}</string>
       <string key="DividerBackground18">{1, 18}</string>
       <string key="DividerThumb">{11, 10}</string>
       <string key="NSMenuCheckmark">{9, 8}</string>
