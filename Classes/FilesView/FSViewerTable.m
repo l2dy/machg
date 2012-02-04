@@ -119,7 +119,7 @@
 
 - (BOOL)		singleItemIsChosenInFiles											{ return ([self numberOfSelectedRows] == 1) || ![self isRowSelected:[self chosenRow]]; }
 - (BOOL)		clickedNodeCoincidesWithTerminalSelections							{ return NO; }
-- (void)		repositoryDataIsNew													{ }
+- (void)		repositoryDataIsNew													{ [self myDeselectAll]; }
 
 - (NSRect)	rectInWindowForNode:(FSNodeInfo*)node
 {
