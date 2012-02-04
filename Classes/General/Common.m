@@ -1851,6 +1851,10 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 // MARK: -
 @implementation NSTableView ( NSTableViewPlusExtensions )
 - (void) selectRow:(NSInteger)row		{ [self selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO]; }
+- (void) myDeselectAll					{ [self selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO]; }		// There is a bug with deselectAll in the 10.6 api / use. I can't track it down exactly but here is a reference:
+																														// http://stackoverflow.com/questions/8377205/enabling-empty-selection-on-view-based-nstableviews
+																														// http://stackoverflow.com/questions/1296798/cant-make-empty-selection-in-nstableview
+																														// http://www.cocoabuilder.com/archive/cocoa/242930-nstableview-empty-selection-not-working.html
 - (BOOL) rowWasClicked					{ return [self clickedRow] != -1; }
 - (NSInteger) chosenRow					{ NSInteger clickedRow = [self clickedRow];	return (clickedRow >= 0) ? clickedRow : [self selectedRow]; }
 - (BOOL) clickedRowInSelectedRows		{ NSInteger clickedRow = [self clickedRow]; return (clickedRow >= 0) &&  [self isRowSelected:clickedRow]; }

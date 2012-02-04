@@ -225,15 +225,6 @@
 	[self setNeedsDisplay:YES];
 }
 
-// There is a bug with deselectAll in the 10.6 api / use. I can't track it down exactly but here is a reference:
-// http://stackoverflow.com/questions/8377205/enabling-empty-selection-on-view-based-nstableviews
-// http://stackoverflow.com/questions/1296798/cant-make-empty-selection-in-nstableview
-// http://www.cocoabuilder.com/archive/cocoa/242930-nstableview-empty-selection-not-working.html
-- (void) myDeselectAll
-{
-	[self selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO];
-}
-
 
 
 

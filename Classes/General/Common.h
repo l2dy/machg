@@ -1202,6 +1202,7 @@ typedef BOOL (^ArrayFilterBlock)(id);
 // MARK: -
 @interface NSTableView ( NSTableViewPlusExtensions )
 - (void)	selectRow:(NSInteger)row;
+- (void)	myDeselectAll;	// Work around bug in 10.6 api in deselectAll
 - (BOOL)	rowWasClicked;
 - (NSInteger) chosenRow;	// If a row was clicked on (that triggered an action) in the table then return
 							// that, or else return the selected row
@@ -1210,7 +1211,6 @@ typedef BOOL (^ArrayFilterBlock)(id);
 - (BOOL)	selectedRowsWereChosen;
 - (void)	scrollToRangeOfRowsLow:(NSInteger)lowTableRow high:(NSInteger)highTableRow;
 @end
-
 
 
 // MARK: -
