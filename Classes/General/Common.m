@@ -250,19 +250,17 @@ WebviewDiffStyleOption    DifferencesWebviewDiffStyleFromDefaults() { return enu
 
 void dispatchWithTimeOut(dispatch_queue_t q, NSTimeInterval t, BlockProcess theBlock)
 {
-	dispatch_time_t timeOutTime = dispatch_time(DISPATCH_TIME_NOW, t * NSEC_PER_SEC);
 	DispatchGroup group = dispatch_group_create();
 	dispatch_group_async(group, q, theBlock);
-	dispatch_group_wait(group, timeOutTime);
+	dispatch_group_wait(group, futureDispatchTime(t));
 	dispatchGroupFinish(group);
 }
 
 void dispatchWithTimeOutBlock(dispatch_queue_t q, NSTimeInterval t, BlockProcess mainBlock, BlockProcess timeoutBlock)
 {
-	dispatch_time_t timeOutTime = dispatch_time(DISPATCH_TIME_NOW, t * NSEC_PER_SEC);
 	DispatchGroup group = dispatch_group_create();
 	dispatch_group_async(group, q, mainBlock);
-	long result = dispatch_group_wait(group, timeOutTime);
+	long result = dispatch_group_wait(group, futureDispatchTime(t));
 	if (result != 0)
 		dispatch_group_async(group, q, timeoutBlock);
 	dispatchGroupFinish(group);

@@ -688,10 +688,12 @@ typedef dispatch_group_t DispatchGroup;
 
 static inline dispatch_queue_t	globalQueue()										{ return dispatch_get_global_queue(0,0); }
 static inline dispatch_queue_t	mainQueue()											{ return dispatch_get_main_queue(); }
+static inline dispatch_time_t   futureDispatchTime(NSTimeInterval seconds)			{ return dispatch_time(DISPATCH_TIME_NOW, seconds * NSEC_PER_SEC); }
 static inline void dispatchGroupWait(dispatch_group_t group)						{ dispatch_group_wait(group, DISPATCH_TIME_FOREVER); }
 static inline void dispatchGroupWaitTime(dispatch_group_t group, dispatch_time_t t)	{ dispatch_group_wait(group, t); }
 static inline void dispatchGroupWaitAndFinish(dispatch_group_t group)				{ dispatch_group_wait(group, DISPATCH_TIME_FOREVER); dispatch_release(group); }
 static inline void dispatchGroupFinish(dispatch_group_t group)						{ dispatch_release(group); }
+
 void dispatchWithTimeOut(dispatch_queue_t q, NSTimeInterval t, BlockProcess theBlock);
 void dispatchWithTimeOutBlock(dispatch_queue_t q, NSTimeInterval t, BlockProcess mainBlock, BlockProcess timeoutBlock);
 
