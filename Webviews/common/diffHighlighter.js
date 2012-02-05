@@ -132,7 +132,10 @@ var createSideBySideDiff = function(diff, element, size, callbacks)
 		}
 		
 		if (diffContent != "" || binary)
-			finalContent += '<div class="file" id="file_index_' + (file_index - 1) + '">' + '<div class="fileHeader">' + title + '</div>';
+		{
+			var diffButton = '<button type="button" class="diffbutton" onclick="doExternalDiffOfFile(\''+title+'\')">external diff</button>';
+			finalContent += '<div class="file" id="file_index_' + (file_index - 1) + '">' + '<div class="fileHeader">' + title + ' ' + diffButton+'</div>';
+		}
 		
 		if (!binary && (diffContent != ""))
 		{
@@ -291,7 +294,7 @@ var createSideBySideDiff = function(diff, element, size, callbacks)
 					newId = m[4];
 			}
 			
-			var theControl = '<span class="includehunk"><input type="checkbox" class="hunkselector" checked="yes" onclick="handleHunkStatusClick(event)" id="' + newId + '">commit</input></span>';
+			var theControl = '<button type="button" class="hunkselector" onclick="handleHunkStatusClick(event)" id="' + newId + '">exclude</button>';
 		    diffContent += '<tr class="hunkheader"><td class="lineno">...</td><td colspan="2">'+ headerLine +'</td><td align="right">'+theControl+'</td></tr>';
 		}
 		else if (firstChar == " ")
@@ -411,9 +414,12 @@ var createUnifiedDiff = function(diff, element, size, callbacks)
 			endname = "";
 			return;				// so printing the filename in the file-list is enough
 		}
-		
+				
 		if (diffContent != "" || binary)
-			finalContent += '<div class="file" id="file_index_' + (file_index - 1) + '">' + '<div class="fileHeader">' + title + '</div>';
+		{
+			var diffButton = '<button type="button" class="diffbutton" onclick="doExternalDiffOfFile(\''+title+'\')">external diff</button>';
+			finalContent += '<div class="file" id="file_index_' + (file_index - 1) + '">' + '<div class="fileHeader">' + title + ' ' + diffButton+'</div>';
+		}
 		
 		if (!binary && (diffContent != ""))
 		{
@@ -580,7 +586,7 @@ var createUnifiedDiff = function(diff, element, size, callbacks)
 			line1 += "...\n";
 			line2 += "...\n";
 			diffContent += '<div class="hunk" id="hunk-index-' + hunk_index + '"><div ' + sindex + 'class="hunkheader">' + headerLine +
-			'<span class="includehunk"><input type="checkbox" class="hunkselector" checked="yes" onclick="handleHunkStatusClick(event)" id="' + newId + '">include</input></span></div>';
+			'<button type="button" class="hunkselector" onclick="handleHunkStatusClick(event)" id="' + newId + '">exclude</button></div>';
 		}
 		else if (firstChar == " ")
 		{
@@ -608,9 +614,9 @@ var createUnifiedDiff = function(diff, element, size, callbacks)
 // MARK:  Exclusion Handling
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-function elementIsHunkCheckBox(element)
+function elementIsHunkButton(element)
 {
-	return (element.type === "checkbox" && element.className === "hunkselector" && element.nodeName === "INPUT");
+	return (element.type === "button" && element.className === "hunkselector" && element.nodeName === "BUTTON");
 }
 
 function getFileNameOfHunkHash(hunkHash)
@@ -639,10 +645,9 @@ function getHunkDivOfHunkHash(hunkHash)
 function handleHunkStatusClick(event)
 {
 	var element = event.target;
-	if (!elementIsHunkCheckBox(element)) return;
+	if (!elementIsHunkButton(element)) return;
 
-	var action = element.checked ?  "include" : "exclude";	// This is counter-intuitive but we are reacting after the click.
-															// Ie if the click turned off the checkbox then we are "excluding"
+	var action = element.firstChild.nodeValue;		// This should be "include" or "exclude"
 	changeViewHunkStatus(element.id, action);
 	changeModelHunkStatus(element.id, action);
 }
@@ -662,10 +667,10 @@ function changeViewHunkStatus(hunkHash, action)
 	if (action !== "exclude" && action !== "include")	return;
 
 	var element = $(hunkHash);
-	if (!elementIsHunkCheckBox(element)) return;
+	if (!elementIsHunkButton(element)) return;
 
 	var theHunk = getHunkDivOfHunkHash(hunkHash);
-	element.checked = (action === "exclude") ? false : true;
+	element.firstChild.nodeValue = (action === "exclude") ? "include" : "exclude";
 	if (theHunk)
 		theHunk.className = (action === "exclude") ? "disabledhunk" : "hunk";
 }
@@ -676,7 +681,7 @@ function changeModelHunkStatus(hunkHash, action)
 	if (action !== "exclude" && action !== "include") return;
 
 	var element = $(hunkHash);
-	if (!elementIsHunkCheckBox(element)) return;
+	if (!elementIsHunkButton(element)) return;
 
 	var fileNamePath = getFileNameOfHunkHash(hunkHash);
 	if (!fileNamePath) return;
@@ -687,3 +692,7 @@ function changeModelHunkStatus(hunkHash, action)
 		machgWebviewController.enableHunkForFileName(hunkHash, fileNamePath);
 }
 
+function doExternalDiffOfFile(fileNamePath)
+{
+	machgWebviewController.doExternalDiffOfFile(fileNamePath);
+}

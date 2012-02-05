@@ -98,7 +98,7 @@
 	<key>FontSizeOfBrowserItems</key>
 	<real>11</real>
 	<key>FontSizeOfDifferencesWebview</key>
-	<integer>11</integer>
+	<integer>10</integer>
 	<key>HandleGeneratedOrigFiles</key>
 	<integer>0</integer>
 	<key>IncludeHomeHgrcInHGRCPATH</key>

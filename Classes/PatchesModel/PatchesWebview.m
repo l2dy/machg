@@ -98,12 +98,12 @@
 
 - (void) disableHunk:(NSString*)hunkHash forFile:(NSString*)fileName 
 {
-	[[parentController hunkExclusions] disableHunk:hunkHash forRoot:repositoryRootForPatch_ andFile:fileName];
+	[[parentController hunkExclusions] disableHunk:hunkHash forRoot:repositoryRootForPatch_ andFile:trimString(fileName)];
 }
 
 - (void) enableHunk:(NSString*)hunkHash forFile:(NSString*)fileName 
 {
-	[[parentController hunkExclusions] enableHunk:hunkHash forRoot:repositoryRootForPatch_ andFile:fileName];
+	[[parentController hunkExclusions] enableHunk:hunkHash forRoot:repositoryRootForPatch_ andFile:trimString(fileName)];
 }
 
 - (void) excludeHunksAccordingToModel
@@ -121,6 +121,12 @@
 	}
 }
 
+- (void) doExternalDiffOfFile:(NSString*)fileName 
+{
+	NSArray* absolutePathOfFile = [NSArray arrayWithObject:fstr(@"%@/%@", repositoryRootForPatch_, trimString(fileName))];
+	[[parentController myDocument] viewDifferencesInCurrentRevisionFor:absolutePathOfFile toRevision:nil];
+}
+
 
 + (NSString *)webScriptNameForSelector:(SEL)sel
 {
@@ -128,6 +134,7 @@
 	if (sel == @selector(disableHunk:forFile:))			return @"disableHunkForFileName";
 	if (sel == @selector(enableHunk:forFile:))			return @"enableHunkForFileName";
 	if (sel == @selector(excludeHunksAccordingToModel))	return @"excludeHunksAccordingToModel";
+	if (sel == @selector(doExternalDiffOfFile:))		return @"doExternalDiffOfFile";
 	return nil;
 }
 + (BOOL)isSelectorExcludedFromWebScript:(SEL)sel
@@ -135,6 +142,7 @@
 	if (sel == @selector(disableHunk:forFile:))			return NO;
 	if (sel == @selector(enableHunk:forFile:))			return NO;
 	if (sel == @selector(excludeHunksAccordingToModel))	return NO;
+	if (sel == @selector(doExternalDiffOfFile:))		return NO;
     return YES;
 }
 + (BOOL)isKeyExcludedFromWebScript:(const char *)name { return NO; }

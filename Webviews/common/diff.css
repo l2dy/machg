@@ -5,6 +5,13 @@ body {
 	font-family: small 'Lucida Grande', Arial;
 }
 
+table, caption {
+  font-size: inherit;
+  font-weight: inherit;
+  font-style: inherit;
+  font-variant: inherit;
+}
+
 .diff .file {
 	margin: 13px 10px;
 	padding: 10px;
@@ -13,7 +20,7 @@ body {
 	-webkit-box-shadow: 1px 1px 2px #DDD;
 }
 
-.includehunk {
+.hunkselector {
 	float: right;
 }
 
@@ -25,8 +32,7 @@ body {
 
 .file .diffcontent {
 	white-space: pre;
-    font-family: Consolas, "Liberation Mono", Monaco, "Lucida Console", monospace;
-    font-size:inherit;
+	font-family: Menlo, Monaco, monospace;
 }
 
 .lineno {
@@ -63,6 +69,7 @@ table.diffcontent {
     border-collapse:collapse;
     border-style: none;
     border-spacing: 0px;
+	font-size:1em;	/* This hack makes webkit actully do inherit, whereas inherit doesn't actually truley do inherit */
     padding:0px;
     width: 100%;
 }
@@ -102,6 +109,8 @@ td.lineno {
 
 .hunk .hunkheader {
   background-color: #f7f7f7;
+  border-top: 1px solid rgba(0,60,80,0.09);
+  margin-top: -1px;
   color: #bbb;
 }
 
@@ -141,6 +150,8 @@ td.lineno {
 
 .disabledhunk .hunkheader {
   background-color: #f7f7f7;
+  border-top: 1px solid rgba(80,80,80,0.09);
+  margin-top: -1px;
   color: #a1a1a1;
 }
 
@@ -222,3 +233,31 @@ div.spinner div.bar12 {-webkit-transform:rotate(330deg) translate(0, -142%); -we
 }
 
 /* @end */
+
+
+.hunkselector, .diffbutton
+{
+	-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	box-shadow:inset 0px 1px 0px 0px #ffffff;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ededed), color-stop(1, #dfdfdf) );
+	background-color:#ededed;
+	-webkit-border-radius:6px;
+	border-radius:6px;
+	border:1px solid #dcdcdc;
+	display:inline-block;
+	color:#777777;
+	font-family:arial;
+	font-size:1em;
+	padding:2px 5px;
+	text-decoration:none;
+}
+.hunkselector:hover, .diffbutton:hover
+{
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #dfdfdf), color-stop(1, #ededed) );
+	background-color:#dfdfdf;
+}
+.hunkselector:active, .diffbutton:active
+{
+	position:relative;
+	top:1px;
+}
