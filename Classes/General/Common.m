@@ -1554,6 +1554,19 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	[output seekToEndOfFile];
 	[output writeData:[string dataUsingEncoding:NSUTF8StringEncoding]];
 }
+- (BOOL) copyItemAtPath:(NSString*)src toPath:(NSString*)dest withIntermediateDirectories:(BOOL)intermediates error:(NSError**)error
+{
+	NSString* destDir = [dest stringByDeletingLastPathComponent];
+	if (intermediates && !pathIsExistentDirectory(destDir))
+	{
+		NSError* err = nil;
+		[self createDirectoryAtPath:destDir withIntermediateDirectories:YES attributes:nil error:&err];
+		[NSApp presentAnyErrorsAndClear:&err];
+	}
+	return [self copyItemAtPath:src toPath:dest error:error];
+}
+
+
 @end
 
 

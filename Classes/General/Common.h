@@ -1144,6 +1144,7 @@ typedef BOOL (^ArrayFilterBlock)(id);
 // MARK: -
 @interface NSFileManager ( NSFileManagerPlusAppending )
 - (void)	appendString:(NSString*)string toFilePath:(NSString*)path;
+- (BOOL)	copyItemAtPath:(NSString*)src toPath:(NSString*)dest withIntermediateDirectories:(BOOL)intermediates error:(NSError**)error;
 @end
 
 
