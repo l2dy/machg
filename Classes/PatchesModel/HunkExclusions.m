@@ -23,6 +23,10 @@
 
 @implementation HunkExclusions
 
+
+
+
+
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 // MARK:  Initialization
@@ -123,6 +127,50 @@
 					[exclusionsDictionary_ removeObjectForKey:root];
 			}
 		}
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Path accessors
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+
+- (NSArray*) absolutePathsWithExclusionsForRoot:(NSString*)root
+{
+	NSDictionary* repositoryExclusions = [exclusionsDictionary_ objectForKey:root];
+	if (IsEmpty(repositoryExclusions))
+		return [NSArray array];
+	NSMutableArray* paths = [[NSMutableArray alloc]init];
+	for (NSString* key in [repositoryExclusions allKeys])
+		[paths addObject:fstr(@"%@/%@",root,key)];
+	return paths;
+}
+
+
+- (NSArray*) contestedPathsIn:(NSArray*)paths forRoot:(NSString*)root
+{
+	NSArray* pathsWithExclusions = [self absolutePathsWithExclusionsForRoot:root];
+	if (IsEmpty(pathsWithExclusions))
+		return [NSArray array];
+	
+	NSMutableSet* setOfPaths = [NSMutableSet setWithArray:paths];
+	[setOfPaths intersectSet:[NSSet setWithArray:pathsWithExclusions]];
+	return [[setOfPaths allObjects] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+}
+
+- (NSArray*) uncontestedPathsIn:(NSArray*)paths forRoot:(NSString*)root
+{	
+	NSArray* pathsWithExclusions = [self absolutePathsWithExclusionsForRoot:root];
+	if (IsEmpty(pathsWithExclusions))
+		return paths;
+	
+	NSMutableSet* setOfPaths = [NSMutableSet setWithArray:paths];
+	[setOfPaths minusSet:[NSSet setWithArray:pathsWithExclusions]];
+	return [[setOfPaths allObjects] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
 }
 
 - (NSString*) description
