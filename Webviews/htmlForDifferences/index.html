@@ -5,19 +5,19 @@
 	<script src="../common/common.js" type="text/javascript" charset="utf-8"></script>
 	<script src="../common/diffHighlighter.js" type="text/javascript" charset="utf-8"></script>
 	<script type="text/javascript" charset="utf-8">
-		var showDiff = function(diff, size, diffStyle) {
+		var showDiff = function(diff, size, diffStyle, allowHunkSelection) {
 		    $("WrappingStyle").style.fontSize = size+"px";
 		    if (diffStyle == "WebviewDiffStyleUnfied")
-			    createUnifiedDiff(diff, $("diff"), size);
+			    createUnifiedDiff(diff, $("diff"), size, allowHunkSelection);
 		    else if (diffStyle == "WebviewDiffStyleSideBySideWrapped")
 		    {
 	    	    $("WrappingStyle").className = "diffwrap";
-			    createSideBySideDiff(diff, $("diff"), size);
+			    createSideBySideDiff(diff, $("diff"), size, allowHunkSelection);
 			}
 		    else if (diffStyle == "WebviewDiffStyleSideBySideTruncated")
 		    {
 	    	    $("WrappingStyle").className = "difftruncate";
-			    createSideBySideDiff(diff, $("diff"), size);
+			    createSideBySideDiff(diff, $("diff"), size, allowHunkSelection);
 			}
 		}
 		var showMessage = function(msg) {

@@ -47,8 +47,9 @@
 		});
 					   
 	dispatch_async(globalQueue(), ^{
+		NSString* allowHunkSelection = [[parentController myDocument] inMergeState] ? @"no" : @"yes";
 		NSString* htmlizedDiffString = [backingPatch_ patchBodyHTMLized];
-		NSArray* showDiffArgs = [NSArray arrayWithObjects:htmlizedDiffString, fstr(@"%f",FontSizeOfDifferencesWebviewFromDefaults()), stringOfDifferencesWebviewDiffStyle(), nil];
+		NSArray* showDiffArgs = [NSArray arrayWithObjects:htmlizedDiffString, fstr(@"%f",FontSizeOfDifferencesWebviewFromDefaults()), stringOfDifferencesWebviewDiffStyle(), allowHunkSelection, nil];
 		dispatch_async(mainQueue(), ^{
 			if (taskNumber >= taskNumber_)
 				[[self windowScriptObject] callWebScriptMethod:@"showDiff" withArguments:showDiffArgs];
@@ -98,6 +99,12 @@
 
 - (void) disableHunk:(NSString*)hunkHash forFile:(NSString*)fileName 
 {
+	if ([[parentController myDocument] inMergeState])
+	{
+		PlayBeep();
+		NSRunAlertPanel(@"Exclusion Forbidden", @"All files must be committed in their entirty during a merge.", @"OK", nil, nil);
+		return;
+	}
 	[[parentController hunkExclusions] disableHunk:hunkHash forRoot:repositoryRootForPatch_ andFile:trimString(fileName)];
 }
 
@@ -108,6 +115,8 @@
 
 - (void) excludeHunksAccordingToModel
 {
+	if ([[parentController myDocument] inMergeState])
+		return;
 	WebScriptObject* script = [self windowScriptObject];
 	for (FilePatch* filePatch in [backingPatch_ filePatches])
 	{

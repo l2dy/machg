@@ -21,7 +21,7 @@ var safeShift = function(v)
 // MARK:  createSideBySideDiff
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-var createSideBySideDiff = function(diff, element, size, callbacks)
+var createSideBySideDiff = function(diff, element, size, allowHunkSelection, callbacks)
 {
 	if (!diff || diff == "")
 		return;
@@ -294,8 +294,10 @@ var createSideBySideDiff = function(diff, element, size, callbacks)
 					newId = m[4];
 			}
 			
-			var theControl = '<button type="button" class="hunkselector" onclick="handleHunkStatusClick(event)" id="' + newId + '">exclude</button>';
-		    diffContent += '<tr class="hunkheader"><td class="lineno">...</td><td colspan="2">'+ headerLine +'</td><td align="right">'+theControl+'</td></tr>';
+			var control = '';
+			if (allowHunkSelection != "no")
+				control = '<button type="button" class="hunkselector" onclick="handleHunkStatusClick(event)" id="' + newId + '">exclude</button>';
+		    diffContent += '<tr class="hunkheader"><td class="lineno">...</td><td colspan="2">'+ headerLine +'</td><td align="right">' + control + '</td></tr>';
 		}
 		else if (firstChar == " ")
 		{
@@ -326,7 +328,7 @@ var createSideBySideDiff = function(diff, element, size, callbacks)
 // MARK:  createUnifiedDiff
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-var createUnifiedDiff = function(diff, element, size, callbacks)
+var createUnifiedDiff = function(diff, element, size, allowHunkSelection, callbacks)
 {
 	if (!diff || diff == "")
 		return;
@@ -585,8 +587,10 @@ var createUnifiedDiff = function(diff, element, size, callbacks)
 			}
 			line1 += "...\n";
 			line2 += "...\n";
-			diffContent += '<div class="hunk" id="hunk-index-' + hunk_index + '"><div ' + sindex + 'class="hunkheader">' + headerLine +
-			'<button type="button" class="hunkselector" onclick="handleHunkStatusClick(event)" id="' + newId + '">exclude</button></div>';
+			var control = '';
+			if (allowHunkSelection != "no")
+				control = '<button type="button" class="hunkselector" onclick="handleHunkStatusClick(event)" id="' + newId + '">exclude</button>';
+			diffContent += '<div class="hunk" id="hunk-index-' + hunk_index + '"><div ' + sindex + 'class="hunkheader">' + headerLine + control + '</div>';
 		}
 		else if (firstChar == " ")
 		{
