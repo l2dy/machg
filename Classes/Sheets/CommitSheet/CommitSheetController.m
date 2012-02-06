@@ -14,6 +14,8 @@
 #import "RepositoryData.h"
 #import "FSNodeInfo.h"
 #import "FSViewerTable.h"
+#import "PatchData.h"
+#import "HunkExclusions.h"
 
 NSString* kAmendOption	 = @"amendOption";
 
@@ -332,17 +334,13 @@ NSString* kAmendOption	 = @"amendOption";
 	return args;
 }
 
-- (void) sheetActionCommit:(NSArray*)pathsToCommit excluding:(NSArray*)excludedPaths
+- (void) sheetActionSimpleCommit:(NSArray*)pathsToCommit
 {
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	[myDocument dispatchToMercurialQueuedWithDescription:@"Committing Files" process:^{
 		NSMutableArray* args = [NSMutableArray arrayWithObjects:@"commit", nil];
 
 		[myDocument registerPendingRefresh:pathsToCommit];
-		if (IsNotEmpty(excludedPaths) && ![myDocument inMergeState])
-			for (NSString* excludedPath in excludedPaths)
-				[args addObject:@"--exclude" followedBy:excludedPath];
-
 		[args addObjectsFromArray:[self argumentsForUserDataMessage]];
 		if (![myDocument inMergeState])
 			[args addObjectsFromArray:pathsToCommit];
@@ -350,6 +348,105 @@ NSString* kAmendOption	 = @"amendOption";
 		[myDocument delayEventsUntilFinishBlock:^{
 			[TaskExecutions executeMercurialWithArgs:args  fromRoot:rootPath];
 			[myDocument addToChangedPathsDuringSuspension:pathsToCommit];
+		}];			
+	}];
+}
+
+static bool reportAnyCommitSubstepErrors(ExecutionResult* result, NSString* operation, NSString* stepNumberInWords)
+{
+	if (![result hasErrors])
+		return NO;
+	NSString* fullMessage = fstr(@"The commit operation could not proceed. During the multistep process needed to commit files with excluded hunks, the %@ step of %@ reported the error: %@. Please back out any patch operations.", stepNumberInWords, operation, [result errStr]);
+	NSRunAlertPanel(@"Aborted commit", fullMessage, @"OK", nil, nil);
+	return YES;
+}
+
+- (void) sheetActionCommitWithUncontestedPaths:(NSArray*)uncontestedPaths andContestedPaths:(NSArray*)contestedPaths
+{
+	if (IsEmpty(contestedPaths))
+	{
+		[self sheetActionSimpleCommit:uncontestedPaths];
+		return;
+	}
+	
+	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+	
+	// Get Diff
+	NSMutableArray* argsDiff = [NSMutableArray arrayWithObjects:@"diff", nil];
+	[argsDiff addObjectsFromArray:contestedPaths];
+	ExecutionResult* diffResult = [TaskExecutions executeMercurialWithArgs:argsDiff  fromRoot:rootPath logging:eLoggingNone];
+
+	// Get contested Patch File
+	PatchData* patchData = IsNotEmpty(diffResult.outStr) ? [PatchData patchDataFromDiffContents:diffResult.outStr] : nil;
+	NSString* contestedPatchFile = [patchData tempFileWithPatchBodyExcluding:[self hunkExclusions] withRoot:rootPath];
+
+	// Create temporary Directory and copy contested files to this directory
+	NSString* tempDirectoryPath = tempDirectoryPathWithTemplate(@"MacHgContestedFilePatchBackup.XXXXXXXXXX");
+	if (!tempDirectoryPath)
+	{
+		NSRunCriticalAlertPanel(@"Cannot Create Temporary Directory", @"Unable to create a necessary temporary directory. Aborting the commit operation.", @"OK", nil, nil);
+		return;
+	}
+	for (NSString* originalPath in contestedPaths)
+	{
+		NSError* err = nil;
+		NSString* backupPath =  fstr(@"%@/%@",tempDirectoryPath, pathDifference(rootPath, originalPath));
+		[[NSFileManager defaultManager] copyItemAtPath:originalPath toPath:backupPath withIntermediateDirectories:YES error:&err];
+		[NSApp presentAnyErrorsAndClear:&err];
+		if (err)
+			return;
+	}
+	
+	
+	[myDocument dispatchToMercurialQueuedWithDescription:@"Committing Files" process:^{
+
+		[myDocument registerPendingRefresh:uncontestedPaths];
+		[myDocument registerPendingRefresh:contestedPaths];
+
+		[myDocument delayEventsUntilFinishBlock:^{
+			@try
+			{
+				// Revert the contested files to their original state
+				NSMutableArray* argsRevert = [NSMutableArray arrayWithObjects:@"revert", @"--no-backup", nil];
+				[argsRevert addObjectsFromArray:contestedPaths];
+				ExecutionResult* revertResult = [TaskExecutions executeMercurialWithArgs:argsRevert  fromRoot:rootPath logging:eLoggingNone];
+				if (reportAnyCommitSubstepErrors(revertResult, @"revert", @"second"))
+					[NSException raise:@"Committing" format:@"Error occurded in reverting contested files", nil];;
+
+				// Patch the contested files to the desired state, (if all the hunks are descelected in the contested files the
+				// patch will be empty) 
+				if (contestedPatchFile)
+				{
+					NSMutableArray*  importArgs   = [NSMutableArray arrayWithObjects:@"import", @"--no-commit", @"--force", contestedPatchFile, nil];
+					ExecutionResult* importResult = [TaskExecutions executeMercurialWithArgs:importArgs  fromRoot:rootPath logging:eLoggingNone];
+					if (reportAnyCommitSubstepErrors(importResult, @"import", @"third"))
+						[NSException raise:@"Committing" format:@"Error occurded in importing contested patch", nil];;
+				}
+				
+				NSMutableArray* commitArgs = [NSMutableArray arrayWithObjects:@"commit", nil];
+				[commitArgs addObjectsFromArray:[self argumentsForUserDataMessage]];
+				[commitArgs addObjectsFromArray:uncontestedPaths];
+				[commitArgs addObjectsFromArray:contestedPaths];
+				ExecutionResult* commitResult = [TaskExecutions executeMercurialWithArgs:commitArgs  fromRoot:rootPath logging:eLoggingNone];
+				if (reportAnyCommitSubstepErrors(commitResult, @"commit", @"fourth"))
+					[NSException raise:@"Committing" format:@"Error occurded in committing files", nil];;				
+			}
+			@catch (NSException * e)
+			{
+			}
+			@finally
+			{
+				// Replace the contested files with their original backups
+				for (NSString* originalPath in contestedPaths)
+				{
+					NSError* err = nil;
+					NSString* backupPath =  fstr(@"%@/%@",tempDirectoryPath, pathDifference(rootPath, originalPath));
+					[[NSFileManager defaultManager] removeItemAtPath:originalPath error:&err];
+					[NSApp presentAnyErrorsAndClear:&err];
+					[[NSFileManager defaultManager] copyItemAtPath:backupPath toPath:originalPath error:&err];
+					[NSApp presentAnyErrorsAndClear:&err];
+				}
+			}
 		}];			
 	}];
 }
@@ -412,18 +509,18 @@ NSString* kAmendOption	 = @"amendOption";
 
 - (IBAction) sheetButtonOk:(id)sender
 {
-	NSArray* paths = committingAllFiles ? [myDocument absolutePathOfRepositoryRootAsArray] : absolutePathsOfFilesToCommit; 		// absolutePathsOfFilesToCommit is set when the sheet is opened.
-	NSMutableArray* filteredAbsolutePathsOfFilesToCommit = [NSMutableArray arrayWithArray:paths];
-	//[filteredAbsolutePathsOfFilesToCommit removeObjectsInArray:excludedPaths];
+	NSString* root = [myDocument absolutePathOfRepositoryRoot];
 	
 	[theCommitSheet makeFirstResponder:theCommitSheet];	// Make the fields of the sheet commit any changes they currently have
 
-	// This is more a check here, error handling should have caught this before now if the files were empty.
-	NSArray* excludedPaths = [NSArray array];
 	NSArray* commitData = [self tableLeafPaths];
-	if (IsEmpty(commitData) || 
-		//[excludedPaths count] >= [commitData count] || 
-		IsEmpty(filteredAbsolutePathsOfFilesToCommit))
+	NSArray*   contestedPaths = [[self hunkExclusions]   contestedPathsIn:commitData  forRoot:root];
+	NSArray* uncontestedPaths = [[self hunkExclusions] uncontestedPathsIn:commitData  forRoot:root];
+	BOOL simpleOperation = 	IsEmpty(contestedPaths);
+	BOOL amend = ([amendButton state] == NSOnState);
+	
+	// This is more a check here, error handling should have caught this before now if the files were empty.
+	if (IsEmpty(commitData))
 	{
 		PlayBeep();
 		DebugLog(@"Nothing to commit");
@@ -432,14 +529,19 @@ NSString* kAmendOption	 = @"amendOption";
 		return;
 	}
 
-	
 	[myDocument removeAllUndoActionsForDocument];
 	
-	if ([amendButton state] == NSOffState)
-		[self sheetActionCommit:filteredAbsolutePathsOfFilesToCommit excluding:excludedPaths];
-	else if ([amendButton state] == NSOnState)
-		[self sheetActionAmend:filteredAbsolutePathsOfFilesToCommit excluding:excludedPaths];
-
+	if (simpleOperation && !amend)
+	{
+		[NSApp endSheet:theCommitSheet];
+		[theCommitSheet orderOut:sender];
+		[self sheetActionSimpleCommit:absolutePathsOfFilesToCommit];
+	}
+	
+	else if (!simpleOperation && !amend)
+		[self sheetActionCommitWithUncontestedPaths:uncontestedPaths andContestedPaths:contestedPaths];
+//	else if ([amendButton state] == NSOnState)
+//		[self sheetActionAmend:uncontestedPaths excluding:excludedPaths];
 	[NSApp endSheet:theCommitSheet];
 	[theCommitSheet orderOut:sender];
 }
