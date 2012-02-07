@@ -25,12 +25,12 @@
 static NSString* encodeForHTML(NSString* line)
 {
 	NSMutableString* text = [line mutableCopy];
-	[text replaceOccurrencesOfString:@"&" withString:@"&amp;" options:NSLiteralSearch range:NSMakeRange(0, text.length)];
-	[text replaceOccurrencesOfString:@"<" withString:@"&lt;" options:NSLiteralSearch range:NSMakeRange(0, text.length)];
-	[text replaceOccurrencesOfString:@">" withString:@"&gt;" options:NSLiteralSearch range:NSMakeRange(0, text.length)];
-	[text replaceOccurrencesOfString:@">" withString:@"&gt;" options:NSLiteralSearch range:NSMakeRange(0, text.length)];
-	[text replaceOccurrencesOfString:@"'" withString:@"\x27" options:NSLiteralSearch range:NSMakeRange(0, text.length)];
-	[text replaceOccurrencesOfString:@"\"" withString:@"\x22" options:NSLiteralSearch range:NSMakeRange(0, text.length)];
+	[text replaceOccurrencesOfString:@"&"  withString:@"&amp;" options:NSLiteralSearch range:NSMakeRange(0, text.length)];
+	[text replaceOccurrencesOfString:@"<"  withString:@"&lt;"  options:NSLiteralSearch range:NSMakeRange(0, text.length)];
+	[text replaceOccurrencesOfString:@">"  withString:@"&gt;"  options:NSLiteralSearch range:NSMakeRange(0, text.length)];
+	[text replaceOccurrencesOfString:@">"  withString:@"&gt;"  options:NSLiteralSearch range:NSMakeRange(0, text.length)];
+	[text replaceOccurrencesOfString:@"'"  withString:@"\x27"  options:NSLiteralSearch range:NSMakeRange(0, text.length)];
+	[text replaceOccurrencesOfString:@"\"" withString:@"\x22"  options:NSLiteralSearch range:NSMakeRange(0, text.length)];
 	return text;
 }
 
@@ -50,73 +50,86 @@ static NSArray* splitTermination(NSString* str)
 	return [NSArray arrayWithObject:str];
 }
 
-static NSString* collapseLines(NSArray* originalLines, NSMutableArray* diffLines, NSString* prefix)
-{
-	NSMutableString* result = [[NSMutableString alloc]init];
-	NSString* formatString = [prefix isEqualToString:@"+"] ? @"<insert>%@</insert>" : @"<delete>%@</delete>";
-	for (NSString* line in originalLines)
-	{
-		NSInteger len = [line length];
-		NSInteger popped = 0;
-		[result appendString:prefix];
-		while (popped < len)
-		{
-			Diff* diff = [diffLines popFirst];
-			if (popped + [diff.text length] > len)
-			{
-				NSString* first = [diff.text substringToIndex:len-popped];
-				NSString* rest  = [diff.text substringFromIndex:len-popped];
-				Diff* firstDiff = [Diff diffWithOperation:diff.operation andText:first];
-				Diff* restDiff  = [Diff diffWithOperation:diff.operation andText:rest];
-				[diffLines insertObject:restDiff atIndex:0];
-				[diffLines insertObject:firstDiff atIndex:0];
-				continue;
-			}
-			NSString* encoded = encodeForHTML(diff.text);
-			if (diff.operation == DIFF_EQUAL)
-				[result appendString:encoded];
-			else if (popped + [diff.text length] < len)
-				[result appendString:fstr(formatString, encoded)];
-			else
-			{
-				NSArray* split = splitTermination(encoded);
-				[result appendString:fstr(formatString, [split firstObject])];
-				if ([split count] > 1)
-					[result appendString:[split lastObject]];
-			}
-			popped += [diff.text length];
-		}
-	}
-	return result;
-}
 
+static void addStringForOperation(NSMutableString* build, NSString* str, Operation operation, NSString* prefix)
+{
+	NSCharacterSet* newlines = [NSCharacterSet newlineCharacterSet];
+	NSString* fromStr = encodeForHTML(str);	// This is an ecoded copy
+	
+	BOOL encounteredNewLine = IsEmpty(build) || [build endsWithNewLine];
+	NSInteger position = 0;
+	while (position != [fromStr length])
+	{
+		if (encounteredNewLine)
+			[build appendString:prefix];
+
+		encounteredNewLine = NO;
+		NSRange newLineRange = [fromStr rangeOfCharacterFromSet:newlines options:NSLiteralSearch range:NSMakeRange(position, [fromStr length] - position)];
+		NSRange contentRange;
+		if (newLineRange.location == NSNotFound)
+			contentRange = NSMakeRange(position, [fromStr length] - position);
+		else if (newLineRange.location == position)
+		{
+			contentRange = NSMakeRange(position, 1);
+			encounteredNewLine = YES;
+		}
+		else
+			contentRange = NSMakeRange(position, newLineRange.location - position);
+
+		NSString* contentString = [fromStr substringWithRange:contentRange];
+		
+		if (encounteredNewLine)
+			[build appendString:contentString];
+		else
+		{
+			switch (operation)
+			{
+				case DIFF_INSERT:   [build appendFormat:@"<insert>%@</insert>", contentString, nil];	break;
+				case DIFF_DELETE:	[build appendFormat:@"<delete>%@</delete>", contentString, nil];	break;
+				case DIFF_EQUAL:	[build appendString:contentString];									break;
+			}			
+		}
+		position += contentRange.length;
+	}
+}
 
 // Given the lines on the left and the lines on the right, create the subline diff and reconstruct the left lines with
 // <delete>...</delete>'s and the right lines with <insert>...</insert>'s in them. Also reinclude the prefix "-" and "+"
-static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* rightLines)
+static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* rightLines, BOOL sublineDiffing)
 {
 	DiffMatchPatch* dmp = [DiffMatchPatch new];
 	dmp.Diff_Timeout = 0;				
 	NSString* left  = [leftLines  componentsJoinedByString:@""];
 	NSString* right = [rightLines componentsJoinedByString:@""];
-	NSMutableArray* newRightLines = [[NSMutableArray alloc]init];
-	NSMutableArray* newLeftLines  = [[NSMutableArray alloc]init];
-	NSMutableArray* diffs = [dmp diff_mainOfOldString:left andNewString:right checkLines:NO];
-	[dmp diff_cleanupSemantic:diffs];
 
-	// Reconstruct all the left hand sides
-	for (Diff* aDiff in diffs)
-		switch (aDiff.operation)
-		{
-			case DIFF_INSERT:									[newRightLines addObject:aDiff];	break;
-			case DIFF_DELETE:	[newLeftLines addObject:aDiff];										break;
-			case DIFF_EQUAL:	[newLeftLines addObject:aDiff]; [newRightLines addObject:aDiff];	break;
-		}
+	NSMutableString* newLeft  = [[NSMutableString alloc]init];
+	NSMutableString* newRight = [[NSMutableString alloc]init];
+
+	sublineDiffing = sublineDiffing && ([leftLines count] < 100) && ([rightLines count] < 100);
+
+	if (!sublineDiffing)
+	{
+		addStringForOperation(newLeft,  left,  DIFF_DELETE, @"-");
+		addStringForOperation(newRight, right, DIFF_INSERT, @"+");
+	}
+	else
+	{
+		NSMutableArray* diffs = [dmp diff_mainOfOldString:left andNewString:right checkLines:NO];
+		[dmp diff_cleanupSemantic:diffs];
+
+		// Reconstruct the left and right hand sides
+		for (Diff* aDiff in diffs)
+			switch (aDiff.operation)
+			{
+				case DIFF_INSERT:																		addStringForOperation(newRight, aDiff.text, aDiff.operation, @"+");	break;
+				case DIFF_DELETE:	addStringForOperation(newLeft, aDiff.text, aDiff.operation, @"-");																		break;
+				case DIFF_EQUAL:	addStringForOperation(newLeft, aDiff.text, aDiff.operation, @"-");	addStringForOperation(newRight, aDiff.text, aDiff.operation, @"+");	break;
+			}
+	}
 	
-	NSString* newLeft  = collapseLines(leftLines,  newLeftLines,  @"-");
-	NSString* newRight = collapseLines(rightLines, newRightLines, @"+");
 	[leftLines removeAllObjects];
 	[rightLines removeAllObjects];
+
 	return fstr(@"%@%@", newLeft, newRight);
 }
 
@@ -148,11 +161,17 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 	hunkBodyLines = lines;
 	
 	// Compute hunkHash
-	NSMutableString* hashLines = [[NSMutableString alloc]init];
+	changeLineCount = 0;
+	NSMutableString* changeLines = [[NSMutableString alloc]init];
 	for (NSString* line in lines)
-		if ([line isMatchedByRegex:@"^(\\+|-).*"])
-			[hashLines appendString:line];	
-	NSString* saltedString = fstr(@"%@:%@", nonNil([parent filePath]), nonNil([hashLines SHA1HashString]));
+	{
+		unichar firstChar = [line characterAtIndex:0];
+		if (firstChar != '+' && firstChar != '-')
+			continue;
+		[changeLines appendString:line];
+		changeLineCount++;
+	}
+	NSString* saltedString = fstr(@"%@:%@", nonNil([parent filePath]), nonNil([changeLines SHA1HashString]));
 	hunkHash = [saltedString SHA1HashString];
 	if ([[parent hunkHashesSet] containsObject:hunkHash])
 	{
@@ -167,7 +186,7 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 	return [[HunkObject alloc] initHunkObjectWithLines:lines andParentFilePatch:parentFilePatch];
 }
 
-- (NSString*)   htmlizedHunk
+- (NSString*)   htmlizedHunk:(BOOL)sublineDiffing
 {
 	NSMutableString* processedString = [[NSMutableString alloc]init];
 	
@@ -190,12 +209,12 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 		else
 		{
 			if (IsNotEmpty(leftLines) || IsNotEmpty(rightLines))
-				[processedString appendString:htmlizedDifference(leftLines, rightLines)];
+				[processedString appendString:htmlizedDifference(leftLines, rightLines, sublineDiffing)];
 			[processedString appendString:encodeForHTML(line)];
 		}
 	}
 	if (IsNotEmpty(leftLines) || IsNotEmpty(rightLines))
-		[processedString appendString:htmlizedDifference(leftLines, rightLines)];
+		[processedString appendString:htmlizedDifference(leftLines, rightLines, sublineDiffing)];
 	return processedString;
 }
 
@@ -205,6 +224,11 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 	for (NSString* line in hunkBodyLines)
 		[builtHunkString appendString:line];
 	return builtHunkString;
+}
+
+- (NSInteger) lineChangeCount
+{
+	return changeLineCount;
 }
 
 - (NSString*) description
@@ -259,6 +283,14 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 	[hunkHashesSet addObject:[hunk hunkHash]];
 }
 
+- (NSInteger) lineChangeCount
+{
+	NSInteger lineChangeCount = 0;
+	for (HunkObject* hunk in hunks)
+		lineChangeCount += [hunk lineChangeCount];
+	return lineChangeCount;
+}
+
 - (NSString*) filePatchFilteredByExclusions:(NSSet*)excludedHunks
 {
 	// The normal case when this file patch is not filtered at all
@@ -277,11 +309,12 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 }
 
 
-- (NSString*) htmlizedFilePatch
+- (NSString*) htmlizedFilePatch:(BOOL)sublineDiffing
 {
 	NSMutableString* builtPatch = [NSMutableString stringWithString:filePatchHeader];
+	sublineDiffing = ([hunks count] < 200) && sublineDiffing;
 	for (HunkObject* hunk in hunks)
-		[builtPatch appendString:[hunk htmlizedHunk]];
+		[builtPatch appendString:[hunk htmlizedHunk:sublineDiffing]];
 	return builtPatch;
 }
 
@@ -386,7 +419,16 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 	for (NSInteger i = 0; i < [lines count] ; i++)
 	{
 		NSString* line = [lines objectAtIndex:i];
-		
+
+		// For speed for really long patches, short circut for the really common case of just adding the line to the hunk lines.
+		// (This skips the regex testing.) 
+		unichar firstChar = [line characterAtIndex:0];
+		if (firstChar != 'd' && firstChar != '@')
+		{
+			[hunkLines addObject:line];
+			continue;
+		}
+
 		// If we hit the diff header of a new file finish the current hunk and start a new filePatch and newHunk
 		NSString* filePath = nil;
 		if ([line getCapturesWithRegexAndTrimedComponents:@"^diff(?: --git)?\\s*a/(.*) b/(.*)" firstComponent:&filePath] && i+2< [lines count])
@@ -582,14 +624,23 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 }
 
 
+- (NSInteger) lineChangeCount
+{
+	NSInteger lineChangeCount = 0;
+	for (FilePatch* filePatch in filePatches_)
+		lineChangeCount += [filePatch lineChangeCount];
+	return lineChangeCount;
+}
+
 
 - (NSString*) patchBodyHTMLized
 {
 	NSMutableString* finalString = [[NSMutableString alloc] init];
+	BOOL sublineDiffing = [self lineChangeCount] < 2000;
 	for (FilePatch* filePatch in filePatches_)
 		if (filePatch)
 		{
-			NSString* htmlizedFilePatch = [filePatch htmlizedFilePatch];
+			NSString* htmlizedFilePatch = [filePatch htmlizedFilePatch:sublineDiffing];
 			if (htmlizedFilePatch)
 				[finalString appendString:htmlizedFilePatch];
 		}

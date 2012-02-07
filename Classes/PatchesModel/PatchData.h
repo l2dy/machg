@@ -21,12 +21,13 @@
 	NSString*   hunkHeader;
 	NSArray*    hunkBodyLines;
 	NSString*   hunkHash;
+	NSInteger	changeLineCount;	// The number of changed lines in the hunk
 }
 @property (readonly,assign) NSString* hunkHash;
 
 + (HunkObject*) hunkObjectWithLines:(NSMutableArray*)lines andParentFilePatch:(FilePatch*)parentFilePatch;
-- (NSString*)   htmlizedHunk;	// The hunk header and hunk body together, but with html insertions for hilighting the diff 
-- (NSString*)   hunkString;		// The hunk header and hunk body together
+- (NSString*)   htmlizedHunk:(BOOL)sublineDiffing;	// The hunk header and hunk body together, but with html insertions for hilighting the diff 
+- (NSString*)   hunkString;							// The hunk header and hunk body together
 @end
 
 
@@ -54,7 +55,7 @@
 - (void)	   addHunkObjectWithLines:(NSMutableArray*)lines;
 
 - (NSString*)  filePatchFilteredByExclusions:(NSSet*)excludedHunks;	// The header and body but with the exculded hunks filtered out
-- (NSString*)  htmlizedFilePatch;									// The header and body, but with html insertions for highlighting the diff
+- (NSString*)  htmlizedFilePatch:(BOOL)sublineDiffing;				// The header and body, but with html insertions for highlighting the diff
 - (NSString*)  filePatchString;										// The header and body together
 
 @end
