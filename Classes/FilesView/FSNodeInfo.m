@@ -11,7 +11,7 @@
 
 #import "FSNodeInfo.h"
 #import "AppController.h"
-#import "FSBrowserCell.h"
+#import "FSViewerPaneCell.h"
 
 @implementation FSNodeInfo
 
@@ -23,6 +23,11 @@
 @synthesize haveComputedTheProperties;
 @synthesize hgStatus;
 
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Queries
+// -----------------------------------------------------------------------------------------------------------------------------------------
 
 // Given a node we have its absolute path and we can query if it is a link, readable, a directory, etc....
 - (BOOL) isLink
@@ -58,22 +63,34 @@
 	return ([lastPathComponent length] ? ([lastPathComponent characterAtIndex:0]!='.') : NO);
 }
 
-- (BOOL) isDirty
-{
-	return bitsInCommon(hgStatus, eHGStatusDirty);
-}
-
-
+- (BOOL)		isDirty				{ return bitsInCommon(hgStatus, eHGStatusDirty); }
 - (BOOL)		isReadable			{ return [[NSFileManager defaultManager] isReadableFileAtPath:absolutePath]; }
 - (NSString*)	fsType				{ return [self isDirectory] ? @"Directory" : @"Non-Directory"; }
 - (NSString*)	lastPathComponent	{ return [relativePath lastPathComponent]; }
 
 
-- (NSImage*) iconImageOfSize:(NSSize)size
-{    
-	NSString* path = [self absolutePath];
-	NSString* defaultImageName = [self isDirectory] ? NSImageNameFolder : @"FSIconImage-Default";
-	return [NSWorkspace iconImageOfSize:size forPath:path withDefault:defaultImageName];
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Accessors
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (NSInteger)   childNodeCount						{ return [[self sortedChildNodeKeys] count]; }
+- (FSNodeInfo*) childNodeAtIndex:(NSInteger)index	{ return [[self childNodes] objectForKey:[[self sortedChildNodeKeys] objectAtIndex:index]]; }
+
+// This method must be called on theRoot node.
+- (FSNodeInfo*) nodeForPathFromRoot:(NSString*)thePath
+{
+	NSString* theRelativePath = pathDifference([self absolutePath], thePath);
+	if (IsEmpty(theRelativePath))
+		return [[self absolutePath] isEqualToString:thePath] ? self : nil;
+	NSArray* thePathComponents = [theRelativePath pathComponents];
+	FSNodeInfo* node = self;
+	for (NSString* pathPath in thePathComponents)
+		node = [[node childNodes] objectForKey:pathPath];
+	return node;
 }
 
 
@@ -167,18 +184,6 @@
 }
 
 
-// This method must be called on theRoot node.
-- (FSNodeInfo*) nodeForPathFromRoot:(NSString*)thePath
-{
-	NSString* theRelativePath = pathDifference([self absolutePath], thePath);
-	NSArray* thePathComponents = [theRelativePath pathComponents];
-	FSNodeInfo* node = self;
-	for (NSString* pathPath in thePathComponents)
-		node = [[node childNodes] objectForKey:pathPath];
-	return node;
-}
-
-
 
 
 
@@ -186,6 +191,13 @@
 // MARK: -
 // MARK: Icons for Nodes
 // -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (NSImage*) iconImageOfSize:(NSSize)size
+{    
+	NSString* path = [self absolutePath];
+	NSString* defaultImageName = [self isDirectory] ? NSImageNameFolder : @"FSIconImage-Default";
+	return [NSWorkspace iconImageOfSize:size forPath:path withDefault:defaultImageName];
+}
 
 - (NSArray*) notableIconImages
 {

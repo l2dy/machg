@@ -336,10 +336,10 @@
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (id) rootItemForBrowser:(NSBrowser*)browser										{ return [self rootNodeInfo]; }
-- (NSInteger) browser:(NSBrowser*)browser numberOfChildrenOfItem:(FSNodeInfo*)item	{ return [[item sortedChildNodeKeys] count]; }
+- (NSInteger) browser:(NSBrowser*)browser numberOfChildrenOfItem:(FSNodeInfo*)item	{ return [item childNodeCount]; }
 - (BOOL) browser:(NSBrowser*)browser isLeafItem:(FSNodeInfo*)item					{ return ![item isDirectory]; }
 - (id) browser:(NSBrowser*)browser objectValueForItem:(FSNodeInfo*)item				{ return [item lastPathComponent]; }
-- (id) browser:(NSBrowser*)browser child:(NSInteger)index ofItem:(FSNodeInfo*)item	{ return [[item childNodes] objectForKey:[[item sortedChildNodeKeys] objectAtIndex:index]]; }
+- (id) browser:(NSBrowser*)browser child:(NSInteger)index ofItem:(FSNodeInfo*)item	{ return [item childNodeAtIndex:index]; }
 
 
 - (void) browser:(NSBrowser*)sender willDisplayCell:(FSBrowserCell*)cell atRow:(NSInteger)row column:(NSInteger)column
@@ -348,8 +348,7 @@
 	FSNodeInfo* parentNodeInfo = [self parentNodeInfoForColumn:column];
 	if (!parentNodeInfo || [[parentNodeInfo sortedChildNodeKeys] count] <= row)
 		return;
-	NSString* childKey = [[parentNodeInfo sortedChildNodeKeys] objectAtIndex:row];	// This is the string key of the child at the rowth row.
-	FSNodeInfo* currentNodeInfo = [[parentNodeInfo childNodes] objectForKey:childKey];
+	FSNodeInfo* currentNodeInfo = [parentNodeInfo childNodeAtIndex:row];
 	[cell setParentNodeInfo:parentNodeInfo];
 	[cell setNodeInfo:currentNodeInfo];
 	[cell loadCellContents];

@@ -46,6 +46,25 @@
 @property (readwrite,assign) HGStatus hgStatus;
 
 
+// Queries
+- (NSString*)	fsType;
+- (NSString*)	absolutePath;
+- (NSString*)	lastPathComponent;
+- (BOOL)		isLink;
+- (BOOL)		isDirectory;
+- (BOOL)		isFile;
+- (BOOL)		isReadable;
+- (BOOL)		isVisible;
+- (BOOL)		isDirty;
+
+
+// Accessors
+- (NSInteger)   childNodeCount;
+- (FSNodeInfo*) childNodeAtIndex:(NSInteger)index;
+- (FSNodeInfo*) nodeForPathFromRoot:(NSString*)thePath;
+
+
+// Tree Operations
 + (HGStatus)	statusEnumFromLetter:(NSString*)statusLetter;
 
 + (FSNodeInfo*)	newEmptyTreeRootedAt:(NSString*)theAbsolutePath;
@@ -59,24 +78,17 @@
 - (NSArray*)	generateFlatLeafNodeList;										// Generate a flat list of all child leaf nodes
 
 
-- (NSString*)	fsType;
-- (NSString*)	absolutePath;
-- (NSString*)	lastPathComponent;
-- (BOOL)		isLink;
-- (BOOL)		isDirectory;
-- (BOOL)		isFile;
-- (BOOL)		isReadable;
-- (BOOL)		isVisible;
-- (BOOL)		isDirty;
 
 
+// Icons for Nodes
 - (NSImage*)	iconImageOfSize:(NSSize)size;		// this is the icon of the file (eg a xcode document icon, or xcode icon for a .h file, etc.)
 - (NSArray*)	notableIconImages;
 
 
-- (FSNodeInfo*) nodeForPathFromRoot:(NSString*)thePath;
+// Computed Properties on Trees
 - (int)			computeChangeCount;					// The number of modified, removed, and added files in the whole tree
 - (int)			maxIconCountOfSubitems;
+
 
 // Preview support
 - (NSImage*)	iconImageForPreview;
