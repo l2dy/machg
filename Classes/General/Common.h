@@ -797,13 +797,15 @@ NSString*	nonNil(NSString* string);
 // MARK: Locations
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-NSString*	executableLocationHG();								// The resolved executable location
-NSString*	applicationSupportFolder();							// the resolved app support dir eg				~/Library/Application Support/MacHg
-NSString*	applicationSupportVersionedFolder();				// the resolved versioned app support dir eg	~/Library/Application Support/MacHg/0.9.5
-NSString*	hgrcPath();											// the search path MacHg will pass to Mercurial to look for hgrc files (Mercurial configuration files.)
-NSArray*	aliasesForShell(NSString* path);					// the aliases for the local hg commands
-NSString*	tempFilePathWithTemplate(NSString* nameTemplate);	// return the file name of a temporary file in the temporary directory based on nameTemplate
-
+NSString*	executableLocationHG();									// The resolved executable location
+NSString*	applicationSupportFolder();								// the resolved app support dir eg				~/Library/Application Support/MacHg
+NSString*	applicationSupportVersionedFolder();					// the resolved versioned app support dir eg	~/Library/Application Support/MacHg/0.9.5
+NSString*	hgrcPath();												// the search path MacHg will pass to Mercurial to look for hgrc files (Mercurial configuration files.)
+NSArray*	aliasesForShell(NSString* path);						// the aliases for the local hg commands
+NSString*	tempFilePathWithTemplate(NSString* nameTemplate);		// return the full file path of a temporary file in the temporary directory based on nameTemplate
+NSString*   tempDirectoryPathWithTemplate(NSString* nameTemplate, NSString* directoryPath);		// return the full path to a new temporary directory inside the given
+																								// dirPath based on nameTemplate. If dirPath is not specified than the
+																								// system temporary directory is used. 
 
 
 

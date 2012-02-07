@@ -665,6 +665,25 @@ NSString* tempFilePathWithTemplate(NSString* nameTemplate)
 	return tempFileName;
 }
 
+NSString* tempDirectoryPathWithTemplate(NSString* nameTemplate, NSString* directoryPath)
+{
+	if (directoryPath && !pathIsExistentDirectory(directoryPath))
+		[[NSFileManager defaultManager] createDirectoryAtPath:directoryPath withIntermediateDirectories:YES attributes:nil error:nil];
+	NSString* resolvedDirectoryPath = directoryPath ? directoryPath : NSTemporaryDirectory();
+
+	NSString* tempDirectoryTemplate = [resolvedDirectoryPath stringByAppendingPathComponent:nameTemplate];
+	const char* tempDirectoryTemplateCString = [tempDirectoryTemplate fileSystemRepresentation];
+	char* tempDirectoryNameCString = (char*)malloc(strlen(tempDirectoryTemplateCString) + 1);
+	strcpy(tempDirectoryNameCString, tempDirectoryTemplateCString);
+	const char* result = mkdtemp(tempDirectoryNameCString);
+	
+	if (!result)
+		return nil;
+	
+	NSString* tempDirectoryName = [[NSFileManager defaultManager] stringWithFileSystemRepresentation:tempDirectoryNameCString length:strlen(tempDirectoryNameCString)];
+	free(tempDirectoryNameCString);
+	return tempDirectoryName;
+}
 
 
 
