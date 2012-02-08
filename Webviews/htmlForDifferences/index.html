@@ -8,16 +8,16 @@
 		var showDiff = function(diff, size, diffStyle, allowHunkSelection) {
 		    $("WrappingStyle").style.fontSize = size+"px";
 		    if (diffStyle == "WebviewDiffStyleUnfied")
-			    createUnifiedDiff(diff, $("diff"), size, allowHunkSelection);
+			    createDiff(diff, "unified", $("diff"), size, allowHunkSelection);
 		    else if (diffStyle == "WebviewDiffStyleSideBySideWrapped")
 		    {
 	    	    $("WrappingStyle").className = "diffwrap";
-			    createSideBySideDiff(diff, $("diff"), size, allowHunkSelection);
+			    createDiff(diff, "sideBySide", $("diff"), size, allowHunkSelection);
 			}
 		    else if (diffStyle == "WebviewDiffStyleSideBySideTruncated")
 		    {
 	    	    $("WrappingStyle").className = "difftruncate";
-			    createSideBySideDiff(diff, $("diff"), size, allowHunkSelection);
+			    createDiff(diff, "sideBySide", $("diff"), size, allowHunkSelection);
 			}
 		}
 		var showMessage = function(msg) {
