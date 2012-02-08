@@ -32,13 +32,14 @@ var createSideBySideDiff = function(diff, element, size, allowHunkSelection, cal
 	element.className = "diff"
 	var content = diff.replace(/\t/g, "    ");
 	
+	var DiffType = { sideBySide : 0, unified : 1 };
+	
+	var diffType = DiffType.sideBySide;
+	
 	var file_index = 0;
-	var hunk_index = 0;
 	
 	var startname = "";
 	var endname = "";
-	var line1 = "";
-	var line2 = "";
 	
 	var leftLines = [];
 	var leftLineNumbers = [];
@@ -61,47 +62,80 @@ var createSideBySideDiff = function(diff, element, size, allowHunkSelection, cal
 	var inHunk = false;		// When we are inside a hunk this is true
 	var header = false;
 	
-	var finishHunk = function()
+	
+	var finishRun = function(diffType)
+    {
+		if (diffType == DiffType.sideBySide)
+			while (leftLines.length > 0 || rightLines.length > 0)
+			{
+				var   leftLineNumber = safeShift(leftLineNumbers);
+				var  rightLineNumber = safeShift(rightLineNumbers);
+				var   leftLine = safeShift(leftLines);
+				var  rightLine = safeShift(rightLines);        
+				diffContent += '<tr><td class="lineno">'+leftLineNumber+'</td><td class="delline">'+leftLine+'</td><td class="lineno">'+rightLineNumber+'</td><td class="addline">'+rightLine+'</td></tr>';
+			}
+    }
+
+
+	var startHunk = function(diffType)
+	{
+		if (diffType == DiffType.sideBySide)
+			diffContent += '<tbody class="hunk">';
+		inHunk = true;
+	}
+	
+	var finishHunk = function(diffType)
 	{
 		if (inHunk && diffContent != "")
 		{
-			diffContent += "</tbody>";
+			if (diffType == DiffType.sideBySide)
+				diffContent += "</tbody>";
+			else if (diffType == DiffType.unified)
+				diffContent += "</div>";
 			inHunk = false;
 		} 
 	}
 	
-	var startHunk = function()
-	{
-		hunk_index++;
-		diffContent += '<tbody class="hunk" id="hunk-index-'+ hunk_index +'">';
-		inHunk = true;
-	}
 	
-	var startFile = function()
+	var startFile = function(diffType)
 	{
-		hunk_index=0;
 		file_index++;
 	}
 	
-    var finishRun = function()
-    {
-        while (leftLines.length > 0 || rightLines.length > 0)
-        {
-            var   leftLineNumber = safeShift(leftLineNumbers);
-            var  rightLineNumber = safeShift(rightLineNumbers);
-            var   leftLine = safeShift(leftLines);
-            var  rightLine = safeShift(rightLines);        
-			diffContent += '<tr><td class="lineno">'+leftLineNumber+'</td><td class="delline">'+leftLine+'</td><td class="lineno">'+rightLineNumber+'</td><td class="addline">'+rightLine+'</td></tr>';
-        }
-    }
-	
-	var finishContent = function()
+
+	var createFileHeader = function(title) 
 	{
-		finishRun();
-		finishHunk();
+		var diffButton = '<button type="button" class="diffbutton" onclick="doExternalDiffOfFile(\''+title+'\')">external diff</button>';
+		return '<div class="fileHeader">' + title + ' ' + diffButton+'</div>';
+	}
+	
+	var finishContentBody = function(diffType)
+	{
+		if (diffType == DiffType.sideBySide)
+		{
+			finalContent +=
+			'<table class="diffcontent"><col width="'+colSizeForLineNumber+'px" /><col width="50%" /><col width="'+colSizeForLineNumber+'px" /><col width="50%" />' +
+			diffContent +
+			'</table>';			
+		}
+		else if (diffType == DiffType.unified)
+		{
+			finalContent +=		'<div class="diffcontent">' +
+			'<div class="lineno">' + line1 + "</div>" +
+			'<div class="lineno">' + line2 + "</div>" +
+			'<div class="lines">' + diffContent + "</div>" +
+			'</div>';			
+		}
+	}
+
+	
+	var finishFile = function(diffType)
+	{
+		finishRun(diffType);
+		finishHunk(diffType);
 		if (!file_index)
 		{
-			startFile();
+			startFile(diffType);
 			return;
 		}
 		
@@ -122,29 +156,18 @@ var createSideBySideDiff = function(diff, element, size, allowHunkSelection, cal
 		
 		if (binary && endname == "/dev/null") 	// in cases of a deleted binary file, there is no diff/file to display
 		{
-			line1 = "";
-			line2 = "";
 			diffContent = "";
-			startFile();
+			startFile(diffType);
 			startname = "";
 			endname = "";
 			return;				// so printing the filename in the file-list is enough
 		}
 		
 		if (diffContent != "" || binary)
-		{
-			var diffButton = '<button type="button" class="diffbutton" onclick="doExternalDiffOfFile(\''+title+'\')">external diff</button>';
-			finalContent += '<div class="file" id="file_index_' + (file_index - 1) + '">' + '<div class="fileHeader">' + title + ' ' + diffButton+'</div>';
-		}
+			finalContent += '<div class="file">' + createFileHeader(title);
 		
 		if (!binary && (diffContent != ""))
-		{
-			
-			finalContent +=
-			'<table class="diffcontent"><col width="'+colSizeForLineNumber+'px" /><col width="50%" /><col width="'+colSizeForLineNumber+'px" /><col width="50%" />' +
-			diffContent +
-			'</table>';
-		}
+			finishContentBody(diffType);
 		else
 		{
 			if (binary)
@@ -159,10 +182,8 @@ var createSideBySideDiff = function(diff, element, size, allowHunkSelection, cal
 		if (diffContent != "" || binary)
 			finalContent += '</div>';
 		
-		line1 = "";
-		line2 = "";
 		diffContent = "";
-		startFile();
+		startFile(diffType);
 		startname = "";
 		endname = "";
 	}
@@ -177,8 +198,8 @@ var createSideBySideDiff = function(diff, element, size, allowHunkSelection, cal
 		{			// "diff", i.e. new file, we have to reset everything
 			header = true;		// diff always starts with a header
 			
-			finishHunk();		// Finish last hunk if any
-			finishContent();	// Finish last file
+			finishHunk(diffType);		// Finish last hunk if any
+			finishFile(diffType);	// Finish last file
 			
 			binary = false;
 			mode_change = false;
@@ -266,7 +287,6 @@ var createSideBySideDiff = function(diff, element, size, allowHunkSelection, cal
 				continue;
 		}
 		
-		sindex = "index=" + lindex.toString() + " ";
 		if (firstChar == "+")
 		{			
 			rightLineNumbers.push(++hunk_start_line_2);
@@ -281,9 +301,9 @@ var createSideBySideDiff = function(diff, element, size, allowHunkSelection, cal
 		{
 			if (header)
 				header = false;
-			finishHunk();		// Finish any other hunk
-			startHunk();		// start the new hunk
-			var newId="hunk-index-control-" + hunk_index;	// should be replaced by the id passed in from MacHg
+			finishHunk(diffType);		// Finish any other hunk
+			startHunk(diffType);		// start the new hunk
+			var newId="hunk-index-control";	// should be replaced by the id passed in from MacHg
 			var headerLine = l;
 			if (m = l.match(/(@@ \-([0-9]+),?\d* \+(\d+),?\d* @@)\s*(\w*)/))
 			{
@@ -301,21 +321,16 @@ var createSideBySideDiff = function(diff, element, size, allowHunkSelection, cal
 		}
 		else if (firstChar == " ")
 		{
-		    finishRun();
+		    finishRun(diffType);
 		    diffContent += '<tr><td class="lineno">'+ ++hunk_start_line_1+'</td><td class="noopline">'+l.slice(1)+'</td><td class="lineno">'+ ++hunk_start_line_2+'</td><td class="noopline">'+l.slice(1)+'</td></tr>';
 		}
 		lindex++;
 	}
 	
-	finishContent();
+	finishFile(diffType);
 	
-	// This takes about 7ms
-	element.innerHTML = finalContent;
-	
-	// TODO: Replace this with a performance pref call
-	if (false)
-		Controller.log_("Total time:" + (new Date().getTime() - start));
-	
+	element.innerHTML = finalContent;		// This takes about 7ms
+
 	machgWebviewController.excludeHunksAccordingToModel();
 }
 
@@ -340,7 +355,6 @@ var createUnifiedDiff = function(diff, element, size, allowHunkSelection, callba
 	var content = diff.replace(/\t/g, "    ");
 	
 	var file_index = 0;
-	var hunk_index = 0;
 	
 	var startname = "";
 	var endname = "";
@@ -371,18 +385,16 @@ var createUnifiedDiff = function(diff, element, size, allowHunkSelection, callba
 	
 	var startHunk = function()
 	{
-		hunk_index++;
 		inHunk = true;
 	}
 	
 	var startFile = function()
 	{
-		hunk_index=0;
 		file_index++;
 	}
 	
 	
-	var finishContent = function()
+	var finishFile = function()
 	{
 		finishHunk();
 		if (!file_index)
@@ -464,7 +476,7 @@ var createUnifiedDiff = function(diff, element, size, allowHunkSelection, callba
 			header = true;						// diff always starts with a header
 			
 			finishHunk();		// Finish last hunk if any
-			finishContent();	// Finish last file
+			finishFile();	// Finish last file
 			
 			binary = false;
 			mode_change = false;
@@ -552,7 +564,6 @@ var createUnifiedDiff = function(diff, element, size, allowHunkSelection, callba
 				continue;
 		}
 		
-		sindex = "index=" + lindex.toString() + " ";
 		if (firstChar == "+")
 		{
 			// Highlight trailing whitespace
@@ -561,13 +572,13 @@ var createUnifiedDiff = function(diff, element, size, allowHunkSelection, callba
 			
 			line1 += "\n";
 			line2 += ++hunk_start_line_2 + "\n";
-			diffContent += "<div " + sindex + "class='addline'>" + l + "</div>";
+			diffContent += "<div class='addline'>" + l + "</div>";
 		}
 		else if (firstChar == "-")
 		{
 			line1 += ++hunk_start_line_1 + "\n";
 			line2 += "\n";
-			diffContent += "<div " + sindex + "class='delline'>" + l + "</div>";
+			diffContent += "<div class='delline'>" + l + "</div>";
 		}
 		else if (firstChar == "@")
 		{
@@ -575,7 +586,7 @@ var createUnifiedDiff = function(diff, element, size, allowHunkSelection, callba
 				header = false;
 			finishHunk();		// Finish any other hunk
 			startHunk();		// start the new hunk
-			var newId="hunk-index-control-" + hunk_index;	// should be replaced by the id passed in from MacHg
+			var newId="hunk-index-control-";	// should be replaced by the id passed in from MacHg
 			var headerLine = l;
 			if (m = l.match(/(@@ \-([0-9]+),?\d* \+(\d+),?\d* @@)\s*(\w*)/))
 			{
@@ -590,18 +601,18 @@ var createUnifiedDiff = function(diff, element, size, allowHunkSelection, callba
 			var control = '';
 			if (allowHunkSelection != "no")
 				control = '<button type="button" class="hunkselector" onclick="handleHunkStatusClick(event)" id="' + newId + '">exclude</button>';
-			diffContent += '<div class="hunk" id="hunk-index-' + hunk_index + '"><div ' + sindex + 'class="hunkheader">' + headerLine + control + '</div>';
+			diffContent += '<div class="hunk"><div class="hunkheader">' + headerLine + control + '</div>';
 		}
 		else if (firstChar == " ")
 		{
 			line1 += ++hunk_start_line_1 + "\n";
 			line2 += ++hunk_start_line_2 + "\n";
-			diffContent += "<div " + sindex + "class='noopline'>" + l + "</div>";
+			diffContent += "<div class='noopline'>" + l + "</div>";
 		}
 		lindex++;
 	}
 	
-	finishContent();
+	finishFile();
 	
 	// This takes about 7ms
 	element.innerHTML = finalContent;
