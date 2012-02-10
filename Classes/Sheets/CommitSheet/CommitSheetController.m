@@ -13,6 +13,7 @@
 #import "DisclosureBoxController.h"
 #import "RepositoryData.h"
 #import "FSNodeInfo.h"
+#import "FSViewerTable.h"
 
 NSString* kAmendOption	 = @"amendOption";
 
@@ -29,6 +30,7 @@ NSString* kAmendOption	 = @"amendOption";
 - (IBAction)	validateButtons:(id)sender;
 - (void)		amendOptionChanged;
 - (void)		setSheetTitle;
+- (NSArray*)	tableLeafNodes;
 @end
 
 @implementation CommitSheetController
@@ -83,8 +85,7 @@ NSString* kAmendOption	 = @"amendOption";
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (IBAction) handlePreviousCommitMessagesTableClick:(id)sender
-{
-	
+{	
 }
 
 - (IBAction) handlePreviousCommitMessagesTableDoubleClick:(id)sender
@@ -92,6 +93,16 @@ NSString* kAmendOption	 = @"amendOption";
 	NSString* message = [logCommentsTableSourceData objectAtIndex:[previousCommitMessagesTableView clickedRow]];
 	[commitMessageTextView insertText:message];
 	[theCommitSheet makeFirstResponder:commitMessageTextView];
+}
+
+
+- (IBAction) browserAction:(id)browser
+{
+}
+
+- (IBAction) browserDoubleAction:(id)browser
+{
+	[self commitSheetDiffAction:self];
 }
 
 
@@ -135,10 +146,11 @@ NSString* kAmendOption	 = @"amendOption";
 	[theCommitSheet makeFirstResponder:commitMessageTextView];
 
 	// Store the paths of the files to be committed
-	absolutePathsOfFilesToCommit = [[myDocument theFSViewer] filterPaths:paths byBitfield:eHGStatusChangedInSomeWay];
+	absolutePathsOfFilesToCommit = pruneContainedPaths([[myDocument theFSViewer] filterPaths:paths byBitfield:eHGStatusChangedInSomeWay]);
 	
-	[commitFilesTableView resetTableDataWithPaths:absolutePathsOfFilesToCommit];
-	
+	[commitFilesViewer	actionSwitchToFilesTable:self];
+	[commitFilesViewer	repositoryDataIsNew];
+
 	// Fetch the last 10 log comments and set the sources so that the table view of these in the commit sheet shows them correctly.
 	NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log", @"--limit", @"10", @"--template", @"{desc}\n#^&^#\n", nil];
 	ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:rootPath  logging:eLoggingNone];
@@ -234,19 +246,16 @@ NSString* kAmendOption	 = @"amendOption";
 {
 	SEL theAction = [anItem action];
 	// CommitSheet contextual items
-	if (theAction == @selector(commitSheetDiffAction:))			return [commitFilesTableView rowsAreSelected];
+	if (theAction == @selector(commitSheetDiffAction:))			return [commitFilesViewer nodesAreSelected];
 	return NO;
 }
 
 
 - (IBAction) validateButtons:(id)sender
 {
-	NSIndexSet* selectedIndexes = [commitFilesTableView selectedRowIndexes];
-	BOOL pathsAreSelected = [selectedIndexes count] > 0;
-	//BOOL pathsCanBeExcluded = pathsAreSelected && ![excludedItems containsIndexes:selectedIndexes] && ![myDocument inMergeState];
-	//BOOL pathsCanBeIncluded = pathsAreSelected && [excludedItems intersectsIndexes:selectedIndexes];
+	BOOL pathsAreSelected = [commitFilesViewer nodesAreSelected];
 	BOOL canAllowAmend = AllowHistoryEditingOfRepositoryFromDefaults() && [myDocument isCurrentRevisionTip] && ![myDocument inMergeState];
-	NSInteger fileCount = [[commitFilesTableView commitDataArray] count];
+	NSInteger fileCount = [[self tableLeafNodes] count];
 	BOOL okToCommit = (fileCount > 0) && ([excludedItems count] < fileCount) && IsNotEmpty([commitMessageTextView string]);
 	NSString* diffButtonMessage = pathsAreSelected ? @"Diff Selected" : @"Diff All";
 	
@@ -291,6 +300,16 @@ NSString* kAmendOption	 = @"amendOption";
 	if (aTableView == previousCommitMessagesTableView)
 		return [logCommentsTableSourceData objectAtIndex:rowIndex];
 	return @" ";
+}
+
+- (NSArray*) tableLeafNodes
+{
+	return [[commitFilesViewer theFilesTable] leafNodeForTableRow];
+}
+
+- (NSArray*) tableLeafPaths
+{
+	return pathsOfFSNodes([[commitFilesViewer theFilesTable] leafNodeForTableRow]);
 }
 
 
@@ -364,7 +383,7 @@ NSString* kAmendOption	 = @"amendOption";
 		if ([self dateOption] && IsNotEmpty([self date]))
 			[qrefreshArgs addObject:@"--date" followedBy:[[self date] isodateDescription]];
 		[qrefreshArgs addObject:@"--message" followedBy:[commitMessageTextView string]];
-		[qrefreshArgs addObjectsFromArray:[commitFilesTableView filteredFilesToCommit]];
+		[qrefreshArgs addObjectsFromArray:[self tableLeafPaths]];
 		ExecutionResult* qrefreshResult = [myDocument executeMercurialWithArgs:qrefreshArgs  fromRoot:rootPath  whileDelayingEvents:YES];
 		if ([qrefreshResult hasErrors])
 		{
@@ -397,7 +416,7 @@ NSString* kAmendOption	 = @"amendOption";
 
 	// This is more a check here, error handling should have caught this before now if the files were empty.
 	NSArray* excludedPaths = [NSArray array];
-	NSArray* commitData = [commitFilesTableView commitDataArray];
+	NSArray* commitData = [self tableLeafPaths];
 	if (IsEmpty(commitData) || 
 		//[excludedPaths count] >= [commitData count] || 
 		IsEmpty(filteredAbsolutePathsOfFilesToCommit))
@@ -424,8 +443,10 @@ NSString* kAmendOption	 = @"amendOption";
 
 - (IBAction) commitSheetDiffAction:(id)sender
 {
-	NSArray* pathsToDiff = [commitFilesTableView rowsAreSelected] ? [commitFilesTableView chosenFilesToCommit] : [commitFilesTableView allFilesToCommit];
+	NSArray* nodesToDiff = [commitFilesViewer nodesAreSelected] ? [commitFilesViewer chosenNodes] : [self tableLeafNodes];
+	NSArray* pathsToDiff = pathsOfFSNodes(nodesToDiff);
 	[myDocument viewDifferencesInCurrentRevisionFor:pathsToDiff toRevision:nil]; // nil indicates the current revision
+	[self makeMessageFieldFirstResponder];
 }
 
 
@@ -441,282 +462,87 @@ NSString* kAmendOption	 = @"amendOption";
 	[self validateButtons:[aNotification object]];
 }
 
-@end
-
 
 
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK:  CommitFileInfo
+// MARK:  FSViewer Protocol Methods
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 
-@implementation CommitFileInfo
-
-@synthesize hgStatus;
-@synthesize filePath;
-@synthesize absoluteFilePath;
-@synthesize fileImage;
-@synthesize statusImage;
-@synthesize lineCount;
-@synthesize additionLineCount;
-@synthesize removalLineCount;
-@synthesize commitState;
-@synthesize parent;
-
-- (id) initWithStatusLine:(NSString*)statusLine withRoot:(NSString*)rootPath andParent:(CommitFilesTableView*)theParent
+// All Controllers which embed a FSBrowser must conform to this protocol
+- (NSArray*) statusLinesForPaths:(NSArray*)absolutePaths withRootPath:(NSString*)rootPath
 {
-	self = [super init];
-	if (!self || [statusLine length] < 3)
-		return self;
+	NSArray* restrictedPaths = restrictPathsToPaths(absolutePaths,absolutePathsOfFilesToCommit);
 
-	static NSImage* additionImage = nil;
-	static NSImage* modifiedImage = nil;
-	static NSImage* removedImage  = nil;
-	NSSize theIconSize = NSMakeSize(ICON_SIZE, ICON_SIZE);
-	if (!modifiedImage)
+	// Get status of everything relevant and return this array for use by the node tree to re-flush stale parts of it (or all of it.)
+	NSMutableArray* argsStatus = [NSMutableArray arrayWithObjects:@"status", @"--added", @"--removed", @"--deleted", @"--modified", nil];
+	[argsStatus addObjectsFromArray:restrictedPaths];
+	
+	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:rootPath  logging:eLoggingNone];
+	
+	if ([results hasErrors])
 	{
-		additionImage = [NSImage imageNamed:@"StatusAdded.png"];
-		modifiedImage = [NSImage imageNamed:@"StatusModified.png"];
-		removedImage  = [NSImage imageNamed:@"StatusRemoved.png"];
-		[additionImage	setSize:theIconSize];
-		[modifiedImage	setSize:theIconSize];
-		[removedImage	setSize:theIconSize];
+		// Try a second time
+		sleep(0.5);
+		results = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:rootPath  logging:eLoggingNone];
 	}
-	
-	NSString* statusLetter = [statusLine substringToIndex:1];
-	
-	hgStatus		 = [FSNodeInfo statusEnumFromLetter:statusLetter];
-	filePath		 = [statusLine substringFromIndex:2];
-	absoluteFilePath = [rootPath stringByAppendingPathComponent:filePath];
-	fileImage		 = [NSWorkspace iconImageOfSize:theIconSize forPath:absoluteFilePath withDefault:@"FSIconImage-Default"];
-	commitState      = eCommitCheckStateOn;
-	parent           = theParent;
-
-	if (bitsInCommon(hgStatus, eHGStatusAdded))		statusImage = additionImage;
-	if (bitsInCommon(hgStatus, eHGStatusRemoved))	statusImage = removedImage;
-	if (bitsInCommon(hgStatus, eHGStatusModified))	statusImage = modifiedImage;
-	
-	return self;
-}
-
-- (IBAction) flipCheckBoxState:(id)sender
-{
-	switch (commitState)
+	if ([results.errStr length] > 0)
 	{
-		case eCommitCheckStateOff:		commitState = eCommitCheckStatePartial;	break;
-		case eCommitCheckStatePartial:	commitState = eCommitCheckStateOn;		break;
-		case eCommitCheckStateOn:		commitState = eCommitCheckStateOff;		break;
+		[results logMercurialResult];
+		// for an error rather than warning fail by returning nil. Maybe later we will return error codes.
+		if ([results hasErrors])
+			return  nil;
 	}
-	NSInteger thisRow = [[parent commitDataArray] indexOfObject:self];
-	[parent setNeedsDisplayInRect:[parent rectOfRow:thisRow]];
+	NSArray* lines = [results.outStr componentsSeparatedByString:@"\n"];
+	return IsNotEmpty(lines) ? lines : [NSArray array];
 }
 
-
-@end
-
-
-
-
-
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
-// MARK:  CommitFilesTableView
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
-
-@implementation CommitFilesTableView
-
-@synthesize commitDataArray;
-
-
-- (void) awakeFromNib
+// Get any resolve status lines and change the resolved code 'R' to 'V' so that this status letter doesn't conflict with the other
+// status letters.
+- (NSArray*) resolveStatusLines:(NSArray*)absolutePaths  withRootPath:(NSString*)rootPath
 {
-	[self setDelegate:self];
-	[self setDataSource:self];
-	[self setTarget:self];
-	[self setDoubleAction:@selector(handleFilesToCommitTableDoubleClick:)];
-	//[self setAction:@selector(handleFilesToCommitTableClick:)];
-}
-
-- (void) resetTableDataWithPaths:(NSArray*)paths
-{
-	// Store the paths of the files to be committed
-	NSArray* absolutePathsOfFilesToCommit = [[[parentController myDocument] theFSViewer] filterPaths:paths byBitfield:eHGStatusChangedInSomeWay];
-	NSString* rootPath = [[parentController myDocument] absolutePathOfRepositoryRoot];
-
-	// Initialize the table source data and show the files which are about to be changed in the commit sheet.
-	NSMutableArray* argsStatus = [NSMutableArray arrayWithObjects:@"status", @"--modified", @"--added", @"--removed", nil];
-	[argsStatus addObjectsFromArray: absolutePathsOfFilesToCommit];
-	ExecutionResult* hgStatusResults = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:rootPath  logging:eLoggingNone];
-	NSArray* statusLines = [hgStatusResults.outStr componentsSeparatedByString:@"\n"];
+	NSArray* restrictedPaths = restrictPathsToPaths(absolutePaths,absolutePathsOfFilesToCommit);
 	
-	NSMutableArray* newCommitDataArray = [[NSMutableArray alloc]init];
-	for (NSString* statusLine in statusLines)
-		if (IsNotEmpty(statusLine))
-			[newCommitDataArray addObject:[[CommitFileInfo alloc] initWithStatusLine:statusLine withRoot:rootPath andParent:self]];
+	// Get status of everything relevant and return this array for use by the node tree to re-flush stale parts of it (or all of it.)
+	NSMutableArray* argsResolveStatus = [NSMutableArray arrayWithObjects:@"resolve", @"--list", nil];
+	[argsResolveStatus addObjectsFromArray:restrictedPaths];
 	
-	commitDataArray = newCommitDataArray;
-	[self reloadData];
-}
-
-
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
-// MARK:  Table Data Handling
-// -----------------------------------------------------------------------------------------------------------------------------------------
-
-- (NSInteger) numberOfRowsInTableView:(NSTableView*)aTableView
-{
-	return [commitDataArray count];
-}
-
-- (id) tableView:(NSTableView*)aTableView objectValueForTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
-{
-	CommitFileInfo*	commitFileInfo = [commitDataArray objectAtIndex:rowIndex];
-	NSString* columnIdentifier = [aTableColumn identifier];
-	if ([columnIdentifier isEqualToString:@"path"])
-		return [commitFileInfo filePath];
-	return nil;
-}
-
-- (void)tableViewSelectionDidChange:(NSNotification*)aNotification
-{
-	[parentController validateButtons:self];
-}
-
-- (void) tableView:(NSTableView*)aTableView  willDisplayCell:(id)aCell forTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
-{
-	NSString* columnIdentifier = [aTableColumn identifier];
-	CommitFileInfo*	commitFileInfo = [commitDataArray objectAtIndex:rowIndex];
-	if ([columnIdentifier isEqualToString:@"include"])
+	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsResolveStatus fromRoot:rootPath  logging:eLoggingNone];
+	if ([results hasErrors])
 	{
-		[aCell setCommitFileInfo:commitFileInfo];
-		[aCell setTarget:commitFileInfo];
-		[aCell setAction:@selector(flipCheckBoxState:)];
-		[aCell setAllowsMixedState:YES];
-		switch ([commitFileInfo commitState])
+		[results logMercurialResult];
+		return nil;
+	}
+	NSArray* lines = [results.outStr componentsSeparatedByString:@"\n"];
+	NSMutableArray* newLines = [[NSMutableArray alloc] init];
+	for (NSString* line in lines)
+		if (IsNotEmpty(line))
 		{
-			case eCommitCheckStateOff:		[aCell setState:NSOffState];	break;
-			case eCommitCheckStatePartial:	[aCell setState:NSMixedState];	break;
-			case eCommitCheckStateOn:		[aCell setState:NSOnState];		break;
+			if ([line characterAtIndex:0] == 'R')
+				[newLines addObject:fstr(@"V%@",[line substringFromIndex:1])];
+			else
+				[newLines addObject:line];
 		}
-	}
-	else if ([columnIdentifier isEqualToString:@"status"])
-	{
-		[aCell setCommitFileInfo:commitFileInfo];
-		[aCell setImage:[commitFileInfo statusImage]];
-	}
-	else if ([columnIdentifier isEqualToString:@"icon"])
-	{
-		[aCell setCommitFileInfo:commitFileInfo];
-		[aCell setImage:[commitFileInfo fileImage]];
-	}
-	
+	return newLines;
 }
 
-
-
-
-
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
-// MARK:  Collection Handling
-// -----------------------------------------------------------------------------------------------------------------------------------------
-
-- (BOOL)	 rowsAreSelected	{ return [self numberOfSelectedRows] > 0; }
-
-- (NSArray*) filteredFilesToCommit
+- (BOOL) writePaths:(NSArray*)paths toPasteboard:(NSPasteboard*)pasteboard
 {
-	return [self allFilesToCommit];
-}
-
-- (NSArray*) allFilesToCommit
-{
-	NSMutableArray* allFiles = [[NSMutableArray alloc]init];
-	for (CommitFileInfo* cfiItem  in commitDataArray)
-		[allFiles addObject:[cfiItem absoluteFilePath]];
-	return allFiles;
-}
-
-- (NSString*) chosenFileToCommit
-{
-	CommitFileInfo* cfiItem = [commitDataArray objectAtIndex:[self chosenRow]];
-	return [cfiItem absoluteFilePath];
-}
-
-- (NSArray*) selectedFilesToCommit
-{
-	NSMutableArray* selectedCommitFiles = [[NSMutableArray alloc]init];
-	NSIndexSet* rows = [self selectedRowIndexes];
-	[rows enumerateIndexesUsingBlock:^(NSUInteger row, BOOL* stop) {
-		CommitFileInfo* cfiItem = [commitDataArray objectAtIndex:row];
-		[selectedCommitFiles addObject:[cfiItem absoluteFilePath]];
-	}];
-	return selectedCommitFiles;
-}
-
-- (NSArray*) chosenFilesToCommit
-{
-	if (![self rowWasClicked] || [[self selectedRowIndexes] containsIndex:[self clickedRow]])
-		return [self selectedFilesToCommit];
-	return [NSArray arrayWithObject:[self chosenFileToCommit]];
+	[pasteboard declareTypes:[NSArray arrayWithObject:NSFilenamesPboardType] owner:self];
+	[pasteboard setPropertyList:paths forType:NSFilenamesPboardType];	
+	return IsNotEmpty(paths) ? YES : NO;
 }
 
 
-- (IBAction) handleFilesToCommitTableDoubleClick:(id)sender
-{
-	NSArray* chosenFiles = [self chosenFilesToCommit];
-	[[parentController myDocument] viewDifferencesInCurrentRevisionFor:chosenFiles toRevision:nil];	// no revision means don't include the --rev option
-	[parentController makeMessageFieldFirstResponder];
-}
+- (void)			setMyDocumentFromParent					{ };
+- (void)			didSwitchViewTo:(FSViewerNum)viewNumber { };
+- (BOOL)			controlsMainFSViewer					{ return NO; }
+- (void)			updateCurrentPreviewImage				{ };
 
-
-
-
-
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
-// MARK:  Utilities
-// -----------------------------------------------------------------------------------------------------------------------------------------
-
-//- (NSImage*) iconImageOfSize:(NSSize)size
-//{    
-//	NSString* path = [self absolutePath];
-//	NSString* defaultImageName = [self isDirectory] ? NSImageNameFolder : @"FSIconImage-Default";
-//	return [NSWorkspace iconImageOfSize:size forPath:path withDefault:defaultImageName];
-//}
 
 
 @end
 
-
-@implementation CommitFilesTableButtonCell
-@synthesize commitFileInfo;
-@end
-
-@implementation CommitFilesTableImageCell
-@synthesize commitFileInfo;
-@end
-
-@implementation CommitFilesTableTextCell
-@synthesize commitFileInfo;
-
-- (NSRect)drawingRectForBounds:(NSRect)theRect
-{	
-	NSRect newRect  = [super drawingRectForBounds:theRect];		// Get the parent's idea of where we should draw
-	NSSize textSize = [self cellSizeForBounds:theRect];			// Get our ideal size for current text
-	
-	// Center that in the proposed rect
-	float heightDelta = newRect.size.height - textSize.height;
-	if (heightDelta > 0)
-	{
-		newRect.size.height -= heightDelta;
-		newRect.origin.y += (heightDelta / 2);
-	}
-	return newRect;
-}
-
-@end

@@ -9,6 +9,7 @@
 
 #import <Cocoa/Cocoa.h>
 #import "BaseSheetWindowController.h"
+#import "FSViewer.h"
 @class CommitFilesTableView;
 
 
@@ -20,9 +21,9 @@
 // MARK:  CommitSheetController
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-@interface CommitSheetController : BaseSheetWindowController
+@interface CommitSheetController : BaseSheetWindowController <ControllerForFSViewer>
 {
-	IBOutlet CommitFilesTableView* commitFilesTableView;
+	IBOutlet FSViewer*	  commitFilesViewer;
 	IBOutlet NSTextField* commitSheetTitle;
 	IBOutlet NSTextView*  commitMessageTextView;
 	IBOutlet NSTableView* previousCommitMessagesTableView;
@@ -76,97 +77,3 @@
 
 @end
 
-
-
-
-
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
-// MARK:  CommitFileInfo
-// -----------------------------------------------------------------------------------------------------------------------------------------
-
-@interface CommitFileInfo : NSObject
-{
-	HGStatus			hgStatus;			// This is the status of the file about to be committed (modified, added, or removed)
-	NSString*			filePath;			// This is the path relative to the repository root
-	NSString*			absoluteFilePath;	// This is the path relative to the repository root
-	NSImage*			fileImage;			// The icon for the given file
-	NSImage*			statusImage;		// The status icon corresponding to this hgStatus
-	NSInteger			lineCount;			// This is the number of lines in the file
-	NSInteger			additionLineCount;	// This is the number of lines being added in the change
-	NSInteger			removalLineCount;	// This is the number of lines being removed in the change
-	CommitCheckBoxState	commitState;		// This is the state of the file we are about to commit (all the changes in the file,
-											// none of the changes in the file, or some of the changes in the file.) 
-	CommitFilesTableView* parent;			// The parent of this CommitFileInfo
-}
-@property (readwrite,assign) HGStatus				hgStatus;
-@property (readwrite,assign) NSString*				filePath;
-@property (readwrite,assign) NSString*				absoluteFilePath;
-@property (readwrite,assign) NSImage*				fileImage;
-@property (readwrite,assign) NSImage*				statusImage;
-@property (readwrite,assign) NSInteger				lineCount;
-@property (readwrite,assign) NSInteger				additionLineCount;
-@property (readwrite,assign) NSInteger				removalLineCount;
-@property (readwrite,assign) CommitCheckBoxState	commitState;
-@property (readwrite,assign) CommitFilesTableView*	parent;
-
-- (id) initWithStatusLine:(NSString*)statusLine withRoot:(NSString*)rootPath andParent:(CommitFilesTableView*)theParent;
-@end
-
-
-
-
-
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
-// MARK:  CommitFilesTableView
-// -----------------------------------------------------------------------------------------------------------------------------------------
-
-@interface CommitFilesTableView : NSTableView <NSTableViewDelegate, NSTableViewDataSource>
-{
-	IBOutlet CommitSheetController*	parentController;	// The parent controller
-	
-	NSArray*	commitDataArray;						// An array of CommitFileInfo
-}
-@property (readwrite,assign) NSArray*	commitDataArray;
-
-// Initialization
-- (void) resetTableDataWithPaths:(NSArray*)paths;
-
-- (NSArray*) allFilesToCommit;
-- (NSArray*) filteredFilesToCommit;
-- (NSArray*) chosenFilesToCommit;
-- (BOOL)	 rowsAreSelected;
-
-@end
-
-
-
-
-
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
-// MARK:  Cells For CommitFilesTableView
-// -----------------------------------------------------------------------------------------------------------------------------------------
-
-
-@interface CommitFilesTableButtonCell : NSButtonCell
-{
-	CommitFileInfo*	commitFileInfo_;
-}
-@property (assign,readwrite) CommitFileInfo*	commitFileInfo;
-@end
-
-@interface CommitFilesTableImageCell : NSImageCell
-{
-	CommitFileInfo*	commitFileInfo_;
-}
-@property (assign,readwrite) CommitFileInfo*	commitFileInfo;
-@end
-
-@interface CommitFilesTableTextCell : NSTextFieldCell
-{
-	CommitFileInfo*	commitFileInfo_;
-}
-@property (assign,readwrite) CommitFileInfo*	commitFileInfo;
-@end
