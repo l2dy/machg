@@ -103,13 +103,18 @@
 	[view setDoubleAction:@selector(browserDoubleAction:)];	
 }
 
+- (NSString*) nibNameForFilesBrowser { return @"FilesViewBrowser"; }
+- (NSString*) nibNameForFilesOutline { return @"FilesViewOutline"; }
+- (NSString*) nibNameForFilesTable   { return @"FilesViewTable"; }
+
 - (FSViewerBrowser*) theFilesBrowser
 {
 	dispatch_once(&theFilesBrowserInitilizer_, ^{
 		// We can't use [NSBundle loadNibNamed:... owner:self] since that causes the FSViewer::awakeFromNib method to fire which
 		// will call this method for a second time and we will lock at this dispatch_once again. Thus do this dance of loading the
-		// nib and then hooking it up manually. 
-		NSViewController* controller = [[NSViewController alloc] initWithNibName:@"FilesViewBrowser" bundle:nil];
+		// nib and then hooking it up manually.
+		NSString* nibName = [self nibNameForFilesBrowser];
+		NSViewController* controller = [[NSViewController alloc] initWithNibName:nibName bundle:nil];
 		theFilesBrowser_ = DynamicCast(FSViewerBrowser, [controller view]);
 		[self setupViewerPane:theFilesBrowser_];		
 	});
@@ -122,7 +127,8 @@
 		// We can't use [NSBundle loadNibNamed:... owner:self] since that causes the FSViewer::awakeFromNib method to fire which
 		// will call this method for a second time and we will lock at this dispatch_once again. Thus do this dance of loading the
 		// nib and then hooking it up manually. 
-		NSViewController* controller = [[NSViewController alloc] initWithNibName:@"FilesViewOutline" bundle:nil];
+		NSString* nibName = [self nibNameForFilesOutline];
+		NSViewController* controller = [[NSViewController alloc] initWithNibName:nibName bundle:nil];
 		theFilesOutline_ = DynamicCast(FSViewerOutline, [controller view]);
 		[self setupViewerPane:theFilesOutline_];		
 	});
@@ -134,8 +140,9 @@
 	dispatch_once(&theFilesTableInitilizer_, ^{
 		// We can't use [NSBundle loadNibNamed:... owner:self] since that causes the FSViewer::awakeFromNib method to fire which
 		// will call this method for a second time and we will lock at this dispatch_once again. Thus do this dance of loading the
-		// nib and then hooking it up manually. 
-		NSViewController* controller = [[NSViewController alloc] initWithNibName:@"FilesViewTable" bundle:nil];
+		// nib and then hooking it up manually.
+		NSString* nibName = [self nibNameForFilesTable];
+		NSViewController* controller = [[NSViewController alloc] initWithNibName:nibName bundle:nil];
 		theFilesTable_ = DynamicCast(FSViewerTable, [controller view]);
 		[self setupViewerPane:theFilesTable_];
 	});
