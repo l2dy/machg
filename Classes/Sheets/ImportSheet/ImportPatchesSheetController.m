@@ -171,7 +171,7 @@
 		if (!patch)
 			break;
 
-		BOOL willFilterPatch = IsNotEmpty([hunkExclusions_ repositoryExclusionsForRoot:rootPath]);
+		BOOL willFilterPatch = IsNotEmpty([hunkExclusions_ repositoryHunkExclusionsForRoot:rootPath]);
 		if ([patch authorIsModified]        || willFilterPatch)		[argsImport addObject:@"--user"    followedBy:[patch author]];
 		if ([patch dateIsModified]          || willFilterPatch)		[argsImport addObject:@"--date"    followedBy:[patch date]];
 		if ([patch commitMessageIsModified] || willFilterPatch)		[argsImport addObject:@"--message" followedBy:[patch commitMessage]];

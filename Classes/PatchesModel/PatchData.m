@@ -691,10 +691,10 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 
 - (BOOL) willExcludeHunksFor:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root
 {
-	NSDictionary* repositoryExclusions = [hunkExclusions repositoryExclusionsForRoot:root];
+	NSDictionary* repositoryHunkExclusions = [hunkExclusions repositoryHunkExclusionsForRoot:root];
 	for (FilePatch* filePatch in filePatches_)
 	{
-		NSSet* exclusionsSet = [repositoryExclusions objectForKey:filePatch];
+		NSSet* exclusionsSet = [repositoryHunkExclusions objectForKey:filePatch];
 		if (exclusionsSet)
 			if ([exclusionsSet intersectsSet:[filePatch hunkHashesSet]])
 				return YES;
@@ -705,15 +705,15 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 - (NSString*) patchBodyExcluding:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root
 {
 	NSMutableString* finalString = [[NSMutableString alloc] init];
-	NSDictionary* repositoryExclusions = [hunkExclusions repositoryExclusionsForRoot:root];
-	if (IsEmpty(repositoryExclusions))
+	NSDictionary* repositoryHunkExclusions = [hunkExclusions repositoryHunkExclusionsForRoot:root];
+	if (IsEmpty(repositoryHunkExclusions))
 		return [self patchBodyString];
 
 	BOOL empty = YES;
 	for (FilePatch* filePatch in filePatches_)
 		if (filePatch)
 		{
-			NSSet* excludedHunks = [repositoryExclusions objectForKey:[filePatch filePath]];
+			NSSet* excludedHunks = [repositoryHunkExclusions objectForKey:[filePatch filePath]];
 			NSString* filteredFilePatch = [filePatch filePatchExcluding:excludedHunks];
 			if (filteredFilePatch)
 			{
@@ -728,15 +728,15 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 - (NSString*) patchBodySelecting:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root
 {
 	NSMutableString* finalString = [[NSMutableString alloc] init];
-	NSDictionary* repositoryExclusions = [hunkExclusions repositoryExclusionsForRoot:root];
-	if (IsEmpty(repositoryExclusions))
+	NSDictionary* repositoryHunkExclusions = [hunkExclusions repositoryHunkExclusionsForRoot:root];
+	if (IsEmpty(repositoryHunkExclusions))
 		return nil;
 	
 	BOOL empty = YES;
 	for (FilePatch* filePatch in filePatches_)
 		if (filePatch)
 		{
-			NSSet* excludedHunks = [repositoryExclusions objectForKey:[filePatch filePath]];
+			NSSet* excludedHunks = [repositoryHunkExclusions objectForKey:[filePatch filePath]];
 			NSString* filteredFilePatch = [filePatch filePatchSelecting:excludedHunks];
 			if (filteredFilePatch)
 			{
@@ -778,13 +778,13 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 - (NSArray*) pathsAffectedByExclusions:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root
 {
 	NSMutableArray* paths = [[NSMutableArray alloc]init];
-	NSDictionary* repositoryExclusions = [hunkExclusions repositoryExclusionsForRoot:root];
-	if (!repositoryExclusions)
+	NSDictionary* repositoryHunkExclusions = [hunkExclusions repositoryHunkExclusionsForRoot:root];
+	if (!repositoryHunkExclusions)
 		return paths;
 	for (FilePatch* filePatch in filePatches_)
 		if (filePatch)
 		{
-			NSSet* exclusionsSet = [repositoryExclusions objectForKey:[filePatch filePath]];
+			NSSet* exclusionsSet = [repositoryHunkExclusions objectForKey:[filePatch filePath]];
 			if ([[filePatch hunkHashesSet] intersectsSet:exclusionsSet])
 				[paths addObject:[filePatch filePath]];
 		}

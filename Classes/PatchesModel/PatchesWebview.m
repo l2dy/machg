@@ -121,8 +121,8 @@
 	for (FilePatch* filePatch in [backingPatch_ filePatches])
 	{
 		NSString* path = [filePatch filePath];
-		NSSet* exclusionsSet = [[parentController hunkExclusions] exclusionsForRoot:repositoryRootForPatch_ andFile:path];
-		for (NSString* hunkHash in exclusionsSet)
+		NSSet* hunkExclusionSet = [[parentController hunkExclusions] hunkExclusionSetForRoot:repositoryRootForPatch_ andFile:path];
+		for (NSString* hunkHash in hunkExclusionSet)
 		{
 			NSArray* excludeViewHunkStatusArgs = [NSArray arrayWithObjects:hunkHash, nil];
 			[script callWebScriptMethod:@"excludeViewHunkStatus" withArguments:excludeViewHunkStatusArgs];

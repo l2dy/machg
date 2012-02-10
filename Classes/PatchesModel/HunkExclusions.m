@@ -32,37 +32,43 @@
 // MARK:  Initialization
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-+ (HunkExclusions*) hunkExclusionsWithExclusions:(NSMutableDictionary*)exclusions
-{
-	return [[HunkExclusions alloc] initWithExclusions:exclusions];
-}
-
-- (HunkExclusions*) initWithExclusions:(NSMutableDictionary*)exclusions
-{
-	self = [super init];
-    if (self)
-		exclusionsDictionary_ = exclusions;
-	return self;
-}
-
 - (HunkExclusions*) init
 {
 	self = [super init];
     if (self)
-		exclusionsDictionary_ = [[NSMutableDictionary alloc]init];
+	{
+		hunkExclusionsDictionary_ = [[NSMutableDictionary alloc]init];
+		validHunkHashDictionary_  = [[NSMutableDictionary alloc]init];
+	}
 	return self;	
 }
 
 - (void) encodeWithCoder:(NSCoder*)coder
 {
-	[coder encodeObject:exclusionsDictionary_ forKey:@"hunkExclusionsDictionary"];
+	[coder encodeObject:hunkExclusionsDictionary_ forKey:@"hunkExclusionsDictionary"];
+	[coder encodeObject:validHunkHashDictionary_  forKey:@"fileExclusionsDictionary"];
 }
 
 - (id) initWithCoder:(NSCoder*)coder
 {
-	exclusionsDictionary_ = [coder decodeObjectForKey:@"hunkExclusionsDictionary"];
+	hunkExclusionsDictionary_ = [coder decodeObjectForKey:@"hunkExclusionsDictionary"];
+	validHunkHashDictionary_  = [coder decodeObjectForKey:@"fileExclusionsDictionary"];
+	if (!hunkExclusionsDictionary_) hunkExclusionsDictionary_ = [[NSMutableDictionary alloc]init];
+	if (!validHunkHashDictionary_)  validHunkHashDictionary_  = [[NSMutableDictionary alloc]init];
 	return self;
 }
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Accessors
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (NSDictionary*) repositoryHunkExclusionsForRoot: (NSString*)root				{ return [hunkExclusionsDictionary_ objectForKey:root]; }
+- (NSDictionary*) repositoryValidHunkHashesForRoot:(NSString*)root				{ return [validHunkHashDictionary_  objectForKey:root]; }
+- (NSSet*) hunkExclusionSetForRoot:(NSString*)root andFile:(NSString*)fileName	{ return [[hunkExclusionsDictionary_ objectForKey:root] objectForKey:fileName]; }
+- (NSSet*) validHunkHashSetForRoot:(NSString*)root andFile:(NSString*)fileName	{ return [[validHunkHashDictionary_  objectForKey:root] objectForKey:fileName]; }
 
 
 
@@ -75,56 +81,45 @@
 
 - (void) disableHunk:(NSString*)hunkHash forRoot:(NSString*)root andFile:(NSString*)fileName
 {
-	NSMutableDictionary* repositoryExclusions = [exclusionsDictionary_ objectForKey:root addingIfNil:[NSMutableDictionary class]];
-	NSMutableSet* set = [repositoryExclusions objectForKey:fileName addingIfNil:[NSMutableSet class]];
+	NSMutableDictionary* repositoryHunkExclusions = [hunkExclusionsDictionary_ objectForKey:root addingIfNil:[NSMutableDictionary class]];
+	NSMutableSet* set = [repositoryHunkExclusions objectForKey:fileName addingIfNil:[NSMutableSet class]];
 	[set addObject:hunkHash];
 }
 
 - (void) enableHunk: (NSString*)hunkHash forRoot:(NSString*)root andFile:(NSString*)fileName
 {
-	NSMutableDictionary* repositoryExclusions = [exclusionsDictionary_ objectForKey:root];
-	NSMutableSet* set = [repositoryExclusions objectForKey:fileName];
+	NSMutableDictionary* repositoryHunkExclusions = [hunkExclusionsDictionary_ objectForKey:root];
+	NSMutableSet* set = [repositoryHunkExclusions objectForKey:fileName];
 	[set removeObject:hunkHash];
 	if (IsEmpty(set))
 	{
-		[repositoryExclusions removeObjectForKey:fileName];
-		if (IsEmpty(repositoryExclusions))
-			[exclusionsDictionary_ removeObjectForKey:root];
+		[repositoryHunkExclusions removeObjectForKey:fileName];
+		if (IsEmpty(repositoryHunkExclusions))
+			[hunkExclusionsDictionary_ removeObjectForKey:root];
 	}
 }
 
-- (NSDictionary*) repositoryExclusionsForRoot:(NSString*)root
-{
-	NSMutableDictionary* repositoryExclusions = [exclusionsDictionary_ objectForKey:root];
-	return repositoryExclusions;
-}
-
-- (NSSet*) exclusionsForRoot:(NSString*)root andFile:(NSString*)fileName
-{
-	NSMutableDictionary* repositoryExclusions = [exclusionsDictionary_ objectForKey:root];
-	NSMutableSet* set = [repositoryExclusions objectForKey:fileName];
-	return set;
-}
 
 - (void) updateExclusionsForPatchData:(PatchData*)patchData andRoot:(NSString*)root
 {
-	NSMutableDictionary* repositoryExclusions = [exclusionsDictionary_ objectForKey:root];
-	if (!repositoryExclusions)
-		return;
+	NSMutableDictionary* repositoryValidHunkHashes = [validHunkHashDictionary_  objectForKey:root addingIfNil:[NSMutableDictionary class]];
+	NSMutableDictionary* repositoryHunkExclusions  = [hunkExclusionsDictionary_ objectForKey:root];
 	for (FilePatch* filePatch in [patchData filePatches])
 		if (filePatch)
 		{
-			NSString* fileName = pathDifference(root, [filePatch filePath]);
-			NSMutableSet* currentSet = [repositoryExclusions objectForKey:fileName];
+			NSString* fileName = [filePatch filePath];
+			NSSet* validHunkHases = [filePatch hunkHashesSet];
+			[repositoryValidHunkHashes setObject:validHunkHases forKey:fileName];
+
+			NSMutableSet* currentSet = [repositoryHunkExclusions objectForKey:fileName];
 			if (!currentSet)
 				continue;
-			NSSet* validHunkHases = [filePatch hunkHashesSet];
 			[currentSet intersectSet:validHunkHases];
 			if (IsEmpty(currentSet))
 			{
-				[repositoryExclusions removeObjectForKey:fileName];
-				if (IsEmpty(repositoryExclusions))
-					[exclusionsDictionary_ removeObjectForKey:root];
+				[repositoryHunkExclusions removeObjectForKey:fileName];
+				if (IsEmpty(repositoryHunkExclusions))
+					[hunkExclusionsDictionary_ removeObjectForKey:root];
 			}
 		}
 }
@@ -138,14 +133,13 @@
 // MARK:  Path accessors
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-
 - (NSArray*) absolutePathsWithExclusionsForRoot:(NSString*)root
 {
-	NSDictionary* repositoryExclusions = [exclusionsDictionary_ objectForKey:root];
-	if (IsEmpty(repositoryExclusions))
+	NSDictionary* repositoryHunkExclusions = [hunkExclusionsDictionary_ objectForKey:root];
+	if (IsEmpty(repositoryHunkExclusions))
 		return [NSArray array];
 	NSMutableArray* paths = [[NSMutableArray alloc]init];
-	for (NSString* key in [repositoryExclusions allKeys])
+	for (NSString* key in [repositoryHunkExclusions allKeys])
 		[paths addObject:fstr(@"%@/%@",root,key)];
 	return paths;
 }
@@ -175,7 +169,7 @@
 
 - (NSString*) description
 {
-	return [exclusionsDictionary_ description];
+	return fstr(@"HunkExclusions:\n%@\nValidHunks:\n%@", [hunkExclusionsDictionary_ description], [validHunkHashDictionary_ description]);
 }
 
 @end

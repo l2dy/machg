@@ -616,6 +616,7 @@
 	dispatch_async(globalQueue(), ^{
 		ExecutionResult* diffResult = [TaskExecutions executeMercurialWithArgs:argsDiff  fromRoot:rootPath logging:eLoggingNone  withDelegate:currentDifferencesTaskController];
 		PatchData* patchData = IsNotEmpty(diffResult.outStr) ? [PatchData patchDataFromDiffContents:diffResult.outStr] : nil;
+		[[self hunkExclusions] updateExclusionsForPatchData:patchData andRoot:rootPath];
 		[detailedPatchesWebView setBackingPatch:patchData andFallbackMessage:@"" withTaskNumber:currentTaskNumber];
 	});
 }

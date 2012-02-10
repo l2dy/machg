@@ -20,23 +20,33 @@
 
 @interface HunkExclusions : NSObject
 {
-	NSMutableDictionary*		exclusionsDictionary_;												// Storage for which hunks are being excluded from commits. Maps
+	NSMutableDictionary*		hunkExclusionsDictionary_;											// Storage for which hunks are being excluded from commits. Maps
 																									// (NSString*)repoRoot-> (NSMutableDictionary*)filePaths ->
 																									// (NSSet*)hunkHashes -> (NSString*)hunkHash 
+	NSMutableDictionary*		validHunkHashDictionary_;											// Storage for all hunk hashes in a given file. Maps
+																									// (NSString*)repoRoot-> (NSMutableDictionary*)filePaths ->
+																									// (NSSet*)hunkHashes -> (NSString*)hunkHash 
+	
 }
-+ (HunkExclusions*) hunkExclusionsWithExclusions:(NSMutableDictionary*)exclusions;
-- (HunkExclusions*) initWithExclusions:(NSMutableDictionary*)exclusions;
 - (HunkExclusions*) init;
 
+
+// Accessors
+- (NSDictionary*) repositoryHunkExclusionsForRoot:(NSString*)root;
+- (NSDictionary*) repositoryValidHunkHashesForRoot:(NSString*)root;
+- (NSSet*)		  hunkExclusionSetForRoot:(NSString*)root andFile:(NSString*)fileName;
+- (NSSet*)		  validHunkHashSetForRoot:(NSString*)root andFile:(NSString*)fileName;
+
+
+// Hunk handling
 - (void)     disableHunk:(NSString*)hunkHash forRoot:(NSString*)root andFile:(NSString*)fileName;	// Add the hunk hash to the dictionary of exclusions for the given
 																									// file in the given repository 
 - (void)     enableHunk: (NSString*)hunkHash forRoot:(NSString*)root andFile:(NSString*)fileName;	// Remove the hunk hash to the dictionary of exclusions for the given
 																									// file in the given repository 
-- (NSSet*)   exclusionsForRoot:(NSString*)root andFile:(NSString*)fileName;
-- (NSDictionary*) repositoryExclusionsForRoot:(NSString*)root;
 - (void)	 updateExclusionsForPatchData:(PatchData*)patchData andRoot:(NSString*)root;			// Given a current patch for the current repository update the
 																									// exclusions (possibly eliminating some exclusions which no longer
 																									// exist) 
+
 // Finding paths with exclusions
 - (NSArray*) absolutePathsWithExclusionsForRoot:(NSString*)root;									// Return all the absolute paths effected by the exclusions for the
 																									// given repository root 
