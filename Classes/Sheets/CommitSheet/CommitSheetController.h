@@ -52,7 +52,7 @@
 	
 	BOOL			committingAllFiles;				// We need to set this up since some commands like merging need to "commit" all
 													// files.
-	NSArray*		absolutePathsOfFilesToCommit;	// This array is stored here when the sheet is set up. Later when
+	NSArray*		absolutePathsOfFilesToCommit_;	// This array is stored here when the sheet is set up. Later when
 													// the user hits the commit button it does this commit.
 	NSMutableIndexSet* excludedItems;				// This index set stores the rows in the list we will exclude from the final commit.
 
@@ -75,6 +75,7 @@
 @property (readwrite,assign) BOOL			dateOption;
 @property (readwrite,assign) NSDate*		date;
 @property (readwrite,assign) BOOL			amendOption;
+@property (readwrite,assign) NSArray*		absolutePathsOfFilesToCommit;
 
 - (CommitSheetController*) initCommitSheetControllerWithDocument:(MacHgDocument*)doc;
 

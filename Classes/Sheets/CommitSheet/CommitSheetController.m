@@ -78,6 +78,7 @@ NSString* kAmendOption	 = @"amendOption";
 @synthesize	dateOption = dateOption_;
 @synthesize	date = date_;
 @synthesize	amendOption = amendOption_;
+@synthesize absolutePathsOfFilesToCommit = absolutePathsOfFilesToCommit_;
 
 
 
@@ -184,7 +185,7 @@ NSString* kAmendOption	 = @"amendOption";
 	[theCommitSheet makeFirstResponder:commitMessageTextView];
 
 	// Store the paths of the files to be committed
-	absolutePathsOfFilesToCommit = pruneContainedPaths([[myDocument theFSViewer] filterPaths:paths byBitfield:eHGStatusChangedInSomeWay]);
+	absolutePathsOfFilesToCommit_ = pruneContainedPaths([[myDocument theFSViewer] filterPaths:paths byBitfield:eHGStatusChangedInSomeWay]);
 	
 	[commitFilesViewer	actionSwitchToFilesTable:self];
 	[commitFilesViewer	repositoryDataIsNew];
@@ -394,7 +395,7 @@ NSString* kAmendOption	 = @"amendOption";
 	
 	if (DisplayWarningForAmendFromDefaults())
 	{
-		BOOL pathsAreRootPath = [[absolutePathsOfFilesToCommit lastObject] isEqual:rootPath];
+		BOOL pathsAreRootPath = [[absolutePathsOfFilesToCommit_ lastObject] isEqual:rootPath];
 		NSString* mainMessage = fstr(@"Amending the latest revision with %@ files", pathsAreRootPath ? @"all" : @"the selected");
 		NSString* subMessage  = fstr(@"Are you sure you want to amend the latest revision in the repository “%@”.", [myDocument selectedRepositoryShortName]);
 		int result = RunCriticalAlertPanelOptionsWithSuppression(mainMessage, subMessage, @"Amend", @"Cancel", nil, MHGDisplayWarningForAmend);
@@ -588,7 +589,7 @@ NSString* kAmendOption	 = @"amendOption";
 	[myDocument removeAllUndoActionsForDocument];
 	
 	if ((simpleOperation && !amend) || inMerge)
-		[self sheetActionSimpleCommit:absolutePathsOfFilesToCommit];
+		[self sheetActionSimpleCommit:absolutePathsOfFilesToCommit_];
 	else
 		[self sheetActionCommitWithUncontestedPaths:uncontestedPaths andContestedPaths:contestedPaths amending:amend];
 
@@ -631,7 +632,7 @@ NSString* kAmendOption	 = @"amendOption";
 // All Controllers which embed a FSBrowser must conform to this protocol
 - (NSArray*) statusLinesForPaths:(NSArray*)absolutePaths withRootPath:(NSString*)rootPath
 {
-	NSArray* restrictedPaths = restrictPathsToPaths(absolutePaths,absolutePathsOfFilesToCommit);
+	NSArray* restrictedPaths = restrictPathsToPaths(absolutePaths,absolutePathsOfFilesToCommit_);
 
 	// Get status of everything relevant and return this array for use by the node tree to re-flush stale parts of it (or all of it.)
 	NSMutableArray* argsStatus = [NSMutableArray arrayWithObjects:@"status", @"--added", @"--removed", @"--deleted", @"--modified", nil];
@@ -660,7 +661,7 @@ NSString* kAmendOption	 = @"amendOption";
 // status letters.
 - (NSArray*) resolveStatusLines:(NSArray*)absolutePaths  withRootPath:(NSString*)rootPath
 {
-	NSArray* restrictedPaths = restrictPathsToPaths(absolutePaths,absolutePathsOfFilesToCommit);
+	NSArray* restrictedPaths = restrictPathsToPaths(absolutePaths,absolutePathsOfFilesToCommit_);
 	
 	// Get status of everything relevant and return this array for use by the node tree to re-flush stale parts of it (or all of it.)
 	NSMutableArray* argsResolveStatus = [NSMutableArray arrayWithObjects:@"resolve", @"--list", nil];
