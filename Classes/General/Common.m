@@ -87,6 +87,7 @@ NSString* const MHGDefaultAnnotationOptionUser				= @"DefaultAnnotationOptionUse
 NSString* const MHGDefaultFilesView							= @"DefaultFilesView";
 NSString* const MHGDefaultHGIgnoreContents              	= @"DefaultHGIgnoreContents";
 NSString* const MHGDefaultWorkspacePath						= @"DefaultWorkspacePath";
+NSString* const MHGDiffDisplaySizeLimit						= @"DiffDisplaySizeLimit";
 NSString* const MHGDifferencesWebviewDiffStyle				= @"DifferencesWebviewDiffStyle";
 NSString* const MHGDisplayFileIconsInBrowser				= @"DisplayFileIconsInBrowser";
 NSString* const MHGDisplayResultsOfAddRemoveRenameFiles		= @"DisplayResultsOfAddRemoveRenameFiles";
@@ -220,6 +221,7 @@ NSString*	LocalWhitelistedHGShellAliasNameFromDefaults()			{ return stringFromDe
 NSString*	MacHgLogFileLocation()									{ return stringFromDefaultsForKey(MHGMacHgLogFileLocation); }
 NSString*	ToolNameForDiffingFromDefaults()						{ return stringFromDefaultsForKey(MHGToolNameForDiffing); }
 NSString*	ToolNameForMergingFromDefaults()						{ return stringFromDefaultsForKey(MHGToolNameForMerging); }
+float		DiffDisplaySizeLimitFromDefaults()						{ return floatFromDefaultsForKey(MHGDiffDisplaySizeLimit); }
 float		fontSizeOfBrowserItemsFromDefaults()					{ return floatFromDefaultsForKey(MHGFontSizeOfBrowserItems); }
 float		FontSizeOfDifferencesWebviewFromDefaults()				{ return floatFromDefaultsForKey(MHGFontSizeOfDifferencesWebview); }
 float		sizeOfBrowserColumnsFromDefaults()						{ return floatFromDefaultsForKey(MHGSizeOfBrowserColumns); }

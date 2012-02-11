@@ -474,6 +474,7 @@ extern NSString* const MHGDefaultAnnotationOptionUser;
 extern NSString* const MHGDefaultFilesView;
 extern NSString* const MHGDefaultHGIgnoreContents;
 extern NSString* const MHGDefaultWorkspacePath;
+extern NSString* const MHGDiffDisplaySizeLimit;
 extern NSString* const MHGDifferencesWebviewDiffStyle;
 extern NSString* const MHGDisplayFileIconsInBrowser;
 extern NSString* const MHGDisplayResultsOfAddRemoveRenameFiles;
@@ -588,6 +589,7 @@ BOOL		WarnAboutBadMercurialConfigurationFromDefaults();
 
 float		fontSizeOfBrowserItemsFromDefaults();
 float		sizeOfBrowserColumnsFromDefaults();
+float		DiffDisplaySizeLimitFromDefaults();
 float		FontSizeOfDifferencesWebviewFromDefaults();
 
 int			LoggingLevelForHGCommands();

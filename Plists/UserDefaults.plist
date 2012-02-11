@@ -43,6 +43,8 @@
 .DS_Store</string>
 	<key>DefaultWorkspacePath</key>
 	<string>~</string>
+	<key>DiffDisplaySizeLimit</key>
+	<real>0.5</real>
 	<key>DifferencesWebviewDiffStyle</key>
 	<integer>1</integer>
 	<key>DisplayFileIconsInBrowser</key>

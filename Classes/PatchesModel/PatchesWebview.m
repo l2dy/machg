@@ -46,15 +46,27 @@
 - (void) redisplayViewForTaskNumber:(NSInteger)taskNumber
 {
 	if (!backingPatch_)
+	{
 		dispatch_async(mainQueue(), ^{
 			if (taskNumber >= taskNumber_)
 				[[self windowScriptObject] callWebScriptMethod:@"showMessage" withArguments:[NSArray arrayWithObject:fallbackMessage_]];
-			return;
 		});
+		return;
+	}
 					   
 	dispatch_async(globalQueue(), ^{
 		NSString* allowHunkSelection = [[parentController myDocument] inMergeState] ? @"no" : @"yes";
 		NSString* htmlizedDiffString = [backingPatch_ patchBodyHTMLized];
+
+		if ([htmlizedDiffString length] > DiffDisplaySizeLimitFromDefaults() * 1000000)
+		{
+			dispatch_async(mainQueue(), ^{
+				if (taskNumber >= taskNumber_)
+					[[self windowScriptObject] callWebScriptMethod:@"showMessage" withArguments:[NSArray arrayWithObject:@"File Differences Size Limit Exceeded…"]];
+			});
+			return;
+		}
+				
 		NSArray* showDiffArgs = [NSArray arrayWithObjects:htmlizedDiffString, fstr(@"%f",FontSizeOfDifferencesWebviewFromDefaults()), stringOfDifferencesWebviewDiffStyle(), allowHunkSelection, nil];
 		dispatch_async(mainQueue(), ^{
 			if (taskNumber >= taskNumber_)
