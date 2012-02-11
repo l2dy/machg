@@ -54,9 +54,10 @@
 + (FilePatch*) filePatchWithPath:(NSString*)path andHeader:(NSString*)header;
 - (void)	   addHunkObjectWithLines:(NSMutableArray*)lines;
 
-- (NSString*)  filePatchFilteredByExclusions:(NSSet*)excludedHunks;	// The header and body but with the exculded hunks filtered out
-- (NSString*)  htmlizedFilePatch:(BOOL)sublineDiffing;				// The header and body, but with html insertions for highlighting the diff
-- (NSString*)  filePatchString;										// The header and body together
+- (NSString*)  filePatchExcluding:(NSSet*)excludedHunks;	// The header and body but with the exculded hunks filtered out
+- (NSString*)  filePatchSelecting:(NSSet*)includedHunks;	// The header and body but with only the included hunks being included
+- (NSString*)  htmlizedFilePatch:(BOOL)sublineDiffing;		// The header and body, but with html insertions for highlighting the diff
+- (NSString*)  filePatchString;								// The header and body together
 
 @end
 
@@ -91,9 +92,11 @@
 - (NSString*) patchBodyHTMLized;
 - (NSString*) patchBodyString;
 
-- (BOOL)      willFilterPatchFor:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root;				// Return YES if any of the hunks in any of the file patches are excluded
-- (NSString*) patchBodyFilteredBy:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root;				// Return the patch body filtering out the given exclusions
-- (NSString*) tempFileWithPatchBodyFilteredBy:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root;	// Create a temporary file with the patch filtered by the given exclusions 
+- (BOOL)      willExcludeHunksFor:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root;				// Return YES if any of the hunks in any of the file patches are excluded
+- (NSString*) patchBodyExcluding:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root;				// Return the patch body filtering out the given exclusions
+- (NSString*) patchBodySelecting:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root;				// Return the patch body selecting only the given exclusions
+- (NSString*) tempFileWithPatchBodyExcluding:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root;	// Create a temporary file of the patch excluding the given exclusions 
+- (NSString*) tempFileWithPatchBodySelecting:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root;	// Create a temporary file of the patch selecting only the given exclusions 
 - (NSArray*)  pathsAffectedByExclusions:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root;		// The paths of the file patches which are affected by the exclusions
 
 @end

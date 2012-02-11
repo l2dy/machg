@@ -184,7 +184,7 @@
 		PatchData* patchData = [patch patchData];
 		NSString* patchPath = [patch path];
 		if (willFilterPatch)
-			patchPath = [patchData tempFileWithPatchBodyFilteredBy:hunkExclusions_ withRoot:rootPath];
+			patchPath = [patchData tempFileWithPatchBodyExcluding:hunkExclusions_ withRoot:rootPath];
 		[argsImport addObject:patchPath];
 		ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsImport  fromRoot:rootPath];
 		if ([result hasWarnings])

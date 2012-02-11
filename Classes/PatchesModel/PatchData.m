@@ -291,21 +291,38 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 	return lineChangeCount;
 }
 
-- (NSString*) filePatchFilteredByExclusions:(NSSet*)excludedHunks
+- (NSString*) filePatchExcluding:(NSSet*)excludedHunks
 {
 	// The normal case when this file patch is not filtered at all
 	if (IsEmpty(excludedHunks) || ![excludedHunks intersectsSet:[self hunkHashesSet]])
 		return [self filePatchString];
-	if ([[self hunkHashesSet] isSubsetOfSet:excludedHunks])
-		return nil;
 
+	BOOL empty = YES;
 	NSMutableString* filteredFilePatch = [NSMutableString stringWithString:filePatchHeader];
 	for (HunkObject* hunk in hunks)
-	{
 		if (![excludedHunks containsObject:[hunk hunkHash]])
+		{
+			empty = NO;
 			[filteredFilePatch appendString:[hunk hunkString]];
-	}
-	return filteredFilePatch;
+		}
+	return !empty ? filteredFilePatch : nil;
+}
+
+- (NSString*) filePatchSelecting:(NSSet*)includedHunks
+{
+	// The normal case when this file patch is not filtered at all
+	if (IsEmpty(includedHunks) || ![includedHunks intersectsSet:[self hunkHashesSet]])
+		return nil;
+
+	BOOL empty = YES;
+	NSMutableString* filteredFilePatch = [NSMutableString stringWithString:filePatchHeader];
+	for (HunkObject* hunk in hunks)
+		if ([includedHunks containsObject:[hunk hunkHash]])
+		{
+			empty = NO;
+			[filteredFilePatch appendString:[hunk hunkString]];
+		}
+	return !empty ? filteredFilePatch : nil;
 }
 
 
@@ -672,7 +689,7 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 // MARK:  Patch Filtering
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BOOL) willFilterPatchFor:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root
+- (BOOL) willExcludeHunksFor:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root
 {
 	NSDictionary* repositoryExclusions = [hunkExclusions repositoryExclusionsForRoot:root];
 	for (FilePatch* filePatch in filePatches_)
@@ -685,27 +702,54 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 	return NO;
 }
 
-- (NSString*) patchBodyFilteredBy:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root
+- (NSString*) patchBodyExcluding:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root
 {
 	NSMutableString* finalString = [[NSMutableString alloc] init];
 	NSDictionary* repositoryExclusions = [hunkExclusions repositoryExclusionsForRoot:root];
 	if (IsEmpty(repositoryExclusions))
 		return [self patchBodyString];
 
+	BOOL empty = YES;
 	for (FilePatch* filePatch in filePatches_)
 		if (filePatch)
 		{
-			NSString* filteredFilePatch = [filePatch filePatchFilteredByExclusions:[repositoryExclusions objectForKey:[filePatch filePath]]];
+			NSSet* excludedHunks = [repositoryExclusions objectForKey:[filePatch filePath]];
+			NSString* filteredFilePatch = [filePatch filePatchExcluding:excludedHunks];
 			if (filteredFilePatch)
+			{
+				empty = NO;
 				[finalString appendString:filteredFilePatch];
+			}
 		}
-	return finalString;
+	return !empty ? finalString : nil;
 }
 
 
-- (NSString*) tempFileWithPatchBodyFilteredBy:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root
+- (NSString*) patchBodySelecting:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root
 {
-	NSString* filteredPatchBody = [self patchBodyFilteredBy:hunkExclusions withRoot:root];
+	NSMutableString* finalString = [[NSMutableString alloc] init];
+	NSDictionary* repositoryExclusions = [hunkExclusions repositoryExclusionsForRoot:root];
+	if (IsEmpty(repositoryExclusions))
+		return nil;
+	
+	BOOL empty = YES;
+	for (FilePatch* filePatch in filePatches_)
+		if (filePatch)
+		{
+			NSSet* excludedHunks = [repositoryExclusions objectForKey:[filePatch filePath]];
+			NSString* filteredFilePatch = [filePatch filePatchSelecting:excludedHunks];
+			if (filteredFilePatch)
+			{
+				empty = NO;
+				[finalString appendString:filteredFilePatch];
+			}
+		}
+	return !empty ? finalString : nil;
+}
+
+
+- (NSString*) tempPatchFileWithContents:(NSString*)contents
+{
 	NSString* tempFilePath = tempFilePathWithTemplate(@"MacHgFilteredPatch.XXXXXXXXXX");
 	if (!tempFilePath)
 	{
@@ -713,9 +757,21 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 		return nil;
 	}
 	NSError* err = nil;
-	[filteredPatchBody writeToFile:tempFilePath atomically:YES encoding:NSUTF8StringEncoding error:&err];
+	[contents writeToFile:tempFilePath atomically:YES encoding:NSUTF8StringEncoding error:&err];
 	[NSApp presentAnyErrorsAndClear:&err];
 	return tempFilePath;	
+}
+
+- (NSString*) tempFileWithPatchBodyExcluding:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root
+{
+	NSString* filteredPatchBody = [self patchBodyExcluding:hunkExclusions withRoot:root];
+	return IsNotEmpty(filteredPatchBody) ? [self tempPatchFileWithContents:filteredPatchBody] : nil;
+}
+
+- (NSString*) tempFileWithPatchBodySelecting:(HunkExclusions*)hunkExclusions withRoot:(NSString*)root
+{
+	NSString* filteredPatchBody = [self patchBodySelecting:hunkExclusions withRoot:root];
+	return IsNotEmpty(filteredPatchBody) ? [self tempPatchFileWithContents:filteredPatchBody] : nil;
 }
 
 
