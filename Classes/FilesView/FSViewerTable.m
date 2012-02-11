@@ -191,23 +191,24 @@
 	[aCell loadCellContents];
 }
 
-//- (void) tableView:(NSTableView*)aTableView setObjectValue:(id)anObject forTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
-//{
-//	PatchData* clickedPatch = [[self patchesTableData] objectAtIndex:rowIndex];
-//	NSString* columnIdentifier = [aTableColumn identifier];
-//	[clickedPatch setValue:anObject forKey:columnIdentifier];
-//	
-//	NSEvent* currentEvent = [NSApp currentEvent];
-//    unsigned flags = [currentEvent modifierFlags];
-//	if (flags & NSAlternateKeyMask)
-//		if ([columnIdentifier isEqualToString:@"forceOption"] || [columnIdentifier isEqualToString:@"exactOption"] || [columnIdentifier isEqualToString:@"commitOption"] || [columnIdentifier isEqualToString:@"importBranchOption"])
-//			for (PatchData* patch in patchesTableData_)
-//				[patch setValue:anObject forKey:columnIdentifier];
-//	[self reloadData];
-//}
-//
-//
-//
+- (void) tableView:(NSTableView*)aTableView setObjectValue:(id)anObject forTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
+{
+	FSNodeInfo* node = [[self leafNodeForTableRow] objectAtIndex:rowIndex];
+	NSString* columnIdentifier = [aTableColumn identifier];
+
+	if ([columnIdentifier isEqualToString:@"exclude"])
+	{
+		NSString* root = [[parentViewer_ rootNodeInfo] absolutePath];
+		HunkExclusions* hunkExclusions = [parentViewer_ hunkExclusions];
+		NSString* fileName = pathDifference(root, [node absolutePath]);
+		NSSet* exlcusions = [hunkExclusions hunkExclusionSetForRoot:root andFile:fileName];
+		if (IsEmpty(exlcusions))
+			[hunkExclusions excludeFile:fileName forRoot:root];
+		else 
+			[hunkExclusions includeFile:fileName forRoot:root];
+	}
+}
+
 //- (BOOL)tableView:(NSTableView*)aTableView shouldEditTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
 //{
 //	NSString* requestedColumn = [aTableColumn identifier];
