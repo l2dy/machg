@@ -330,7 +330,7 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 
 - (PatchData*) initWithDiffContents:(NSString*)contents
 {
-	filePatchForFilePath_ = [[NSMutableDictionary alloc]init];
+	filePatchForFilePathDictionary_ = [[NSMutableDictionary alloc]init];
 	filePatches_ = [[NSMutableArray alloc]init];
 	patchBody_ = contents;
 	[self parseBodyIntoFilePatches];
@@ -371,7 +371,7 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 	FilePatch* newFilePatch = [FilePatch filePatchWithPath:filePath andHeader:filePatchHeader];
 	if (!filePath || !newFilePatch)
 		return;
-	[filePatchForFilePath_ setObject:newFilePatch forKey:filePath];
+	[filePatchForFilePathDictionary_ setObject:newFilePatch forKey:filePath];
 	[filePatches_ addObject:newFilePatch];
 }
 
@@ -436,6 +436,17 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 
 	[self finishHunkObjectWithLines:hunkLines];
 }
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Accessors
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (FilePatch*) filePatchForFilePath:(NSString*)filePath		{ return [filePatchForFilePathDictionary_ objectForKey:filePath]; }
 
 
 

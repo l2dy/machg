@@ -73,7 +73,7 @@
 	// Note don't be confused between these file paths (of the source code being patched) and
 	// the path to the actual patch	
 	
-	NSMutableDictionary* filePatchForFilePath_;				// Map of (NSString*)sourceCodeFilePath -> (FilePatch*)patch (mirrors filePatches_)
+	NSMutableDictionary* filePatchForFilePathDictionary_;	// Map of (NSString*)sourceCodeFilePath -> (FilePatch*)patch (mirrors filePatches_)
 	NSMutableArray* filePatches_;							// Array of (FilePatch*)patch (mirrors filePatchForFilePath_)
 	NSString*		patchBody_;
 }	
@@ -81,6 +81,8 @@
 @property (readonly,assign) NSMutableArray* filePatches;
 
 + (PatchData*) patchDataFromDiffContents:(NSString*)diff;
+
+- (FilePatch*) filePatchForFilePath:(NSString*)filePath;
 
 - (NSAttributedString*) patchBodyColorized;
 
