@@ -99,6 +99,19 @@
 	}
 }
 
+- (void)	 excludeFile:(NSString*)fileName forRoot:(NSString*)root
+{
+	NSSet* validHunkHashSet = [self validHunkHashSetForRoot:root andFile:fileName];
+	NSMutableDictionary* repositoryHunkExclusions = [hunkExclusionsDictionary_ objectForKey:root];
+	[repositoryHunkExclusions setObject:[validHunkHashSet mutableCopy] forKey:fileName];
+}
+
+- (void)	 includeFile:(NSString*)fileName forRoot:(NSString*)root
+{
+	NSMutableDictionary* repositoryHunkExclusions = [hunkExclusionsDictionary_ objectForKey:root];
+	[repositoryHunkExclusions removeObjectForKey:fileName];	
+}
+
 
 - (void) updateExclusionsForPatchData:(PatchData*)patchData andRoot:(NSString*)root
 {

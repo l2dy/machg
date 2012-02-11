@@ -41,8 +41,11 @@
 // Hunk handling
 - (void)     disableHunk:(NSString*)hunkHash forRoot:(NSString*)root andFile:(NSString*)fileName;	// Add the hunk hash to the dictionary of exclusions for the given
 																									// file in the given repository 
-- (void)     enableHunk: (NSString*)hunkHash forRoot:(NSString*)root andFile:(NSString*)fileName;	// Remove the hunk hash to the dictionary of exclusions for the given
-																									// file in the given repository 
+- (void)     enableHunk: (NSString*)hunkHash forRoot:(NSString*)root andFile:(NSString*)fileName;	// Remove the hunk hash from the dictionary of exclusions for the
+																									// given file in the given repository 
+- (void)	 excludeFile:(NSString*)fileName forRoot:(NSString*)root;								// exclude all hunk hashes of the given file in the given repository 
+- (void)	 includeFile:(NSString*)fileName forRoot:(NSString*)root;								// include all hunk hashes of the given file in the given repository 
+
 - (void)	 updateExclusionsForPatchData:(PatchData*)patchData andRoot:(NSString*)root;			// Given a current patch for the current repository update the
 																									// exclusions (possibly eliminating some exclusions which no longer
 																									// exist) 
