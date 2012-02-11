@@ -9,6 +9,7 @@
 #import "FSViewerTable.h"
 #import "FSNodeInfo.h"
 #import "FSViewerPaneCell.h"
+#import "HunkExclusions.h"
 
 @interface FSViewerTable (PrivateAPI)
 - (void) regenerateTableData;
@@ -167,8 +168,26 @@
 - (void) tableView:(NSTableView*)aTableView  willDisplayCell:(id)aCell forTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
 {
 	FSNodeInfo* node = [[self leafNodeForTableRow] objectAtIndex:rowIndex];
-	[aCell setParentNodeInfo:nil];
+	NSString* columnIdentifier = [aTableColumn identifier];
 	[aCell setNodeInfo:node];
+	if ([columnIdentifier isEqualToString:@"exclude"])
+	{
+		NSString* root = [[parentViewer_ rootNodeInfo] absolutePath];
+		HunkExclusions* hunkExclusions = [parentViewer_ hunkExclusions];
+		NSString* fileName = pathDifference(root, [node absolutePath]);
+		NSSet* exlcusions = [hunkExclusions hunkExclusionSetForRoot:root andFile:fileName];
+		NSInteger state;
+		if (IsEmpty(exlcusions))
+			state = NSOnState;
+		else
+		{
+			NSSet* validHunkHashSet = [hunkExclusions validHunkHashSetForRoot:root andFile:fileName];
+			state = [validHunkHashSet isSubsetOfSet:exlcusions] ? NSOffState : NSMixedState;
+		}
+		[aCell setState:state];
+		return;
+	}
+	[aCell setParentNodeInfo:nil];
 	[aCell loadCellContents];
 }
 
@@ -233,3 +252,37 @@
 
 
 @end
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  FSViewerTableButtonCell
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+
+@implementation FSViewerTableButtonCell
+@synthesize tableColumn = tableColumn_;
+@synthesize nodeInfo = nodeInfo_;
+
+//- (void) mouseEntered:(NSEvent*)event
+//{
+//	[NSAnimationContext beginGrouping];
+//	[[NSAnimationContext currentContext] setDuration:1.0];
+//	[[buttonMessage animator] setHidden:NO];
+//	[NSAnimationContext endGrouping];
+//}
+//- (void) mouseExited:(NSEvent*)event
+//{
+//	[NSAnimationContext beginGrouping];
+//	[[NSAnimationContext currentContext] setDuration:1.0];
+//	[[buttonMessage animator] setHidden:YES];
+//	[NSAnimationContext endGrouping];
+//}
+
+- (BOOL) showsBorderOnlyWhileMouseInside
+{
+	return YES;
+}
+
+@end;

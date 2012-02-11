@@ -21,6 +21,42 @@ NSString* kAmendOption	 = @"amendOption";
 
 
 
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  CommitFSViewer
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+
+@implementation CommitFSViewer
+- (void) awakeFromNib
+{
+	[super awakeFromNib];
+
+	HunkExclusions* exclusions = [self hunkExclusions];
+	[self observe:kHunkWasExcluded from:exclusions byCalling:@selector(nodeWasChanged:)];
+	[self observe:kHunkWasIncluded from:exclusions byCalling:@selector(nodeWasChanged:)];
+	[self observe:kFileWasExcluded from:exclusions byCalling:@selector(nodeWasChanged:)];
+	[self observe:kFileWasIncluded from:exclusions byCalling:@selector(nodeWasChanged:)];
+}
+
+- (void) nodeWasChanged:(NSNotification*)notification
+{
+	if ([self showingFilesTable])
+	{
+		NSDictionary* userInfo = [notification userInfo];
+		NSString* absolutePath = fstr(@"%@/%@", nonNil([userInfo objectForKey:kRootPath]), nonNil([userInfo objectForKey:kFileName]));
+		FSNodeInfo* changedNode = [[self rootNodeInfo] nodeForPathFromRoot:absolutePath];
+		if (changedNode)
+			[[[self window] contentView] setNeedsDisplayInRect:[self rectInWindowForNode:changedNode]];
+	}
+}
+
+- (NSString*) nibNameForFilesTable   { return @"CommitFilesViewTable"; }
+@end
+
+
+
+
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -

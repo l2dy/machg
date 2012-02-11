@@ -247,6 +247,7 @@
 		96E22FFC14959C5700174A55 /* FilesViewBrowser.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96E22FFA14959C5700174A55 /* FilesViewBrowser.xib */; };
 		96E2303F1495A4A000174A55 /* FilesViewOutline.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96E2303D1495A4A000174A55 /* FilesViewOutline.xib */; };
 		96E3E61C1477CD820077503D /* GradientBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 96E3E61B1477CD820077503D /* GradientBox.m */; };
+		96E5832A14E5CA0F0041B472 /* CommitFilesViewTable.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96E5832814E5CA0F0041B472 /* CommitFilesViewTable.xib */; };
 		96F5A4DE11A8185800707404 /* TextButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96F5A4DD11A8185800707404 /* TextButtonCell.m */; };
 		96F5A4FA11A81B5B00707404 /* DiffTextButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96F5A4F911A81B5B00707404 /* DiffTextButtonCell.m */; };
 		96F5A70D11A879F100707404 /* LabelTextButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96F5A70C11A879F100707404 /* LabelTextButtonCell.m */; };
@@ -632,6 +633,7 @@
 		96E2303E1495A4A000174A55 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/FilesViewOutline.xib; sourceTree = SOURCE_ROOT; };
 		96E3E61A1477CD820077503D /* GradientBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GradientBox.h; sourceTree = "<group>"; };
 		96E3E61B1477CD820077503D /* GradientBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GradientBox.m; sourceTree = "<group>"; };
+		96E5832914E5CA0F0041B472 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/CommitFilesViewTable.xib; sourceTree = SOURCE_ROOT; };
 		96F5A4DC11A8185800707404 /* TextButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextButtonCell.h; sourceTree = "<group>"; };
 		96F5A4DD11A8185800707404 /* TextButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextButtonCell.m; sourceTree = "<group>"; };
 		96F5A4F811A81B5B00707404 /* DiffTextButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DiffTextButtonCell.h; sourceTree = "<group>"; };
@@ -1093,6 +1095,7 @@
 			children = (
 				9631D0371107A7E20007FDF2 /* CommitSheetController.h */,
 				9631D0381107A7E20007FDF2 /* CommitSheetController.m */,
+				96E5832814E5CA0F0041B472 /* CommitFilesViewTable.xib */,
 				9631D2E11107A84A0007FDF2 /* CommitSheet.xib */,
 			);
 			path = CommitSheet;
@@ -2004,6 +2007,7 @@
 				96DC134A14B92A9700A6E61B /* VerticalDividerThumb.png in Resources */,
 				96DC18A514BACCE000A6E61B /* AddDropButtonSizeSmall.png in Resources */,
 				96DADB6614DCB9870092F379 /* AppearancePreferencesMono18.png in Resources */,
+				96E5832A14E5CA0F0041B472 /* CommitFilesViewTable.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2438,6 +2442,14 @@
 				96E2303E1495A4A000174A55 /* English */,
 			);
 			name = FilesViewOutline.xib;
+			sourceTree = "<group>";
+		};
+		96E5832814E5CA0F0041B472 /* CommitFilesViewTable.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				96E5832914E5CA0F0041B472 /* English */,
+			);
+			name = CommitFilesViewTable.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

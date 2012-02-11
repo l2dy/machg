@@ -3242,7 +3242,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
         <object class="NSAffineTransform" key="394.IBViewBoundsToFrameTransform">
           <bytes key="NSTransformStruct">AUMKAAAAAAAAA</bytes>
         </object>
-        <string key="395.CustomClassName">FSViewer</string>
+        <string key="395.CustomClassName">CommitFSViewer</string>
         <string key="395.IBEditorWindowLastContentRect">{{42, 491}, {713, 610}}</string>
         <string key="395.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <object class="NSAffineTransform" key="395.IBViewBoundsToFrameTransform"/>
@@ -3381,6 +3381,14 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
           </object>
         </object>
         <object class="IBPartialClassDescription">
+          <string key="className">CommitFSViewer</string>
+          <string key="superclassName">FSViewer</string>
+          <object class="IBClassDescriptionSource" key="sourceIdentifier" id="447286495">
+            <string key="majorKey">IBProjectSource</string>
+            <string key="minorKey">Classes/Sheets/CommitSheet/CommitSheetController.h</string>
+          </object>
+        </object>
+        <object class="IBPartialClassDescription">
           <string key="className">CommitSheetController</string>
           <string key="superclassName">BaseSheetWindowController</string>
           <dictionary class="NSMutableDictionary" key="actions">
@@ -3414,7 +3422,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
           </dictionary>
           <dictionary class="NSMutableDictionary" key="outlets">
             <string key="amendButton">NSButton</string>
-            <string key="commitFilesViewer">FSViewer</string>
+            <string key="commitFilesViewer">CommitFSViewer</string>
             <string key="commitMessageTextView">NSTextView</string>
             <string key="commitSheetBranchString">NSTextField</string>
             <string key="commitSheetTitle">NSTextField</string>
@@ -3431,7 +3439,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
             </object>
             <object class="IBToOneOutletInfo" key="commitFilesViewer">
               <string key="name">commitFilesViewer</string>
-              <string key="candidateClassName">FSViewer</string>
+              <string key="candidateClassName">CommitFSViewer</string>
             </object>
             <object class="IBToOneOutletInfo" key="commitMessageTextView">
               <string key="name">commitMessageTextView</string>
@@ -3466,10 +3474,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
               <string key="candidateClassName">NSWindow</string>
             </object>
           </dictionary>
-          <object class="IBClassDescriptionSource" key="sourceIdentifier">
-            <string key="majorKey">IBProjectSource</string>
-            <string key="minorKey">Classes/Sheets/CommitSheet/CommitSheetController.h</string>
-          </object>
+          <reference key="sourceIdentifier" ref="447286495"/>
         </object>
         <object class="IBPartialClassDescription">
           <string key="className">DisclosureBoxController</string>

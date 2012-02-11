@@ -20,3 +20,15 @@
 
 @end
 
+
+
+@interface FSViewerTableButtonCell : NSButtonCell
+{
+	//IBOutlet NSTextField* buttonMessage;
+	NSTableColumn*		tableColumn_;
+	FSNodeInfo*			nodeInfo_;
+}
+@property (assign,readwrite) NSTableColumn*	tableColumn;
+@property (assign,readwrite) FSNodeInfo*	nodeInfo;
+
+@end

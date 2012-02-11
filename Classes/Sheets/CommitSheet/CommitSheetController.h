@@ -10,8 +10,20 @@
 #import <Cocoa/Cocoa.h>
 #import "BaseSheetWindowController.h"
 #import "FSViewer.h"
-@class CommitFilesTableView;
 
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  CommitFSViewer
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+@interface CommitFSViewer : FSViewer
+{
+}
+@end
 
 
 
@@ -23,7 +35,7 @@
 
 @interface CommitSheetController : BaseSheetWindowController <ControllerForFSViewer>
 {
-	IBOutlet FSViewer*	  commitFilesViewer;
+	IBOutlet CommitFSViewer* commitFilesViewer;
 	IBOutlet NSTextField* commitSheetTitle;
 	IBOutlet NSTextView*  commitMessageTextView;
 	IBOutlet NSTableView* previousCommitMessagesTableView;
