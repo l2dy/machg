@@ -93,6 +93,33 @@
 	return node;
 }
 
+// This method must be called on theRoot node.
+- (BOOL) getRow:(NSInteger*)row andColumn:(NSInteger*)column forNode:(FSNodeInfo*)goalNode
+{
+	if (row == nil || column == nil || goalNode == nil)
+		return NO;
+
+	*column = -1;
+	*row = 0;
+	NSString* thePath = [goalNode absolutePath];
+	NSString* theRelativePath = pathDifference([self absolutePath], thePath);
+	if (IsEmpty(theRelativePath))
+		return NO;
+	
+	NSArray* thePathComponents = [theRelativePath pathComponents];
+	FSNodeInfo* node = self;
+	FSNodeInfo* childNode = self;
+	for (NSString* pathPath in thePathComponents)
+	{
+		node = childNode;
+		childNode = [[node childNodes] objectForKey:pathPath];
+		(*column)++;
+	}
+	if (!childNode)
+		return NO;
+	*row = [[node sortedChildNodeKeys] indexOfObject:[thePathComponents lastObject]];
+	return (*row != NSNotFound);
+}
 
 
 

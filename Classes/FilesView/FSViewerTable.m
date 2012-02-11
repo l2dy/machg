@@ -107,18 +107,27 @@
 // MARK: Path and Selection Operations
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BOOL)		singleFileIsChosenInFiles	{ return ([self nodeIsClicked] || [[self selectedRowIndexes] count] == 1); }
+- (BOOL) singleFileIsChosenInFiles
+{
+	if (![[self chosenNode] isFile])
+		return NO;
+	return ([self numberOfSelectedRows] == 1) || ![self isRowSelected:[self chosenRow]];
+}
 
-- (BOOL)		singleItemIsChosenInFiles											{ return NO; }
-
-
-// Graphic Operations
-- (NSRect)		frameinWindowOfRow:(NSInteger)row inColumn:(NSInteger)column		{ return NSMakeRect(0, 0, 20, 20); }
-
+- (BOOL)		singleItemIsChosenInFiles											{ return ([self numberOfSelectedRows] == 1) || ![self isRowSelected:[self chosenRow]]; }
 - (BOOL)		clickedNodeCoincidesWithTerminalSelections							{ return NO; }
-
 - (void)		repositoryDataIsNew													{ }
-- (NSArray*)	quickLookPreviewItems												{ return [NSArray array]; }
+
+- (NSRect)	rectInWindowForNode:(FSNodeInfo*)node
+{
+	NSInteger row = [[self leafNodeForTableRow ] indexOfObject:node];
+	NSRect itemRect = (row != NSNotFound) ? [self rectOfRow:row] : NSZeroRect;	
+	
+	// check that the path Rect is visible on screen
+	if (NSIntersectsRect([self visibleRect], itemRect))
+		return [self convertRectToBase:itemRect];			// convert item rect to screen coordinates
+	return NSZeroRect;
+}
 
 // Save and restore browser, outline, or table state
 - (FSViewerSelectionState*)	saveViewerSelectionState								{ return [[FSViewerSelectionState alloc]init]; }

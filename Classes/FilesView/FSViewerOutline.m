@@ -75,16 +75,27 @@
 // MARK: Path and Selection Operations
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BOOL)		singleFileIsChosenInFiles											{ return NO; }
-- (BOOL)		singleItemIsChosenInFiles											{ return NO; }
+- (BOOL) singleFileIsChosenInFiles
+{
+	if (![[self chosenNode] isFile])
+		return NO;
+	return ([self numberOfSelectedRows] == 1) || ![self isRowSelected:[self chosenRow]];
+}
 
-
-// Graphic Operations
-- (NSRect)		frameinWindowOfRow:(NSInteger)row inColumn:(NSInteger)column		{ return NSMakeRect(0, 0, 20, 20); }
-
+- (BOOL)		singleItemIsChosenInFiles											{ return ([self numberOfSelectedRows] == 1) || ![self isRowSelected:[self chosenRow]]; }
 - (BOOL)		clickedNodeCoincidesWithTerminalSelections							{ return NO; }
 - (void)		repositoryDataIsNew													{ expandedNodes_ = nil; }
-- (NSArray*)	quickLookPreviewItems												{ return [NSArray array]; }
+
+- (NSRect)	rectInWindowForNode:(FSNodeInfo*)node
+{
+	NSInteger row = [self rowForItem:node];
+	NSRect itemRect = (row>=0) ? [self rectOfRow:row] : NSZeroRect;	
+	
+	// check that the path Rect is visible on screen
+	if (NSIntersectsRect([self visibleRect], itemRect))
+		return [self convertRectToBase:itemRect];			// convert item rect to screen coordinates
+	return NSZeroRect;
+}
 
 
 

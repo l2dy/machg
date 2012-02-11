@@ -62,6 +62,7 @@
 - (NSInteger)   childNodeCount;
 - (FSNodeInfo*) childNodeAtIndex:(NSInteger)index;
 - (FSNodeInfo*) nodeForPathFromRoot:(NSString*)thePath;
+- (BOOL)		getRow:(NSInteger*)row andColumn:(NSInteger*)column forNode:(FSNodeInfo*)node;	// Get the row, column (for browsers) of the given node
 
 
 // Tree Operations

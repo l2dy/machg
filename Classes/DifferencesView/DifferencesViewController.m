@@ -571,20 +571,16 @@
 	NSString* compareChangeset = isNotIncompleteRev ? [[compareLogTableView selectedEntry] changeset] : nil;
 
 	NSMutableArray* quickLookPreviewItems = [[NSMutableArray alloc] init];
-	NSArray* indexPaths = [[theFSViewer theFilesBrowser] selectionIndexPaths];
-	for (NSIndexPath* indexPath in indexPaths)
+	NSArray* nodes = [theFSViewer selectedNodes];
+	for (FSNodeInfo* node in nodes)
 	{
-		NSString* path = [[[theFSViewer theFilesBrowser] itemAtIndexPath:indexPath] absolutePath];
+		NSString* path = [node absolutePath];
 		if (!path)
 			continue;
-		
-		NSInteger col = [indexPath length] - 1;
-		NSInteger row = [indexPath indexAtPosition:col];
-		NSRect itemRect   = [theFSViewer frameinWindowOfRow:row inColumn:col];
-		
+		NSRect screenRect = [theFSViewer screenRectForNode:node];
 		NSString* pathOfCachedCopy = [myDocument loadCachedCopyOfPath:path forChangeset:compareChangeset];
 		if (pathOfCachedCopy)
-			[quickLookPreviewItems addObject:[PathQuickLookPreviewItem previewItemForPath:pathOfCachedCopy withRect:itemRect]];
+			[quickLookPreviewItems addObject:[PathQuickLookPreviewItem previewItemForPath:pathOfCachedCopy withRect:screenRect]];
 	}
 	return quickLookPreviewItems;
 }

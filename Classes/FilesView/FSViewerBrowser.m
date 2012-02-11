@@ -169,45 +169,19 @@
 - (NSRect) frameinWindowOfRow:(NSInteger)row inColumn:(NSInteger)column
 {
 	NSRect itemRect = [self frameOfRow:row inColumn:column];
-	NSRect itemRectInWindow = NSZeroRect;
 	
 	// check that the path Rect is visible on screen
 	if (NSIntersectsRect([self visibleRect], itemRect))
-	{
-		// convert item rect to screen coordinates
-		itemRectInWindow = [self convertRectToBase:itemRect];
-		itemRectInWindow.origin = [[self window] convertBaseToScreen:itemRectInWindow.origin];
-	}
-	return itemRectInWindow;
+		return [self convertRectToBase:itemRect];	// convert item rect to screen coordinates
+	return NSZeroRect;
 }
 
-
-
-
-
-// -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
-// MARK:  Quicklook Handling
-// -----------------------------------------------------------------------------------------------------------------------------------------
-
-- (NSArray*) quickLookPreviewItems
+- (NSRect)	rectInWindowForNode:(FSNodeInfo*)node
 {
-	if (![self nodesAreSelected])
-		return [NSArray array];
-	
-	NSMutableArray* quickLookPreviewItems = [[NSMutableArray alloc] init];
-	NSArray* indexPaths = [self selectionIndexPaths];
-	for (NSIndexPath* indexPath in indexPaths)
-	{
-		NSString* path = [[self itemAtIndexPath:indexPath] absolutePath];
-		if (!path)
-			continue;
-		NSInteger col = [indexPath length] - 1;
-		NSInteger row = [indexPath indexAtPosition:col];
-		NSRect rect   = [self frameinWindowOfRow:row inColumn:col];
-		[quickLookPreviewItems addObject:[PathQuickLookPreviewItem previewItemForPath:path withRect:rect]];
-	}
-	return quickLookPreviewItems;
+	NSInteger col;
+	NSInteger row;
+	BOOL found = [[self rootNodeInfo] getRow:&row andColumn:&col forNode:node];
+	return found ? [self frameinWindowOfRow:row inColumn:col] : NSZeroRect;
 }
 
 

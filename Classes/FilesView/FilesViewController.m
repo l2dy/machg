@@ -237,7 +237,7 @@
 // MARK:  Quicklook Handling
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (NSInteger) numberOfQuickLookPreviewItems		{ return [[theFSViewer absolutePathsOfSelectedFilesInBrowser] count]; }
+- (NSInteger) numberOfQuickLookPreviewItems		{ return [theFSViewer numberOfQuickLookPreviewItems]; }
 
 - (NSArray*) quickLookPreviewItems				{ return [theFSViewer quickLookPreviewItems]; }
 

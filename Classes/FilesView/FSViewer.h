@@ -74,16 +74,12 @@
 - (BOOL)		singleFileIsChosenInFiles;		// Not debugged
 - (BOOL)		singleItemIsChosenInFiles;		// Not debugged
 
-
-// Graphic Operations
-- (NSRect)		frameinWindowOfRow:(NSInteger)row inColumn:(NSInteger)column;
-
 - (BOOL)		clickedNodeCoincidesWithTerminalSelections;
 
 - (void)		reloadData;
 - (void)		reloadDataSin;
 - (void)		repositoryDataIsNew;	// Reset the repository root and regenerate all the data and reload it.
-- (NSArray*)	quickLookPreviewItems;
+- (NSRect)		rectInWindowForNode:(FSNodeInfo*)node;
 
 // Save and restore browser, outline, or table state
 - (FSViewerSelectionState*)	saveViewerSelectionState;
@@ -177,6 +173,12 @@
 
 // Action Utilities
 - (BrowserDoubleClickAction) actionEnumForBrowserDoubleClick;	// Get the keyboard modifier state and return the corresponding action enum for a double click
+
+
+// Quicklook Support
+- (NSInteger)	numberOfQuickLookPreviewItems;
+- (NSArray*)	quickLookPreviewItems;
+- (NSRect)		screenRectForNode:(FSNodeInfo*)node;
 
 
 // Drag and Drop

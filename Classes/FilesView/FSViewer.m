@@ -218,8 +218,8 @@
 - (FSNodeInfo*) chosenNode				{ return [[self currentViewerPane] chosenNode]; }
 - (FSNodeInfo*) clickedNode				{ return [[self currentViewerPane] clickedNode]; }
 - (NSArray*) selectedNodes				{ return [[self currentViewerPane] selectedNodes]; }
-- (BOOL) singleFileIsChosenInFiles	{ return [[self currentViewerPane] singleFileIsChosenInFiles]; }
-- (BOOL) singleItemIsChosenInFiles	{ return [[self currentViewerPane] singleItemIsChosenInFiles]; }
+- (BOOL) singleFileIsChosenInFiles		{ return [[self currentViewerPane] singleFileIsChosenInFiles]; }
+- (BOOL) singleItemIsChosenInFiles		{ return [[self currentViewerPane] singleItemIsChosenInFiles]; }
 - (BOOL) clickedNodeInSelectedNodes		{ return [[self currentViewerPane] clickedNodeInSelectedNodes]; }
 
 - (BOOL) clickedNodeCoincidesWithTerminalSelections		{ return [[self currentViewerPane] clickedNodeCoincidesWithTerminalSelections]; }
@@ -277,7 +277,7 @@
 // MARK: Status Operations
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BOOL) statusOfChosenPathsInFilesContain:(HGStatus)status	{ return bitsInCommon(status, [self statusOfChosenPathsInFiles]); }
+- (BOOL) statusOfChosenPathsInFilesContain:(HGStatus)status		{ return bitsInCommon(status, [self statusOfChosenPathsInFiles]); }
 - (BOOL) repositoryHasFilesWhichContainStatus:(HGStatus)status	{ return bitsInCommon(status, [[self rootNodeInfo] hgStatus]); }
 
 
@@ -311,8 +311,7 @@
 	return remainingPaths;
 }
 
-
-- (NSArray*) quickLookPreviewItems		{ return [[self currentViewerPane] quickLookPreviewItems]; }
+- (NSRect)	rectInWindowForNode:(FSNodeInfo*)node	{ return [[self currentViewerPane] rectInWindowForNode:node]; }
 
 
 
@@ -320,10 +319,31 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK:  Graphic Operations
+// MARK:  Quicklook Handling
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (NSRect) frameinWindowOfRow:(NSInteger)row inColumn:(NSInteger)column		{ return [[self currentViewerPane] frameinWindowOfRow:row inColumn:column]; }
+- (NSRect)	screenRectForNode:(FSNodeInfo*)node		{ NSRect rect = [self rectInWindowForNode:node]; rect.origin = [[self window] convertBaseToScreen:rect.origin]; return rect; }
+
+- (NSInteger) numberOfQuickLookPreviewItems			{ return [[self absolutePathsOfSelectedFilesInBrowser] count]; }
+
+- (NSArray*) quickLookPreviewItems
+{
+	if (![self nodesAreSelected])
+		return [NSArray array];
+	
+	NSMutableArray* quickLookPreviewItems = [[NSMutableArray alloc] init];
+	NSArray* nodes = [self selectedNodes];
+	for (FSNodeInfo* node in nodes)
+	{
+		NSString* path = [node absolutePath];
+		if (!path)
+			continue;
+		NSRect screenRect = [self screenRectForNode:node];
+		[quickLookPreviewItems addObject:[PathQuickLookPreviewItem previewItemForPath:path withRect:screenRect]];
+	}
+	return quickLookPreviewItems;
+}
+
 
 
 
