@@ -13,6 +13,7 @@
 #import "RepositoryData.h"
 #import "LogTableView.h"
 #import "PatchData.h"
+#import "HunkExclusions.h"
 #import "PatchesTableView.h"
 #import "MacHgDocument.h"
 #import "NSString+SymlinksAndAliases.h"
@@ -56,6 +57,7 @@
 	if (self)
 	{
 		patchesTableData_ = nil;
+		hunkExclusions_ = [[HunkExclusions alloc]init];
 	}
     
 	return self;
@@ -272,7 +274,8 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 	}
 	else
 	{
-		NSArray* showDiffArgs = [NSArray arrayWithObject:[[self selectedPatch] patchBody]];
+		NSString* htmlizedDiffString = [[[self selectedPatch] patchData] patchBodyHTMLized];
+		NSArray* showDiffArgs = [NSArray arrayWithObjects:htmlizedDiffString, fstr(@"%f",FontSizeOfDifferencesWebviewFromDefaults()), stringOfDifferencesWebviewDiffStyle(), nil];
 		[script callWebScriptMethod:@"showDiff" withArguments:showDiffArgs];
 	}
 }
@@ -411,30 +414,36 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 // MARK:  Callback Methods from Javascript
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) disableHunk:(NSString*)hunkNumber forFile:(NSString*)fileName 
+- (void) disableHunk:(NSString*)hunkHash forFile:(NSString*)fileName 
 {
-	NSMutableDictionary* dict = [[[self selectedPatch] patchData] excludedPatchHunksForFilePath];
-	NSMutableSet* set = [dict objectForKey:fileName addingIfNil:[NSMutableSet class]];
-	[set addObject:hunkNumber];
+	MacHgDocument* myDocument = [self myDocument];
+	NSString* root = [myDocument absolutePathOfRepositoryRoot];
+	[hunkExclusions_ disableHunk:hunkHash forRoot:root andFile:fileName];
 }
 
-- (void) enableHunk:(NSString*)hunkNumber forFile:(NSString*)fileName 
+- (void) enableHunk:(NSString*)hunkHash forFile:(NSString*)fileName 
 {
-	NSMutableDictionary* dict = [[[self selectedPatch] patchData] excludedPatchHunksForFilePath];
-	NSMutableSet* set = [dict objectForKey:fileName];
-	[set removeObject:hunkNumber];
+	MacHgDocument* myDocument = [self myDocument];
+	NSString* root = [myDocument absolutePathOfRepositoryRoot];
+	[hunkExclusions_ enableHunk:hunkHash forRoot:root andFile:fileName];
 }
 
 - (void) excludeHunksAccordingToModel
 {
 	WebScriptObject* script = [detailedPatchWebView windowScriptObject];
-	NSMutableDictionary* dict = [[[self selectedPatch] patchData] excludedPatchHunksForFilePath];
-	for (NSString* file in [dict allKeys])
-		for (NSString* hunkNumber in [dict objectForKey:file])
+	MacHgDocument* myDocument = [self myDocument];
+	NSString* root = [myDocument absolutePathOfRepositoryRoot];
+	NSDictionary* exclusions = [hunkExclusions_ repositoryExclusionsForRoot:root];
+	for (NSString* path in [exclusions allKeys])
+	{
+		NSString* file = pathDifference(root,path);
+		NSSet* exclusions = [hunkExclusions_ exclusionsForRoot:root andFile:file];
+		for (NSString* hunkHash in exclusions)
 		{
-			NSArray* excludeViewHunkStatusArgs = [NSArray arrayWithObjects:file, hunkNumber, nil];
+			NSArray* excludeViewHunkStatusArgs = [NSArray arrayWithObjects:hunkHash, nil];
 			[script callWebScriptMethod:@"excludeViewHunkStatus" withArguments:excludeViewHunkStatusArgs];
 		}
+	}
 }
 
 

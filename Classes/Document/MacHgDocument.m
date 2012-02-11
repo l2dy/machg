@@ -54,6 +54,8 @@
 #import "MonitorFSEvents.h"
 #import "SingleTimedQueue.h"
 #import "TaskExecutions.h"
+#import "PatchData.h"
+#import "HunkExclusions.h"
 //#import "LNCStopwatch.h"
 #import <QuartzCore/CIFilter.h>
 
@@ -162,14 +164,14 @@
 		[sidebar_ reloadData];
 		connections_ = loadedDataProxy_->loadedConnections;
 		hunkExclusions_ = loadedDataProxy_->loadedHunkExclusions;
-		// loadedDataProxy_ = nil;		// We no longer need this have it collected
 	}
 	else
-	{
 		[self populateOutlineContents];
-		connections_ = [[NSMutableDictionary alloc]init];
-		hunkExclusions_ = [[NSMutableDictionary alloc]init];
-	}
+
+	if (!connections_)    connections_    = [[NSMutableDictionary alloc]init];
+	if (!hunkExclusions_) hunkExclusions_ = [[HunkExclusions alloc]init];
+	if ([hunkExclusions_ class] != [HunkExclusions class])
+		hunkExclusions_ = [[HunkExclusions alloc]init];
 	[self actionSwitchViewToBackingView:self];
 }
 
@@ -1187,11 +1189,11 @@
 			loadedDataProxy_->loadedHunkExclusions	= [archiver decodeObjectForKey:@"hunkExclusions"];		
 		}
 		@catch (NSException * e) {
-			loadedDataProxy_->loadedHunkExclusions = [[NSMutableDictionary alloc]init];
+			loadedDataProxy_->loadedHunkExclusions = [[HunkExclusions alloc]init];
 		}
 		
 		if (!loadedDataProxy_->loadedConnections)	 loadedDataProxy_->loadedConnections    = [[NSMutableDictionary alloc]init];
-		if (!loadedDataProxy_->loadedHunkExclusions) loadedDataProxy_->loadedHunkExclusions = [[NSMutableDictionary alloc]init];
+		if (!loadedDataProxy_->loadedHunkExclusions) loadedDataProxy_->loadedHunkExclusions = [[HunkExclusions alloc]init];
 	}
 	@catch (NSException* e)
 	{

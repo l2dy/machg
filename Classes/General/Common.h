@@ -51,7 +51,10 @@
 @class LabelsTableView;
 
 // Patches
+@class FilePatch;
+@class PatchData;
 @class PatchRecord;
+@class HunkExclusions;
 @class PatchesTableView;
 
 // Processes

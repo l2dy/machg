@@ -23,6 +23,7 @@
 #import "ShellHere.h"
 #import "JHConcertinaView.h"
 #import "PatchData.h"
+#import "HunkExclusions.h"
 
 
 
@@ -572,22 +573,18 @@
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 
-- (void) disableHunk:(NSString*)hunkNumber forFile:(NSString*)fileName 
+- (void) disableHunk:(NSString*)hunkHash forFile:(NSString*)fileName 
 {
 	MacHgDocument* myDocument = [self myDocument];
 	NSString* root = [myDocument absolutePathOfRepositoryRoot];
-	NSMutableDictionary* repositoryExclusions = [[myDocument hunkExclusions] objectForKey:root addingIfNil:[NSMutableDictionary class]];
-	NSMutableSet* set = [repositoryExclusions objectForKey:fileName addingIfNil:[NSMutableSet class]];
-	[set addObject:hunkNumber];
+	[[myDocument hunkExclusions] disableHunk:hunkHash forRoot:root andFile:fileName];
 }
 
-- (void) enableHunk:(NSString*)hunkNumber forFile:(NSString*)fileName 
+- (void) enableHunk:(NSString*)hunkHash forFile:(NSString*)fileName 
 {
 	MacHgDocument* myDocument = [self myDocument];
 	NSString* root = [myDocument absolutePathOfRepositoryRoot];
-	NSMutableDictionary* repositoryExclusions = [[myDocument hunkExclusions] objectForKey:root];
-	NSMutableSet* set = [repositoryExclusions objectForKey:fileName];
-	[set removeObject:hunkNumber];
+	[[myDocument hunkExclusions] enableHunk:hunkHash forRoot:root andFile:fileName];
 }
 
 - (void) excludeHunksAccordingToModel
@@ -595,14 +592,14 @@
 	WebScriptObject* script = [detailedDiffWebView windowScriptObject];
 	MacHgDocument* myDocument = [self myDocument];
 	NSString* root = [myDocument absolutePathOfRepositoryRoot];
-	NSMutableDictionary* repositoryExclusions = [[myDocument hunkExclusions] objectForKey:root];
 	NSArray* selectedPaths = [self absolutePathsOfSelectedFilesInBrowser];
 	for (NSString* path in selectedPaths)
 	{
 		NSString* file = pathDifference(root,path);
-		for (NSString* hunkNumber in [repositoryExclusions objectForKey:file])
+		NSSet* exclusions = [[myDocument hunkExclusions] exclusionsForRoot:root andFile:file];
+		for (NSString* hunkHash in exclusions)
 		{
-			NSArray* excludeViewHunkStatusArgs = [NSArray arrayWithObjects:file, hunkNumber, nil];
+			NSArray* excludeViewHunkStatusArgs = [NSArray arrayWithObjects:hunkHash, nil];
 			[script callWebScriptMethod:@"excludeViewHunkStatus" withArguments:excludeViewHunkStatusArgs];
 		}
 	}
@@ -636,16 +633,6 @@
 	}
 }
 
-static NSString* stringOfDifferencesWebviewDiffStyle()
-{
-	switch (DifferencesWebviewDiffStyleFromDefaults())
-	{
-		case 	eWebviewDiffStyleUnfied:				return @"WebviewDiffStyleUnfied";
-		case	eWebviewDiffStyleSideBySideWrapped:		return @"WebviewDiffStyleSideBySideWrapped";
-		case	eWebviewDiffStyleSideBySideTruncated:	return @"WebviewDiffStyleSideBySideTruncated";
-	}
-	return @"";
-}
 
 - (void) regenerateDifferencesInWebview
 {

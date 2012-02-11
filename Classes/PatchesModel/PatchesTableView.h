@@ -23,10 +23,12 @@
 	IBOutlet id	<ControllerForPatchesTableView> parentController;	// Controlling class should be an object which is controlling a sheet or a
 																	// window controller.
 	
-	IBOutlet WebView*	detailedPatchWebView;					// This is the field where the details of the patch are displayed.
+	IBOutlet WebView*	detailedPatchWebView;			// This is the field where the details of the patch are displayed.
 
-	NSArray*			patchesTableData_;						// The array of ordered patches (tags, branches, bookmarks) which
-																	// backs the PatchesTableView
+	NSArray*			patchesTableData_;				// The array of ordered patches (tags, branches, bookmarks) which
+														// backs the PatchesTableView
+	
+	HunkExclusions*		hunkExclusions_;				// Storage of which hunks in the patches are disabled	
 }
 
 - (MacHgDocument*)		myDocument;

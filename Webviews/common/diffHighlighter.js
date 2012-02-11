@@ -12,6 +12,15 @@ var safeShift = function(v)
     return (v.length > 0) ? v.shift() : "";
 }
 
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  createSideBySideDiff
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
 var createSideBySideDiff = function(diff, element, size, callbacks)
 {
 	if (!diff || diff == "")
@@ -271,19 +280,19 @@ var createSideBySideDiff = function(diff, element, size, callbacks)
 				header = false;
 			finishHunk();		// Finish any other hunk
 			startHunk();		// start the new hunk
-			
-			if (m = l.match(/@@ \-([0-9]+),?\d* \+(\d+),?\d* @@/))
+			var newId="hunk-index-control-" + hunk_index;	// should be replaced by the id passed in from MacHg
+			var headerLine = l;
+			if (m = l.match(/(@@ \-([0-9]+),?\d* \+(\d+),?\d* @@)\s*(\w*)/))
 			{
-				hunk_start_line_1 = parseInt(m[1]) - 1;
-				hunk_start_line_2 = parseInt(m[2]) - 1;
+				headerLine = m[1]
+				hunk_start_line_1 = parseInt(m[2]) - 1;
+				hunk_start_line_2 = parseInt(m[3]) - 1;
+				if (m.length >= 5)
+					newId = m[4];
 			}
 			
-			var encodedFileNamePlusHunk = encodeURIComponent(endname+':'+hunk_index);
-			var theControl = '<span class="includehunk"><input type="checkbox" class="hunkselector" checked="yes" onclick="handleHunkStatusClick(event)" id="' + encodedFileNamePlusHunk + '">commit</input></span>';
-		    diffContent += '<tr class="hunkheader"><td class="lineno">...</td><td colspan="2">'+l+'</td><td align="right">'+theControl+'</td></tr>';
-			
-			/*diffContent += '<div class="hunk" id="hunk-index-' + hunk_index + '"><div ' + sindex + 'class="hunkheader">' + l + theControl;*/
-			
+			var theControl = '<span class="includehunk"><input type="checkbox" class="hunkselector" checked="yes" onclick="handleHunkStatusClick(event)" id="' + newId + '">commit</input></span>';
+		    diffContent += '<tr class="hunkheader"><td class="lineno">...</td><td colspan="2">'+ headerLine +'</td><td align="right">'+theControl+'</td></tr>';
 		}
 		else if (firstChar == " ")
 		{
@@ -307,6 +316,12 @@ var createSideBySideDiff = function(diff, element, size, callbacks)
 
 
 
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  createUnifiedDiff
+// -----------------------------------------------------------------------------------------------------------------------------------------
 
 var createUnifiedDiff = function(diff, element, size, callbacks)
 {
@@ -552,17 +567,20 @@ var createUnifiedDiff = function(diff, element, size, callbacks)
 				header = false;
 			finishHunk();		// Finish any other hunk
 			startHunk();		// start the new hunk
-			
-			if (m = l.match(/@@ \-([0-9]+),?\d* \+(\d+),?\d* @@/))
+			var newId="hunk-index-control-" + hunk_index;	// should be replaced by the id passed in from MacHg
+			var headerLine = l;
+			if (m = l.match(/(@@ \-([0-9]+),?\d* \+(\d+),?\d* @@)\s*(\w*)/))
 			{
-				hunk_start_line_1 = parseInt(m[1]) - 1;
-				hunk_start_line_2 = parseInt(m[2]) - 1;
+				headerLine = m[1]
+				hunk_start_line_1 = parseInt(m[2]) - 1;
+				hunk_start_line_2 = parseInt(m[3]) - 1;
+				if (m.length >= 5)
+					newId = m[4];
 			}
 			line1 += "...\n";
 			line2 += "...\n";
-			var encodedFileNamePlusHunk = encodeURIComponent(endname+':'+hunk_index);
-			diffContent += '<div class="hunk" id="hunk-index-' + hunk_index + '"><div ' + sindex + 'class="hunkheader">' + l +
-			'<span class="includehunk"><input type="checkbox" class="hunkselector" checked="yes" onclick="handleHunkStatusClick(event)" id="' + encodedFileNamePlusHunk + '">include</input></span></div>';
+			diffContent += '<div class="hunk" id="hunk-index-' + hunk_index + '"><div ' + sindex + 'class="hunkheader">' + headerLine +
+			'<span class="includehunk"><input type="checkbox" class="hunkselector" checked="yes" onclick="handleHunkStatusClick(event)" id="' + newId + '">include</input></span></div>';
 		}
 		else if (firstChar == " ")
 		{
@@ -582,60 +600,90 @@ var createUnifiedDiff = function(diff, element, size, callbacks)
 }
 
 
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Exclusion Handling
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+function elementIsHunkCheckBox(element)
+{
+	return (element.type === "checkbox" && element.className === "hunkselector" && element.nodeName === "INPUT");
+}
+
+function getFileNameOfHunkHash(hunkHash)
+{
+	var element = $(hunkHash);
+	var theFile = element;
+	while (theFile && theFile.className !== "file")
+		theFile = theFile.parentNode;
+	
+	try {
+		return theFile.firstChild.firstChild.nodeValue;
+	}
+	catch(err) { }
+	return null;
+}
+
+function getHunkDivOfHunkHash(hunkHash)
+{
+	var element = $(hunkHash);
+	var theHunk = element;
+	while (theHunk && theHunk.className !== "hunk" && theHunk.className !== "disabledhunk")
+		theHunk = theHunk.parentNode;
+	return theHunk;
+}
+
 function handleHunkStatusClick(event)
 {
 	var element = event.target;
-	if (element.type === "checkbox" && element.className === "hunkselector" && element.nodeName === "INPUT")
-	{
-		var action = element.checked ?  "include" : "exclude";	// This is counter-intuitive but we are reacting after the click.
-																// Ie if the click turned off the checkbox then we are "excluding"
-		changeViewHunkStatus(element.id, action);
-		changeModelHunkStatus(element.id, action);
-	}
+	if (!elementIsHunkCheckBox(element)) return;
+
+	var action = element.checked ?  "include" : "exclude";	// This is counter-intuitive but we are reacting after the click.
+															// Ie if the click turned off the checkbox then we are "excluding"
+	changeViewHunkStatus(element.id, action);
+	changeModelHunkStatus(element.id, action);
 }
 
-function excludeViewHunkStatus(fileName, hunkNumber)
+function excludeViewHunkStatus(hunkHash)
 {
-	var encodedFileNamePlusHunk = encodeURIComponent(fileName + ':' + hunkNumber);
-	changeViewHunkStatus(encodedFileNamePlusHunk, "exclude");
+	changeViewHunkStatus(hunkHash, "exclude");
+}
+
+function includeViewHunkStatus(hunkHash)
+{
+	changeViewHunkStatus(hunkHash, "include");
+}
+
+function changeViewHunkStatus(hunkHash, action)
+{
+	if (action !== "exclude" && action !== "include")	return;
+
+	var element = $(hunkHash);
+	if (!elementIsHunkCheckBox(element)) return;
+
+	var theHunk = getHunkDivOfHunkHash(hunkHash);
+	element.checked = (action === "exclude") ? false : true;
+	if (theHunk)
+		theHunk.className = (action === "exclude") ? "disabledhunk" : "hunk";
 }
 
 
-function changeViewHunkStatus(theId, action)
+function changeModelHunkStatus(hunkHash, action)
 {
-	var element = $(theId);
-	if (element.type === "checkbox" && element.className === "hunkselector" && element.nodeName === "INPUT")
-	{
-		if (action !== "exclude" && action !== "include")	return;
-		element.checked = (action === "exclude") ? false : true;
-		var theHunk = element;
-		while (theHunk && theHunk.className !== "hunk" && theHunk.className !== "disabledhunk")
-		    theHunk = theHunk.parentNode;
-		if (theHunk)
-			theHunk.className = (action === "exclude") ? "disabledhunk" : "hunk";
-	}
-}
+	if (action !== "exclude" && action !== "include") return;
 
+	var element = $(hunkHash);
+	if (!elementIsHunkCheckBox(element)) return;
 
-function changeModelHunkStatus(theId, action)
-{
-	var element = $(theId);
-	if (element.type === "checkbox" && element.className === "hunkselector" && element.nodeName === "INPUT")
-	{
-		if (action !== "exclude" && action !== "include")
-			return;
-		var fileNamePlusHunk = decodeURIComponent(element.id);
-		var regex = /(.*):(\d+)$/g;
-		theMatch = regex.exec(fileNamePlusHunk);
-		if (theMatch)
-		{
-			var fileNamePath = theMatch[1];
-			var hunkNumber = theMatch[2];
-			if (action === "exclude")
-				machgWebviewController.disableHunkForFileName(hunkNumber, fileNamePath);
-			else
-				machgWebviewController.enableHunkForFileName(hunkNumber, fileNamePath);
-		}
-	}
+	var fileNamePath = getFileNameOfHunkHash(hunkHash);
+	if (!fileNamePath) return;
+			
+	if (action === "exclude")
+		machgWebviewController.disableHunkForFileName(hunkHash, fileNamePath);
+	else
+		machgWebviewController.enableHunkForFileName(hunkHash, fileNamePath);
 }
 

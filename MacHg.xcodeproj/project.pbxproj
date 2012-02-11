@@ -105,6 +105,7 @@
 		9631D2F51107A8720007FDF2 /* LocalRepositoryRefSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9631D2F31107A8720007FDF2 /* LocalRepositoryRefSheet.xib */; };
 		9631D2F81107A87A0007FDF2 /* RevertSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9631D2F61107A87A0007FDF2 /* RevertSheet.xib */; };
 		9631D2FB1107A87F0007FDF2 /* UpdateSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9631D2F91107A87F0007FDF2 /* UpdateSheet.xib */; };
+		9637607314CEB04B00ECB9D6 /* HunkExclusions.m in Sources */ = {isa = PBXBuildFile; fileRef = 9637607214CEB04B00ECB9D6 /* HunkExclusions.m */; };
 		9637C86F118E9A3E0000C14B /* InitializationWizardController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9637C86E118E9A3E0000C14B /* InitializationWizardController.m */; };
 		9637C872118E9A4D0000C14B /* InitializationWizard.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9637C870118E9A4D0000C14B /* InitializationWizard.xib */; };
 		9637C876118E9A690000C14B /* ExportPatchesSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9637C875118E9A690000C14B /* ExportPatchesSheetController.m */; };
@@ -413,6 +414,8 @@
 		9631D2F41107A8720007FDF2 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/LocalRepositoryRefSheet.xib; sourceTree = SOURCE_ROOT; };
 		9631D2F71107A87A0007FDF2 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/RevertSheet.xib; sourceTree = SOURCE_ROOT; };
 		9631D2FA1107A87F0007FDF2 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/UpdateSheet.xib; sourceTree = SOURCE_ROOT; };
+		9637607114CEB04B00ECB9D6 /* HunkExclusions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = HunkExclusions.h; sourceTree = "<group>"; };
+		9637607214CEB04B00ECB9D6 /* HunkExclusions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = HunkExclusions.m; sourceTree = "<group>"; };
 		9637C86D118E9A3E0000C14B /* InitializationWizardController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = InitializationWizardController.h; sourceTree = "<group>"; };
 		9637C86E118E9A3E0000C14B /* InitializationWizardController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = InitializationWizardController.m; sourceTree = "<group>"; };
 		9637C871118E9A4D0000C14B /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/InitializationWizard.xib; sourceTree = SOURCE_ROOT; };
@@ -1005,6 +1008,8 @@
 		962ED04E11875AED0072211F /* PatchesModel */ = {
 			isa = PBXGroup;
 			children = (
+				9637607114CEB04B00ECB9D6 /* HunkExclusions.h */,
+				9637607214CEB04B00ECB9D6 /* HunkExclusions.m */,
 				962ED04F11875AED0072211F /* PatchData.h */,
 				962ED05011875AED0072211F /* PatchData.m */,
 				962ED05111875AED0072211F /* PatchesTableView.h */,
@@ -2105,6 +2110,7 @@
 				968FFA0814CB5815004D4444 /* NSString+JavaSubstring.m in Sources */,
 				968FFA0914CB5815004D4444 /* NSString+UnicharUtilities.m in Sources */,
 				968FFA0A14CB5815004D4444 /* NSString+UriCompatibility.m in Sources */,
+				9637607314CEB04B00ECB9D6 /* HunkExclusions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

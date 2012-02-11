@@ -24,11 +24,11 @@
 	NSString* filePath;
 	NSString* filePatchHeader;
 	NSMutableArray* hunks;
-	NSMutableSet* hunkHashes;
+	NSMutableArray* hunkHashes;
+	NSMutableSet* hunkHashesSet;
 }
 + (FilePatch*) filePatchWithPath:(NSString*)path andHeader:(NSString*)header;
 - (void) finishHunk:(NSMutableArray*)lines;
-- (NSString*) hashHunk:(NSString*)hunk;
 - (NSString*) filterFilePatchWithExclusions:(NSSet*)excludedHunks;
 - (NSString*) htmlizedFilePatch;
 @end
@@ -53,6 +53,7 @@
 	NSString*		patchBody_;
 }	
 @property (readonly,assign) NSString* patchBody;
+@property (readonly,assign) NSMutableArray* filePatches;
 @property (readonly,assign) NSMutableDictionary* excludedPatchHunksForFilePath;
 
 + (PatchData*) patchDataFromDiffContents:(NSString*)diff;
@@ -128,3 +129,16 @@
 - (BOOL) isModified;
 
 @end
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Patch Utilities
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+// Return the enum as a string for use via webview calls.
+NSString* stringOfDifferencesWebviewDiffStyle();
+
