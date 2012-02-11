@@ -59,3 +59,10 @@
 - (NSArray*) uncontestedPathsIn:(NSArray*)paths forRoot:(NSString*)root;							// Out of the given paths return those which are uneffected by the
 																									// exclusions. (The given paths minus all paths with exclusions)
 @end
+
+
+
+// Dictionary keys
+extern NSString* const kFileName;
+extern NSString* const kRootPath;
+extern NSString* const kHunkHash;

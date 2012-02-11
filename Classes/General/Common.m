@@ -28,10 +28,14 @@ NSString* const kMacHgApp								= @"MacHgApp";
 
 // Notifications
 NSString* const kBrowserDisplayPreferencesChanged		= @"BrowserDisplayPreferencesChanged";
-NSString* const kFileDiffsDisplayPreferencesChanged	    = @"FileDiffsDisplayPreferencesChanged";
 NSString* const kCommandKeyIsDown						= @"CommandKeyIsDown";
 NSString* const kCommandKeyIsUp							= @"CommandKeyIsUp";
 NSString* const kCompatibleRepositoryChanged			= @"CompatibleRepositoryChanged";
+NSString* const kFileDiffsDisplayPreferencesChanged	    = @"FileDiffsDisplayPreferencesChanged";
+NSString* const kFileWasExcluded						= @"FileWasExcluded";
+NSString* const kFileWasIncluded						= @"FileWasIncluded";
+NSString* const kHunkWasExcluded						= @"HunkWasExcluded";
+NSString* const kHunkWasIncluded						= @"HunkWasIncluded";
 NSString* const kLogEntriesDidChange                    = @"LogEntriesDidChange";
 NSString* const kProcessAddedToProcessList				= @"ProcessAddedToProcessList";
 NSString* const kProcessRemovedFromProcessList			= @"ProcessRemovedFromProcessList";

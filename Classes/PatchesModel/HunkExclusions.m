@@ -11,6 +11,10 @@
 #import "PatchData.h"
 #import "HunkExclusions.h"
 
+NSString* const kFileName	= @"FileName";
+NSString* const kRootPath	= @"RootPath";
+NSString* const kHunkHash	= @"HunkHash";
+
 
 
 
@@ -84,6 +88,8 @@
 	NSMutableDictionary* repositoryHunkExclusions = [hunkExclusionsDictionary_ objectForKey:root addingIfNil:[NSMutableDictionary class]];
 	NSMutableSet* set = [repositoryHunkExclusions objectForKey:fileName addingIfNil:[NSMutableSet class]];
 	[set addObject:hunkHash];
+	NSDictionary* info = [NSDictionary dictionaryWithObjectsAndKeys:nonNil(fileName), kFileName, nonNil(root), kRootPath, nonNil(hunkHash), kHunkHash, nil];
+	[self postNotificationWithName:kHunkWasExcluded userInfo:info];
 }
 
 - (void) enableHunk: (NSString*)hunkHash forRoot:(NSString*)root andFile:(NSString*)fileName
@@ -97,6 +103,8 @@
 		if (IsEmpty(repositoryHunkExclusions))
 			[hunkExclusionsDictionary_ removeObjectForKey:root];
 	}
+	NSDictionary* info = [NSDictionary dictionaryWithObjectsAndKeys:nonNil(fileName), kFileName, nonNil(root), kRootPath, nonNil(hunkHash), kHunkHash, nil];
+	[self postNotificationWithName:kHunkWasIncluded userInfo:info];
 }
 
 - (void)	 excludeFile:(NSString*)fileName forRoot:(NSString*)root
@@ -104,12 +112,16 @@
 	NSSet* validHunkHashSet = [self validHunkHashSetForRoot:root andFile:fileName];
 	NSMutableDictionary* repositoryHunkExclusions = [hunkExclusionsDictionary_ objectForKey:root];
 	[repositoryHunkExclusions setObject:[validHunkHashSet mutableCopy] forKey:fileName];
+	NSDictionary* info = [NSDictionary dictionaryWithObjectsAndKeys:nonNil(fileName), kFileName, nonNil(root), kRootPath, nil];
+	[self postNotificationWithName:kFileWasExcluded userInfo:info];
 }
 
 - (void)	 includeFile:(NSString*)fileName forRoot:(NSString*)root
 {
 	NSMutableDictionary* repositoryHunkExclusions = [hunkExclusionsDictionary_ objectForKey:root];
 	[repositoryHunkExclusions removeObjectForKey:fileName];	
+	NSDictionary* info = [NSDictionary dictionaryWithObjectsAndKeys:nonNil(fileName), kFileName, nonNil(root), kRootPath, nil];
+	[self postNotificationWithName:kFileWasIncluded userInfo:info];
 }
 
 

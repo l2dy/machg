@@ -404,7 +404,10 @@ extern NSString* const kBrowserDisplayPreferencesChanged;	// The user selected s
 															// update their visual appearance.
 extern NSString* const kFileDiffsDisplayPreferencesChanged; // The user selected some preference or something so that the file
 															// view differences should update their visual appearance. 
-
+extern NSString* const kHunkWasExcluded;					// A hunk in a file was excluded from the next commit.
+extern NSString* const kHunkWasIncluded;					// A hunk in a file was included for the next commit.
+extern NSString* const kFileWasExcluded;					// A hunk in a file was excluded from the next commit.
+extern NSString* const kFileWasIncluded;					// A file was included for the next commit.
 extern NSString* const kCompatibleRepositoryChanged;		// A repository compatible to the current repository changed. (A push
 															// happened, etc.)
 extern NSString* const kReceivedCompatibleRepositoryCount;	// We just received the change count difference between the current
