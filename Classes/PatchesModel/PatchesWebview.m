@@ -26,6 +26,12 @@
 	[[self mainFrame] loadRequest:[NSURLRequest requestWithURL:patchDetailURL]];
 	[[self windowScriptObject] setValue:self forKey:@"machgWebviewController"];
 	fallbackMessage_ = @"";
+
+	HunkExclusions* exclusions = [parentController hunkExclusions];
+	[self observe:kHunkWasExcluded from:exclusions byCalling:@selector(hunkWasExcluded:)];
+	[self observe:kHunkWasIncluded from:exclusions byCalling:@selector(hunkWasIncluded:)];
+	[self observe:kFileWasExcluded from:exclusions byCalling:@selector(fileWasExcluded:)];
+	[self observe:kFileWasIncluded from:exclusions byCalling:@selector(fileWasIncluded:)];
 }
 
 
@@ -94,6 +100,51 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
+// MARK:  Notifications
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (void) hunkWasExcluded:(NSNotification*)notification
+{
+	NSString* hunkHash = [[notification userInfo] objectForKey:kHunkHash];
+	[[self windowScriptObject] callWebScriptMethod:@"excludeViewHunkStatus" withArguments:[NSArray arrayWithObject:hunkHash]];
+}
+
+- (void) hunkWasIncluded:(NSNotification*)notification
+{
+	NSString* hunkHash = [[notification userInfo] objectForKey:kHunkHash];
+	[[self windowScriptObject] callWebScriptMethod:@"inludeViewHunkStatus" withArguments:[NSArray arrayWithObject:hunkHash]];
+}
+
+- (void) fileWasExcluded:(NSNotification*)notification
+{
+	NSString* fileName = [[notification userInfo] objectForKey:kFileName];
+	FilePatch* filePatch = [backingPatch_ filePatchForFilePath:fileName];
+	if (!filePatch)
+		return;
+	
+	NSSet* hunkExclusionSet = [[parentController hunkExclusions] hunkExclusionSetForRoot:repositoryRootForPatch_ andFile:fileName];
+	for (NSString* hunkHash in hunkExclusionSet)
+		[[self windowScriptObject] callWebScriptMethod:@"excludeViewHunkStatus" withArguments:[NSArray arrayWithObject:hunkHash]];
+}
+
+- (void) fileWasIncluded:(NSNotification*)notification
+{
+	NSString* fileName = [[notification userInfo] objectForKey:kFileName];
+	FilePatch* filePatch = [backingPatch_ filePatchForFilePath:fileName];
+	if (!filePatch)
+		return;
+	
+	NSSet* validHunkHashSet = [[parentController hunkExclusions] validHunkHashSetForRoot:repositoryRootForPatch_ andFile:fileName];
+	for (NSString* hunkHash in validHunkHashSet)
+		[[self windowScriptObject] callWebScriptMethod:@"includeViewHunkStatus" withArguments:[NSArray arrayWithObject:hunkHash]];
+}
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
 // MARK:  Javascript webview handling
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -123,10 +174,7 @@
 		NSString* path = [filePatch filePath];
 		NSSet* hunkExclusionSet = [[parentController hunkExclusions] hunkExclusionSetForRoot:repositoryRootForPatch_ andFile:path];
 		for (NSString* hunkHash in hunkExclusionSet)
-		{
-			NSArray* excludeViewHunkStatusArgs = [NSArray arrayWithObjects:hunkHash, nil];
-			[script callWebScriptMethod:@"excludeViewHunkStatus" withArguments:excludeViewHunkStatusArgs];
-		}
+			[script callWebScriptMethod:@"excludeViewHunkStatus" withArguments:[NSArray arrayWithObject:hunkHash]];
 	}
 }
 
