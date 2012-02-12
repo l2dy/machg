@@ -48,12 +48,15 @@
 	[self observe:kReceivedCompatibleRepositoryCount byCalling:@selector(updateIncomingOutgoingCount)];
 	[forceOption setSpecialHandling:YES];
 	[forceOption		setName:@"force"];
+	[bookmarkOption		setName:@"bookmark"];
+	[branchOption		setName:@"branch"];
+	[insecureOption		setName:@"insecure"];	
 	[rebaseOption		setName:@"rebase"];
+	[remotecmdOption	setName:@"remotecmd"];
 	[revOption			setName:@"rev"];
 	[sshOption			setName:@"ssh"];
-	[remotecmdOption	setName:@"remotecmd"];
 	[updateOption		setName:@"update"];
-	cmdOptions = [NSArray arrayWithObjects:revOption, sshOption, remotecmdOption, updateOption, rebaseOption, forceOption, nil];
+	cmdOptions = [NSArray arrayWithObjects:forceOption, bookmarkOption, branchOption, insecureOption, rebaseOption, remotecmdOption, revOption, sshOption, updateOption, nil];
 }
 
 

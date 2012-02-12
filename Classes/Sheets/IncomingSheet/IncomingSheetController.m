@@ -48,18 +48,20 @@
 	[self observe:kReceivedCompatibleRepositoryCount byCalling:@selector(updateIncomingOutgoingCount)];
 	[forceOption setSpecialHandling:YES];
 	[forceOption		setName:@"force"];
-	[revOption			setName:@"rev"];
-	[newestfirstOption	setName:@"newest-first"];
-	[patchOption		setName:@"patch"];
+	[branchOption		setName:@"branch"];
 	[gitOption			setName:@"git"];
+	[graphOption		setName:@"graph"];
+	[insecureOption		setName:@"insecure"];
 	[limitOption		setName:@"limit"];
+	[newestfirstOption	setName:@"newest-first"];
 	[nomergesOption		setName:@"no-merges"];
+	[patchOption		setName:@"patch"];
+	[remotecmdOption	setName:@"remotecmd"];
+	[revOption			setName:@"rev"];
+	[sshOption			setName:@"ssh"];
 	[styleOption		setName:@"style"];
 	[templateOption		setName:@"template"];
-	[sshOption			setName:@"ssh"];
-	[remotecmdOption	setName:@"remotecmd"];
-	[graphOption		setName:@"graph"];
-	cmdOptions = [NSArray arrayWithObjects:	forceOption, revOption, newestfirstOption, patchOption, gitOption, limitOption, nomergesOption, styleOption, templateOption, sshOption, remotecmdOption, graphOption, nil];
+	cmdOptions = [NSArray arrayWithObjects:	forceOption, branchOption, gitOption, graphOption, insecureOption, limitOption, newestfirstOption, nomergesOption, patchOption, remotecmdOption, revOption, sshOption, styleOption, templateOption, nil];
 }
 
 
@@ -92,7 +94,7 @@
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
-//  Actions ConfigureExistingIncoming   --------------------------------------------------------------------------------------------------------
+//  Actions ConfigureExistingIncoming   ----------------------------------------------------------------------------------------------------
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (IBAction) openSheet:(id)sender

@@ -17,10 +17,13 @@
 	IBOutlet NSButton*			sheetButtonCancelForPullSheet;
 
 	// Advanced options
+	IBOutlet OptionController*	bookmarkOption;
+	IBOutlet OptionController*	branchOption;
+	IBOutlet OptionController*	insecureOption;	
 	IBOutlet OptionController*	rebaseOption;
+	IBOutlet OptionController*	remotecmdOption;
 	IBOutlet OptionController*	revOption;
 	IBOutlet OptionController*	sshOption;
-	IBOutlet OptionController*	remotecmdOption;
 	IBOutlet OptionController*	updateOption;
 }
 

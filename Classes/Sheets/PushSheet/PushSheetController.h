@@ -17,9 +17,12 @@
 	IBOutlet NSButton*			sheetButtonCancelForPushSheet;
 
 	// Advanced options
+	IBOutlet OptionController*	bookmarkOption;
+	IBOutlet OptionController*	branchOption;
+	IBOutlet OptionController*	insecureOption;
+	IBOutlet OptionController*	remotecmdOption;
 	IBOutlet OptionController*	revOption;
 	IBOutlet OptionController*	sshOption;
-	IBOutlet OptionController*	remotecmdOption;
 }
 
 - (PushSheetController*) initPushSheetControllerWithDocument:(MacHgDocument*)doc;

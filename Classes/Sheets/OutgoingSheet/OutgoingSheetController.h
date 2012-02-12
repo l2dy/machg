@@ -17,17 +17,19 @@
 	IBOutlet NSButton*			sheetButtonCancelForOutgoingSheet;
 
 	// Advanced options
-	IBOutlet OptionController*	revOption;
-	IBOutlet OptionController*	newestfirstOption;
-	IBOutlet OptionController*	patchOption;
+	IBOutlet OptionController*	branchOption;
 	IBOutlet OptionController*	gitOption;
+	IBOutlet OptionController*	graphOption;
+	IBOutlet OptionController*	insecureOption;
 	IBOutlet OptionController*	limitOption;
+	IBOutlet OptionController*	newestfirstOption;
 	IBOutlet OptionController*	nomergesOption;
+	IBOutlet OptionController*	patchOption;
+	IBOutlet OptionController*	remotecmdOption;
+	IBOutlet OptionController*	revOption;
+	IBOutlet OptionController*	sshOption;
 	IBOutlet OptionController*	styleOption;
 	IBOutlet OptionController*	templateOption;
-	IBOutlet OptionController*	sshOption;
-	IBOutlet OptionController*	remotecmdOption;
-	IBOutlet OptionController*	graphOption;
 }
 
 - (OutgoingSheetController*) initOutgoingSheetControllerWithDocument:(MacHgDocument*)doc;
