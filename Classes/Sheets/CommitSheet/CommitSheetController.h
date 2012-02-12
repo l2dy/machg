@@ -54,8 +54,6 @@
 													// files.
 	NSArray*		absolutePathsOfFilesToCommit_;	// This array is stored here when the sheet is set up. Later when
 													// the user hits the commit button it does this commit.
-	NSMutableIndexSet* excludedItems;				// This index set stores the rows in the list we will exclude from the final commit.
-
 	NSArray*		logCommentsTableSourceData;		// This array is computed whenever we put up the
 													// sheet, but the tableview in the sheet uses this class as a data
 													// source so we have to have this as a class member.

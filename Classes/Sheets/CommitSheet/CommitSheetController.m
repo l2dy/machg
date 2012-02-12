@@ -49,6 +49,7 @@ NSString* kAmendOption	 = @"amendOption";
 		if (changedNode)
 			[[[self window] contentView] setNeedsDisplayInRect:[self rectInWindowForNode:changedNode]];
 	}
+	[(id)parentController performSelectorIfPossible:@selector(validateButtons:) withObject:self];
 }
 
 - (NSString*) nibNameForFilesTable   { return @"CommitFilesViewTable"; }
@@ -158,7 +159,6 @@ NSString* kAmendOption	 = @"amendOption";
 - (void) openCommitSheetWithPaths:(NSArray*)paths
 {
 	logCommentsTableSourceData = nil;
-	excludedItems = nil;
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 
 	// Report the branch we are about to commit on in the dialog
@@ -228,7 +228,7 @@ NSString* kAmendOption	 = @"amendOption";
 {
 	NSString* newTitle = nil;
 	BOOL mergedState = [[myDocument repositoryData] inMergeState];
-	BOOL allFiles = committingAllFiles && IsEmpty(excludedItems);
+	BOOL allFiles = committingAllFiles;
 	NSString* repositoryShortName = [myDocument selectedRepositoryShortName];
 	if (mergedState)
 		newTitle = fstr(@"Committing Merged Files in %@", repositoryShortName);
@@ -289,13 +289,28 @@ NSString* kAmendOption	 = @"amendOption";
 	return NO;
 }
 
+- (BOOL) anyHunksToCommit
+{
+	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+	HunkExclusions* hunkExclusions = [self hunkExclusions];
+	for(FSNodeInfo* node in [self tableLeafNodes])
+	{
+		NSString* fileName = pathDifference(rootPath, [node absolutePath]);
+		NSSet* hunkExclusionSet = [hunkExclusions hunkExclusionSetForRoot:rootPath andFile:fileName];
+		if (IsEmpty(hunkExclusionSet))
+			return YES;
+		NSSet* validHunkHashSet = [hunkExclusions validHunkHashSetForRoot:rootPath andFile:fileName];
+		if (IsNotEmpty(validHunkHashSet) && ![validHunkHashSet isSubsetOfSet:hunkExclusionSet])
+			return YES;
+	}
+	return NO;
+}
 
 - (IBAction) validateButtons:(id)sender
 {
 	BOOL pathsAreSelected = [commitFilesViewer nodesAreSelected];
 	BOOL canAllowAmend = AllowHistoryEditingOfRepositoryFromDefaults() && [myDocument isCurrentRevisionTip] && ![myDocument inMergeState];
-	NSInteger fileCount = [[self tableLeafNodes] count];
-	BOOL okToCommit = (fileCount > 0) && ([excludedItems count] < fileCount) && IsNotEmpty([commitMessageTextView string]);
+	BOOL okToCommit = IsNotEmpty([commitMessageTextView string]) && [self anyHunksToCommit];
 	NSString* diffButtonMessage = pathsAreSelected ? @"Diff Selected" : @"Diff All";
 	
 	dispatch_async(mainQueue(), ^{
