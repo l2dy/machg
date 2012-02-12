@@ -107,19 +107,20 @@ NSString* const kHunkHash	= @"HunkHash";
 	[self postNotificationWithName:kHunkWasIncluded userInfo:info];
 }
 
-- (void)	 excludeFile:(NSString*)fileName forRoot:(NSString*)root
+- (void) excludeFile:(NSString*)fileName forRoot:(NSString*)root
 {
 	NSSet* validHunkHashSet = [self validHunkHashSetForRoot:root andFile:fileName];
-	NSMutableDictionary* repositoryHunkExclusions = [hunkExclusionsDictionary_ objectForKey:root];
+	if (IsEmpty(validHunkHashSet)) return;
+	NSMutableDictionary* repositoryHunkExclusions = [hunkExclusionsDictionary_ objectForKey:root addingIfNil:[NSMutableDictionary class]];
 	[repositoryHunkExclusions setObject:[validHunkHashSet mutableCopy] forKey:fileName];
 	NSDictionary* info = [NSDictionary dictionaryWithObjectsAndKeys:nonNil(fileName), kFileName, nonNil(root), kRootPath, nil];
 	[self postNotificationWithName:kFileWasExcluded userInfo:info];
 }
 
-- (void)	 includeFile:(NSString*)fileName forRoot:(NSString*)root
+- (void) includeFile:(NSString*)fileName forRoot:(NSString*)root
 {
 	NSMutableDictionary* repositoryHunkExclusions = [hunkExclusionsDictionary_ objectForKey:root];
-	[repositoryHunkExclusions removeObjectForKey:fileName];	
+	[repositoryHunkExclusions removeObjectForKey:nonNil(fileName)];	
 	NSDictionary* info = [NSDictionary dictionaryWithObjectsAndKeys:nonNil(fileName), kFileName, nonNil(root), kRootPath, nil];
 	[self postNotificationWithName:kFileWasIncluded userInfo:info];
 }
