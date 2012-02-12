@@ -79,6 +79,7 @@ NSString* kAmendOption	 = @"amendOption";
 @synthesize	dateOption = dateOption_;
 @synthesize	date = date_;
 @synthesize	amendOption = amendOption_;
+@synthesize	commitSubstateOption = commitSubstateOption_;
 @synthesize absolutePathsOfFilesToCommit = absolutePathsOfFilesToCommit_;
 
 
@@ -177,6 +178,11 @@ NSString* kAmendOption	 = @"amendOption";
 	[self setDateOption:NO];
 	if ([amendButton state] == NSOnState)
 		[self setAmendOption:NO];
+
+	// Handle the commit substate option
+	hasHgSub_ = pathIsExistentFile(fstr(@"%@/.hgsub",rootPath));
+	[self setCommitSubstateOption:SubrepoSubstateCommitFromDefauts() == eSubrepositorySubstateDoCommit];
+	[commitSubstateButton setHidden:!hasHgSub_];
 	
 	NSString* currentMessage = [commitMessageTextView string];
 	[commitMessageTextView setSelectedRange:NSMakeRange(0, [currentMessage length])];
@@ -386,12 +392,22 @@ NSString* kAmendOption	 = @"amendOption";
 	return args;
 }
 
+
+- (void) handleCommitSubrepoSubstateOption:(NSMutableArray*)commandArgs
+{
+	if (hasHgSub_ && [commitSubstateButton state] == NSOffState)
+	{
+		[commandArgs addObject:@"-X" followedBy:@".hgsub"];
+		[commandArgs addObject:@"-X" followedBy:@".hgsubstate"];
+	}
+}
+
 - (void) sheetActionSimpleCommit:(NSArray*)pathsToCommit
 {
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	[myDocument dispatchToMercurialQueuedWithDescription:@"Committing Files" process:^{
 		NSMutableArray* args = [NSMutableArray arrayWithObjects:@"commit", nil];
-
+		[self handleCommitSubrepoSubstateOption:args];
 		[myDocument registerPendingRefresh:pathsToCommit];
 		[args addObjectsFromArray:[self argumentsForUserDataMessage]];
 		if (![myDocument inMergeState])
@@ -528,6 +544,7 @@ NSString* kAmendOption	 = @"amendOption";
 				{
 					// Do the commit
 					NSMutableArray* commitArgs = [NSMutableArray arrayWithObjects:@"commit", nil];
+					[self handleCommitSubrepoSubstateOption:commitArgs];
 					[commitArgs addObjectsFromArray:commitCommandArguments];
 					[commitArgs addObjectsFromArray:uncontestedPaths];
 					[commitArgs addObjectsFromArray:contestedPaths];
@@ -539,6 +556,7 @@ NSString* kAmendOption	 = @"amendOption";
 				{
 					// Do the refresh
 					NSMutableArray* qrefreshArgs = [NSMutableArray arrayWithObjects:@"qrefresh", @"--config", @"extensions.hgext.mq=", @"--short", nil];
+					[self handleCommitSubrepoSubstateOption:qrefreshArgs];
 					[qrefreshArgs addObjectsFromArray:commitCommandArguments];
 					[qrefreshArgs addObjectsFromArray:uncontestedPaths];
 					[qrefreshArgs addObjectsFromArray:contestedPaths];

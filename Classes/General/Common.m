@@ -142,6 +142,7 @@ NSString* const MHGShowResolvedFilesInBrowser				= @"ShowResolvedFilesInBrowser"
 NSString* const MHGShowUnresolvedFilesInBrowser				= @"ShowUnresolvedFilesInBrowser";
 NSString* const MHGShowUntrackedFilesInBrowser				= @"ShowUntrackedFilesInBrowser";
 NSString* const MHGSizeOfBrowserColumns						= @"SizeOfBrowserColumns";
+NSString* const MHGSubrepoSubstateCommit					= @"SubrepoSubstateCommit";
 NSString* const MHGToolNameForDiffing						= @"ToolNameForDiffing";
 NSString* const MHGToolNameForMerging						= @"ToolNameForMerging";
 NSString* const MHGUseWhichToolForDiffing					= @"UseWhichToolForDiffing";
@@ -237,12 +238,13 @@ BrowserDoubleClickAction browserBehaviourOptionDoubleClick()	    { return enumFr
 AfterMergeDoOption			AfterMergeDoFromDefaults()			    { return enumFromDefaultsForKey(MHGAfterMergeDo); }
 AfterMergeSwitchToOption	AfterMergeSwitchToFromDefaults()	    { return enumFromDefaultsForKey(MHGAfterMergeSwitchTo); }
 DateAndTimeFormatOption		DateAndTimeFormatFromDefaults()		    { return enumFromDefaultsForKey(MHGDateAndTimeFormat); }
-RevisionSortOrderOption		RevisionSortOrderFromDefaults()		    { return enumFromDefaultsForKey(MHGRevisionSortOrder); }
+FSViewerNumberDefaultOption	DefaultFilesViewFromDefaults()		    { return enumFromDefaultsForKey(MHGDefaultFilesView); }
 HandleOrigFilesOption		HandleGeneratedOrigFilesFromDefaults()  { return enumFromDefaultsForKey(MHGHandleGeneratedOrigFiles); }
 OnActivationOpenWhatOption	OnActivationOpenFromDefaults()		    { return enumFromDefaultsForKey(MHGOnActivationOpen); }
+RevisionSortOrderOption		RevisionSortOrderFromDefaults()		    { return enumFromDefaultsForKey(MHGRevisionSortOrder); }
+SubrepoSubstateCommitOption	SubrepoSubstateCommitFromDefauts()		{ return enumFromDefaultsForKey(MHGSubrepoSubstateCommit); }
 ToolForDiffing				UseWhichToolForDiffingFromDefaults()    { return enumFromDefaultsForKey(MHGUseWhichToolForDiffing); }
 ToolForMerging				UseWhichToolForMergingFromDefaults()    { return enumFromDefaultsForKey(MHGUseWhichToolForMerging); }
-FSViewerNumberDefaultOption	DefaultFilesViewFromDefaults()		    { return enumFromDefaultsForKey(MHGDefaultFilesView); }
 WebviewDiffStyleOption    DifferencesWebviewDiffStyleFromDefaults() { return enumFromDefaultsForKey(MHGDifferencesWebviewDiffStyle); }
 
 

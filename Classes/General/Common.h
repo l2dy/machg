@@ -165,6 +165,12 @@ typedef enum
 
 typedef enum
 {
+	eSubrepositorySubstateDoNotCommit = 0,
+	eSubrepositorySubstateDoCommit	  = 1
+} SubrepoSubstateCommitOption;
+
+typedef enum
+{
 	eSortRevisionsAscending	 = 0,
 	eSortRevisionsDescending = 1
 } RevisionSortOrderOption;
@@ -530,6 +536,7 @@ extern NSString* const MHGShowResolvedFilesInBrowser;
 extern NSString* const MHGShowUnresolvedFilesInBrowser;
 extern NSString* const MHGShowUntrackedFilesInBrowser;
 extern NSString* const MHGSizeOfBrowserColumns;
+extern NSString* const MHGSubrepoSubstateCommit;
 extern NSString* const MHGToolNameForDiffing;
 extern NSString* const MHGToolNameForMerging;
 extern NSString* const MHGUseWhichToolForDiffing;
@@ -611,13 +618,14 @@ NSColor*	LogEntryTableBookmarkHighlightColor();
 
 AfterMergeDoOption				AfterMergeDoFromDefaults();
 AfterMergeSwitchToOption		AfterMergeSwitchToFromDefaults();
-RevisionSortOrderOption			RevisionSortOrderFromDefaults();
 DateAndTimeFormatOption			DateAndTimeFormatFromDefaults();
+FSViewerNumberDefaultOption		DefaultFilesViewFromDefaults();
 HandleOrigFilesOption			HandleGeneratedOrigFilesFromDefaults();
 OnActivationOpenWhatOption		OnActivationOpenFromDefaults();
+RevisionSortOrderOption			RevisionSortOrderFromDefaults();
+SubrepoSubstateCommitOption		SubrepoSubstateCommitFromDefauts();
 ToolForDiffing					UseWhichToolForDiffingFromDefaults();
 ToolForMerging					UseWhichToolForMergingFromDefaults();
-FSViewerNumberDefaultOption		DefaultFilesViewFromDefaults();
 WebviewDiffStyleOption			DifferencesWebviewDiffStyleFromDefaults();
 
 BrowserDoubleClickAction		browserBehaviourDoubleClick();

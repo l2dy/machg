@@ -159,6 +159,8 @@
 	<true/>
 	<key>SizeOfBrowserColumns</key>
 	<integer>210</integer>
+	<key>SubrepoSubstateCommit</key>
+	<integer>0</integer>
 	<key>ToolNameForDiffing</key>
 	<string></string>
 	<key>UseWhichToolForDiffing</key>

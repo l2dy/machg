@@ -45,6 +45,7 @@
 	IBOutlet NSButton*	  diffButton;
 	IBOutlet NSButton*	  okButton;
 	IBOutlet NSButton*	  amendButton;
+	IBOutlet NSButton*	  commitSubstateButton;
 	IBOutlet DisclosureBoxController*	disclosureController;	// The disclosure box for the advanced options
 
 	
@@ -64,8 +65,10 @@
 	NSDate*			date_;							// The value of the date option
 	BOOL			dateOption_;					// Has the committer option been specified
 	BOOL			amendOption_;					// Has the amend option been specified
+	BOOL			commitSubstateOption_;			// Has the commit substate option been specified
 	NSString*		cachedCommitMessageForAmend_;	// When the amend option has been activated we need to swap out the current
 													// commit message for the last revision's commit message
+	BOOL			hasHgSub_;						// Does this repository have a .hgsub file
 }
 @property (readwrite,assign) MacHgDocument* myDocument;
 @property (readwrite,assign) BOOL			committerOption;
@@ -73,6 +76,7 @@
 @property (readwrite,assign) BOOL			dateOption;
 @property (readwrite,assign) NSDate*		date;
 @property (readwrite,assign) BOOL			amendOption;
+@property (readwrite,assign) BOOL			commitSubstateOption;
 @property (readwrite,assign) NSArray*		absolutePathsOfFilesToCommit;
 
 - (CommitSheetController*) initCommitSheetControllerWithDocument:(MacHgDocument*)doc;

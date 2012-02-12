@@ -11,8 +11,7 @@
       <string key="com.apple.WebKitIBPlugin">851</string>
     </dictionary>
     <array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-      <integer value="402"/>
-      <integer value="312"/>
+      <integer value="43"/>
     </array>
     <array key="IBDocument.PluginDependencies">
       <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -39,9 +38,9 @@
         <nil key="NSViewClass"/>
         <nil key="NSUserInterfaceItemIdentifier"/>
         <string key="NSWindowContentMaxSize">{1.7976931348623157e+308, 1.7976931348623157e+308}</string>
-        <string key="NSWindowContentMinSize">{500, 400}</string>
+        <string key="NSWindowContentMinSize">{600, 400}</string>
         <object class="NSView" key="NSWindowView" id="538557104">
-          <nil key="NSNextResponder"/>
+          <reference key="NSNextResponder"/>
           <int key="NSvFlags">256</int>
           <array class="NSMutableArray" key="NSSubviews">
             <object class="NSButton" id="64017787">
@@ -212,7 +211,7 @@
                     <object class="NSTextField" id="1017708655">
                       <reference key="NSNextResponder" ref="924852654"/>
                       <int key="NSvFlags">266</int>
-                      <string key="NSFrame">{{116, 43}, {672, 22}}</string>
+                      <string key="NSFrame">{{116, 43}, {673, 22}}</string>
                       <reference key="NSSuperview" ref="924852654"/>
                       <bool key="NSEnabled">YES</bool>
                       <object class="NSTextFieldCell" key="NSCell" id="434526185">
@@ -358,12 +357,34 @@ AQABAAEAAQAB//+dkAEA//+PgAAE//+dkAEI//+dkAEMUERUAFBTVABQV1QAUFBUAAAAAAEAAAABA</b
                         <int key="NSPeriodicInterval">25</int>
                       </object>
                     </object>
+                    <object class="NSButton" id="3669041">
+                      <reference key="NSNextResponder" ref="924852654"/>
+                      <int key="NSvFlags">268</int>
+                      <string key="NSFrame">{{407, 14}, {135, 18}}</string>
+                      <reference key="NSSuperview" ref="924852654"/>
+                      <bool key="NSEnabled">YES</bool>
+                      <object class="NSButtonCell" key="NSCell" id="901698091">
+                        <int key="NSCellFlags">67239424</int>
+                        <int key="NSCellFlags2">0</int>
+                        <string key="NSContents">Commit Substate:</string>
+                        <reference key="NSSupport" ref="612085715"/>
+                        <reference key="NSControlView" ref="3669041"/>
+                        <int key="NSButtonFlags">1210864127</int>
+                        <int key="NSButtonFlags2">2</int>
+                        <reference key="NSNormalImage" ref="340218879"/>
+                        <reference key="NSAlternateImage" ref="737224458"/>
+                        <string key="NSAlternateContents"/>
+                        <string key="NSKeyEquivalent"/>
+                        <int key="NSPeriodicDelay">200</int>
+                        <int key="NSPeriodicInterval">25</int>
+                      </object>
+                    </object>
                   </array>
-                  <string key="NSFrame">{{2, 2}, {806, 75}}</string>
+                  <string key="NSFrame">{{2, 2}, {807, 75}}</string>
                   <reference key="NSSuperview" ref="812115754"/>
                 </object>
               </array>
-              <string key="NSFrame">{{17, 56}, {810, 79}}</string>
+              <string key="NSFrame">{{17, 56}, {811, 79}}</string>
               <reference key="NSSuperview" ref="538557104"/>
               <string key="NSOffsets">{0, 0}</string>
               <object class="NSTextFieldCell" key="NSTitleCell">
@@ -459,18 +480,18 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
                     <object class="NSSplitView" id="814013895">
                       <reference key="NSNextResponder" ref="753957596"/>
                       <int key="NSvFlags">4370</int>
-                      <string key="NSFrame">{{0, -1}, {804, 556}}</string>
+                      <string key="NSFrame">{{0, -1}, {805, 556}}</string>
                       <reference key="NSSuperview" ref="753957596"/>
                       <string key="NSReuseIdentifierKey">_NS:1028</string>
                       <int key="NSDividerStyle">2</int>
                     </object>
                   </array>
-                  <string key="NSFrame">{{1, 1}, {804, 553}}</string>
+                  <string key="NSFrame">{{1, 1}, {805, 553}}</string>
                   <reference key="NSSuperview" ref="1049406672"/>
                   <string key="NSReuseIdentifierKey">_NS:21</string>
                 </object>
               </array>
-              <string key="NSFrame">{{19, 169}, {806, 555}}</string>
+              <string key="NSFrame">{{19, 169}, {807, 555}}</string>
               <reference key="NSSuperview" ref="538557104"/>
               <string key="NSReuseIdentifierKey">_NS:18</string>
               <string key="NSOffsets">{0, 0}</string>
@@ -563,9 +584,10 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
             </object>
           </array>
           <string key="NSFrameSize">{845, 833}</string>
+          <reference key="NSSuperview"/>
         </object>
         <string key="NSScreenRect">{{0, 0}, {1920, 1178}}</string>
-        <string key="NSMinSize">{500, 422}</string>
+        <string key="NSMinSize">{600, 422}</string>
         <string key="NSMaxSize">{1.7976931348623157e+308, 1.7976931348623157e+308}</string>
         <string key="NSFrameAutosaveName">CommitSheetWindowFrame</string>
         <bool key="NSWindowIsRestorable">YES</bool>
@@ -816,7 +838,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
         </object>
       </object>
       <object class="NSBox" id="791433854">
-        <reference key="NSNextResponder"/>
+        <nil key="NSNextResponder"/>
         <int key="NSvFlags">10</int>
         <array class="NSMutableArray" key="NSSubviews">
           <object class="NSView" id="542124661">
@@ -966,7 +988,6 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
           </object>
         </array>
         <string key="NSFrameSize">{804, 18}</string>
-        <reference key="NSSuperview"/>
         <string key="NSOffsets">{0, 0}</string>
         <object class="NSTextFieldCell" key="NSTitleCell">
           <int key="NSCellFlags">67239424</int>
@@ -1443,7 +1464,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
         <bool key="AllowsUndo">YES</bool>
       </object>
       <object class="NSCustomView" id="915439076">
-        <reference key="NSNextResponder"/>
+        <nil key="NSNextResponder"/>
         <int key="NSvFlags">268</int>
         <array class="NSMutableArray" key="NSSubviews">
           <object class="NSTextField" id="106553500">
@@ -1725,7 +1746,6 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
           </object>
         </array>
         <string key="NSFrameSize">{346, 118}</string>
-        <reference key="NSSuperview"/>
         <string key="NSReuseIdentifierKey">_NS:1109</string>
         <string key="NSClassName">NSView</string>
       </object>
@@ -2283,6 +2303,30 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
           </object>
           <int key="connectionID">444</int>
         </object>
+        <object class="IBConnectionRecord">
+          <object class="IBOutletConnection" key="connection">
+            <string key="label">commitSubstateButton</string>
+            <reference key="source" ref="1001"/>
+            <reference key="destination" ref="3669041"/>
+          </object>
+          <int key="connectionID">448</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBBindingConnection" key="connection">
+            <string key="label">value: commitSubstateOption</string>
+            <reference key="source" ref="3669041"/>
+            <reference key="destination" ref="1001"/>
+            <object class="NSNibBindingConnector" key="connector">
+              <reference key="NSSource" ref="3669041"/>
+              <reference key="NSDestination" ref="1001"/>
+              <string key="NSLabel">value: commitSubstateOption</string>
+              <string key="NSBinding">value</string>
+              <string key="NSKeyPath">commitSubstateOption</string>
+              <int key="NSNibBindingConnectorVersion">2</int>
+            </object>
+          </object>
+          <int key="connectionID">449</int>
+        </object>
       </array>
       <object class="IBMutableOrderedSet" key="objectRecords">
         <array key="orderedObjects">
@@ -2465,6 +2509,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
               <reference ref="104057074"/>
               <reference ref="553643916"/>
               <reference ref="785537154"/>
+              <reference ref="3669041"/>
             </array>
             <reference key="parent" ref="538557104"/>
           </object>
@@ -3077,6 +3122,19 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
             <reference key="object" ref="847834906"/>
             <reference key="parent" ref="0"/>
           </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">445</int>
+            <reference key="object" ref="3669041"/>
+            <array class="NSMutableArray" key="children">
+              <reference ref="901698091"/>
+            </array>
+            <reference key="parent" ref="812115754"/>
+          </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">446</int>
+            <reference key="object" ref="901698091"/>
+            <reference key="parent" ref="3669041"/>
+          </object>
         </array>
       </object>
       <dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -3146,6 +3204,9 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
         <string key="204.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="205.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="223.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+        <object class="NSAffineTransform" key="223.IBViewBoundsToFrameTransform">
+          <bytes key="NSTransformStruct">P4AAAL+AAABDmwAAwfAAAA</bytes>
+        </object>
         <string key="224.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="254.CustomClassName">HelpButton</string>
         <object class="NSMutableDictionary" key="254.IBAttributePlaceholdersKey">
@@ -3207,7 +3268,9 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
           <bytes key="NSTransformStruct">AT+AAAA/gAAAA</bytes>
         </object>
         <string key="326.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-        <object class="NSAffineTransform" key="326.IBViewBoundsToFrameTransform"/>
+        <object class="NSAffineTransform" key="326.IBViewBoundsToFrameTransform">
+          <bytes key="NSTransformStruct">AUGYAABDKQAAA</bytes>
+        </object>
         <object class="NSMutableDictionary" key="335.IBAttributePlaceholdersKey">
           <string key="NS.key.0">ToolTip</string>
           <object class="IBToolTipAttribute" key="NS.object.0">
@@ -3248,6 +3311,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
         <object class="NSAffineTransform" key="395.IBViewBoundsToFrameTransform"/>
         <string key="402.IBEditorWindowLastContentRect">{{277, 196}, {346, 118}}</string>
         <string key="402.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+        <object class="NSAffineTransform" key="402.IBViewBoundsToFrameTransform"/>
         <string key="403.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <object class="NSAffineTransform" key="403.IBViewBoundsToFrameTransform">
           <bytes key="NSTransformStruct">P4AAAL+AAABC5AAAwiAAAA</bytes>
@@ -3283,7 +3347,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
         <boolean value="NO" key="41.windowTemplate.hasMaxSize"/>
         <boolean value="YES" key="41.windowTemplate.hasMinSize"/>
         <string key="41.windowTemplate.maxSize">{1000, 400}</string>
-        <string key="41.windowTemplate.minSize">{500, 400}</string>
+        <string key="41.windowTemplate.minSize">{600, 400}</string>
         <string key="410.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <object class="NSAffineTransform" key="410.IBViewBoundsToFrameTransform">
           <bytes key="NSTransformStruct">P4AAAL+AAABC6gAAwyUAAA</bytes>
@@ -3326,6 +3390,11 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
         <string key="43.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="430.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="44.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+        <string key="445.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+        <object class="NSAffineTransform" key="445.IBViewBoundsToFrameTransform">
+          <bytes key="NSTransformStruct">P4AAAL+AAABDmwAAwfAAAA</bytes>
+        </object>
+        <string key="446.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="45.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="46.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="49.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3352,7 +3421,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
       <nil key="activeLocalization"/>
       <dictionary class="NSMutableDictionary" key="localizations"/>
       <nil key="sourceID"/>
-      <int key="maxID">444</int>
+      <int key="maxID">449</int>
     </object>
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3426,6 +3495,7 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
             <string key="commitMessageTextView">NSTextView</string>
             <string key="commitSheetBranchString">NSTextField</string>
             <string key="commitSheetTitle">NSTextField</string>
+            <string key="commitSubstateButton">NSButton</string>
             <string key="diffButton">NSButton</string>
             <string key="disclosureController">DisclosureBoxController</string>
             <string key="okButton">NSButton</string>
@@ -3452,6 +3522,10 @@ ARcABAAAAAEAAAACARwAAwAAAAEAAQAAAVIAAwAAAAEAAQAAAVMAAwAAAAIAAQABAAAAAA</bytes>
             <object class="IBToOneOutletInfo" key="commitSheetTitle">
               <string key="name">commitSheetTitle</string>
               <string key="candidateClassName">NSTextField</string>
+            </object>
+            <object class="IBToOneOutletInfo" key="commitSubstateButton">
+              <string key="name">commitSubstateButton</string>
+              <string key="candidateClassName">NSButton</string>
             </object>
             <object class="IBToOneOutletInfo" key="diffButton">
               <string key="name">diffButton</string>
