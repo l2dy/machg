@@ -1108,6 +1108,7 @@ typedef BOOL (^ArrayFilterBlock)(id);
 - (NSColor*) intensifySaturationAndBrightness:(double)factor;
 + (NSColor*) errorColor;
 + (NSColor*) successColor;
+- (void)	 bwDrawPixelThickLineAtPosition:(int)posInPixels withInset:(int)insetInPixels inRect:(NSRect)aRect inView:(NSView*)view horizontal:(BOOL)isHorizontal flip:(BOOL)shouldFlip;
 @end
 
 
