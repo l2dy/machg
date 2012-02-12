@@ -9,7 +9,10 @@
 
 #import "Common.h"
 #import <Quartz/Quartz.h>	// Quartz framework provides the QLPreviewPanel public API
-@class WebView;
+#import "PatchesWebview.h"
+
+
+
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -28,6 +31,7 @@
 - (void)			updateCurrentPreviewImage;
 - (void)			awakeFromNib;	// This routine needs to be able to be called multiple times on the Controller parent of the
 									// FSBrowser, yet interanlly fire only once
+- (HunkExclusions*) hunkExclusions;
 @end
 
 
@@ -99,11 +103,11 @@
 // MARK: FSViewer
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-@interface FSViewer : NSBox <FSViewerProtocol>
+@interface FSViewer : NSBox <FSViewerProtocol, ControllerForPatchesWebview>
 {
 	IBOutlet id <ControllerForFSViewer> parentController;
-	IBOutlet NSMenu* contextualMenuForFSViewerPane;
-	IBOutlet WebView* detailedDiffWebView;
+	IBOutlet PatchesWebview*	detailedPatchesWebView;
+	IBOutlet NSMenu*			contextualMenuForFSViewerPane;
 	
 	NSString*		absolutePathOfRepositoryRoot_;
 	FSNodeInfo*		rootNodeInfo_;
@@ -116,8 +120,6 @@
 	FSViewerTable*		theFilesTable_;
 	FSViewerNum			currentFSViewerPane_;			// The current style of viewing the files, ie browser, outline, or table
 
-	NSInteger			currentDifferencesRegenerationNumber_;	// When we regenerating the differences for the WebView we need to
-																// track if the returned results are still valid. 
 	dispatch_once_t		theFilesBrowserInitilizer_;
 	dispatch_once_t		theFilesOutlineInitilizer_;
 	dispatch_once_t		theFilesTableInitilizer_;	

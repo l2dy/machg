@@ -7,9 +7,8 @@
 //  This software is licensed under the "New BSD License". The full license text is given in the file License.txt
 //
 
-#import <WebKit/WebKit.h>
 #import "Common.h"
-
+#import "PatchesWebview.h"
 
 @protocol ControllerForPatchesTableView <NSObject>
 - (MacHgDocument*)	myDocument;
@@ -19,15 +18,15 @@
 
 // This class is a subclass of NSTableView which is its own data source and own delegate. It turned out it's easier this way. And
 // thus in the one class we wrap up all the behavior of managing a list of revisions. It only needs the two outlets below connected up.
-@interface PatchesTableView : NSTableView <NSTableViewDelegate, NSTableViewDataSource>
+@interface PatchesTableView : NSTableView <NSTableViewDelegate, NSTableViewDataSource, ControllerForPatchesWebview>
 {
 	IBOutlet id	<ControllerForPatchesTableView> parentController;	// Controlling class should be an object which is controlling a sheet or a
 																	// window controller.
 	
-	IBOutlet WebView*	detailedPatchWebView;			// This is the field where the details of the patch are displayed.
+	IBOutlet PatchesWebview*	detailedPatchesWebView;				// This is the field where the details of the patch are displayed.
 
-	NSArray*			patchesTableData_;				// The array of ordered patches (tags, branches, bookmarks) which
-														// backs the PatchesTableView	
+	NSArray*					patchesTableData_;					// The array of ordered patches (tags, branches, bookmarks) which
+																	// backs the PatchesTableView	
 }
 
 - (MacHgDocument*)		myDocument;

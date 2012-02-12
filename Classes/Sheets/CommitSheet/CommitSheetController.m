@@ -536,6 +536,11 @@ NSString* kAmendOption	 = @"amendOption";
 	return IsNotEmpty(paths) ? YES : NO;
 }
 
+- (HunkExclusions*) hunkExclusions
+{
+	return [myDocument hunkExclusions];
+}
+
 
 - (void)			setMyDocumentFromParent					{ };
 - (void)			didSwitchViewTo:(FSViewerNum)viewNumber { };

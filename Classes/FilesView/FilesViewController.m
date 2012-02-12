@@ -295,6 +295,11 @@
 	return IsNotEmpty(paths) ? YES : NO;
 }
 
+- (HunkExclusions*) hunkExclusions
+{
+	return [myDocument hunkExclusions];
+}
+
 
 
 

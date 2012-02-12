@@ -128,6 +128,7 @@
 		963DBE1210C7D54800189853 /* Sidebar.m in Sources */ = {isa = PBXBuildFile; fileRef = 963DBE0B10C7D54800189853 /* Sidebar.m */; };
 		963DBE1310C7D54800189853 /* SidebarCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 963DBE0D10C7D54800189853 /* SidebarCell.m */; };
 		963DBE1410C7D54800189853 /* SidebarNode.m in Sources */ = {isa = PBXBuildFile; fileRef = 963DBE0F10C7D54800189853 /* SidebarNode.m */; };
+		963E431914D5A4CC004C6CAB /* PatchesWebview.m in Sources */ = {isa = PBXBuildFile; fileRef = 963E431814D5A4CC004C6CAB /* PatchesWebview.m */; };
 		9654F5E811D237F200826FD6 /* AddRemove.png in Resources */ = {isa = PBXBuildFile; fileRef = 9654F5E311D237F200826FD6 /* AddRemove.png */; };
 		9654F5E911D237F200826FD6 /* Commit.png in Resources */ = {isa = PBXBuildFile; fileRef = 9654F5E411D237F200826FD6 /* Commit.png */; };
 		9654F5EA11D237F200826FD6 /* Diff.png in Resources */ = {isa = PBXBuildFile; fileRef = 9654F5E511D237F200826FD6 /* Diff.png */; };
@@ -452,6 +453,8 @@
 		963DBE0E10C7D54800189853 /* SidebarNode.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = SidebarNode.h; sourceTree = "<group>"; };
 		963DBE0F10C7D54800189853 /* SidebarNode.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = SidebarNode.m; sourceTree = "<group>"; };
 		963DBE3810C7D6CA00189853 /* Sidebar.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Sidebar.h; sourceTree = "<group>"; };
+		963E431714D5A4CC004C6CAB /* PatchesWebview.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PatchesWebview.h; sourceTree = "<group>"; };
+		963E431814D5A4CC004C6CAB /* PatchesWebview.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PatchesWebview.m; sourceTree = "<group>"; };
 		9654F5E311D237F200826FD6 /* AddRemove.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AddRemove.png; sourceTree = "<group>"; };
 		9654F5E411D237F200826FD6 /* Commit.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Commit.png; sourceTree = "<group>"; };
 		9654F5E511D237F200826FD6 /* Diff.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = Diff.png; sourceTree = "<group>"; };
@@ -1014,6 +1017,8 @@
 				962ED05011875AED0072211F /* PatchData.m */,
 				962ED05111875AED0072211F /* PatchesTableView.h */,
 				962ED05211875AED0072211F /* PatchesTableView.m */,
+				963E431714D5A4CC004C6CAB /* PatchesWebview.h */,
+				963E431814D5A4CC004C6CAB /* PatchesWebview.m */,
 			);
 			name = PatchesModel;
 			path = Classes/PatchesModel;
@@ -2111,6 +2116,7 @@
 				968FFA0914CB5815004D4444 /* NSString+UnicharUtilities.m in Sources */,
 				968FFA0A14CB5815004D4444 /* NSString+UriCompatibility.m in Sources */,
 				9637607314CEB04B00ECB9D6 /* HunkExclusions.m in Sources */,
+				963E431914D5A4CC004C6CAB /* PatchesWebview.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

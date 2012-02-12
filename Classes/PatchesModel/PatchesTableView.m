@@ -76,12 +76,7 @@
 
 	// drag and drop support
 	[self registerForDraggedTypes:[NSArray arrayWithObjects:kPatchesTablePBoardType, NSFilenamesPboardType, nil]];
-	
-	NSURL* patchDetailURL = [NSURL fileURLWithPath:fstr(@"%@/Webviews/htmlForImport/%@",[[NSBundle mainBundle] resourcePath], @"index.html")];
-	[[detailedPatchWebView mainFrame] loadRequest:[NSURLRequest requestWithURL:patchDetailURL]];
 
-	[[detailedPatchWebView windowScriptObject] setValue:self forKey:@"machgWebviewController"];
-	
 	[self setRowHeight:30];
 }
 
@@ -258,23 +253,14 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 
 - (void) tableViewSelectionDidChange:(NSNotification*)aNotification
 {
-	WebScriptObject* script = [detailedPatchWebView windowScriptObject];
-	[script setValue:self forKey:@"machgWebviewController"];
+	NSInteger currentTaskNumber = [detailedPatchesWebView nextTaskNumber];
 	NSInteger selectedRowCount = [[self selectedRowIndexes] count];
 	if (selectedRowCount == 0)
-	{
-		[script callWebScriptMethod:@"showMessage" withArguments:[NSArray arrayWithObject:@"No Patch Selected"]];
-	}
+		[detailedPatchesWebView setBackingPatch:nil andFallbackMessage:@"No Patch Selected" withTaskNumber:currentTaskNumber];
 	else if (selectedRowCount > 1)
-	{
-		[script callWebScriptMethod:@"showMessage" withArguments:[NSArray arrayWithObject:@"Multiple Patches Selected"]];
-	}
+		[detailedPatchesWebView setBackingPatch:nil andFallbackMessage:@"Multiple Patches Selected" withTaskNumber:currentTaskNumber];
 	else
-	{
-		NSString* htmlizedDiffString = [[[self selectedPatch] patchData] patchBodyHTMLized];
-		NSArray* showDiffArgs = [NSArray arrayWithObjects:htmlizedDiffString, fstr(@"%f",FontSizeOfDifferencesWebviewFromDefaults()), stringOfDifferencesWebviewDiffStyle(), nil];
-		[script callWebScriptMethod:@"showDiff" withArguments:showDiffArgs];
-	}
+		[detailedPatchesWebView setBackingPatch:[[self selectedPatch] patchData] andFallbackMessage:@"" withTaskNumber:currentTaskNumber];
 }
 
 // Clicking on the checkboxes in the table view shouldn't change the selection.
@@ -411,50 +397,15 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 // MARK:  Callback Methods from Javascript
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) disableHunk:(NSString*)hunkHash forFile:(NSString*)fileName 
+- (NSURL*) patchDetailURL
 {
-	MacHgDocument* myDocument = [self myDocument];
-	NSString* root = [myDocument absolutePathOfRepositoryRoot];
-	[[parentController hunkExclusions] disableHunk:hunkHash forRoot:root andFile:fileName];
+	return [NSURL fileURLWithPath:fstr(@"%@/Webviews/htmlForDifferences/%@",[[NSBundle mainBundle] resourcePath], @"index.html")];
 }
 
-- (void) enableHunk:(NSString*)hunkHash forFile:(NSString*)fileName 
+- (HunkExclusions*) hunkExclusions
 {
-	MacHgDocument* myDocument = [self myDocument];
-	NSString* root = [myDocument absolutePathOfRepositoryRoot];
-	[[parentController hunkExclusions] enableHunk:hunkHash forRoot:root andFile:fileName];
+	return [parentController hunkExclusions];
 }
-
-- (void) excludeHunksAccordingToModel
-{
-	WebScriptObject* script = [detailedPatchWebView windowScriptObject];
-	MacHgDocument* myDocument = [self myDocument];
-	NSString* root = [myDocument absolutePathOfRepositoryRoot];
-	NSDictionary* exclusions = [[parentController hunkExclusions] repositoryExclusionsForRoot:root];
-	for (NSString* path in [exclusions allKeys])
-	{
-		NSSet* exclusionsSet = [[parentController hunkExclusions] exclusionsForRoot:root andFile:path];
-		for (NSString* hunkHash in exclusionsSet)
-		{
-			NSArray* excludeViewHunkStatusArgs = [NSArray arrayWithObjects:hunkHash, nil];
-			[script callWebScriptMethod:@"excludeViewHunkStatus" withArguments:excludeViewHunkStatusArgs];
-		}
-	}
-}
-
-
-+ (NSString *)webScriptNameForSelector:(SEL)sel
-{
-    // change the javascript name from 'disableHunk_forFile' to 'disableHunkForFile' etc...
-	if (sel == @selector(disableHunk:forFile:))			return @"disableHunkForFileName";
-	if (sel == @selector(enableHunk:forFile:))			return @"enableHunkForFileName";
-	if (sel == @selector(excludeHunksAccordingToModel))	return @"excludeHunksAccordingToModel";
-	
-	return nil;
-}
-
-+ (BOOL)isSelectorExcludedFromWebScript:(SEL)aSelector { return NO; }
-+ (BOOL)isKeyExcludedFromWebScript:(const char *)name { return NO; }
 
 @end
 

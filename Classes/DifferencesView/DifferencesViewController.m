@@ -506,6 +506,11 @@
 	return [[NSArray alloc]init]; // We never list any resolved / unresolved files in the differences view
 }
 
+- (HunkExclusions*) hunkExclusions
+{
+	return nil;	// There is no meaning to disabling / enabling patches for the differences view.
+}
+
 
 - (BOOL) writePaths:(NSArray*)paths toPasteboard:(NSPasteboard*)pasteboard
 {

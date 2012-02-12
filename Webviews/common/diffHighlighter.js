@@ -311,7 +311,7 @@ var createSideBySideDiff = function(diff, element, size, callbacks)
 	if (false)
 		Controller.log_("Total time:" + (new Date().getTime() - start));
 	
-	machgFSViewer.excludeHunksAccordingToModel();
+	machgWebviewController.excludeHunksAccordingToModel();
 }
 
 

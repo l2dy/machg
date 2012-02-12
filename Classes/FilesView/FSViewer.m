@@ -84,7 +84,7 @@
 {
 	[self observe:kBrowserDisplayPreferencesChanged from:nil byCalling:@selector(reloadDataSin)];
 	[self observe:kDifferencesDisplayPreferencesChanged from:nil byCalling:@selector(regenerateDifferencesInWebview)];
-	[self observe:kConcertinaViewContentDidUncollapse	from:detailedDiffWebView byCalling:@selector(regenerateDifferencesInWebview)];
+	[self observe:kConcertinaViewContentDidUncollapse	from:detailedPatchesWebView byCalling:@selector(regenerateDifferencesInWebview)];
 	
 	[parentController setMyDocumentFromParent];	// Set up the parent's myDocument since the partent's awakeFromNib has not yet been called.
 	rootNodeInfo_ = nil;
@@ -92,10 +92,6 @@
 	if (viewerNum == eFilesNoView)
 		viewerNum = DefaultFilesViewFromDefaults() + 1;
 	[self setCurrentFSViewerPane:viewerNum];
-
-	NSURL* diffDetailURL = [NSURL fileURLWithPath:fstr(@"%@/Webviews/htmlForDifferences/%@",[[NSBundle mainBundle] resourcePath], @"index.html")];
-	[[detailedDiffWebView mainFrame] loadRequest:[NSURLRequest requestWithURL:diffDetailURL]];
-	[[detailedDiffWebView windowScriptObject] setValue:self forKey:@"machgFSViewer"];
 }
 
 - (void) setupViewerPane:(id)view
@@ -572,92 +568,45 @@
 // MARK:  Webview Handling
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-
-- (void) disableHunk:(NSString*)hunkHash forFile:(NSString*)fileName 
+- (NSURL*) patchDetailURL
 {
-	MacHgDocument* myDocument = [self myDocument];
-	NSString* root = [myDocument absolutePathOfRepositoryRoot];
-	[[myDocument hunkExclusions] disableHunk:hunkHash forRoot:root andFile:fileName];
+	return [NSURL fileURLWithPath:fstr(@"%@/Webviews/htmlForDifferences/%@",[[NSBundle mainBundle] resourcePath], @"index.html")];
 }
 
-- (void) enableHunk:(NSString*)hunkHash forFile:(NSString*)fileName 
+- (HunkExclusions*) hunkExclusions
 {
-	MacHgDocument* myDocument = [self myDocument];
-	NSString* root = [myDocument absolutePathOfRepositoryRoot];
-	[[myDocument hunkExclusions] enableHunk:hunkHash forRoot:root andFile:fileName];
+	return [parentController hunkExclusions];
 }
-
-- (void) excludeHunksAccordingToModel
-{
-	WebScriptObject* script = [detailedDiffWebView windowScriptObject];
-	MacHgDocument* myDocument = [self myDocument];
-	NSString* root = [myDocument absolutePathOfRepositoryRoot];
-	NSArray* selectedPaths = [self absolutePathsOfSelectedFilesInBrowser];
-	for (NSString* path in selectedPaths)
-	{
-		NSString* file = pathDifference(root,path);
-		NSSet* exclusionsSet = [[myDocument hunkExclusions] exclusionsForRoot:root andFile:file];
-		for (NSString* hunkHash in exclusionsSet)
-		{
-			NSArray* excludeViewHunkStatusArgs = [NSArray arrayWithObjects:hunkHash, nil];
-			[script callWebScriptMethod:@"excludeViewHunkStatus" withArguments:excludeViewHunkStatusArgs];
-		}
-	}
-}
-
-
-+ (NSString *)webScriptNameForSelector:(SEL)sel
-{
-    // change the javascript name from 'disableHunk_forFile' to 'disableHunkForFile' etc...
-	if (sel == @selector(disableHunk:forFile:))			return @"disableHunkForFileName";
-	if (sel == @selector(enableHunk:forFile:))			return @"enableHunkForFileName";
-	if (sel == @selector(excludeHunksAccordingToModel))	return @"excludeHunksAccordingToModel";
-	return nil;
-}
-+ (BOOL)isSelectorExcludedFromWebScript:(SEL)sel
-{
-	if (sel == @selector(disableHunk:forFile:))			return NO;
-	if (sel == @selector(enableHunk:forFile:))			return NO;
-	if (sel == @selector(excludeHunksAccordingToModel))	return NO;
-    return YES;
-}
-+ (BOOL)isKeyExcludedFromWebScript:(const char *)name { return NO; }
 
 - (void) putUpGeneratingDifferencesNotice:(NSTimer*)theTimer
 {
 	ShellTaskController* theTaskContoller = [theTimer userInfo];
 	if ([[theTaskContoller shellTask] isRunning])
 	{
-		WebScriptObject* script = [detailedDiffWebView windowScriptObject];
-		[script callWebScriptMethod:@"showGeneratingMessage" withArguments:[NSArray arrayWithObject:@"Generating Differences "]];
+		WebScriptObject* script = [detailedPatchesWebView windowScriptObject];
+		[script callWebScriptMethod:@"showGeneratingMessage" withArguments:[NSArray arrayWithObject:@"Generating Differences… "]];
 	}
 }
 
-
 - (void) regenerateDifferencesInWebview
 {
-	WebScriptObject* script = [detailedDiffWebView windowScriptObject];
-	[script setValue:self forKey:@"machgWebviewController"];
-	[script callWebScriptMethod:@"changeFontSizeOfDiff" withArguments:[NSArray arrayWithObject:fstr(@"%f",FontSizeOfDifferencesWebviewFromDefaults())]];
-	
-	JHConcertinaSubView* subView = (JHConcertinaSubView*)[detailedDiffWebView enclosingViewOfClass:[JHConcertinaSubView class]];
+	JHConcertinaSubView* subView = (JHConcertinaSubView*)[detailedPatchesWebView enclosingViewOfClass:[JHConcertinaSubView class]];
 	JHConcertinaView* parentConcertinaView = (JHConcertinaView*)[subView enclosingViewOfClass:[JHConcertinaView class]];
 	if (parentConcertinaView && [parentConcertinaView isSubviewCollapsed:subView])
 		return;
-	
+
+	WebScriptObject* script = [detailedPatchesWebView windowScriptObject];
+	[script setValue:self forKey:@"machgWebviewController"];
+	[script callWebScriptMethod:@"changeFontSizeOfDiff" withArguments:[NSArray arrayWithObject:fstr(@"%f",FontSizeOfDifferencesWebviewFromDefaults())]];
+		
 	NSArray* selectedPaths = [self absolutePathsOfSelectedFilesInBrowser];
 	if (IsEmpty(selectedPaths))
 	{
-		[script callWebScriptMethod:@"showMessage" withArguments:[NSArray arrayWithObject:@""]];
+		[detailedPatchesWebView setBackingPatch:nil andFallbackMessage:@""];
 		return;
 	}
 	
-	NSInteger currentTaskNumber;
-	@synchronized(self)
-	{
-		currentDifferencesRegenerationNumber_++;
-		currentTaskNumber = currentDifferencesRegenerationNumber_;
-	}
+	NSInteger currentTaskNumber = [detailedPatchesWebView nextTaskNumber];
 	NSString* rootPath = [self absolutePathOfRepositoryRoot];
 	NSMutableArray* argsDiff = [NSMutableArray arrayWithObjects:@"diff", nil];
 	[argsDiff addObject:@"--unified" followedBy:fstr(@"%d",NumContextLinesForDifferencesWebviewFromDefaults())];
@@ -666,21 +615,8 @@
 	[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(putUpGeneratingDifferencesNotice:) userInfo:currentDifferencesTaskController repeats:NO];
 	dispatch_async(globalQueue(), ^{
 		ExecutionResult* diffResult = [TaskExecutions executeMercurialWithArgs:argsDiff  fromRoot:rootPath logging:eLoggingNone  withDelegate:currentDifferencesTaskController];
-		BOOL empty = IsEmpty(diffResult.outStr);
-		PatchData* patchData = !empty ? [PatchData patchDataFromDiffContents:diffResult.outStr] : nil;
-		NSString* htmlizedDiffString = [patchData patchBodyHTMLized];
-		
-		dispatch_async(mainQueue(), ^{
-			if (currentTaskNumber == currentDifferencesRegenerationNumber_)
-			{
-				NSArray* showDiffArgs = [NSArray arrayWithObjects:htmlizedDiffString, fstr(@"%f",FontSizeOfDifferencesWebviewFromDefaults()), stringOfDifferencesWebviewDiffStyle(), nil];
-				WebScriptObject* script = [detailedDiffWebView windowScriptObject];
-				if (!empty)
-					[script callWebScriptMethod:@"showDiff" withArguments:showDiffArgs];
-				else
-					[script callWebScriptMethod:@"showMessage" withArguments:[NSArray arrayWithObject:@""]];
-			}
-		});
+		PatchData* patchData = IsNotEmpty(diffResult.outStr) ? [PatchData patchDataFromDiffContents:diffResult.outStr] : nil;
+		[detailedPatchesWebView setBackingPatch:patchData andFallbackMessage:@"" withTaskNumber:currentTaskNumber];
 	});
 }
 

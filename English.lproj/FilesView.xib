@@ -2857,14 +2857,6 @@
         </object>
         <object class="IBConnectionRecord">
           <object class="IBOutletConnection" key="connection">
-            <string key="label">detailedDiffWebView</string>
-            <reference key="source" ref="264801874"/>
-            <reference key="destination" ref="465768189"/>
-          </object>
-          <int key="connectionID">327</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBOutletConnection" key="connection">
             <string key="label">concertinaView</string>
             <reference key="source" ref="453712496"/>
             <reference key="destination" ref="580918613"/>
@@ -3042,6 +3034,22 @@
             <reference key="destination" ref="722516753"/>
           </object>
           <int key="connectionID">394</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBOutletConnection" key="connection">
+            <string key="label">detailedPatchesWebView</string>
+            <reference key="source" ref="264801874"/>
+            <reference key="destination" ref="465768189"/>
+          </object>
+          <int key="connectionID">395</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBOutletConnection" key="connection">
+            <string key="label">parentController</string>
+            <reference key="source" ref="465768189"/>
+            <reference key="destination" ref="264801874"/>
+          </object>
+          <int key="connectionID">396</int>
         </object>
       </object>
       <object class="IBMutableOrderedSet" key="objectRecords">
@@ -4270,6 +4278,7 @@
           <string>316.IBEditorWindowLastContentRect</string>
           <string>316.IBPluginDependency</string>
           <string>317.IBPluginDependency</string>
+          <string>325.CustomClassName</string>
           <string>325.IBPluginDependency</string>
           <string>325.IBViewBoundsToFrameTransform</string>
           <string>328.IBPluginDependency</string>
@@ -4614,6 +4623,7 @@
           <string>{{139, 404}, {146, 520}}</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+          <string>PatchesWebview</string>
           <string>com.apple.WebKitIBPlugin</string>
           <object class="NSAffineTransform">
             <bytes key="NSTransformStruct">AT+AAAA/gAAAA</bytes>
@@ -4743,7 +4753,7 @@
         </object>
       </object>
       <nil key="sourceID"/>
-      <int key="maxID">394</int>
+      <int key="maxID">396</int>
     </object>
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -5123,13 +5133,13 @@
             <object class="NSArray" key="dict.sortedKeys">
               <bool key="EncodedWithXMLCoder">YES</bool>
               <string>contextualMenuForFSViewerPane</string>
-              <string>detailedDiffWebView</string>
+              <string>detailedPatchesWebView</string>
               <string>parentController</string>
             </object>
             <object class="NSMutableArray" key="dict.values">
               <bool key="EncodedWithXMLCoder">YES</bool>
               <string>NSMenu</string>
-              <string>WebView</string>
+              <string>PatchesWebview</string>
               <string>id</string>
             </object>
           </object>
@@ -5138,7 +5148,7 @@
             <object class="NSArray" key="dict.sortedKeys">
               <bool key="EncodedWithXMLCoder">YES</bool>
               <string>contextualMenuForFSViewerPane</string>
-              <string>detailedDiffWebView</string>
+              <string>detailedPatchesWebView</string>
               <string>parentController</string>
             </object>
             <object class="NSMutableArray" key="dict.values">
@@ -5148,8 +5158,8 @@
                 <string key="candidateClassName">NSMenu</string>
               </object>
               <object class="IBToOneOutletInfo">
-                <string key="name">detailedDiffWebView</string>
-                <string key="candidateClassName">WebView</string>
+                <string key="name">detailedPatchesWebView</string>
+                <string key="candidateClassName">PatchesWebview</string>
               </object>
               <object class="IBToOneOutletInfo">
                 <string key="name">parentController</string>
@@ -6251,6 +6261,25 @@
         <object class="IBPartialClassDescription">
           <string key="className">NSWindow</string>
           <reference key="sourceIdentifier" ref="317562612"/>
+        </object>
+        <object class="IBPartialClassDescription">
+          <string key="className">PatchesWebview</string>
+          <string key="superclassName">WebView</string>
+          <object class="NSMutableDictionary" key="outlets">
+            <string key="NS.key.0">parentController</string>
+            <string key="NS.object.0">id</string>
+          </object>
+          <object class="NSMutableDictionary" key="toOneOutletInfosByName">
+            <string key="NS.key.0">parentController</string>
+            <object class="IBToOneOutletInfo" key="NS.object.0">
+              <string key="name">parentController</string>
+              <string key="candidateClassName">id</string>
+            </object>
+          </object>
+          <object class="IBClassDescriptionSource" key="sourceIdentifier">
+            <string key="majorKey">IBProjectSource</string>
+            <string key="minorKey">Classes/PatchesModel/PatchesWebview.h</string>
+          </object>
         </object>
         <object class="IBPartialClassDescription">
           <string key="className">ProcessListController</string>
