@@ -24,6 +24,7 @@
 #import "NSString+SymlinksAndAliases.h"
 #import "ShellHere.h"
 #import "CTBadge.h"
+#include <sys/stat.h>
 
 
 //
@@ -600,6 +601,11 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 		NSString* fullPath = [enclosingPath stringByAppendingPathComponent:path];
 		if (repositoryExistsAtPath(fullPath))
 		{
+			// Make sure the link is not a symbolic one or else we can sometimes get infinite recursion depdening on where the link points too
+			struct stat fileInfo;
+			if (lstat([[NSFileManager defaultManager] fileSystemRepresentationWithPath:fullPath], &fileInfo) < 0) continue;
+			if (S_ISLNK(fileInfo.st_mode)) continue;
+
 			SidebarNode* newNode = [SidebarNode nodeForLocalURL:fullPath];
 			[node addChild:newNode];
 			[newNode refreshNodeIcon];
