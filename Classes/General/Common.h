@@ -755,7 +755,10 @@ BOOL		pathIsExistentFile(NSString* path);
 BOOL		pathIsReadable(NSString* path);
 BOOL		repositoryExistsAtPath(NSString* path);			// Does a repository exist at the given local file path.
 NSArray*	pruneDisallowedPaths(NSArray* paths);
-NSArray*	pruneContainedPaths(NSArray* paths);
+NSArray*	pruneContainedPaths(NSArray* paths);			// Remove any path which is inside any of the other paths.
+NSArray*	restrictPathsToPaths(NSArray* paths, NSArray* containingPaths);	// If a path p is inside containingPaths then keep it, if a path p is
+																			// not inside the containingPaths then keep all the paths in
+																			// contaningPaths which are inside p. 
 
 
 

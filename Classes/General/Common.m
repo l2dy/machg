@@ -451,6 +451,45 @@ NSArray* pruneContainedPaths(NSArray* paths)
 	return pruned;
 }
 
+NSArray* restrictPathsToPaths(NSArray* inPaths, NSArray* inContainingPaths)
+{
+	//	NSArray* testPaths = [NSArray arrayWithObjects:@"aa/bb/cc", @"aa/bb/cc/dd", @"ab/bb/cc", @"cc", @"dd", nil];
+	//	NSArray* containingPaths = [NSArray arrayWithObjects:@"aa/bb", @"cc/aa/", @"cc/bb/cc", @"dd", nil];
+	//	NSArray* ans = restrictPathsToPaths(testPaths, containingPaths);
+	// then result should be aa/bb/cc, aa/bb/cc/dd, cc/aa/, cc/bb/cc, dd
+	
+	NSArray* paths = [inPaths sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+	NSArray* containingPaths = [inContainingPaths sortedArrayUsingSelector:@selector(caseInsensitiveCompare:)];
+	NSInteger i = 0;
+	NSInteger j = 0;
+	NSMutableArray* restrictedPaths = [[NSMutableArray alloc]init];
+	while (i < [paths count] && j < [containingPaths count])
+	{
+		NSString* si = [paths objectAtIndex:i];
+		NSString* sj = [containingPaths objectAtIndex:j];
+		if ([sj hasPrefix:si])
+		{
+			[restrictedPaths addObject:sj];
+			j++;
+			continue;
+		}
+		else if ([si hasPrefix:sj])
+		{
+			[restrictedPaths addObject:si];
+			i++;
+			continue;
+		}
+		if ([si compare:sj] == NSOrderedAscending)
+		{
+			i++;
+			continue;
+		}
+		else
+			j++;
+	}
+	return restrictedPaths;
+}
+
 
 
 
