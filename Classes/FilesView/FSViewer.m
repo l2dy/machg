@@ -703,8 +703,8 @@
 		return;
 	}
 	NSArray* canonicalizedSelectedPaths = pruneContainedPaths([self absolutePathsOfSelectedFilesInBrowser]);
-	NSArray* combined = [canonicalizedSelectedPaths arrayByAddingObjectsFromArray:absoluteChangedPaths];
-	BOOL changesInSelectedPaths = [pruneContainedPaths(combined) count] != [combined count];
+	NSArray* restrictedSelectedPaths = restrictPathsToPaths(canonicalizedSelectedPaths, absoluteChangedPaths);
+	BOOL changesInSelectedPaths = IsNotEmpty(restrictedSelectedPaths);
 
 	ProcessListController* theProcessListController = [[self myDocument] theProcessListController];
 	NSNumber* processNum = [theProcessListController addProcessIndicator:@"Refresh Browser Data"];
