@@ -623,9 +623,23 @@
 	dispatch_async(globalQueue(), ^{
 		ExecutionResult* diffResult = [TaskExecutions executeMercurialWithArgs:argsDiff  fromRoot:rootPath logging:eLoggingNone  withDelegate:currentDifferencesTaskController];
 		PatchData* patchData = IsNotEmpty(diffResult.outStr) ? [PatchData patchDataFromDiffContents:diffResult.outStr] : nil;
-		[[self hunkExclusions] updateExclusionsForPatchData:patchData andRoot:rootPath];
+		[[self hunkExclusions] updateExclusionsForPatchData:patchData andRoot:rootPath within:selectedPaths];
 		[detailedPatchesWebView setBackingPatch:patchData andFallbackMessage:@"" withTaskNumber:currentTaskNumber];
 	});
+}
+
+- (void) updateExclusionDataForChangedPaths:(NSArray*)absoluteChangedPaths andRoot:(NSString*)rootPath
+{
+	// We might have potentially changed removed some excluded hunks or added new ones so we need to bring the patches up to date
+	// with the latest changes. 
+	NSArray* changedPathsWithExclusions = restrictPathsToPaths([[self hunkExclusions] absolutePathsWithExclusionsForRoot:rootPath], absoluteChangedPaths);
+	if (IsEmpty(changedPathsWithExclusions)) return;
+	NSMutableArray* argsDiff = [NSMutableArray arrayWithObjects:@"diff", @"--unified", @"1", nil];
+	[argsDiff addObjectsFromArray:changedPathsWithExclusions];
+	ExecutionResult* diffResult = [TaskExecutions executeMercurialWithArgs:argsDiff  fromRoot:rootPath logging:eLoggingNone];
+	PatchData* patchData = IsNotEmpty(diffResult.outStr) ? [PatchData patchDataFromDiffContents:diffResult.outStr] : nil;
+	if (patchData)
+		[[self hunkExclusions] updateExclusionsForPatchData:patchData andRoot:rootPath within:changedPathsWithExclusions];
 }
 
 
@@ -737,6 +751,11 @@
 			newRootNode = [rootNodeInfo_ shallowTreeCopyRemoving:absoluteChangedPaths];	// copy the tree and prune the changed paths out of the node tree.
 			if (!newRootNode)
 				newRootNode = [FSNodeInfo newEmptyTreeRootedAt:rootPath];				// regenerate the node tree if we don't have one
+		});
+
+		
+		dispatch_async(globalQueue(), ^{
+			[self updateExclusionDataForChangedPaths:absoluteChangedPaths andRoot:rootPath];
 		});
 
 		dispatchGroupWait(group);			// Synchronize the created newStatusLines, newResolveStatusLines and the copied

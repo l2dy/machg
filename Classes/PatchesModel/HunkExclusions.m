@@ -126,10 +126,12 @@ NSString* const kHunkHash	= @"HunkHash";
 }
 
 
-- (void) updateExclusionsForPatchData:(PatchData*)patchData andRoot:(NSString*)root
+- (void) updateExclusionsForPatchData:(PatchData*)patchData andRoot:(NSString*)root within:(NSArray*)paths
 {
 	NSMutableDictionary* repositoryValidHunkHashes = [validHunkHashDictionary_  objectForKey:root addingIfNil:[NSMutableDictionary class]];
 	NSMutableDictionary* repositoryHunkExclusions  = [hunkExclusionsDictionary_ objectForKey:root];
+	
+	// For all file patches in the new patch data update them
 	for (FilePatch* filePatch in [patchData filePatches])
 		if (filePatch)
 		{
@@ -148,6 +150,19 @@ NSString* const kHunkHash	= @"HunkHash";
 					[hunkExclusionsDictionary_ removeObjectForKey:root];
 			}
 		}
+	
+	// For all files registered to have exclusions, if the file no longer has modifications then remove the exclusions from the
+	// dictionaries 
+	NSArray* exclusionsRestricedToPaths = restrictPathsToPaths([self absolutePathsWithExclusionsForRoot:root], paths);
+	for (NSString* path in exclusionsRestricedToPaths)
+	{
+		NSString* relativePath = pathDifference(root, path);
+		if (![patchData filePatchForFilePath:relativePath])
+		{
+			[repositoryHunkExclusions  removeObjectForKey:relativePath];
+			[repositoryValidHunkHashes removeObjectForKey:relativePath];
+		}
+	}
 }
 
 
