@@ -22,6 +22,7 @@
 	NSArray*    hunkBodyLines;
 	NSString*   hunkHash;
 	NSInteger	changeLineCount;	// The number of changed lines in the hunk
+	BOOL		binaryHunk;			// Is this hunk binary data
 }
 @property (readonly,assign) NSString* hunkHash;
 
@@ -45,13 +46,15 @@
 	NSString* filePatchHeader;
 	NSMutableArray* hunks;			// An array of HunkObjects
 	NSMutableSet* hunkHashesSet;	// An array of the hases in the hunk Objects
+	BOOL binaryPatch;				// Records wether this file patch is a binary one
 }
 @property (readonly,assign) NSString* filePath;
 @property (readonly,assign) NSString* filePatchHeader;
 @property (readonly,assign) NSMutableArray* hunks;
 @property (readonly,assign) NSMutableSet* hunkHashesSet;
+@property (readonly,assign) BOOL binaryPatch;
 
-+ (FilePatch*) filePatchWithPath:(NSString*)path andHeader:(NSString*)header;
++ (FilePatch*) filePatchWithPath:(NSString*)path andHeader:(NSString*)header binary:(BOOL)binary;
 - (void)	   addHunkObjectWithLines:(NSMutableArray*)lines;
 
 - (NSString*)  filePatchExcluding:(NSSet*)excludedHunks;	// The header and body but with the exculded hunks filtered out
