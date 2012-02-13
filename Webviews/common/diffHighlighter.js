@@ -21,7 +21,7 @@ var safeShift = function(v)
 // MARK:  createSideBySideDiff
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-var createDiff = function(diff, diffTypeString, element, size, allowHunkSelection, callbacks)
+var createDiff = function(diff, diffTypeString, element, size, allowHunkSelection, showExternalDiffButton, callbacks)
 {
 	if (!diff || diff == "")
 		return;
@@ -175,10 +175,12 @@ var createDiff = function(diff, diffTypeString, element, size, allowHunkSelectio
 	}
 	
 
-	var createFileHeader = function(title) 
+	var createFileHeader = function(title)
 	{
-		var diffButton = '<button type="button" class="diffbutton" onclick="doExternalDiffOfFile(\''+title+'\')">external diff</button>';
-		return '<div class="fileHeader">' + title + ' ' + diffButton+'</div>';
+		var diffButton = '';
+		if (showExternalDiffButton == 'yes')
+			diffButton = ' <button type="button" class="diffbutton" onclick="doExternalDiffOfFile(\''+title+'\')">external diff</button>';
+		return '<div class="fileHeader">' + title + diffButton + '</div>';
 	}
 	
 	var finishContentBody = function(diffType)

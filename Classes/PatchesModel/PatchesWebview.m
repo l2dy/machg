@@ -14,6 +14,11 @@
 
 @implementation PatchesWebview
 
+@synthesize showExternalDiffButton = showExternalDiffButton_;
+
+
+
+
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
@@ -32,6 +37,7 @@
 	[self observe:kHunkWasIncluded from:exclusions byCalling:@selector(hunkWasIncluded:)];
 	[self observe:kFileWasExcluded from:exclusions byCalling:@selector(fileWasExcluded:)];
 	[self observe:kFileWasIncluded from:exclusions byCalling:@selector(fileWasIncluded:)];
+	showExternalDiffButton_ = YES;
 }
 
 
@@ -55,7 +61,6 @@
 	}
 					   
 	dispatch_async(globalQueue(), ^{
-		NSString* allowHunkSelection = [[parentController myDocument] inMergeState] ? @"no" : @"yes";
 		NSString* htmlizedDiffString = [backingPatch_ patchBodyHTMLized];
 
 		if ([htmlizedDiffString length] > DiffDisplaySizeLimitFromDefaults() * 1000000)
@@ -66,8 +71,11 @@
 			});
 			return;
 		}
-				
-		NSArray* showDiffArgs = [NSArray arrayWithObjects:htmlizedDiffString, fstr(@"%f",FontSizeOfDifferencesWebviewFromDefaults()), stringOfDifferencesWebviewDiffStyle(), allowHunkSelection, nil];
+
+		NSString* allowHunkSelection = [[parentController myDocument] inMergeState] ? @"no" : @"yes";
+		NSString* showExternalDiff = showExternalDiffButton_ ? @"yes" : @"no";
+
+		NSArray* showDiffArgs = [NSArray arrayWithObjects:htmlizedDiffString, fstr(@"%f",FontSizeOfDifferencesWebviewFromDefaults()), stringOfDifferencesWebviewDiffStyle(), allowHunkSelection, showExternalDiff, nil];
 		dispatch_async(mainQueue(), ^{
 			if (taskNumber >= taskNumber_)
 				[[self windowScriptObject] callWebScriptMethod:@"showDiff" withArguments:showDiffArgs];

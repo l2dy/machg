@@ -74,6 +74,9 @@
 	[self setDelegate:self];
 	[self setDataSource:self];
 
+	[self observe:kFileDiffsDisplayPreferencesChanged from:nil byCalling:@selector(tableViewSelectionDidChange:)];
+	[detailedPatchesWebView setShowExternalDiffButton:NO];
+
 	// drag and drop support
 	[self registerForDraggedTypes:[NSArray arrayWithObjects:kPatchesTablePBoardType, NSFilenamesPboardType, nil]];
 

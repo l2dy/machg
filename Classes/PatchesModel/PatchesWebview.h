@@ -35,8 +35,10 @@
 										// that once the bigger patch finishes it doesn't overwrite the later smaller patch and so
 										// we record the task number to prevents this.
 	NSString*  repositoryRootForPatch_;	// When we load up a new patch, record it's root path so we can use this for access into
-										// the hunkExclusions 
+										// the hunkExclusions
+	BOOL		showExternalDiffButton_;// Do we show the external diff button in the patches.
 }
+@property (assign,readwrite) BOOL	showExternalDiffButton;
 
 - (NSInteger) nextTaskNumber;		// Start a new process and display of a patch. 
 - (void) setBackingPatch:(PatchData*)patchData andFallbackMessage:(NSString*)fallbackMessage;
