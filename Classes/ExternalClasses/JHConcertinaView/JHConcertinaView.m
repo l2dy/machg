@@ -151,31 +151,26 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 	CGFloat totalContentHeights = 0;
 	for (JHConcertinaSubView* pane in panes)
 		totalContentHeights += [pane contentHeight];
-	
+
+	NSInteger count = [panes count];
+	CGFloat extraHeights[count];
+
 	if (totalContentHeights < 1)
-	{
-		NSInteger count = [panes count];
-		CGFloat extraPerPane = floor(extra/count);
-		CGFloat total = 0;
-		for (JHConcertinaSubView* pane in panes)
-		{
-			total += extraPerPane;
-			[pane changeFrameHeightBy: extraPerPane];
-		}
-		[[panes objectAtIndex:0] changeFrameHeightBy: (extra - total)]; // Put any left over into expanding the first pane
-		[self changeFrameHeightBy: -extra];
-		return;
-	}
+		for (NSInteger i = 0 ; i < count; i++)
+			extraHeights[i] = floor(extra/count);
+	else
+		for (NSInteger i = 0 ; i < count; i++)
+			extraHeights[i] = extraForPane(extra, [panes objectAtIndex:i], totalContentHeights);
 
 	CGFloat total = 0;
-	for (JHConcertinaSubView* pane in panes)
-	{
-		CGFloat amount = extraForPane(extra, pane, totalContentHeights);
-		total += amount;
-		[pane changeFrameHeightBy: amount];
-	}
-	[[panes objectAtIndex:0] changeFrameHeightBy: (extra - total)]; // Put any left over into expanding the first pane
+	for (NSInteger i = 0 ; i < count; i++)
+		total += extraHeights[0];
+	
+	extraHeights[0] += (extra - total); // Put any left over into expanding the first pane
+	for (NSInteger i = 0 ; i < count; i++)
+		[[panes objectAtIndex:i] changeFrameHeightBy: extraHeights[0]]; // Put any left over into expanding the first pane
 	[self changeFrameHeightBy: -extra];
+
 	return;
 }
 
