@@ -129,12 +129,13 @@ static NSCursor* cursorForSpaceAboveAndBelow(BOOL spaceAbove, BOOL spaceInAndBel
 // MARK:  Accessors
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (NSView*) divider			 { return divider; }
-- (NSView*) content			 { return content; }
-- (CGFloat) dividerHeight	 { return divider.frame.size.height; }
-- (CGFloat) contentHeight	 { return [self height] - [self dividerHeight]; }
-- (CGFloat) height			 { return self.frame.size.height; }
-- (void)	setOldPaneHeight { oldPaneHeight = MAX([self height], 100); };
+- (NSView*) divider			  { return divider; }
+- (NSView*) content			  { return content; }
+- (CGFloat) dividerHeight	  { return divider.frame.size.height; }
+- (CGFloat) contentHeight	  { return [self height] - [self dividerHeight]; }
+- (CGFloat) height			  { return self.frame.size.height; }
+- (CGFloat) oldPaneHeight	  { return oldPaneHeight; }
+- (void)	initOldPaneHeight { oldPaneHeight = MAX([self height], 100); }
 
 - (void)	changeFrameHeightBy:(CGFloat)delta		 { if (delta == 0) return; NSRect frame = [self frame]; frame.size.height += delta; [[self animator] setFrame:frame]; }
 - (void)	changeFrameHeightDirectBy:(CGFloat)delta { if (delta == 0) return; NSRect frame = [self frame]; frame.size.height += delta; [self setFrame:frame]; }
@@ -174,13 +175,13 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 	return;
 }
 
-- (void) expandPaneTakingSpaceFromPanes:(NSArray*)panes
+- (void) expandPaneTo:(CGFloat)height byTakingSpaceFromPanes:(NSArray*)panes
 {
 	CGFloat totalContentHeights = 0;
 	for (JHConcertinaSubView* pane in panes)
 		totalContentHeights += [pane contentHeight];
 
-	CGFloat extra = oldPaneHeight - [self height];
+	CGFloat extra = height - [self height];
 	
 	CGFloat totalExtra = 0;
 	if (totalContentHeights > 0.5)
@@ -256,7 +257,7 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 	[self adjustSubviews];
 	
 	for (JHConcertinaSubView* pane in arrayOfConcertinaPanes)
-		[pane setOldPaneHeight];
+		[pane initOldPaneHeight];
 
 
 	[self setDelegate:self];
@@ -271,6 +272,29 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 	return [arrayOfConcertinaPanes objectAtIndex:paneNumber];
 }
 
+- (void) expandPane:(NSView*)paneChild toHeight:(CGFloat)height
+{
+	JHConcertinaSubView* pane = (JHConcertinaSubView*)enclosingViewOfClass(paneChild, [JHConcertinaSubView class]);
+	NSMutableArray* otherPanes = [arrayOfConcertinaPanes mutableCopy];
+	[otherPanes removeObject:pane];
+	[pane expandPaneTo:height byTakingSpaceFromPanes:otherPanes];
+	[self splitView:self resizeSubviewsWithOldSize:[self frame].size];	
+}
+
+- (void) collapsePane:(NSView*)paneChild
+{
+	JHConcertinaSubView* pane = (JHConcertinaSubView*)enclosingViewOfClass(paneChild, [JHConcertinaSubView class]);
+	NSMutableArray* otherPanes = [arrayOfConcertinaPanes mutableCopy];
+	[otherPanes removeObject:pane];
+	[pane collapsePaneGivingSpaceToPanes:otherPanes];
+	[self splitView:self resizeSubviewsWithOldSize:[self frame].size];	
+}
+
+- (void) expandPane:(NSView*)paneChild toPecentageHeight:(float)percentage
+{
+	float desieredFrameHeight = [self frame].size.height*constrain(percentage,0,1);
+	[self expandPane:paneChild toHeight:desieredFrameHeight];
+}
 
 - (void) mouseDown:(NSEvent*)theEvent
 {
@@ -293,14 +317,11 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 		[self doDragLoopOfDivider:dividerDragIndex withEvent:theEvent];
 	else
 	{
-		NSMutableArray* otherPanes = [arrayOfConcertinaPanes mutableCopy];
 		JHConcertinaSubView* pane = [self pane:dividerDragIndex];
-		[otherPanes removeObject:pane];
 		if ([pane contentHeight] == 0)
-			[pane expandPaneTakingSpaceFromPanes:otherPanes];
+			[self expandPane:pane toHeight:[pane oldPaneHeight]];
 		else
-			[pane collapsePaneGivingSpaceToPanes:otherPanes];
-		[self splitView:self resizeSubviewsWithOldSize:[self frame].size];
+			[self collapsePane:pane];
 	}
 }
 

@@ -41,10 +41,13 @@
 - (CGFloat) dividerHeight;
 - (CGFloat) contentHeight;
 - (CGFloat) height;
+- (CGFloat) oldPaneHeight;
 - (BOOL)	clickIsInsideDivider:(NSEvent*)theEvent;
 
+
+// Redistribute space
 - (void) collapsePaneGivingSpaceToPanes:(NSArray*)panes;
-- (void) expandPaneTakingSpaceFromPanes:(NSArray*)panes;
+- (void) expandPaneTo:(CGFloat)height byTakingSpaceFromPanes:(NSArray*)panes;
 
 @end
 
@@ -66,6 +69,15 @@
 }
 
 - (JHConcertinaSubView*) pane:(NSInteger)paneNumber;
+
+
+// Directly expand / collapse subviews
+- (void) expandPane:(NSView*)paneChild toHeight:(CGFloat)height;
+- (void) expandPane:(NSView*)paneChild toPecentageHeight:(float)percentage;
+- (void) collapsePane:(NSView*)paneChild;
+
+
+// Accessors
 - (BOOL) isSubviewCollapsed:(NSView*)subview;
 - (BOOL) spaceAbove:(JHConcertinaSubView*)subview;
 - (BOOL) spaceInAndBelow:(JHConcertinaSubView*)subview;
