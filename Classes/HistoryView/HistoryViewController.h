@@ -66,8 +66,8 @@
 
 }
 
-@property (readwrite,assign) MacHgDocument*	myDocument;
-@property (readonly, assign) LogTableView*	logTableView;
+@property (readwrite,assign) MacHgDocument*	  myDocument;
+@property (readonly, assign) LogTableView*	  logTableView;
 
 
 // Initializations
@@ -81,6 +81,8 @@
 - (IBAction) resetHistoryView:(id)sender;
 - (void)	 restoreConcertinaSplitViewPositions;
 - (void)	 scrollToSelected;
+- (void)	 expandLabelsTableinConcertina;
+- (void)	 manageLabelsOfType:(LabelType)labelType;
 
 
 // Menu Actions

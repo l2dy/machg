@@ -332,23 +332,39 @@
 - (IBAction)	mainMenuGotoChangeset:(id)sender;
 - (IBAction)	mainMenuMergeWith:(id)sender;
 // ------------------------------------------------------
-- (IBAction)	mainMenuCollapseChangesets:(id)sender;
-- (IBAction)	mainMenuStripChangesets:(id)sender;
-- (IBAction)	mainMenuRebaseChangesets:(id)sender;
-- (IBAction)	mainMenuHistoryEditChangesets:(id)sender;
-- (IBAction)	mainMenuBackoutChangeset:(id)sender;
-// ------------------------------------------------------
 - (IBAction)	mainMenuManifestOfCurrentVersion:(id)sender;
 - (IBAction)	mainMenuAddLabelToCurrentRevision:(id)sender;
 // ------------------------------------------------------
-- (IBAction)	mainMenuAddLocalRepositoryRef:(id)sender;
-- (IBAction)	mainMenuAddServerRepositoryRef:(id)sender;
-- (IBAction)	mainMenuAddNewSidebarGroupItem:(id)sender;
-- (IBAction)	mainMenuRemoveSidebarItems:(id)sender;
-- (IBAction)	mainMenuConfigureRepositoryRef:(id)sender;
-- (IBAction)	mainMenuConfigureLocalRepositoryRef:(id)sender;
-- (IBAction)	mainMenuConfigureServerRepositoryRef:(id)sender;
+// Labels>
+  - (IBAction)    mainMenuAddBookmark:(id)sender;
+  - (IBAction)    mainMenuManageBookmarks:(id)sender;
+  // ------------------------------------------------------
+  - (IBAction)    mainMenuAddLocalTag:(id)sender;
+  - (IBAction)    mainMenuAddGlobalTag:(id)sender;
+  - (IBAction)    mainMenuManageTags:(id)sender;
+  // ------------------------------------------------------
+  - (IBAction)    mainMenuAddBranch:(id)sender;
+  - (IBAction)    mainMenuCloseBranch:(id)sender;
+  - (IBAction)    mainMenuManageBranches:(id)sender;
+// Patches >
+  - (IBAction)    mainMenuImportPatches:(id)sender;
+  - (IBAction)    mainMenuExportPatches:(id)sender;
+// History Editing >
+  - (IBAction)    mainMenuCollapseChangesets:(id)sender;
+  - (IBAction)    mainMenuStripChangesets:(id)sender;
+  - (IBAction)    mainMenuRebaseChangesets:(id)sender;
+  - (IBAction)    mainMenuHistoryEditChangesets:(id)sender;
+  - (IBAction)    mainMenuBackoutChangeset:(id)sender;
 // ------------------------------------------------------
+// Manage Repository >
+  - (IBAction)    mainMenuAddLocalRepositoryRef:(id)sender;
+  - (IBAction)    mainMenuAddServerRepositoryRef:(id)sender;
+  - (IBAction)    mainMenuAddNewSidebarGroupItem:(id)sender;
+  - (IBAction)    mainMenuRemoveSidebarItems:(id)sender;
+  - (IBAction)    mainMenuConfigureRepositoryRef:(id)sender;
+  - (IBAction)    mainMenuConfigureLocalRepositoryRef:(id)sender;
+  - (IBAction)    mainMenuConfigureServerRepositoryRef:(id)sender;
+
 - (IBAction)	mainMenuRevealSelectedFilesInFinder:(id)sender;
 - (IBAction)	mainMenuOpenSelectedFilesInFinder:(id)sender;
 - (IBAction)	mainMenuOpenTerminalHere:(id)sender;
@@ -378,6 +394,7 @@
 - (BOOL)		primaryActionUntrackSelectedFiles:(NSArray*)theSelectedFiles;
 - (BOOL)		primaryActionRemerge:(NSArray*)absolutePaths withConfirmation:(BOOL)confirm;
 - (BOOL)		primaryActionMarkResolved:(NSArray*)absolutePaths withConfirmation:(BOOL)confirm;
+- (BOOL)		primaryActionCloseBranchWithConfirmation:(BOOL)confirm;
 - (BOOL)		primaryActionIgnoreSelectedFiles:(NSArray*)theSelectedFiles;
 - (BOOL)		primaryActionUnignoreSelectedFiles:(NSArray*)theSelectedFiles;
 - (BOOL)		primaryActionAnnotateSelectedFiles:(NSArray*)theSelectedFiles;

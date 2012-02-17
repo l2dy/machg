@@ -48,4 +48,8 @@
 - (IBAction) labelTableSingleClick:(id) sender;
 - (IBAction) labelTableDoubleClick:(id) sender;
 
+
+// State setting
+- (void) setButtonsFromLabelType:(LabelType)labelType;
+
 @end

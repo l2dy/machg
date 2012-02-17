@@ -163,6 +163,15 @@
 // MARK:  Labels Table Data
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+- (void) setButtonsFromLabelType:(LabelType)labelType
+{
+	[showTags setState:bitsInCommon(eTagLabel, labelType)];
+	[showBookmarks setState:bitsInCommon(eBookmarkLabel, labelType)];
+	[showBranches setState:bitsInCommon(eOpenBranchLabel, labelType)];
+	[showClosedBranches setState:bitsInCommon(eClosedBranch, labelType)];
+	[showOpenHeads setState:bitsInCommon(eOpenHead, labelType)];
+}
+
 - (LabelType) labelTypeFilterOfButtons
 {
 	return

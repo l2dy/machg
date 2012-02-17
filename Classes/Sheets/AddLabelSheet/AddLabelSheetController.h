@@ -53,6 +53,12 @@ typedef enum
 
 
 - (IBAction) openAddLabelSheet:(id)sender;
+
+- (IBAction) openAddLabelSheetForBookmark:(id)sender;
+- (IBAction) openAddLabelSheetForLocalTag:(id)sender;
+- (IBAction) openAddLabelSheetForGlobalTag:(id)sender;
+- (IBAction) openAddLabelSheetForBranch:(id)sender;
+
 - (IBAction) sheetButtonOk:(id)sender;
 - (IBAction) sheetButtonCancel:(id)sender;
 - (IBAction) didSelectSegment:(id)sender;

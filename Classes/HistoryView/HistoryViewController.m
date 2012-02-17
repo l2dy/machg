@@ -75,6 +75,8 @@
 
 
 
+
+
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 // MARK: Initialization
@@ -168,7 +170,18 @@
 	[logTableView scrollToSelected:self];
 }
 
+- (void) expandLabelsTableinConcertina
+{
+	[concertinaView expandPane:theLabelsTableView_ toPecentageHeight:0.5];
+}
 
+- (void) manageLabelsOfType:(LabelType)labelTypes
+{
+	[myDocument actionSwitchViewToHistoryView:self];
+	[self expandLabelsTableinConcertina];
+	[theLabelsTableView_ setButtonsFromLabelType:labelTypes];
+	[theLabelsTableView_ resetTable:self];
+}
 
 
 

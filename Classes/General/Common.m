@@ -99,6 +99,7 @@ NSString* const MHGDisplayWarningForAddRemoveRenameFiles	= @"DisplayWarningForAd
 NSString* const MHGDisplayWarningForAmend					= @"DisplayWarningForAmend";
 NSString* const MHGDisplayWarningForBackout					= @"DisplayWarningForBackout";
 NSString* const MHGDisplayWarningForBranchNameRemoval		= @"DisplayWarningForBranchNameRemoval";
+NSString* const MHGDisplayWarningForCloseBranch				= @"DisplayWarningForCloseBranch";
 NSString* const MHGDisplayWarningForFileDeletion			= @"DisplayWarningForFileDeletion";
 NSString* const MHGDisplayWarningForMarkingFilesResolved	= @"DisplayWarningForMarkingFilesResolved";
 NSString* const MHGDisplayWarningForMerging					= @"DisplayWarningForMerging";
@@ -178,6 +179,7 @@ BOOL		DisplayWarningForAddRemoveRenameFilesFromDefaults()		{ return boolFromDefa
 BOOL		DisplayWarningForAmendFromDefaults()					{ return boolFromDefaultsForKey(MHGDisplayWarningForAmend); }
 BOOL		DisplayWarningForBackoutFromDefaults()					{ return boolFromDefaultsForKey(MHGDisplayWarningForBackout); }
 BOOL		DisplayWarningForBranchNameRemovalFromDefaults()		{ return boolFromDefaultsForKey(MHGDisplayWarningForBranchNameRemoval); }
+BOOL		DisplayWarningForCloseBranchFromDefaults()				{ return boolFromDefaultsForKey(MHGDisplayWarningForCloseBranch); }
 BOOL		DisplayWarningForFileDeletionFromDefaults()				{ return boolFromDefaultsForKey(MHGDisplayWarningForFileDeletion); }
 BOOL		DisplayWarningForMarkingFilesResolvedFromDefaults()		{ return boolFromDefaultsForKey(MHGDisplayWarningForMarkingFilesResolved); }
 BOOL		DisplayWarningForMergingFromDefaults()					{ return boolFromDefaultsForKey(MHGDisplayWarningForMerging); }

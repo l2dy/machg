@@ -67,6 +67,8 @@
 	<true/>
 	<key>DisplayWarningForBranchNameRemoval</key>
 	<true/>
+	<key>DisplayWarningForCloseBranch</key>
+	<true/>
 	<key>DisplayWarningForFileDeletion</key>
 	<true/>
 	<key>DisplayWarningForMarkingFilesResolved</key>

@@ -185,6 +185,11 @@ NSString* kTheRevisionFieldValue = @"theRevisionFieldValue";
 // MARK:  Tab handling
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+- (IBAction) openAddLabelSheetForBookmark:(id)sender	{ [self setAddLabelTabNumber:eAddLabelTabBookmark];		[self openAddLabelSheet:sender]; }
+- (IBAction) openAddLabelSheetForLocalTag:(id)sender	{ [self setAddLabelTabNumber:eAddLabelTabLocalTag];		[self openAddLabelSheet:sender]; }
+- (IBAction) openAddLabelSheetForGlobalTag:(id)sender	{ [self setAddLabelTabNumber:eAddLabelTabGlobalTag];	[self openAddLabelSheet:sender]; }
+- (IBAction) openAddLabelSheetForBranch:(id)sender		{ [self setAddLabelTabNumber:eAddLabelTabBranch];		[self openAddLabelSheet:sender]; }
+
 - (IBAction) openAddLabelSheet:(id)sender
 {
 	HistoryView* theHistoryView = [myDocument theHistoryView];

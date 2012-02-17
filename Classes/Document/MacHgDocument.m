@@ -900,22 +900,38 @@
 	if (theAction == @selector(mainMenuGotoChangeset:))					return [self localRepoIsSelectedAndReady];
 	if (theAction == @selector(mainMenuMergeWith:))						return [self localRepoIsSelectedAndReady] && [self showingFilesOrHistoryView] && [[self repositoryData]hasMultipleOpenHeads] && ![self repositoryHasFilesWhichContainStatus:eHGStatusSecondary];
 	// ------
-	if (theAction == @selector(mainMenuCollapseChangesets:))		 	return [[self currentPaneView] validateUserInterfaceItem:anItem];
-	if (theAction == @selector(mainMenuHistoryEditChangesets:))		 	return [[self currentPaneView] validateUserInterfaceItem:anItem];
-	if (theAction == @selector(mainMenuStripChangesets:))			 	return [[self currentPaneView] validateUserInterfaceItem:anItem];
-	if (theAction == @selector(mainMenuRebaseChangesets:))			 	return [[self currentPaneView] validateUserInterfaceItem:anItem];
-	if (theAction == @selector(mainMenuBackoutChangeset:))			 	return [[self currentPaneView] validateUserInterfaceItem:anItem];
-	// ------
 	if (theAction == @selector(mainMenuManifestOfCurrentVersion:))		return [self localRepoIsSelectedAndReady] && [self showingFilesOrHistoryView];
 	if (theAction == @selector(mainMenuAddLabelToCurrentRevision:))		return [self localRepoIsSelectedAndReady] && [self showingFilesOrHistoryView];	
+	// ------ Labels >
+		if (theAction == @selector(mainMenuAddBookmark:))				return [self localRepoIsSelectedAndReady] && [self showingFilesOrHistoryView];
+		if (theAction == @selector(mainMenuManageBookmarks:))			return [self localRepoIsSelectedAndReady] && [self showingFilesOrHistoryView];
+		// ------
+		if (theAction == @selector(mainMenuAddLocalTag:))				return [self localRepoIsSelectedAndReady] && [self showingFilesOrHistoryView];
+		if (theAction == @selector(mainMenuAddGlobalTag:))				return [self localRepoIsSelectedAndReady] && [self showingFilesOrHistoryView];
+		if (theAction == @selector(mainMenuManageTags:))				return [self localRepoIsSelectedAndReady] && [self showingFilesOrHistoryView];
+		// ------
+		if (theAction == @selector(mainMenuAddBranch:))					return [self localRepoIsSelectedAndReady] && [self showingFilesOrHistoryView];
+		if (theAction == @selector(mainMenuCloseBranch:))				return [self localRepoIsSelectedAndReady] && [self showingFilesOrHistoryView];
+		if (theAction == @selector(mainMenuManageBranches:))			return [self localRepoIsSelectedAndReady] && [self showingFilesOrHistoryView];
+	// ------ History Patches >
+		if (theAction == @selector(mainMenuImportPatches:))				return [self localRepoIsSelectedAndReady] && [self showingFilesOrHistoryView];
+		if (theAction == @selector(mainMenuExportPatches:))				return [self localRepoIsSelectedAndReady] && [self showingFilesOrHistoryView];
+
+	// ------ History Editing >
+		if (theAction == @selector(mainMenuCollapseChangesets:))		return [[self currentPaneView] validateUserInterfaceItem:anItem];
+		if (theAction == @selector(mainMenuHistoryEditChangesets:))		return [[self currentPaneView] validateUserInterfaceItem:anItem];
+		if (theAction == @selector(mainMenuStripChangesets:))		 	return [[self currentPaneView] validateUserInterfaceItem:anItem];
+		if (theAction == @selector(mainMenuRebaseChangesets:))			return [[self currentPaneView] validateUserInterfaceItem:anItem];
+		if (theAction == @selector(mainMenuBackoutChangeset:))		 	return [[self currentPaneView] validateUserInterfaceItem:anItem];
 	// ------
-	if (theAction == @selector(mainMenuAddLocalRepositoryRef:))			return !showingSheet_;
-	if (theAction == @selector(mainMenuAddServerRepositoryRef:))		return !showingSheet_;
-	if (theAction == @selector(mainMenuAddNewSidebarGroupItem:))		return !showingSheet_;
-	if (theAction == @selector(mainMenuRemoveSidebarItems:))			return [self validateAndSwitchMenuForRemoveSidebarItems:anItem];
-	if (theAction == @selector(mainMenuConfigureRepositoryRef:))		return [self localOrServerRepoIsSelectedAndReady];
-	if (theAction == @selector(mainMenuConfigureLocalRepositoryRef:))	return [self localRepoIsSelectedAndReady];
-	if (theAction == @selector(mainMenuConfigureServerRepositoryRef:))	return [self localOrServerRepoIsSelectedAndReady];
+	// ------ Manage Repositories >
+		if (theAction == @selector(mainMenuAddLocalRepositoryRef:))		return !showingSheet_;
+		if (theAction == @selector(mainMenuAddServerRepositoryRef:))	return !showingSheet_;
+		if (theAction == @selector(mainMenuAddNewSidebarGroupItem:))	return !showingSheet_;
+		if (theAction == @selector(mainMenuRemoveSidebarItems:))		return [self validateAndSwitchMenuForRemoveSidebarItems:anItem];
+		if (theAction == @selector(mainMenuConfigureRepositoryRef:))	return [self localOrServerRepoIsSelectedAndReady];
+		if (theAction == @selector(mainMenuConfigureLocalRepositoryRef:)) return [self localRepoIsSelectedAndReady];
+		if (theAction == @selector(mainMenuConfigureServerRepositoryRef:)) return [self localOrServerRepoIsSelectedAndReady];
 	// ------
 	if (theAction == @selector(mainMenuRevealRepositoryInFinder:))		return [self localRepoIsSelectedAndReady];
 	if (theAction == @selector(mainMenuOpenTerminalHere:))				return [self localRepoIsSelectedAndReady];
@@ -944,8 +960,6 @@
 	if (theAction == @selector(browserMenuRevealSelectedFilesInFinder:))return [self localRepoIsSelectedAndReady];
 	if (theAction == @selector(browserMenuOpenTerminalHere:))			return [self localRepoIsSelectedAndReady];
 	// -------                                                       
-	if (theAction == @selector(mainMenuImportPatches:))					return [self localRepoIsSelectedAndReady] && [self showingFilesOrHistoryView];
-	if (theAction == @selector(mainMenuExportPatches:))					return [self localRepoIsSelectedAndReady] && [self showingFilesOrHistoryView];
 
 	
 	if (theAction == @selector(mainMenuNoAction:))						return !showingSheet_ && ([sidebar_ selectedNode] ? YES : NO);
@@ -1116,10 +1130,27 @@
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (IBAction) mainMenuMergeWith:(id)sender						{ [[self theMergeSheetController] openMergeSheet:sender]; }
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Labels
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
 - (IBAction) mainMenuAddLabelToCurrentRevision:(id)sender		{ [[self theAddLabelSheetController] openAddLabelSheet:sender]; }
-
-
-
+- (IBAction) mainMenuAddBookmark:(id)sender						{ [[self theAddLabelSheetController] openAddLabelSheetForBookmark:sender]; }
+- (IBAction) mainMenuManageBookmarks:(id)sender					{ [[self theHistoryView] manageLabelsOfType:eBookmarkLabel];}
+// ------
+- (IBAction) mainMenuAddLocalTag:(id)sender						{ [[self theAddLabelSheetController] openAddLabelSheetForLocalTag:sender]; }
+- (IBAction) mainMenuAddGlobalTag:(id)sender					{ [[self theAddLabelSheetController] openAddLabelSheetForGlobalTag:sender]; }
+- (IBAction) mainMenuManageTags:(id)sender						{ [[self theHistoryView] manageLabelsOfType:eTagLabel];}
+// ------
+- (IBAction) mainMenuAddBranch:(id)sender						{ [[self theAddLabelSheetController] openAddLabelSheetForBranch:sender]; }
+- (IBAction) mainMenuCloseBranch:(id)sender						{ [self primaryActionCloseBranchWithConfirmation:YES]; }
+- (IBAction) mainMenuManageBranches:(id)sender					{ [[self theHistoryView] manageLabelsOfType:eOpenBranchLabel];}
 
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
@@ -2336,6 +2367,37 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 	[self delayEventsUntilFinishBlock:^{
 		[TaskExecutions executeMercurialWithArgs:argsResolve fromRoot:rootPath];
 		[self addToChangedPathsDuringSuspension:rootPathAsArray];
+	}];
+	return YES;
+}
+
+
+- (BOOL) primaryActionCloseBranchWithConfirmation:(BOOL)confirm
+{
+	if ([self repositoryHasFilesWhichContainStatus:eHGStatusCommittable])
+	{
+		NSInteger result = NSRunAlertPanel(@"Outstanding Changes", @"There are outstanding uncommitted changes. Are you sure you want to continue?", @"Cancel", @"Ok", nil);
+		if (result == NSAlertDefaultReturn)
+			return NO;
+	}	
+
+	NSString* branchName = [[self repositoryData] getHGBranchName];
+	NSString* mainMessage = fstr(@"Closing the branch “%@”", branchName);
+
+	if (confirm && DisplayWarningForCloseBranchFromDefaults())
+	{
+		NSString* subMessage  = fstr( @"Are you sure you want to close the branch “%@” in the repository “%@”?", branchName, [self selectedRepositoryShortName]);
+		
+		int result = RunCriticalAlertPanelWithSuppression(mainMessage, subMessage, @"Close", @"Cancel", MHGDisplayWarningForCloseBranch);
+		if (result != NSAlertFirstButtonReturn)
+			return NO;
+	}
+	
+	[self removeAllUndoActionsForDocument];
+	NSString* rootPath = [self absolutePathOfRepositoryRoot];
+	NSMutableArray* argsCloseBranch = [NSMutableArray arrayWithObjects:@"commit", @"--close-branch", @"--exclude", @"\"set:removed() or added() or modified()\"", @"--message", mainMessage, nil];
+	[self delayEventsUntilFinishBlock:^{
+		[TaskExecutions executeMercurialWithArgs:argsCloseBranch fromRoot:rootPath];
 	}];
 	return YES;
 }
