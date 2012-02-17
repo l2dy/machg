@@ -70,12 +70,27 @@
 // MARK: validateButtons
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+- (BOOL) incompleteRevisionWillBeStripped
+{
+	NSUInteger incompleteRow = [logTableView tableRowForRevision:[[myDocument repositoryData] incompleteRevision]];
+	return (incompleteRow != NSNotFound && [logTableView isRowSelected:incompleteRow]);
+}
+
 - (NSIndexSet*) indexSetForStartingRevision:(NSNumber*)rev
 {
+	LogEntry* incompleteRevisionEntry = [[myDocument repositoryData] incompleteRevisionEntry];
+	if (theSameNumbers(rev,[incompleteRevisionEntry revision]))
+		return [NSIndexSet indexSet];
+	
 	NSSet* descendants = [[myDocument repositoryData] descendantsOfRevisionNumber:rev];
 	NSMutableIndexSet* newIndexes = [[NSMutableIndexSet alloc]init];
 	for (NSNumber* revNum in descendants)
 		[newIndexes addIndex:[logTableView tableRowForRevision:revNum]];
+	
+	// Add the incompleteRevision if applicable
+	if (incompleteRevisionEntry && [descendants containsObject:[incompleteRevisionEntry firstParent]])
+		[newIndexes addIndex:[logTableView tableRowForRevision:[incompleteRevisionEntry revision]]];
+
 	return newIndexes;
 }
 
@@ -84,9 +99,9 @@
 	NSArray* entries = [logTableView selectedEntries];
 
 	if ([entries count] < 1)
-		return @"Unable to perform the strip because no revisions are selected to strip. Select two or more consecutive revisions to strip.";
+		return @"Unable to perform the strip because no revisions are selected to strip. Select one or more consecutive revisions to strip.";
 
-	if ([myDocument repositoryHasFilesWhichContainStatus:eHGStatusCommittable] && ![self forceOption])
+	if (![self forceOption] && [self incompleteRevisionWillBeStripped])
 		return @"Unable to perform the strip because there are uncommitted changes. Enable the checkbox 'Force' option to ignore the uncommitted changes.";
 
 	return nil;
@@ -128,6 +143,14 @@
 	[self setBackupOption:YES];
 
 	[logTableView resetTable:self];
+	[logTableView setCanSelectIncompleteRevision:YES];
+	
+	if ([myDocument repositoryHasFilesWhichContainStatus:eHGStatusCommittable])
+	{
+		NSInteger result = NSRunAlertPanel(@"Outstanding Changes", @"There are outstanding uncommitted changes. Are you sure you want to continue?", @"Cancel", @"Ok", nil);
+		if (result == NSAlertDefaultReturn)
+			return;
+	}
 	
 	NSArray* revs = [[[myDocument theHistoryView] logTableView] chosenRevisions];
 	if ([revs count] <= 0)
@@ -203,9 +226,6 @@
 - (NSIndexSet*) tableView:(NSTableView*)tableView selectionIndexesForProposedSelection:(NSIndexSet*)proposedSelectionIndexes
 {
 	return proposedSelectionIndexes;
-	if (![logTableView rowWasClicked])
-		return [self indexSetForStartingRevision:stringAsNumber([logTableView revisionForTableRow:[proposedSelectionIndexes firstIndex]])];
-	return [self indexSetForStartingRevision:[logTableView chosenRevision]];
 }
 
 - (IBAction) handleLogTableViewClick:(id)sender
@@ -227,7 +247,8 @@
 {
 	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
 	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
-	BOOL migthEraseUncommitted = [myDocument repositoryHasFilesWhichContainStatus:eHGStatusCommittable];
+
+	BOOL willEraseUncommitted = [self incompleteRevisionWillBeStripped];
 	BOOL singleRevision = pair.lowRevision == pair.highRevision;
 	if (singleRevision)
 	{
@@ -241,9 +262,9 @@
 		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" through to ")];
 		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(intAsString(pair.highRevision))];
 	}
-	if (migthEraseUncommitted)
+	if (willEraseUncommitted)
 	{
-		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" (and any ")];
+		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" (and the ")];
 		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(@"uncommitted changes")];
 		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(fstr(@" deriving from %@)", singleRevision ? @"this revision": @"these revisions"))];
 	}
