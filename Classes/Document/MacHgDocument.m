@@ -960,7 +960,6 @@
 
 	
 	// Labels contextual items                                       
-	if (theAction == @selector(labelsMenuAddLabelToCurrentRevision:))	return [[self currentPaneView] validateUserInterfaceItem:anItem];
 	if (theAction == @selector(labelsMenuMoveChosenLabel:))			 	return [[self currentPaneView] validateUserInterfaceItem:anItem];
 	if (theAction == @selector(labelsMenuRemoveChosenLabel:))		 	return [[self currentPaneView] validateUserInterfaceItem:anItem];
 	// -------                                                       

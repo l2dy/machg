@@ -470,7 +470,6 @@
 	if (theAction == @selector(historyMenuViewRevisionDifferences:))			return [myDocument localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
 
 	// Labels contextual items
-	if (theAction == @selector(labelsMenuAddLabelToCurrentRevision:))			return [myDocument localRepoIsSelectedAndReady];
 	if (theAction == @selector(labelsMenuMoveChosenLabel:))						return [myDocument localRepoIsSelectedAndReady] && [theLabelsTableView_ chosenLabel] && ![[theLabelsTableView_ chosenLabel] isOpenHead];
 	if (theAction == @selector(labelsMenuRemoveChosenLabel:))					return [myDocument localRepoIsSelectedAndReady] && [theLabelsTableView_ chosenLabel] && ![[theLabelsTableView_ chosenLabel] isOpenHead];
 	// -------
