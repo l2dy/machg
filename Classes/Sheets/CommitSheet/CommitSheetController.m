@@ -320,7 +320,7 @@ NSString* kAmendOption	 = @"amendOption";
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK:  Actions
+// MARK:  Committing
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (NSArray*) argumentsForUserDataMessage
@@ -352,53 +352,99 @@ NSString* kAmendOption	 = @"amendOption";
 	}];
 }
 
-static bool reportAnyCommitSubstepErrors(ExecutionResult* result, NSString* operation, NSString* stepNumberInWords)
+- (BOOL) commit_setupForAmend
 {
-	if (![result hasErrors])
-		return NO;
-	NSString* fullMessage = fstr(@"The commit operation could not proceed. During the multistep process needed to commit files with excluded hunks, the %@ step of %@ reported the error: %@. Please back out any patch operations.", stepNumberInWords, operation, [result errStr]);
-	NSRunAlertPanel(@"Aborted commit", fullMessage, @"OK", nil, nil);
+	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+	
+	if (DisplayWarningForAmendFromDefaults())
+	{
+		BOOL pathsAreRootPath = [[absolutePathsOfFilesToCommit lastObject] isEqual:rootPath];
+		NSString* mainMessage = fstr(@"Amending the latest revision with %@ files", pathsAreRootPath ? @"all" : @"the selected");
+		NSString* subMessage  = fstr(@"Are you sure you want to amend the latest revision in the repository “%@”.", [myDocument selectedRepositoryShortName]);
+		int result = RunCriticalAlertPanelOptionsWithSuppression(mainMessage, subMessage, @"Amend", @"Cancel", nil, MHGDisplayWarningForAmend);
+		if (result != NSAlertFirstButtonReturn)
+			[NSException raise:@"UserCanceled" format:@"The user canceled this operation", nil];
+	}	
+	
+	NSString* parent1RevisionStr = numberAsString([myDocument getHGParent1Revision]);
+	NSMutableArray*  qimportArgs   = [NSMutableArray arrayWithObjects:@"qimport", @"--config", @"extensions.hgext.mq=", @"--rev", parent1RevisionStr, @"--name", @"macHgAmendPatch", @"--git", nil];
+	ExecutionResult* qimportResult = [myDocument executeMercurialWithArgs:qimportArgs  fromRoot:rootPath  whileDelayingEvents:YES];
+	if ([qimportResult hasErrors])
+		[NSException raise:@"QImporting" format:@"The Amend operation could not proceed. The process of importing the existing patch reported the error: %@.", [qimportResult errStr], nil];
 	return YES;
 }
 
-- (void) sheetActionCommitWithUncontestedPaths:(NSArray*)uncontestedPaths andContestedPaths:(NSArray*)contestedPaths
+- (void) commit_backupContestedFiles:(NSArray*)contestedPaths into:(NSString*)tempDirectoryPath withRoot:(NSString*)rootPath
 {
 	if (IsEmpty(contestedPaths))
-	{
-		[self sheetActionSimpleCommit:uncontestedPaths];
 		return;
-	}
-	
-	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
-	
-	// Get Diff
-	NSMutableArray* argsDiff = [NSMutableArray arrayWithObjects:@"diff", nil];
-	[argsDiff addObjectsFromArray:contestedPaths];
-	ExecutionResult* diffResult = [TaskExecutions executeMercurialWithArgs:argsDiff  fromRoot:rootPath logging:eLoggingNone];
-
-	// Get contested Patch File
-	PatchData* patchData = IsNotEmpty(diffResult.outStr) ? [PatchData patchDataFromDiffContents:diffResult.outStr] : nil;
-	NSString* contestedPatchFile = [patchData tempFileWithPatchBodyExcluding:[self hunkExclusions] withRoot:rootPath];
-
-	// Create temporary Directory and copy contested files to this directory
-	NSString* tempDirectoryPath = tempDirectoryPathWithTemplate(@"MacHgContestedFilePatchBackup.XXXXXXXXXX");
 	if (!tempDirectoryPath)
-	{
-		NSRunCriticalAlertPanel(@"Cannot Create Temporary Directory", @"Unable to create a necessary temporary directory. Aborting the commit operation.", @"OK", nil, nil);
-		return;
-	}
+		[NSException raise:@"TempDirectory" format:@"Unable to create a necessary temporary directory. Aborting the operation.", nil];
 	for (NSString* originalPath in contestedPaths)
 	{
 		NSError* err = nil;
 		NSString* backupPath =  fstr(@"%@/%@",tempDirectoryPath, pathDifference(rootPath, originalPath));
 		[[NSFileManager defaultManager] copyItemAtPath:originalPath toPath:backupPath withIntermediateDirectories:YES error:&err];
-		[NSApp presentAnyErrorsAndClear:&err];
 		if (err)
-			return;
+		{
+			NSString* operation = ([amendButton state] == NSOnState) ? @"amend" : @"commit";
+			[NSException raise:@"Backup" format:@"Unable to backup files before the main %@ (Mac OS reports: %@). Aborting the %@.", operation, [err localizedDescription], operation, nil];
+		}
+	}	
+}
+
+- (void) commit_restoreContestedFiles:(NSArray*)contestedPaths from:(NSString*)tempDirectoryPath withRoot:(NSString*)rootPath
+{
+	for (NSString* originalPath in contestedPaths)
+	{
+		NSError* err = nil;
+		NSString* backupPath =  fstr(@"%@/%@",tempDirectoryPath, pathDifference(rootPath, originalPath));
+		[[NSFileManager defaultManager] removeItemAtPath:originalPath error:&err];
+		[NSApp presentAnyErrorsAndClear:&err];
+		[[NSFileManager defaultManager] copyItemAtPath:backupPath toPath:originalPath error:&err];
+		[NSApp presentAnyErrorsAndClear:&err];
+	}
+	moveFilesToTheTrash([NSArray arrayWithObject:tempDirectoryPath]);
+}
+
+- (void) sheetActionCommitWithUncontestedPaths:(NSArray*)uncontestedPaths andContestedPaths:(NSArray*)contestedPaths amending:(BOOL)amend
+{
+	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+	NSString* operation = amend ? @"amend" : @"commit";
+	NSString* errorTitle = fstr(@"Aborted %@", amend ? @"Amend" : @"Commit");
+	NSString* operationTitle = fstr(@"%@ Files", amend ? @"Amending" : @"Committing");
+	
+	// Get contested Patch File
+	NSString* contestedPatchFile = nil;
+	if (IsNotEmpty(contestedPaths))
+	{
+		NSMutableArray* argsDiff = [NSMutableArray arrayWithObjects:@"diff", nil];
+		[argsDiff addObjectsFromArray:contestedPaths];
+		ExecutionResult* diffResult = [TaskExecutions executeMercurialWithArgs:argsDiff  fromRoot:rootPath logging:eLoggingNone];
+		PatchData* patchData = IsNotEmpty(diffResult.outStr) ? [PatchData patchDataFromDiffContents:diffResult.outStr] : nil;
+		contestedPatchFile = [patchData tempFileWithPatchBodyExcluding:[self hunkExclusions] withRoot:rootPath];
 	}
 	
+	// Create temporary Directory and copy contested files to this directory
+	NSString* commitPartsDirectory = fstr(@"%@/%@", rootPath, @".hg/macHgParts");
+	NSString* tempDirectoryPath = tempDirectoryPathWithTemplate(@"MacHgContestedFilePatchBackupDir.XXXXXXXXXX", commitPartsDirectory);
+	@try
+	{
+		[self commit_backupContestedFiles:contestedPaths into:tempDirectoryPath withRoot:rootPath];
+		if (amend)
+			[self commit_setupForAmend];
+	}
+	@catch (NSException* e)
+	{
+		if ([[e name] isEqualToString:@"UserCanceled"])
+			return;
+		NSRunCriticalAlertPanel(errorTitle, [e reason], @"OK", nil, nil);
+		return;
+	}
 	
-	[myDocument dispatchToMercurialQueuedWithDescription:@"Committing Files" process:^{
+	NSArray* commitCommandArguments = [self argumentsForUserDataMessage];
+	
+	[myDocument dispatchToMercurialQueuedWithDescription:operationTitle process:^{
 
 		[myDocument registerPendingRefresh:uncontestedPaths];
 		[myDocument registerPendingRefresh:contestedPaths];
@@ -407,11 +453,14 @@ static bool reportAnyCommitSubstepErrors(ExecutionResult* result, NSString* oper
 			@try
 			{
 				// Revert the contested files to their original state
-				NSMutableArray* argsRevert = [NSMutableArray arrayWithObjects:@"revert", @"--no-backup", nil];
-				[argsRevert addObjectsFromArray:contestedPaths];
-				ExecutionResult* revertResult = [TaskExecutions executeMercurialWithArgs:argsRevert  fromRoot:rootPath logging:eLoggingNone];
-				if (reportAnyCommitSubstepErrors(revertResult, @"revert", @"second"))
-					[NSException raise:@"Committing" format:@"Error occurded in reverting contested files", nil];;
+				if (IsNotEmpty(contestedPaths))
+				{
+					NSMutableArray* argsRevert = [NSMutableArray arrayWithObjects:@"revert", @"--no-backup", nil];
+					[argsRevert addObjectsFromArray:contestedPaths];
+					ExecutionResult* revertResult = [TaskExecutions executeMercurialWithArgs:argsRevert  fromRoot:rootPath logging:eLoggingNone];
+					if ([revertResult hasErrors])
+						[NSException raise:@"Reverting" format:@"During the process needed to %@ the files, the step of reverting the files with excluded hunks reported the error: %@.", operation, [revertResult errStr], nil];
+				}
 
 				// Patch the contested files to the desired state, (if all the hunks are descelected in the contested files the
 				// patch will be empty) 
@@ -419,93 +468,63 @@ static bool reportAnyCommitSubstepErrors(ExecutionResult* result, NSString* oper
 				{
 					NSMutableArray*  importArgs   = [NSMutableArray arrayWithObjects:@"import", @"--no-commit", @"--force", contestedPatchFile, nil];
 					ExecutionResult* importResult = [TaskExecutions executeMercurialWithArgs:importArgs  fromRoot:rootPath logging:eLoggingNone];
-					if (reportAnyCommitSubstepErrors(importResult, @"import", @"third"))
-						[NSException raise:@"Committing" format:@"Error occurded in importing contested patch", nil];;
+					if ([importResult hasErrors])
+						[NSException raise:@"Importing" format:@"During the process needed to %@ the files, the step of adjusting the files to exclude the specified hunks reported the error: %@.", operation, [importResult errStr], nil];
 				}
 				
-				NSMutableArray* commitArgs = [NSMutableArray arrayWithObjects:@"commit", nil];
-				[commitArgs addObjectsFromArray:[self argumentsForUserDataMessage]];
-				[commitArgs addObjectsFromArray:uncontestedPaths];
-				[commitArgs addObjectsFromArray:contestedPaths];
-				ExecutionResult* commitResult = [TaskExecutions executeMercurialWithArgs:commitArgs  fromRoot:rootPath logging:eLoggingNone];
-				if (reportAnyCommitSubstepErrors(commitResult, @"commit", @"fourth"))
-					[NSException raise:@"Committing" format:@"Error occurded in committing files", nil];;				
+				if (!amend)
+				{
+					// Do the commit
+					NSMutableArray* commitArgs = [NSMutableArray arrayWithObjects:@"commit", nil];
+					[commitArgs addObjectsFromArray:commitCommandArguments];
+					[commitArgs addObjectsFromArray:uncontestedPaths];
+					[commitArgs addObjectsFromArray:contestedPaths];
+					ExecutionResult* commitResult = [TaskExecutions executeMercurialWithArgs:commitArgs  fromRoot:rootPath logging:eLoggingNone];
+					if ([commitResult hasErrors])
+						[NSException raise:@"Committing" format:@"During the process needed to %@ the files, the step of commiting the adjusted files reported the error: %@.", operation, [commitResult errStr], nil];
+				}
+				else
+				{
+					// Do the refresh
+					NSMutableArray* qrefreshArgs = [NSMutableArray arrayWithObjects:@"qrefresh", @"--config", @"extensions.hgext.mq=", @"--short", nil];
+					[qrefreshArgs addObjectsFromArray:commitCommandArguments];
+					[qrefreshArgs addObjectsFromArray:uncontestedPaths];
+					[qrefreshArgs addObjectsFromArray:contestedPaths];
+					ExecutionResult* qrefreshResult = [myDocument executeMercurialWithArgs:qrefreshArgs  fromRoot:rootPath  whileDelayingEvents:YES];
+					if ([qrefreshResult hasErrors])
+						[NSException raise:@"Refreshing" format:@"The amend operation could not proceed. The patch refresh process reported the error: %@. Please back out any patch operations.", [qrefreshResult errStr], nil];
+					
+					// Do the queue finish
+					NSMutableArray*  qfinishArgs   = [NSMutableArray arrayWithObjects:@"qfinish", @"--config", @"extensions.hgext.mq=", @"macHgAmendPatch", nil];
+					ExecutionResult* qfinishResult = [myDocument executeMercurialWithArgs:qfinishArgs  fromRoot:rootPath  whileDelayingEvents:YES];
+					if ([qfinishResult hasErrors])
+						[NSException raise:@"Finishing" format:@"The amend operation could not proceed. The patch finish process reported the error: %@. Please back out any patch operations.", [qfinishResult errStr], nil];
+				}
 			}
 			@catch (NSException * e)
 			{
+				[amendButton setState:NSOffState];
+				NSRunCriticalAlertPanel(errorTitle, [e reason], @"OK", nil, nil);
 			}
 			@finally
 			{
 				// Replace the contested files with their original backups
-				for (NSString* originalPath in contestedPaths)
-				{
-					NSError* err = nil;
-					NSString* backupPath =  fstr(@"%@/%@",tempDirectoryPath, pathDifference(rootPath, originalPath));
-					[[NSFileManager defaultManager] removeItemAtPath:originalPath error:&err];
-					[NSApp presentAnyErrorsAndClear:&err];
-					[[NSFileManager defaultManager] copyItemAtPath:backupPath toPath:originalPath error:&err];
-					[NSApp presentAnyErrorsAndClear:&err];
-				}
+				[self commit_restoreContestedFiles:contestedPaths from:tempDirectoryPath withRoot:rootPath];
+				[myDocument addToChangedPathsDuringSuspension:contestedPaths];
+				[myDocument addToChangedPathsDuringSuspension:uncontestedPaths];
 			}
 		}];			
 	}];
 }
 
 
-- (void) sheetActionAmend:(NSArray*)pathsToCommit excluding:(NSArray*)excludedPaths
-{
-	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
-	
-	if (DisplayWarningForAmendFromDefaults())
-	{
-		BOOL pathsAreRootPath = [[pathsToCommit lastObject] isEqual:rootPath];
-		NSString* mainMessage = fstr(@"Amending the latest revision with %@ files", pathsAreRootPath ? @"all" : @"the selected");
-		NSString* subMessage  = fstr(@"Are you sure you want to amend the latest revision in the repository “%@”.",
-									 [myDocument selectedRepositoryShortName]);
-		
-		int result = RunCriticalAlertPanelOptionsWithSuppression(mainMessage, subMessage, @"Amend", @"Cancel", nil, MHGDisplayWarningForAmend);
-		if (result != NSAlertFirstButtonReturn)
-			return;
-	}	
-	
-	NSString* parent1RevisionStr = numberAsString([myDocument getHGParent1Revision]);
-	NSMutableArray*  qimportArgs   = [NSMutableArray arrayWithObjects:@"qimport", @"--config", @"extensions.hgext.mq=", @"--rev", parent1RevisionStr, @"--name", @"macHgAmendPatch", nil];
-	ExecutionResult* qimportResult = [myDocument executeMercurialWithArgs:qimportArgs  fromRoot:rootPath  whileDelayingEvents:YES];
-	if ([qimportResult hasErrors])
-	{
-		NSRunAlertPanel(@"Aborted Import", fstr(@"The Amend operation could not proceed. The patch import process reported the error: %@.", [qimportResult errStr]), @"OK", nil, nil);
-		[amendButton setState:NSOffState];
-		return;
-	}
-	
-	[myDocument dispatchToMercurialQueuedWithDescription:@"Committing Files" process:^{
 
-		[myDocument registerPendingRefresh:pathsToCommit];
 
-		NSMutableArray* qrefreshArgs = [NSMutableArray arrayWithObjects:@"qrefresh", @"--config", @"extensions.hgext.mq=", @"--short", nil];
-		[qrefreshArgs addObjectsFromArray:[self argumentsForUserDataMessage]];
-		[qrefreshArgs addObjectsFromArray:[self tableLeafPaths]];
-		ExecutionResult* qrefreshResult = [myDocument executeMercurialWithArgs:qrefreshArgs  fromRoot:rootPath  whileDelayingEvents:YES];
-		if ([qrefreshResult hasErrors])
-		{
-			NSRunAlertPanel(@"Aborted Import", fstr(@"The Amend operation could not proceed. The patch refresh process reported the error: %@. Please back out any patch operations.", [qrefreshResult errStr]), @"OK", nil, nil);
-			[amendButton setState:NSOffState];
-			return;
-		}
-		
-		NSMutableArray*  qfinishArgs   = [NSMutableArray arrayWithObjects:@"qfinish", @"--config", @"extensions.hgext.mq=", @"macHgAmendPatch", nil];
-		ExecutionResult* qfinishResult = [myDocument executeMercurialWithArgs:qfinishArgs  fromRoot:rootPath  whileDelayingEvents:YES];
-		if ([qfinishResult hasErrors])
-		{
-			NSRunAlertPanel(@"Aborted Import", fstr(@"The Amend operation could not proceed. The patch finish process reported the error: %@. Please back out any patch operations.", [qfinishResult errStr]), @"OK", nil, nil);
-			[amendButton setState:NSOffState];
-			return;
-		}
-		
-		[myDocument addToChangedPathsDuringSuspension:pathsToCommit];
-	}];
-}
 
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  Actions
+// -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (IBAction) sheetButtonOk:(id)sender
 {
@@ -516,6 +535,7 @@ static bool reportAnyCommitSubstepErrors(ExecutionResult* result, NSString* oper
 	NSArray* commitData = [self tableLeafPaths];
 	NSArray*   contestedPaths = [[self hunkExclusions]   contestedPathsIn:commitData  forRoot:root];
 	NSArray* uncontestedPaths = [[self hunkExclusions] uncontestedPathsIn:commitData  forRoot:root];
+	BOOL inMerge = [[myDocument repositoryData] inMergeState];
 	BOOL simpleOperation = 	IsEmpty(contestedPaths);
 	BOOL amend = ([amendButton state] == NSOnState);
 	
@@ -531,17 +551,11 @@ static bool reportAnyCommitSubstepErrors(ExecutionResult* result, NSString* oper
 
 	[myDocument removeAllUndoActionsForDocument];
 	
-	if (simpleOperation && !amend)
-	{
-		[NSApp endSheet:theCommitSheet];
-		[theCommitSheet orderOut:sender];
+	if ((simpleOperation && !amend) || inMerge)
 		[self sheetActionSimpleCommit:absolutePathsOfFilesToCommit];
-	}
-	
-	else if (!simpleOperation && !amend)
-		[self sheetActionCommitWithUncontestedPaths:uncontestedPaths andContestedPaths:contestedPaths];
-//	else if ([amendButton state] == NSOnState)
-//		[self sheetActionAmend:uncontestedPaths excluding:excludedPaths];
+	else
+		[self sheetActionCommitWithUncontestedPaths:uncontestedPaths andContestedPaths:contestedPaths amending:amend];
+
 	[NSApp endSheet:theCommitSheet];
 	[theCommitSheet orderOut:sender];
 }
