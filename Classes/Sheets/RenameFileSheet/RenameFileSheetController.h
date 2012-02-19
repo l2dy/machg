@@ -29,12 +29,13 @@
 	NSString*			theNewNameFieldValue_;
 	NSNumber*			theAlreadyMovedButtonValue_;
 }
-
 @property (readwrite,assign) NSString*	  theCurrentNameFieldValue;
 @property (readwrite,assign) NSString*	  theNewNameFieldValue;
 @property (readwrite,assign) NSNumber*	  theAlreadyMovedButtonValue;
 
+
 - (RenameFileSheetController*) initRenameFileSheetControllerWithDocument:(MacHgDocument*)doc;
+
 
 // Actions
 - (IBAction) validateButtons:(id)sender;
@@ -43,6 +44,8 @@
 - (IBAction) openRenameFileSheet:(id)sender;
 - (IBAction) browseToPath:(id)sender;
 
+
+// Delegates
 - (void) controlTextDidChange:(NSNotification*)aNotification;
 
 @end
