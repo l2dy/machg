@@ -104,7 +104,7 @@
 	[theLabelsTableView_ setAutosaveName:fstr(@"File:%@:HistoryLabelsTableViewColumnPositions", fileName)];
 	
 	[logTableView setTarget:self];
-	[logTableView setDoubleAction:@selector(diffSelectedRevisions:)];
+	[logTableView setDoubleAction:@selector(historyMenuDiffSelectedRevisions:)];
 	
 	[[myDocument mainWindow] makeFirstResponder:logTableView];
 }
@@ -270,6 +270,13 @@
 	[[myDocument theDifferencesView] performSelector:@selector(compareLowHighValue:) withObject:pairAsValue afterDelay:t];
 }
 
+- (IBAction) historyMenuDiffSelectedRevisions:(id)sender
+{
+	NSArray* rootPathAsArray = [myDocument absolutePathOfRepositoryRootAsArray];
+	LowHighPair pair = [logTableView parentToHighestSelectedRevisions];
+	NSString* revisionNumbers = fstr(@"%d%:%d", pair.lowRevision, pair.highRevision);
+	[myDocument viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:revisionNumbers];
+}
 
 
 
@@ -280,13 +287,6 @@
 // MARK:  LogTableView Actions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (IBAction) diffSelectedRevisions:(id)sender
-{
-	NSArray* rootPathAsArray = [myDocument absolutePathOfRepositoryRootAsArray];
-	LowHighPair pair = [logTableView parentToHighestSelectedRevisions];
-	NSString* revisionNumbers = fstr(@"%d%:%d", pair.lowRevision, pair.highRevision);
-	[myDocument viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:revisionNumbers];
-}
 
 - (void) logTableViewSelectionDidChange:(LogTableView*)theLogTable
 {
@@ -419,7 +419,7 @@
 - (IBAction) toolbarCommitFiles:(id)sender						{ [self mainMenuCommitAllFiles:sender]; }
 
 - (IBAction) mainMenuDiffAllFiles:(id)sender					{ [myDocument viewDifferencesInCurrentRevisionFor:[myDocument absolutePathOfRepositoryRootAsArray] toRevision:nil]; }	// nil indicates the current revision
-- (IBAction) toolbarDiffFiles:(id)sender						{ [self diffSelectedRevisions:sender]; }
+- (IBAction) toolbarDiffFiles:(id)sender						{ [self historyMenuDiffSelectedRevisions:sender]; }
 
 
 
@@ -461,6 +461,7 @@
 	
 	// HistoryView contextual items
 	if (theAction == @selector(historyMenuAddLabelToChosenRevision:))			return [myDocument localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuDiffSelectedRevisions:))				return [myDocument localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
 	if (theAction == @selector(historyMenuDiffAllToChosenRevision:))			return [myDocument localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
 	if (theAction == @selector(historyMenuUpdateRepositoryToChosenRevision:))	return [myDocument localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
 	if (theAction == @selector(historyMenuGotoChangeset:))						return [myDocument localRepoIsSelectedAndReady] && [myDocument showingHistoryView];

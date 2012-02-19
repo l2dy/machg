@@ -12,7 +12,7 @@
     </object>
     <object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
       <bool key="EncodedWithXMLCoder">YES</bool>
-      <integer value="1113"/>
+      <integer value="1148"/>
     </object>
     <object class="NSArray" key="IBDocument.PluginDependencies">
       <bool key="EncodedWithXMLCoder">YES</bool>
@@ -965,6 +965,37 @@
                   <reference key="NSOnImage" ref="385016679"/>
                   <reference key="NSMixedImage" ref="150129030"/>
                 </object>
+                <object class="NSMenuItem" id="628030758">
+                  <reference key="NSMenu" ref="1038298959"/>
+                  <string key="NSTitle">Differences</string>
+                  <string key="NSKeyEquiv"/>
+                  <int key="NSMnemonicLoc">2147483647</int>
+                  <reference key="NSOnImage" ref="385016679"/>
+                  <reference key="NSMixedImage" ref="150129030"/>
+                  <string key="NSAction">submenuAction:</string>
+                  <object class="NSMenu" key="NSSubmenu" id="858855064">
+                    <string key="NSTitle">Differences</string>
+                    <object class="NSMutableArray" key="NSMenuItems">
+                      <bool key="EncodedWithXMLCoder">YES</bool>
+                      <object class="NSMenuItem" id="585708436">
+                        <reference key="NSMenu" ref="858855064"/>
+                        <string key="NSTitle">Diff Selected Revisions</string>
+                        <string key="NSKeyEquiv"/>
+                        <int key="NSMnemonicLoc">2147483647</int>
+                        <reference key="NSOnImage" ref="385016679"/>
+                        <reference key="NSMixedImage" ref="150129030"/>
+                      </object>
+                      <object class="NSMenuItem" id="331654041">
+                        <reference key="NSMenu" ref="858855064"/>
+                        <string key="NSTitle">View Revision Differences</string>
+                        <string key="NSKeyEquiv"/>
+                        <int key="NSMnemonicLoc">2147483647</int>
+                        <reference key="NSOnImage" ref="385016679"/>
+                        <reference key="NSMixedImage" ref="150129030"/>
+                      </object>
+                    </object>
+                  </object>
+                </object>
                 <object class="NSMenuItem" id="249896574">
                   <reference key="NSMenu" ref="1038298959"/>
                   <string key="NSTitle">Merge…</string>
@@ -1161,6 +1192,16 @@
                       <object class="NSMenuItem" id="972358786">
                         <reference key="NSMenu" ref="786632432"/>
                         <string key="NSTitle">Rebase Changesets…</string>
+                        <string key="NSKeyEquiv"/>
+                        <int key="NSMnemonicLoc">2147483647</int>
+                        <reference key="NSOnImage" ref="385016679"/>
+                        <reference key="NSMixedImage" ref="150129030"/>
+                      </object>
+                      <object class="NSMenuItem" id="497724988">
+                        <reference key="NSMenu" ref="786632432"/>
+                        <bool key="NSIsDisabled">YES</bool>
+                        <bool key="NSIsSeparator">YES</bool>
+                        <string key="NSTitle"/>
                         <string key="NSKeyEquiv"/>
                         <int key="NSMnemonicLoc">2147483647</int>
                         <reference key="NSOnImage" ref="385016679"/>
@@ -2956,6 +2997,22 @@
           </object>
           <int key="connectionID">1145</int>
         </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">historyMenuDiffSelectedRevisions:</string>
+            <reference key="source" ref="569835777"/>
+            <reference key="destination" ref="585708436"/>
+          </object>
+          <int key="connectionID">1151</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">historyMenuViewRevisionDifferences:</string>
+            <reference key="source" ref="569835777"/>
+            <reference key="destination" ref="331654041"/>
+          </object>
+          <int key="connectionID">1152</int>
+        </object>
       </object>
       <object class="IBMutableOrderedSet" key="objectRecords">
         <object class="NSArray" key="orderedObjects">
@@ -4002,6 +4059,7 @@
               <reference ref="681277547"/>
               <reference ref="193245495"/>
               <reference ref="390794834"/>
+              <reference ref="628030758"/>
             </object>
             <reference key="parent" ref="901585875"/>
           </object>
@@ -4234,6 +4292,7 @@
               <reference ref="993350178"/>
               <reference ref="972358786"/>
               <reference ref="599290626"/>
+              <reference ref="497724988"/>
             </object>
             <reference key="parent" ref="581294341"/>
           </object>
@@ -4415,6 +4474,40 @@
             <reference key="object" ref="1008369061"/>
             <reference key="parent" ref="984668518"/>
           </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">1146</int>
+            <reference key="object" ref="497724988"/>
+            <reference key="parent" ref="786632432"/>
+          </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">1147</int>
+            <reference key="object" ref="628030758"/>
+            <object class="NSMutableArray" key="children">
+              <bool key="EncodedWithXMLCoder">YES</bool>
+              <reference ref="858855064"/>
+            </object>
+            <reference key="parent" ref="1038298959"/>
+          </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">1148</int>
+            <reference key="object" ref="858855064"/>
+            <object class="NSMutableArray" key="children">
+              <bool key="EncodedWithXMLCoder">YES</bool>
+              <reference ref="585708436"/>
+              <reference ref="331654041"/>
+            </object>
+            <reference key="parent" ref="628030758"/>
+          </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">1149</int>
+            <reference key="object" ref="585708436"/>
+            <reference key="parent" ref="858855064"/>
+          </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">1150</int>
+            <reference key="object" ref="331654041"/>
+            <reference key="parent" ref="858855064"/>
+          </object>
         </object>
       </object>
       <object class="NSMutableDictionary" key="flattenedProperties">
@@ -4468,6 +4561,13 @@
           <string>1133.IBPluginDependency</string>
           <string>1136.IBPluginDependency</string>
           <string>1137.IBPluginDependency</string>
+          <string>1146.IBPluginDependency</string>
+          <string>1147.IBPluginDependency</string>
+          <string>1148.IBEditorWindowLastContentRect</string>
+          <string>1148.IBPluginDependency</string>
+          <string>1149.IBPluginDependency</string>
+          <string>1150.IBAttributePlaceholdersKey</string>
+          <string>1150.IBPluginDependency</string>
           <string>124.IBPluginDependency</string>
           <string>124.ImportedFromIB2</string>
           <string>125.IBEditorWindowLastContentRect</string>
@@ -4750,7 +4850,7 @@
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>{{617, 284}, {207, 103}}</string>
+          <string>{{925, 351}, {207, 113}}</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>{{617, 204}, {289, 103}}</string>
@@ -4771,11 +4871,25 @@
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>{{617, 364}, {168, 43}}</string>
+          <string>{{925, 441}, {168, 43}}</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+          <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+          <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+          <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+          <string>{{925, 511}, {226, 43}}</string>
+          <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+          <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
+          <object class="NSMutableDictionary">
+            <string key="NS.key.0">ToolTip</string>
+            <object class="IBToolTipAttribute" key="NS.object.0">
+              <string key="name">ToolTip</string>
+              <reference key="object" ref="331654041"/>
+              <string key="toolTip">examine the selected revisions in the DifferencesView</string>
+            </object>
+          </object>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <integer value="1"/>
@@ -4965,7 +5079,7 @@
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>{{622, 371}, {303, 353}}</string>
+          <string>{{622, 351}, {303, 373}}</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -5054,7 +5168,7 @@
         </object>
       </object>
       <nil key="sourceID"/>
-      <int key="maxID">1145</int>
+      <int key="maxID">1152</int>
     </object>
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -5633,9 +5747,9 @@
             <bool key="EncodedWithXMLCoder">YES</bool>
             <object class="NSArray" key="dict.sortedKeys">
               <bool key="EncodedWithXMLCoder">YES</bool>
-              <string>diffSelectedRevisions:</string>
               <string>historyMenuAddLabelToChosenRevision:</string>
               <string>historyMenuDiffAllToChosenRevision:</string>
+              <string>historyMenuDiffSelectedRevisions:</string>
               <string>historyMenuGotoChangeset:</string>
               <string>historyMenuManifestOfChosenRevision:</string>
               <string>historyMenuMergeRevision:</string>
@@ -5690,9 +5804,9 @@
             <bool key="EncodedWithXMLCoder">YES</bool>
             <object class="NSArray" key="dict.sortedKeys">
               <bool key="EncodedWithXMLCoder">YES</bool>
-              <string>diffSelectedRevisions:</string>
               <string>historyMenuAddLabelToChosenRevision:</string>
               <string>historyMenuDiffAllToChosenRevision:</string>
+              <string>historyMenuDiffSelectedRevisions:</string>
               <string>historyMenuGotoChangeset:</string>
               <string>historyMenuManifestOfChosenRevision:</string>
               <string>historyMenuMergeRevision:</string>
@@ -5718,15 +5832,15 @@
             <object class="NSMutableArray" key="dict.values">
               <bool key="EncodedWithXMLCoder">YES</bool>
               <object class="IBActionInfo">
-                <string key="name">diffSelectedRevisions:</string>
-                <string key="candidateClassName">id</string>
-              </object>
-              <object class="IBActionInfo">
                 <string key="name">historyMenuAddLabelToChosenRevision:</string>
                 <string key="candidateClassName">id</string>
               </object>
               <object class="IBActionInfo">
                 <string key="name">historyMenuDiffAllToChosenRevision:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">historyMenuDiffSelectedRevisions:</string>
                 <string key="candidateClassName">id</string>
               </object>
               <object class="IBActionInfo">

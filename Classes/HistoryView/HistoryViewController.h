@@ -96,7 +96,7 @@
 
 
 // Button Actions
-- (IBAction) diffSelectedRevisions:(id)sender;
+- (IBAction) historyMenuDiffSelectedRevisions:(id)sender;
 
 
 // LogTableView Contextual Menu

@@ -12,6 +12,8 @@
     </object>
     <array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
       <integer value="771"/>
+      <integer value="845"/>
+      <integer value="850"/>
       <integer value="584"/>
     </array>
     <array key="IBDocument.PluginDependencies">
@@ -32,7 +34,7 @@
         <bool key="NSSharedInstance">YES</bool>
       </object>
       <object class="NSView" id="945562250">
-        <reference key="NSNextResponder"/>
+        <nil key="NSNextResponder"/>
         <int key="NSvFlags">256</int>
         <array class="NSMutableArray" key="NSSubviews">
           <object class="NSSplitView" id="470152575">
@@ -40,13 +42,10 @@
             <int key="NSvFlags">274</int>
             <string key="NSFrame">{{0, -1}, {822, 634}}</string>
             <reference key="NSSuperview" ref="945562250"/>
-            <reference key="NSWindow"/>
             <int key="NSDividerStyle">2</int>
           </object>
         </array>
         <string key="NSFrameSize">{822, 631}</string>
-        <reference key="NSSuperview"/>
-        <reference key="NSWindow"/>
       </object>
       <object class="NSMenu" id="886653824">
         <string key="NSTitle"/>
@@ -1239,7 +1238,7 @@
         </object>
       </object>
       <object class="NSBox" id="232934855">
-        <nil key="NSNextResponder"/>
+        <reference key="NSNextResponder"/>
         <int key="NSvFlags">10</int>
         <array class="NSMutableArray" key="NSSubviews">
           <object class="NSView" id="674072841">
@@ -1388,6 +1387,7 @@
           </object>
         </array>
         <string key="NSFrameSize">{824, 24}</string>
+        <reference key="NSSuperview"/>
         <string key="NSOffsets">{0, 0}</string>
         <object class="NSTextFieldCell" key="NSTitleCell">
           <int key="NSCellFlags">67239424</int>
@@ -1416,7 +1416,7 @@
         </object>
       </object>
       <object class="NSBox" id="944921791">
-        <nil key="NSNextResponder"/>
+        <reference key="NSNextResponder"/>
         <int key="NSvFlags">10</int>
         <array class="NSMutableArray" key="NSSubviews">
           <object class="NSView" id="958889504">
@@ -1586,6 +1586,7 @@
           </object>
         </array>
         <string key="NSFrameSize">{824, 24}</string>
+        <reference key="NSSuperview"/>
         <string key="NSOffsets">{0, 0}</string>
         <object class="NSTextFieldCell" key="NSTitleCell">
           <int key="NSCellFlags">67239424</int>
@@ -1946,27 +1947,11 @@
         </object>
         <object class="IBConnectionRecord">
           <object class="IBActionConnection" key="connection">
-            <string key="label">diffSelectedRevisions:</string>
-            <reference key="source" ref="1003"/>
-            <reference key="destination" ref="678370463"/>
-          </object>
-          <int key="connectionID">1016</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBActionConnection" key="connection">
             <string key="label">mainMenuBackoutChangeset:</string>
             <reference key="source" ref="1003"/>
             <reference key="destination" ref="523666229"/>
           </object>
           <int key="connectionID">1021</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBActionConnection" key="connection">
-            <string key="label">diffSelectedRevisions:</string>
-            <reference key="source" ref="1003"/>
-            <reference key="destination" ref="747438026"/>
-          </object>
-          <int key="connectionID">1022</int>
         </object>
         <object class="IBConnectionRecord">
           <object class="IBOutletConnection" key="connection">
@@ -2023,6 +2008,22 @@
             <reference key="destination" ref="470152575"/>
           </object>
           <int key="connectionID">1051</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">historyMenuDiffSelectedRevisions:</string>
+            <reference key="source" ref="1003"/>
+            <reference key="destination" ref="747438026"/>
+          </object>
+          <int key="connectionID">1054</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">historyMenuDiffSelectedRevisions:</string>
+            <reference key="source" ref="1003"/>
+            <reference key="destination" ref="678370463"/>
+          </object>
+          <int key="connectionID">1055</int>
         </object>
       </array>
       <object class="IBMutableOrderedSet" key="objectRecords">
@@ -2989,7 +2990,7 @@
       <nil key="activeLocalization"/>
       <dictionary class="NSMutableDictionary" key="localizations"/>
       <nil key="sourceID"/>
-      <int key="maxID">1053</int>
+      <int key="maxID">1055</int>
     </object>
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -2997,9 +2998,9 @@
           <string key="className">HistoryView</string>
           <string key="superclassName">NSView</string>
           <dictionary class="NSMutableDictionary" key="actions">
-            <string key="diffSelectedRevisions:">id</string>
             <string key="historyMenuAddLabelToChosenRevision:">id</string>
             <string key="historyMenuDiffAllToChosenRevision:">id</string>
+            <string key="historyMenuDiffSelectedRevisions:">id</string>
             <string key="historyMenuGotoChangeset:">id</string>
             <string key="historyMenuManifestOfChosenRevision:">id</string>
             <string key="historyMenuMergeRevision:">id</string>
@@ -3012,6 +3013,7 @@
             <string key="mainMenuCollapseChangesets:">id</string>
             <string key="mainMenuCommitAllFiles:">id</string>
             <string key="mainMenuDiffAllFiles:">id</string>
+            <string key="mainMenuEditChangesetDetails:">id</string>
             <string key="mainMenuHistoryEditChangesets:">id</string>
             <string key="mainMenuRebaseChangesets:">id</string>
             <string key="mainMenuRevertAllFiles:">id</string>
@@ -3023,16 +3025,16 @@
             <string key="toolbarRevertFiles:">id</string>
           </dictionary>
           <dictionary class="NSMutableDictionary" key="actionInfosByName">
-            <object class="IBActionInfo" key="diffSelectedRevisions:">
-              <string key="name">diffSelectedRevisions:</string>
-              <string key="candidateClassName">id</string>
-            </object>
             <object class="IBActionInfo" key="historyMenuAddLabelToChosenRevision:">
               <string key="name">historyMenuAddLabelToChosenRevision:</string>
               <string key="candidateClassName">id</string>
             </object>
             <object class="IBActionInfo" key="historyMenuDiffAllToChosenRevision:">
               <string key="name">historyMenuDiffAllToChosenRevision:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="historyMenuDiffSelectedRevisions:">
+              <string key="name">historyMenuDiffSelectedRevisions:</string>
               <string key="candidateClassName">id</string>
             </object>
             <object class="IBActionInfo" key="historyMenuGotoChangeset:">
@@ -3081,6 +3083,10 @@
             </object>
             <object class="IBActionInfo" key="mainMenuDiffAllFiles:">
               <string key="name">mainMenuDiffAllFiles:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="mainMenuEditChangesetDetails:">
+              <string key="name">mainMenuEditChangesetDetails:</string>
               <string key="candidateClassName">id</string>
             </object>
             <object class="IBActionInfo" key="mainMenuHistoryEditChangesets:">
@@ -3418,8 +3424,12 @@
             <string key="actionTestListingItem:">id</string>
             <string key="doLinkUp:">id</string>
             <string key="mainMenuAddAndCloneServerRepositoryRef:">id</string>
+            <string key="mainMenuAddBookmark:">id</string>
+            <string key="mainMenuAddBranch:">id</string>
+            <string key="mainMenuAddGlobalTag:">id</string>
             <string key="mainMenuAddLabelToCurrentRevision:">id</string>
             <string key="mainMenuAddLocalRepositoryRef:">id</string>
+            <string key="mainMenuAddLocalTag:">id</string>
             <string key="mainMenuAddNewSidebarGroupItem:">id</string>
             <string key="mainMenuAddRenameRemoveAllFiles:">id</string>
             <string key="mainMenuAddRenameRemoveSelectedFiles:">id</string>
@@ -3428,6 +3438,7 @@
             <string key="mainMenuAnnotateSelectedFiles:">id</string>
             <string key="mainMenuBackoutChangeset:">id</string>
             <string key="mainMenuCloneRepository:">id</string>
+            <string key="mainMenuCloseBranch:">id</string>
             <string key="mainMenuCollapseChangesets:">id</string>
             <string key="mainMenuCommitAllFiles:">id</string>
             <string key="mainMenuCommitSelectedFiles:">id</string>
@@ -3437,12 +3448,16 @@
             <string key="mainMenuDeleteSelectedFiles:">id</string>
             <string key="mainMenuDiffAllFiles:">id</string>
             <string key="mainMenuDiffSelectedFiles:">id</string>
+            <string key="mainMenuEditChangesetDetails:">id</string>
             <string key="mainMenuExportPatches:">id</string>
             <string key="mainMenuGotoChangeset:">id</string>
             <string key="mainMenuHistoryEditChangesets:">id</string>
             <string key="mainMenuIgnoreSelectedFiles:">id</string>
             <string key="mainMenuImportPatches:">id</string>
             <string key="mainMenuIncomingFromRepository:">id</string>
+            <string key="mainMenuManageBookmarks:">id</string>
+            <string key="mainMenuManageBranches:">id</string>
+            <string key="mainMenuManageTags:">id</string>
             <string key="mainMenuManifestOfCurrentVersion:">id</string>
             <string key="mainMenuMarkResolvedSelectedFiles:">id</string>
             <string key="mainMenuMergeWith:">id</string>
@@ -3519,12 +3534,28 @@
               <string key="name">mainMenuAddAndCloneServerRepositoryRef:</string>
               <string key="candidateClassName">id</string>
             </object>
+            <object class="IBActionInfo" key="mainMenuAddBookmark:">
+              <string key="name">mainMenuAddBookmark:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="mainMenuAddBranch:">
+              <string key="name">mainMenuAddBranch:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="mainMenuAddGlobalTag:">
+              <string key="name">mainMenuAddGlobalTag:</string>
+              <string key="candidateClassName">id</string>
+            </object>
             <object class="IBActionInfo" key="mainMenuAddLabelToCurrentRevision:">
               <string key="name">mainMenuAddLabelToCurrentRevision:</string>
               <string key="candidateClassName">id</string>
             </object>
             <object class="IBActionInfo" key="mainMenuAddLocalRepositoryRef:">
               <string key="name">mainMenuAddLocalRepositoryRef:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="mainMenuAddLocalTag:">
+              <string key="name">mainMenuAddLocalTag:</string>
               <string key="candidateClassName">id</string>
             </object>
             <object class="IBActionInfo" key="mainMenuAddNewSidebarGroupItem:">
@@ -3557,6 +3588,10 @@
             </object>
             <object class="IBActionInfo" key="mainMenuCloneRepository:">
               <string key="name">mainMenuCloneRepository:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="mainMenuCloseBranch:">
+              <string key="name">mainMenuCloseBranch:</string>
               <string key="candidateClassName">id</string>
             </object>
             <object class="IBActionInfo" key="mainMenuCollapseChangesets:">
@@ -3595,6 +3630,10 @@
               <string key="name">mainMenuDiffSelectedFiles:</string>
               <string key="candidateClassName">id</string>
             </object>
+            <object class="IBActionInfo" key="mainMenuEditChangesetDetails:">
+              <string key="name">mainMenuEditChangesetDetails:</string>
+              <string key="candidateClassName">id</string>
+            </object>
             <object class="IBActionInfo" key="mainMenuExportPatches:">
               <string key="name">mainMenuExportPatches:</string>
               <string key="candidateClassName">id</string>
@@ -3617,6 +3656,18 @@
             </object>
             <object class="IBActionInfo" key="mainMenuIncomingFromRepository:">
               <string key="name">mainMenuIncomingFromRepository:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="mainMenuManageBookmarks:">
+              <string key="name">mainMenuManageBookmarks:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="mainMenuManageBranches:">
+              <string key="name">mainMenuManageBranches:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="mainMenuManageTags:">
+              <string key="name">mainMenuManageTags:</string>
               <string key="candidateClassName">id</string>
             </object>
             <object class="IBActionInfo" key="mainMenuManifestOfCurrentVersion:">
