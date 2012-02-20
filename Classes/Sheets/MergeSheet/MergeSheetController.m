@@ -132,7 +132,7 @@
 
 - (IBAction) openMergeSheet:(id)sender
 {
-	[NSApp beginSheet:mergeSheetWindow modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[myDocument beginSheet:mergeSheetWindow];
 	[self validateButtons:self];
 	[logTableView resetTable:self];
 }
@@ -141,8 +141,7 @@
 - (IBAction) sheetButtonOk:(id)sender
 {
 	[mergeSheetWindow makeFirstResponder:mergeSheetWindow]; // Make the text fields of the sheet commit any changes they currently have
-	[NSApp endSheet:mergeSheetWindow];
-	[mergeSheetWindow orderOut:sender];
+	[myDocument endSheet:mergeSheetWindow];
 	NSNumber* theSelectedRevision = [logTableView selectedRevision];
 	NSArray* theOptions = [self forceTheMerge] ? [NSArray arrayWithObject:@"--force"] : nil;
 	[myDocument primaryActionMergeWithVersion:theSelectedRevision andOptions:theOptions withConfirmation:NO];
@@ -152,8 +151,7 @@
 - (IBAction) sheetButtonCancel:(id)sender
 {
 	[mergeSheetWindow makeFirstResponder:mergeSheetWindow]; // Make the text fields of the sheet commit any changes they currently have
-	[NSApp endSheet:mergeSheetWindow];
-	[mergeSheetWindow orderOut:sender];
+	[myDocument endSheet:mergeSheetWindow];
 }
 
 

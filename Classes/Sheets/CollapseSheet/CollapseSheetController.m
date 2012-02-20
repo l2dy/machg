@@ -165,21 +165,19 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 	
 	[self validateButtons:self];
 	[self setWindow:theCollapseSheet];
-	[NSApp beginSheet:theCollapseSheet  modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[myDocument beginSheet:theCollapseSheet];
 }
 
 
 - (IBAction) sheetButtonOkForCollapseSheet:(id)sender
 {
-	[NSApp endSheet:theCollapseSheet];
-	[theCollapseSheet orderOut:sender];
+	[myDocument endSheet:theCollapseSheet];
 	[self openCollapseSheetWithCombinedCommitMessage:self];
 }
 
 - (IBAction) sheetButtonCancelForCollapseSheet:(id)sender
 {
-	[NSApp endSheet:theCollapseSheet];
-	[theCollapseSheet orderOut:sender];
+	[myDocument endSheet:theCollapseSheet];
 }
 
 
@@ -195,15 +193,14 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 
 	[sheetConfirmationInformativeMessageTextField setAttributedStringValue:[sheetInformativeMessageTextField attributedStringValue]];
 	[self setWindow:theCollapseConfirmationSheet];
-	[NSApp beginSheet:theCollapseConfirmationSheet  modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[myDocument beginSheet:theCollapseConfirmationSheet];
 	[[[sheetConfirmationInformativeMessageTextField enclosingScrollView] contentView] scrollToPoint:NSMakePoint(0,0)];
 }
 
 - (IBAction) sheetButtonOkForCollapseConfirmationSheet:(id)sender
 {
 	[theCollapseConfirmationSheet makeFirstResponder:theCollapseConfirmationSheet];	// Make the text fields of the sheet commit any changes they currently have
-	[NSApp endSheet:theCollapseConfirmationSheet];
-	[theCollapseConfirmationSheet orderOut:sender];
+	[myDocument endSheet:theCollapseConfirmationSheet];
 
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	NSString* repositoryName = [[[myDocument sidebar] selectedNode] shortName];
@@ -226,8 +223,7 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 }
 - (IBAction) sheetButtonCancelForCollapseConfirmationSheet:(id)sender
 {
-	[NSApp endSheet:theCollapseConfirmationSheet];
-	[theCollapseConfirmationSheet orderOut:sender];
+	[myDocument endSheet:theCollapseConfirmationSheet];
 }
 
 

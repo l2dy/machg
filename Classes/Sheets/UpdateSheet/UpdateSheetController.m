@@ -81,7 +81,7 @@
 	[sheetInformativeMessageTextField setStringValue:@""];
 	
 	[logTableView resetTable:self];
-	[NSApp beginSheet:theUpdateSheet  modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[myDocument beginSheet:theUpdateSheet];
 	[logTableView scrollToRevision:revision ? revision : [myDocument getHGParent1Revision]];
 	[self validate:self];
 }
@@ -106,14 +106,12 @@
 	if (!didReversion)
 		return;
 
-	[NSApp endSheet:theUpdateSheet];
-	[theUpdateSheet orderOut:sender];
+	[myDocument endSheet:theUpdateSheet];
 }
 
 - (IBAction) sheetButtonCancel:(id)sender
 {
-	[NSApp endSheet:theUpdateSheet];
-	[theUpdateSheet orderOut:sender];
+	[myDocument endSheet:theUpdateSheet];
 }
 
 

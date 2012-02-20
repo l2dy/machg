@@ -82,7 +82,7 @@
 	[self validate:self];
 
 	[logTableView resetTable:self];
-	[NSApp beginSheet:theMoveLabelSheet  modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[myDocument beginSheet:theMoveLabelSheet];
 	[logTableView scrollToRevision:[label revision]];
 }
 
@@ -138,8 +138,7 @@
 	if ([results hasErrors])
 		return;
 	
-	[NSApp endSheet:theMoveLabelSheet];
-	[theMoveLabelSheet orderOut:sender];
+	[myDocument endSheet:theMoveLabelSheet];
 	[myDocument postNotificationWithName:kUnderlyingRepositoryChanged];		// Check that we still need to post this notification. The command
 																			// should like cause a refresh in any case.
 }
@@ -148,8 +147,7 @@
 
 - (IBAction) sheetButtonCancel:(id)sender
 {
-	[NSApp endSheet:theMoveLabelSheet];
-	[theMoveLabelSheet orderOut:sender];
+	[myDocument endSheet:theMoveLabelSheet];
 }
 
 

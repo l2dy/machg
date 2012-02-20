@@ -185,22 +185,20 @@
 	if ([okButton isEnabled])
 		[sheetInformativeMessageTextField setAttributedStringValue: [self formattedSheetMessage]];
 	[self setWindow:theHistoryEditSheet];
-	[NSApp beginSheet:theHistoryEditSheet  modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[myDocument beginSheet:theHistoryEditSheet];
 	
 }
 
 
 - (IBAction) sheetButtonOkForHistoryEditSheet:(id)sender
 {
-	[NSApp endSheet:theHistoryEditSheet];
-	[theHistoryEditSheet orderOut:sender];
+	[myDocument endSheet:theHistoryEditSheet];
 	[self openHistoryEditConfirmationSheet:self];
 }
 
 - (IBAction) sheetButtonCancelForHistoryEditSheet:(id)sender
 {
-	[NSApp endSheet:theHistoryEditSheet];
-	[theHistoryEditSheet orderOut:sender];
+	[myDocument endSheet:theHistoryEditSheet];
 }
 
 
@@ -229,14 +227,13 @@
 	
 	[sheetConfirmationInformativeMessageTextField setAttributedStringValue:[sheetInformativeMessageTextField attributedStringValue]];
 	[self setWindow:theHistoryEditConfirmationSheet];
-	[NSApp beginSheet:theHistoryEditConfirmationSheet  modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[myDocument beginSheet:theHistoryEditConfirmationSheet];
 }
 
 - (IBAction) sheetButtonOkForHistoryEditConfirmationSheet:(id)sender
 {
 	[theHistoryEditConfirmationSheet makeFirstResponder:theHistoryEditConfirmationSheet];	// Make the text fields of the sheet commit any changes they currently have
-	[NSApp endSheet:theHistoryEditConfirmationSheet];
-	[theHistoryEditConfirmationSheet orderOut:sender];
+	[myDocument endSheet:theHistoryEditConfirmationSheet];
 
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
@@ -253,8 +250,7 @@
 }
 - (IBAction) sheetButtonCancelForHistoryEditConfirmationSheet:(id)sender
 {
-	[NSApp endSheet:theHistoryEditConfirmationSheet];
-	[theHistoryEditConfirmationSheet orderOut:sender];
+	[myDocument endSheet:theHistoryEditConfirmationSheet];
 }
 
 

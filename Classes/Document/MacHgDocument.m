@@ -80,6 +80,7 @@
 
 @synthesize sidebar = sidebar_;
 @synthesize mainWindow = mainWindow_;
+@synthesize shownSheet = shownSheet_;
 @synthesize theProcessListController  = theProcessListController_;
 @synthesize refreshBrowserSerialQueue = refreshBrowserSerialQueue_;
 @synthesize mercurialTaskSerialQueue  = mercurialTaskSerialQueue_;
@@ -129,7 +130,7 @@
 		mercurialTaskSerialQueue_  = dispatch_queue_create("machg.mercurialTaskSerialQueue", NULL);
 		queueForUnderlyingRepositoryChangedViaEvents_ = [SingleTimedQueue SingleTimedQueueExecutingOn:mainQueue()  withTimeDelay:0.15  descriptiveName:@"queueForUnderlyingRepositoryChangedViaEvents"];
 		events_ = [[MonitorFSEvents alloc]init];
-		showingSheet_ = NO;
+		shownSheet_ = nil;
 		eventsSuspensionCount_ = 0;
     }
     return self;
@@ -465,6 +466,19 @@
 	return fileName ? fileName : @"UntitledDocument";
 }
 
+- (void) beginSheet:(NSWindow*)sheet
+{
+	shownSheet_ = sheet;
+	[NSApp beginSheet:sheet modalForWindow:[self mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+}
+
+- (void) endSheet:(NSWindow*)sheet
+{
+	shownSheet_ = nil;
+	[NSApp endSheet:sheet];
+	[sheet orderOut:self];
+}
+
 
 
 
@@ -649,7 +663,7 @@
 - (BOOL)	showingFilesOrHistoryView						{ return currentPane_ == eFilesView || currentPane_ == eHistoryView; }
 - (BOOL)	showingFilesOrDifferencesView					{ return currentPane_ == eFilesView || currentPane_ == eDifferencesView; }
 - (BOOL)	showingFilesOrHistoryOrDifferencesView			{ return currentPane_ == eFilesView || currentPane_ == eHistoryView || currentPane_ == eDifferencesView; }
-- (BOOL)	showingASheet									{ return showingSheet_; }
+- (BOOL)	showingASheet									{ return shownSheet_ != nil; }
 
 
 - (IBAction) actionSwitchViewToFilesView:(id)sender			{ [self setCurrentPane:eFilesView]; }
@@ -691,8 +705,8 @@
 // MARK: Window Delegate Methods
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) windowWillBeginSheet:(NSNotification*)notification	{ showingSheet_ = YES; }
-- (void) windowDidEndSheet:(NSNotification*)notification	{ showingSheet_ = NO;  }
+- (void) windowWillBeginSheet:(NSNotification*)notification	{ if (!shownSheet_) shownSheet_ = [notification object]; }
+- (void) windowDidEndSheet:(NSNotification*)notification	{ shownSheet_ = nil;  }
 - (void) windowDidBecomeMain:(NSNotification*)notification	{ [sidebar_ becomeMain]; }
 - (void) windowDidResignMain:(NSNotification*)notification	{ [sidebar_ resignMain]; }
 
@@ -814,10 +828,10 @@
 // MARK: Action Validation
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (BOOL) localRepoIsSelectedAndReady						{ return !showingSheet_ && [sidebar_ localRepoIsSelected]; }
-- (BOOL) localRepoIsChosenAndReady							{ return !showingSheet_ && [sidebar_ localRepoIsChosen]; }
-- (BOOL) localOrServerRepoIsSelectedAndReady				{ return !showingSheet_ && [sidebar_ localOrServerRepoIsSelected]; }
-- (BOOL) localOrServerRepoIsChosenAndReady					{ return !showingSheet_ && [sidebar_ localOrServerRepoIsChosen]; }
+- (BOOL) localRepoIsSelectedAndReady						{ return ![self showingASheet] && [sidebar_ localRepoIsSelected]; }
+- (BOOL) localRepoIsChosenAndReady							{ return ![self showingASheet] && [sidebar_ localRepoIsChosen]; }
+- (BOOL) localOrServerRepoIsSelectedAndReady				{ return ![self showingASheet] && [sidebar_ localOrServerRepoIsSelected]; }
+- (BOOL) localOrServerRepoIsChosenAndReady					{ return ![self showingASheet] && [sidebar_ localOrServerRepoIsChosen]; }
 - (BOOL) toolbarActionAppliesToFilesWith:(HGStatus)status	{ return ([self statusOfChosenPathsInFilesContain:status] || (![self nodesAreChosenInFiles] && [self repositoryHasFilesWhichContainStatus:status])); }
 
 - (BOOL) validateAndSwitchMenuForCommitAllFiles:(id)anItem
@@ -840,7 +854,7 @@
 {
 	NSMenuItem* menuItem = DynamicCast(NSMenuItem, anItem);
 	[menuItem setTitle:[sidebar_ menuTitleForRemoveSidebarItems]];
-	return !showingSheet_ && [sidebar_ chosenNode];
+	return ![self showingASheet] && [sidebar_ chosenNode];
 }
 
 
@@ -925,9 +939,9 @@
 		if (theAction == @selector(mainMenuBackoutChangeset:))		 	return [[self currentPaneView] validateUserInterfaceItem:anItem];
 	// ------
 	// ------ Manage Repositories >
-		if (theAction == @selector(mainMenuAddLocalRepositoryRef:))		return !showingSheet_;
-		if (theAction == @selector(mainMenuAddServerRepositoryRef:))	return !showingSheet_;
-		if (theAction == @selector(mainMenuAddNewSidebarGroupItem:))	return !showingSheet_;
+		if (theAction == @selector(mainMenuAddLocalRepositoryRef:))		return ![self showingASheet];
+		if (theAction == @selector(mainMenuAddServerRepositoryRef:))	return ![self showingASheet];
+		if (theAction == @selector(mainMenuAddNewSidebarGroupItem:))	return ![self showingASheet];
 		if (theAction == @selector(mainMenuRemoveSidebarItems:))		return [self validateAndSwitchMenuForRemoveSidebarItems:anItem];
 		if (theAction == @selector(mainMenuConfigureRepositoryRef:))	return [self localOrServerRepoIsSelectedAndReady];
 		if (theAction == @selector(mainMenuConfigureLocalRepositoryRef:)) return [self localRepoIsSelectedAndReady];
@@ -935,7 +949,7 @@
 	// ------
 	if (theAction == @selector(mainMenuRevealRepositoryInFinder:))		return [self localRepoIsSelectedAndReady];
 	if (theAction == @selector(mainMenuOpenTerminalHere:))				return [self localRepoIsSelectedAndReady];
-	if (theAction == @selector(actionTestListingItem:))					return !showingSheet_ && ([sidebar_ selectedNode] ? YES : NO);
+	if (theAction == @selector(actionTestListingItem:))					return ![self showingASheet] && ([sidebar_ selectedNode] ? YES : NO);
 
 	
 	if (theAction == @selector(mainMenuOpenSelectedFilesInFinder:))		return [self localRepoIsSelectedAndReady] && [self nodesAreChosenInFiles];
@@ -962,7 +976,7 @@
 	// -------                                                       
 
 	
-	if (theAction == @selector(mainMenuNoAction:))						return !showingSheet_ && ([sidebar_ selectedNode] ? YES : NO);
+	if (theAction == @selector(mainMenuNoAction:))						return ![self showingASheet] && ([sidebar_ selectedNode] ? YES : NO);
 	if (theAction == @selector(togglePreviewPanel:))					return [self validateAndSwitchMenuForPreviewSelectedFiles:anItem];
 	
 

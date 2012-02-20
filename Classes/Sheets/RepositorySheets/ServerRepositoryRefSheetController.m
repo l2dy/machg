@@ -194,7 +194,7 @@
 	[theTitleText setStringValue:@"Add Server Repository"];
 	[okButton setTitle:@"Add Server"];
 	[theConnectionValidationController resetForSheetOpen];
-	[NSApp beginSheet:theWindow modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[myDocument beginSheet:theWindow];
 }
 
 
@@ -210,7 +210,7 @@
 	[theTitleText setStringValue:@"Add and Clone Server Repository"];
 	[okButton setTitle:@"Add and Clone"];
 	[theConnectionValidationController resetForSheetOpen];
-	[NSApp beginSheet:theWindow modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[myDocument beginSheet:theWindow];
 }
 
 
@@ -254,7 +254,7 @@
 	cloneAfterAddition_ = NO;
 	[theConnectionValidationController resetForSheetOpen];
 	[self validateButtons:self];
-	[NSApp beginSheet:theWindow modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[myDocument beginSheet:theWindow];
 }
 
 
@@ -356,8 +356,7 @@
 
 	[[AppController sharedAppController] computeRepositoryIdentityForPath:newPath];
 	
-	[NSApp endSheet:theWindow];
-	[theWindow orderOut:sender];
+	[myDocument endSheet:theWindow];
 	[[myDocument sidebar] reloadData];
 	[myDocument saveDocumentIfNamed];
 	[myDocument postNotificationWithName:kSidebarSelectionDidChange];
@@ -368,8 +367,7 @@
 - (IBAction) sheetButtonCancel:(id)sender
 {
 	[theWindow makeFirstResponder:theWindow];	// Make the text fields of the sheet commit any changes they currently have
-	[NSApp endSheet:theWindow];
-	[theWindow orderOut:sender];
+	[myDocument endSheet:theWindow];
 }
 
 

@@ -117,7 +117,7 @@
 	[theTitleText setStringValue:@"Create Repository"];
 	[theLocalRepositoryRefSheet resizeSoContentsFitInFields: shortNameField, pathField, nil];
 	[self validateButtons:self];
-	[NSApp beginSheet:theLocalRepositoryRefSheet modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[myDocument beginSheet:theLocalRepositoryRefSheet];
 }
 
 
@@ -142,7 +142,7 @@
 
 	[theLocalRepositoryRefSheet resizeSoContentsFitInFields: shortNameField, pathField, nil];
 	[self validateButtons:self];
-	[NSApp beginSheet:theLocalRepositoryRefSheet modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[myDocument beginSheet:theLocalRepositoryRefSheet];
 }
 
 
@@ -239,8 +239,7 @@
 - (IBAction) sheetButtonCancel:(id)sender
 {
 	[theLocalRepositoryRefSheet makeFirstResponder:theLocalRepositoryRefSheet];	// Make the text fields of the sheet commit any changes they currently have
-	[NSApp endSheet:theLocalRepositoryRefSheet];
-	[theLocalRepositoryRefSheet orderOut:sender];
+	[myDocument endSheet:theLocalRepositoryRefSheet];
 }
 
 

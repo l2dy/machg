@@ -80,7 +80,7 @@
 
 	
 	[logTableView resetTable:self];
-	[NSApp beginSheet:theBackoutSheet  modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[myDocument beginSheet:theBackoutSheet];
 	[logTableView selectAndScrollToRevision:revision];
 	[self validate:self];
 }
@@ -113,14 +113,12 @@
 	if (!didReversion)
 		return;
 
-	[NSApp endSheet:theBackoutSheet];
-	[theBackoutSheet orderOut:sender];
+	[myDocument endSheet:theBackoutSheet];
 }
 
 - (IBAction) sheetButtonCancel:(id)sender
 {
-	[NSApp endSheet:theBackoutSheet];
-	[theBackoutSheet orderOut:sender];
+	[myDocument endSheet:theBackoutSheet];
 }
 
 

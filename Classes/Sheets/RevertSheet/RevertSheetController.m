@@ -70,7 +70,7 @@
 	
 	[logTableView resetTable:self];
 	[selectedFilesTextView setString:[paths componentsJoinedByString:@"\n"]];
-	[NSApp beginSheet:theRevertSheet  modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[myDocument beginSheet:theRevertSheet];
 	[logTableView scrollToRevision:revision];
 }
 
@@ -102,14 +102,12 @@
 	if (!didReversion)
 		return;
 
-	[NSApp endSheet:theRevertSheet];
-	[theRevertSheet orderOut:sender];
+	[myDocument endSheet:theRevertSheet];
 }
 
 - (IBAction) sheetButtonCancel:(id)sender
 {
-	[NSApp endSheet:theRevertSheet];
-	[theRevertSheet orderOut:sender];
+	[myDocument endSheet:theRevertSheet];
 }
 
 

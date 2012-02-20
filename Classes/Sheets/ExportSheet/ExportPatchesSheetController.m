@@ -110,7 +110,7 @@
 		[logTableView selectAndScrollToRevision:[myDocument getHGTipRevision]];
 	}
 	
-	[NSApp beginSheet:theExportPatchesSheet  modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[myDocument beginSheet:theExportPatchesSheet];
 }
 
 
@@ -139,8 +139,7 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 - (IBAction) sheetButtonOk:(id)sender
 {
 	[theExportPatchesSheet makeFirstResponder:theExportPatchesSheet];	// Make the text fields of the sheet commit any changes they currently have
-	[NSApp endSheet:theExportPatchesSheet];
-	[theExportPatchesSheet orderOut:sender];
+	[myDocument endSheet:theExportPatchesSheet];
 	
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	NSArray* entries = [logTableView selectedEntries];
@@ -251,8 +250,7 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 
 - (IBAction) sheetButtonCancel:(id)sender
 {
-	[NSApp endSheet:theExportPatchesSheet];
-	[theExportPatchesSheet orderOut:sender];
+	[myDocument endSheet:theExportPatchesSheet];
 }
 
 

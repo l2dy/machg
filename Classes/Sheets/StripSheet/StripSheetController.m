@@ -171,14 +171,13 @@
 	if ([okButton isEnabled])
 		[sheetInformativeMessageTextField setAttributedStringValue: [self formattedSheetMessage]];
 
-	[NSApp beginSheet:theStripSheet  modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[myDocument beginSheet:theStripSheet];
 }
 
 
 - (IBAction) sheetButtonOk:(id)sender
 {
-	[NSApp endSheet:theStripSheet];
-	[theStripSheet orderOut:sender];
+	[myDocument endSheet:theStripSheet];
 
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	NSString* repositoryName = [[[myDocument sidebar] selectedNode] shortName];
@@ -203,8 +202,7 @@
 
 - (IBAction) sheetButtonCancel:(id)sender
 {
-	[NSApp endSheet:theStripSheet];
-	[theStripSheet orderOut:sender];
+	[myDocument endSheet:theStripSheet];
 }
 
 

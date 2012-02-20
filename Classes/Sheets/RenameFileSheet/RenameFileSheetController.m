@@ -139,7 +139,7 @@
 	[theRenameFileSheet resizeSoContentsFitInFields:theCurrentNameField, theNewNameField, nil];
 	[self setTheAlreadyMovedButtonValue:newButtonState];
 	[self validateButtons:self];
-	[NSApp beginSheet:theRenameFileSheet modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[myDocument beginSheet:theRenameFileSheet];
 }
 
 
@@ -171,14 +171,12 @@
 		}];		
 	}];
 
-	[NSApp endSheet:theRenameFileSheet];
-	[theRenameFileSheet orderOut:sender];
+	[myDocument endSheet:theRenameFileSheet];
 }
 
 - (IBAction) sheetButtonCancel:(id)sender
 {
-	[NSApp endSheet:theRenameFileSheet];
-	[theRenameFileSheet orderOut:sender];
+	[myDocument endSheet:theRenameFileSheet];
 }
 
 - (IBAction) browseToPath: (id)sender

@@ -135,7 +135,7 @@
 														// object yet so we store the bits we would set, eg which nodes in the
 														// side bar are expanded, etc, then once the object is fully loaded we
 														// use these stored values.
-	BOOL						showingSheet_;			// Record if this document is currently showing a sheet at the moment.
+	NSWindow*					shownSheet_;			// Record if this document is currently showing a sheet at the moment.
 														// Then in validateUserInterfaceItem I can detect if we are showing a
 														// sheet and then not validate the menu items. There should be a
 														// better way to detect this but after googling for a bit I can't see
@@ -144,6 +144,7 @@
 
 @property (nonatomic, assign) Sidebar*				sidebar;
 @property (nonatomic, assign) NSWindow*				mainWindow;
+@property (nonatomic, assign) NSWindow*				shownSheet;
 @property (nonatomic, assign) NSMutableDictionary*	connections;
 @property (nonatomic, assign) HunkExclusions*		hunkExclusions;
 @property (readonly,  assign) ProcessListController* theProcessListController;
@@ -216,6 +217,9 @@
 
 // Document Information
 - (NSString*)	documentNameForAutosave;
+- (void)		beginSheet:(NSWindow*)sheet;
+- (void)		endSheet:(NSWindow*)sheet;
+
 
 // Undo
 - (void)		removeAllUndoActionsForDocument;

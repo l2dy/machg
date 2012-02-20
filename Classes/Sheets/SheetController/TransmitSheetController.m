@@ -323,7 +323,7 @@
 		[self recenterMainGroupingBox];
 	});
 	[sheetWindow setDelegate:self];
-	[NSApp beginSheet:sheetWindow modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[myDocument beginSheet:sheetWindow];
 }
 
 

@@ -103,8 +103,7 @@
 - (IBAction) sheetButtonPush:(id)sender
 {
 	[sheetWindow makeFirstResponder:sheetWindow]; // Make the text fields of the sheet commit any changes they currently have
-	[NSApp endSheet:sheetWindow];
-	[sheetWindow orderOut:sender];
+	[myDocument endSheet:sheetWindow];
 
 	SidebarNode* pushDestination  = [self destinationRepository];
 	SidebarNode* pushSource       = [self sourceRepository];
@@ -157,8 +156,7 @@
 - (IBAction) sheetButtonCancel:(id)sender
 {
 	[sheetWindow makeFirstResponder:sheetWindow]; // Make the text fields of the sheet commit any changes they currently have
-	[NSApp endSheet:sheetWindow];
-	[sheetWindow orderOut:sender];
+	[myDocument endSheet:sheetWindow];
 	[self setConnectionFromFieldsForSource:[self sourceRepository] andDestination:[self destinationRepository]];
 }
 

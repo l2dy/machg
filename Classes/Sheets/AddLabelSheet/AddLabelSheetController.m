@@ -203,7 +203,7 @@ NSString* kTheRevisionFieldValue = @"theRevisionFieldValue";
 	[commitMessageTextView setString:@""];
 	[self setForceValue:NO];
 	[self updateButtonsAndMessages];
-	[NSApp beginSheet:theAddLabelSheet modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[myDocument beginSheet:theAddLabelSheet];
 }
 
 
@@ -235,8 +235,7 @@ NSString* kTheRevisionFieldValue = @"theRevisionFieldValue";
 	if ([results hasErrors])
 		return;
 	
-	[NSApp endSheet:theAddLabelSheet];
-	[theAddLabelSheet orderOut:sender];
+	[myDocument endSheet:theAddLabelSheet];
 	[myDocument postNotificationWithName:kUnderlyingRepositoryChanged];	// Check that we still need to post this notification. The command
 																		// should like cause a refresh in any case.
 }
@@ -245,8 +244,7 @@ NSString* kTheRevisionFieldValue = @"theRevisionFieldValue";
 - (IBAction) sheetButtonCancel:(id)sender
 {
 	[theAddLabelSheet makeFirstResponder:theAddLabelSheet];	// Make the text fields of the sheet commit any changes they currently have
-	[NSApp endSheet:theAddLabelSheet];
-	[theAddLabelSheet orderOut:sender];
+	[myDocument endSheet:theAddLabelSheet];
 }
 
 

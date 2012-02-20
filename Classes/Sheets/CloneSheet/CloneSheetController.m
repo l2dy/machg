@@ -193,7 +193,7 @@
 		[self validateButtons:self];
 	});
 	
-	[NSApp beginSheet:theCloneSheet modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[myDocument beginSheet:theCloneSheet];
 }
 
 
@@ -202,8 +202,7 @@
 - (IBAction) sheetButtonOk:(id)sender
 {
 	[theCloneSheet makeFirstResponder:theCloneSheet];	// Make the text fields of the sheet commit any changes they currently have
-	[NSApp endSheet:theCloneSheet];
-	[theCloneSheet orderOut:sender];
+	[myDocument endSheet:theCloneSheet];
 
 	Sidebar* theSidebar = [myDocument sidebar];
 	[[theSidebar prepareUndoWithTarget:theSidebar] setRootAndUpdate:[[theSidebar root] copyNodeTree]];
@@ -254,8 +253,7 @@
 - (IBAction) sheetButtonCancel:(id)sender
 {
 	[theCloneSheet makeFirstResponder:theCloneSheet];				// Make the text fields of the sheet commit any changes they currently have
-	[NSApp endSheet:theCloneSheet];
-	[theCloneSheet orderOut:sender];
+	[myDocument endSheet:theCloneSheet];
 	[self setConnectionFromFieldsForSource:sourceNode_];	// Cache advanced option settings for this source.
 }
 

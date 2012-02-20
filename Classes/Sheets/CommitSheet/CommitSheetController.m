@@ -187,7 +187,7 @@ NSString* kAmendOption	 = @"amendOption";
 	NSString* currentMessage = [commitMessageTextView string];
 	[commitMessageTextView setSelectedRange:NSMakeRange(0, [currentMessage length])];
 	[self setSheetTitle];
-	[NSApp beginSheet:theCommitSheet modalForWindow:[myDocument mainWindow] modalDelegate:nil didEndSelector:nil contextInfo:nil];
+	[myDocument beginSheet:theCommitSheet];
 	[theCommitSheet makeFirstResponder:commitMessageTextView];
 
 	// Store the paths of the files to be committed
@@ -626,8 +626,7 @@ NSString* kAmendOption	 = @"amendOption";
 	else
 		[self sheetActionCommitWithUncontestedPaths:uncontestedPaths andContestedPaths:contestedPaths amending:amend];
 
-	[NSApp endSheet:theCommitSheet];
-	[theCommitSheet orderOut:sender];
+	[myDocument endSheet:theCommitSheet];
 }
 
 
@@ -642,8 +641,7 @@ NSString* kAmendOption	 = @"amendOption";
 
 - (IBAction) sheetButtonCancel:(id)sender
 {
-	[NSApp endSheet:theCommitSheet];
-	[theCommitSheet orderOut:sender];
+	[myDocument endSheet:theCommitSheet];
 }
 
 
