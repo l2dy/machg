@@ -142,7 +142,9 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 	[logTableView resetTable:self];
 	
 	NSArray* revs = [[[myDocument theHistoryView] logTableView] chosenRevisions];
-	if ([revs count] > 0)
+	if ([revs count] <= 0)
+		[logTableView selectAndScrollToRevision:[myDocument getHGTipRevision]];
+	else
 	{
 		NSInteger minRev = numberAsInt([revs objectAtIndex:0]);
 		NSInteger maxRev = numberAsInt([revs objectAtIndex:0]);
@@ -156,11 +158,6 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 		NSInteger maxTableRow = [logTableView tableRowForIntegerRevision:maxRev];
 		NSIndexSet* firstLastIndexSet = [NSIndexSet indexSetWithIndexesInRange:MakeRangeFirstLast(minTableRow, maxTableRow)];
 		[logTableView selectAndScrollToIndexSet:firstLastIndexSet];
-	}
-	else
-	{
-		[logTableView scrollToRevision:[myDocument getHGTipRevision]];
-		[logTableView selectAndScrollToRevision:[myDocument getHGTipRevision]];
 	}
 	
 	[self validateButtons:self];
@@ -226,6 +223,12 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 	[myDocument endSheet:theCollapseConfirmationSheet];
 }
 
+- (IBAction) sheetButtonCancel:(id)sender
+{
+	NSWindow* shownSheet = [myDocument shownSheet];
+	if (shownSheet && (shownSheet == theCollapseSheet || shownSheet == theCollapseConfirmationSheet))
+		[myDocument endSheet:shownSheet];
+}
 
 
 
