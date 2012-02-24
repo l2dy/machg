@@ -75,6 +75,27 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
+// MARK: Notifications
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+- (void) postBrowserViewSelectionDidChangeNotification
+{
+	NSNotification* note = [NSNotification notificationWithName:@"BrowserViewSelectionDidChangeNotification" object:self];
+	[NSObject cancelPreviousPerformRequestsWithTarget:parentViewer_ selector:@selector(viewerSelectionDidChange:) object:note];	// Cancel any other requests to show the object
+	[parentViewer_ performSelector:@selector(viewerSelectionDidChange:) withObject:note afterDelay:(NSTimeInterval)0.1];
+}
+
+- (void) testForSeletionChanged
+{
+	if ([[self selectionIndexPath] compare:lastSelectedIndexPath_] != NSOrderedSame)
+		[self postBrowserViewSelectionDidChangeNotification];
+	lastSelectedIndexPath_ = [self selectionIndexPath];	
+}
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
 // MARK: Path and Selection Operations
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
@@ -161,8 +182,17 @@
 	return [selectedCell nodeInfo];
 }
 
-- (IBAction) fsviewerDoubleAction:(id)sender { [parentViewer_ fsviewerDoubleAction:sender]; }
-- (IBAction) fsviewerAction:(id)sender		 { [parentViewer_ fsviewerAction:sender]; }
+
+- (IBAction) fsviewerDoubleAction:(id)sender
+{
+	[self testForSeletionChanged];
+	[parentViewer_ fsviewerDoubleAction:sender];
+}
+- (IBAction) fsviewerAction:(id)sender
+{
+	[self testForSeletionChanged];
+	[parentViewer_ fsviewerAction:sender];
+}
 
 
 
@@ -235,8 +265,7 @@
 // to ensure that the browser has actually changed to the new selection. 
 - (NSIndexSet*) browser:(NSBrowser*)browser selectionIndexesForProposedSelection:(NSIndexSet*)proposedSelectionIndexes inColumn:(NSInteger)column
 {
-	NSNotification* note = [NSNotification notificationWithName:@"BrowserViewSelectionDidChangeNotification" object:browser];
-	[parentViewer_ performSelector:@selector(viewerSelectionDidChange:) withObject:note afterDelay:(NSTimeInterval)0.1];
+	[self postBrowserViewSelectionDidChangeNotification];
 	return proposedSelectionIndexes;
 }
 

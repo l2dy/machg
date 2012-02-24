@@ -13,6 +13,7 @@
 {
 	FSViewer*			parentViewer_;
 	NSViewController*	browserLeafPreviewController_;
+	NSIndexPath*		lastSelectedIndexPath_;
 }
 @property (readwrite, assign) FSViewer*	parentViewer;
 
