@@ -25,6 +25,9 @@
 - (void) awakeFromNib
 {
 	[self setDelegate:self];
+	[self setTarget:self];
+	[self setAction:@selector(fsviewerAction:)];
+	[self setDoubleAction:@selector(fsviewerDoubleAction:)];	
 	
 	// Make the browser user our custom browser cell.
 	[self setCellClass: [FSViewerPaneIconedCell class]];
@@ -157,6 +160,9 @@
 	FSViewerPaneCell* selectedCell = [self selectedCellInColumn:column-1];
 	return [selectedCell nodeInfo];
 }
+
+- (IBAction) fsviewerDoubleAction:(id)sender { [parentViewer_ fsviewerDoubleAction:sender]; }
+- (IBAction) fsviewerAction:(id)sender		 { [parentViewer_ fsviewerAction:sender]; }
 
 
 

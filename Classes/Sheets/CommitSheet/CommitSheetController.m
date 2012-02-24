@@ -137,11 +137,11 @@ NSString* kAmendOption	 = @"amendOption";
 }
 
 
-- (IBAction) browserAction:(id)browser
+- (IBAction) fsviewerAction:(id)sender
 {
 }
 
-- (IBAction) browserDoubleAction:(id)browser
+- (IBAction) fsviewerDoubleAction:(id)sender
 {
 	[self commitSheetDiffAction:self];
 }

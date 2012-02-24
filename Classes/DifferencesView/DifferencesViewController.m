@@ -429,11 +429,11 @@
 	}
 }
 
-- (IBAction) browserAction:(id)browser	{ [self updateCurrentPreviewImage]; }
-- (IBAction) browserDoubleAction:(id)browser
+- (IBAction) fsviewerAction:(id)sender	{ [self updateCurrentPreviewImage]; }
+- (IBAction) fsviewerDoubleAction:(id)sender
 {
 	SEL theAction = [self actionForDoubleClickEnum:[theFSViewer actionEnumForBrowserDoubleClick]];
-	[[NSApplication sharedApplication] sendAction:theAction to:nil from:browser];
+	[[NSApplication sharedApplication] sendAction:theAction to:nil from:sender];
 }
 
 

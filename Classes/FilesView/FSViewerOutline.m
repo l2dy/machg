@@ -25,6 +25,9 @@
 {
 	[self setDelegate:self];
 	[self setDataSource:self];
+	[self setTarget:self];
+	[self setAction:@selector(fsviewerAction:)];
+	[self setDoubleAction:@selector(fsviewerDoubleAction:)];
 	[self setIndentationPerLevel:20.0];
 }
 
@@ -68,6 +71,9 @@
 - (NSArray*)	selectedNodes		{ return [self selectedItems]; }
 - (NSArray*)	chosenNodes			{ return [self chosenItems]; }
 - (BOOL) clickedNodeInSelectedNodes	{ return [self clickedRowInSelectedRows]; }
+
+- (IBAction) fsviewerDoubleAction:(id)sender { [parentViewer_ fsviewerDoubleAction:sender]; }
+- (IBAction) fsviewerAction:(id)sender		 { [parentViewer_ fsviewerAction:sender]; }
 
 
 

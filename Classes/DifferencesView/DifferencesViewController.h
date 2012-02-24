@@ -136,8 +136,8 @@
 
 
 // Delegated Actions
-- (IBAction)	browserAction:(id)sender;
-- (IBAction)	browserDoubleAction:(id)sender;
+- (IBAction)	fsviewerAction:(id)sender;
+- (IBAction)	fsviewerDoubleAction:(id)sender;
 
 
 // Delegate Methods

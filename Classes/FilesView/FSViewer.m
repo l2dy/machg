@@ -98,9 +98,6 @@
 {
 	[view setParentViewer:self];
 	[view setMenu:contextualMenuForFSViewerPane];
-	[view setTarget:parentController];
-	[view setAction:@selector(browserAction:)];
-	[view setDoubleAction:@selector(browserDoubleAction:)];	
 }
 
 - (NSString*) nibNameForFilesBrowser { return @"FilesViewBrowser"; }
@@ -167,6 +164,8 @@
 - (MacHgDocument*)	myDocument		{ return [parentController myDocument]; }
 - (NSWindow*)		parentWindow	{ return [[parentController myDocument] mainWindow]; }
 
+- (IBAction) fsviewerDoubleAction:(id)sender { [parentController fsviewerDoubleAction:sender]; }
+- (IBAction) fsviewerAction:(id)sender		 { [parentController fsviewerAction:sender]; }
 
 
 

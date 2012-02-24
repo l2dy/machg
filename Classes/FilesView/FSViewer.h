@@ -25,6 +25,8 @@
 - (NSArray*)		resolveStatusLines: (NSArray*)absolutePaths withRootPath:(NSString*)rootPath;
 - (BOOL)			writePaths:(NSArray*)paths toPasteboard:(NSPasteboard*)pasteboard;	// dragging support
 - (MacHgDocument*)	myDocument;
+- (IBAction)		fsviewerDoubleAction:(id)sender;
+- (IBAction)		fsviewerAction:(id)sender;
 - (void)			setMyDocumentFromParent;
 - (void)			didSwitchViewTo:(FSViewerNum)viewNumber;
 - (BOOL)			controlsMainFSViewer;
@@ -75,6 +77,8 @@
 - (BOOL)		clickedNodeInSelectedNodes;
 - (FSNodeInfo*) chosenNode;
 - (NSArray*)	selectedNodes;
+- (IBAction)	fsviewerDoubleAction:(id)sender;
+- (IBAction)	fsviewerAction:(id)sender;
 
 
 // Path and Selection Operations

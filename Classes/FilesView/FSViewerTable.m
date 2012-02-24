@@ -33,6 +33,9 @@
 {
 	[self setDelegate:self];
 	[self setDataSource:self];
+	[self setTarget:self];
+	[self setAction:@selector(fsviewerAction:)];
+	[self setDoubleAction:@selector(fsviewerDoubleAction:)];
 }
 
 - (NSArray*) leafNodeForTableRow
@@ -101,6 +104,9 @@
 - (BOOL)		clickedNodeInSelectedNodes	{ return [self nodeIsClicked] ? [[self selectedRowIndexes] containsIndex:[self clickedRow]] : NO; }
 - (FSNodeInfo*) chosenNode					{ FSNodeInfo* ans = [self clickedNode]; return ans ? ans : [self selectedNode]; }
 - (NSArray*)	selectedNodes				{ return [[self leafNodeForTableRow] objectsAtIndexes:[self selectedRowIndexes]]; }
+
+- (IBAction) fsviewerDoubleAction:(id)sender { [parentViewer_ fsviewerDoubleAction:sender]; }
+- (IBAction) fsviewerAction:(id)sender		 { [parentViewer_ fsviewerAction:sender]; }
 
 
 
