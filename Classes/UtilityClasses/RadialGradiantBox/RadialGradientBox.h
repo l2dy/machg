@@ -11,7 +11,7 @@
 
 
 // This box draws itself with a radial gradiant centered on the centering Object
-@interface RadialGradiantBox : NSBox
+@interface RadialGradientBox : NSBox
 {
 	IBOutlet NSView*	centeringObject;
 	NSArray*			foregroundFilters_;

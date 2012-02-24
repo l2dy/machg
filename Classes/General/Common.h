@@ -106,7 +106,7 @@
 @class PopupWindowController;
 @class DisclosureBoxController;
 @class ConnectionValidationController;
-@class RadialGradiantBox;
+@class RadialGradientBox;
 @class OptionController;
 @class SingleTimedQueue;
 @class ThickSplitView;

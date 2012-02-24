@@ -239,7 +239,7 @@
 		96DCCC2010CD41B100C843C9 /* spawnshellatpath in Resources */ = {isa = PBXBuildFile; fileRef = 96DCCC1D10CD41B100C843C9 /* spawnshellatpath */; };
 		96DD29CA112AE56200A57BD3 /* CollapseSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96DD29C9112AE56200A57BD3 /* CollapseSheetController.m */; };
 		96DD29CD112AE56D00A57BD3 /* CollapseSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96DD29CB112AE56D00A57BD3 /* CollapseSheet.xib */; };
-		96DF426511B48DC700D986FF /* RadialGradiantBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 96DF426411B48DC700D986FF /* RadialGradiantBox.m */; };
+		96DF426511B48DC700D986FF /* RadialGradientBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 96DF426411B48DC700D986FF /* RadialGradientBox.m */; };
 		96DF437111B5209C00D986FF /* RelativePositionedBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 96DF437011B5209C00D986FF /* RelativePositionedBox.m */; };
 		96DF546411B83E1E00D986FF /* LocalMercurial in Copy Files (Mercurial) */ = {isa = PBXBuildFile; fileRef = 96DF51E211B83DF900D986FF /* LocalMercurial */; };
 		96DF581611BFC71A00D986FF /* MacHgDocumentController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96DF581511BFC71A00D986FF /* MacHgDocumentController.m */; };
@@ -623,8 +623,8 @@
 		96DD29C8112AE56200A57BD3 /* CollapseSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CollapseSheetController.h; sourceTree = "<group>"; };
 		96DD29C9112AE56200A57BD3 /* CollapseSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CollapseSheetController.m; sourceTree = "<group>"; };
 		96DD29CC112AE56D00A57BD3 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/CollapseSheet.xib; sourceTree = SOURCE_ROOT; };
-		96DF426311B48DC700D986FF /* RadialGradiantBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RadialGradiantBox.h; sourceTree = "<group>"; };
-		96DF426411B48DC700D986FF /* RadialGradiantBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RadialGradiantBox.m; sourceTree = "<group>"; };
+		96DF426311B48DC700D986FF /* RadialGradientBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RadialGradientBox.h; sourceTree = "<group>"; };
+		96DF426411B48DC700D986FF /* RadialGradientBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RadialGradientBox.m; sourceTree = "<group>"; };
 		96DF436F11B5209C00D986FF /* RelativePositionedBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RelativePositionedBox.h; sourceTree = "<group>"; };
 		96DF437011B5209C00D986FF /* RelativePositionedBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RelativePositionedBox.m; sourceTree = "<group>"; };
 		96DF51E211B83DF900D986FF /* LocalMercurial */ = {isa = PBXFileReference; lastKnownFileType = folder; path = LocalMercurial; sourceTree = "<group>"; };
@@ -1785,8 +1785,8 @@
 		96DF426211B48DC700D986FF /* RadialGradiantBox */ = {
 			isa = PBXGroup;
 			children = (
-				96DF426311B48DC700D986FF /* RadialGradiantBox.h */,
-				96DF426411B48DC700D986FF /* RadialGradiantBox.m */,
+				96DF426311B48DC700D986FF /* RadialGradientBox.h */,
+				96DF426411B48DC700D986FF /* RadialGradientBox.m */,
 			);
 			path = RadialGradiantBox;
 			sourceTree = "<group>";
@@ -2119,7 +2119,7 @@
 				96F5A4DE11A8185800707404 /* TextButtonCell.m in Sources */,
 				96F5A4FA11A81B5B00707404 /* DiffTextButtonCell.m in Sources */,
 				96F5A70D11A879F100707404 /* LabelTextButtonCell.m in Sources */,
-				96DF426511B48DC700D986FF /* RadialGradiantBox.m in Sources */,
+				96DF426511B48DC700D986FF /* RadialGradientBox.m in Sources */,
 				96DF437111B5209C00D986FF /* RelativePositionedBox.m in Sources */,
 				96DF581611BFC71A00D986FF /* MacHgDocumentController.m in Sources */,
 				966E8E5011CB86160052FF42 /* HistoryViewController.m in Sources */,

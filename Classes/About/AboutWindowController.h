@@ -13,7 +13,7 @@
 {
 	IBOutlet NSWindow*			aboutWindow;
 	IBOutlet WebView*			creditsWebview;
-	IBOutlet RadialGradiantBox*	backingBox;	
+	IBOutlet RadialGradientBox*	backingBox;	
 }
 
 - (AboutWindowController*) initAboutWindowController;

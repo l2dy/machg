@@ -9,7 +9,7 @@
 #import <WebKit/WebKit.h>
 #import "Common.h"
 #import "AboutWindowController.h"
-#import "RadialGradiantBox.h"
+#import "RadialGradientBox.h"
 #import "AppController.h"
 
 

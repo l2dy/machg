@@ -6,10 +6,10 @@
 //  Copyright 2010 Jason F Harris. All rights reserved.
 //
 
-#import "RadialGradiantBox.h"
+#import "RadialGradientBox.h"
 #import <QuartzCore/CIFilter.h>
 
-@interface RadialGradiantBox (PrivateAPI)
+@interface RadialGradientBox (PrivateAPI)
 
 - (void) recomputeFilters;
 @end
@@ -22,7 +22,7 @@
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 
-@implementation RadialGradiantBox : NSBox
+@implementation RadialGradientBox : NSBox
 
 
 
