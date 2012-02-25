@@ -117,7 +117,7 @@ void commonLoadCellContents(NSCell* cell)
 	//drawPoint.y += [controlView isFlipped] ? ceil(cellFrame.size.height) : 0;
 
 	float heightDelta = cellFrame.size.height - combinedIcon.size.height;
-	drawPoint.y -= floor(heightDelta/2);
+	drawPoint.y -= floor(heightDelta/3);
 	
 	// Leave space that the disclosure triangle would take
 	if (isOutlineCell && !hasChildren)
