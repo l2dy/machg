@@ -18,7 +18,8 @@
 #define ICON_INSET_HORIZ 	 4.0	// Distance to inset the icon from the left edge.
 #define ICON_INTERSPACING	 5.0	// Distance between the status icons and the file icon if the file icon is present.
 #define ICON_TEXT_SPACING	 4.0	// Distance between the end of the icon and the text part
-
+#define DISCLOSURE_SIZE	     7.0	// The space to reserve for the disclosure arrow if we are in an outline cell
+#define DISCLOSURE_SPACING	 3.0	// The space on either side to reserve for the disclosure arrow if we are in an outline cell
 
 @interface FSViewerPaneCell : NSTextFieldCell
 {
@@ -28,6 +29,7 @@
 @property (readwrite,assign) FSNodeInfo*	nodeInfo;
 @property (readwrite,assign) FSNodeInfo*	parentNodeInfo;
 
++ (NSSize)		iconRowSize:(FSNodeInfo*)parentNodeInfo;	// The maximum size needed for any child's icon row
 - (void)		loadCellContents;
 @end
 
@@ -41,15 +43,7 @@
 @end
 
 
-@interface FSViewerPaneCheckedIconedCell : NSButtonCell
+@interface FSViewerOutlinePaneIconedCell : FSViewerPaneIconedCell
 {
-	FSNodeInfo* nodeInfo;
-	FSNodeInfo* parentNodeInfo;
-	NSImage*	fileIcon;
 }
-@property (readwrite,assign) FSNodeInfo*	nodeInfo;
-@property (readwrite,assign) FSNodeInfo*	parentNodeInfo;
-@property (readwrite,assign) NSImage*		fileIcon;
-
-- (void)		loadCellContents;
 @end

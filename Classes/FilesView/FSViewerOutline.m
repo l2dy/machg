@@ -53,7 +53,15 @@
 	[[[parentViewer_ myDocument] mainWindow] makeFirstResponder:self];
 }
 
-
+- (NSRect)frameOfOutlineCellAtRow:(NSInteger)row
+{
+	NSRect r = [super frameOfOutlineCellAtRow:row];
+	FSNodeInfo* node = [self itemAtRow:row];
+	FSNodeInfo* parent = [self parentForItem:node];
+	NSSize iconRowSize = [FSViewerPaneIconedCell iconRowSize:parent];
+	return NSOffsetRect(r, ICON_INSET_HORIZ + iconRowSize.width + DISCLOSURE_SPACING + 11, 1);	// The 11 comes emperically and accounts for the space which the
+																								// disclosure would take up if it where there. 
+}
 
 
 

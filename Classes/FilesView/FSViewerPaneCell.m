@@ -58,7 +58,13 @@ void commonLoadCellContents(NSCell* cell)
 {
 	commonLoadCellContents(self);
 }
-	
+
++ (NSSize) iconRowSize:(FSNodeInfo*)parentNodeInfo
+{
+	int iconCount = parentNodeInfo ? [parentNodeInfo maxIconCountOfSubitems] : 1;
+	return NSMakeSize(ICON_SIZE + floor(ICON_SIZE * (iconCount - 1)/IconOverlapCompression), ICON_SIZE);
+}
+
 @end
 
 
@@ -77,55 +83,73 @@ void commonLoadCellContents(NSCell* cell)
 - (NSSize) cellSizeForBounds:(NSRect)aRect
 {
 	// Make our cells a bit higher than normal to give some additional space for the icon to fit.
+	BOOL isOutlineCell = [self isKindOfClass:[FSViewerOutlinePaneIconedCell class]];
 	NSSize theSize  = [super cellSizeForBounds:aRect];
-	NSSize iconSize = NSMakeSize(ICON_SIZE, ICON_SIZE);
-	theSize.width += iconSize.width + ICON_INSET_HORIZ + ICON_TEXT_SPACING;
-	theSize.height = MAX(ICON_SIZE + ICON_INSET_VERT * 2.0, [[self attributedStringValue] size].height + 5);
+	NSSize iconRowSize = [FSViewerPaneCell iconRowSize:parentNodeInfo];
+	theSize.width += ICON_INSET_HORIZ + iconRowSize.width;
+	if (isOutlineCell)
+		theSize.width += DISCLOSURE_SPACING + DISCLOSURE_SIZE + DISCLOSURE_SPACING;
+	if (fileIcon)
+		theSize.width += ICON_INTERSPACING + ICON_SIZE;
+	theSize.width += ICON_TEXT_SPACING;
+	theSize.height = MAX(iconRowSize.height + ICON_INSET_VERT * 2.0, [[self attributedStringValue] size].height + 5);
 	return theSize;
-}
-
-
-- (CGFloat) iconRowWidth
-{
-	int iconCount = parentNodeInfo ? [parentNodeInfo maxIconCountOfSubitems] : 1;
-	return ICON_SIZE + floor(ICON_SIZE * (iconCount - 1)/IconOverlapCompression);
 }
 
 
 - (void) drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView*)controlView
 {
 	NSImage* combinedIcon = [nodeInfo combinedIconImage];
-	NSSize imageSize = NSMakeSize(ICON_SIZE, ICON_SIZE);
-	NSRect imageFrame, textFrame;
-	
-	// Divide the cell into 2 parts, the image part (on the left) and the text part.
-	
-	CGFloat iconRowWidth = [self iconRowWidth];
-	
-	NSDivideRect(cellFrame, &imageFrame, &textFrame, ICON_INSET_HORIZ + iconRowWidth + (fileIcon ? ICON_INTERSPACING + ICON_SIZE: 0) + ICON_TEXT_SPACING, NSMinXEdge);
-	imageFrame.origin.x += ICON_INSET_HORIZ;
-	imageFrame.size = imageSize;
-	
-	// Adjust the image frame top account for the fact that we may or may not be in a flipped control view,
-	// since when compositing the online documentation states: "The image will have the orientation of the
-	// base coordinate system, regardless of the destination coordinates".
-	imageFrame.origin.y += ceil((textFrame.size.height + ([controlView isFlipped] ? 1 : -1) * imageFrame.size.height) / 2);
+	BOOL isOutlineCell = [self isKindOfClass:[FSViewerOutlinePaneIconedCell class]];
+	BOOL hasChildren = IsNotEmpty([nodeInfo childNodes]);
 	
 	[self setDrawsBackground:NO];
 
-	NSPoint originC = NSMakePoint(imageFrame.origin.x + iconRowWidth - combinedIcon.size.width, imageFrame.origin.y);
-	// If we have fewer icons than the maximum, then inset the origin accordingly so that the icons are right aligned
-	[combinedIcon compositeToPoint:originC operation:NSCompositeSourceOver fraction:1.0];
+	CGFloat iconRowWidth = [FSViewerPaneCell iconRowSize:parentNodeInfo].width;	
+	NSPoint drawPoint = cellFrame.origin;
+	
+	// Draw IconRow
+	drawPoint.x += ICON_INSET_HORIZ;
+	// Adjust the image frame top account for the fact that we may or may not be in a flipped control view,
+	// since when compositing the online documentation states: "The image will have the orientation of the
+	// base coordinate system, regardless of the destination coordinates".
+	drawPoint.y += ceil((cellFrame.size.height + ([controlView isFlipped] ? 1 : -1) * cellFrame.size.height) / 2);
+	//drawPoint.y += [controlView isFlipped] ? ceil(cellFrame.size.height) : 0;
 
-	// If we are including file icons then draw it after the status icon
+	float heightDelta = cellFrame.size.height - combinedIcon.size.height;
+	drawPoint.y -= floor(heightDelta/2);
+	
+	// Leave space that the disclosure triangle would take
+	if (isOutlineCell && !hasChildren)
+		drawPoint.x += DISCLOSURE_SPACING + DISCLOSURE_SIZE + DISCLOSURE_SPACING;
+	
+	drawPoint.x += iconRowWidth - combinedIcon.size.width;
+	[combinedIcon compositeToPoint:drawPoint operation:NSCompositeSourceOver fraction:1.0];
+	drawPoint.x += combinedIcon.size.width;
+	
+	// Leave space for the disclosure triangle if present
+	if (isOutlineCell && hasChildren)
+		drawPoint.x += DISCLOSURE_SPACING + DISCLOSURE_SIZE + DISCLOSURE_SPACING;
+	
+	// Draw the fileIcon if present
 	if (fileIcon)
 	{
-		NSPoint originF = NSMakePoint(imageFrame.origin.x + iconRowWidth + ICON_INTERSPACING, imageFrame.origin.y);
-		[fileIcon compositeToPoint:originF operation:NSCompositeSourceOver fraction:1.0];
+		drawPoint.x += ICON_INTERSPACING;
+		[fileIcon compositeToPoint:drawPoint operation:NSCompositeSourceOver fraction:1.0];
+		drawPoint.x += fileIcon.size.width;
 	}
 	
-	// Have NSBrowserCell kindly draw the text part, since it knows how to do that for us, no need to re-invent what it knows how to do.
-	[super drawInteriorWithFrame:textFrame inView:controlView];
+	// Space before text
+	drawPoint.x += ICON_TEXT_SPACING;
+	
+	// Comute the textFrame and draw it
+	CGFloat xOffset = drawPoint.x - cellFrame.origin.x;
+	NSRect textFrame = cellFrame;
+	textFrame.size.width -= xOffset;
+	textFrame.origin.x   += xOffset;
+	[super drawInteriorWithFrame:textFrame inView:controlView];		// Have NSBrowserCell kindly draw the text part, since it knows how to
+																	// do that for us, no need to re-invent what it knows how to do. 
+
 }
 
 
@@ -137,7 +161,7 @@ void commonLoadCellContents(NSCell* cell)
 	// If we do need an expansion frame, the rect will be non-empty. We need to move it over, and shrink it, since we won't be drawing the icon in it
 	if (!NSIsEmptyRect(expansionFrame))
 	{
-		CGFloat iconsWidth = [self iconRowWidth];
+		CGFloat iconsWidth = [FSViewerPaneCell iconRowSize:parentNodeInfo].width;
 		expansionFrame.origin.x   = expansionFrame.origin.x   +  iconsWidth + ICON_INSET_HORIZ  + ICON_TEXT_SPACING;
 		expansionFrame.size.width = expansionFrame.size.width - (iconsWidth + ICON_TEXT_SPACING + ICON_INSET_HORIZ / 2.0);
 	}
@@ -155,14 +179,9 @@ void commonLoadCellContents(NSCell* cell)
 
 
 
-@implementation FSViewerPaneCheckedIconedCell : NSButtonCell
+@implementation FSViewerOutlinePaneIconedCell
 
-@synthesize nodeInfo;
-@synthesize parentNodeInfo;
-@synthesize fileIcon;
-
-
-- (void) loadCellContents { commonLoadCellContents(self); }
+// Do drawing here.
 
 @end
 
