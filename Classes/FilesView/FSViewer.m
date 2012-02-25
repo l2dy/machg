@@ -91,6 +91,17 @@
 	FSViewerNum viewerNum = [[NSUserDefaults standardUserDefaults] integerForKey:[self viewerAutoSaveName]];
 	if (viewerNum == eFilesNoView)
 		viewerNum = DefaultFilesViewFromDefaults() + 1;
+
+	[browserSegementButton setTarget:self];
+	[browserSegementButton setAction:@selector(actionSwitchToFilesBrowser:)];
+	[browserSegementButton setState:NO];
+	[outlineSegementButton setTarget:self];
+	[outlineSegementButton setAction:@selector(actionSwitchToFilesOutline:)];
+	[outlineSegementButton setState:NO];
+	[tableSegementButton   setTarget:self];
+	[tableSegementButton   setAction:@selector(actionSwitchToFilesTable:)];
+	[tableSegementButton   setState:NO];
+	
 	[self setCurrentFSViewerPane:viewerNum];
 }
 
@@ -221,6 +232,13 @@
 	[[self currentViewerPane] prepareToOpenFSViewerPane];	
 }
 	
+- (void) updateSegmentSelectorButtons
+{
+	FSViewerNum currentViewNumber = [self currentFSViewerPaneNum];
+	[browserSegementButton setState:(currentViewNumber == eFilesBrowser)];
+	[outlineSegementButton setState:(currentViewNumber == eFilesOutline)];
+	[tableSegementButton   setState:(currentViewNumber == eFilesTable)];
+}
 
 
 

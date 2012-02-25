@@ -83,10 +83,6 @@
 {
 	[self setMyDocumentFromParent];
 	[self observe:kRepositoryDataIsNew		from:[self myDocument]  byCalling:@selector(repositoryDataIsNew)];
-	[FilesViewBrowserSegement setState:NO];
-	[FilesViewOutlineSegement setState:NO];
-	[FilesViewTableSegement setState:NO];
-
 	[theFSViewer setAreNodesVirtual:NO];
 }
 
@@ -139,22 +135,10 @@
 // MARK:  Refreshing
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) updateFilesViewButtonSelector
-{
-	FSViewerNum currentViewNumber = [theFSViewer currentFSViewerPaneNum];
-	[FilesViewBrowserSegement setState:(currentViewNumber == eFilesBrowser)];
-	[FilesViewOutlineSegement setState:(currentViewNumber == eFilesOutline)];
-	[FilesViewTableSegement   setState:(currentViewNumber == eFilesTable)];
-}
-
-- (void) didSwitchViewTo:(FSViewerNum)viewNumber
-{
-	[self updateFilesViewButtonSelector];
-}
-
-- (void) repositoryDataIsNew					{ [theFSViewer repositoryDataIsNew]; }
-
-- (IBAction) refreshBrowserContent:(id)sender	{ return [myDocument refreshBrowserContent:myDocument]; }
+- (void) updateFilesViewButtonSelector				{ [theFSViewer updateSegmentSelectorButtons]; }
+- (void) didSwitchViewTo:(FSViewerNum)viewNumber	{ [self updateFilesViewButtonSelector]; }
+- (void) repositoryDataIsNew						{ [theFSViewer repositoryDataIsNew]; }
+- (IBAction) refreshBrowserContent:(id)sender		{ return [myDocument refreshBrowserContent:myDocument]; }
 
 - (void) restoreConcertinaSplitViewPositions
 {

@@ -647,6 +647,7 @@
 								[[self theHistoryView]     scrollToSelected];						break;
         case eDifferencesView:  [[self theDifferencesView] restoreDifferencesSplitViewPositions];
 								[[self theDifferencesView] scrollToSelected];						break;
+								[[self theDifferencesView] updateFilesViewButtonSelector];			break;
         default:                break;
 	}
 

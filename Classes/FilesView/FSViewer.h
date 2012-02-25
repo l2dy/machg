@@ -113,10 +113,13 @@
 	IBOutlet PatchesWebview*	detailedPatchesWebView;
 	IBOutlet NSMenu*			contextualMenuForFSViewerPane;
 	
-	NSString*		absolutePathOfRepositoryRoot_;
-	FSNodeInfo*		rootNodeInfo_;
-	BOOL			areNodesVirtual_;				// Is this browser used to display virtual nodes?
-
+	IBOutlet NSButton*	browserSegementButton;			// Indicate if the browser pane is shown
+	IBOutlet NSButton*	outlineSegementButton;			// Indicate if the outline pane is shown
+	IBOutlet NSButton*	tableSegementButton;			// Indicate if the table   pane is shown
+	
+	NSString*			absolutePathOfRepositoryRoot_;
+	FSNodeInfo*			rootNodeInfo_;
+	BOOL				areNodesVirtual_;				// Is this browser used to display virtual nodes?
 
  @private
 	FSViewerBrowser*	theFilesBrowser_;
@@ -159,6 +162,7 @@
 - (FSViewerNum)	currentFSViewerPaneNum;
 - (void)		setCurrentFSViewerPane:(FSViewerNum)styleNum;
 - (NSView<FSViewerProtocol>*)	currentViewerPane;
+- (void)		updateSegmentSelectorButtons;
 
 
 // Common Path and Selection Operations
