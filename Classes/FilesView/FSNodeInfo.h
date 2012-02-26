@@ -80,6 +80,8 @@
 
 
 // Icons for Nodes
++ (NSArray*)	notableIconImagesForStatus:(HGStatus)status isDirectory:(BOOL)isDirectory;
++ (NSImage*)	compositeRowOfIcons:(NSArray*)icons withOverlap:(CGFloat)overlap;
 - (NSImage*)	iconImageOfSize:(NSSize)size;		// this is the icon of the file (eg a xcode document icon, or xcode icon for a .h file, etc.)
 - (NSImage*)	combinedIconImage;
 

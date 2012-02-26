@@ -226,7 +226,7 @@
 	return [NSWorkspace iconImageOfSize:size forPath:path withDefault:defaultImageName];
 }
 
-- (NSArray*) notableIconImages
++ (NSArray*) notableIconImagesForStatus:(HGStatus)status isDirectory:(BOOL)isDirectory
 {
 	static BOOL initalizedCaches    = NO;
 	static NSImage* additionImage   = nil;
@@ -267,7 +267,6 @@
 	}
 
 	NSMutableArray* icons = [[NSMutableArray alloc] init];
-	HGStatus status = [self hgStatus];
 
 	if (bitsInCommon(status, eHGStatusMissing))		[icons addObject:missingImage];
 	if (bitsInCommon(status, eHGStatusUntracked))	[icons addObject:unknownImage];
@@ -278,7 +277,7 @@
 	if (bitsInCommon(status, eHGStatusResolved))	[icons addObject:resolvedImage];
 
 	// For directories we only consider the icons above
-	if ([self isDirectory])
+	if (isDirectory)
 		return icons;
 	
 	// For files we need to get the other images as well
@@ -286,6 +285,21 @@
 	if (bitsInCommon(status, eHGStatusIgnored))		[icons addObject:ignoredImage];
 	
 	return icons;
+}
+
++ (NSImage*) compositeRowOfIcons:(NSArray*)icons withOverlap:(CGFloat)overlap
+{
+	CGFloat hsize = ICON_SIZE + ceil(ICON_SIZE * ([icons count] - 1)/overlap);
+	NSImage* combinedImage = [[NSImage alloc] initWithSize:NSMakeSize(hsize,  ICON_SIZE)];
+	NSRect imageFrame = NSMakeRect(0, 0, ICON_SIZE, ICON_SIZE);
+	[combinedImage lockFocus];
+	for (NSImage* icon in icons)
+	{
+		[icon compositeToPoint:imageFrame.origin operation:NSCompositeSourceOver fraction:1.0];
+		imageFrame.origin.x += ICON_SIZE / overlap;
+	}
+	[combinedImage unlockFocus];
+	return combinedImage;
 }
 
 - (NSImage*) combinedIconImage
@@ -299,18 +313,8 @@
 	if (cached)
 		return cached;
 	
-	NSArray* icons = [self notableIconImages];
-	CGFloat hsize = ICON_SIZE + ceil(ICON_SIZE * ([icons count] - 1)/IconOverlapCompression);
-	NSImage* combinedImage = [[NSImage alloc] initWithSize:NSMakeSize(hsize,  ICON_SIZE)];
-	NSRect imageFrame = NSMakeRect(0, 0, ICON_SIZE, ICON_SIZE);
-	[combinedImage lockFocus];
-	for (NSImage* icon in icons)
-	{
-		[icon compositeToPoint:imageFrame.origin operation:NSCompositeSourceOver fraction:1.0];
-		imageFrame.origin.x += ICON_SIZE / IconOverlapCompression;
-	}
-	[combinedImage unlockFocus];
-	
+	NSArray* icons = [FSNodeInfo notableIconImagesForStatus:[self hgStatus] isDirectory:[self isDirectory]];
+	NSImage* combinedImage = [FSNodeInfo compositeRowOfIcons:icons withOverlap:IconOverlapCompression];
 	[cachedIcons setObject:combinedImage forKey:theKey];
 	return combinedImage;
 }
