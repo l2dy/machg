@@ -11,7 +11,7 @@
       <string key="NS.object.0">851</string>
     </object>
     <array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-      <integer value="545"/>
+      <integer value="635"/>
     </array>
     <array key="IBDocument.PluginDependencies">
       <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -1129,10 +1129,63 @@
                               <string>NeXT Encapsulated PostScript v1.2 pasteboard type</string>
                               <string>NeXT TIFF v4.0 pasteboard type</string>
                             </set>
-                            <string key="NSFrame">{{-1, 0}, {1002, 24}}</string>
+                            <string key="NSFrame">{{-1, 0}, {1142, 24}}</string>
                             <reference key="NSSuperview" ref="500031095"/>
                             <bool key="NSEnabled">YES</bool>
                             <object class="NSImageCell" key="NSCell" id="840131311">
+                              <int key="NSCellFlags">130560</int>
+                              <int key="NSCellFlags2">33554432</int>
+                              <reference key="NSContents" ref="663174445"/>
+                              <int key="NSAlign">0</int>
+                              <int key="NSScale">1</int>
+                              <int key="NSStyle">0</int>
+                              <bool key="NSAnimates">NO</bool>
+                            </object>
+                            <bool key="NSEditable">YES</bool>
+                          </object>
+                          <object class="NSImageView" id="1023311022">
+                            <reference key="NSNextResponder" ref="500031095"/>
+                            <int key="NSvFlags">265</int>
+                            <set class="NSMutableSet" key="NSDragTypes">
+                              <string>Apple PDF pasteboard type</string>
+                              <string>Apple PICT pasteboard type</string>
+                              <string>Apple PNG pasteboard type</string>
+                              <string>NSFilenamesPboardType</string>
+                              <string>NeXT Encapsulated PostScript v1.2 pasteboard type</string>
+                              <string>NeXT TIFF v4.0 pasteboard type</string>
+                            </set>
+                            <string key="NSFrame">{{1122, 7}, {11, 10}}</string>
+                            <reference key="NSSuperview" ref="500031095"/>
+                            <bool key="NSEnabled">YES</bool>
+                            <object class="NSImageCell" key="NSCell" id="319470754">
+                              <int key="NSCellFlags">130560</int>
+                              <int key="NSCellFlags2">33554432</int>
+                              <object class="NSCustomResource" key="NSContents">
+                                <string key="NSClassName">NSImage</string>
+                                <string key="NSResourceName">DividerThumb</string>
+                              </object>
+                              <int key="NSAlign">0</int>
+                              <int key="NSScale">0</int>
+                              <int key="NSStyle">0</int>
+                              <bool key="NSAnimates">NO</bool>
+                            </object>
+                            <bool key="NSEditable">YES</bool>
+                          </object>
+                          <object class="NSImageView" id="617959668">
+                            <reference key="NSNextResponder" ref="500031095"/>
+                            <int key="NSvFlags">268</int>
+                            <set class="NSMutableSet" key="NSDragTypes">
+                              <string>Apple PDF pasteboard type</string>
+                              <string>Apple PICT pasteboard type</string>
+                              <string>Apple PNG pasteboard type</string>
+                              <string>NSFilenamesPboardType</string>
+                              <string>NeXT Encapsulated PostScript v1.2 pasteboard type</string>
+                              <string>NeXT TIFF v4.0 pasteboard type</string>
+                            </set>
+                            <string key="NSFrame">{{-1, 0}, {400, 24}}</string>
+                            <reference key="NSSuperview" ref="500031095"/>
+                            <bool key="NSEnabled">YES</bool>
+                            <object class="NSImageCell" key="NSCell" id="208105286">
                               <int key="NSCellFlags">130560</int>
                               <int key="NSCellFlags2">33554432</int>
                               <reference key="NSContents" ref="663174445"/>
@@ -1270,11 +1323,11 @@
                             </object>
                           </object>
                         </array>
-                        <string key="NSFrameSize">{1000, 24}</string>
+                        <string key="NSFrameSize">{1140, 24}</string>
                         <reference key="NSSuperview" ref="888491489"/>
                       </object>
                     </array>
-                    <string key="NSFrame">{{1, 339}, {1000, 24}}</string>
+                    <string key="NSFrame">{{1, 339}, {1140, 24}}</string>
                     <reference key="NSSuperview" ref="299178848"/>
                     <string key="NSOffsets">{0, 0}</string>
                     <object class="NSTextFieldCell" key="NSTitleCell">
@@ -1860,7 +1913,7 @@
                         <string key="NSReuseIdentifierKey">_NS:21</string>
                       </object>
                     </array>
-                    <string key="NSFrame">{{1002, 63}, {139, 286}}</string>
+                    <string key="NSFrame">{{1002, 52}, {139, 286}}</string>
                     <reference key="NSSuperview" ref="299178848"/>
                     <string key="NSReuseIdentifierKey">_NS:18</string>
                     <string key="NSOffsets">{0, 0}</string>
@@ -3144,9 +3197,11 @@
               <reference ref="1071103306"/>
               <reference ref="967258203"/>
               <reference ref="818370833"/>
+              <reference ref="1023311022"/>
+              <reference ref="617959668"/>
             </array>
             <reference key="parent" ref="299178848"/>
-            <string key="objectName">Concertina Divider1</string>
+            <string key="objectName">Divider 2</string>
           </object>
           <object class="IBObjectRecord">
             <int key="objectID">638</int>
@@ -3538,6 +3593,32 @@
             <reference key="object" ref="469675416"/>
             <reference key="parent" ref="914937613"/>
           </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">658</int>
+            <reference key="object" ref="1023311022"/>
+            <array class="NSMutableArray" key="children">
+              <reference ref="319470754"/>
+            </array>
+            <reference key="parent" ref="888491489"/>
+          </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">659</int>
+            <reference key="object" ref="319470754"/>
+            <reference key="parent" ref="1023311022"/>
+          </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">660</int>
+            <reference key="object" ref="617959668"/>
+            <array class="NSMutableArray" key="children">
+              <reference ref="208105286"/>
+            </array>
+            <reference key="parent" ref="888491489"/>
+          </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">661</int>
+            <reference key="object" ref="208105286"/>
+            <reference key="parent" ref="617959668"/>
+          </object>
         </array>
       </object>
       <dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -3767,12 +3848,22 @@
         <string key="649.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="650.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="651.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+        <string key="658.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+        <object class="NSAffineTransform" key="658.IBViewBoundsToFrameTransform">
+          <bytes key="NSTransformStruct">AUQNQABDMAAAA</bytes>
+        </object>
+        <string key="659.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+        <string key="660.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+        <object class="NSAffineTransform" key="660.IBViewBoundsToFrameTransform">
+          <bytes key="NSTransformStruct">Ab+AAAAAAAAAA</bytes>
+        </object>
+        <string key="661.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
       </dictionary>
       <dictionary class="NSMutableDictionary" key="unlocalizedProperties"/>
       <nil key="activeLocalization"/>
       <dictionary class="NSMutableDictionary" key="localizations"/>
       <nil key="sourceID"/>
-      <int key="maxID">657</int>
+      <int key="maxID">661</int>
     </object>
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -6110,6 +6201,7 @@
     <dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
       <string key="ActionDropButtonSizeSmall">{18, 11}</string>
       <string key="DividerBackground24">{1, 24}</string>
+      <string key="DividerThumb">{11, 10}</string>
       <string key="FilesViewBrowser">{15, 14}</string>
       <string key="FilesViewOutline">{15, 14}</string>
       <string key="FilesViewTable">{13, 14}</string>
