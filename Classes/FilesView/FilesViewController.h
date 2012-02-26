@@ -50,7 +50,6 @@
 	IBOutlet FilesViewController*		parentContoller;
 	IBOutlet FSViewer*					theFSViewer;
 	IBOutlet StatusSidebarSplitView*	statusSidebarSplitView;
-	IBOutlet PopupWindowController*		fileDifferencesPreferencesPopup;
 	IBOutlet JHConcertinaView*			concertinaView;	// Main concertina view containing the sub panes.
 	IBOutlet NSImageView*	nodeIconWell;		// Image well showing the selected items icon.
 	IBOutlet NSTextField*	nodeInspector;		// Text field showing the selected items attributes.
@@ -94,8 +93,8 @@
 
 	IBOutlet NSBox*			statusSidebarContent;
 	IBOutlet NSView*		expandedStatusSidebarGroup;
-	IBOutlet NSView*		collapsedStatusSidebarGroup;
 	IBOutlet NSButton*		toggleStatusSidebarButton;
+	IBOutlet NSBox*			dividerStatusBox;	
 	BOOL					minimized;
 	NSViewAnimation*		viewAnimation;
 }

@@ -49,6 +49,8 @@
 		9606F3451157F1F100968DE8 /* opendiff-w.sh in Resources */ = {isa = PBXBuildFile; fileRef = 9606F3441157F1F100968DE8 /* opendiff-w.sh */; };
 		9609EF4711391D3C0077E178 /* tb-browserPane.png in Resources */ = {isa = PBXBuildFile; fileRef = 9609EF4411391D3C0077E178 /* tb-browserPane.png */; };
 		9609EF4811391D3C0077E178 /* tb-DiffInspectorPane.png in Resources */ = {isa = PBXBuildFile; fileRef = 9609EF4511391D3C0077E178 /* tb-DiffInspectorPane.png */; };
+		960E55AE14FB68B500F577BC /* StatusButton.m in Sources */ = {isa = PBXBuildFile; fileRef = 960E55AD14FB68B500F577BC /* StatusButton.m */; };
+		960E580A14FC889400F577BC /* ButtonDownArrow.png in Resources */ = {isa = PBXBuildFile; fileRef = 960E580914FC889400F577BC /* ButtonDownArrow.png */; };
 		960FF39714ADB4F900A66857 /* SidebarOpen.png in Resources */ = {isa = PBXBuildFile; fileRef = 960FF39614ADB4F900A66857 /* SidebarOpen.png */; };
 		9610639B117C6E4000FF7EB2 /* ActionDrop24.png in Resources */ = {isa = PBXBuildFile; fileRef = 9610639A117C6E4000FF7EB2 /* ActionDrop24.png */; };
 		96138847116B437D0022F368 /* ActionDrop.png in Resources */ = {isa = PBXBuildFile; fileRef = 96138846116B437D0022F368 /* ActionDrop.png */; };
@@ -342,6 +344,9 @@
 		9606F3441157F1F100968DE8 /* opendiff-w.sh */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.sh; path = "opendiff-w.sh"; sourceTree = "<group>"; };
 		9609EF4411391D3C0077E178 /* tb-browserPane.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tb-browserPane.png"; sourceTree = "<group>"; };
 		9609EF4511391D3C0077E178 /* tb-DiffInspectorPane.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tb-DiffInspectorPane.png"; sourceTree = "<group>"; };
+		960E55AC14FB68B500F577BC /* StatusButton.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = StatusButton.h; sourceTree = "<group>"; };
+		960E55AD14FB68B500F577BC /* StatusButton.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = StatusButton.m; sourceTree = "<group>"; };
+		960E580914FC889400F577BC /* ButtonDownArrow.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ButtonDownArrow.png; path = ButtonIcons/ButtonDownArrow.png; sourceTree = "<group>"; };
 		960FF39614ADB4F900A66857 /* SidebarOpen.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = SidebarOpen.png; path = ButtonIcons/SidebarOpen.png; sourceTree = "<group>"; };
 		9610639A117C6E4000FF7EB2 /* ActionDrop24.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ActionDrop24.png; path = ButtonIcons/ActionDrop24.png; sourceTree = "<group>"; };
 		96138846116B437D0022F368 /* ActionDrop.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ActionDrop.png; path = ButtonIcons/ActionDrop.png; sourceTree = "<group>"; };
@@ -956,6 +961,7 @@
 				9637C8C2118E9C300000C14B /* ActionDropButtonSizeSmall.png */,
 				9610639A117C6E4000FF7EB2 /* ActionDrop24.png */,
 				96C3C3381304C0CF009BB242 /* DiffButton.png */,
+				960E580914FC889400F577BC /* ButtonDownArrow.png */,
 				960FF39614ADB4F900A66857 /* SidebarOpen.png */,
 				96D003C114ABDF74007E53C8 /* SidebarClose.png */,
 			);
@@ -1697,6 +1703,8 @@
 				96A77BB714940EE200A51000 /* FSViewerPaneCell.m */,
 				96A77BB814940EE200A51000 /* FSNodeInfo.h */,
 				96A77BB914940EE200A51000 /* FSNodeInfo.m */,
+				960E55AC14FB68B500F577BC /* StatusButton.h */,
+				960E55AD14FB68B500F577BC /* StatusButton.m */,
 				96A77BBA14940EE200A51000 /* FSViewer.h */,
 				96A77BBB14940EE200A51000 /* FSViewer.m */,
 				96E2303D1495A4A000174A55 /* FilesViewOutline.xib */,
@@ -2025,6 +2033,7 @@
 				96DADB6614DCB9870092F379 /* AppearancePreferencesMono18.png in Resources */,
 				96E5832A14E5CA0F0041B472 /* CommitFilesViewTable.xib in Resources */,
 				96F2C6C514F18C51006C6FEC /* AlterDetailsSheet.xib in Resources */,
+				960E580A14FC889400F577BC /* ButtonDownArrow.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2157,6 +2166,7 @@
 				963E431914D5A4CC004C6CAB /* PatchesWebview.m in Sources */,
 				9699215214DC1AFE006DC6EB /* PopupWindowController.m in Sources */,
 				96F2C6C214F18C34006C6FEC /* AlterDetailsSheetController.m in Sources */,
+				960E55AE14FB68B500F577BC /* StatusButton.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

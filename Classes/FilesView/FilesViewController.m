@@ -420,8 +420,8 @@
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 
-const CGFloat collapsedWidth =  39;	// This is the width of the view in its collapsed form
-const CGFloat  expandedWidth = 146;	// This is the width of the view in its expanded form
+const CGFloat collapsedWidth =  3;	// This is the width of the view in its collapsed form
+const CGFloat  expandedWidth = 148;	// This is the width of the view in its expanded form
 
 @implementation StatusSidebarSplitView
 
@@ -476,6 +476,7 @@ const CGFloat  expandedWidth = 146;	// This is the width of the view in its expa
 	if (!minimized)
 		return;
 
+	[dividerStatusBox setHidden:YES];
 	[toggleStatusSidebarButton setImage:[NSImage imageNamed:@"SidebarClose"]];
 	[toggleStatusSidebarButton setAction:@selector(minimize:)];
 
@@ -483,8 +484,6 @@ const CGFloat  expandedWidth = 146;	// This is the width of the view in its expa
 	NSRect endFrame = [self frame];
 	endFrame.size.width -= expandedWidth;
 	[self animateContentToNewFrame:endFrame];
-
-	[statusSidebarContent setContentView:expandedStatusSidebarGroup];
 }
 
 - (IBAction) minimize:(id)sender
@@ -492,6 +491,7 @@ const CGFloat  expandedWidth = 146;	// This is the width of the view in its expa
 	if (minimized)
 		return;
 
+	[dividerStatusBox setHidden:NO];
 	[toggleStatusSidebarButton setImage:[NSImage imageNamed:@"SidebarOpen"]];
 	[toggleStatusSidebarButton setAction:@selector(maximize:)];
 
@@ -499,8 +499,6 @@ const CGFloat  expandedWidth = 146;	// This is the width of the view in its expa
 	NSRect endFrame = [self frame];
 	endFrame.size.width -= collapsedWidth;
 	[self animateContentToNewFrame:endFrame];
-	
-	[statusSidebarContent setContentView:collapsedStatusSidebarGroup];
 }
 
 
