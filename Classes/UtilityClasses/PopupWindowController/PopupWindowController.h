@@ -15,7 +15,9 @@
 	IBOutlet NSButton*		displayButton;
 	IBOutlet NSView*		popupContentView;
     MAAttachedWindow*		attachedPopupWindow;
+	NSNumber*				attachedPosition;
 }
+@property (readwrite,assign) NSNumber*	attachedPosition;
 
 - (IBAction) toggleAttachedPopupWindow:(id)sender;
 

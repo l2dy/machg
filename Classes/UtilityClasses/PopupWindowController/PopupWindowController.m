@@ -11,18 +11,22 @@
 
 @implementation PopupWindowController
 
+@synthesize attachedPosition;
+
+
 - (IBAction) toggleAttachedPopupWindow:(id)sender
 {
 	// Attach/detach window
     if (!attachedPopupWindow)
 	{
+		MAWindowPosition windowPosition = attachedPosition ? [attachedPosition intValue] : MAPositionRightTop;
         NSPoint buttonPoint = NSMakePoint(NSMaxX([displayButton bounds]) - 2.0,
                                           NSMidY([displayButton bounds]) + 3.0);
 		NSPoint pointInWindow = [displayButton convertPoint:buttonPoint toView:nil];
         attachedPopupWindow = [[MAAttachedWindow alloc] initWithView:popupContentView 
 																	 attachedToPoint:pointInWindow 
 																			inWindow:[displayButton window] 
-																			  onSide:MAPositionRightTop 
+																			  onSide:windowPosition
 																		  atDistance:2.0];
         [attachedPopupWindow setBorderColor:[NSColor colorWithDeviceWhite:0.9 alpha:1.0]];
         [attachedPopupWindow setBackgroundColor:[NSColor colorWithDeviceWhite:0.93 alpha:1.0]];
