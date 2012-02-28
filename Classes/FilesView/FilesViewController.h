@@ -45,22 +45,20 @@
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
 
-@interface FilesView : NSView <AccessesDocument, ControllerForFSViewer, NSUserInterfaceValidations, NSWindowDelegate>
+@interface FilesView : NSView <AccessesDocument, ControllerForFSViewer, NSUserInterfaceValidations>
 {
-	IBOutlet FilesViewController* parentContoller;
-	IBOutlet FSViewer*		theFSViewer;
+	IBOutlet FilesViewController*		parentContoller;
+	IBOutlet FSViewer*					theFSViewer;
 	IBOutlet StatusSidebarSplitView*	statusSidebarSplitView;
-	IBOutlet JHConcertinaView*	concertinaView;	// Main concertina view containing the sub panes.
+	IBOutlet PopupWindowController*		fileDifferencesPreferencesPopup;
+	IBOutlet JHConcertinaView*			concertinaView;	// Main concertina view containing the sub panes.
 	IBOutlet NSImageView*	nodeIconWell;		// Image well showing the selected items icon.
 	IBOutlet NSTextField*	nodeInspector;		// Text field showing the selected items attributes.
 	IBOutlet NSButton*		FilesViewBrowserSegement;
 	IBOutlet NSButton*		FilesViewOutlineSegement;
 	IBOutlet NSButton*		FilesViewTableSegement;
-	IBOutlet NSButton*		DifferencesViewTogglePreferences;
 	MacHgDocument*			myDocument;
 	
-	IBOutlet NSView*		preferencesViewForAttachedWindow;
-    MAAttachedWindow*		attachedDifferencesPreferenceWindow;
 }
 
 @property (readwrite,assign) MacHgDocument*	myDocument;
@@ -80,7 +78,6 @@
 - (IBAction) browserAction:(id)browser;			// Respond to a single click or a key down event
 - (IBAction) browserDoubleAction:(id)browser;	// Respond to a double click
 - (IBAction) differencesDisplayPreferencesChanged:(id)sender;	// Respond to a change in the display preferences
-- (IBAction) toggleAttachedDifferencesPreferencesWindow:(id)sender;
 
 @end
 

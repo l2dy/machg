@@ -177,6 +177,7 @@
 		9695CB6A110A0AD4004CE684 /* IncomingSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9695CB68110A0AD4004CE684 /* IncomingSheet.xib */; };
 		9695CBD3110A101C004CE684 /* IncomingSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9695CBD2110A101C004CE684 /* IncomingSheetController.m */; };
 		9698090F13170E0D006088CA /* NSURL+Parameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 9698090E13170E0D006088CA /* NSURL+Parameters.m */; };
+		9699215214DC1AFE006DC6EB /* PopupWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9699215114DC1AFE006DC6EB /* PopupWindowController.m */; };
 		969BD94511953E43007AA6D9 /* AddLabelSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 969BD94411953E43007AA6D9 /* AddLabelSheetController.m */; };
 		969BD94811953E54007AA6D9 /* AddLabelSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 969BD94611953E54007AA6D9 /* AddLabelSheet.xib */; };
 		969BD95511953FAA007AA6D9 /* MoveLabelSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 969BD95411953FAA007AA6D9 /* MoveLabelSheetController.m */; };
@@ -531,6 +532,8 @@
 		9695CBD2110A101C004CE684 /* IncomingSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IncomingSheetController.m; sourceTree = "<group>"; };
 		9698090D13170E0D006088CA /* NSURL+Parameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+Parameters.h"; sourceTree = "<group>"; };
 		9698090E13170E0D006088CA /* NSURL+Parameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+Parameters.m"; sourceTree = "<group>"; };
+		9699215014DC1AFE006DC6EB /* PopupWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopupWindowController.h; sourceTree = "<group>"; };
+		9699215114DC1AFE006DC6EB /* PopupWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopupWindowController.m; sourceTree = "<group>"; };
 		969BD94311953E43007AA6D9 /* AddLabelSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddLabelSheetController.h; sourceTree = "<group>"; };
 		969BD94411953E43007AA6D9 /* AddLabelSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddLabelSheetController.m; sourceTree = "<group>"; };
 		969BD94711953E54007AA6D9 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/AddLabelSheet.xib; sourceTree = SOURCE_ROOT; };
@@ -1406,6 +1409,7 @@
 				9606EE15115670FD00968DE8 /* Help Button */,
 				9672AC57114B796A00312CE2 /* OptionController */,
 				96DC168014BA0EDF00A6E61B /* PopupActionButton */,
+				9699214F14DC1AFE006DC6EB /* PopupWindowController */,
 				96DF426211B48DC700D986FF /* RadialGradiantBox */,
 				96DF436E11B5209C00D986FF /* RelativePositionedBox */,
 				9672AC5A114B796A00312CE2 /* ResultsWindow */,
@@ -1580,6 +1584,15 @@
 				9698090E13170E0D006088CA /* NSURL+Parameters.m */,
 			);
 			path = "NSURL+Parameters";
+			sourceTree = "<group>";
+		};
+		9699214F14DC1AFE006DC6EB /* PopupWindowController */ = {
+			isa = PBXGroup;
+			children = (
+				9699215014DC1AFE006DC6EB /* PopupWindowController.h */,
+				9699215114DC1AFE006DC6EB /* PopupWindowController.m */,
+			);
+			path = PopupWindowController;
 			sourceTree = "<group>";
 		};
 		969BD94211953E43007AA6D9 /* AddLabelSheet */ = {
@@ -2117,6 +2130,7 @@
 				968FFA0A14CB5815004D4444 /* NSString+UriCompatibility.m in Sources */,
 				9637607314CEB04B00ECB9D6 /* HunkExclusions.m in Sources */,
 				963E431914D5A4CC004C6CAB /* PatchesWebview.m in Sources */,
+				9699215214DC1AFE006DC6EB /* PopupWindowController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -102,6 +102,7 @@
 // Utilities
 @class LNCStopwatch;
 @class AttachedWindowController;
+@class PopupWindowController;
 @class DisclosureBoxController;
 @class ConnectionValidationController;
 @class RadialGradiantBox;
@@ -109,8 +110,6 @@
 @class SingleTimedQueue;
 @class ThickSplitView;
 @class JHConcertinaView;
-
-@class BWSplitView;
 
 
 
