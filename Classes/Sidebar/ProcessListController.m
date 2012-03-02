@@ -41,11 +41,12 @@
 	@synchronized(self)
 	{
 		processNum = [NSNumber numberWithInt:(processNumber_++)];
-		if ([progressIndicators_ synchronizedCount] == 0)
-			[[informationAndActivityBox animator] setContentView:activityBox];
+		BOOL switchToActivityBox = ([progressIndicators_ synchronizedCount] == 0);
 		[processDescriptions_ synchronizedSetObject:processDescription forKey:processNum];
 		[progressIndicators_ synchronizedSetObject:indicator forKey:processNum];
 		dispatch_async(mainQueue(), ^{
+			if (switchToActivityBox)
+				[[informationAndActivityBox animator] setContentView:activityBox];
 			[processListTableView addSubview:indicator];
 			[processListTableView reloadData];
 		});
