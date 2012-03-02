@@ -145,6 +145,15 @@ a.linkarrow:hover {
 	margin-bottom: 18px;
 }
 
+a.shifted {
+    width:0px;
+    height:0px;
+    white-space:pre;
+    float:left;
+    clear:both;
+    position:relative;
+    bottom:50px;
+}
 
 
 /* @end */
