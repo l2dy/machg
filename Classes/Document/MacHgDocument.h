@@ -62,6 +62,7 @@
 	CloneSheetController*				theCloneSheetController_;
 	CollapseSheetController*			theCollapseSheetController_;
 	CommitSheetController*				theCommitSheetController_;
+	AlterDetailsSheetController*		theAlterDetailsSheetController_;
 	ExportPatchesSheetController*		theExportPatchesSheetController_;
 	HistoryEditSheetController*			theHistoryEditSheetController_;
 	ImportPatchesSheetController*		theImportPatchesSheetController_;
@@ -90,6 +91,7 @@
 	dispatch_once_t						theCloneSheetControllerInitilizer_;
 	dispatch_once_t						theCollapseSheetControllerInitilizer_;
 	dispatch_once_t						theCommitSheetControllerInitilizer_;
+	dispatch_once_t						theAlterDetailsSheetControllerInitilizer_;
 	dispatch_once_t						theExportPatchesSheetControllerInitilizer_;
 	dispatch_once_t						theHistoryEditSheetControllerInitilizer_;
 	dispatch_once_t						theImportPatchesSheetControllerInitilizer_;
@@ -173,6 +175,7 @@
 - (CloneSheetController*)			theCloneSheetController;
 - (CollapseSheetController*)		theCollapseSheetController;
 - (CommitSheetController*)			theCommitSheetController;
+- (AlterDetailsSheetController*)	theAlterDetailsSheetController;
 - (ExportPatchesSheetController*)	theExportPatchesSheetController;
 - (HistoryEditSheetController*)		theHistoryEditSheetController;
 - (ImportPatchesSheetController*)	theImportPatchesSheetController;
@@ -355,6 +358,7 @@
   - (IBAction)    mainMenuExportPatches:(id)sender;
 // History Editing >
   - (IBAction)    mainMenuCollapseChangesets:(id)sender;
+  - (IBAction)    mainMenuAlterDetails:(id)sender;
   - (IBAction)    mainMenuStripChangesets:(id)sender;
   - (IBAction)    mainMenuRebaseChangesets:(id)sender;
   - (IBAction)    mainMenuHistoryEditChangesets:(id)sender;

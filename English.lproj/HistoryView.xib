@@ -11,10 +11,11 @@
       <string key="NS.object.0">851</string>
     </object>
     <array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-      <integer value="771"/>
-      <integer value="845"/>
-      <integer value="850"/>
       <integer value="584"/>
+      <integer value="850"/>
+      <integer value="845"/>
+      <integer value="344"/>
+      <integer value="771"/>
     </array>
     <array key="IBDocument.PluginDependencies">
       <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -64,14 +65,6 @@
               <string key="NSResourceName">NSMenuMixedState</string>
             </object>
           </object>
-          <object class="NSMenuItem" id="747438026">
-            <reference key="NSMenu" ref="886653824"/>
-            <string key="NSTitle">Diff Selected Revisions</string>
-            <string key="NSKeyEquiv"/>
-            <int key="NSMnemonicLoc">2147483647</int>
-            <reference key="NSOnImage" ref="591860921"/>
-            <reference key="NSMixedImage" ref="550118683"/>
-          </object>
           <object class="NSMenuItem" id="267544846">
             <reference key="NSMenu" ref="886653824"/>
             <string key="NSTitle">Update Repository to Revision</string>
@@ -93,6 +86,14 @@
             <bool key="NSIsDisabled">YES</bool>
             <bool key="NSIsSeparator">YES</bool>
             <string key="NSTitle"/>
+            <string key="NSKeyEquiv"/>
+            <int key="NSMnemonicLoc">2147483647</int>
+            <reference key="NSOnImage" ref="591860921"/>
+            <reference key="NSMixedImage" ref="550118683"/>
+          </object>
+          <object class="NSMenuItem" id="747438026">
+            <reference key="NSMenu" ref="886653824"/>
+            <string key="NSTitle">Diff Selected Revisions</string>
             <string key="NSKeyEquiv"/>
             <int key="NSMnemonicLoc">2147483647</int>
             <reference key="NSOnImage" ref="591860921"/>
@@ -140,14 +141,6 @@
             <reference key="NSOnImage" ref="591860921"/>
             <reference key="NSMixedImage" ref="550118683"/>
           </object>
-          <object class="NSMenuItem" id="523666229">
-            <reference key="NSMenu" ref="886653824"/>
-            <string key="NSTitle">Backout Changeset…</string>
-            <string key="NSKeyEquiv"/>
-            <int key="NSMnemonicLoc">2147483647</int>
-            <reference key="NSOnImage" ref="591860921"/>
-            <reference key="NSMixedImage" ref="550118683"/>
-          </object>
           <object class="NSMenuItem" id="833267092">
             <reference key="NSMenu" ref="886653824"/>
             <bool key="NSIsDisabled">YES</bool>
@@ -185,6 +178,32 @@
           <object class="NSMenuItem" id="612777809">
             <reference key="NSMenu" ref="886653824"/>
             <string key="NSTitle">Rebase Changesets…</string>
+            <string key="NSKeyEquiv"/>
+            <int key="NSMnemonicLoc">2147483647</int>
+            <reference key="NSOnImage" ref="591860921"/>
+            <reference key="NSMixedImage" ref="550118683"/>
+          </object>
+          <object class="NSMenuItem" id="304366727">
+            <reference key="NSMenu" ref="886653824"/>
+            <bool key="NSIsDisabled">YES</bool>
+            <bool key="NSIsSeparator">YES</bool>
+            <string key="NSTitle"/>
+            <string key="NSKeyEquiv"/>
+            <int key="NSMnemonicLoc">2147483647</int>
+            <reference key="NSOnImage" ref="591860921"/>
+            <reference key="NSMixedImage" ref="550118683"/>
+          </object>
+          <object class="NSMenuItem" id="1069535817">
+            <reference key="NSMenu" ref="886653824"/>
+            <string key="NSTitle">Alter Details…</string>
+            <string key="NSKeyEquiv"/>
+            <int key="NSMnemonicLoc">2147483647</int>
+            <reference key="NSOnImage" ref="591860921"/>
+            <reference key="NSMixedImage" ref="550118683"/>
+          </object>
+          <object class="NSMenuItem" id="523666229">
+            <reference key="NSMenu" ref="886653824"/>
+            <string key="NSTitle">Backout Changeset…</string>
             <string key="NSKeyEquiv"/>
             <int key="NSMnemonicLoc">2147483647</int>
             <reference key="NSOnImage" ref="591860921"/>
@@ -2025,6 +2044,14 @@
           </object>
           <int key="connectionID">1055</int>
         </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">mainMenuAlterDetails:</string>
+            <reference key="source" ref="1003"/>
+            <reference key="destination" ref="1069535817"/>
+          </object>
+          <int key="connectionID">1060</int>
+        </object>
       </array>
       <object class="IBMutableOrderedSet" key="objectRecords">
         <array key="orderedObjects">
@@ -2063,7 +2090,6 @@
             <array class="NSMutableArray" key="children">
               <reference ref="134642559"/>
               <reference ref="267544846"/>
-              <reference ref="747438026"/>
               <reference ref="64259375"/>
               <reference ref="523038910"/>
               <reference ref="439573777"/>
@@ -2076,7 +2102,10 @@
               <reference ref="482568947"/>
               <reference ref="338504833"/>
               <reference ref="233744336"/>
+              <reference ref="1069535817"/>
               <reference ref="523666229"/>
+              <reference ref="304366727"/>
+              <reference ref="747438026"/>
             </array>
             <reference key="parent" ref="0"/>
             <string key="objectName">HistoryContextMenu</string>
@@ -2794,6 +2823,16 @@
             <reference key="object" ref="987666715"/>
             <reference key="parent" ref="944921791"/>
           </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">1056</int>
+            <reference key="object" ref="1069535817"/>
+            <reference key="parent" ref="886653824"/>
+          </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">1059</int>
+            <reference key="object" ref="304366727"/>
+            <reference key="parent" ref="886653824"/>
+          </object>
         </array>
       </object>
       <dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -2831,8 +2870,10 @@
         <object class="NSAffineTransform" key="1053.IBViewBoundsToFrameTransform">
           <bytes key="NSTransformStruct">AULGAAAAAAAAA</bytes>
         </object>
+        <string key="1056.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+        <string key="1059.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="145.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-        <string key="344.IBEditorWindowLastContentRect">{{1338, 354}, {256, 293}}</string>
+        <string key="344.IBEditorWindowLastContentRect">{{970, 324}, {256, 323}}</string>
         <string key="344.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="345.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="347.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2990,7 +3031,7 @@
       <nil key="activeLocalization"/>
       <dictionary class="NSMutableDictionary" key="localizations"/>
       <nil key="sourceID"/>
-      <int key="maxID">1055</int>
+      <int key="maxID">1060</int>
     </object>
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3009,11 +3050,11 @@
             <string key="labelsMenuMoveChosenLabel:">id</string>
             <string key="labelsMenuRemoveChosenLabel:">id</string>
             <string key="labelsMenuUpdateRepositoryToChosenRevision:">id</string>
+            <string key="mainMenuAlterDetails:">id</string>
             <string key="mainMenuBackoutChangeset:">id</string>
             <string key="mainMenuCollapseChangesets:">id</string>
             <string key="mainMenuCommitAllFiles:">id</string>
             <string key="mainMenuDiffAllFiles:">id</string>
-            <string key="mainMenuEditChangesetDetails:">id</string>
             <string key="mainMenuHistoryEditChangesets:">id</string>
             <string key="mainMenuRebaseChangesets:">id</string>
             <string key="mainMenuRevertAllFiles:">id</string>
@@ -3069,6 +3110,10 @@
               <string key="name">labelsMenuUpdateRepositoryToChosenRevision:</string>
               <string key="candidateClassName">id</string>
             </object>
+            <object class="IBActionInfo" key="mainMenuAlterDetails:">
+              <string key="name">mainMenuAlterDetails:</string>
+              <string key="candidateClassName">id</string>
+            </object>
             <object class="IBActionInfo" key="mainMenuBackoutChangeset:">
               <string key="name">mainMenuBackoutChangeset:</string>
               <string key="candidateClassName">id</string>
@@ -3083,10 +3128,6 @@
             </object>
             <object class="IBActionInfo" key="mainMenuDiffAllFiles:">
               <string key="name">mainMenuDiffAllFiles:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBActionInfo" key="mainMenuEditChangesetDetails:">
-              <string key="name">mainMenuEditChangesetDetails:</string>
               <string key="candidateClassName">id</string>
             </object>
             <object class="IBActionInfo" key="mainMenuHistoryEditChangesets:">
@@ -3435,6 +3476,7 @@
             <string key="mainMenuAddRenameRemoveSelectedFiles:">id</string>
             <string key="mainMenuAddSelectedFiles:">id</string>
             <string key="mainMenuAddServerRepositoryRef:">id</string>
+            <string key="mainMenuAlterDetails:">id</string>
             <string key="mainMenuAnnotateSelectedFiles:">id</string>
             <string key="mainMenuBackoutChangeset:">id</string>
             <string key="mainMenuCloneRepository:">id</string>
@@ -3448,7 +3490,6 @@
             <string key="mainMenuDeleteSelectedFiles:">id</string>
             <string key="mainMenuDiffAllFiles:">id</string>
             <string key="mainMenuDiffSelectedFiles:">id</string>
-            <string key="mainMenuEditChangesetDetails:">id</string>
             <string key="mainMenuExportPatches:">id</string>
             <string key="mainMenuGotoChangeset:">id</string>
             <string key="mainMenuHistoryEditChangesets:">id</string>
@@ -3578,6 +3619,10 @@
               <string key="name">mainMenuAddServerRepositoryRef:</string>
               <string key="candidateClassName">id</string>
             </object>
+            <object class="IBActionInfo" key="mainMenuAlterDetails:">
+              <string key="name">mainMenuAlterDetails:</string>
+              <string key="candidateClassName">id</string>
+            </object>
             <object class="IBActionInfo" key="mainMenuAnnotateSelectedFiles:">
               <string key="name">mainMenuAnnotateSelectedFiles:</string>
               <string key="candidateClassName">id</string>
@@ -3628,10 +3673,6 @@
             </object>
             <object class="IBActionInfo" key="mainMenuDiffSelectedFiles:">
               <string key="name">mainMenuDiffSelectedFiles:</string>
-              <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBActionInfo" key="mainMenuEditChangesetDetails:">
-              <string key="name">mainMenuEditChangesetDetails:</string>
               <string key="candidateClassName">id</string>
             </object>
             <object class="IBActionInfo" key="mainMenuExportPatches:">

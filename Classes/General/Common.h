@@ -75,6 +75,7 @@
 @class CloneSheetController;
 @class CollapseSheetController;
 @class CommitSheetController;
+@class AlterDetailsSheetController;
 @class ExportPatchesSheetController;
 @class HistoryEditSheetController;
 @class ImportPatchesSheetController;

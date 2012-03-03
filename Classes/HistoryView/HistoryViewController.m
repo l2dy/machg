@@ -18,6 +18,7 @@
 #import "CloneSheetController.h"
 #import "CollapseSheetController.h"
 #import "CommitSheetController.h"
+#import "AlterDetailsSheetController.h"
 #import "StripSheetController.h"
 #import "HistoryEditSheetController.h"
 #import "RebaseSheetController.h"
@@ -203,6 +204,7 @@
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (IBAction) mainMenuCollapseChangesets:(id)sender		{ [[myDocument theCollapseSheetController]		openCollapseSheetWithSelectedRevisions:sender]; }
+- (IBAction) mainMenuAlterDetails:(id)sender			{ [[myDocument theAlterDetailsSheetController]	openAlterDetailsChooseChangesetSheet:sender]; }
 - (IBAction) mainMenuHistoryEditChangesets:(id)sender	{ [[myDocument theHistoryEditSheetController]	openHistoryEditSheetWithSelectedRevisions:sender]; }
 - (IBAction) mainMenuStripChangesets:(id)sender			{ [[myDocument theStripSheetController]			openStripSheetWithSelectedRevisions:sender]; }
 - (IBAction) mainMenuRebaseChangesets:(id)sender		{ [[myDocument theRebaseSheetController]		openRebaseSheetWithSelectedRevisions:sender]; }
@@ -454,6 +456,7 @@
 	
 	// History only methods
 	if (theAction == @selector(mainMenuCollapseChangesets:))					return [myDocument localRepoIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();
+	if (theAction == @selector(mainMenuAlterDetails:))							return [myDocument localRepoIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();
 	if (theAction == @selector(mainMenuHistoryEditChangesets:))					return [myDocument localRepoIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();
 	if (theAction == @selector(mainMenuStripChangesets:))						return [myDocument localRepoIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();
 	if (theAction == @selector(mainMenuRebaseChangesets:))						return [myDocument localRepoIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();

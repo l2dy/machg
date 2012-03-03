@@ -248,6 +248,8 @@
 		96E2303F1495A4A000174A55 /* FilesViewOutline.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96E2303D1495A4A000174A55 /* FilesViewOutline.xib */; };
 		96E3E61C1477CD820077503D /* GradientBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 96E3E61B1477CD820077503D /* GradientBox.m */; };
 		96E5832A14E5CA0F0041B472 /* CommitFilesViewTable.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96E5832814E5CA0F0041B472 /* CommitFilesViewTable.xib */; };
+		96F2C6C214F18C34006C6FEC /* AlterDetailsSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96F2C6C114F18C34006C6FEC /* AlterDetailsSheetController.m */; };
+		96F2C6C514F18C51006C6FEC /* AlterDetailsSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96F2C6C314F18C51006C6FEC /* AlterDetailsSheet.xib */; };
 		96F5A4DE11A8185800707404 /* TextButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96F5A4DD11A8185800707404 /* TextButtonCell.m */; };
 		96F5A4FA11A81B5B00707404 /* DiffTextButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96F5A4F911A81B5B00707404 /* DiffTextButtonCell.m */; };
 		96F5A70D11A879F100707404 /* LabelTextButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96F5A70C11A879F100707404 /* LabelTextButtonCell.m */; };
@@ -634,6 +636,9 @@
 		96E3E61A1477CD820077503D /* GradientBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GradientBox.h; sourceTree = "<group>"; };
 		96E3E61B1477CD820077503D /* GradientBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GradientBox.m; sourceTree = "<group>"; };
 		96E5832914E5CA0F0041B472 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/CommitFilesViewTable.xib; sourceTree = SOURCE_ROOT; };
+		96F2C6C014F18C34006C6FEC /* AlterDetailsSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlterDetailsSheetController.h; sourceTree = "<group>"; };
+		96F2C6C114F18C34006C6FEC /* AlterDetailsSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlterDetailsSheetController.m; sourceTree = "<group>"; };
+		96F2C6C414F18C51006C6FEC /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/AlterDetailsSheet.xib; sourceTree = SOURCE_ROOT; };
 		96F5A4DC11A8185800707404 /* TextButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TextButtonCell.h; sourceTree = "<group>"; };
 		96F5A4DD11A8185800707404 /* TextButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TextButtonCell.m; sourceTree = "<group>"; };
 		96F5A4F811A81B5B00707404 /* DiffTextButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DiffTextButtonCell.h; sourceTree = "<group>"; };
@@ -1055,6 +1060,7 @@
 			isa = PBXGroup;
 			children = (
 				969BD94211953E43007AA6D9 /* AddLabelSheet */,
+				96F2C6BF14F18C34006C6FEC /* AlterDetailsSheet */,
 				963001A312988A6000C1782B /* BackoutSheet */,
 				9631D0331107A7E20007FDF2 /* CloneSheet */,
 				9631D0361107A7E20007FDF2 /* CommitSheet */,
@@ -1803,6 +1809,16 @@
 			path = GradientBox;
 			sourceTree = "<group>";
 		};
+		96F2C6BF14F18C34006C6FEC /* AlterDetailsSheet */ = {
+			isa = PBXGroup;
+			children = (
+				96F2C6C014F18C34006C6FEC /* AlterDetailsSheetController.h */,
+				96F2C6C114F18C34006C6FEC /* AlterDetailsSheetController.m */,
+				96F2C6C314F18C51006C6FEC /* AlterDetailsSheet.xib */,
+			);
+			path = AlterDetailsSheet;
+			sourceTree = "<group>";
+		};
 		96F5A4DB11A8185800707404 /* TextButtonCell */ = {
 			isa = PBXGroup;
 			children = (
@@ -2008,6 +2024,7 @@
 				96DC18A514BACCE000A6E61B /* AddDropButtonSizeSmall.png in Resources */,
 				96DADB6614DCB9870092F379 /* AppearancePreferencesMono18.png in Resources */,
 				96E5832A14E5CA0F0041B472 /* CommitFilesViewTable.xib in Resources */,
+				96F2C6C514F18C51006C6FEC /* AlterDetailsSheet.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2139,6 +2156,7 @@
 				9637607314CEB04B00ECB9D6 /* HunkExclusions.m in Sources */,
 				963E431914D5A4CC004C6CAB /* PatchesWebview.m in Sources */,
 				9699215214DC1AFE006DC6EB /* PopupWindowController.m in Sources */,
+				96F2C6C214F18C34006C6FEC /* AlterDetailsSheetController.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2450,6 +2468,14 @@
 				96E5832914E5CA0F0041B472 /* English */,
 			);
 			name = CommitFilesViewTable.xib;
+			sourceTree = "<group>";
+		};
+		96F2C6C314F18C51006C6FEC /* AlterDetailsSheet.xib */ = {
+			isa = PBXVariantGroup;
+			children = (
+				96F2C6C414F18C51006C6FEC /* English */,
+			);
+			name = AlterDetailsSheet.xib;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

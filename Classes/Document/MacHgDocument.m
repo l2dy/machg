@@ -32,6 +32,7 @@
 #import "CloneSheetController.h"
 #import "CollapseSheetController.h"
 #import "CommitSheetController.h"
+#import "AlterDetailsSheetController.h"
 #import "ExportPatchesSheetController.h"
 #import "HistoryEditSheetController.h"
 #import "ImportPatchesSheetController.h"
@@ -305,6 +306,13 @@
 	dispatch_once(&theCommitSheetControllerInitilizer_, ^{
 		theCommitSheetController_ = [[CommitSheetController alloc] initCommitSheetControllerWithDocument:self]; });
 	return theCommitSheetController_;
+}
+
+- (AlterDetailsSheetController*) theAlterDetailsSheetController
+{
+	dispatch_once(&theAlterDetailsSheetControllerInitilizer_, ^{
+		theAlterDetailsSheetController_ = [[AlterDetailsSheetController alloc] initAlterDetailsSheetControllerWithDocument:self]; });
+	return theAlterDetailsSheetController_;
 }
 
 - (ExportPatchesSheetController*) theExportPatchesSheetController
@@ -933,6 +941,7 @@
 
 	// ------ History Editing >
 		if (theAction == @selector(mainMenuCollapseChangesets:))		return [[self currentPaneView] validateUserInterfaceItem:anItem];
+		if (theAction == @selector(mainMenuAlterDetails:))				return [[self currentPaneView] validateUserInterfaceItem:anItem];
 		if (theAction == @selector(mainMenuHistoryEditChangesets:))		return [[self currentPaneView] validateUserInterfaceItem:anItem];
 		if (theAction == @selector(mainMenuStripChangesets:))		 	return [[self currentPaneView] validateUserInterfaceItem:anItem];
 		if (theAction == @selector(mainMenuRebaseChangesets:))			return [[self currentPaneView] validateUserInterfaceItem:anItem];
@@ -1081,11 +1090,12 @@
 // MARK: History Altering Actions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (IBAction) mainMenuCollapseChangesets:(id)sender			{ [[self theCollapseSheetController]	openCollapseSheetWithSelectedRevisions:sender]; }
-- (IBAction) mainMenuHistoryEditChangesets:(id)sender		{ [[self theHistoryEditSheetController]	openHistoryEditSheetWithSelectedRevisions:sender]; }
-- (IBAction) mainMenuStripChangesets:(id)sender				{ [[self theStripSheetController]		openStripSheetWithSelectedRevisions:sender]; }
-- (IBAction) mainMenuRebaseChangesets:(id)sender			{ [[self theRebaseSheetController]		openRebaseSheetWithSelectedRevisions:sender]; }
-- (IBAction) mainMenuBackoutChangeset:(id)sender			{ [[self theBackoutSheetController]		openBackoutSheetWithSelectedRevision:sender]; }
+- (IBAction) mainMenuCollapseChangesets:(id)sender			{ [[self theCollapseSheetController]		openCollapseSheetWithSelectedRevisions:sender]; }
+- (IBAction) mainMenuAlterDetails:(id)sender				{ [[self theAlterDetailsSheetController]	openAlterDetailsChooseChangesetSheet:sender]; }
+- (IBAction) mainMenuHistoryEditChangesets:(id)sender		{ [[self theHistoryEditSheetController]		openHistoryEditSheetWithSelectedRevisions:sender]; }
+- (IBAction) mainMenuStripChangesets:(id)sender				{ [[self theStripSheetController]			openStripSheetWithSelectedRevisions:sender]; }
+- (IBAction) mainMenuRebaseChangesets:(id)sender			{ [[self theRebaseSheetController]			openRebaseSheetWithSelectedRevisions:sender]; }
+- (IBAction) mainMenuBackoutChangeset:(id)sender			{ [[self theBackoutSheetController]			openBackoutSheetWithSelectedRevision:sender]; }
 
 
 

@@ -12,7 +12,7 @@
     </object>
     <object class="NSMutableArray" key="IBDocument.EditedObjectIDs">
       <bool key="EncodedWithXMLCoder">YES</bool>
-      <integer value="1148"/>
+      <integer value="1097"/>
     </object>
     <object class="NSArray" key="IBDocument.PluginDependencies">
       <bool key="EncodedWithXMLCoder">YES</bool>
@@ -1202,6 +1202,14 @@
                         <bool key="NSIsDisabled">YES</bool>
                         <bool key="NSIsSeparator">YES</bool>
                         <string key="NSTitle"/>
+                        <string key="NSKeyEquiv"/>
+                        <int key="NSMnemonicLoc">2147483647</int>
+                        <reference key="NSOnImage" ref="385016679"/>
+                        <reference key="NSMixedImage" ref="150129030"/>
+                      </object>
+                      <object class="NSMenuItem" id="308265832">
+                        <reference key="NSMenu" ref="786632432"/>
+                        <string key="NSTitle">Alter Details…</string>
                         <string key="NSKeyEquiv"/>
                         <int key="NSMnemonicLoc">2147483647</int>
                         <reference key="NSOnImage" ref="385016679"/>
@@ -3013,6 +3021,14 @@
           </object>
           <int key="connectionID">1152</int>
         </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">mainMenuAlterDetails:</string>
+            <reference key="source" ref="569835777"/>
+            <reference key="destination" ref="308265832"/>
+          </object>
+          <int key="connectionID">1156</int>
+        </object>
       </object>
       <object class="IBMutableOrderedSet" key="objectRecords">
         <object class="NSArray" key="orderedObjects">
@@ -4293,6 +4309,7 @@
               <reference ref="972358786"/>
               <reference ref="599290626"/>
               <reference ref="497724988"/>
+              <reference ref="308265832"/>
             </object>
             <reference key="parent" ref="581294341"/>
           </object>
@@ -4508,6 +4525,11 @@
             <reference key="object" ref="331654041"/>
             <reference key="parent" ref="858855064"/>
           </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">1153</int>
+            <reference key="object" ref="308265832"/>
+            <reference key="parent" ref="786632432"/>
+          </object>
         </object>
       </object>
       <object class="NSMutableDictionary" key="flattenedProperties">
@@ -4568,6 +4590,7 @@
           <string>1149.IBPluginDependency</string>
           <string>1150.IBAttributePlaceholdersKey</string>
           <string>1150.IBPluginDependency</string>
+          <string>1153.IBPluginDependency</string>
           <string>124.IBPluginDependency</string>
           <string>124.ImportedFromIB2</string>
           <string>125.IBEditorWindowLastContentRect</string>
@@ -4850,7 +4873,7 @@
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
-          <string>{{925, 351}, {207, 113}}</string>
+          <string>{{925, 311}, {207, 133}}</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>{{617, 204}, {289, 103}}</string>
@@ -4890,6 +4913,7 @@
               <string key="toolTip">examine the selected revisions in the DifferencesView</string>
             </object>
           </object>
+          <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
           <integer value="1"/>
@@ -5168,7 +5192,7 @@
         </object>
       </object>
       <nil key="sourceID"/>
-      <int key="maxID">1152</int>
+      <int key="maxID">1156</int>
     </object>
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <object class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -5758,6 +5782,7 @@
               <string>labelsMenuMoveChosenLabel:</string>
               <string>labelsMenuRemoveChosenLabel:</string>
               <string>labelsMenuUpdateRepositoryToChosenRevision:</string>
+              <string>mainMenuAlterDetails:</string>
               <string>mainMenuBackoutChangeset:</string>
               <string>mainMenuCollapseChangesets:</string>
               <string>mainMenuCommitAllFiles:</string>
@@ -5774,6 +5799,7 @@
             </object>
             <object class="NSMutableArray" key="dict.values">
               <bool key="EncodedWithXMLCoder">YES</bool>
+              <string>id</string>
               <string>id</string>
               <string>id</string>
               <string>id</string>
@@ -5815,6 +5841,7 @@
               <string>labelsMenuMoveChosenLabel:</string>
               <string>labelsMenuRemoveChosenLabel:</string>
               <string>labelsMenuUpdateRepositoryToChosenRevision:</string>
+              <string>mainMenuAlterDetails:</string>
               <string>mainMenuBackoutChangeset:</string>
               <string>mainMenuCollapseChangesets:</string>
               <string>mainMenuCommitAllFiles:</string>
@@ -5873,6 +5900,10 @@
               </object>
               <object class="IBActionInfo">
                 <string key="name">labelsMenuUpdateRepositoryToChosenRevision:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuAlterDetails:</string>
                 <string key="candidateClassName">id</string>
               </object>
               <object class="IBActionInfo">
@@ -6544,6 +6575,7 @@
               <string>mainMenuAddRenameRemoveSelectedFiles:</string>
               <string>mainMenuAddSelectedFiles:</string>
               <string>mainMenuAddServerRepositoryRef:</string>
+              <string>mainMenuAlterDetails:</string>
               <string>mainMenuAnnotateSelectedFiles:</string>
               <string>mainMenuBackoutChangeset:</string>
               <string>mainMenuCloneRepository:</string>
@@ -6680,6 +6712,7 @@
               <string>id</string>
               <string>id</string>
               <string>id</string>
+              <string>id</string>
             </object>
           </object>
           <object class="NSMutableDictionary" key="actionInfosByName">
@@ -6707,6 +6740,7 @@
               <string>mainMenuAddRenameRemoveSelectedFiles:</string>
               <string>mainMenuAddSelectedFiles:</string>
               <string>mainMenuAddServerRepositoryRef:</string>
+              <string>mainMenuAlterDetails:</string>
               <string>mainMenuAnnotateSelectedFiles:</string>
               <string>mainMenuBackoutChangeset:</string>
               <string>mainMenuCloneRepository:</string>
@@ -6848,6 +6882,10 @@
               </object>
               <object class="IBActionInfo">
                 <string key="name">mainMenuAddServerRepositoryRef:</string>
+                <string key="candidateClassName">id</string>
+              </object>
+              <object class="IBActionInfo">
+                <string key="name">mainMenuAlterDetails:</string>
                 <string key="candidateClassName">id</string>
               </object>
               <object class="IBActionInfo">

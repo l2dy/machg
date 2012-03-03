@@ -110,6 +110,7 @@
 - (IBAction) historyMenuViewRevisionDifferences:(id)sender;
 // -------
 - (IBAction) mainMenuCollapseChangesets:(id)sender;
+- (IBAction) mainMenuAlterDetails:(id)sender;
 - (IBAction) mainMenuStripChangesets:(id)sender;
 - (IBAction) mainMenuRebaseChangesets:(id)sender;
 - (IBAction) mainMenuHistoryEditChangesets:(id)sender;
