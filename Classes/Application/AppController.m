@@ -455,10 +455,10 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		if (pathIsExistent(@"/Developer/Applications/Utilities/FileMerge.app"))
 			[[NSWorkspace sharedWorkspace] launchApplicationAtURL:[NSURL fileURLWithPath:@"/Developer/Applications/Utilities/FileMerge.app"] options:NSWorkspaceLaunchAsync|NSWorkspaceLaunchAndHide configuration:nil error:nil];
 		else
-			NSRunCriticalAlertPanel(@"FileMerge not found", @"FileMerge was not found on this system. Please install the full developer tools from the system disk which came with your computer (they contain the application FileMerge). (Alternatively you can install a different diffing and merging tool and select it in the preferences.) (Sometimes you need to run FileMerge once so that OSX \"recognizes it exists\".)", @"OK", nil, nil);
+			NSRunCriticalAlertPanel(@"FileMerge not found", @"FileMerge was not found on this system. Please install the full developer tools for your computer (they contain the application FileMerge). (Alternatively you can install a different diffing and merging tool and select it in the preferences.) (Sometimes you need to run FileMerge once so that OSX \"recognizes it exists\".)", @"OK", nil, nil);
 	}
-	if (!pathIsExistent(@"/usr/bin/opendiff") && !pathIsExistent(@"/Developer/usr/bin/opendiff"))
-		NSRunCriticalAlertPanel(@"Opendiff not found", @"Neither /usr/bin/opendiff nor /Developer/usr/bin/opendiff was found on this system. Please install the full developer tools from the system disk which came with your computer (they contain the application FileMerge). (Alternatively you can install a different diffing and merging tool and select it in the preferences.).", @"OK", nil, nil);
+	if (!pathIsExistent(@"/usr/bin/opendiff") && !pathIsExistent(@"/Developer/usr/bin/opendiff") && !pathIsExistent(@"/Applications/Xcode.app/Contents/Developer/usr/bin/opendiff"))
+		NSRunCriticalAlertPanel(@"Opendiff not found", @"Neither /usr/bin/opendiff nor /Developer/usr/bin/opendiff nor /Applications/Xcode.app/Contents/Developer/usr/bin/opendiff was found on this system. Please install the full XCode developer tools (they contain the application FileMerge). (Alternatively you can install a different diffing and merging tool and select it in the preferences.).", @"OK", nil, nil);
 }
 
 - (void) checkForAraxisScripts

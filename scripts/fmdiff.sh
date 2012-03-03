@@ -63,12 +63,15 @@ if [ -z "$rightattributes" ] || [ "$rightattributes" != "UTF-8;134217984" ]; the
 fi
 shopt -u nocasematch
 
-OPENDIFF=/usr/bin/opendiff
+OPENDIFF=/Applications/Xcode.app/Contents/Developer/usr/bin/opendiff
 if [ ! -f "$OPENDIFF" ]; then
-	OPENDIFF=/Developer/usr/bin/opendiff
+	OPENDIFF=/usr/bin/opendiff
 	if [ ! -f "$OPENDIFF" ]; then
-		echo "MacHg can't find either /usr/bin/opendiff or /Developer/usr/bin/opendiff " 1>&2
-		exit 2
+		OPENDIFF=/Developer/usr/bin/opendiff
+		if [ ! -f "$OPENDIFF" ]; then
+			echo "MacHg can't find either /Applications/Xcode.app/Contents/Developer/usr/bin/opendiff or /usr/bin/opendiff or /Developer/usr/bin/opendiff " 1>&2
+			exit 2
+		fi
 	fi
 fi
 
