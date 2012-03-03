@@ -58,6 +58,7 @@
 
 @implementation FSViewer
 
+@synthesize parentController;
 @synthesize areNodesVirtual = areNodesVirtual_;
 @synthesize absolutePathOfRepositoryRoot = absolutePathOfRepositoryRoot_;
 

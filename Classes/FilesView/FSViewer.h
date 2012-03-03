@@ -133,6 +133,7 @@
 	dispatch_once_t		theFilesTableInitilizer_;	
 }
 
+@property (readwrite,assign) id <ControllerForFSViewer> parentController;
 @property (readwrite,assign) BOOL		areNodesVirtual;
 @property (readwrite,assign) NSString*	absolutePathOfRepositoryRoot;
 

@@ -101,7 +101,17 @@
 
 - (BOOL)		singleItemIsChosenInFiles											{ return ([self numberOfSelectedRows] == 1) || ![self isRowSelected:[self chosenRow]]; }
 - (BOOL)		clickedNodeCoincidesWithTerminalSelections							{ return NO; }
-- (void)		repositoryDataIsNew													{ expandedNodes_ = nil; [self myDeselectAll]; }
+- (void)		repositoryDataIsNew
+{
+	// If we are autoExpanding the clear all the old expansions
+	if ([[parentViewer_ parentController] autoExpandViewerOutlines])
+	{
+		NSString* cacheKeyName = fstr(@"ChacheExpandedFSViewerOutlineNodes§%@", [[parentViewer_ myDocument] absolutePathOfRepositoryRoot]);
+		[[NSUserDefaults standardUserDefaults] removeObjectForKey:cacheKeyName];
+	}
+	expandedNodes_ = nil;
+	[self myDeselectAll];
+}
 
 - (NSRect)	rectInWindowForNode:(FSNodeInfo*)node
 {
@@ -205,6 +215,16 @@
 // MARK: Save and Restore Outline state
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+- (void) autoExpandNodes:(FSNodeInfo*)node
+{
+	if (!bitsInCommon([node hgStatus],eHGStatusChangedInSomeWay))
+		return;
+	[self expandItem:node];
+	NSArray* childNodes = [[node childNodes] allValues];
+	for (FSNodeInfo* child in childNodes)
+		[self autoExpandNodes:child];
+}
+
 - (void) saveExpandedStateToUserDefaults
 {
 	NSString* cacheKeyName = fstr(@"ChacheExpandedFSViewerOutlineNodes§%@", [[parentViewer_ myDocument] absolutePathOfRepositoryRoot]);
@@ -228,6 +248,8 @@
 		if (node)
 			[self expandItem:node];
 	}
+	if ([[parentViewer_ parentController] autoExpandViewerOutlines])
+		[self autoExpandNodes:rootNode];
 }
 
 - (FSViewerSelectionState*)	saveViewerSelectionState
