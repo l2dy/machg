@@ -11,7 +11,9 @@
 	<key>AfterMergeSwitchTo</key>
 	<integer>1</integer>
 	<key>AllowHistoryEditingOfRepository</key>
-	<false/>
+	<true/>
+	<key>AutoExpandViewerOutlines</key>
+	<true/>
 	<key>BrowserBehaviourCommandDoubleClick</key>
 	<integer>0</integer>
 	<key>BrowserBehaviourCommandOptionDoubleClick</key>

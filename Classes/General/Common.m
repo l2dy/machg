@@ -72,6 +72,7 @@ NSString* const MHGAddRemoveUsesSimilarity					= @"AddRemoveUsesSimilarity";
 NSString* const MHGAfterMergeDo								= @"AfterMergeDo";
 NSString* const MHGAfterMergeSwitchTo						= @"AfterMergeSwitchTo";
 NSString* const MHGAllowHistoryEditingOfRepository			= @"AllowHistoryEditingOfRepository";
+NSString* const MHGAutoExpandViewerOutlines					= @"AutoExpandViewerOutlines";
 NSString* const MHGBrowserBehaviourCommandDoubleClick		= @"BrowserBehaviourCommandDoubleClick";
 NSString* const MHGBrowserBehaviourCommandOptionDoubleClick	= @"BrowserBehaviourCommandOptionDoubleClick";
 NSString* const MHGBrowserBehaviourDoubleClick				= @"BrowserBehaviourDoubleClick";
@@ -162,6 +163,7 @@ static inline NSColor*	colorFromDefaultsForKey(NSString* key)		{ return [NSUnarc
 
 BOOL		AddRemoveUsesSimilarityFromDefaults()					{ return boolFromDefaultsForKey(MHGAddRemoveUsesSimilarity); }
 BOOL		AllowHistoryEditingOfRepositoryFromDefaults()			{ return boolFromDefaultsForKey(MHGAllowHistoryEditingOfRepository); }
+BOOL		AutoExpandViewerOutlinesFromDefaults()					{ return boolFromDefaultsForKey(MHGAutoExpandViewerOutlines); }
 BOOL		DefaultAnnotationOptionChangesetFromDefaults()			{ return boolFromDefaultsForKey(MHGDefaultAnnotationOptionChangeset); }
 BOOL		DefaultAnnotationOptionDateFromDefaults()				{ return boolFromDefaultsForKey(MHGDefaultAnnotationOptionDate); }
 BOOL		DefaultAnnotationOptionFollowFromDefaults()				{ return boolFromDefaultsForKey(MHGDefaultAnnotationOptionFollow); }

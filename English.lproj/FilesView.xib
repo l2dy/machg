@@ -11,8 +11,12 @@
       <string key="com.apple.WebKitIBPlugin">851</string>
     </dictionary>
     <array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-      <integer value="201"/>
+      <integer value="316"/>
+      <integer value="184"/>
       <integer value="193"/>
+      <integer value="419"/>
+      <integer value="201"/>
+      <integer value="222"/>
     </array>
     <array key="IBDocument.PluginDependencies">
       <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -30,7 +34,7 @@
         <string key="NSClassName">NSApplication</string>
       </object>
       <object class="NSCustomView" id="453712496">
-        <nil key="NSNextResponder"/>
+        <reference key="NSNextResponder"/>
         <int key="NSvFlags">274</int>
         <array class="NSMutableArray" key="NSSubviews">
           <object class="NSSplitView" id="460990162">
@@ -108,9 +112,14 @@
           </object>
         </array>
         <string key="NSFrameSize">{902, 671}</string>
+        <reference key="NSSuperview"/>
         <string key="NSClassName">FilesView</string>
       </object>
       <object class="NSUserDefaultsController" id="69413389">
+        <array class="NSMutableArray" key="NSDeclaredKeys">
+          <string>AutoExpandOutlines</string>
+          <string>AutoExpandViewerOutlines</string>
+        </array>
         <bool key="NSSharedInstance">YES</bool>
       </object>
       <object class="NSMenu" id="1040381362">
@@ -307,7 +316,7 @@
         </array>
       </object>
       <object class="NSBox" id="264801874">
-        <nil key="NSNextResponder"/>
+        <reference key="NSNextResponder"/>
         <int key="NSvFlags">4114</int>
         <array class="NSMutableArray" key="NSSubviews">
           <object class="NSView" id="710521415">
@@ -319,6 +328,7 @@
           </object>
         </array>
         <string key="NSFrameSize">{713, 610}</string>
+        <reference key="NSSuperview"/>
         <string key="NSReuseIdentifierKey">_NS:18</string>
         <string key="NSOffsets">{0, 0}</string>
         <object class="NSTextFieldCell" key="NSTitleCell">
@@ -920,7 +930,7 @@
         </object>
       </object>
       <object class="NSCustomView" id="962846676">
-        <nil key="NSNextResponder"/>
+        <reference key="NSNextResponder"/>
         <int key="NSvFlags">268</int>
         <array class="NSMutableArray" key="NSSubviews">
           <object class="NSButton" id="822774429">
@@ -1499,6 +1509,7 @@
           </object>
         </array>
         <string key="NSFrameSize">{148, 543}</string>
+        <reference key="NSSuperview"/>
         <string key="NSReuseIdentifierKey">_NS:1109</string>
         <string key="NSClassName">NSView</string>
       </object>
@@ -1794,7 +1805,7 @@
         <string key="NSClassName">NSView</string>
       </object>
       <object class="NSCustomView" id="998057580">
-        <nil key="NSNextResponder"/>
+        <reference key="NSNextResponder"/>
         <int key="NSvFlags">268</int>
         <array class="NSMutableArray" key="NSSubviews">
           <object class="NSButton" id="720363453">
@@ -2275,6 +2286,7 @@
           </object>
         </array>
         <string key="NSFrameSize">{148, 284}</string>
+        <reference key="NSSuperview"/>
         <string key="NSReuseIdentifierKey">_NS:1109</string>
         <string key="NSClassName">NSView</string>
       </object>
@@ -3068,22 +3080,6 @@
           <int key="connectionID">417</int>
         </object>
         <object class="IBConnectionRecord">
-          <object class="IBBindingConnection" key="connection">
-            <string key="label">value: values.DisplayFileIconsInBrowser</string>
-            <reference key="source" ref="822774429"/>
-            <reference key="destination" ref="69413389"/>
-            <object class="NSNibBindingConnector" key="connector">
-              <reference key="NSSource" ref="822774429"/>
-              <reference key="NSDestination" ref="69413389"/>
-              <string key="NSLabel">value: values.DisplayFileIconsInBrowser</string>
-              <string key="NSBinding">value</string>
-              <string key="NSKeyPath">values.DisplayFileIconsInBrowser</string>
-              <int key="NSNibBindingConnectorVersion">2</int>
-            </object>
-          </object>
-          <int key="connectionID">418</int>
-        </object>
-        <object class="IBConnectionRecord">
           <object class="IBActionConnection" key="connection">
             <string key="label">refreshBrowserContent:</string>
             <reference key="source" ref="453712496"/>
@@ -3269,22 +3265,6 @@
         </object>
         <object class="IBConnectionRecord">
           <object class="IBBindingConnection" key="connection">
-            <string key="label">value: values.DisplayFileIconsInBrowser</string>
-            <reference key="source" ref="720363453"/>
-            <reference key="destination" ref="69413389"/>
-            <object class="NSNibBindingConnector" key="connector">
-              <reference key="NSSource" ref="720363453"/>
-              <reference key="NSDestination" ref="69413389"/>
-              <string key="NSLabel">value: values.DisplayFileIconsInBrowser</string>
-              <string key="NSBinding">value</string>
-              <string key="NSKeyPath">values.DisplayFileIconsInBrowser</string>
-              <int key="NSNibBindingConnectorVersion">2</int>
-            </object>
-          </object>
-          <int key="connectionID">483</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBBindingConnection" key="connection">
             <string key="label">value: values.ShowMissingFilesInBrowser</string>
             <reference key="source" ref="908212022"/>
             <reference key="destination" ref="69413389"/>
@@ -3378,6 +3358,38 @@
             <reference key="destination" ref="799351168"/>
           </object>
           <int key="connectionID">508</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBBindingConnection" key="connection">
+            <string key="label">value: values.AutoExpandViewerOutlines</string>
+            <reference key="source" ref="822774429"/>
+            <reference key="destination" ref="69413389"/>
+            <object class="NSNibBindingConnector" key="connector">
+              <reference key="NSSource" ref="822774429"/>
+              <reference key="NSDestination" ref="69413389"/>
+              <string key="NSLabel">value: values.AutoExpandViewerOutlines</string>
+              <string key="NSBinding">value</string>
+              <string key="NSKeyPath">values.AutoExpandViewerOutlines</string>
+              <int key="NSNibBindingConnectorVersion">2</int>
+            </object>
+          </object>
+          <int key="connectionID">516</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBBindingConnection" key="connection">
+            <string key="label">value: values.AutoExpandViewerOutlines</string>
+            <reference key="source" ref="720363453"/>
+            <reference key="destination" ref="69413389"/>
+            <object class="NSNibBindingConnector" key="connector">
+              <reference key="NSSource" ref="720363453"/>
+              <reference key="NSDestination" ref="69413389"/>
+              <string key="NSLabel">value: values.AutoExpandViewerOutlines</string>
+              <string key="NSBinding">value</string>
+              <string key="NSKeyPath">values.AutoExpandViewerOutlines</string>
+              <int key="NSNibBindingConnectorVersion">2</int>
+            </object>
+          </object>
+          <int key="connectionID">517</int>
         </object>
       </array>
       <object class="IBMutableOrderedSet" key="objectRecords">
@@ -4671,7 +4683,7 @@
         <string key="17.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="18.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="184.CustomClassName">FSViewer</string>
-        <string key="184.IBEditorWindowLastContentRect">{{42, 491}, {714, 608}}</string>
+        <string key="184.IBEditorWindowLastContentRect">{{42, 491}, {713, 610}}</string>
         <string key="184.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <object class="NSAffineTransform" key="184.IBViewBoundsToFrameTransform"/>
         <object class="NSAffineTransform" key="189.IBViewBoundsToFrameTransform">
@@ -5024,7 +5036,7 @@
       <nil key="activeLocalization"/>
       <dictionary class="NSMutableDictionary" key="localizations"/>
       <nil key="sourceID"/>
-      <int key="maxID">514</int>
+      <int key="maxID">517</int>
     </object>
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <array class="NSMutableArray" key="referencedPartialClassDescriptions">

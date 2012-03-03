@@ -466,6 +466,7 @@ extern NSString* const MHGAddRemoveUsesSimilarity;
 extern NSString* const MHGAfterMergeDo;
 extern NSString* const MHGAfterMergeSwitchTo;
 extern NSString* const MHGAllowHistoryEditingOfRepository;
+extern NSString* const MHGAutoExpandViewerOutlines;
 extern NSString* const MHGBrowserBehaviourCommandDoubleClick;
 extern NSString* const MHGBrowserBehaviourCommandOptionDoubleClick;
 extern NSString* const MHGBrowserBehaviourDoubleClick;
@@ -549,6 +550,7 @@ extern NSString* const MHGWarnAboutBadMercurialConfiguration;
 
 BOOL		AddRemoveUsesSimilarityFromDefaults();
 BOOL		AllowHistoryEditingOfRepositoryFromDefaults();
+BOOL		AutoExpandViewerOutlinesFromDefaults();
 BOOL		DefaultAnnotationOptionChangesetFromDefaults();
 BOOL		DefaultAnnotationOptionDateFromDefaults();
 BOOL		DefaultAnnotationOptionFollowFromDefaults();
