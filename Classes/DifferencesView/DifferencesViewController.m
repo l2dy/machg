@@ -441,17 +441,8 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK: Delegate / Protocol Methods
+// MARK: FSViewerController Protocol Methods
 // -----------------------------------------------------------------------------------------------------------------------------------------
-
-- (void)	logTableViewSelectionDidChange:(LogTableView*)theLogTable
-{
-	[baseHeaderMessage setStringValue:fstr(@"Base Revision: %@", [baseLogTableView selectedRevision])];
-	[compareHeaderMessage setStringValue:fstr(@"Compare Revision: %@", [compareLogTableView selectedRevision])];
-	[self redisplayBrowser:self];
-	[[myDocument mainWindow] makeFirstResponder:theLogTable];
-}
-
 
 - (NSArray*) statusLinesForPaths:(NSArray*)absolutePaths withRootPath:(NSString*)rootPath
 {
@@ -505,12 +496,6 @@
 	return [[NSArray alloc]init]; // We never list any resolved / unresolved files in the differences view
 }
 
-- (HunkExclusions*) hunkExclusions
-{
-	return nil;	// There is no meaning to disabling / enabling patches for the differences view.
-}
-
-
 - (BOOL) writePaths:(NSArray*)paths toPasteboard:(NSPasteboard*)pasteboard
 {
 	NSNumber* compareRev       = [compareLogTableView selectedRevision];
@@ -532,6 +517,27 @@
 	return IsNotEmpty(pathsOfCachedItems) ? YES : NO;
 }
 
+- (BOOL) autoExpandViewerOutlines	{ return NO; } 
+
+- (HunkExclusions*) hunkExclusions	{ return nil; }	// There is no meaning to disabling / enabling patches for the differences view.
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Delegate / Protocol Methods
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+
+- (void)	logTableViewSelectionDidChange:(LogTableView*)theLogTable
+{
+	[baseHeaderMessage setStringValue:fstr(@"Base Revision: %@", [baseLogTableView selectedRevision])];
+	[compareHeaderMessage setStringValue:fstr(@"Compare Revision: %@", [compareLogTableView selectedRevision])];
+	[self redisplayBrowser:self];
+	[[myDocument mainWindow] makeFirstResponder:theLogTable];
+}
 
 - (CGFloat) firstPaneHeight:(NSSplitView*)theSplitView
 {

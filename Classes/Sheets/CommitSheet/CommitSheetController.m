@@ -658,7 +658,6 @@ NSString* kAmendOption	 = @"amendOption";
 // MARK: -
 // MARK:  FSViewer Protocol Methods
 // -----------------------------------------------------------------------------------------------------------------------------------------
-// MARK: -
 
 // All Controllers which embed a FSBrowser must conform to this protocol
 - (NSArray*) statusLinesForPaths:(NSArray*)absolutePaths withRootPath:(NSString*)rootPath
@@ -724,12 +723,8 @@ NSString* kAmendOption	 = @"amendOption";
 	return IsNotEmpty(paths) ? YES : NO;
 }
 
-- (HunkExclusions*) hunkExclusions
-{
-	return [myDocument hunkExclusions];
-}
-
-
+- (BOOL)			autoExpandViewerOutlines						{ return NO; }
+- (HunkExclusions*) hunkExclusions							{ return [myDocument hunkExclusions]; }
 - (void)			setMyDocumentFromParent					{ };
 - (void)			didSwitchViewTo:(FSViewerNum)viewNumber { };
 - (BOOL)			controlsMainFSViewer					{ return NO; }

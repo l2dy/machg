@@ -30,6 +30,7 @@
 - (void)			setMyDocumentFromParent;
 - (void)			didSwitchViewTo:(FSViewerNum)viewNumber;
 - (BOOL)			controlsMainFSViewer;
+- (BOOL)			autoExpandViewerOutlines;
 - (void)			updateCurrentPreviewImage;
 - (void)			awakeFromNib;	// This routine needs to be able to be called multiple times on the Controller parent of the
 									// FSBrowser, yet interanlly fire only once

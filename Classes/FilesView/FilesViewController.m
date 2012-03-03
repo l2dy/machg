@@ -156,7 +156,7 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK:  FSBrowser Protocol Methods
+// MARK:  FSViewerController Protocol Methods
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (NSArray*) statusLinesForPaths:(NSArray*)absolutePaths withRootPath:(NSString*)rootPath
@@ -226,10 +226,8 @@
 	return IsNotEmpty(paths) ? YES : NO;
 }
 
-- (HunkExclusions*) hunkExclusions
-{
-	return [myDocument hunkExclusions];
-}
+- (BOOL)			autoExpandViewerOutlines	{ return AutoExpandViewerOutlinesFromDefaults(); } 
+- (HunkExclusions*) hunkExclusions		{ return [myDocument hunkExclusions]; }
 
 
 

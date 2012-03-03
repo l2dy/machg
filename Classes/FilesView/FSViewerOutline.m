@@ -227,7 +227,7 @@
 		FSNodeInfo* node = [rootNode nodeForPathFromRoot:path];
 		if (node)
 			[self expandItem:node];
-	}	
+	}
 }
 
 - (FSViewerSelectionState*)	saveViewerSelectionState
