@@ -268,6 +268,7 @@
 
 	NSMutableArray* icons = [[NSMutableArray alloc] init];
 
+	if (bitsInCommon(status, eHGStatusDirty))		[icons addObject:blankImage];
 	if (bitsInCommon(status, eHGStatusMissing))		[icons addObject:missingImage];
 	if (bitsInCommon(status, eHGStatusUntracked))	[icons addObject:unknownImage];
 	if (bitsInCommon(status, eHGStatusAdded))		[icons addObject:additionImage];
