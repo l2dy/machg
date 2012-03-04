@@ -77,6 +77,7 @@
 	BOOL						showIgnoredFilesInBrowser_;
 	BOOL						showUnresolvedFilesInBrowser_;
 	BOOL						showResolvedFilesInBrowser_;
+	BOOL						autoExpandViewerOutlines_;
 	NSMutableArray*				theTableRows;				// Map of table row -> revision number
 	NSString*					repositoryRootPath;			// The root of the repository being browsed
 }
@@ -90,6 +91,7 @@
 @property (readwrite,assign) BOOL showCleanFilesInBrowser;
 @property (readwrite,assign) BOOL showUnresolvedFilesInBrowser;
 @property (readwrite,assign) BOOL showResolvedFilesInBrowser;
+@property (readwrite,assign) BOOL autoExpandViewerOutlines;
 @property (readwrite,assign) MacHgDocument*  myDocument;
 @property (readwrite,assign) FSViewer*  theFSViewer;
 

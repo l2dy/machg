@@ -64,6 +64,7 @@
 @synthesize showCleanFilesInBrowser		 = showCleanFilesInBrowser_;
 @synthesize showUnresolvedFilesInBrowser = showUnresolvedFilesInBrowser_;
 @synthesize showResolvedFilesInBrowser   = showResolvedFilesInBrowser_;
+@synthesize autoExpandViewerOutlines	 = autoExpandViewerOutlines_;
 @synthesize myDocument;
 @synthesize theFSViewer;
 
@@ -96,6 +97,8 @@
 	[compareLogTableView setAutosaveTableColumns:YES];
 	[compareLogTableView setAutosaveName:fstr(@"File:%@:DifferencesCompareTableViewColumnPositions", fileName)];
 	[compareLogTableView reloadData];
+	
+	[self setAutoExpandViewerOutlines:AutoExpandViewerOutlinesFromDefaults()];
 	
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 	if (rootPath)
@@ -515,8 +518,6 @@
 	
 	return IsNotEmpty(pathsOfCachedItems) ? YES : NO;
 }
-
-- (BOOL) autoExpandViewerOutlines	{ return NO; } 
 
 - (HunkExclusions*) hunkExclusions	{ return nil; }	// There is no meaning to disabling / enabling patches for the differences view.
 
