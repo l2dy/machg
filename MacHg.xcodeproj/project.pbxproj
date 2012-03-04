@@ -250,6 +250,7 @@
 		96E2303F1495A4A000174A55 /* FilesViewOutline.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96E2303D1495A4A000174A55 /* FilesViewOutline.xib */; };
 		96E3E61C1477CD820077503D /* GradientBox.m in Sources */ = {isa = PBXBuildFile; fileRef = 96E3E61B1477CD820077503D /* GradientBox.m */; };
 		96E5832A14E5CA0F0041B472 /* CommitFilesViewTable.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96E5832814E5CA0F0041B472 /* CommitFilesViewTable.xib */; };
+		96EFA31415034BD2009163ED /* AutoExpand.png in Resources */ = {isa = PBXBuildFile; fileRef = 96EFA31315034BD2009163ED /* AutoExpand.png */; };
 		96F2C6C214F18C34006C6FEC /* AlterDetailsSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96F2C6C114F18C34006C6FEC /* AlterDetailsSheetController.m */; };
 		96F2C6C514F18C51006C6FEC /* AlterDetailsSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96F2C6C314F18C51006C6FEC /* AlterDetailsSheet.xib */; };
 		96F5A4DE11A8185800707404 /* TextButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96F5A4DD11A8185800707404 /* TextButtonCell.m */; };
@@ -641,6 +642,7 @@
 		96E3E61A1477CD820077503D /* GradientBox.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = GradientBox.h; sourceTree = "<group>"; };
 		96E3E61B1477CD820077503D /* GradientBox.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GradientBox.m; sourceTree = "<group>"; };
 		96E5832914E5CA0F0041B472 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/CommitFilesViewTable.xib; sourceTree = SOURCE_ROOT; };
+		96EFA31315034BD2009163ED /* AutoExpand.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AutoExpand.png; sourceTree = "<group>"; };
 		96F2C6C014F18C34006C6FEC /* AlterDetailsSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AlterDetailsSheetController.h; sourceTree = "<group>"; };
 		96F2C6C114F18C34006C6FEC /* AlterDetailsSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AlterDetailsSheetController.m; sourceTree = "<group>"; };
 		96F2C6C414F18C51006C6FEC /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/AlterDetailsSheet.xib; sourceTree = SOURCE_ROOT; };
@@ -854,6 +856,7 @@
 		9600C2A610CD3D9F00CD8D28 /* StatusItems */ = {
 			isa = PBXGroup;
 			children = (
+				96EFA31315034BD2009163ED /* AutoExpand.png */,
 				96D003A914ABDBDF007E53C8 /* GrayBall.png */,
 				9600C2A710CD3D9F00CD8D28 /* StatusAdded.png */,
 				9600C2A810CD3D9F00CD8D28 /* StatusConflicted.png */,
@@ -2034,6 +2037,7 @@
 				96E5832A14E5CA0F0041B472 /* CommitFilesViewTable.xib in Resources */,
 				96F2C6C514F18C51006C6FEC /* AlterDetailsSheet.xib in Resources */,
 				960E580A14FC889400F577BC /* ButtonDownArrow.png in Resources */,
+				96EFA31415034BD2009163ED /* AutoExpand.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

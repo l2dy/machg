@@ -13,10 +13,10 @@
     <array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
       <integer value="184"/>
       <integer value="201"/>
-      <integer value="419"/>
-      <integer value="222"/>
-      <integer value="230"/>
+      <integer value="190"/>
       <integer value="316"/>
+      <integer value="419"/>
+      <integer value="230"/>
     </array>
     <array key="IBDocument.PluginDependencies">
       <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -929,6 +929,39 @@
         <reference key="NSNextResponder"/>
         <int key="NSvFlags">268</int>
         <array class="NSMutableArray" key="NSSubviews">
+          <object class="NSImageView" id="584848945">
+            <reference key="NSNextResponder" ref="962846676"/>
+            <int key="NSvFlags">268</int>
+            <set class="NSMutableSet" key="NSDragTypes">
+              <string>Apple PDF pasteboard type</string>
+              <string>Apple PICT pasteboard type</string>
+              <string>Apple PNG pasteboard type</string>
+              <string>NSFilenamesPboardType</string>
+              <string>NeXT Encapsulated PostScript v1.2 pasteboard type</string>
+              <string>NeXT TIFF v4.0 pasteboard type</string>
+            </set>
+            <string key="NSFrame">{{20, 252}, {16, 16}}</string>
+            <reference key="NSSuperview" ref="962846676"/>
+            <bool key="NSEnabled">YES</bool>
+            <object class="NSImageCell" key="NSCell" id="209324092">
+              <int key="NSCellFlags">67239424</int>
+              <int key="NSCellFlags2">33816576</int>
+              <object class="NSCustomResource" key="NSContents" id="159223564">
+                <string key="NSClassName">NSImage</string>
+                <string key="NSResourceName">AutoExpand</string>
+              </object>
+              <object class="NSFont" key="NSSupport" id="22">
+                <string key="NSName">LucidaGrande</string>
+                <double key="NSSize">9</double>
+                <int key="NSfFlags">3600</int>
+              </object>
+              <int key="NSAlign">0</int>
+              <int key="NSScale">0</int>
+              <int key="NSStyle">0</int>
+              <bool key="NSAnimates">NO</bool>
+            </object>
+            <bool key="NSEditable">YES</bool>
+          </object>
           <object class="NSButton" id="822774429">
             <reference key="NSNextResponder" ref="962846676"/>
             <int key="NSvFlags">268</int>
@@ -995,11 +1028,7 @@
                 <string key="NSClassName">NSImage</string>
                 <string key="NSResourceName">StatusIgnored</string>
               </object>
-              <object class="NSFont" key="NSSupport" id="22">
-                <string key="NSName">LucidaGrande</string>
-                <double key="NSSize">9</double>
-                <int key="NSfFlags">3600</int>
-              </object>
+              <reference key="NSSupport" ref="22"/>
               <int key="NSAlign">0</int>
               <int key="NSScale">0</int>
               <int key="NSStyle">0</int>
@@ -1804,6 +1833,32 @@
         <reference key="NSNextResponder"/>
         <int key="NSvFlags">268</int>
         <array class="NSMutableArray" key="NSSubviews">
+          <object class="NSImageView" id="353836260">
+            <reference key="NSNextResponder" ref="998057580"/>
+            <int key="NSvFlags">268</int>
+            <set class="NSMutableSet" key="NSDragTypes">
+              <string>Apple PDF pasteboard type</string>
+              <string>Apple PICT pasteboard type</string>
+              <string>Apple PNG pasteboard type</string>
+              <string>NSFilenamesPboardType</string>
+              <string>NeXT Encapsulated PostScript v1.2 pasteboard type</string>
+              <string>NeXT TIFF v4.0 pasteboard type</string>
+            </set>
+            <string key="NSFrame">{{20, 20}, {16, 16}}</string>
+            <reference key="NSSuperview" ref="998057580"/>
+            <bool key="NSEnabled">YES</bool>
+            <object class="NSImageCell" key="NSCell" id="243846740">
+              <int key="NSCellFlags">67239424</int>
+              <int key="NSCellFlags2">33816576</int>
+              <reference key="NSContents" ref="159223564"/>
+              <reference key="NSSupport" ref="22"/>
+              <int key="NSAlign">0</int>
+              <int key="NSScale">0</int>
+              <int key="NSStyle">0</int>
+              <bool key="NSAnimates">NO</bool>
+            </object>
+            <bool key="NSEditable">YES</bool>
+          </object>
           <object class="NSButton" id="720363453">
             <reference key="NSNextResponder" ref="998057580"/>
             <int key="NSvFlags">268</int>
@@ -3431,6 +3486,66 @@
           </object>
           <int key="connectionID">531</int>
         </object>
+        <object class="IBConnectionRecord">
+          <object class="IBBindingConnection" key="connection">
+            <string key="label">hidden: theFilesView.theFSViewer.showingFilesOutline</string>
+            <reference key="source" ref="720363453"/>
+            <reference key="destination" ref="1001"/>
+            <object class="NSNibBindingConnector" key="connector">
+              <reference key="NSSource" ref="720363453"/>
+              <reference key="NSDestination" ref="1001"/>
+              <string key="NSLabel">hidden: theFilesView.theFSViewer.showingFilesOutline</string>
+              <string key="NSBinding">hidden</string>
+              <string key="NSKeyPath">theFilesView.theFSViewer.showingFilesOutline</string>
+              <object class="NSDictionary" key="NSOptions">
+                <string key="NS.key.0">NSValueTransformerName</string>
+                <string key="NS.object.0">NSNegateBoolean</string>
+              </object>
+              <int key="NSNibBindingConnectorVersion">2</int>
+            </object>
+          </object>
+          <int key="connectionID">534</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBBindingConnection" key="connection">
+            <string key="label">hidden: theFilesView.theFSViewer.showingFilesOutline</string>
+            <reference key="source" ref="353836260"/>
+            <reference key="destination" ref="1001"/>
+            <object class="NSNibBindingConnector" key="connector">
+              <reference key="NSSource" ref="353836260"/>
+              <reference key="NSDestination" ref="1001"/>
+              <string key="NSLabel">hidden: theFilesView.theFSViewer.showingFilesOutline</string>
+              <string key="NSBinding">hidden</string>
+              <string key="NSKeyPath">theFilesView.theFSViewer.showingFilesOutline</string>
+              <object class="NSDictionary" key="NSOptions">
+                <string key="NS.key.0">NSValueTransformerName</string>
+                <string key="NS.object.0">NSNegateBoolean</string>
+              </object>
+              <int key="NSNibBindingConnectorVersion">2</int>
+            </object>
+          </object>
+          <int key="connectionID">538</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBBindingConnection" key="connection">
+            <string key="label">hidden: theFilesView.theFSViewer.showingFilesOutline</string>
+            <reference key="source" ref="584848945"/>
+            <reference key="destination" ref="1001"/>
+            <object class="NSNibBindingConnector" key="connector">
+              <reference key="NSSource" ref="584848945"/>
+              <reference key="NSDestination" ref="1001"/>
+              <string key="NSLabel">hidden: theFilesView.theFSViewer.showingFilesOutline</string>
+              <string key="NSBinding">hidden</string>
+              <string key="NSKeyPath">theFilesView.theFSViewer.showingFilesOutline</string>
+              <object class="NSDictionary" key="NSOptions">
+                <string key="NS.key.0">NSValueTransformerName</string>
+                <string key="NS.object.0">NSNegateBoolean</string>
+              </object>
+              <int key="NSNibBindingConnectorVersion">2</int>
+            </object>
+          </object>
+          <int key="connectionID">541</int>
+        </object>
       </array>
       <object class="IBMutableOrderedSet" key="objectRecords">
         <array key="orderedObjects">
@@ -3755,6 +3870,7 @@
               <reference ref="88332913"/>
               <reference ref="328341118"/>
               <reference ref="822774429"/>
+              <reference ref="584848945"/>
             </array>
             <reference key="parent" ref="0"/>
             <string key="objectName">expandedStatusSidebarGroup</string>
@@ -4341,6 +4457,7 @@
               <reference ref="127161090"/>
               <reference ref="798867415"/>
               <reference ref="885708569"/>
+              <reference ref="353836260"/>
             </array>
             <reference key="parent" ref="0"/>
             <string key="objectName">Attached Status Preferences</string>
@@ -4687,6 +4804,32 @@
             <reference key="object" ref="804730753"/>
             <reference key="parent" ref="29140535"/>
           </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">535</int>
+            <reference key="object" ref="353836260"/>
+            <array class="NSMutableArray" key="children">
+              <reference ref="243846740"/>
+            </array>
+            <reference key="parent" ref="998057580"/>
+          </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">536</int>
+            <reference key="object" ref="243846740"/>
+            <reference key="parent" ref="353836260"/>
+          </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">539</int>
+            <reference key="object" ref="584848945"/>
+            <array class="NSMutableArray" key="children">
+              <reference ref="209324092"/>
+            </array>
+            <reference key="parent" ref="962846676"/>
+          </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">540</int>
+            <reference key="object" ref="209324092"/>
+            <reference key="parent" ref="584848945"/>
+          </object>
         </array>
       </object>
       <dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -4826,7 +4969,7 @@
         <string key="28.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="29.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="30.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-        <string key="316.IBEditorWindowLastContentRect">{{139, 381}, {148, 543}}</string>
+        <string key="316.IBEditorWindowLastContentRect">{{354, 392}, {148, 543}}</string>
         <string key="316.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <object class="NSAffineTransform" key="316.IBViewBoundsToFrameTransform"/>
         <string key="317.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -4954,7 +5097,7 @@
         <string key="423.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="424.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <object class="NSAffineTransform" key="424.IBViewBoundsToFrameTransform">
-          <bytes key="NSTransformStruct">AUGgAABDiYAAA</bytes>
+          <bytes key="NSTransformStruct">AUGgAABCLAAAA</bytes>
         </object>
         <string key="426.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="427.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -5053,6 +5196,16 @@
         <string key="514.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="52.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="53.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+        <string key="535.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+        <object class="NSAffineTransform" key="535.IBViewBoundsToFrameTransform">
+          <bytes key="NSTransformStruct">AUGgAABBoAAAA</bytes>
+        </object>
+        <string key="536.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+        <string key="539.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+        <object class="NSAffineTransform" key="539.IBViewBoundsToFrameTransform">
+          <bytes key="NSTransformStruct">AUGgAABBoAAAA</bytes>
+        </object>
+        <string key="540.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="86.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <object class="NSAffineTransform" key="86.IBViewBoundsToFrameTransform">
           <bytes key="NSTransformStruct">AUGgAABDiYAAA</bytes>
@@ -5076,7 +5229,7 @@
       <nil key="activeLocalization"/>
       <dictionary class="NSMutableDictionary" key="localizations"/>
       <nil key="sourceID"/>
-      <int key="maxID">531</int>
+      <int key="maxID">541</int>
     </object>
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -7311,6 +7464,7 @@
     <int key="IBDocument.defaultPropertyAccessControl">3</int>
     <dictionary class="NSMutableDictionary" key="IBDocument.LastKnownImageSizes">
       <string key="AppearancePreferencesMono">{17, 15}</string>
+      <string key="AutoExpand">{16, 16}</string>
       <string key="DividerBackground24">{1, 24}</string>
       <string key="DividerThumb">{11, 10}</string>
       <string key="FilesViewBrowser">{15, 14}</string>
