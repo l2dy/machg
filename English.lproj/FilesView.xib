@@ -11,11 +11,11 @@
       <string key="com.apple.WebKitIBPlugin">851</string>
     </dictionary>
     <array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-      <integer value="184"/>
       <integer value="201"/>
-      <integer value="190"/>
-      <integer value="316"/>
       <integer value="419"/>
+      <integer value="184"/>
+      <integer value="316"/>
+      <integer value="190"/>
       <integer value="230"/>
     </array>
     <array key="IBDocument.PluginDependencies">
@@ -1489,7 +1489,7 @@
             <bool key="NSEnabled">YES</bool>
             <object class="NSButtonCell" key="NSCell" id="921888795">
               <int key="NSCellFlags">-2080244224</int>
-              <int key="NSCellFlags2">16941056</int>
+              <int key="NSCellFlags2">163840</int>
               <string key="NSContents">Up to date</string>
               <reference key="NSSupport" ref="26"/>
               <reference key="NSControlView" ref="826835531"/>
@@ -2295,7 +2295,7 @@
             <bool key="NSEnabled">YES</bool>
             <object class="NSButtonCell" key="NSCell" id="646288466">
               <int key="NSCellFlags">-2080244224</int>
-              <int key="NSCellFlags2">16941056</int>
+              <int key="NSCellFlags2">163840</int>
               <string key="NSContents">Up to date</string>
               <reference key="NSSupport" ref="26"/>
               <reference key="NSControlView" ref="798867415"/>
