@@ -1428,7 +1428,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 												 [incomingCounts setObject:intAsString([results.outStr length]) forKey:[repo path]];
 											 else
 												 [incomingCounts setObject:@"-" forKey:[repo path]];
-											 NSDictionary* info = [NSDictionary dictionaryWithObject:repo forKey:@"sidebarNode"];
+											 NSDictionary* info = [NSDictionary dictionaryWithObject:[repo path] forKey:@"sidebarNodePath"];
 											 [myDocument postNotificationWithName:kReceivedCompatibleRepositoryCount userInfo:info];
 										 });										 
 									 },
