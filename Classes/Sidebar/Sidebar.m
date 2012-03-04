@@ -61,7 +61,7 @@
 	root_ = [SidebarNode sectionNodeWithCaption:kSidebarRootInitializationDummy];
 	[self observe:kUnderlyingRepositoryChanged				from:myDocument  byCalling:@selector(underlyingRepositoryDidChange)];
 	[self observe:kCompatibleRepositoryChanged				from:myDocument  byCalling:@selector(computeIncomingOutgoingToCompatibleRepositories)];
-	[self observe:kReceivedCompatibleRepositoryCount		from:myDocument  byCalling:@selector(reloadData)];
+	[self observe:kReceivedCompatibleRepositoryCount		from:myDocument  byCalling:@selector(sidebarNodeDidChange:)];
 	[self observe:kRepositoryDataIsNew						from:myDocument  byCalling:@selector(repositoryDataIsNew:)];
 	[self observe:kRepositoryDataDidChange					from:myDocument  byCalling:@selector(repositoryDataDidChange:)];
 
@@ -108,6 +108,12 @@
 - (void) repositoryDataDidChange:(NSNotification*)notification
 {
 	[self updateInformationTextView];
+}
+
+- (void) sidebarNodeDidChange:(NSNotification*)notification
+{
+	NSString* nodePath = [[notification userInfo] objectForKey:@"sidebarNodePath"];
+	[self setNeedsDisplayForNodePath:nodePath];
 }
 
 
@@ -821,6 +827,36 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 - (void) resignMain { [self setBackgroundColor:rgbColor255(238, 238, 238)]; }	// source list inactive
 
 
+- (NSRect)	rectInWindowForNode:(SidebarNode*)node
+{
+	NSInteger row = [self rowForItem:node];
+	NSRect itemRect = (row>=0) ? [self rectOfRow:row] : NSZeroRect;	
+	
+	// check that the path Rect is visible on screen
+	if (NSIntersectsRect([self visibleRect], itemRect))
+		return [self convertRectToBase:itemRect];			// convert item rect to screen coordinates
+	return NSZeroRect;
+}
+
+- (void) setNeedsDisplayForNode:(SidebarNode*)node
+{
+	[[[self window] contentView] setNeedsDisplayInRect:[self rectInWindowForNode:node]];
+}
+
+- (void) setNeedsDisplayForNodePath:(NSString*)nodePath andNode:(SidebarNode*)node
+{
+	if ([node isRepositoryRef] && [nodePath isEqualToString:[node path]])
+		[self setNeedsDisplayForNode:node];
+	for (SidebarNode* child in [node children])
+		[self setNeedsDisplayForNodePath:nodePath andNode:child];
+}
+
+- (void) setNeedsDisplayForNodePath:(NSString*)nodePath
+{
+	[self setNeedsDisplayForNodePath:nodePath andNode:root_];
+}
+
+
 
 
 
@@ -1356,8 +1392,8 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 												 [outgoingCounts setObject:intAsString([results.outStr length]) forKey:[repo path]];
 											 else
 												 [outgoingCounts setObject:@"-" forKey:[repo path]];
-											 [self reloadData];
-											 [myDocument postNotificationWithName:kReceivedCompatibleRepositoryCount];
+											 NSDictionary* info = [NSDictionary dictionaryWithObject:[repo path] forKey:@"sidebarNodePath"];
+											 [myDocument postNotificationWithName:kReceivedCompatibleRepositoryCount userInfo:info];
 										 });										 
 									 },
 									 
@@ -1368,7 +1404,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 											 if (![rootPath isEqualTo:[[self selectedNode] path]])
 												 return;
 											 [outgoingCounts setObject:@"-" forKey:[repo path]];
-											 [self reloadData];
+											 [self setNeedsDisplayForNodePath:[repo path]];
 										 });										 
 									 });
 		}
@@ -1392,8 +1428,8 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 												 [incomingCounts setObject:intAsString([results.outStr length]) forKey:[repo path]];
 											 else
 												 [incomingCounts setObject:@"-" forKey:[repo path]];
-											 [self reloadData];
-											 [myDocument postNotificationWithName:kReceivedCompatibleRepositoryCount];
+											 NSDictionary* info = [NSDictionary dictionaryWithObject:repo forKey:@"sidebarNode"];
+											 [myDocument postNotificationWithName:kReceivedCompatibleRepositoryCount userInfo:info];
 										 });										 
 									 },
 									 
@@ -1404,7 +1440,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 											 if (![rootPath isEqualTo:[[self selectedNode] path]])
 												 return;
 											 [incomingCounts setObject:@"-" forKey:[repo path]];
-											 [self reloadData];
+											 [self setNeedsDisplayForNodePath:[repo path]];
 										 });										 
 									 });
 		}

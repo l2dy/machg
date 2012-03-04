@@ -93,6 +93,7 @@
 // Drawing
 - (void) becomeMain;
 - (void) resignMain;
+- (void) setNeedsDisplayForNodePath:(NSString*)nodePath;
 
 
 // Saving and Loading
