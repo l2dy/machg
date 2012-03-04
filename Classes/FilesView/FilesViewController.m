@@ -135,8 +135,7 @@
 // MARK:  Refreshing
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) updateFilesViewButtonSelector				{ [theFSViewer updateSegmentSelectorButtons]; }
-- (void) didSwitchViewTo:(FSViewerNum)viewNumber	{ [self updateFilesViewButtonSelector]; }
+- (void) didSwitchViewTo:(FSViewerNum)viewNumber	{ }
 - (void) repositoryDataIsNew						{ [theFSViewer repositoryDataIsNew]; }
 - (IBAction) refreshBrowserContent:(id)sender		{ return [myDocument refreshBrowserContent:myDocument]; }
 

@@ -113,11 +113,7 @@
 	IBOutlet id <ControllerForFSViewer> parentController;
 	IBOutlet PatchesWebview*	detailedPatchesWebView;
 	IBOutlet NSMenu*			contextualMenuForFSViewerPane;
-	
-	IBOutlet NSButton*	browserSegementButton;			// Indicate if the browser pane is shown
-	IBOutlet NSButton*	outlineSegementButton;			// Indicate if the outline pane is shown
-	IBOutlet NSButton*	tableSegementButton;			// Indicate if the table   pane is shown
-	
+
 	NSString*			absolutePathOfRepositoryRoot_;
 	FSNodeInfo*			rootNodeInfo_;
 	BOOL				areNodesVirtual_;				// Is this browser used to display virtual nodes?
@@ -161,10 +157,9 @@
 - (IBAction)	actionSwitchToFilesBrowser:(id)sender;
 - (IBAction)	actionSwitchToFilesOutline:(id)sender;
 - (IBAction)	actionSwitchToFilesTable:(id)sender;
-- (FSViewerNum)	currentFSViewerPaneNum;
+- (FSViewerNum)	currentFSViewerPane;
 - (void)		setCurrentFSViewerPane:(FSViewerNum)styleNum;
 - (NSView<FSViewerProtocol>*)	currentViewerPane;
-- (void)		updateSegmentSelectorButtons;
 
 
 // Common Path and Selection Operations

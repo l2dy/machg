@@ -92,16 +92,6 @@
 	FSViewerNum viewerNum = [[NSUserDefaults standardUserDefaults] integerForKey:[self viewerAutoSaveName]];
 	if (viewerNum == eFilesNoView)
 		viewerNum = DefaultFilesViewFromDefaults() + 1;
-
-	[browserSegementButton setTarget:self];
-	[browserSegementButton setAction:@selector(actionSwitchToFilesBrowser:)];
-	[browserSegementButton setState:NO];
-	[outlineSegementButton setTarget:self];
-	[outlineSegementButton setAction:@selector(actionSwitchToFilesOutline:)];
-	[outlineSegementButton setState:NO];
-	[tableSegementButton   setTarget:self];
-	[tableSegementButton   setAction:@selector(actionSwitchToFilesTable:)];
-	[tableSegementButton   setState:NO];
 	
 	[self setCurrentFSViewerPane:viewerNum];
 }
@@ -209,14 +199,24 @@
 	}
 }
 
-- (NSView<FSViewerProtocol>*) currentViewerPane			{ return [self viewerPane:currentFSViewerPane_]; }
-- (BOOL)	 showingFilesBrowser						{ return currentFSViewerPane_ == eFilesBrowser; }
-- (BOOL)	 showingFilesOutline						{ return currentFSViewerPane_ == eFilesOutline; }
-- (BOOL)	 showingFilesTable							{ return currentFSViewerPane_ == eFilesTable; }
-- (IBAction) actionSwitchToFilesBrowser:(id)sender		{ [self setCurrentFSViewerPane:eFilesBrowser]; }
-- (IBAction) actionSwitchToFilesOutline:(id)sender		{ [self setCurrentFSViewerPane:eFilesOutline]; }
-- (IBAction) actionSwitchToFilesTable:(id)sender		{ [self setCurrentFSViewerPane:eFilesTable]; }
-- (FSViewerNum)	currentFSViewerPaneNum					{ return currentFSViewerPane_; }
+- (NSView<FSViewerProtocol>*) currentViewerPane				{ return [self viewerPane:currentFSViewerPane_]; }
+- (BOOL)	 showingFilesBrowser							{ return currentFSViewerPane_ == eFilesBrowser; }
+- (BOOL)	 showingFilesOutline							{ return currentFSViewerPane_ == eFilesOutline; }
+- (BOOL)	 showingFilesTable								{ return currentFSViewerPane_ == eFilesTable; }
+
+- (void)	 setShowingFilesBrowser:(BOOL)val				{ }
+- (void)	 setShowingFilesOutline:(BOOL)val				{ }
+- (void)	 setShowingFilesTable:(BOOL)val					{ }
+
+
+- (IBAction) actionSwitchToFilesBrowser:(id)sender			{ [self setCurrentFSViewerPane:eFilesBrowser]; }
+- (IBAction) actionSwitchToFilesOutline:(id)sender			{ [self setCurrentFSViewerPane:eFilesOutline]; }
+- (IBAction) actionSwitchToFilesTable:(id)sender			{ [self setCurrentFSViewerPane:eFilesTable]; }
++ (NSSet*)	 keyPathsForValuesAffectingShowingFilesBrowser	{ return [NSSet setWithObject:@"currentFSViewerPane"]; }
++ (NSSet*)	 keyPathsForValuesAffectingShowingFilesOutline	{ return [NSSet setWithObject:@"currentFSViewerPane"]; }
++ (NSSet*)	 keyPathsForValuesAffectingShowingFilesTable	{ return [NSSet setWithObject:@"currentFSViewerPane"]; }
+
+- (FSViewerNum)	currentFSViewerPane							{ return currentFSViewerPane_; }
 
 - (void) setCurrentFSViewerPane:(FSViewerNum)styleNum
 {
@@ -231,14 +231,6 @@
 - (void) prepareToOpenFSViewerPane
 {
 	[[self currentViewerPane] prepareToOpenFSViewerPane];	
-}
-	
-- (void) updateSegmentSelectorButtons
-{
-	FSViewerNum currentViewNumber = [self currentFSViewerPaneNum];
-	[browserSegementButton setState:(currentViewNumber == eFilesBrowser)];
-	[outlineSegementButton setState:(currentViewNumber == eFilesOutline)];
-	[tableSegementButton   setState:(currentViewNumber == eFilesTable)];
 }
 
 

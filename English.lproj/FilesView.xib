@@ -11,12 +11,12 @@
       <string key="com.apple.WebKitIBPlugin">851</string>
     </dictionary>
     <array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-      <integer value="316"/>
       <integer value="184"/>
-      <integer value="193"/>
-      <integer value="419"/>
       <integer value="201"/>
+      <integer value="419"/>
       <integer value="222"/>
+      <integer value="230"/>
+      <integer value="316"/>
     </array>
     <array key="IBDocument.PluginDependencies">
       <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -116,10 +116,6 @@
         <string key="NSClassName">FilesView</string>
       </object>
       <object class="NSUserDefaultsController" id="69413389">
-        <array class="NSMutableArray" key="NSDeclaredKeys">
-          <string>AutoExpandOutlines</string>
-          <string>AutoExpandViewerOutlines</string>
-        </array>
         <bool key="NSSharedInstance">YES</bool>
       </object>
       <object class="NSMenu" id="1040381362">
@@ -2764,30 +2760,6 @@
           <int key="connectionID">225</int>
         </object>
         <object class="IBConnectionRecord">
-          <object class="IBActionConnection" key="connection">
-            <string key="label">actionSwitchViewToFilesBrowserView:</string>
-            <reference key="source" ref="1003"/>
-            <reference key="destination" ref="593147930"/>
-          </object>
-          <int key="connectionID">242</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBActionConnection" key="connection">
-            <string key="label">actionSwitchViewToFilesOutlineView:</string>
-            <reference key="source" ref="1003"/>
-            <reference key="destination" ref="589549321"/>
-          </object>
-          <int key="connectionID">243</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBActionConnection" key="connection">
-            <string key="label">actionSwitchViewToFilesTableView:</string>
-            <reference key="source" ref="1003"/>
-            <reference key="destination" ref="60214963"/>
-          </object>
-          <int key="connectionID">244</int>
-        </object>
-        <object class="IBConnectionRecord">
           <object class="IBOutletConnection" key="connection">
             <string key="label">statusSidebarSplitView</string>
             <reference key="source" ref="453712496"/>
@@ -3046,30 +3018,6 @@
             <reference key="destination" ref="369066997"/>
           </object>
           <int key="connectionID">409</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBOutletConnection" key="connection">
-            <string key="label">browserSegementButton</string>
-            <reference key="source" ref="264801874"/>
-            <reference key="destination" ref="593147930"/>
-          </object>
-          <int key="connectionID">410</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBOutletConnection" key="connection">
-            <string key="label">outlineSegementButton</string>
-            <reference key="source" ref="264801874"/>
-            <reference key="destination" ref="589549321"/>
-          </object>
-          <int key="connectionID">411</int>
-        </object>
-        <object class="IBConnectionRecord">
-          <object class="IBOutletConnection" key="connection">
-            <string key="label">tableSegementButton</string>
-            <reference key="source" ref="264801874"/>
-            <reference key="destination" ref="60214963"/>
-          </object>
-          <int key="connectionID">412</int>
         </object>
         <object class="IBConnectionRecord">
           <object class="IBActionConnection" key="connection">
@@ -3390,6 +3338,98 @@
             </object>
           </object>
           <int key="connectionID">517</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBBindingConnection" key="connection">
+            <string key="label">hidden: theFilesView.theFSViewer.showingFilesOutline</string>
+            <reference key="source" ref="822774429"/>
+            <reference key="destination" ref="1001"/>
+            <object class="NSNibBindingConnector" key="connector">
+              <reference key="NSSource" ref="822774429"/>
+              <reference key="NSDestination" ref="1001"/>
+              <string key="NSLabel">hidden: theFilesView.theFSViewer.showingFilesOutline</string>
+              <string key="NSBinding">hidden</string>
+              <string key="NSKeyPath">theFilesView.theFSViewer.showingFilesOutline</string>
+              <object class="NSDictionary" key="NSOptions">
+                <string key="NS.key.0">NSValueTransformerName</string>
+                <string key="NS.object.0">NSNegateBoolean</string>
+              </object>
+              <int key="NSNibBindingConnectorVersion">2</int>
+            </object>
+          </object>
+          <int key="connectionID">521</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">actionSwitchToFilesBrowser:</string>
+            <reference key="source" ref="264801874"/>
+            <reference key="destination" ref="593147930"/>
+          </object>
+          <int key="connectionID">522</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">actionSwitchToFilesOutline:</string>
+            <reference key="source" ref="264801874"/>
+            <reference key="destination" ref="589549321"/>
+          </object>
+          <int key="connectionID">523</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">actionSwitchToFilesTable:</string>
+            <reference key="source" ref="264801874"/>
+            <reference key="destination" ref="60214963"/>
+          </object>
+          <int key="connectionID">524</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBBindingConnection" key="connection">
+            <string key="label">value: theFilesView.theFSViewer.showingFilesOutline</string>
+            <reference key="source" ref="589549321"/>
+            <reference key="destination" ref="1001"/>
+            <object class="NSNibBindingConnector" key="connector">
+              <reference key="NSSource" ref="589549321"/>
+              <reference key="NSDestination" ref="1001"/>
+              <string key="NSLabel">value: theFilesView.theFSViewer.showingFilesOutline</string>
+              <string key="NSBinding">value</string>
+              <string key="NSKeyPath">theFilesView.theFSViewer.showingFilesOutline</string>
+              <int key="NSNibBindingConnectorVersion">2</int>
+            </object>
+          </object>
+          <int key="connectionID">527</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBBindingConnection" key="connection">
+            <string key="label">value: theFilesView.theFSViewer.showingFilesBrowser</string>
+            <reference key="source" ref="593147930"/>
+            <reference key="destination" ref="1001"/>
+            <object class="NSNibBindingConnector" key="connector">
+              <reference key="NSSource" ref="593147930"/>
+              <reference key="NSDestination" ref="1001"/>
+              <string key="NSLabel">value: theFilesView.theFSViewer.showingFilesBrowser</string>
+              <string key="NSBinding">value</string>
+              <string key="NSKeyPath">theFilesView.theFSViewer.showingFilesBrowser</string>
+              <int key="NSNibBindingConnectorVersion">2</int>
+            </object>
+          </object>
+          <int key="connectionID">529</int>
+        </object>
+        <object class="IBConnectionRecord">
+          <object class="IBBindingConnection" key="connection">
+            <string key="label">value: theFilesView.theFSViewer.showingFilesTable</string>
+            <reference key="source" ref="60214963"/>
+            <reference key="destination" ref="1001"/>
+            <object class="NSNibBindingConnector" key="connector">
+              <reference key="NSSource" ref="60214963"/>
+              <reference key="NSDestination" ref="1001"/>
+              <string key="NSLabel">value: theFilesView.theFSViewer.showingFilesTable</string>
+              <string key="NSBinding">value</string>
+              <string key="NSKeyPath">theFilesView.theFSViewer.showingFilesTable</string>
+              <int key="NSNibBindingConnectorVersion">2</int>
+            </object>
+          </object>
+          <int key="connectionID">531</int>
         </object>
       </array>
       <object class="IBMutableOrderedSet" key="objectRecords">
@@ -5036,7 +5076,7 @@
       <nil key="activeLocalization"/>
       <dictionary class="NSMutableDictionary" key="localizations"/>
       <nil key="sourceID"/>
-      <int key="maxID">517</int>
+      <int key="maxID">531</int>
     </object>
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -5279,18 +5319,11 @@
             </object>
           </dictionary>
           <dictionary class="NSMutableDictionary" key="outlets">
-            <string key="browserSegementButton">NSButton</string>
             <string key="contextualMenuForFSViewerPane">NSMenu</string>
             <string key="detailedPatchesWebView">PatchesWebview</string>
-            <string key="outlineSegementButton">NSButton</string>
             <string key="parentController">id</string>
-            <string key="tableSegementButton">NSButton</string>
           </dictionary>
           <dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-            <object class="IBToOneOutletInfo" key="browserSegementButton">
-              <string key="name">browserSegementButton</string>
-              <string key="candidateClassName">NSButton</string>
-            </object>
             <object class="IBToOneOutletInfo" key="contextualMenuForFSViewerPane">
               <string key="name">contextualMenuForFSViewerPane</string>
               <string key="candidateClassName">NSMenu</string>
@@ -5299,17 +5332,9 @@
               <string key="name">detailedPatchesWebView</string>
               <string key="candidateClassName">PatchesWebview</string>
             </object>
-            <object class="IBToOneOutletInfo" key="outlineSegementButton">
-              <string key="name">outlineSegementButton</string>
-              <string key="candidateClassName">NSButton</string>
-            </object>
             <object class="IBToOneOutletInfo" key="parentController">
               <string key="name">parentController</string>
               <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBToOneOutletInfo" key="tableSegementButton">
-              <string key="name">tableSegementButton</string>
-              <string key="candidateClassName">NSButton</string>
             </object>
           </dictionary>
           <object class="IBClassDescriptionSource" key="sourceIdentifier">

@@ -11,7 +11,7 @@
       <string key="NS.object.0">851</string>
     </object>
     <array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-      <integer value="635"/>
+      <integer value="636"/>
     </array>
     <array key="IBDocument.PluginDependencies">
       <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -2572,7 +2572,7 @@
             <reference key="source" ref="43990950"/>
             <reference key="destination" ref="812669862"/>
           </object>
-          <int key="connectionID">652</int>
+          <int key="connectionID">662</int>
         </object>
         <object class="IBConnectionRecord">
           <object class="IBActionConnection" key="connection">
@@ -2580,7 +2580,7 @@
             <reference key="source" ref="43990950"/>
             <reference key="destination" ref="768636893"/>
           </object>
-          <int key="connectionID">653</int>
+          <int key="connectionID">663</int>
         </object>
         <object class="IBConnectionRecord">
           <object class="IBActionConnection" key="connection">
@@ -2588,31 +2588,55 @@
             <reference key="source" ref="43990950"/>
             <reference key="destination" ref="776122787"/>
           </object>
-          <int key="connectionID">654</int>
+          <int key="connectionID">664</int>
         </object>
         <object class="IBConnectionRecord">
-          <object class="IBOutletConnection" key="connection">
-            <string key="label">browserSegementButton</string>
-            <reference key="source" ref="43990950"/>
-            <reference key="destination" ref="812669862"/>
+          <object class="IBBindingConnection" key="connection">
+            <string key="label">value: theDifferencesView.theFSViewer.showingFilesBrowser</string>
+            <reference key="source" ref="812669862"/>
+            <reference key="destination" ref="1001"/>
+            <object class="NSNibBindingConnector" key="connector">
+              <reference key="NSSource" ref="812669862"/>
+              <reference key="NSDestination" ref="1001"/>
+              <string key="NSLabel">value: theDifferencesView.theFSViewer.showingFilesBrowser</string>
+              <string key="NSBinding">value</string>
+              <string key="NSKeyPath">theDifferencesView.theFSViewer.showingFilesBrowser</string>
+              <int key="NSNibBindingConnectorVersion">2</int>
+            </object>
           </object>
-          <int key="connectionID">655</int>
+          <int key="connectionID">666</int>
         </object>
         <object class="IBConnectionRecord">
-          <object class="IBOutletConnection" key="connection">
-            <string key="label">outlineSegementButton</string>
-            <reference key="source" ref="43990950"/>
-            <reference key="destination" ref="768636893"/>
+          <object class="IBBindingConnection" key="connection">
+            <string key="label">value: theDifferencesView.theFSViewer.showingFilesOutline</string>
+            <reference key="source" ref="768636893"/>
+            <reference key="destination" ref="1001"/>
+            <object class="NSNibBindingConnector" key="connector">
+              <reference key="NSSource" ref="768636893"/>
+              <reference key="NSDestination" ref="1001"/>
+              <string key="NSLabel">value: theDifferencesView.theFSViewer.showingFilesOutline</string>
+              <string key="NSBinding">value</string>
+              <string key="NSKeyPath">theDifferencesView.theFSViewer.showingFilesOutline</string>
+              <int key="NSNibBindingConnectorVersion">2</int>
+            </object>
           </object>
-          <int key="connectionID">656</int>
+          <int key="connectionID">668</int>
         </object>
         <object class="IBConnectionRecord">
-          <object class="IBOutletConnection" key="connection">
-            <string key="label">tableSegementButton</string>
-            <reference key="source" ref="43990950"/>
-            <reference key="destination" ref="776122787"/>
+          <object class="IBBindingConnection" key="connection">
+            <string key="label">value: theDifferencesView.theFSViewer.showingFilesTable</string>
+            <reference key="source" ref="776122787"/>
+            <reference key="destination" ref="1001"/>
+            <object class="NSNibBindingConnector" key="connector">
+              <reference key="NSSource" ref="776122787"/>
+              <reference key="NSDestination" ref="1001"/>
+              <string key="NSLabel">value: theDifferencesView.theFSViewer.showingFilesTable</string>
+              <string key="NSBinding">value</string>
+              <string key="NSKeyPath">theDifferencesView.theFSViewer.showingFilesTable</string>
+              <int key="NSNibBindingConnectorVersion">2</int>
+            </object>
           </object>
-          <int key="connectionID">657</int>
+          <int key="connectionID">669</int>
         </object>
       </array>
       <object class="IBMutableOrderedSet" key="objectRecords">
@@ -3736,7 +3760,7 @@
         <string key="372.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="375.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="376.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
-        <string key="389.IBEditorWindowLastContentRect">{{402, 104}, {1142, 732}}</string>
+        <string key="389.IBEditorWindowLastContentRect">{{330, 4}, {1142, 732}}</string>
         <string key="389.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="400.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="401.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3863,7 +3887,7 @@
       <nil key="activeLocalization"/>
       <dictionary class="NSMutableDictionary" key="localizations"/>
       <nil key="sourceID"/>
-      <int key="maxID">661</int>
+      <int key="maxID">669</int>
     </object>
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -4122,18 +4146,11 @@
             </object>
           </dictionary>
           <dictionary class="NSMutableDictionary" key="outlets">
-            <string key="browserSegementButton">NSButton</string>
             <string key="contextualMenuForFSViewerPane">NSMenu</string>
             <string key="detailedPatchesWebView">PatchesWebview</string>
-            <string key="outlineSegementButton">NSButton</string>
             <string key="parentController">id</string>
-            <string key="tableSegementButton">NSButton</string>
           </dictionary>
           <dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
-            <object class="IBToOneOutletInfo" key="browserSegementButton">
-              <string key="name">browserSegementButton</string>
-              <string key="candidateClassName">NSButton</string>
-            </object>
             <object class="IBToOneOutletInfo" key="contextualMenuForFSViewerPane">
               <string key="name">contextualMenuForFSViewerPane</string>
               <string key="candidateClassName">NSMenu</string>
@@ -4142,17 +4159,9 @@
               <string key="name">detailedPatchesWebView</string>
               <string key="candidateClassName">PatchesWebview</string>
             </object>
-            <object class="IBToOneOutletInfo" key="outlineSegementButton">
-              <string key="name">outlineSegementButton</string>
-              <string key="candidateClassName">NSButton</string>
-            </object>
             <object class="IBToOneOutletInfo" key="parentController">
               <string key="name">parentController</string>
               <string key="candidateClassName">id</string>
-            </object>
-            <object class="IBToOneOutletInfo" key="tableSegementButton">
-              <string key="name">tableSegementButton</string>
-              <string key="candidateClassName">NSButton</string>
             </object>
           </dictionary>
           <object class="IBClassDescriptionSource" key="sourceIdentifier">

@@ -233,8 +233,7 @@
 }
 
 
-- (void) updateFilesViewButtonSelector				{ [theFSViewer updateSegmentSelectorButtons]; }
-- (void) didSwitchViewTo:(FSViewerNum)viewNumber	{ [self updateFilesViewButtonSelector]; }
+- (void) didSwitchViewTo:(FSViewerNum)viewNumber	{ }
 
 
 - (void) scrollToSelected

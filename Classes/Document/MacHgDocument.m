@@ -641,13 +641,11 @@
 	// correct size we can restore and split view positions. 
 	switch (newPaneNum)
 	{
-		case eFilesView:		[[self theFilesView]       restoreConcertinaSplitViewPositions];
-								[[self theFilesView]       updateFilesViewButtonSelector];			break;
+		case eFilesView:		[[self theFilesView]       restoreConcertinaSplitViewPositions];	break;
         case eHistoryView:      [[self theHistoryView]     restoreConcertinaSplitViewPositions];
 								[[self theHistoryView]     scrollToSelected];						break;
         case eDifferencesView:  [[self theDifferencesView] restoreDifferencesSplitViewPositions];
 								[[self theDifferencesView] scrollToSelected];						break;
-								[[self theDifferencesView] updateFilesViewButtonSelector];			break;
         default:                break;
 	}
 

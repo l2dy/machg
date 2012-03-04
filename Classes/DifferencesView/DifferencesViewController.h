@@ -102,7 +102,6 @@
 - (IBAction)	validateButtons:(id)sender;
 - (void)		prepareToOpenDifferencesView;
 - (IBAction)	refreshDifferencesView:(id)sender;
-- (void)		updateFilesViewButtonSelector;
 - (void)		didSwitchViewTo:(FSViewerNum)viewNumber;
 - (void)		scrollToSelected;
 - (IBAction)	redisplayBrowser:(id)sender;
