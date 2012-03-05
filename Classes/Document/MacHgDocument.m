@@ -2622,15 +2622,20 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 - (CGFloat)splitView:(NSSplitView*)splitView constrainSplitPosition:(CGFloat)proposedPosition		 ofSubviewAt:(NSInteger)dividerIndex	{ return constrainFloat(proposedPosition, 150.0, 400.0); }
 
 - (void) splitView:(NSSplitView*)splitView resizeSubviewsWithOldSize:(NSSize)oldSize
-{	
-	NSRect sidebarGroupFrame	= [sidebarGroup frame];
-	NSRect contentGroupFrame	= [contentGroup frame];
+{
+	NSRect splitViewFrame        = [self frame];
+	NSRect sidebarGroupFrame	 = [sidebarGroup frame];
+	NSRect contentGroupFrame	 = [contentGroup frame];
+	CGFloat dividerThickness     = [self dividerThickness];
 	sidebarGroupFrame.size.width = constrainFloat(sidebarGroupFrame.size.width, 150.0, 400.0);
-	contentGroupFrame.size.width = self.frame.size.width - sidebarGroupFrame.size.width;
-	contentGroupFrame.origin.x = sidebarGroupFrame.size.width;
+	
+	contentGroupFrame.size.width = splitViewFrame.size.width - sidebarGroupFrame.size.width - dividerThickness;
+	contentGroupFrame.origin.x = splitViewFrame.size.width - contentGroupFrame.size.width;
+	sidebarGroupFrame.size.height = splitViewFrame.size.height;
+	contentGroupFrame.size.height = splitViewFrame.size.height;
+	
 	[contentGroup setFrame:contentGroupFrame];
 	[sidebarGroup setFrame:sidebarGroupFrame];
-	[self adjustSubviews];
 }
 
 - (NSRect) splitView:(NSSplitView*)splitView additionalEffectiveRectOfDividerAtIndex:(NSInteger)dividerIndex
