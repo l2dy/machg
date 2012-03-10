@@ -157,6 +157,8 @@
 		currentRegenerationTask_ = currentRegenerationTaskController;
 	}
 	
+	// FIXME deque all old timers for this target and name.
+	// If the webscriptObject is now nil then reload the page.
 	[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(putUpGeneratingDifferencesNotice:) userInfo:currentRegenerationTaskController repeats:NO];
 	dispatch_async(globalQueue(), ^{
 		if ([self taskIsStale:[currentRegenerationTaskController taskNumber]]) return;
