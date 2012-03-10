@@ -15,6 +15,7 @@ table, caption {
 .diff .file {
 	margin: 13px 10px;
 	padding: 10px;
+	min-width : 450px;
 	-webkit-border-radius: 10px;
 	border: 1px solid #CCC;
 	-webkit-box-shadow: 1px 1px 2px #DDD;
