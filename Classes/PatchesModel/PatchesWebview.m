@@ -12,6 +12,31 @@
 #import "MacHgDocument.h"
 
 
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  RegenerationTaskController
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+@implementation RegenerationTaskController
+@synthesize taskNumber = taskNumber_;
+@end
+
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK:  PatchesWebview
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+@interface PatchesWebview (PrivateAPI)
+- (void) redisplayViewForTaskNumber:(NSInteger)taskNumber;
+@end
+
 @implementation PatchesWebview
 
 @synthesize showExternalDiffButton = showExternalDiffButton_;
@@ -49,12 +74,18 @@
 // MARK:  Refreshing and Regeneration
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+- (NSInteger) nextTaskNumber					{ return ++taskNumber_; }
+- (NSInteger) currentTaskNumber					{ return   taskNumber_; }
+- (void) redisplay								{ [self redisplayViewForTaskNumber:taskNumber_]; }
+- (BOOL) taskIsStale:(NSInteger)taskNumber		{ return taskNumber < taskNumber_; }
+- (BOOL) taskIsNotStale:(NSInteger)taskNumber	{ return taskNumber >= taskNumber_; }
+
 - (void) redisplayViewForTaskNumber:(NSInteger)taskNumber
 {
 	if (!backingPatch_)
 	{
 		dispatch_async(mainQueue(), ^{
-			if (taskNumber >= taskNumber_)
+			if ([self taskIsNotStale:taskNumber])
 				[[self windowScriptObject] callWebScriptMethod:@"showMessage" withArguments:[NSArray arrayWithObject:fallbackMessage_]];
 		});
 		return;
@@ -66,7 +97,7 @@
 		if ([htmlizedDiffString length] > DiffDisplaySizeLimitFromDefaults() * 1000000)
 		{
 			dispatch_async(mainQueue(), ^{
-				if (taskNumber >= taskNumber_)
+				if ([self taskIsNotStale:taskNumber])
 					[[self windowScriptObject] callWebScriptMethod:@"showMessage" withArguments:[NSArray arrayWithObject:@"File Differences Size Limit Exceeded…"]];
 			});
 			return;
@@ -77,14 +108,12 @@
 
 		NSArray* showDiffArgs = [NSArray arrayWithObjects:htmlizedDiffString, fstr(@"%f",FontSizeOfDifferencesWebviewFromDefaults()), stringOfDifferencesWebviewDiffStyle(), allowHunkSelection, showExternalDiff, nil];
 		dispatch_async(mainQueue(), ^{
-			if (taskNumber >= taskNumber_)
+			if ([self taskIsNotStale:taskNumber])
 				[[self windowScriptObject] callWebScriptMethod:@"showDiff" withArguments:showDiffArgs];
 		});
 	});	
 }
-- (void) redisplay	{ [self redisplayViewForTaskNumber:taskNumber_]; }
 
-- (NSInteger) nextTaskNumber { return ++taskNumber_; }
 
 - (void) setBackingPatch:(PatchData*)patchData andFallbackMessage:(NSString*)fallbackMessage
 {
@@ -95,12 +124,57 @@
 - (void) setBackingPatch:(PatchData*)patchData andFallbackMessage:(NSString*)fallbackMessage withTaskNumber:(NSInteger)taskNumber
 {
 	[[self windowScriptObject] setValue:self forKey:@"machgWebviewController"];
-	if (taskNumber_ > taskNumber)
+	if ([self taskIsStale:taskNumber])
 		return;
 	fallbackMessage_ = fallbackMessage;
 	backingPatch_ = patchData;
 	repositoryRootForPatch_ = [[parentController myDocument] absolutePathOfRepositoryRoot];
 	[self redisplayViewForTaskNumber: taskNumber];
+}
+
+
+- (void) putUpGeneratingDifferencesNotice:(NSTimer*)theTimer
+{
+	RegenerationTaskController* theRegenerationTaskContoller = [theTimer userInfo];
+	if ([self taskIsStale:[theRegenerationTaskContoller taskNumber]])
+		return;
+	if ([[theRegenerationTaskContoller shellTask] isRunning])
+	{
+		WebScriptObject* script = [self windowScriptObject];
+		[script callWebScriptMethod:@"showGeneratingMessage" withArguments:[NSArray arrayWithObject:@"Generating Differences… "]];
+	}
+}
+
+
+- (void) regenerateDifferencesForSelectedPaths:(NSArray*)selectedPaths andRoot:(NSString*)rootPath
+{
+	RegenerationTaskController* currentRegenerationTaskController = [[RegenerationTaskController alloc]init];
+	@synchronized(self)
+	{
+		[currentRegenerationTaskController setTaskNumber:[self nextTaskNumber]];
+		@try { [[currentRegenerationTask_ shellTask] terminate]; }
+		@catch (NSException * e) { }
+		currentRegenerationTask_ = currentRegenerationTaskController;
+	}
+	
+	[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(putUpGeneratingDifferencesNotice:) userInfo:currentRegenerationTaskController repeats:NO];
+	dispatch_async(globalQueue(), ^{
+		if ([self taskIsStale:[currentRegenerationTaskController taskNumber]]) return;
+
+		NSMutableArray* argsDiff = [NSMutableArray arrayWithObjects:@"diff", nil];
+		[argsDiff addObject:@"--unified" followedBy:fstr(@"%d",NumContextLinesForDifferencesWebviewFromDefaults())];
+		[argsDiff addObjectsFromArray:selectedPaths];
+
+		if ([self taskIsStale:[currentRegenerationTaskController taskNumber]]) return;
+		
+		ExecutionResult* diffResult = [TaskExecutions executeMercurialWithArgs:argsDiff  fromRoot:rootPath logging:eLoggingNone  withDelegate:currentRegenerationTaskController];
+
+		if ([self taskIsStale:[currentRegenerationTaskController taskNumber]]) return;
+
+		PatchData* patchData = IsNotEmpty(diffResult.outStr) ? [PatchData patchDataFromDiffContents:diffResult.outStr] : nil;
+		[[parentController hunkExclusions] updateExclusionsForPatchData:patchData andRoot:rootPath within:selectedPaths];
+		[self setBackingPatch:patchData andFallbackMessage:@"" withTaskNumber:[currentRegenerationTaskController taskNumber]];
+	});	
 }
 
 

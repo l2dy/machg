@@ -595,15 +595,6 @@
 	return [parentController hunkExclusions];
 }
 
-- (void) putUpGeneratingDifferencesNotice:(NSTimer*)theTimer
-{
-	ShellTaskController* theTaskContoller = [theTimer userInfo];
-	if ([[theTaskContoller shellTask] isRunning])
-	{
-		WebScriptObject* script = [detailedPatchesWebView windowScriptObject];
-		[script callWebScriptMethod:@"showGeneratingMessage" withArguments:[NSArray arrayWithObject:@"Generating Differences… "]];
-	}
-}
 
 - (void) regenerateDifferencesInWebview
 {
@@ -623,19 +614,8 @@
 		return;
 	}
 	
-	NSInteger currentTaskNumber = [detailedPatchesWebView nextTaskNumber];
 	NSString* rootPath = [self absolutePathOfRepositoryRoot];
-	NSMutableArray* argsDiff = [NSMutableArray arrayWithObjects:@"diff", nil];
-	[argsDiff addObject:@"--unified" followedBy:fstr(@"%d",NumContextLinesForDifferencesWebviewFromDefaults())];
-	[argsDiff addObjectsFromArray:selectedPaths];
-	ShellTaskController* currentDifferencesTaskController = [[ShellTaskController alloc]init];
-	[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(putUpGeneratingDifferencesNotice:) userInfo:currentDifferencesTaskController repeats:NO];
-	dispatch_async(globalQueue(), ^{
-		ExecutionResult* diffResult = [TaskExecutions executeMercurialWithArgs:argsDiff  fromRoot:rootPath logging:eLoggingNone  withDelegate:currentDifferencesTaskController];
-		PatchData* patchData = IsNotEmpty(diffResult.outStr) ? [PatchData patchDataFromDiffContents:diffResult.outStr] : nil;
-		[[self hunkExclusions] updateExclusionsForPatchData:patchData andRoot:rootPath within:selectedPaths];
-		[detailedPatchesWebView setBackingPatch:patchData andFallbackMessage:@"" withTaskNumber:currentTaskNumber];
-	});
+	[detailedPatchesWebView regenerateDifferencesForSelectedPaths:selectedPaths andRoot:rootPath];
 }
 
 - (void) updateExclusionDataForChangedPaths:(NSArray*)absoluteChangedPaths andRoot:(NSString*)rootPath
