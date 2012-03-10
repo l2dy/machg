@@ -207,6 +207,7 @@
 - (BOOL)		showingFilesOrDifferencesView;
 - (BOOL)		showingFilesOrHistoryOrDifferencesView;
 - (BOOL)		showingASheet;
+- (BOOL)		showingSheetOf:(NSWindowController*)controller;
 - (PaneViewNum)	currentPane;
 - (void)		setCurrentPane:(PaneViewNum)paneNum;
 - (IBAction)	actionSwitchViewToFilesView:(id)sender;
@@ -406,7 +407,7 @@
 - (BOOL)		primaryActionIgnoreSelectedFiles:(NSArray*)theSelectedFiles;
 - (BOOL)		primaryActionUnignoreSelectedFiles:(NSArray*)theSelectedFiles;
 - (BOOL)		primaryActionAnnotateSelectedFiles:(NSArray*)theSelectedFiles;
-- (BOOL)		primaryActionUpdateFilesToVersion:(NSNumber*)version withCleanOption:(BOOL)clean;
+- (BOOL)		primaryActionUpdateFilesToVersion:(NSNumber*)version withCleanOption:(BOOL)clean withConfirmation:(BOOL)confirm;
 - (BOOL)		primaryActionBackoutFilesToVersion:(NSNumber*)version;
 - (BOOL)		primaryActionMergeWithVersion:(NSNumber*)mergeVersion andOptions:(NSArray*)options withConfirmation:(BOOL)confirm;
 - (void)		primaryActionDisplayManifestForVersion:(NSNumber*)version;

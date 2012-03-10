@@ -671,6 +671,7 @@
 - (BOOL)	showingFilesOrDifferencesView					{ return currentPane_ == eFilesView || currentPane_ == eDifferencesView; }
 - (BOOL)	showingFilesOrHistoryOrDifferencesView			{ return currentPane_ == eFilesView || currentPane_ == eHistoryView || currentPane_ == eDifferencesView; }
 - (BOOL)	showingASheet									{ return shownSheet_ != nil; }
+- (BOOL)	showingSheetOf:(NSWindowController*)controller	{ return shownSheet_ && ([controller window] == shownSheet_); }
 
 
 - (IBAction) actionSwitchViewToFilesView:(id)sender			{ [self setCurrentPane:eFilesView]; }
@@ -1138,7 +1139,7 @@
 // MARK: All Files Menu Actions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (IBAction) mainMenuUpdateRepository:(id)sender				{ [self primaryActionUpdateFilesToVersion:[self getHGTipRevision] withCleanOption:NO]; }
+- (IBAction) mainMenuUpdateRepository:(id)sender				{ [self primaryActionUpdateFilesToVersion:[self getHGTipRevision] withCleanOption:NO withConfirmation:YES]; }
 - (IBAction) mainMenuUpdateRepositoryToVersion:(id)sender		{ [[self theUpdateSheetController] openUpdateSheetWithSelectedRevision:sender]; }
 - (IBAction) toolbarUpdate:(id)sender							{ [[self theUpdateSheetController] openUpdateSheetWithSelectedRevision:sender]; }
 
@@ -2160,10 +2161,10 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 }
 
 
-- (BOOL) primaryActionUpdateFilesToVersion:(NSNumber*)version withCleanOption:(BOOL)clean
+- (BOOL) primaryActionUpdateFilesToVersion:(NSNumber*)version withCleanOption:(BOOL)clean withConfirmation:(BOOL)confirm
 {
 	BOOL containsChangedFiles = [self repositoryHasFilesWhichContainStatus:eHGStatusCommittable];
-	if (DisplayWarningForUpdatingFromDefaults() || [self repositoryHasFilesWhichContainStatus:eHGStatusCommittable])
+	if ((confirm && DisplayWarningForUpdatingFromDefaults()) || containsChangedFiles)
 	{
 		NSString* mainMessage = @"Updating All Files";
 		NSString* subMessage  = fstr( @"Are you sure you want to update the repository “%@” to revision “%@”?",
@@ -2172,8 +2173,11 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 		if (containsChangedFiles)
 			subMessage = fstr(@"There are uncommitted changes. %@", subMessage);
 		
-		NSAlert* alert = NewAlertPanel(mainMessage, subMessage, @"Update", @"Cancel", @"Options…");
+		BOOL showingUpdateSheet = [self showingSheetOf:[self theUpdateSheetController]];
+		NSString* thirdButton = showingUpdateSheet ? nil : @"Options…";
+		NSAlert* alert = NewAlertPanel(mainMessage, subMessage, @"Update", @"Cancel", thirdButton);
 		[updateAlertAccessoryCleanCheckBox setState:clean];
+		[updateAlertAccessoryAlertSuppressionCheckBox setHidden:containsChangedFiles];
 		[updateAlertAccessoryAlertSuppressionCheckBox setState:NO];
 		[alert setAccessoryView:updateAlertAccessoryView];
 		int result = [alert runModal];

@@ -236,7 +236,7 @@
 - (IBAction) historyMenuUpdateRepositoryToChosenRevision:(id)sender
 {
 	NSNumber* theSelectedRevision = [[logTableView chosenEntry] revision];
-	[myDocument primaryActionUpdateFilesToVersion:theSelectedRevision withCleanOption:NO];
+	[myDocument primaryActionUpdateFilesToVersion:theSelectedRevision withCleanOption:NO withConfirmation:YES];
 }
 
 - (IBAction) historyMenuGotoChangeset:(id)sender
@@ -388,7 +388,7 @@
 			}
 			if (![[[myDocument repositoryData] getHGParent1Revision] isEqualToNumber:rev])
 			{
-				BOOL didUpdateToReversion = [myDocument primaryActionUpdateFilesToVersion:rev withCleanOption:NO];
+				BOOL didUpdateToReversion = [myDocument primaryActionUpdateFilesToVersion:rev withCleanOption:NO withConfirmation:YES];
 				if (!didUpdateToReversion)
 					return;
 			}
@@ -407,7 +407,7 @@
 {
 	LabelData* label = [theLabelsTableView_ chosenLabel];
 	[[[myDocument theHistoryView] logTableView] scrollToRevision:[label revision]];
-	[myDocument primaryActionUpdateFilesToVersion:[label revision] withCleanOption:NO];
+	[myDocument primaryActionUpdateFilesToVersion:[label revision] withCleanOption:NO withConfirmation:YES];
 }
 
 

@@ -102,7 +102,7 @@
 - (IBAction) sheetButtonOk:(id)sender
 {
 	NSNumber* versionToUpdateTo = [logTableView selectedRevision];
-	BOOL didReversion = [myDocument primaryActionUpdateFilesToVersion:versionToUpdateTo withCleanOption:[self cleanUpdate]];
+	BOOL didReversion = [myDocument primaryActionUpdateFilesToVersion:versionToUpdateTo withCleanOption:[self cleanUpdate] withConfirmation:NO];
 	if (!didReversion)
 		return;
 

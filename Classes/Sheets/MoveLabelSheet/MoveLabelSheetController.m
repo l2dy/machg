@@ -107,7 +107,7 @@
 		{
 			if (![versionToRevertTo isEqualToNumber:[[myDocument repositoryData] getHGParent1Revision]])
 			{
-				BOOL updatedToTagetRev = [myDocument primaryActionUpdateFilesToVersion:versionToRevertTo withCleanOption:NO];
+				BOOL updatedToTagetRev = [myDocument primaryActionUpdateFilesToVersion:versionToRevertTo withCleanOption:NO withConfirmation:YES];
 				if (!updatedToTagetRev)
 					bailEarly = YES;
 			}
