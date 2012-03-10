@@ -62,7 +62,7 @@
         [super setBackgroundColor:[NSColor clearColor]];
         [self setMovableByWindowBackground:NO];
         [self setExcludedFromWindowsMenu:YES];
-        [self setAlphaValue:1.0];
+        [self setAlphaValue:0.9];
         [self setOpaque:NO];
         [self setHasShadow:YES];
         [self useOptimizedDrawing:YES];
