@@ -87,6 +87,7 @@
 
 @interface StatusSidebarSplitView : NSSplitView <NSSplitViewDelegate, NSAnimationDelegate>
 {
+	IBOutlet FilesView*		parentView;
 	IBOutlet NSView*		theContent;
 	IBOutlet NSView*		theSidebar;
 

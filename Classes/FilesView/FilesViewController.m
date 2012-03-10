@@ -422,6 +422,8 @@ const CGFloat  expandedWidth = 148;	// This is the width of the view in its expa
 
 @implementation StatusSidebarSplitView
 
+- (NSString*) isMinimizedAutoSaveName { return fstr(@"File:%@:StatusSidebarIsMinimized", [[parentView myDocument] documentNameForAutosave]); }
+
 - (void) awakeFromNib
 {
 	[self setDelegate:self];
@@ -433,7 +435,11 @@ const CGFloat  expandedWidth = 148;	// This is the width of the view in its expa
 	[viewAnimation setAnimationCurve:NSAnimationEaseInOut];
 	[viewAnimation setDelegate:self];
 	
-	[self maximize:self];
+	BOOL shouldBeMinimized = [[NSUserDefaults standardUserDefaults] boolForKey:[self isMinimizedAutoSaveName]];
+	if (shouldBeMinimized)
+		[self minimize:self];
+	else
+		[self maximize:self];
 }
 
 - (CGFloat) targetDividerPosition					{ return self.frame.size.width - (minimized ? collapsedWidth : expandedWidth); }
@@ -470,6 +476,7 @@ const CGFloat  expandedWidth = 148;	// This is the width of the view in its expa
 
 - (IBAction) maximize:(id)sender
 {
+	[[NSUserDefaults standardUserDefaults] setBool:NO  forKey:[self isMinimizedAutoSaveName]];
 	if (!minimized)
 		return;
 
@@ -485,6 +492,7 @@ const CGFloat  expandedWidth = 148;	// This is the width of the view in its expa
 
 - (IBAction) minimize:(id)sender
 {
+	[[NSUserDefaults standardUserDefaults] setBool:YES  forKey:[self isMinimizedAutoSaveName]];
 	if (minimized)
 		return;
 

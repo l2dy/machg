@@ -11,12 +11,12 @@
       <string key="com.apple.WebKitIBPlugin">851</string>
     </dictionary>
     <array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-      <integer value="201"/>
-      <integer value="419"/>
-      <integer value="184"/>
       <integer value="316"/>
-      <integer value="190"/>
       <integer value="230"/>
+      <integer value="419"/>
+      <integer value="190"/>
+      <integer value="184"/>
+      <integer value="201"/>
     </array>
     <array key="IBDocument.PluginDependencies">
       <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -3546,6 +3546,14 @@
           </object>
           <int key="connectionID">541</int>
         </object>
+        <object class="IBConnectionRecord">
+          <object class="IBOutletConnection" key="connection">
+            <string key="label">parentView</string>
+            <reference key="source" ref="460990162"/>
+            <reference key="destination" ref="453712496"/>
+          </object>
+          <int key="connectionID">542</int>
+        </object>
       </array>
       <object class="IBMutableOrderedSet" key="objectRecords">
         <array key="orderedObjects">
@@ -5229,7 +5237,7 @@
       <nil key="activeLocalization"/>
       <dictionary class="NSMutableDictionary" key="localizations"/>
       <nil key="sourceID"/>
-      <int key="maxID">541</int>
+      <int key="maxID">542</int>
     </object>
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -6519,6 +6527,7 @@
           <dictionary class="NSMutableDictionary" key="outlets">
             <string key="dividerStatusBox">NSBox</string>
             <string key="expandedStatusSidebarGroup">NSView</string>
+            <string key="parentView">FilesView</string>
             <string key="statusSidebarContent">NSBox</string>
             <string key="theContent">NSView</string>
             <string key="theSidebar">NSView</string>
@@ -6532,6 +6541,10 @@
             <object class="IBToOneOutletInfo" key="expandedStatusSidebarGroup">
               <string key="name">expandedStatusSidebarGroup</string>
               <string key="candidateClassName">NSView</string>
+            </object>
+            <object class="IBToOneOutletInfo" key="parentView">
+              <string key="name">parentView</string>
+              <string key="candidateClassName">FilesView</string>
             </object>
             <object class="IBToOneOutletInfo" key="statusSidebarContent">
               <string key="name">statusSidebarContent</string>
