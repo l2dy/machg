@@ -117,19 +117,23 @@
 
 - (void) setBackingPatch:(PatchData*)patchData andFallbackMessage:(NSString*)fallbackMessage
 {
-	[[self windowScriptObject] setValue:self forKey:@"machgWebviewController"];
-	[self setBackingPatch:patchData andFallbackMessage:fallbackMessage withTaskNumber:[self nextTaskNumber]];
+	dispatch_async(mainQueue(), ^{
+		[[self windowScriptObject] setValue:self forKey:@"machgWebviewController"];
+		[self setBackingPatch:patchData andFallbackMessage:fallbackMessage withTaskNumber:[self nextTaskNumber]];
+	});
 }
 
 - (void) setBackingPatch:(PatchData*)patchData andFallbackMessage:(NSString*)fallbackMessage withTaskNumber:(NSInteger)taskNumber
 {
-	[[self windowScriptObject] setValue:self forKey:@"machgWebviewController"];
-	if ([self taskIsStale:taskNumber])
-		return;
-	fallbackMessage_ = fallbackMessage;
-	backingPatch_ = patchData;
-	repositoryRootForPatch_ = [[parentController myDocument] absolutePathOfRepositoryRoot];
-	[self redisplayViewForTaskNumber: taskNumber];
+	dispatch_async(mainQueue(), ^{
+		[[self windowScriptObject] setValue:self forKey:@"machgWebviewController"];
+		if ([self taskIsStale:taskNumber])
+			return;
+		fallbackMessage_ = fallbackMessage;
+		backingPatch_ = patchData;
+		repositoryRootForPatch_ = [[parentController myDocument] absolutePathOfRepositoryRoot];
+		[self redisplayViewForTaskNumber: taskNumber];
+	});
 }
 
 
@@ -139,10 +143,10 @@
 	if ([self taskIsStale:[theRegenerationTaskContoller taskNumber]])
 		return;
 	if ([[theRegenerationTaskContoller shellTask] isRunning])
-	{
-		WebScriptObject* script = [self windowScriptObject];
-		[script callWebScriptMethod:@"showGeneratingMessage" withArguments:[NSArray arrayWithObject:@"Generating Differences… "]];
-	}
+		dispatch_async(mainQueue(), ^{
+			WebScriptObject* script = [self windowScriptObject];
+			[script callWebScriptMethod:@"showGeneratingMessage" withArguments:[NSArray arrayWithObject:@"Generating Differences… "]];
+		});
 }
 
 
@@ -201,14 +205,18 @@
 
 - (void) hunkWasExcluded:(NSNotification*)notification
 {
-	NSString* hunkHash = [[notification userInfo] objectForKey:kHunkHash];
-	[[self windowScriptObject] callWebScriptMethod:@"excludeViewHunkStatus" withArguments:[NSArray arrayWithObject:hunkHash]];
+	dispatch_async(mainQueue(), ^{
+		NSString* hunkHash = [[notification userInfo] objectForKey:kHunkHash];
+		[[self windowScriptObject] callWebScriptMethod:@"excludeViewHunkStatus" withArguments:[NSArray arrayWithObject:hunkHash]];
+	});
 }
 
 - (void) hunkWasIncluded:(NSNotification*)notification
 {
-	NSString* hunkHash = [[notification userInfo] objectForKey:kHunkHash];
-	[[self windowScriptObject] callWebScriptMethod:@"inludeViewHunkStatus" withArguments:[NSArray arrayWithObject:hunkHash]];
+	dispatch_async(mainQueue(), ^{
+		NSString* hunkHash = [[notification userInfo] objectForKey:kHunkHash];
+		[[self windowScriptObject] callWebScriptMethod:@"inludeViewHunkStatus" withArguments:[NSArray arrayWithObject:hunkHash]];
+	});
 }
 
 - (void) fileWasExcluded:(NSNotification*)notification
@@ -218,9 +226,11 @@
 	if (!filePatch)
 		return;
 	
-	NSSet* hunkExclusionSet = [[parentController hunkExclusions] hunkExclusionSetForRoot:repositoryRootForPatch_ andFile:fileName];
-	for (NSString* hunkHash in hunkExclusionSet)
-		[[self windowScriptObject] callWebScriptMethod:@"excludeViewHunkStatus" withArguments:[NSArray arrayWithObject:hunkHash]];
+	dispatch_async(mainQueue(), ^{
+		NSSet* hunkExclusionSet = [[parentController hunkExclusions] hunkExclusionSetForRoot:repositoryRootForPatch_ andFile:fileName];
+		for (NSString* hunkHash in hunkExclusionSet)
+			[[self windowScriptObject] callWebScriptMethod:@"excludeViewHunkStatus" withArguments:[NSArray arrayWithObject:hunkHash]];
+	});
 }
 
 - (void) fileWasIncluded:(NSNotification*)notification
@@ -229,10 +239,12 @@
 	FilePatch* filePatch = [backingPatch_ filePatchForFilePath:fileName];
 	if (!filePatch)
 		return;
-	
-	NSSet* validHunkHashSet = [[parentController hunkExclusions] validHunkHashSetForRoot:repositoryRootForPatch_ andFile:fileName];
-	for (NSString* hunkHash in validHunkHashSet)
-		[[self windowScriptObject] callWebScriptMethod:@"includeViewHunkStatus" withArguments:[NSArray arrayWithObject:hunkHash]];
+
+	dispatch_async(mainQueue(), ^{
+		NSSet* validHunkHashSet = [[parentController hunkExclusions] validHunkHashSetForRoot:repositoryRootForPatch_ andFile:fileName];
+		for (NSString* hunkHash in validHunkHashSet)
+			[[self windowScriptObject] callWebScriptMethod:@"includeViewHunkStatus" withArguments:[NSArray arrayWithObject:hunkHash]];
+	});
 }
 
 
@@ -264,14 +276,16 @@
 {
 	if ([[parentController myDocument] inMergeState])
 		return;
-	WebScriptObject* script = [self windowScriptObject];
-	for (FilePatch* filePatch in [backingPatch_ filePatches])
-	{
-		NSString* path = [filePatch filePath];
-		NSSet* hunkExclusionSet = [[parentController hunkExclusions] hunkExclusionSetForRoot:repositoryRootForPatch_ andFile:path];
-		for (NSString* hunkHash in hunkExclusionSet)
-			[script callWebScriptMethod:@"excludeViewHunkStatus" withArguments:[NSArray arrayWithObject:hunkHash]];
-	}
+	dispatch_async(mainQueue(), ^{
+		WebScriptObject* script = [self windowScriptObject];
+		for (FilePatch* filePatch in [backingPatch_ filePatches])
+		{
+			NSString* path = [filePatch filePath];
+			NSSet* hunkExclusionSet = [[parentController hunkExclusions] hunkExclusionSetForRoot:repositoryRootForPatch_ andFile:path];
+			for (NSString* hunkHash in hunkExclusionSet)
+				[script callWebScriptMethod:@"excludeViewHunkStatus" withArguments:[NSArray arrayWithObject:hunkHash]];
+		}
+	});
 }
 
 - (void) doExternalDiffOfFile:(NSString*)fileName 

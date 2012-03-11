@@ -609,19 +609,21 @@
 	if (parentConcertinaView && [parentConcertinaView isSubviewCollapsed:subView])
 		return;
 
-	WebScriptObject* script = [detailedPatchesWebView windowScriptObject];
-	[script setValue:self forKey:@"machgWebviewController"];
-	[script callWebScriptMethod:@"changeFontSizeOfDiff" withArguments:[NSArray arrayWithObject:fstr(@"%f",FontSizeOfDifferencesWebviewFromDefaults())]];
+	dispatch_async(mainQueue(), ^{
+		WebScriptObject* script = [detailedPatchesWebView windowScriptObject];
+		[script setValue:self forKey:@"machgWebviewController"];
+		[script callWebScriptMethod:@"changeFontSizeOfDiff" withArguments:[NSArray arrayWithObject:fstr(@"%f",FontSizeOfDifferencesWebviewFromDefaults())]];
+			
+		NSArray* selectedPaths = [self absolutePathsOfSelectedFilesInBrowser];
+		if (IsEmpty(selectedPaths))
+		{
+			[detailedPatchesWebView setBackingPatch:nil andFallbackMessage:@""];
+			return;
+		}
 		
-	NSArray* selectedPaths = [self absolutePathsOfSelectedFilesInBrowser];
-	if (IsEmpty(selectedPaths))
-	{
-		[detailedPatchesWebView setBackingPatch:nil andFallbackMessage:@""];
-		return;
-	}
-	
-	NSString* rootPath = [self absolutePathOfRepositoryRoot];
-	[detailedPatchesWebView regenerateDifferencesForSelectedPaths:selectedPaths andRoot:rootPath];
+		NSString* rootPath = [self absolutePathOfRepositoryRoot];
+		[detailedPatchesWebView regenerateDifferencesForSelectedPaths:selectedPaths andRoot:rootPath];
+	});
 }
 
 - (void) updateExclusionDataForChangedPaths:(NSArray*)absoluteChangedPaths andRoot:(NSString*)rootPath
