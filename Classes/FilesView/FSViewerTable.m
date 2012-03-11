@@ -185,7 +185,6 @@
 - (void) restoreViewerSelectionState:(FSViewerSelectionState*)savedState
 {
 	NSArray* savedSelectedPaths            = [savedState savedSelectedPaths];
-	BOOL     restoreFirstResponderToViewer = [savedState restoreFirstResponderToViewer];
 	NSValue* savedScrollPositionValue	   = [[savedState savedColumnScrollPositions] firstObject];
 	FSNodeInfo* rootNode				   = [parentViewer_ rootNodeInfo];
 	
@@ -210,9 +209,6 @@
 		NSUInteger row = [rowsToBeSelected firstIndex];
 		[self scrollRowToVisible:row];
 	}
-	
-	if (restoreFirstResponderToViewer)
-		[[self window] makeFirstResponder:self];	
 }
 
 
