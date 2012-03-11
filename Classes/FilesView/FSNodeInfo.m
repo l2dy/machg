@@ -290,7 +290,8 @@
 
 + (NSImage*) compositeRowOfIcons:(NSArray*)icons withOverlap:(CGFloat)overlap
 {
-	CGFloat hsize = ICON_SIZE + ceil(ICON_SIZE * ([icons count] - 1)/overlap);
+	NSInteger adjustedIconCount = MAX([icons count] - 1, 0);
+	CGFloat hsize = ceil(ICON_SIZE * (1 + adjustedIconCount / overlap));
 	NSImage* combinedImage = [[NSImage alloc] initWithSize:NSMakeSize(hsize,  ICON_SIZE)];
 	NSRect imageFrame = NSMakeRect(0, 0, ICON_SIZE, ICON_SIZE);
 	[combinedImage lockFocus];
