@@ -96,6 +96,20 @@
 	return nil;
 }
 
+- (NSInteger) indexOfNode:(FSNodeInfo*)node
+{
+	@try
+	{
+		return [[self leafNodeForTableRow ] indexOfObject:node];
+	}
+	@catch (NSException* ne)
+	{
+		return NSNotFound;
+	}
+	return NSNotFound;
+}
+
+
 - (BOOL)		nodesAreSelected			{ return IsNotEmpty([self selectedRowIndexes]); }
 - (BOOL)		nodeIsClicked				{ return [self clickedRow] != -1; }
 - (BOOL)		nodesAreChosen				{ return [self nodeIsClicked] || [self nodesAreSelected]; }
@@ -130,7 +144,7 @@
 
 - (NSRect)	rectInWindowForNode:(FSNodeInfo*)node
 {
-	NSInteger row = [[self leafNodeForTableRow ] indexOfObject:node];
+	NSInteger row = [self indexOfNode:node];
 	NSRect itemRect = (row != NSNotFound) ? [self rectOfRow:row] : NSZeroRect;	
 	
 	// check that the path Rect is visible on screen
@@ -139,10 +153,67 @@
 	return NSZeroRect;
 }
 
-// Save and restore browser, outline, or table state
-- (FSViewerSelectionState*)	saveViewerSelectionState								{ return [[FSViewerSelectionState alloc]init]; }
-- (void)					restoreViewerSelectionState:(FSViewerSelectionState*)savedState {}
 
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Save and Restore Table state
+// -----------------------------------------------------------------------------------------------------------------------------------------
+
+// Save and restore browser, outline, or table state
+- (FSViewerSelectionState*)	saveViewerSelectionState
+{
+	FSViewerSelectionState* newSavedState = [[FSViewerSelectionState alloc] init];
+	
+	NSArray* selectedPaths = [parentViewer_ absolutePathsOfSelectedFilesInBrowser];
+	BOOL restoreFirstResponderToViewer = [[[parentViewer_ parentWindow] firstResponder] hasAncestor:self];
+	
+	NSScrollView* enclosingSV = [self enclosingScrollView];
+	NSPoint currentScrollPosition = [[enclosingSV contentView] bounds].origin;
+	NSValue* scrollPositionAsValue = [NSValue valueWithPoint:currentScrollPosition];
+	
+	// Save the selectedPaths
+	newSavedState.savedColumnScrollPositions = [NSMutableArray arrayWithObject:scrollPositionAsValue];
+	newSavedState.savedSelectedPaths = selectedPaths;
+	newSavedState.restoreFirstResponderToViewer = restoreFirstResponderToViewer;
+	
+	return newSavedState;
+}
+
+- (void) restoreViewerSelectionState:(FSViewerSelectionState*)savedState
+{
+	NSArray* savedSelectedPaths            = [savedState savedSelectedPaths];
+	BOOL     restoreFirstResponderToViewer = [savedState restoreFirstResponderToViewer];
+	NSValue* savedScrollPositionValue	   = [[savedState savedColumnScrollPositions] firstObject];
+	FSNodeInfo* rootNode				   = [parentViewer_ rootNodeInfo];
+	
+	// restore the selection
+	NSMutableIndexSet* rowsToBeSelected = [[NSMutableIndexSet alloc]init];	
+	for (NSString* path in savedSelectedPaths)
+	{
+		FSNodeInfo* item = [rootNode nodeForPathFromRoot:path];
+		NSInteger row = item ? [self indexOfNode:item] : NSNotFound;
+		if (row != NSNotFound)
+			[rowsToBeSelected addIndex:row];
+	}
+	[self selectRowIndexes:rowsToBeSelected byExtendingSelection:NO];
+	
+	if (savedScrollPositionValue)
+	{
+		NSScrollView* enclosingSV = [self enclosingScrollView];
+		[[enclosingSV documentView] scrollPoint:[savedScrollPositionValue pointValue]];
+	}
+	if ([rowsToBeSelected count]>0)
+	{
+		NSUInteger row = [rowsToBeSelected firstIndex];
+		[self scrollRowToVisible:row];
+	}
+	
+	if (restoreFirstResponderToViewer)
+		[[self window] makeFirstResponder:self];	
+}
 
 
 
