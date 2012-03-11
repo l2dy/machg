@@ -11,12 +11,12 @@
       <string key="com.apple.WebKitIBPlugin">851</string>
     </dictionary>
     <array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-      <integer value="316"/>
-      <integer value="230"/>
+      <integer value="193"/>
       <integer value="419"/>
+      <integer value="316"/>
       <integer value="190"/>
-      <integer value="184"/>
       <integer value="201"/>
+      <integer value="184"/>
     </array>
     <array key="IBDocument.PluginDependencies">
       <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -520,18 +520,18 @@
               <object class="NSButton" id="14107649">
                 <reference key="NSNextResponder" ref="310906602"/>
                 <int key="NSvFlags">289</int>
-                <string key="NSFrame">{{802, 4}, {14, 14}}</string>
+                <string key="NSFrame">{{803, 5}, {12, 14}}</string>
                 <reference key="NSSuperview" ref="310906602"/>
                 <string key="NSReuseIdentifierKey">_NS:4117</string>
                 <bool key="NSEnabled">YES</bool>
                 <object class="NSButtonCell" key="NSCell" id="283891816">
-                  <int key="NSCellFlags">67239424</int>
+                  <int key="NSCellFlags">-2080244224</int>
                   <int key="NSCellFlags2">134217728</int>
                   <string key="NSContents"/>
                   <reference key="NSSupport" ref="868302081"/>
                   <string key="NSCellIdentifier">_NS:4117</string>
                   <reference key="NSControlView" ref="14107649"/>
-                  <int key="NSButtonFlags">-2033958657</int>
+                  <int key="NSButtonFlags">-2042347265</int>
                   <int key="NSButtonFlags2">162</int>
                   <object class="NSCustomResource" key="NSNormalImage">
                     <string key="NSClassName">NSImage</string>
@@ -7487,7 +7487,7 @@
       <string key="NSMenuCheckmark">{9, 8}</string>
       <string key="NSMenuMixedState">{7, 2}</string>
       <string key="NSSwitch">{15, 15}</string>
-      <string key="SidebarClose">{5, 8}</string>
+      <string key="SidebarClose">{11, 12}</string>
       <string key="StatusAdded">{16, 16}</string>
       <string key="StatusIgnored">{16, 16}</string>
       <string key="StatusMissing">{16, 16}</string>
