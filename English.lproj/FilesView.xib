@@ -11,12 +11,10 @@
       <string key="com.apple.WebKitIBPlugin">851</string>
     </dictionary>
     <array class="NSMutableArray" key="IBDocument.EditedObjectIDs">
-      <integer value="193"/>
-      <integer value="419"/>
-      <integer value="316"/>
       <integer value="190"/>
       <integer value="201"/>
-      <integer value="184"/>
+      <integer value="193"/>
+      <integer value="419"/>
     </array>
     <array key="IBDocument.PluginDependencies">
       <string>com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -312,7 +310,7 @@
         </array>
       </object>
       <object class="NSBox" id="264801874">
-        <reference key="NSNextResponder"/>
+        <nil key="NSNextResponder"/>
         <int key="NSvFlags">4114</int>
         <array class="NSMutableArray" key="NSSubviews">
           <object class="NSView" id="710521415">
@@ -324,7 +322,6 @@
           </object>
         </array>
         <string key="NSFrameSize">{713, 610}</string>
-        <reference key="NSSuperview"/>
         <string key="NSReuseIdentifierKey">_NS:18</string>
         <string key="NSOffsets">{0, 0}</string>
         <object class="NSTextFieldCell" key="NSTitleCell">
@@ -492,7 +489,7 @@
                     <reference key="NSSuperview" ref="799351168"/>
                   </object>
                 </array>
-                <string key="NSFrame">{{595, 1}, {203, 22}}</string>
+                <string key="NSFrame">{{557, 1}, {203, 22}}</string>
                 <reference key="NSSuperview" ref="310906602"/>
                 <string key="NSOffsets">{0, 0}</string>
                 <object class="NSTextFieldCell" key="NSTitleCell">
@@ -583,6 +580,65 @@
                   <reference key="NSBackgroundColor" ref="611171074"/>
                   <reference key="NSTextColor" ref="1003921959"/>
                 </object>
+              </object>
+              <object class="NSBox" id="931445891">
+                <reference key="NSNextResponder" ref="310906602"/>
+                <int key="NSvFlags">9</int>
+                <array class="NSMutableArray" key="NSSubviews">
+                  <object class="NSView" id="22803807">
+                    <reference key="NSNextResponder" ref="931445891"/>
+                    <int key="NSvFlags">274</int>
+                    <array class="NSMutableArray" key="NSSubviews">
+                      <object class="NSButton" id="149719317">
+                        <reference key="NSNextResponder" ref="22803807"/>
+                        <int key="NSvFlags">268</int>
+                        <string key="NSFrame">{{0, -2}, {34, 26}}</string>
+                        <reference key="NSSuperview" ref="22803807"/>
+                        <bool key="NSEnabled">YES</bool>
+                        <object class="NSButtonCell" key="NSCell" id="539869497">
+                          <int key="NSCellFlags">-2080244224</int>
+                          <int key="NSCellFlags2">134217728</int>
+                          <string key="NSContents"/>
+                          <reference key="NSSupport" ref="868302081"/>
+                          <reference key="NSControlView" ref="149719317"/>
+                          <int key="NSButtonFlags">-2033434369</int>
+                          <int key="NSButtonFlags2">162</int>
+                          <object class="NSCustomResource" key="NSNormalImage">
+                            <string key="NSClassName">NSImage</string>
+                            <string key="NSResourceName">ForceUpdate</string>
+                          </object>
+                          <string key="NSAlternateContents"/>
+                          <string key="NSKeyEquivalent"/>
+                          <int key="NSPeriodicDelay">400</int>
+                          <int key="NSPeriodicInterval">75</int>
+                        </object>
+                      </object>
+                    </array>
+                    <string key="NSFrameSize">{41, 22}</string>
+                    <reference key="NSSuperview" ref="931445891"/>
+                  </object>
+                </array>
+                <string key="NSFrame">{{761, 1}, {41, 22}}</string>
+                <reference key="NSSuperview" ref="310906602"/>
+                <string key="NSOffsets">{0, 0}</string>
+                <object class="NSTextFieldCell" key="NSTitleCell">
+                  <int key="NSCellFlags">67239424</int>
+                  <int key="NSCellFlags2">0</int>
+                  <string key="NSContents">Box</string>
+                  <reference key="NSSupport" ref="26"/>
+                  <reference key="NSBackgroundColor" ref="401672922"/>
+                  <object class="NSColor" key="NSTextColor">
+                    <int key="NSColorSpace">3</int>
+                    <bytes key="NSWhite">MCAwLjgwMDAwMDAxMTkAA</bytes>
+                  </object>
+                </object>
+                <reference key="NSContentView" ref="22803807"/>
+                <int key="NSBorderType">1</int>
+                <int key="NSBoxType">4</int>
+                <int key="NSTitlePosition">0</int>
+                <bool key="NSTransparent">NO</bool>
+                <real value="0.0" key="NSBorderWidth2"/>
+                <reference key="NSBorderColor2" ref="981718467"/>
               </object>
               <object class="NSBox" id="417462929">
                 <reference key="NSNextResponder" ref="310906602"/>
@@ -926,7 +982,7 @@
         </object>
       </object>
       <object class="NSCustomView" id="962846676">
-        <reference key="NSNextResponder"/>
+        <nil key="NSNextResponder"/>
         <int key="NSvFlags">268</int>
         <array class="NSMutableArray" key="NSSubviews">
           <object class="NSImageView" id="584848945">
@@ -1534,7 +1590,6 @@
           </object>
         </array>
         <string key="NSFrameSize">{148, 543}</string>
-        <reference key="NSSuperview"/>
         <string key="NSReuseIdentifierKey">_NS:1109</string>
         <string key="NSClassName">NSView</string>
       </object>
@@ -3554,6 +3609,14 @@
           </object>
           <int key="connectionID">542</int>
         </object>
+        <object class="IBConnectionRecord">
+          <object class="IBActionConnection" key="connection">
+            <string key="label">forceRefreshFSViewer:</string>
+            <reference key="source" ref="264801874"/>
+            <reference key="destination" ref="149719317"/>
+          </object>
+          <int key="connectionID">556</int>
+        </object>
       </array>
       <object class="IBMutableOrderedSet" key="objectRecords">
         <array key="orderedObjects">
@@ -3738,6 +3801,7 @@
               <reference ref="799351168"/>
               <reference ref="14107649"/>
               <reference ref="167676203"/>
+              <reference ref="931445891"/>
             </array>
             <reference key="parent" ref="0"/>
             <string key="objectName">Concertina Divider1</string>
@@ -4838,6 +4902,28 @@
             <reference key="object" ref="209324092"/>
             <reference key="parent" ref="584848945"/>
           </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">543</int>
+            <reference key="object" ref="931445891"/>
+            <array class="NSMutableArray" key="children">
+              <reference ref="149719317"/>
+            </array>
+            <reference key="parent" ref="156105479"/>
+            <string key="objectName">DividerForceUpdateGroup</string>
+          </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">545</int>
+            <reference key="object" ref="149719317"/>
+            <array class="NSMutableArray" key="children">
+              <reference ref="539869497"/>
+            </array>
+            <reference key="parent" ref="931445891"/>
+          </object>
+          <object class="IBObjectRecord">
+            <int key="objectID">548</int>
+            <reference key="object" ref="539869497"/>
+            <reference key="parent" ref="149719317"/>
+          </object>
         </array>
       </object>
       <dictionary class="NSMutableDictionary" key="flattenedProperties">
@@ -4886,7 +4972,7 @@
         <object class="NSAffineTransform" key="190.IBViewBoundsToFrameTransform">
           <bytes key="NSTransformStruct">P4AAAL+AAAAAAAAAxEUAAA</bytes>
         </object>
-        <string key="193.IBEditorWindowLastContentRect">{{126, 972}, {824, 24}}</string>
+        <string key="193.IBEditorWindowLastContentRect">{{98, 838}, {824, 24}}</string>
         <string key="193.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <object class="NSAffineTransform" key="193.IBViewBoundsToFrameTransform"/>
         <string key="194.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
@@ -4924,7 +5010,7 @@
         <string key="23.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="230.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <object class="NSAffineTransform" key="230.IBViewBoundsToFrameTransform">
-          <bytes key="NSTransformStruct">AUJwAAA/gAAAA</bytes>
+          <bytes key="NSTransformStruct">AUKGAAA/gAAAA</bytes>
         </object>
         <object class="NSMutableDictionary" key="231.IBAttributePlaceholdersKey">
           <string key="NS.key.0">ToolTip</string>
@@ -5214,6 +5300,23 @@
           <bytes key="NSTransformStruct">AUGgAABBoAAAA</bytes>
         </object>
         <string key="540.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+        <string key="543.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+        <object class="NSAffineTransform" key="543.IBViewBoundsToFrameTransform">
+          <bytes key="NSTransformStruct">AUJwAAA/gAAAA</bytes>
+        </object>
+        <object class="NSMutableDictionary" key="545.IBAttributePlaceholdersKey">
+          <string key="NS.key.0">ToolTip</string>
+          <object class="IBToolTipAttribute" key="NS.object.0">
+            <string key="name">ToolTip</string>
+            <reference key="object" ref="149719317"/>
+            <string key="toolTip">Force Refresh</string>
+          </object>
+        </object>
+        <string key="545.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
+        <object class="NSAffineTransform" key="545.IBViewBoundsToFrameTransform">
+          <bytes key="NSTransformStruct">P4AAAL+AAAAAAAAAwbAAAA</bytes>
+        </object>
+        <string key="548.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <string key="86.IBPluginDependency">com.apple.InterfaceBuilder.CocoaPlugin</string>
         <object class="NSAffineTransform" key="86.IBViewBoundsToFrameTransform">
           <bytes key="NSTransformStruct">AUGgAABDiYAAA</bytes>
@@ -5237,7 +5340,7 @@
       <nil key="activeLocalization"/>
       <dictionary class="NSMutableDictionary" key="localizations"/>
       <nil key="sourceID"/>
-      <int key="maxID">542</int>
+      <int key="maxID">556</int>
     </object>
     <object class="IBClassDescriber" key="IBDocument.Classes">
       <array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -5451,6 +5554,7 @@
             <string key="actionSwitchToFilesTable:">id</string>
             <string key="browserMenuOpenTerminalHere:">id</string>
             <string key="browserMenuRevealSelectedFilesInFinder:">id</string>
+            <string key="forceRefreshFSViewer:">id</string>
             <string key="viewerMenuOpenSelectedFilesInFinder:">id</string>
           </dictionary>
           <dictionary class="NSMutableDictionary" key="actionInfosByName">
@@ -5472,6 +5576,10 @@
             </object>
             <object class="IBActionInfo" key="browserMenuRevealSelectedFilesInFinder:">
               <string key="name">browserMenuRevealSelectedFilesInFinder:</string>
+              <string key="candidateClassName">id</string>
+            </object>
+            <object class="IBActionInfo" key="forceRefreshFSViewer:">
+              <string key="name">forceRefreshFSViewer:</string>
               <string key="candidateClassName">id</string>
             </object>
             <object class="IBActionInfo" key="viewerMenuOpenSelectedFilesInFinder:">
@@ -7484,6 +7592,7 @@
       <string key="FilesViewOutline">{15, 14}</string>
       <string key="FilesViewTable">{13, 14}</string>
       <string key="FinderIcon">{16, 16}</string>
+      <string key="ForceUpdate">{16, 18}</string>
       <string key="NSMenuCheckmark">{9, 8}</string>
       <string key="NSMenuMixedState">{7, 2}</string>
       <string key="NSSwitch">{15, 15}</string>

@@ -166,6 +166,13 @@
 	[theLabelsTableView_ resetTable:self];
 }
 
+- (IBAction) forceReinitilizeHistoryViews:(id)sender
+{
+	changesetHashToLogRecord = [[NSMutableDictionary alloc]init];
+	[myDocument initializeRepositoryData];
+	[self resetHistoryView:sender];
+}
+
 - (void) scrollToSelected
 {
 	[logTableView scrollToSelected:self];

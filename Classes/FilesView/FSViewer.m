@@ -389,6 +389,12 @@
 // MARK: Menu Item Actions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+- (IBAction) forceRefreshFSViewer:(id)sender
+{
+	[self repositoryDataIsNew];
+}
+
+
 - (IBAction) viewerMenuOpenSelectedFilesInFinder:(id)sender
 {
 	NSArray* paths = [self absolutePathsOfChosenFiles];

@@ -177,6 +177,7 @@
 
 
 // Menu Item Actions
+- (IBAction)	forceRefreshFSViewer:(id)sender;
 - (IBAction)	viewerMenuOpenSelectedFilesInFinder:(id)sender;
 - (IBAction)	browserMenuOpenTerminalHere:(id)sender;
 - (IBAction)	browserMenuRevealSelectedFilesInFinder:(id)sender;

@@ -49,6 +49,7 @@
 
 
 - (IBAction)	reloadSidebarData:(id)sender;
+- (IBAction)	forceRefreshOfSidebarData:(id)sender;
 
 
 // Add / delete Nodes

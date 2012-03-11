@@ -65,7 +65,6 @@
 
 
 @interface MacHgDocument (PrivateAPI)
-- (void) initializeRepositoryData;
 - (void) populateOutlineContents;
 - (void) validateViewSelector;
 @end
@@ -660,7 +659,7 @@
 
 // -----------------------------------------------------------------------------------------------------------------------------------------
 // MARK: -
-// MARK: Actions
+// MARK: Showing Queries
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (BOOL)	showingFilesView								{ return currentPane_ == eFilesView; }
@@ -673,6 +672,14 @@
 - (BOOL)	showingASheet									{ return shownSheet_ != nil; }
 - (BOOL)	showingSheetOf:(NSWindowController*)controller	{ return shownSheet_ && ([controller window] == shownSheet_); }
 
+
+
+
+
+// -----------------------------------------------------------------------------------------------------------------------------------------
+// MARK: -
+// MARK: Actions
+// -----------------------------------------------------------------------------------------------------------------------------------------
 
 - (IBAction) actionSwitchViewToFilesView:(id)sender			{ [self setCurrentPane:eFilesView]; }
 - (IBAction) actionSwitchViewToBackingView:(id)sender		{ [self setCurrentPane:eBackingView]; }

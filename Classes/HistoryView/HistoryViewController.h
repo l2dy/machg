@@ -79,6 +79,7 @@
 - (NSString*) searchCaption;
 - (IBAction) refreshHistoryView:(id)sender;
 - (IBAction) resetHistoryView:(id)sender;
+- (IBAction) forceReinitilizeHistoryViews:(id)sender;
 - (void)	 restoreConcertinaSplitViewPositions;
 - (void)	 scrollToSelected;
 - (void)	 expandLabelsTableinConcertina;

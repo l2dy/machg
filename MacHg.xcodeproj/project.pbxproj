@@ -256,6 +256,7 @@
 		96F5A4DE11A8185800707404 /* TextButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96F5A4DD11A8185800707404 /* TextButtonCell.m */; };
 		96F5A4FA11A81B5B00707404 /* DiffTextButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96F5A4F911A81B5B00707404 /* DiffTextButtonCell.m */; };
 		96F5A70D11A879F100707404 /* LabelTextButtonCell.m in Sources */ = {isa = PBXBuildFile; fileRef = 96F5A70C11A879F100707404 /* LabelTextButtonCell.m */; };
+		96F7D961150B845A00507F6A /* ForceUpdate.png in Resources */ = {isa = PBXBuildFile; fileRef = 96F7D960150B845A00507F6A /* ForceUpdate.png */; };
 		96FF036111991C21006EC616 /* DBPrefsWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96FF036011991C21006EC616 /* DBPrefsWindowController.m */; };
 		96FF03A81199200E006EC616 /* UpdatePreferences.tiff in Resources */ = {isa = PBXBuildFile; fileRef = 96FF03A71199200E006EC616 /* UpdatePreferences.tiff */; };
 /* End PBXBuildFile section */
@@ -652,6 +653,7 @@
 		96F5A4F911A81B5B00707404 /* DiffTextButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DiffTextButtonCell.m; sourceTree = "<group>"; };
 		96F5A70B11A879F100707404 /* LabelTextButtonCell.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LabelTextButtonCell.h; sourceTree = "<group>"; };
 		96F5A70C11A879F100707404 /* LabelTextButtonCell.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LabelTextButtonCell.m; sourceTree = "<group>"; };
+		96F7D960150B845A00507F6A /* ForceUpdate.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = ForceUpdate.png; path = ButtonIcons/ForceUpdate.png; sourceTree = "<group>"; };
 		96FF035F11991C21006EC616 /* DBPrefsWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = DBPrefsWindowController.h; sourceTree = "<group>"; };
 		96FF036011991C21006EC616 /* DBPrefsWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DBPrefsWindowController.m; sourceTree = "<group>"; };
 		96FF03A71199200E006EC616 /* UpdatePreferences.tiff */ = {isa = PBXFileReference; lastKnownFileType = image.tiff; path = UpdatePreferences.tiff; sourceTree = "<group>"; };
@@ -959,6 +961,7 @@
 		961D5167115BC11A0064A4DA /* ButtonIcons */ = {
 			isa = PBXGroup;
 			children = (
+				96F7D960150B845A00507F6A /* ForceUpdate.png */,
 				96DC18A414BACCE000A6E61B /* AddDropButtonSizeSmall.png */,
 				96138846116B437D0022F368 /* ActionDrop.png */,
 				9637C8C2118E9C300000C14B /* ActionDropButtonSizeSmall.png */,
@@ -2038,6 +2041,7 @@
 				96F2C6C514F18C51006C6FEC /* AlterDetailsSheet.xib in Resources */,
 				960E580A14FC889400F577BC /* ButtonDownArrow.png in Resources */,
 				96EFA31415034BD2009163ED /* AutoExpand.png in Resources */,
+				96F7D961150B845A00507F6A /* ForceUpdate.png in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

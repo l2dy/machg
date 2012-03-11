@@ -1044,6 +1044,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 - (IBAction) mainMenuCloneRepository:(id)sender						{ [myDocument mainMenuCloneRepository:sender]; }
 
 - (IBAction) reloadSidebarData:(id)sender							{ [self reloadData]; }
+- (IBAction) forceRefreshOfSidebarData:(id)sender					{ [self outlineViewSelectionDidChange:nil]; }
 
 - (IBAction) mainMenuConfigureRepositoryRef:(id)sender
 {

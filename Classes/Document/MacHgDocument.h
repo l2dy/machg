@@ -259,6 +259,7 @@
 
 // RepositoryData and Version Information
 - (RepositoryData*)	 repositoryData;
+- (void)		initializeRepositoryData;
 - (NSNumber*)	getHGParent1Revision;
 - (NSNumber*)	getHGParent2Revision;
 - (NSString*)	getHGParent1Changeset;
