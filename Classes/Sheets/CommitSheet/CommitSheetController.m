@@ -155,6 +155,28 @@ NSString* kAmendOption	 = @"amendOption";
 // MARK:  Sheet opening
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+- (void) computeAmendIsPossible
+{
+	// Determine if we can do amends at all
+	amendIsPossible_ = NO;
+	if ([myDocument inMergeState])
+		return;
+
+	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+	NSString* parentRevision = numberAsString([myDocument getHGParent1Revision]);
+	NSString* revPattern = fstr(@"descendants(rev(%@))", parentRevision);
+	NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log", @"--limit", @"10", @"--template", @"{rev},", @"--rev", revPattern, nil];
+	ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:rootPath  logging:eLoggingNone];
+	if ([hgLogResults hasErrors])
+		return;
+	
+	NSArray* descdentRevs = [hgLogResults.outStr componentsSeparatedByString:@","];
+	NSInteger count = [descdentRevs count];
+	if (IsEmpty([descdentRevs lastObject]))
+		count--;
+	if (count <= 1)
+		amendIsPossible_ = YES;
+}
 
 
 - (void) openCommitSheetWithPaths:(NSArray*)paths
@@ -203,6 +225,8 @@ NSString* kAmendOption	 = @"amendOption";
 	[previousCommitMessagesTableView reloadData];
 	cachedCommitMessageForAmend_ = [[logCommentsTableSourceData objectAtIndex:0] copy];
 
+	[self computeAmendIsPossible];
+	
 	[self validateButtons:self];
 }
 
@@ -315,7 +339,7 @@ NSString* kAmendOption	 = @"amendOption";
 - (IBAction) validateButtons:(id)sender
 {
 	BOOL pathsAreSelected = [commitFilesViewer nodesAreSelected];
-	BOOL canAllowAmend = AllowHistoryEditingOfRepositoryFromDefaults() && [myDocument isCurrentRevisionTip] && ![myDocument inMergeState];
+	BOOL canAllowAmend = AllowHistoryEditingOfRepositoryFromDefaults() && amendIsPossible_ && ![myDocument inMergeState];
 	BOOL okToCommit = IsNotEmpty([commitMessageTextView string]) && [self anyHunksToCommit];
 	NSString* diffButtonMessage = pathsAreSelected ? @"Diff Selected" : @"Diff All";
 	

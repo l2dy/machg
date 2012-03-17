@@ -58,6 +58,7 @@
 	NSArray*		logCommentsTableSourceData;		// This array is computed whenever we put up the
 													// sheet, but the tableview in the sheet uses this class as a data
 													// source so we have to have this as a class member.
+	BOOL			amendIsPossible_;				// Is the amend operation even possible. This is determined at sheet opening time.
 	
 	// Advanaced commit options
 	NSString*		committer_;						// The value of the committer option
