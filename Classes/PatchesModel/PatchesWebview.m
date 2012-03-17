@@ -137,9 +137,8 @@
 }
 
 
-- (void) putUpGeneratingDifferencesNotice:(NSTimer*)theTimer
+- (void) putUpGeneratingDifferencesNotice:(RegenerationTaskController*)theRegenerationTaskContoller
 {
-	RegenerationTaskController* theRegenerationTaskContoller = [theTimer userInfo];
 	if ([self taskIsStale:[theRegenerationTaskContoller taskNumber]])
 		return;
 	if ([[theRegenerationTaskContoller shellTask] isRunning])
@@ -161,9 +160,8 @@
 		currentRegenerationTask_ = currentRegenerationTaskController;
 	}
 	
-	// FIXME deque all old timers for this target and name.
-	// If the webscriptObject is now nil then reload the page.
-	[NSTimer scheduledTimerWithTimeInterval:0.5 target:self selector:@selector(putUpGeneratingDifferencesNotice:) userInfo:currentRegenerationTaskController repeats:NO];
+	// FIXME : If the webscriptObject is now nil then reload the page.
+	[self performSelector:@selector(putUpGeneratingDifferencesNotice:) withObject:currentRegenerationTaskController afterDelay:0.5];
 	dispatch_async(globalQueue(), ^{
 		if ([self taskIsStale:[currentRegenerationTaskController taskNumber]]) return;
 
