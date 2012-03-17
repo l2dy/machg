@@ -577,7 +577,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 		if (duplicate)
 			continue;
 		
-		NSString* caption = fstr(@"%@ (%@)", captionBase, serverId);
+		NSString* caption = isDefaultPushServer ? fstr(@"%@ (push)", captionBase) : captionBase;
 		SidebarNode* serverNode = [SidebarNode nodeWithCaption:caption forServerPath:serverPath];
 		[[AppController sharedAppController] computeRepositoryIdentityForPath:serverPath];
 		if (isDefaultServer)
