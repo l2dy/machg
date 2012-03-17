@@ -559,9 +559,13 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 		NSString* serverId = trimString([path objectAtIndex:1]);
 		NSString* serverPath = [path objectAtIndex:2];
 		NSString* url = trimmedURL(serverPath);
-		NSString* caption;
 		
 		// If the server is already present in the document don't add it again.
+		BOOL isDefaultServer     = [serverId isEqualToString:@"default"];
+		BOOL isDefaultPushServer = [serverId isEqualToString:@"default-push"];
+		
+		if (!isDefaultServer && !isDefaultPushServer)
+			continue;
 		BOOL duplicate = NO;
 		if (!includeAlreadyPresent)
 			for (SidebarNode* repo in allRepositories)
@@ -573,14 +577,13 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 		if (duplicate)
 			continue;
 		
-		if ([serverId isEqualToString:@"default"])
-			caption = captionBase;
-		else
-			caption = fstr(@"%@ (%@)", captionBase, serverId);
-		
+		NSString* caption = fstr(@"%@ (%@)", captionBase, serverId);
 		SidebarNode* serverNode = [SidebarNode nodeWithCaption:caption forServerPath:serverPath];
 		[[AppController sharedAppController] computeRepositoryIdentityForPath:serverPath];
-		[serversToAdd addObject:serverNode];
+		if (isDefaultServer)
+			[serversToAdd insertObject:serverNode atIndex:0];
+		else
+			[serversToAdd addObject:serverNode];
 		[allRepositories addObject:serverNode];
 	}
 	return serversToAdd;
