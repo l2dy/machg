@@ -16,6 +16,7 @@
 #import "FSViewerTable.h"
 #import "PatchData.h"
 #import "HunkExclusions.h"
+#import "LogEntry.h"
 
 NSString* kAmendOption	 = @"amendOption";
 
@@ -223,7 +224,10 @@ NSString* kAmendOption	 = @"amendOption";
 	ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:rootPath  logging:eLoggingNone];
 	logCommentsTableSourceData = [hgLogResults.outStr componentsSeparatedByString:@"\n#^&^#\n"];
 	[previousCommitMessagesTableView reloadData];
-	cachedCommitMessageForAmend_ = [[logCommentsTableSourceData objectAtIndex:0] copy];
+	
+	LogEntry* parent = [[myDocument repositoryData] entryForRevision:[myDocument getHGParent1Revision]];
+	[parent fullyLoadEntry];
+	cachedCommitMessageForAmend_ = [parent fullComment];
 
 	[self computeAmendIsPossible];
 	
@@ -459,6 +463,10 @@ NSString* kAmendOption	 = @"amendOption";
 	}	
 	
 	NSString* parent1RevisionStr = numberAsString([myDocument getHGParent1Revision]);
+	[self computeAmendIsPossible];
+	if (!amendIsPossible_)
+		[NSException raise:@"Descendants" format:@"The Amend operation could not proceed. The revision to amend %@ has other descedants.", parent1RevisionStr, nil];
+
 	NSMutableArray*  qimportArgs   = [NSMutableArray arrayWithObjects:@"qimport", @"--config", @"extensions.hgext.mq=", @"--rev", parent1RevisionStr, @"--name", @"macHgAmendPatch", @"--git", nil];
 	ExecutionResult* qimportResult = [myDocument executeMercurialWithArgs:qimportArgs  fromRoot:rootPath  whileDelayingEvents:YES];
 	if ([qimportResult hasErrors])
