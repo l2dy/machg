@@ -519,6 +519,7 @@ NSString* kAmendOption	 = @"amendOption";
 	if (IsNotEmpty(contestedPaths))
 	{
 		NSMutableArray* argsDiff = [NSMutableArray arrayWithObjects:@"diff", nil];
+		[argsDiff addObject:@"--unified" followedBy:fstr(@"%d",NumContextLinesForDifferencesWebviewFromDefaults())];
 		[argsDiff addObjectsFromArray:contestedPaths];
 		ExecutionResult* diffResult = [TaskExecutions executeMercurialWithArgs:argsDiff  fromRoot:rootPath logging:eLoggingNone];
 		PatchData* patchData = IsNotEmpty(diffResult.outStr) ? [PatchData patchDataFromDiffContents:diffResult.outStr] : nil;

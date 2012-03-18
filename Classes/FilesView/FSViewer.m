@@ -632,7 +632,8 @@
 	// with the latest changes. 
 	NSArray* changedPathsWithExclusions = restrictPathsToPaths([[self hunkExclusions] absolutePathsWithExclusionsForRoot:rootPath], absoluteChangedPaths);
 	if (IsEmpty(changedPathsWithExclusions)) return;
-	NSMutableArray* argsDiff = [NSMutableArray arrayWithObjects:@"diff", @"--unified", @"1", nil];
+	NSMutableArray* argsDiff = [NSMutableArray arrayWithObjects:@"diff", nil];
+	[argsDiff addObject:@"--unified" followedBy:fstr(@"%d",NumContextLinesForDifferencesWebviewFromDefaults())];
 	[argsDiff addObjectsFromArray:changedPathsWithExclusions];
 	ExecutionResult* diffResult = [TaskExecutions executeMercurialWithArgs:argsDiff  fromRoot:rootPath logging:eLoggingNone];
 	PatchData* patchData = IsNotEmpty(diffResult.outStr) ? [PatchData patchDataFromDiffContents:diffResult.outStr] : nil;
