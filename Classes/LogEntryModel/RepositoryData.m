@@ -431,7 +431,21 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 	return [[[NSFileManager alloc] init] fileExistsAtPath:rollbackFile isDirectory:&sourceIsDir];
 }
 
-
+- (BOOL)	  isTipOfLocalBranch
+{
+	NSString* parentRevision = numberAsString([self getHGParent1Revision]);
+	NSString* revPattern = fstr(@"descendants(rev(%@))", parentRevision);
+	NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log", @"--limit", @"10", @"--template", @"{rev},", @"--rev", revPattern, nil];
+	ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:[self rootPath]  logging:eLoggingNone];
+	if ([hgLogResults hasErrors])
+		return NO;
+	
+	NSArray* descdentRevs = [hgLogResults.outStr componentsSeparatedByString:@","];
+	NSInteger count = [descdentRevs count];
+	if (IsEmpty([descdentRevs lastObject]))
+		count--;
+	return (count <= 1);
+}
 
 
 

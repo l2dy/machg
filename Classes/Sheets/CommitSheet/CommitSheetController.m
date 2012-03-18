@@ -156,30 +156,6 @@ NSString* kAmendOption	 = @"amendOption";
 // MARK:  Sheet opening
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (void) computeAmendIsPossible
-{
-	// Determine if we can do amends at all
-	amendIsPossible_ = NO;
-	if ([myDocument inMergeState])
-		return;
-
-	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
-	NSString* parentRevision = numberAsString([myDocument getHGParent1Revision]);
-	NSString* revPattern = fstr(@"descendants(rev(%@))", parentRevision);
-	NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log", @"--limit", @"10", @"--template", @"{rev},", @"--rev", revPattern, nil];
-	ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:rootPath  logging:eLoggingNone];
-	if ([hgLogResults hasErrors])
-		return;
-	
-	NSArray* descdentRevs = [hgLogResults.outStr componentsSeparatedByString:@","];
-	NSInteger count = [descdentRevs count];
-	if (IsEmpty([descdentRevs lastObject]))
-		count--;
-	if (count <= 1)
-		amendIsPossible_ = YES;
-}
-
-
 - (void) openCommitSheetWithPaths:(NSArray*)paths
 {
 	logCommentsTableSourceData = nil;
@@ -229,7 +205,7 @@ NSString* kAmendOption	 = @"amendOption";
 	[parent fullyLoadEntry];
 	cachedCommitMessageForAmend_ = [parent fullComment];
 
-	[self computeAmendIsPossible];
+	amendIsPossible_ = ![myDocument inMergeState] && [[myDocument repositoryData] isTipOfLocalBranch];
 	
 	[self validateButtons:self];
 }
@@ -463,8 +439,11 @@ NSString* kAmendOption	 = @"amendOption";
 	}	
 	
 	NSString* parent1RevisionStr = numberAsString([myDocument getHGParent1Revision]);
-	[self computeAmendIsPossible];
-	if (!amendIsPossible_)
+
+	if ([myDocument inMergeState])
+		[NSException raise:@"Merge" format:@"The Amend operation could not proceed. The repository is in a merge state.", nil];
+
+	if (![[myDocument repositoryData] isTipOfLocalBranch])
 		[NSException raise:@"Descendants" format:@"The Amend operation could not proceed. The revision to amend %@ has other descedants.", parent1RevisionStr, nil];
 
 	NSMutableArray*  qimportArgs   = [NSMutableArray arrayWithObjects:@"qimport", @"--config", @"extensions.hgext.mq=", @"--rev", parent1RevisionStr, @"--name", @"macHgAmendPatch", @"--git", nil];

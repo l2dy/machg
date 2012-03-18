@@ -93,6 +93,7 @@
 - (BOOL)		hasMultipleOpenHeads;			// Do we have more than one "open" head in the repository. If not then we have nothing
 												// to merge with.
 - (BOOL)		isRollbackInformationAvailable;	// Could we rollback the last operation if we wanted to?
+- (BOOL)	    isTipOfLocalBranch;				// Query the underlying repository to see if this version is the tip of the local branch.
 
 
 // State Maintenance
