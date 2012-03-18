@@ -14,6 +14,7 @@
 #import "DisclosureBoxController.h"
 #import "LogEntry.h"
 #import "HistoryViewController.h"
+#import "RepositoryData.h"
 
 
 @interface AlterDetailsSheetController (PrivateAPI)
@@ -179,6 +180,13 @@
 		NSRunAlertPanel(@"Outstanding Changes", @"There are outstanding uncommitted changes. Please commit or discard these changes and repeat the edit operation.", @"Ok", nil, nil);
 		return;
 	}
+
+	if (![[myDocument repositoryData] isTipOfLocalBranch])
+	{
+		PlayBeep();
+		NSRunAlertPanel(@"Not at Tip", @"The repository is not updated to the local tip of the branch. Please update to the local tip of the branch and redo the operation.", @"Ok", nil, nil);
+		return;
+	}	
 	
 	@try
 	{
