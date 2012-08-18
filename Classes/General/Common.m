@@ -545,9 +545,9 @@ NSString* getSingleDirectoryPathFromOpenPanel()
 	NSInteger result = [panel runModal];
 	if (result == NSAlertAlternateReturn)
 		return nil;
-	NSArray* filenames = [panel filenames];
-	id filename = [filenames lastObject];
-	return DynamicCast(NSString,filename);
+	NSArray* filenameURLs = [panel URLs];
+	NSURL* filenameURL = [filenameURLs lastObject];
+	return [filenameURL path];
 }
 
 
@@ -560,9 +560,9 @@ NSString* getSingleFilePathFromOpenPanel()
 	NSInteger result = [panel runModal];
 	if (result == NSAlertAlternateReturn)
 		return nil;
-	NSArray* filenames = [panel filenames];
-	id filename = [filenames lastObject];
-	return DynamicCast(NSString,filename);
+	NSArray* filenameURLs = [panel URLs];
+	NSURL* filenameURL = [filenameURLs lastObject];
+	return [filenameURL path];
 }
 
 
@@ -579,13 +579,13 @@ NSString* getSingleApplicationPathFromOpenPanel(NSString* forDocument)
 	NSInteger result = [panel runModal];
 	if (result == NSAlertAlternateReturn)
 		return nil;
-	NSArray* filenames = [panel filenames];
-	id filename = [filenames lastObject];
-	return DynamicCast(NSString,filename);
+	NSArray* filenameURLs = [panel URLs];
+	NSURL* filenameURL = [filenameURLs lastObject];
+	return [filenameURL path];
 }
 
 
-NSArray* getListOfFilePathsFromOpenPanel(NSString* startingPath)
+NSArray* getListOfFilePathURLsFromOpenPanel(NSString* startingPath)
 {
 	NSOpenPanel* panel = [NSOpenPanel openPanel];
 	[panel setDirectoryURL:[NSURL fileURLWithPath:startingPath]];
@@ -595,7 +595,7 @@ NSArray* getListOfFilePathsFromOpenPanel(NSString* startingPath)
 	NSInteger result = [panel runModal];
 	if (result == NSAlertAlternateReturn)
 		return nil;
-	return [panel filenames];
+	return [panel URLs];
 }
 
 

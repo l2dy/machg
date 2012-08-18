@@ -885,7 +885,7 @@ static inline NSNumber* minimumNumber(NSNumber* a, NSNumber* b)
 NSString*			getSingleDirectoryPathFromOpenPanel();
 NSString*			getSingleFilePathFromOpenPanel();
 NSString*			getSingleApplicationPathFromOpenPanel(NSString* forDocument);
-NSArray*			getListOfFilePathsFromOpenPanel(NSString* startingPath);
+NSArray*			getListOfFilePathURLsFromOpenPanel(NSString* startingPath);
 
 
 
