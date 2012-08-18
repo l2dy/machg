@@ -988,6 +988,24 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 // MARK: Extensions
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
+
+@interface NSArray(Subscripting)
+- (id) objectAtIndexedSubscript:(NSUInteger)index;
+@end
+
+@interface NSMutableArray(Subscripting)
+- (void) setObject:(id)obj atIndexedSubscript:(NSUInteger)index;
+@end
+
+@interface NSDictionary(Subscripting)
+- (id) objectForKeyedSubscript:(id)key;
+@end
+
+@interface NSMutableDictionary(Subscripting)
+- (void) setObject:(id)obj forKeyedSubscript:(id <NSCopying>)key;
+@end
+
+
 // MARK: -
 @protocol AccessesDocument
 - (MacHgDocument*)	myDocument;
