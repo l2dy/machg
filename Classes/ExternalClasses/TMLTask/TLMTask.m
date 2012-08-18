@@ -1,10 +1,10 @@
 //
 //  TLMTask.m
-//  TeX Live Manager
+//  TeX Live Utility
 //
 //  Created by Adam Maxwell on 1/5/09.
 /*
- This software is Copyright (c) 2009-2011
+ This software is Copyright (c) 2009-2012
  Adam Maxwell. All rights reserved.
  
  Redistribution and use in source and binary forms, with or without
@@ -37,7 +37,6 @@
  */
 
 #import "TLMTask.h"
-//#import "TLMLogServer.h"
 #include <sys/event.h>
 #include "Common.h"
 
@@ -99,19 +98,19 @@
     
     // hopefully this never happens...
     if (fdo < 0 || fde < 0) {
-        DebugLog(@"invalid stdio channels in task %@", self);
+        NSLog(@"invalid stdio channels in task %@", self);
         [pool release];
         return;
     }
     
-    int kq_fd = kqueue();
+    int kq_fd = HANDLE_EINTR(kqueue());
 #define TLM_EVENT_COUNT 2
     struct kevent events[TLM_EVENT_COUNT];
     memset(events, 0, sizeof(struct kevent) * TLM_EVENT_COUNT);
     
     EV_SET(&events[0], fdo, EVFILT_READ, EV_ADD, 0, 0, NULL);
     EV_SET(&events[1], fde, EVFILT_READ, EV_ADD, 0, 0, NULL);
-    kevent(kq_fd, events, TLM_EVENT_COUNT, NULL, 0, NULL);
+    (void) HANDLE_EINTR(kevent(kq_fd, events, TLM_EVENT_COUNT, NULL, 0, NULL));
     
     // kqueue is set up now, so we can launch
     [_lock unlockWithCondition:TLM_KQ_SETUP];
@@ -133,7 +132,7 @@
     bool errEOF = false, outEOF = false;
     
     // most of this code is copied directly from tlu_ipctask
-    while ((eventCount = kevent(kq_fd, NULL, 0, &event, 1, &ts)) != -1) {
+    while ((eventCount = HANDLE_EINTR(kevent(kq_fd, NULL, 0, &event, 1, &ts))) != -1) {
                         
         /*
          If still running, wait for the next timeout; this is basically insurance,
@@ -156,7 +155,7 @@
 
             char sbuf[2048];
             char *buf = (len > sizeof(sbuf)) ? malloc(len) : sbuf;
-            len = read(event.ident, buf, len);
+            len = HANDLE_EINTR(read(event.ident, buf, len));
                     
             if (event.ident == (unsigned)fdo) {
                 [outBuffer appendBytes:buf length:len];
@@ -193,14 +192,14 @@
     
     events[0].flags = EV_DELETE;
     events[1].flags = EV_DELETE;
-    kevent(kq_fd, events, TLM_EVENT_COUNT, NULL, 0, NULL);
+    (void) HANDLE_EINTR(kevent(kq_fd, events, TLM_EVENT_COUNT, NULL, 0, NULL));
     close(kq_fd);
     
     _outputData = [outBuffer copy];
     _errorData = [errBuffer copy];
     [_lock unlockWithCondition:TLM_KQ_FINISHED];
     
-    [pool drain];
+    [pool release];
 }
 
 - (void)launch
