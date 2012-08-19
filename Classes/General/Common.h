@@ -363,12 +363,6 @@ typedef struct
 	NSInteger	highRevision;
 } LowHighPair;
 
-typedef struct
-{
-	NSString*	lowRevision;
-	NSString*	highRevision;
-} LowHighStringPair;
-
 
 extern NSString* const kSidebarPBoardType;
 extern NSString* const kSidebarRootInitializationDummy;
