@@ -855,11 +855,6 @@
 
 @implementation FSViewerSelectionState
 
-@synthesize savedColumnScrollPositions;
-@synthesize savedHorizontalScrollPosition;
-@synthesize savedSelectedPaths;
-@synthesize restoreFirstResponderToViewer;
-
 @end
 
 

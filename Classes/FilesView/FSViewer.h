@@ -221,18 +221,9 @@
 // This is a way to save the state of any FSViewer, be it browser, outline, or table.
 @interface FSViewerSelectionState : NSObject
 {
-  @public
-	// Information for saving a Browser state
-	NSMutableArray*		savedColumnScrollPositions;
-	NSPoint				savedHorizontalScrollPosition;
-	NSArray*			savedSelectedPaths;
-	
-	// Information for saving a Table state
-	// XXXX
-
-	BOOL				restoreFirstResponderToViewer;
 }
 
+// Information for saving a Browser state
 @property (readwrite,assign) NSMutableArray*	savedColumnScrollPositions;
 @property (readwrite,assign) NSPoint			savedHorizontalScrollPosition;
 @property (readwrite,assign) NSArray*			savedSelectedPaths;
