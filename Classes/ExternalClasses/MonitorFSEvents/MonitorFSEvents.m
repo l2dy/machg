@@ -114,7 +114,7 @@ static void FSEventsCallBack_(ConstFSEventStreamRef streamRef, void* clientCallB
 	if (!isWatchingPaths)
 		return @"The event stream is not running. Start it by calling: startWatchingPaths:";
 	CFStringRef desc = FSEventStreamCopyDescription(eventStream);
-	NSString* ans = [NSString stringWithString:(NSString*)desc];
+	NSString* ans = [NSString stringWithString:(__bridge NSString*)desc];
 	CFRelease(desc);
 	return ans;
 }
@@ -156,7 +156,7 @@ static void FSEventsCallBack_(ConstFSEventStreamRef streamRef, void* clientCallB
 	
 	if (eventStream)
 		FSEventStreamRelease(eventStream);
-    eventStream = FSEventStreamCreate(kCFAllocatorDefault, &FSEventsCallBack_, &callbackInfo, ((CFArrayRef)watchedPaths), kFSEventStreamEventIdSinceNow, notificationLatency, kFSEventStreamCreateFlagUseCFTypes | kFSEventStreamCreateFlagWatchRoot);
+    eventStream = FSEventStreamCreate(kCFAllocatorDefault, &FSEventsCallBack_, &callbackInfo, (__bridge CFArrayRef)watchedPaths, kFSEventStreamEventIdSinceNow, notificationLatency, kFSEventStreamCreateFlagUseCFTypes | kFSEventStreamCreateFlagWatchRoot);
 }
 
 /**
@@ -166,9 +166,9 @@ static void FSEventsCallBack_(ConstFSEventStreamRef streamRef, void* clientCallB
  */
 static void FSEventsCallBack_(ConstFSEventStreamRef streamRef, void* clientCallBackInfo, size_t numEvents, void* eventPaths, const FSEventStreamEventFlags eventFlags[], const FSEventStreamEventId eventIds[])
 {
-    MonitorFSEvents* pathWatcher = (MonitorFSEvents*)clientCallBackInfo;
+    MonitorFSEvents* pathWatcher = (__bridge MonitorFSEvents*)clientCallBackInfo;
 	if ([[pathWatcher delegate] conformsToProtocol:@protocol(MonitorFSEventListenerProtocol)])
-		[[pathWatcher delegate] fileEventsOccurredIn:eventPaths];
+		[[pathWatcher delegate] fileEventsOccurredIn:(__bridge NSArray *)(eventPaths)];
 }
 
 @end
