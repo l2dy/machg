@@ -1,4 +1,5 @@
 #import "DTCPathView.h"
+#import "Common.h"
 
 @implementation DTCPathView
 
@@ -73,9 +74,9 @@
     int i = 0;
     while (i < [dirContents count])
     {
-        if ([[[dirContents objectAtIndex:i] lowercaseString] hasPrefix:[[components lastObject] lowercaseString]])
+        if ([[dirContents[i] lowercaseString] hasPrefix:[[components lastObject] lowercaseString]])
         {
-            NSString* completedPath = [[NSString pathWithComponents:componentsBase] stringByAppendingPathComponent:[dirContents objectAtIndex:i]];
+            NSString* completedPath = [[NSString pathWithComponents:componentsBase] stringByAppendingPathComponent:dirContents[i]];
             
 			// We should only complete directories
 			BOOL isDir;

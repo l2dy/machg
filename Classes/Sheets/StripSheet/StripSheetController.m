@@ -157,7 +157,7 @@
 		[logTableView scrollToRevision:[myDocument getHGTipRevision]];
 	else
 	{
-		NSInteger minRev = numberAsInt([revs objectAtIndex:0]);
+		NSInteger minRev = numberAsInt(revs[0]);
 		for (NSNumber* revision in revs)
 		{
 			NSInteger revInt = numberAsInt(revision);

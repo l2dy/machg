@@ -47,8 +47,8 @@ static int logEntryPartRevision;
 
 void setupGlobalsForLogEntryPartsAndTemplate()
 {
-	NSArray* templateParts = [NSArray arrayWithObjects:@"{rev}",    @"{parents}", @"{node}", nil];
-	namesOfLogEntryParts   = [NSArray arrayWithObjects:@"revision", @"parents",   @"changeset",    nil];
+	NSArray* templateParts = @[ @"{rev}",    @"{parents}", @"{node}"];
+	namesOfLogEntryParts   = @[ @"revision", @"parents",   @"changeset"];
 	templateLogEntryString = [[templateParts componentsJoinedByString:logEntryPartSeparator] stringByAppendingString:logEntrySeparator];
 
 	logEntryPartChangeset  = [namesOfLogEntryParts indexOfObject:@"changeset"];
@@ -110,7 +110,7 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 // MARK:  Derived information
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (NSArray*) labels { return [[collection_ revisionNumberToLabels] objectForKey:[self revision]]; }
+- (NSArray*) labels { return [collection_ revisionNumberToLabels][[self revision]]; }
 
 - (NSArray*) tags
 {
@@ -134,7 +134,7 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 	if (IsEmpty(labels))
 		return @"";
 	NSArray* branchLabels = [LabelData filterLabels:labels byType:eBranchLabel];
-	return IsNotEmpty(branchLabels) ? [[branchLabels objectAtIndex:0] name] : @"";
+	return IsNotEmpty(branchLabels) ? [branchLabels[0] name] : @"";
 }
 
 - (BOOL) isClosedBranchHead
@@ -187,7 +187,7 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 	NSNumber* parent2 = [collection getHGParent2Revision];
 	if (!parent1)
 		parent1 = intAsNumber(numberAsInt(revision) -1);
-	NSArray* hgParentsArray = parent2 ? [NSArray arrayWithObjects:parent1,parent2,nil] : [NSArray arrayWithObject:parent1];
+	NSArray* hgParentsArray = parent2 ? @[parent1,parent2] : @[parent1];
 	[entry setParentsArray:hgParentsArray];
 	[entry setLoadStatus:eLogEntryLoaded];
 	[entry setChangeset:incompleteChangeset];
@@ -213,15 +213,15 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 	if ([parts count] < itemCount)
 		return;
 	
-	[self setChangeset:[parts objectAtIndex:logEntryPartChangeset]];
-	[self setRevision:stringAsNumber([parts objectAtIndex:logEntryPartRevision])];
+	[self setChangeset:parts[logEntryPartChangeset]];
+	[self setRevision:stringAsNumber(parts[logEntryPartRevision])];
 
-	NSString* parents = [parts objectAtIndex:logEntryPartParents];
+	NSString* parents = parts[logEntryPartParents];
 	if (IsEmpty(parents))
 	{
 		NSInteger revisionInt = numberAsInt(revision_);
 		if (revisionInt > 0)
-			parentsArray_ = [NSArray arrayWithObject:intAsNumber(revisionInt - 1)];
+			parentsArray_ = @[ intAsNumber(revisionInt - 1) ];
 		else
 			parentsArray_ = nil;
 	}
@@ -262,7 +262,7 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 	if (!childRevNum)
 		return;
 	if (!childrenArray_)
-		childrenArray_ = [NSArray arrayWithObject:childRevNum];
+		childrenArray_ = @[childRevNum];
 	else if (![childrenArray_ containsObject:childRevNum])
 		childrenArray_ = [childrenArray_ arrayByAddingObject:childRevNum];
 }
@@ -294,19 +294,19 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 - (NSArray*)	childrenOfEntry			{ return childrenArray_; }
 - (NSString*)	revisionStr				{ return numberAsString(revision_); }
 - (NSInteger)	revisionInt				{ return numberAsInt(revision_); }
-- (NSInteger)	ithChildRev:(NSInteger)i			{ return (0 <= i && [self childCount]  > i) ? numberAsInt([childrenArray_ objectAtIndex:i]) : NSNotFound; }
-- (NSInteger)	ithParentRev:(NSInteger)i			{ return (0 <= i && [self parentCount] > i) ? numberAsInt([parentsArray_  objectAtIndex:i]) : NSNotFound; }
+- (NSInteger)	ithChildRev:(NSInteger)i			{ return (0 <= i && [self childCount]  > i) ? numberAsInt(childrenArray_[i]) : NSNotFound; }
+- (NSInteger)	ithParentRev:(NSInteger)i			{ return (0 <= i && [self parentCount] > i) ? numberAsInt(parentsArray_[i]) : NSNotFound; }
 - (BOOL)	    revIsDirectParent:(NSInteger)rev	{ return rev == numberAsInt(revision_) - 1; }
 - (BOOL)	    revIsDirectChild:(NSInteger)rev		{ return rev == numberAsInt(revision_) + 1; }
 - (BOOL)		isEqualToEntry:(LogEntry*)entry		{ return [changeset_ isEqualToString:[entry changeset]] && [parentsArray_ isEqualToArray:[entry parentsOfEntry]]; }
-- (NSNumber*)	firstParent				{ return [parentsArray_ count] > 0 ? [parentsArray_ objectAtIndex:0] : nil; }
-- (NSNumber*)	secondParent			{ return [parentsArray_ count] > 1 ? [parentsArray_ objectAtIndex:1] : nil; }
+- (NSNumber*)	firstParent				{ return [parentsArray_ count] > 0 ? parentsArray_[0] : nil; }
+- (NSNumber*)	secondParent			{ return [parentsArray_ count] > 1 ? parentsArray_[1] : nil; }
 - (NSNumber*)   minimumParent
 {
 	switch ([parentsArray_ count])
 	{
-		case 1: return [parentsArray_ objectAtIndex:0];
-		case 2: return minimumNumber([parentsArray_ objectAtIndex:0], [parentsArray_ objectAtIndex:1]);
+		case 1: return parentsArray_[0];
+		case 2: return minimumNumber(parentsArray_[0], parentsArray_[1]);
 	}
 	return nil;
 }
@@ -569,13 +569,13 @@ NSDictionary* categoryFontAttributes()
 		[paragraphStyle setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
 		[paragraphStyle setHeadIndent:theIndent];
 		[paragraphStyle setFirstLineHeadIndent:theFirstLineIndent];
-		[paragraphStyle setTabStops: [NSArray arrayWithObject:tabstop]];
+		[paragraphStyle setTabStops: @[tabstop]];
 		
 		NSColor* textColor = rgbColor255(180.0, 180.0, 180.0);
 		
 		NSFont* font = [NSFont fontWithName:@"Helvetica-Bold"  size:[NSFont systemFontSize]];
 		
-		theDictionary = [NSDictionary dictionaryWithObjectsAndKeys: font, NSFontAttributeName, textColor, NSForegroundColorAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil];
+		theDictionary = @{NSFontAttributeName: font, NSForegroundColorAttributeName: textColor, NSParagraphStyleAttributeName: paragraphStyle};
 	}
 	return theDictionary;
 }
@@ -590,10 +590,10 @@ NSDictionary* normalFontAttributes()
 		[paragraphStyle setHeadIndent:theIndent];
 		[paragraphStyle setFirstLineHeadIndent:theIndent];
 		NSTextTab* tabstop = [[NSTextTab alloc] initWithType:NSLeftTabStopType location:theIndent];
-		[paragraphStyle setTabStops: [NSArray arrayWithObject:tabstop]];	// Add a tab stop.
+		[paragraphStyle setTabStops: @[tabstop]];	// Add a tab stop.
 		
 		NSFont* font = [NSFont fontWithName:@"Helvetica"  size:[NSFont systemFontSize]];
-		theDictionary = [NSDictionary dictionaryWithObjectsAndKeys: font, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil];
+		theDictionary = @{NSFontAttributeName: font, NSParagraphStyleAttributeName: paragraphStyle};
 	}
 	return theDictionary;
 }
@@ -608,13 +608,13 @@ NSDictionary* grayedFontAttributes()
 		[paragraphStyle setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
 		[paragraphStyle setHeadIndent:theIndent];
 		[paragraphStyle setFirstLineHeadIndent:theIndent];
-		[paragraphStyle setTabStops: [NSArray arrayWithObject:tabstop]];
+		[paragraphStyle setTabStops: @[tabstop]];
 		
 		NSColor* textColor = rgbColor255(180.0, 180.0, 180.0);
 		
 		NSFont* font = [NSFont fontWithName:@"Helvetica"  size:[NSFont systemFontSize]];
 		
-		theDictionary = [NSDictionary dictionaryWithObjectsAndKeys: font, NSFontAttributeName, textColor, NSForegroundColorAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil];
+		theDictionary = @{NSFontAttributeName: font, NSForegroundColorAttributeName: textColor, NSParagraphStyleAttributeName: paragraphStyle};
 	}
 	return theDictionary;
 }

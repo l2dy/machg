@@ -162,7 +162,7 @@
 {
 	if (!expandedNodes_)
 		[self restoreExpandedStateFromUserDefaults];
-	FSNodeInfo* node = [[notification userInfo] objectForKey:@"NSObject"];
+	FSNodeInfo* node = [notification userInfo][@"NSObject"];
 	if ([expandedNodes_ containsObject:[node absolutePath]])
 	{
 		[expandedNodes_ removeObject:[node absolutePath]];
@@ -174,7 +174,7 @@
 {
 	if (!expandedNodes_)
 		[self restoreExpandedStateFromUserDefaults];
-	FSNodeInfo* node = [[notification userInfo] objectForKey:@"NSObject"];
+	FSNodeInfo* node = [notification userInfo][@"NSObject"];
 	if (![expandedNodes_ containsObject:[node absolutePath]])
 	{
 		[expandedNodes_ addObject:[node absolutePath]];

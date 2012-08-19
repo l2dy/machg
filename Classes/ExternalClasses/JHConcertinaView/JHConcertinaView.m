@@ -22,30 +22,11 @@
 
 
 #import "JHConcertinaView.h"
+#import "Common.h"
 
 static inline CGFloat square(CGFloat f)									{ return f*f; }
 static inline CGFloat lowest(CGFloat val)								{ return (val > 0) ? floor(val) : ceil(val); }
 static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val < min) return min; if (val > max) return max; return val; }
-
-static inline NSNumber*	boolAsNumber(bool b)							{ return [NSNumber numberWithBool:b]; }
-static inline BOOL		numberAsBool(NSNumber* num)						{ return [num boolValue]; }
-
-static inline BOOL IsEmpty(id thing)
-{
-    return
-	thing == nil ||
-	([thing respondsToSelector:@selector(length)] && [(NSData*)thing length] == 0) ||
-	([thing respondsToSelector:@selector(count)]  && [(NSArray*)thing count] == 0);
-}
-
-static inline NSString* fstr(NSString* format, ...)
-{
-    va_list args;
-    va_start(args, format);
-    NSString* string = [[NSString alloc] initWithFormat:format arguments:args];
-    va_end(args);
-    return string;
-}
 
 NSView* enclosingViewOfClass(NSView* view, Class class)
 {
@@ -169,7 +150,7 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 			extraHeights[i] = floor(extra/count);
 	else
 		for (NSInteger i = 0 ; i < count; i++)
-			extraHeights[i] = extraForPane(extra, [panes objectAtIndex:i], totalContentHeights);
+			extraHeights[i] = extraForPane(extra, panes[i], totalContentHeights);
 
 	CGFloat total = 0;
 	for (NSInteger i = 0 ; i < count; i++)
@@ -177,7 +158,7 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 	
 	extraHeights[0] += (extra - total); // Put any left over into expanding the first pane
 	for (NSInteger i = 0 ; i < count; i++)
-		[[panes objectAtIndex:i] changeFrameHeightBy: extraHeights[0]]; // Put any left over into expanding the first pane
+		[panes[i] changeFrameHeightBy: extraHeights[0]]; // Put any left over into expanding the first pane
 	[self changeFrameHeightBy: -extra];
 
 	return;
@@ -295,7 +276,7 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 		for (int i = 0; i<count; i++)
 		{
 			JHConcertinaSubView* ithPane = [self pane:i];
-			BOOL initiallyCollapsed = numberAsBool([oldCollapsedStates_ objectAtIndex:i]);
+			BOOL initiallyCollapsed = numberAsBool(oldCollapsedStates_[i]);
 			BOOL collapsed = [ithPane contentHeight] <= 0;
 			recordNewCollapseSate |= (collapsed != initiallyCollapsed);
 			if (collapsed && !initiallyCollapsed)
@@ -311,7 +292,7 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 
 - (JHConcertinaSubView*) pane:(NSInteger)paneNumber
 {
-	return [arrayOfConcertinaPanes objectAtIndex:paneNumber];
+	return arrayOfConcertinaPanes[paneNumber];
 }
 
 - (void) expandPane:(NSView*)paneChild toHeight:(CGFloat)height
@@ -632,7 +613,7 @@ static inline CGFloat total(CGFloat* array, NSInteger count)
 	NSMutableDictionary* dict = [[NSMutableDictionary alloc]init];
 	NSInteger count = [arrayOfConcertinaPanes count];	
 	for (int i = 0; i<count; i++)
-		[dict setObject:NSStringFromRect([[self pane:i] frame]) forKey:fstr(@"pane%d",i)];
+		dict[fstr(@"pane%d",i)] = NSStringFromRect([[self pane:i] frame]);
 	[[NSUserDefaults standardUserDefaults] setObject:dict forKey:autosavePoistionName_];	
 }
 
@@ -647,7 +628,7 @@ static inline CGFloat total(CGFloat* array, NSInteger count)
 	NSInteger count = [arrayOfConcertinaPanes count];
 	for (int i = 0; i<count; i++)
 	{
-		NSString* paneFrameString = [dict objectForKey:fstr(@"pane%d",i)];
+		NSString* paneFrameString = dict[fstr(@"pane%d",i)];
 		if (paneFrameString)
 		{
 			[[self pane:i] setFrame:NSRectFromString(paneFrameString)];

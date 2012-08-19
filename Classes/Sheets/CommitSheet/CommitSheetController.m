@@ -45,7 +45,7 @@ NSString* kAmendOption	 = @"amendOption";
 	if ([self showingFilesTable])
 	{
 		NSDictionary* userInfo = [notification userInfo];
-		NSString* absolutePath = fstr(@"%@/%@", nonNil([userInfo objectForKey:kRootPath]), nonNil([userInfo objectForKey:kFileName]));
+		NSString* absolutePath = fstr(@"%@/%@", nonNil(userInfo[kRootPath]), nonNil(userInfo[kFileName]));
 		FSNodeInfo* changedNode = [[self rootNodeInfo] nodeForPathFromRoot:absolutePath];
 		if (changedNode)
 			[[[self window] contentView] setNeedsDisplayInRect:[self rectInWindowForNode:changedNode]];
@@ -132,7 +132,7 @@ NSString* kAmendOption	 = @"amendOption";
 
 - (IBAction) handlePreviousCommitMessagesTableDoubleClick:(id)sender
 {
-	NSString* message = [logCommentsTableSourceData objectAtIndex:[previousCommitMessagesTableView clickedRow]];
+	NSString* message = logCommentsTableSourceData[[previousCommitMessagesTableView clickedRow]];
 	[commitMessageTextView insertText:message];
 	[theCommitSheet makeFirstResponder:commitMessageTextView];
 }
@@ -362,7 +362,7 @@ NSString* kAmendOption	 = @"amendOption";
 - (id) tableView:(NSTableView*)aTableView objectValueForTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
 {
 	if (aTableView == previousCommitMessagesTableView)
-		return [logCommentsTableSourceData objectAtIndex:rowIndex];
+		return logCommentsTableSourceData[rowIndex];
 	return @" ";
 }
 
@@ -483,7 +483,7 @@ NSString* kAmendOption	 = @"amendOption";
 		[[NSFileManager defaultManager] copyItemAtPath:backupPath toPath:originalPath error:&err];
 		[NSApp presentAnyErrorsAndClear:&err];
 	}
-	moveFilesToTheTrash([NSArray arrayWithObject:tempDirectoryPath]);
+	moveFilesToTheTrash(@[tempDirectoryPath]);
 }
 
 - (void) sheetActionCommitWithUncontestedPaths:(NSArray*)uncontestedPaths andContestedPaths:(NSArray*)contestedPaths amending:(BOOL)amend
@@ -696,7 +696,7 @@ NSString* kAmendOption	 = @"amendOption";
 			return  nil;
 	}
 	NSArray* lines = [results.outStr componentsSeparatedByString:@"\n"];
-	return IsNotEmpty(lines) ? lines : [NSArray array];
+	return IsNotEmpty(lines) ? lines : @[];
 }
 
 // Get any resolve status lines and change the resolved code 'R' to 'V' so that this status letter doesn't conflict with the other
@@ -730,7 +730,7 @@ NSString* kAmendOption	 = @"amendOption";
 
 - (BOOL) writePaths:(NSArray*)paths toPasteboard:(NSPasteboard*)pasteboard
 {
-	[pasteboard declareTypes:[NSArray arrayWithObject:NSFilenamesPboardType] owner:self];
+	[pasteboard declareTypes:@[NSFilenamesPboardType] owner:self];
 	[pasteboard setPropertyList:paths forType:NSFilenamesPboardType];	
 	return IsNotEmpty(paths) ? YES : NO;
 }

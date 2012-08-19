@@ -91,8 +91,8 @@
 	NSArray* revs = [[[myDocument theHistoryView] logTableView] chosenRevisions];
 	if ([revs count] > 0)
 	{
-		NSInteger minRev = numberAsInt([revs objectAtIndex:0]);
-		NSInteger maxRev = numberAsInt([revs objectAtIndex:0]);
+		NSInteger minRev = numberAsInt(revs[0]);
+		NSInteger maxRev = numberAsInt(revs[0]);
 		for (NSNumber* revision in revs)
 		{
 			NSInteger revInt = numberAsInt(revision);
@@ -170,8 +170,8 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 	fileNameTemplate      = [fileNameTemplate stringByReplacingOccurrencesOfRegex:@"\\%N" withString:intAsString(numberOfPatches)];
 	BOOL changingFileName = [fileNameTemplate isMatchedByRegex:@"\\%[nrRhH]" options:RKLNoOptions];
 	
-	NSString* countFormat    = [[NSArray arrayWithObjects:@"%0", intAsString([intAsString(numberOfPatches) length]), @"d", nil] componentsJoinedByString:@""];
-	NSString* revisionFormat = [[NSArray arrayWithObjects:@"%0", intAsString([intAsString(MAX(start, end)) length]), @"d", nil] componentsJoinedByString:@""];
+	NSString* countFormat    = [@[@"%0", intAsString([intAsString(numberOfPatches) length]), @"d"] componentsJoinedByString:@""];
+	NSString* revisionFormat = [@[@"%0", intAsString([intAsString(MAX(start, end)) length]), @"d"] componentsJoinedByString:@""];
 	
 	[myDocument dispatchToMercurialQueuedWithDescription:exportDescription  process:^{
 		[myDocument delayEventsUntilFinishBlock:^{
@@ -212,7 +212,7 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 						NSString* header4 = fstr(@"# Node ID %@", [entry changeset]);
 						NSString* header5 = fstr(@"# Parent  %@", [parent changeset]);
 						NSString* header6 = fstr(@"%@\n", [entry fullComment]);
-						content = [[NSArray arrayWithObjects:header1, header2, header3, header4, header5, header6, content, nil] componentsJoinedByString:@"\n"];
+						content = [@[header1, header2, header3, header4, header5, header6, content] componentsJoinedByString:@"\n"];
 					}
 					else if (rev != incompleteRev && reversePatchOption_)
 					{
@@ -224,7 +224,7 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 						NSString* header1 = @"# HG changeset patch";
 						NSString* header2 = fstr(@"# User %@", [entry fullAuthor]);
 						NSString* header3 = fstr(@"Backout: %@\n", [entry fullComment]);
-						content = [[NSArray arrayWithObjects:header1, header2, header3, content, nil] componentsJoinedByString:@"\n"];
+						content = [@[header1, header2, header3, content] componentsJoinedByString:@"\n"];
 					}
 					NSString* patchFileName = fileNameTemplate;
 					patchFileName = [patchFileName stringByReplacingOccurrencesOfRegex:@"\\%R" withString:intAsString(rev)];

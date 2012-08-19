@@ -71,7 +71,7 @@
 	
 
 	// drag and drop support
-	[self registerForDraggedTypes:[NSArray arrayWithObjects:kSidebarPBoardType, NSFilenamesPboardType, nil]];
+	[self registerForDraggedTypes:@[kSidebarPBoardType, NSFilenamesPboardType]];
 
 	// Set repository path control default string
 	[repositoryPathControl_ setURL:[NSURL fileURLWithPath:NSHomeDirectory()]];
@@ -112,7 +112,7 @@
 
 - (void) sidebarNodeDidChange:(NSNotification*)notification
 {
-	NSString* nodePath = [[notification userInfo] objectForKey:@"sidebarNodePath"];
+	NSString* nodePath = [notification userInfo][@"sidebarNodePath"];
 	[self setNeedsDisplayForNodePath:nodePath];
 }
 
@@ -345,8 +345,8 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 		SidebarNode* selectedNode = [self selectedNode];
 		[sidebarCell setNode:node];
 
-		NSString* outgoingCount = [outgoingCounts objectForKey:[node path]];
-		NSString* incomingCount = [incomingCounts objectForKey:[node path]];
+		NSString* outgoingCount = outgoingCounts[[node path]];
+		NSString* incomingCount = incomingCounts[[node path]];
 		BOOL selected = [self isRowSelected:[self rowForItem:node]];
 		BOOL exists = [node isLocalRepositoryRef] && repositoryExistsAtPath([node path]);
 		BOOL allowedBadge = exists || [node isServerRepositoryRef];
@@ -491,12 +491,12 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 // Override these so we can save the state if a node is expanded or not.
 - (void) outlineViewItemDidCollapse:(NSNotification*)notification
 {
-	SidebarNode* node = [[notification userInfo] objectForKey:@"NSObject"];
+	SidebarNode* node = [notification userInfo][@"NSObject"];
 	[node setIsExpanded:NO];
 }
 - (void) outlineViewItemDidExpand:(NSNotification*)notification
 {
-	SidebarNode* node = [[notification userInfo] objectForKey:@"NSObject"];
+	SidebarNode* node = [notification userInfo][@"NSObject"];
 	[node setIsExpanded:YES];
 }
 
@@ -507,7 +507,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 		return;
 
 	SidebarNode* selectedNode = [self selectedNode];
-	NSText* fieldEditor = [[aNotification userInfo] objectForKey:@"NSFieldEditor"];
+	NSText* fieldEditor = [aNotification userInfo][@"NSFieldEditor"];
 	NSString* newString = [[fieldEditor string] copy];		// Important to make a copy here. Apple says:
 
 	if (newString == [selectedNode shortName])
@@ -556,8 +556,8 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	NSString* captionBase = [file lastPathComponent];
 	for (NSArray* path in paths)
 	{
-		NSString* serverId = trimString([path objectAtIndex:1]);
-		NSString* serverPath = [path objectAtIndex:2];
+		NSString* serverId = trimString(path[1]);
+		NSString* serverPath = path[2];
 		NSString* url = trimmedURL(serverPath);
 		
 		// If the server is already present in the document don't add it again.
@@ -627,7 +627,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 - (NSDragOperation) draggingSourceOperationMaskForLocal:(BOOL)isLocal  { return isLocal ? (NSDragOperationMove|NSDragOperationCopy) : NSDragOperationNone; }
 - (BOOL) outlineView:(NSOutlineView*)outlineView  writeItems:(NSArray*)items  toPasteboard:(NSPasteboard*)pasteboard
 {
-	[pasteboard declareTypes:[NSArray arrayWithObjects:kSidebarPBoardType, nil] owner:self];
+	[pasteboard declareTypes:@[kSidebarPBoardType] owner:self];
 	
 	// keep track of this nodes for drag feedback in "validateDrop"
 	[[AppController sharedAppController] setDragNodesArray:items];
@@ -650,7 +650,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 - (NSDragOperation) outlineView:(NSOutlineView*)outlineView  validateDrop:(id<NSDraggingInfo>)info  proposedItem:(id)item  proposedChildIndex:(NSInteger)index
 {
 	NSPasteboard* pasteboard = [info draggingPasteboard];	// get the pasteboard
-	if ([pasteboard availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]])
+	if ([pasteboard availableTypeFromArray:@[NSFilenamesPboardType]])
 	{
 		NSArray* filenames = [pasteboard propertyListForType:NSFilenamesPboardType];
 		NSArray* resolvedFilenames = [filenames resolveSymlinksAndAliasesInPaths];
@@ -684,7 +684,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 		targetParent = root_;
 
 	// user is doing an intra-app drag within the outline view
-	if ([pasteboard availableTypeFromArray:[NSArray arrayWithObject:kSidebarPBoardType]])
+	if ([pasteboard availableTypeFromArray:@[kSidebarPBoardType]])
 	{
 		NSInteger adjIdx = 0;
 
@@ -699,7 +699,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 		BOOL copyNodes = (sourceSidebar != self) || ([info draggingSourceOperationMask] == NSDragOperationCopy);
 		
 		// We can't drag the item onto itself
-		if ([dragNodesArray count] == 1 && [dragNodesArray objectAtIndex:0] == targetParent)
+		if ([dragNodesArray count] == 1 && dragNodesArray[0] == targetParent)
 			return NO;
 		
 		if (!copyNodes)
@@ -707,7 +707,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 			// Compute new insertion offset
 			for (NSInteger i = 0; i < [dragNodesArray count]; ++i)
 			{
-				SidebarNode* node = [dragNodesArray objectAtIndex:i];
+				SidebarNode* node = dragNodesArray[i];
 				if ([node parent] == targetParent)
 					if ([targetParent indexOfChildNode:node] < index)
 						adjIdx--;
@@ -715,7 +715,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 
 			for (NSInteger i = 0; i < [dragNodesArray count]; ++i)
 			{
-				SidebarNode* node = [dragNodesArray objectAtIndex:i];
+				SidebarNode* node = dragNodesArray[i];
 				[[node parent] removeChild:node];
 			}
 		}
@@ -725,7 +725,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 			newTargetIndex = [targetParent numberOfChildren];
 		for (NSInteger i = [dragNodesArray count] -1; i >=0; i--)
 		{
-			SidebarNode* node = [dragNodesArray objectAtIndex:i];
+			SidebarNode* node = dragNodesArray[i];
 			SidebarNode* useNode = copyNodes ? [node copyNodeTree] : node;
 			[targetParent insertChild:useNode atIndex:newTargetIndex];
 		}
@@ -742,7 +742,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	}
 
 	// We are dragging files in from the finder.
-	if ([pasteboard availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]])
+	if ([pasteboard availableTypeFromArray:@[NSFilenamesPboardType]])
 	{
 		SidebarNode* copiedTree = [root_ copyNodeTree];
 		[[self prepareUndoWithTarget:self] setRootAndUpdate:copiedTree];
@@ -1354,8 +1354,8 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 }
 
 
-- (NSString*) outgoingCountTo:(SidebarNode*)destination	{ return [outgoingCounts objectForKey:[destination path]]; }
-- (NSString*) incomingCountFrom:(SidebarNode*)source	{ return [incomingCounts objectForKey:[source path]]; }
+- (NSString*) outgoingCountTo:(SidebarNode*)destination	{ return outgoingCounts[[destination path]]; }
+- (NSString*) incomingCountFrom:(SidebarNode*)source	{ return incomingCounts[[source path]]; }
 
 
 - (void) computeIncomingOutgoingToCompatibleRepositories
@@ -1393,10 +1393,10 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 											 if (![rootPath isEqualTo:[[self selectedNode] path]])
 												 return;
 											 if ([results hasNoErrors])
-												 [outgoingCounts setObject:intAsString([results.outStr length]) forKey:[repo path]];
+												 outgoingCounts[[repo path]] = intAsString([results.outStr length]);
 											 else
-												 [outgoingCounts setObject:@"-" forKey:[repo path]];
-											 NSDictionary* info = [NSDictionary dictionaryWithObject:[repo path] forKey:@"sidebarNodePath"];
+												 outgoingCounts[[repo path]] = @"-";
+											 NSDictionary* info = @{@"sidebarNodePath": [repo path]};
 											 [myDocument postNotificationWithName:kReceivedCompatibleRepositoryCount userInfo:info];
 										 });										 
 									 },
@@ -1407,7 +1407,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 										 dispatch_async(mainQueue(), ^{
 											 if (![rootPath isEqualTo:[[self selectedNode] path]])
 												 return;
-											 [outgoingCounts setObject:@"-" forKey:[repo path]];
+											 outgoingCounts[[repo path]] = @"-";
 											 [self setNeedsDisplayForNodePath:[repo path]];
 										 });										 
 									 });
@@ -1429,10 +1429,10 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 											 if (![rootPath isEqualTo:[[self selectedNode] path]])
 												 return;
 											 if ([results hasNoErrors])
-												 [incomingCounts setObject:intAsString([results.outStr length]) forKey:[repo path]];
+												 incomingCounts[[repo path]] = intAsString([results.outStr length]);
 											 else
-												 [incomingCounts setObject:@"-" forKey:[repo path]];
-											 NSDictionary* info = [NSDictionary dictionaryWithObject:[repo path] forKey:@"sidebarNodePath"];
+												 incomingCounts[[repo path]] = @"-";
+											 NSDictionary* info = @{@"sidebarNodePath": [repo path]};
 											 [myDocument postNotificationWithName:kReceivedCompatibleRepositoryCount userInfo:info];
 										 });										 
 									 },
@@ -1443,7 +1443,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 										 dispatch_async(mainQueue(), ^{
 											 if (![rootPath isEqualTo:[[self selectedNode] path]])
 												 return;
-											 [incomingCounts setObject:@"-" forKey:[repo path]];
+											 incomingCounts[[repo path]] = @"-";
 											 [self setNeedsDisplayForNodePath:[repo path]];
 										 });										 
 									 });

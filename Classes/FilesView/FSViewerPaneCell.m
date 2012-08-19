@@ -212,11 +212,11 @@ NSDictionary* fsStringAttributes(FSNodeInfo* nodeInfo)
 		NSFont* italicTextFont = [fontManager convertFont:textFont toHaveTrait:NSItalicFontMask];
 		NSFont* boldTextFont   = [fontManager convertFont:textFont toHaveTrait:NSBoldFontMask];
 		
-		standardAttributes = [NSDictionary dictionaryWithObjectsAndKeys: textFont,       NSFontAttributeName, ps, NSParagraphStyleAttributeName, nil];
-		italicAttributes   = [NSDictionary dictionaryWithObjectsAndKeys: italicTextFont, NSFontAttributeName, ps, NSParagraphStyleAttributeName, nil];
-		grayedAttributes   = [NSDictionary dictionaryWithObjectsAndKeys: textFont,       NSFontAttributeName, greyColor, NSForegroundColorAttributeName, ps, NSParagraphStyleAttributeName, nil];
-		dirtyAttributes    = [NSDictionary dictionaryWithObjectsAndKeys: boldTextFont,   NSFontAttributeName, greyColor, NSForegroundColorAttributeName, ps, NSParagraphStyleAttributeName, nil];
-		virtualAttributes  = [NSDictionary dictionaryWithObjectsAndKeys: italicTextFont, NSFontAttributeName, ps, NSParagraphStyleAttributeName, nil];
+		standardAttributes = @{NSFontAttributeName: textFont, NSParagraphStyleAttributeName: ps};
+		italicAttributes   = @{NSFontAttributeName: italicTextFont, NSParagraphStyleAttributeName: ps};
+		grayedAttributes   = @{NSFontAttributeName: textFont, NSForegroundColorAttributeName: greyColor, NSParagraphStyleAttributeName: ps};
+		dirtyAttributes    = @{NSFontAttributeName: boldTextFont, NSForegroundColorAttributeName: greyColor, NSParagraphStyleAttributeName: ps};
+		virtualAttributes  = @{NSFontAttributeName: italicTextFont, NSParagraphStyleAttributeName: ps};
 	}
 	
 	if ([nodeInfo isDirty])

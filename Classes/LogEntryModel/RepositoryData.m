@@ -465,7 +465,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 {
 	NSString* repositoryDotHGDirPath = [[myDocument absolutePathOfRepositoryRoot] stringByAppendingPathComponent:@".hg"];
 	NSString* histEditStatePath = [repositoryDotHGDirPath stringByAppendingPathComponent:@"rebasestate"];
-	moveFilesToTheTrash([NSArray arrayWithObject:histEditStatePath]);
+	moveFilesToTheTrash(@[histEditStatePath]);
 }
 
 - (BOOL) historyEditInProgress
@@ -479,7 +479,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 {
 	NSString* repositoryDotHGDirPath = [[myDocument absolutePathOfRepositoryRoot] stringByAppendingPathComponent:@".hg"];
 	NSString* histEditStatePath = [repositoryDotHGDirPath stringByAppendingPathComponent:@"histedit-state"];
-	moveFilesToTheTrash([NSArray arrayWithObject:histEditStatePath]);
+	moveFilesToTheTrash(@[histEditStatePath]);
 }
 
 
@@ -537,7 +537,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 	
 	@synchronized(revisionNumberToLogEntry_)
 	{
-		[revisionNumberToLogEntry_  setObject:entry forKey:rev];
+		revisionNumberToLogEntry_[rev] = entry;
 		if ([entry parentsArray])
 		{
 			NSArray* entries = [NSMutableArray arrayWithObject:entry];
@@ -551,16 +551,16 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 // Given a revision ensure that the parents and children are correctly linked in the revisionNumberToLogEntry_ table.
 - (void) relinkParentsAndChildrenOf:(NSNumber*)revision
 {
-	LogEntry* entry = [revisionNumberToLogEntry_ objectForKey:revision];
+	LogEntry* entry = revisionNumberToLogEntry_[revision];
 	for (NSNumber* parentRevision in [entry parentsOfEntry])
 	{
-		LogEntry* parentEntry = [revisionNumberToLogEntry_ objectForKey:parentRevision];
+		LogEntry* parentEntry = revisionNumberToLogEntry_[parentRevision];
 		[parentEntry addChildRevisionNum:revision];
 	}
 	NSMutableArray* childrenToRemove = nil;
 	for (NSNumber* childRevision in [entry childrenOfEntry])
 	{
-		LogEntry* childEntry = [revisionNumberToLogEntry_ objectForKey:childRevision];
+		LogEntry* childEntry = revisionNumberToLogEntry_[childRevision];
 		if (!childEntry || ![[childEntry parentsOfEntry] containsObject:revision])
 		{
 			if (!childrenToRemove)
@@ -589,7 +589,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 		NSString* changeset = [entry changeset];
 		if (changeset)
 		{
-			LogRecord* logRecord = [changesetHashToLogRecord objectForKey:changeset];
+			LogRecord* logRecord = changesetHashToLogRecord[changeset];
 			if ([logRecord detailsAreLoadingOrLoaded])
 				needToLoadLogRecord = NO;
 			if (!logRecord)
@@ -625,12 +625,12 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 			{
 				NSNumber* revision = [entry revision];
 				
-				LogEntry* oldEntry = [oldRevisionNumberToLogEntry_ objectForKey:revision];
+				LogEntry* oldEntry = oldRevisionNumberToLogEntry_[revision];
 				if ([oldEntry childrenArray]) [revisionsToReconnect addObjectsFromArray:[oldEntry childrenArray]];
 				if ([oldEntry parentsArray])  [revisionsToReconnect addObjectsFromArray:[oldEntry parentsArray]];
 				if ([entry parentsArray])	  [revisionsToReconnect addObjectsFromArray:[entry parentsArray]];
 				[revisionsToReconnect addObject:revision];
-				[revisionNumberToLogEntry_ setObject:entry forKey:revision];
+				revisionNumberToLogEntry_[revision] = entry;
 			}
 
 			

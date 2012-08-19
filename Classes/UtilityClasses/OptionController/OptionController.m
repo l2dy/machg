@@ -126,7 +126,7 @@
 			value = [self optionValue];
 		else
 			value = YESasNumber;
-		[connections setObject:value forKey:fullKey];
+		connections[fullKey] = value;
 	}
 	else
 		[connections removeObjectForKey:fullKey];
@@ -135,7 +135,7 @@
 - (void) setOptionFromConnections:(NSMutableDictionary*)connections forKey:(NSString*)key
 {
 	NSString* fullKey = [key stringByAppendingString:optionName];
-	id val = [connections objectForKey:fullKey];
+	id val = connections[fullKey];
 	[self setOptionValue:val];
 }
 

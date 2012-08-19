@@ -93,7 +93,7 @@
 			return (NSComparisonResult)NSOrderedAscending;
 		return (NSComparisonResult)NSOrderedSame;
 	}];
-	return ([sortedKeys count] > requestedRow) ? [sortedKeys objectAtIndex:requestedRow] : nil;
+	return ([sortedKeys count] > requestedRow) ? sortedKeys[requestedRow] : nil;
 }
 
 - (NSProgressIndicator*) indicatorForRow:(NSInteger)requestedRow
@@ -143,7 +143,7 @@
 
 - (void) setProgress:(NSString*)progress forKey:(NSNumber*)key
 {
-	[processProgressStrings_ setObject:progress forKey:key];
+	processProgressStrings_[key] = progress;
 	[processListTableView reloadData];
 }
 

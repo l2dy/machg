@@ -143,7 +143,7 @@
 	[mergeSheetWindow makeFirstResponder:mergeSheetWindow]; // Make the text fields of the sheet commit any changes they currently have
 	[myDocument endSheet:mergeSheetWindow];
 	NSNumber* theSelectedRevision = [logTableView selectedRevision];
-	NSArray* theOptions = [self forceTheMerge] ? [NSArray arrayWithObject:@"--force"] : nil;
+	NSArray* theOptions = [self forceTheMerge] ? @[@"--force"] : nil;
 	[myDocument primaryActionMergeWithVersion:theSelectedRevision andOptions:theOptions withConfirmation:NO];
 }
 

@@ -80,7 +80,7 @@
 	NSString* newTitle = fstr(@"Reverting All Files in %@", [myDocument selectedRepositoryShortName]);
 	[revertSheetTitle setStringValue:newTitle];
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
-	[self openRevertSheetWithPaths:[NSArray arrayWithObject:rootPath] andRevision:[myDocument getHGParent1Revision]];
+	[self openRevertSheetWithPaths:@[rootPath] andRevision:[myDocument getHGParent1Revision]];
 }
 
 - (IBAction) openRevertSheetWithSelectedFiles:(id)sender

@@ -78,7 +78,7 @@
 	[detailedPatchesWebView setShowExternalDiffButton:NO];
 
 	// drag and drop support
-	[self registerForDraggedTypes:[NSArray arrayWithObjects:kPatchesTablePBoardType, NSFilenamesPboardType, nil]];
+	[self registerForDraggedTypes:@[kPatchesTablePBoardType, NSFilenamesPboardType]];
 
 	[self setRowHeight:30];
 }
@@ -98,8 +98,8 @@
 
 - (BOOL)		 patchIsSelected { return 0 <= [self selectedRow] && [self selectedRow] < [patchesTableData_ count]; }
 - (BOOL)		 patchIsClicked	 { return [self clickedRow] != -1; }
-- (PatchRecord*) selectedPatch	 { return [self patchIsSelected] ? [patchesTableData_ objectAtIndex:[self selectedRow]] : nil; }
-- (PatchRecord*) clickedPatch	 { return [self patchIsClicked]  ? [patchesTableData_ objectAtIndex:[self clickedRow]]  : nil; }
+- (PatchRecord*) selectedPatch	 { return [self patchIsSelected] ? patchesTableData_[[self selectedRow]] : nil; }
+- (PatchRecord*) clickedPatch	 { return [self patchIsClicked]  ? patchesTableData_[[self clickedRow]]  : nil; }
 - (PatchRecord*) chosenPatch	 { PatchRecord* ans = [self clickedPatch]; return ans ? ans : [self selectedPatch]; }
 - (NSArray*)     patches		 { return patchesTableData_; }
 
@@ -207,7 +207,7 @@
 
 - (id) tableView:(NSTableView*)aTableView objectValueForTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)requestedRow
 {
-	PatchRecord* patch = [[self patchesTableData] objectAtIndex:requestedRow];
+	PatchRecord* patch = [self patchesTableData][requestedRow];
 	NSString* requestedColumn = [aTableColumn identifier];
 
 	id value = [patch valueForKey:requestedColumn];
@@ -216,7 +216,7 @@
 
 - (void) tableView:(NSTableView*)aTableView setObjectValue:(id)anObject forTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
 {
-	PatchRecord* clickedPatch = [[self patchesTableData] objectAtIndex:rowIndex];
+	PatchRecord* clickedPatch = [self patchesTableData][rowIndex];
 	NSString* columnIdentifier = [aTableColumn identifier];
 	[clickedPatch setValue:anObject forKey:columnIdentifier];
 
@@ -232,7 +232,7 @@
 - (void) tableView:(NSTableView*)aTableView  willDisplayCell:(id)aCell forTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
 {
 	[aCell setPatchesTableColumn:aTableColumn];
-	[aCell setPatch:[patchesTableData_ objectAtIndex:rowIndex]];
+	[aCell setPatch:patchesTableData_[rowIndex]];
 }
 
 
@@ -272,7 +272,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 	NSInteger column = [self clickedColumn];
 	if (column < 0)
 		return YES;
-	NSTableColumn* clickedTableColumn = [[self tableColumns] objectAtIndex:column];
+	NSTableColumn* clickedTableColumn = [self tableColumns][column];
 	NSString* columnIdentifier = [clickedTableColumn identifier];
 	if ([columnIdentifier isEqualToString:@"forceOption"] || [columnIdentifier isEqualToString:@"exactOption"] || [columnIdentifier isEqualToString:@"commitOption"] || [columnIdentifier isEqualToString:@"importBranchOption"])
 		return NO;
@@ -293,7 +293,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 	NSInteger theEditedColumn = [self editedColumn];
 	if (theEditedColumn < 0 || theEditedColumn >= [[self tableColumns]count])
 		return NO;
-	NSTableColumn* editedTableColumn = [[self tableColumns] objectAtIndex:theEditedColumn];
+	NSTableColumn* editedTableColumn = [self tableColumns][theEditedColumn];
 	NSString* columnIdentifier = [editedTableColumn identifier];
 	if ([columnIdentifier isNotEqualToString:@"commitMessage"])
 		return NO;
@@ -318,7 +318,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 {
     // Copy the row numbers to the pasteboard.
     NSData* data = [NSKeyedArchiver archivedDataWithRootObject:rowIndexes];
-    [pboard declareTypes:[NSArray arrayWithObject:kPatchesTablePBoardType] owner:self];
+    [pboard declareTypes:@[kPatchesTablePBoardType] owner:self];
     [pboard setData:data forType:kPatchesTablePBoardType];
     return YES;
 }
@@ -327,12 +327,12 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 {
     // Add code here to validate the drop
 	NSPasteboard* pboard = [info draggingPasteboard];	// get the pasteboard
-	if ([pboard availableTypeFromArray:[NSArray arrayWithObject:kPatchesTablePBoardType]])
+	if ([pboard availableTypeFromArray:@[kPatchesTablePBoardType]])
 	{
 		if (op == NSTableViewDropAbove)
 			return NSDragOperationMove;
 	}
-	else if ([pboard availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]])
+	else if ([pboard availableTypeFromArray:@[NSFilenamesPboardType]])
 	{
 		NSArray* filenames = [pboard propertyListForType:NSFilenamesPboardType];
 		NSArray* resolvedFilenames = [filenames resolveSymlinksAndAliasesInPaths];
@@ -350,7 +350,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 - (BOOL) tableView:(NSTableView*)aTableView acceptDrop:(id <NSDraggingInfo>)info row:(NSInteger)dropRow dropOperation:(NSTableViewDropOperation)operation
 {
     NSPasteboard* pboard = [info draggingPasteboard];
-	if ([pboard availableTypeFromArray:[NSArray arrayWithObject:kPatchesTablePBoardType]])
+	if ([pboard availableTypeFromArray:@[kPatchesTablePBoardType]])
 	{
 		NSData* rowData = [pboard dataForType:kPatchesTablePBoardType];
 		NSIndexSet* rowIndexes = [NSKeyedUnarchiver unarchiveObjectWithData:rowData];
@@ -367,7 +367,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 		return YES;
 	}
 	
-	if ([pboard availableTypeFromArray:[NSArray arrayWithObject:NSFilenamesPboardType]])
+	if ([pboard availableTypeFromArray:@[NSFilenamesPboardType]])
 	{
 		NSArray* filenames = [pboard propertyListForType:NSFilenamesPboardType];
 		NSArray* resolvedFilenames = [filenames resolveSymlinksAndAliasesInPaths];

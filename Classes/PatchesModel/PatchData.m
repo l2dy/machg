@@ -46,8 +46,8 @@ static NSArray* splitTermination(NSString* str)
 	NSString* firstChars = [str substringToIndex:[str length] -1];
 	NSString* lastChar   = [str substringFromIndex:[str length] -1];
 	if (lastChar && [lastChar isMatchedByRegex:linebreak])
-		return [NSArray arrayWithObjects:firstChars, lastChar, nil];
-	return [NSArray arrayWithObject:str];
+		return @[firstChars, lastChar];
+	return @[str];
 }
 
 
@@ -438,7 +438,7 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 	FilePatch* newFilePatch = [FilePatch filePatchWithPath:filePath andHeader:filePatchHeader binary:binary];
 	if (!filePath || !newFilePatch)
 		return;
-	[filePatchForFilePathDictionary_ setObject:newFilePatch forKey:filePath];
+	filePatchForFilePathDictionary_[filePath] = newFilePatch;
 	[filePatches_ addObject:newFilePatch];
 }
 
@@ -452,7 +452,7 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 	NSArray* lines = [patchBody_ stringDividedIntoLines];			// The patchBody broken into it's lines (each line includes the line ending)
 	for (NSInteger i = 0; i < [lines count] ; i++)
 	{
-		NSString* line = [lines objectAtIndex:i];
+		NSString* line = lines[i];
 
 		// For speed for really long patches, short circut for the really common case of just adding the line to the hunk lines.
 		// (This skips the regex testing.) 
@@ -474,7 +474,7 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 			BOOL binaryPatch = NO;
 			for (;j < [lines count] ; j++)
 			{
-				NSString* jline = [lines objectAtIndex:j];
+				NSString* jline = lines[j];
 				if ([jline isMatchedByRegex:@"(^@@.*)|(^diff .*)"])
 					break;
 				if ([jline isMatchedByRegex:@"(^GIT binary patch$)"] && (j+1 < [lines count]))
@@ -523,7 +523,7 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 // MARK:  Accessors
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (FilePatch*) filePatchForFilePath:(NSString*)filePath		{ return [filePatchForFilePathDictionary_ objectForKey:filePath]; }
+- (FilePatch*) filePatchForFilePath:(NSString*)filePath		{ return filePatchForFilePathDictionary_[filePath]; }
 
 
 
@@ -573,8 +573,8 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 		[paragraphStyle setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
 		float charWidth = [[font screenFontWithRenderingMode:NSFontDefaultRenderingMode] advancementForGlyph:(NSGlyph) ' '].width;
 		[paragraphStyle setDefaultTabInterval:(charWidth * 4)];
-		[paragraphStyle setTabStops:[NSArray array]];
-		theDictionary = [NSDictionary dictionaryWithObjectsAndKeys:font, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil];
+		[paragraphStyle setTabStops:@[]];
+		theDictionary = @{NSFontAttributeName: font, NSParagraphStyleAttributeName: paragraphStyle};
 		
 		lightGreen		= [theDictionary mutableCopy];
 		lightBlue		= [theDictionary mutableCopy];
@@ -589,38 +589,38 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 		diffStatHeader	= [theDictionary mutableCopy];
 		normal			= [theDictionary mutableCopy];
 		
-		[lightGreen		setObject:rgbColor255(221.0, 255.0, 221.0) forKey:NSBackgroundColorAttributeName];
-		[lightBlue		setObject:rgbColor255(202.0, 238.0, 255.0) forKey:NSBackgroundColorAttributeName];
-		[lightRed		setObject:rgbColor255(255.0, 221.0, 221.0) forKey:NSBackgroundColorAttributeName];
-		[green			setObject:rgbColor255(160.0, 255.0, 160.0) forKey:NSBackgroundColorAttributeName];
-		[red			setObject:rgbColor255(255.0, 160.0, 160.0) forKey:NSBackgroundColorAttributeName];
-		[linePart		setObject:rgbColor255(240.0, 240.0, 240.0) forKey:NSBackgroundColorAttributeName];
-		[linePart		setObject:rgbColor255(128.0, 128.0, 128.0) forKey:NSForegroundColorAttributeName];
-		[hunkPart		setObject:rgbColor255(234.0, 242.0, 245.0) forKey:NSBackgroundColorAttributeName];
-		[hunkPart		setObject:rgbColor255(128.0, 128.0, 128.0) forKey:NSForegroundColorAttributeName];
-		[headerLine		setObject:rgbColor255(230.0, 230.0, 230.0) forKey:NSBackgroundColorAttributeName];
-		[headerLine		setObject:rgbColor255(128.0, 128.0, 128.0) forKey:NSForegroundColorAttributeName];
-		[diffStatLine	setObject:rgbColor255(255.0, 253.0, 217.0) forKey:NSBackgroundColorAttributeName];
-		[diffStatLine	setObject:rgbColor255(128.0, 128.0, 128.0) forKey:NSForegroundColorAttributeName];
-		[diffStatHeader setObject:rgbColor255(255.0, 253.0, 200.0) forKey:NSBackgroundColorAttributeName];
-		[diffStatHeader setObject:rgbColor255(128.0, 128.0, 128.0) forKey:NSForegroundColorAttributeName];
-		[magenta		setObject:rgbColor255(255.0, 200.0, 255.0) forKey:NSBackgroundColorAttributeName];
-		[normal			setObject:rgbColor255(248.0, 248.0, 255.0) forKey:NSBackgroundColorAttributeName];
+		lightGreen[NSBackgroundColorAttributeName] = rgbColor255(221.0, 255.0, 221.0);
+		lightBlue[NSBackgroundColorAttributeName] = rgbColor255(202.0, 238.0, 255.0);
+		lightRed[NSBackgroundColorAttributeName] = rgbColor255(255.0, 221.0, 221.0);
+		green[NSBackgroundColorAttributeName] = rgbColor255(160.0, 255.0, 160.0);
+		red[NSBackgroundColorAttributeName] = rgbColor255(255.0, 160.0, 160.0);
+		linePart[NSBackgroundColorAttributeName] = rgbColor255(240.0, 240.0, 240.0);
+		linePart[NSForegroundColorAttributeName] = rgbColor255(128.0, 128.0, 128.0);
+		hunkPart[NSBackgroundColorAttributeName] = rgbColor255(234.0, 242.0, 245.0);
+		hunkPart[NSForegroundColorAttributeName] = rgbColor255(128.0, 128.0, 128.0);
+		headerLine[NSBackgroundColorAttributeName] = rgbColor255(230.0, 230.0, 230.0);
+		headerLine[NSForegroundColorAttributeName] = rgbColor255(128.0, 128.0, 128.0);
+		diffStatLine[NSBackgroundColorAttributeName] = rgbColor255(255.0, 253.0, 217.0);
+		diffStatLine[NSForegroundColorAttributeName] = rgbColor255(128.0, 128.0, 128.0);
+		diffStatHeader[NSBackgroundColorAttributeName] = rgbColor255(255.0, 253.0, 200.0);
+		diffStatHeader[NSForegroundColorAttributeName] = rgbColor255(128.0, 128.0, 128.0);
+		magenta[NSBackgroundColorAttributeName] = rgbColor255(255.0, 200.0, 255.0);
+		normal[NSBackgroundColorAttributeName] = rgbColor255(248.0, 248.0, 255.0);
 		
 		NSMutableParagraphStyle* hunkParagraphStyle = [paragraphStyle mutableCopy];
 		[hunkParagraphStyle setParagraphSpacingBefore:20];
-		[hunkPart		setObject:hunkParagraphStyle forKey:NSParagraphStyleAttributeName];
+		hunkPart[NSParagraphStyleAttributeName] = hunkParagraphStyle;
 		
 		
 		NSMutableParagraphStyle* headerParagraphStyle = [paragraphStyle mutableCopy];
 		[headerParagraphStyle setParagraphSpacingBefore:30];
-		[headerLine		setObject:[NSFont fontWithName:@"Monaco"  size:15] forKey:NSFontAttributeName];
-		[headerLine		setObject:headerParagraphStyle forKey:NSParagraphStyleAttributeName];
+		headerLine[NSFontAttributeName] = [NSFont fontWithName:@"Monaco"  size:15];
+		headerLine[NSParagraphStyleAttributeName] = headerParagraphStyle;
 		
-		[diffStatHeader	setObject:[NSFont fontWithName:@"Monaco"  size:15] forKey:NSFontAttributeName];
+		diffStatHeader[NSFontAttributeName] = [NSFont fontWithName:@"Monaco"  size:15];
 	}
 	
-	//ExecutionResult* result = [ShellTask execute:@"/usr/bin/diffstat" withArgs:[NSArray arrayWithObjects:path_, nil] withEnvironment:[TaskExecutions environmentForHg]];
+	//ExecutionResult* result = [ShellTask execute:@"/usr/bin/diffstat" withArgs:@[path_] withEnvironment:[TaskExecutions environmentForHg]];
 	//if ([result hasNoErrors])
 	//{
 	//	[colorized appendAttributedString:[NSAttributedString string:@"Patch Statistics\n" withAttributes:diffStatHeader]];
@@ -631,7 +631,7 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 	NSArray* lines = [patchBody_ stringDividedIntoLines];			// The patchBody broken into it's lines (each line includes the line ending)	
 	for (NSInteger i = 0; i < [lines count] ; i++)
 	{
-		NSString* line = [lines objectAtIndex:i];
+		NSString* line = lines[i];
 		
 		// Detect the header of
 		// diff ...
@@ -639,8 +639,8 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 		// +++ b/<fileName>
 		if ([line isMatchedByRegex:@"^diff.*"] && i+2< [lines count])
 		{
-			NSString* minusLine = [lines objectAtIndex:i+1];
-			NSString* addLine   = [lines objectAtIndex:i+2];
+			NSString* minusLine = lines[i+1];
+			NSString* addLine   = lines[i+2];
 			NSString* filePath = nil;
 			if ([minusLine isMatchedByRegex:@"^---.*"])
 				if ([addLine getCapturesWithRegexAndTrimedComponents:@"^\\+\\+\\+\\s*b/(.*)"  firstComponent:&filePath])
@@ -719,7 +719,7 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 	NSDictionary* repositoryHunkExclusions = [hunkExclusions repositoryHunkExclusionsForRoot:root];
 	for (FilePatch* filePatch in filePatches_)
 	{
-		NSSet* exclusionsSet = [repositoryHunkExclusions objectForKey:filePatch];
+		NSSet* exclusionsSet = repositoryHunkExclusions[filePatch];
 		if (exclusionsSet)
 			if ([exclusionsSet intersectsSet:[filePatch hunkHashesSet]])
 				return YES;
@@ -738,7 +738,7 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 	for (FilePatch* filePatch in filePatches_)
 		if (filePatch)
 		{
-			NSSet* excludedHunks = [repositoryHunkExclusions objectForKey:[filePatch filePath]];
+			NSSet* excludedHunks = repositoryHunkExclusions[[filePatch filePath]];
 			NSString* filteredFilePatch = [filePatch filePatchExcluding:excludedHunks];
 			if (filteredFilePatch)
 			{
@@ -761,7 +761,7 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 	for (FilePatch* filePatch in filePatches_)
 		if (filePatch)
 		{
-			NSSet* excludedHunks = [repositoryHunkExclusions objectForKey:[filePatch filePath]];
+			NSSet* excludedHunks = repositoryHunkExclusions[[filePatch filePath]];
 			NSString* filteredFilePatch = [filePatch filePatchSelecting:excludedHunks];
 			if (filteredFilePatch)
 			{
@@ -809,7 +809,7 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 	for (FilePatch* filePatch in filePatches_)
 		if (filePatch)
 		{
-			NSSet* exclusionsSet = [repositoryHunkExclusions objectForKey:[filePatch filePath]];
+			NSSet* exclusionsSet = repositoryHunkExclusions[[filePatch filePath]];
 			if ([[filePatch hunkHashesSet] intersectsSet:exclusionsSet])
 				[paths addObject:[filePatch filePath]];
 		}
@@ -897,19 +897,19 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 		return self;
 	}
 
-	patchData_ = [PatchData patchDataFromDiffContents:trimString([parts objectAtIndex:2])];
-	NSString* header  = trimString([parts objectAtIndex:1]);
+	patchData_ = [PatchData patchDataFromDiffContents:trimString(parts[2])];
+	NSString* header  = trimString(parts[1]);
 	if (!header)
 		return self;
 
 	parts = [header captureComponentsMatchedByRegex:authorRegEx options:RKLMultiline range:NSMaxiumRange error:NULL];
 	if ([parts count] >= 1)
-		author_ = trimString([parts objectAtIndex:1]);
+		author_ = trimString(parts[1]);
 
 	parts = [header captureComponentsMatchedByRegex:dateRegEx options:RKLMultiline range:NSMaxiumRange error:NULL];
 	if ([parts count] >= 1)
 	{
-		date_ = trimString([parts objectAtIndex:1]);
+		date_ = trimString(parts[1]);
 		if (date_)
 		{
 			NSDate* parsedDate = [NSDate dateWithUTCdatePlusOffset:date_];
@@ -920,15 +920,15 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 
 	parts = [header captureComponentsMatchedByRegex:parentRegEx options:RKLMultiline range:NSMaxiumRange error:NULL];
 	if ([parts count] >= 1)
-		parent_ = trimString([parts objectAtIndex:1]);
+		parent_ = trimString(parts[1]);
 
 	parts = [header captureComponentsMatchedByRegex:nodeRegEx options:RKLMultiline range:NSMaxiumRange error:NULL];
 	if ([parts count] >= 1)
-		nodeID_ = trimString([parts objectAtIndex:1]);
+		nodeID_ = trimString(parts[1]);
 
 	parts = [header captureComponentsMatchedByRegex:commitMessageRegEx options:(RKLDotAll) range:NSMaxiumRange error:NULL];
 	if ([parts count] >= 1)
-		commitMessage_ = trimString([parts objectAtIndex:1]);
+		commitMessage_ = trimString(parts[1]);
 	
 	return self;
 }

@@ -36,7 +36,7 @@
 - (void) awakeFromNib
 {
 	offsetFromCenter_ = NSMakePoint(0.0, 0.0);
-	radius_ = [NSNumber numberWithFloat:450.0];
+	radius_ = @450.0f;
 	foregroundFilters_ = nil;
 	backgroundFilters_ = nil;
 	lastCenterForGradiant_ = nil;
@@ -65,7 +65,7 @@
 	CIColor* color0  = [CIColor colorWithRed: 77.0/255.0 green: 78.0/255.0 blue: 87.0/255.0 alpha:0.8];
 	CIColor* color1  = [CIColor colorWithRed: 39.0/255.0 green: 40.0/255.0 blue: 52.0/255.0 alpha:0.5];
 	CIVector* center = [self recomputePosition];
-	NSNumber* radius = radius_ ? radius_ : [NSNumber numberWithFloat:450.0];
+	NSNumber* radius = radius_ ? radius_ : @450.0f;
 	
 	CIFilter* gradiantFilter = [CIFilter filterWithName:@"CIGaussianGradient"];
 	[gradiantFilter setValue:color0 forKey:@"inputColor0"];
@@ -76,8 +76,8 @@
 	CIFilter* constantFilter = [CIFilter filterWithName:@"CIConstantColorGenerator"];
 	[constantFilter setValue:black forKey:@"inputColor"];
 	
-	foregroundFilters_ = [NSArray arrayWithObject:gradiantFilter];
-	backgroundFilters_ = [NSArray arrayWithObject:constantFilter];
+	foregroundFilters_ = @[gradiantFilter];
+	backgroundFilters_ = @[constantFilter];
 	
 }
 

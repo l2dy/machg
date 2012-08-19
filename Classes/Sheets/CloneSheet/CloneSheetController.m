@@ -49,7 +49,7 @@
 	[noupdateOption		setName:@"noupdate"];
 	[pullOption			setName:@"pull"];
 	[uncompressedOption setName:@"uncompressed"];
-	cmdOptions = [NSArray arrayWithObjects:revOption, sshOption, updaterevOption, remotecmdOption, noupdateOption, pullOption, uncompressedOption, nil];
+	cmdOptions = @[revOption, sshOption, updaterevOption, remotecmdOption, noupdateOption, pullOption, uncompressedOption];
 	[errorDisclosureController roundTheBoxCorners];
 }
 

@@ -69,10 +69,10 @@ NSString* const kHunkHash	= @"HunkHash";
 // MARK:  Accessors
 // -----------------------------------------------------------------------------------------------------------------------------------------
 
-- (NSDictionary*) repositoryHunkExclusionsForRoot: (NSString*)root				{ return [hunkExclusionsDictionary_ objectForKey:root]; }
-- (NSDictionary*) repositoryValidHunkHashesForRoot:(NSString*)root				{ return [validHunkHashDictionary_  objectForKey:root]; }
-- (NSSet*) hunkExclusionSetForRoot:(NSString*)root andFile:(NSString*)fileName	{ return [[hunkExclusionsDictionary_ objectForKey:root] objectForKey:fileName]; }
-- (NSSet*) validHunkHashSetForRoot:(NSString*)root andFile:(NSString*)fileName	{ return [[validHunkHashDictionary_  objectForKey:root] objectForKey:fileName]; }
+- (NSDictionary*) repositoryHunkExclusionsForRoot: (NSString*)root				{ return hunkExclusionsDictionary_[root]; }
+- (NSDictionary*) repositoryValidHunkHashesForRoot:(NSString*)root				{ return validHunkHashDictionary_[root]; }
+- (NSSet*) hunkExclusionSetForRoot:(NSString*)root andFile:(NSString*)fileName	{ return hunkExclusionsDictionary_[root][fileName]; }
+- (NSSet*) validHunkHashSetForRoot:(NSString*)root andFile:(NSString*)fileName	{ return validHunkHashDictionary_[root][fileName]; }
 
 
 
@@ -88,14 +88,14 @@ NSString* const kHunkHash	= @"HunkHash";
 	NSMutableDictionary* repositoryHunkExclusions = [hunkExclusionsDictionary_ objectForKey:root addingIfNil:[NSMutableDictionary class]];
 	NSMutableSet* set = [repositoryHunkExclusions objectForKey:fileName addingIfNil:[NSMutableSet class]];
 	[set addObject:hunkHash];
-	NSDictionary* info = [NSDictionary dictionaryWithObjectsAndKeys:nonNil(fileName), kFileName, nonNil(root), kRootPath, nonNil(hunkHash), kHunkHash, nil];
+	NSDictionary* info = @{kFileName: nonNil(fileName), kRootPath: nonNil(root), kHunkHash: nonNil(hunkHash)};
 	[self postNotificationWithName:kHunkWasExcluded userInfo:info];
 }
 
 - (void) enableHunk: (NSString*)hunkHash forRoot:(NSString*)root andFile:(NSString*)fileName
 {
-	NSMutableDictionary* repositoryHunkExclusions = [hunkExclusionsDictionary_ objectForKey:root];
-	NSMutableSet* set = [repositoryHunkExclusions objectForKey:fileName];
+	NSMutableDictionary* repositoryHunkExclusions = hunkExclusionsDictionary_[root];
+	NSMutableSet* set = repositoryHunkExclusions[fileName];
 	[set removeObject:hunkHash];
 	if (IsEmpty(set))
 	{
@@ -103,7 +103,7 @@ NSString* const kHunkHash	= @"HunkHash";
 		if (IsEmpty(repositoryHunkExclusions))
 			[hunkExclusionsDictionary_ removeObjectForKey:root];
 	}
-	NSDictionary* info = [NSDictionary dictionaryWithObjectsAndKeys:nonNil(fileName), kFileName, nonNil(root), kRootPath, nonNil(hunkHash), kHunkHash, nil];
+	NSDictionary* info = @{kFileName: nonNil(fileName), kRootPath: nonNil(root), kHunkHash: nonNil(hunkHash)};
 	[self postNotificationWithName:kHunkWasIncluded userInfo:info];
 }
 
@@ -112,16 +112,16 @@ NSString* const kHunkHash	= @"HunkHash";
 	NSSet* validHunkHashSet = [self validHunkHashSetForRoot:root andFile:fileName];
 	if (IsEmpty(validHunkHashSet)) return;
 	NSMutableDictionary* repositoryHunkExclusions = [hunkExclusionsDictionary_ objectForKey:root addingIfNil:[NSMutableDictionary class]];
-	[repositoryHunkExclusions setObject:[validHunkHashSet mutableCopy] forKey:fileName];
-	NSDictionary* info = [NSDictionary dictionaryWithObjectsAndKeys:nonNil(fileName), kFileName, nonNil(root), kRootPath, nil];
+	repositoryHunkExclusions[fileName] = [validHunkHashSet mutableCopy];
+	NSDictionary* info = @{kFileName: nonNil(fileName), kRootPath: nonNil(root)};
 	[self postNotificationWithName:kFileWasExcluded userInfo:info];
 }
 
 - (void) includeFile:(NSString*)fileName forRoot:(NSString*)root
 {
-	NSMutableDictionary* repositoryHunkExclusions = [hunkExclusionsDictionary_ objectForKey:root];
+	NSMutableDictionary* repositoryHunkExclusions = hunkExclusionsDictionary_[root];
 	[repositoryHunkExclusions removeObjectForKey:nonNil(fileName)];	
-	NSDictionary* info = [NSDictionary dictionaryWithObjectsAndKeys:nonNil(fileName), kFileName, nonNil(root), kRootPath, nil];
+	NSDictionary* info = @{kFileName: nonNil(fileName), kRootPath: nonNil(root)};
 	[self postNotificationWithName:kFileWasIncluded userInfo:info];
 }
 
@@ -129,7 +129,7 @@ NSString* const kHunkHash	= @"HunkHash";
 - (void) updateExclusionsForPatchData:(PatchData*)patchData andRoot:(NSString*)root within:(NSArray*)paths
 {
 	NSMutableDictionary* repositoryValidHunkHashes = [validHunkHashDictionary_  objectForKey:root addingIfNil:[NSMutableDictionary class]];
-	NSMutableDictionary* repositoryHunkExclusions  = [hunkExclusionsDictionary_ objectForKey:root];
+	NSMutableDictionary* repositoryHunkExclusions  = hunkExclusionsDictionary_[root];
 	
 	// For all file patches in the new patch data update them
 	for (FilePatch* filePatch in [patchData filePatches])
@@ -137,9 +137,9 @@ NSString* const kHunkHash	= @"HunkHash";
 		{
 			NSString* fileName = [filePatch filePath];
 			NSSet* validHunkHases = [filePatch hunkHashesSet];
-			[repositoryValidHunkHashes setObject:validHunkHases forKey:fileName];
+			repositoryValidHunkHashes[fileName] = validHunkHases;
 
-			NSMutableSet* currentSet = [repositoryHunkExclusions objectForKey:fileName];
+			NSMutableSet* currentSet = repositoryHunkExclusions[fileName];
 			if (!currentSet)
 				continue;
 			[currentSet intersectSet:validHunkHases];
@@ -176,9 +176,9 @@ NSString* const kHunkHash	= @"HunkHash";
 
 - (NSArray*) absolutePathsWithExclusionsForRoot:(NSString*)root
 {
-	NSDictionary* repositoryHunkExclusions = [hunkExclusionsDictionary_ objectForKey:root];
+	NSDictionary* repositoryHunkExclusions = hunkExclusionsDictionary_[root];
 	if (IsEmpty(repositoryHunkExclusions))
-		return [NSArray array];
+		return @[];
 	NSMutableArray* paths = [[NSMutableArray alloc]init];
 	for (NSString* key in [repositoryHunkExclusions allKeys])
 		[paths addObject:fstr(@"%@/%@",root,key)];
@@ -190,7 +190,7 @@ NSString* const kHunkHash	= @"HunkHash";
 {
 	NSArray* pathsWithExclusions = [self absolutePathsWithExclusionsForRoot:root];
 	if (IsEmpty(pathsWithExclusions))
-		return [NSArray array];
+		return @[];
 	
 	NSMutableSet* setOfPaths = [NSMutableSet setWithArray:paths];
 	[setOfPaths intersectSet:[NSSet setWithArray:pathsWithExclusions]];

@@ -839,17 +839,17 @@ NSString*   tempDirectoryPathWithTemplate(NSString* nameTemplate, NSString* dire
 static inline NSString*	intAsString(int i)				{ return [NSString stringWithFormat:@"%d", i]; }
 static inline int		stringAsInt(NSString* str)		{ return [str intValue]; }
 
-static inline NSNumber*	intAsNumber(int i)				{ return [NSNumber numberWithInt:i]; }
+static inline NSNumber*	intAsNumber(int i)				{ return @(i); }
 static inline int		numberAsInt(NSNumber* num)		{ return [num intValue]; }
 
-static inline NSNumber*	floatAsNumber(float f)			{ return [NSNumber numberWithFloat:f]; }
+static inline NSNumber*	floatAsNumber(float f)			{ return @(f); }
 static inline float		numberAsFloat(NSNumber* num)	{ return [num floatValue]; }
 
-static inline NSNumber*	boolAsNumber(bool b)			{ return [NSNumber numberWithBool:b]; }
+static inline NSNumber*	boolAsNumber(bool b)			{ return @(b); }
 static inline BOOL		numberAsBool(NSNumber* num)		{ return [num boolValue]; }
 
 static inline NSString*	numberAsString(NSNumber* num)	{ return [num stringValue]; }
-static inline NSNumber*	stringAsNumber(NSString* str)	{ return [NSNumber numberWithInt:[str intValue]]; }
+static inline NSNumber*	stringAsNumber(NSString* str)	{ return @([str intValue]); }
 
 static inline NSString* dupString(NSString* str)		{ return str ? [NSString stringWithString:str] : nil; }
 

@@ -182,7 +182,7 @@
 	NSSortDescriptor* byName = [NSSortDescriptor sortDescriptorWithKey:@"name"					ascending:YES  selector:@selector(caseInsensitiveCompare:)];
 	NSSortDescriptor* byRev  = [NSSortDescriptor sortDescriptorWithKey:@"revision"				ascending:YES  selector:@selector(compare:)];
 	NSSortDescriptor* byType = [NSSortDescriptor sortDescriptorWithKey:@"labelTypeDescription"	ascending:YES  selector:@selector(compare:)];
-	descriptors = [NSArray arrayWithObjects:byName, byRev, byType, nil];
+	descriptors = @[byName, byRev, byType];
 	return descriptors;
 }
 
@@ -194,7 +194,7 @@
 	NSSortDescriptor* byName = [NSSortDescriptor sortDescriptorWithKey:@"name"					ascending:YES  selector:@selector(caseInsensitiveCompare:)];
 	NSSortDescriptor* byRev  = [NSSortDescriptor sortDescriptorWithKey:@"revision"				ascending:YES  selector:@selector(compare:)];
 	NSSortDescriptor* byType = [NSSortDescriptor sortDescriptorWithKey:@"labelTypeDescription"	ascending:YES  selector:@selector(compare:)];
-	descriptors = [NSArray arrayWithObjects:byRev, byName, byType, nil];
+	descriptors = @[byRev, byName, byType];
 	return descriptors;
 }
 
@@ -206,7 +206,7 @@
 	NSSortDescriptor* byName = [NSSortDescriptor sortDescriptorWithKey:@"name"					ascending:YES  selector:@selector(caseInsensitiveCompare:)];
 	NSSortDescriptor* byRev  = [NSSortDescriptor sortDescriptorWithKey:@"revision"				ascending:YES  selector:@selector(compare:)];
 	NSSortDescriptor* byType = [NSSortDescriptor sortDescriptorWithKey:@"labelTypeDescription"	ascending:YES  selector:@selector(compare:)];
-	descriptors = [NSArray arrayWithObjects:byType, byRev, byName, nil];
+	descriptors = @[byType, byRev, byName];
 	return descriptors;
 }
 

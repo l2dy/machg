@@ -264,7 +264,7 @@
 - (NSArray*) chosenNodes
 {
 	if ([self nodeIsClicked] && ![self clickedNodeInSelectedNodes])
-		return [NSArray arrayWithObject:[self clickedNode]];	
+		return @[ [self clickedNode] ];
 	return [self selectedNodes];
 }
 
@@ -273,7 +273,7 @@
 {
 	NSArray* theSelectedNodes = [self selectedNodes];
 	if (IsEmpty(theSelectedNodes))
-		return [NSArray array];
+		return @[];
 	NSMutableArray* paths = [[NSMutableArray alloc] init];
 	for (FSNodeInfo* node in theSelectedNodes)
 		[paths addObjectIfNonNil:[node absolutePath]];
@@ -284,7 +284,7 @@
 - (NSArray*) absolutePathsOfChosenFiles
 {
 	if ([self nodeIsClicked] && ![self clickedNodeInSelectedNodes])
-		return [NSArray arrayWithObject:[[self clickedNode] absolutePath]];
+		return @[ [[self clickedNode] absolutePath] ];
 	return [self absolutePathsOfSelectedFilesInBrowser];
 }
 
@@ -364,7 +364,7 @@
 - (NSArray*) quickLookPreviewItems
 {
 	if (![self nodesAreSelected])
-		return [NSArray array];
+		return @[];
 	
 	NSMutableArray* quickLookPreviewItems = [[NSMutableArray alloc] init];
 	NSArray* nodes = [self selectedNodes];
@@ -471,10 +471,10 @@
 {
 	NSMenuItem* item = [[NSMenuItem alloc]init];
 	NSString* appName = [[appURL path] lastPathComponent];
-	if ([dict objectForKey:appName])
+	if (dict[appName])
 		return nil;
-	[dict setObject:appURL forKey:appName];
-	NSString* version = [[[NSBundle bundleWithPath:[appURL path]] infoDictionary] objectForKey:@"CFBundleShortVersionString"];
+	dict[appName] = appURL;
+	NSString* version = [[NSBundle bundleWithPath:[appURL path]] infoDictionary][@"CFBundleShortVersionString"];
 	NSString* title = [appName stringByDeletingPathExtension];
 	[item setTitle:version ? fstr(@"%@ (%@)",title, version) : title];
 	[item setRepresentedObject:appURL];
@@ -492,7 +492,7 @@
 	static NSArray* nsurlSortDescriptors = nil;
 	
 	if (!nsurlSortDescriptors)
-		nsurlSortDescriptors = [NSArray arrayWithObject:[[NSSortDescriptor alloc] initWithKey:@"absoluteString" ascending:YES]];
+		nsurlSortDescriptors = @[ [[NSSortDescriptor alloc] initWithKey:@"absoluteString" ascending:YES] ];
 
 	NSMenuItem* openWithItem = [theMenu itemWithTitle:@"Open With…"];
 	if (openWithItem)
@@ -612,7 +612,7 @@
 	dispatch_async(mainQueue(), ^{
 		WebScriptObject* script = [detailedPatchesWebView windowScriptObject];
 		[script setValue:self forKey:@"machgWebviewController"];
-		[script callWebScriptMethod:@"changeFontSizeOfDiff" withArguments:[NSArray arrayWithObject:fstr(@"%f",FontSizeOfDifferencesWebviewFromDefaults())]];
+		[script callWebScriptMethod:@"changeFontSizeOfDiff" withArguments:@[ fstr(@"%f",FontSizeOfDifferencesWebviewFromDefaults()) ]];
 			
 		NSArray* selectedPaths = [self absolutePathsOfSelectedFilesInBrowser];
 		if (IsEmpty(selectedPaths))
@@ -820,7 +820,7 @@
 		DebugLog(@"Null Root Path encountered.");
 		return;
 	}
-	NSArray* absoluteChangedPaths = [NSArray arrayWithObject:rootPath];
+	NSArray* absoluteChangedPaths = @[rootPath];
 	[self refreshBrowserPaths:[RepositoryPaths fromPaths:absoluteChangedPaths withRootPath:rootPath]  finishingBlock:nil];
 }
 

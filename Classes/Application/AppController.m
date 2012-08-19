@@ -48,11 +48,11 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 {
 	DebugLog(@"set up globals");
 	periodicCheckingForRepositoryIdentity = [NSTimer scheduledTimerWithTimeInterval:2.0 target:self selector:@selector(checkRepositoryIdentities:) userInfo:nil repeats:YES];
-	NOasNumber  = [NSNumber numberWithBool:NO];
-	YESasNumber = [NSNumber numberWithBool:YES];
+	NOasNumber  = @NO;
+	YESasNumber = @YES;
 	SlotNumber  = [NSNumber numberWithInteger:(NSNotFound -1)];	
 
-	configurationForProgress = [NSArray arrayWithObjects:@"--config", @"extensions.hgext.progress=", @"--config", @"progress.delay=0.5", @"--config", @"progress.format=number", @"--config", @"progress.assume-tty=True", @"--config", @"progress.refresh=0.25", @"--config", @"progress.output-prefix=MHGProgress:", nil];
+	configurationForProgress = @[@"--config", @"extensions.hgext.progress=", @"--config", @"progress.delay=0.5", @"--config", @"progress.format=number", @"--config", @"progress.assume-tty=True", @"--config", @"progress.refresh=0.25", @"--config", @"progress.output-prefix=MHGProgress:"];
 	setupGlobalsForLogEntryPartsAndTemplate();
 	setupGlobalsForLogRecordPartsAndTemplate();
 	
@@ -80,20 +80,20 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	missingSidebarSelectedColor		= rgbaColor255(255, 235, 235, 1.0);
 
 	// Set up font attributes
-	systemFontAttributes			= [NSDictionary dictionaryWithObjectsAndKeys: systemFont, NSFontAttributeName, nil];
-	graySystemFontAttributes		= [NSDictionary dictionaryWithObjectsAndKeys: systemFont, NSFontAttributeName, grayColor, NSForegroundColorAttributeName, nil];
-	boldSystemFontAttributes		= [NSDictionary dictionaryWithObjectsAndKeys: boldSystemFont, NSFontAttributeName, nil];
-	italicSystemFontAttributes		= [NSDictionary dictionaryWithObjectsAndKeys: systemFont, NSFontAttributeName, [NSNumber numberWithFloat:0.15], NSObliquenessAttributeName, nil];
+	systemFontAttributes			= @{NSFontAttributeName: systemFont};
+	graySystemFontAttributes		= @{NSFontAttributeName: systemFont, NSForegroundColorAttributeName: grayColor};
+	boldSystemFontAttributes		= @{NSFontAttributeName: boldSystemFont};
+	italicSystemFontAttributes		= @{NSFontAttributeName: systemFont, NSObliquenessAttributeName: @0.15f};
 
-	smallSystemFontAttributes       = [NSDictionary dictionaryWithObjectsAndKeys: smallSystemFont, NSFontAttributeName, nil];
-	smallGraySystemFontAttributes   = [NSDictionary dictionaryWithObjectsAndKeys: smallSystemFont, NSFontAttributeName, grayColor, NSForegroundColorAttributeName, nil];
-	smallBoldSystemFontAttributes   = [NSDictionary dictionaryWithObjectsAndKeys: smallBoldSystemFont, NSFontAttributeName, nil];
-	smallItalicSystemFontAttributes = [NSDictionary dictionaryWithObjectsAndKeys: smallSystemFont, NSFontAttributeName, [NSNumber numberWithFloat:0.15], NSObliquenessAttributeName, nil];
-	smallFixedWidthUserFontAttributes = [NSDictionary dictionaryWithObjectsAndKeys: smallFixedPitchUserFont, NSFontAttributeName, nil];
+	smallSystemFontAttributes       = @{NSFontAttributeName: smallSystemFont};
+	smallGraySystemFontAttributes   = @{NSFontAttributeName: smallSystemFont, NSForegroundColorAttributeName: grayColor};
+	smallBoldSystemFontAttributes   = @{NSFontAttributeName: smallBoldSystemFont};
+	smallItalicSystemFontAttributes = @{NSFontAttributeName: smallSystemFont, NSObliquenessAttributeName: @0.15f};
+	smallFixedWidthUserFontAttributes = @{NSFontAttributeName: smallFixedPitchUserFont};
 
-	smallCenteredSystemFontAttributes     = [NSDictionary dictionaryWithObjectsAndKeys: smallSystemFont,     NSFontAttributeName, cps, NSParagraphStyleAttributeName, nil];
-	smallBoldCenteredSystemFontAttributes = [NSDictionary dictionaryWithObjectsAndKeys: smallBoldSystemFont, NSFontAttributeName, cps, NSParagraphStyleAttributeName, nil];
-	standardSidebarFontAttributes		  = [NSDictionary dictionaryWithObjectsAndKeys: smallSystemFont,	 NSFontAttributeName, ps,  NSParagraphStyleAttributeName, nil];
+	smallCenteredSystemFontAttributes     = @{NSFontAttributeName: smallSystemFont, NSParagraphStyleAttributeName: cps};
+	smallBoldCenteredSystemFontAttributes = @{NSFontAttributeName: smallBoldSystemFont, NSParagraphStyleAttributeName: cps};
+	standardSidebarFontAttributes		  = @{NSFontAttributeName: smallSystemFont, NSParagraphStyleAttributeName: ps};
 }
 
 - (id) init
@@ -175,7 +175,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"version", @"--quiet", nil];
 		ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
 		NSArray* versionParts = [result.outStr componentsSeparatedByString:@"\n"];
-		versionString = ([versionParts count] > 0) ? [versionParts objectAtIndex:0] : nil;
+		versionString = ([versionParts count] > 0) ? versionParts[0] : nil;
 	}
 	return versionString ? versionString : @"";
 }
@@ -206,7 +206,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	// Switch the version string to center aligned
 	NSMutableParagraphStyle* ps = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
 	[ps setAlignment:NSCenterTextAlignment];
-	NSDictionary* newParagraphStyle = [NSDictionary dictionaryWithObject:ps forKey:NSParagraphStyleAttributeName];
+	NSDictionary* newParagraphStyle = @{NSParagraphStyleAttributeName: ps};
 	[version addAttributes:newParagraphStyle range:NSMakeRange(0, [version length])];
 	return version;
 }
@@ -305,7 +305,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		NSString* macHgHGRCFilePath = fstr(@"%@/hgrc",applicationSupportFolder());
 		if (pathIsExistent(macHgHGRCFilePath))
 		{
-			moveFilesToTheTrash([NSArray arrayWithObject:macHgHGRCFilePath]);
+			moveFilesToTheTrash(@[macHgHGRCFilePath]);
 			replacedHgrc = YES;
 		}
 	}	
@@ -314,7 +314,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		NSString* macHgIgnoreFilePath = fstr(@"%@/hgignore",applicationSupportFolder());
 		if (pathIsExistent(macHgIgnoreFilePath))
 		{
-			moveFilesToTheTrash([NSArray arrayWithObject:macHgIgnoreFilePath]);
+			moveFilesToTheTrash(@[macHgIgnoreFilePath]);
 			replacedHgignore = YES;
 		}
 	}
@@ -474,7 +474,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 
 - (void) checkForMercurialWarningsAndErrors
 {
-	NSArray* versionArgs = [NSArray arrayWithObjects: @"--header", @"version", nil];
+	NSArray* versionArgs = @[@"--header", @"version"];
 	NSString* hgBinary = executableLocationHG();
 	ExecutionResult* results = [ShellTask execute:hgBinary withArgs:versionArgs withEnvironment:[TaskExecutions environmentForHg]];
 	if ([results hasWarnings] && WarnAboutBadMercurialConfigurationFromDefaults())
@@ -868,7 +868,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	[self setupGlobals];
 	// mv now old log file ontop of old old log file name
 	NSString* oldMacHgLogFileLocation = fstr(@"%@.old",MacHgLogFileLocation());
-	[ShellTask execute:@"/bin/mv" withArgs:[NSArray arrayWithObjects:@"-f", MacHgLogFileLocation(), oldMacHgLogFileLocation, nil]];
+	[ShellTask execute:@"/bin/mv" withArgs:@[@"-f", MacHgLogFileLocation(), oldMacHgLogFileLocation]];
 }
 
 
@@ -951,8 +951,8 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	NSArray* paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
 	if ([paths count])
 	{
-		NSString* bundleName = [[[NSBundle mainBundle] infoDictionary] objectForKey:@"CFBundleIdentifier"];
-		cacheDir = [[paths objectAtIndex:0] stringByAppendingPathComponent:bundleName];
+		NSString* bundleName = [[NSBundle mainBundle] infoDictionary][@"CFBundleIdentifier"];
+		cacheDir = [paths[0] stringByAppendingPathComponent:bundleName];
 	}
 	return cacheDir;
 }
@@ -984,7 +984,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	NSDictionary* userDefaultsValuesDict = [NSDictionary dictionaryWithContentsOfFile:userDefaultsValuesPath];
 #ifdef DEBUG
 	NSMutableDictionary* allowWebKitInspection = [userDefaultsValuesDict mutableCopy];
-	[allowWebKitInspection setObject:[NSNumber numberWithBool:YES] forKey:@"WebKitDeveloperExtras"];
+	allowWebKitInspection[@"WebKitDeveloperExtras"] = @YES;
 	userDefaultsValuesDict = allowWebKitInspection;
 #endif
 
@@ -1141,7 +1141,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 			[repositoryIdentityForPath_ synchronizedSetObject:newRepositoryIdentity forKey:nodePath];
 			if (!oldRepositoryIdentity || [oldRepositoryIdentity isNotEqualToString:newRepositoryIdentity])
 			{
-				NSDictionary* info = [NSDictionary dictionaryWithObjectsAndKeys:nodePath, @"path", newRepositoryIdentity, @"repositoryIdentity", nil];
+				NSDictionary* info = @{@"path": nodePath, @"repositoryIdentity": newRepositoryIdentity};
 				[self postNotificationWithName:kRepositoryIdentityChanged userInfo:info];
 			}
 			[dirtyRepositoryIdentityForPath_ synchronizedRemoveObjectForKey:nodePath];

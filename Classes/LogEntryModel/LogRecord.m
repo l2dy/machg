@@ -41,8 +41,8 @@ NSMutableDictionary* changesetHashToLogRecord = nil;				// changset (full) -> Lo
 
 void setupGlobalsForLogRecordPartsAndTemplate()
 {
-	NSArray* templateParts       = [NSArray arrayWithObjects: @"{node}",    @"{author|person}", @"{author}",     @"{date}",   @"{branches}", @"{desc|firstline}", @"{desc}",      nil];
-	namesOfLogRecordDetailsParts = [NSArray arrayWithObjects: @"changeset", @"author",          @"fullAuthor"  , @"date",     @"branch",     @"shortComment",     @"fullComment", nil];
+	NSArray* templateParts       = @[ @"{node}",    @"{author|person}", @"{author}",     @"{date}",   @"{branches}", @"{desc|firstline}", @"{desc}"];
+	namesOfLogRecordDetailsParts = @[ @"changeset", @"author",          @"fullAuthor"  , @"date",     @"branch",     @"shortComment",     @"fullComment"];
 	templateLogRecordString		 = [[templateParts componentsJoinedByString:LogRecordDetailsPartSeparator] stringByAppendingString:LogRecordSeparator];
 }
 
@@ -99,10 +99,10 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 	[record setLoadStatus:eLogRecordDetailsLoading];
 	@synchronized(changesetHashToLogRecord)
 	{
-		LogRecord* stored = [changesetHashToLogRecord objectForKey:changeset];
+		LogRecord* stored = changesetHashToLogRecord[changeset];
 		if (stored)
 			return stored;
-		[changesetHashToLogRecord setObject:record forKey:changeset];
+		changesetHashToLogRecord[changeset] = record;
 	}
 	return record;
 }
@@ -118,7 +118,7 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 		[unfinishedRecord setFullComment: @" - current modifications - "];
 		[unfinishedRecord setAuthor:@" - "];
 		[unfinishedRecord setLoadStatus:eLogRecordDetailsAndFilesLoaded];
-		[changesetHashToLogRecord setObject:unfinishedRecord forKey:incompleteChangeset];
+		changesetHashToLogRecord[incompleteChangeset] = unfinishedRecord;
     });
 
 	return unfinishedRecord;
@@ -156,7 +156,7 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 	if ([parts count] < itemCount)
 		return NO;
 	
-	NSString* changeset = [parts objectAtIndex:0];
+	NSString* changeset = parts[0];
 	
 	// If we already have an entry for this changeset we are done.
 	LogRecord* stored = [changesetHashToLogRecord synchronizedObjectForKey:changeset];
@@ -167,7 +167,7 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 	@synchronized(record)
 	{
 		for (int item = 0; item <itemCount; item++)
-			[record setValue:[parts objectAtIndex:item] forKey:[namesOfLogRecordDetailsParts objectAtIndex:item]];
+			[record setValue:parts[item] forKey:namesOfLogRecordDetailsParts[item]];
 		
 		LogRecordLoadStatus status = [record loadStatus];
 		status = unsetBits(status, eLogRecordDetailsLoading);

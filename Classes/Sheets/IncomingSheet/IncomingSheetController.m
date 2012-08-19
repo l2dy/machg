@@ -61,7 +61,7 @@
 	[sshOption			setName:@"ssh"];
 	[styleOption		setName:@"style"];
 	[templateOption		setName:@"template"];
-	cmdOptions = [NSArray arrayWithObjects:	forceOption, branchOption, gitOption, graphOption, insecureOption, limitOption, newestfirstOption, nomergesOption, patchOption, remotecmdOption, revOption, sshOption, styleOption, templateOption, nil];
+	cmdOptions = @[forceOption, branchOption, gitOption, graphOption, insecureOption, limitOption, newestfirstOption, nomergesOption, patchOption, remotecmdOption, revOption, sshOption, styleOption, templateOption];
 }
 
 

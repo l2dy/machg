@@ -101,8 +101,8 @@
 
 - (BOOL)	  labelIsSelected	{ return 0 <= [self selectedRow] && [self selectedRow] < [labelsTableData_ count]; }
 - (BOOL)	  labelIsClicked	{ return [self clickedRow] != -1; }
-- (LabelData*) selectedLabel	{ return [self labelIsSelected] ? [labelsTableData_ objectAtIndex:[self selectedRow]] : nil; }
-- (LabelData*) clickedLabel		{ return [self labelIsClicked]  ? [labelsTableData_ objectAtIndex:[self clickedRow]]  : nil; }
+- (LabelData*) selectedLabel	{ return [self labelIsSelected] ? labelsTableData_[[self selectedRow]] : nil; }
+- (LabelData*) clickedLabel		{ return [self labelIsClicked]  ? labelsTableData_[[self clickedRow]]  : nil; }
 - (LabelData*) chosenLabel		{ LabelData* ans = [self clickedLabel]; return ans ? ans : [self selectedLabel]; }
 
 
@@ -248,7 +248,7 @@
 {
 	if ([self numberOfRowsInTableView:aTableView] <= requestedRow)	return fstr(@"%d",requestedRow);
 
-	LabelData* label = [[self labelsTableData] objectAtIndex:requestedRow];
+	LabelData* label = [self labelsTableData][requestedRow];
 	NSString* requestedColumn = [aTableColumn identifier];
 	return [label valueForKey:requestedColumn];
 }

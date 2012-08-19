@@ -25,7 +25,7 @@
 	if (![self window])
 	{
 		[NSBundle loadNibNamed:@"About" owner:self];
-		[backingBox setRadius:[NSNumber numberWithFloat:190.0]];
+		[backingBox setRadius:@190.0f];
 		[backingBox setOffsetFromCenter:NSMakePoint(0.0, -40.0)];
 		[backingBox setNeedsDisplay:YES];
 		NSURL* creditsURL = [NSURL fileURLWithPath:fstr(@"%@/MacHGHelp/%@",[[NSBundle mainBundle] resourcePath], @"Credits.html")];

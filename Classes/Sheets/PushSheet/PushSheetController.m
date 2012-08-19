@@ -55,7 +55,7 @@
 	[remotecmdOption	setName:@"remotecmd"];
 	[revOption			setName:@"rev"];
 	[sshOption			setName:@"ssh"];
-	cmdOptions = [NSArray arrayWithObjects:forceOption, bookmarkOption, branchOption, insecureOption, remotecmdOption, revOption, sshOption, nil];
+	cmdOptions = @[forceOption, bookmarkOption, branchOption, insecureOption, remotecmdOption, revOption, sshOption];
 }
 
 

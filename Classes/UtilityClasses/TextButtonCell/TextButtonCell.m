@@ -72,7 +72,7 @@
 		[paragraphStyle setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
 		[paragraphStyle setAlignment:NSCenterTextAlignment];
 		NSFont* font = [NSFont controlContentFontOfSize:[NSFont systemFontSize]];
-		theDictionary = [NSDictionary dictionaryWithObjectsAndKeys: font, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil];
+		theDictionary = @{NSFontAttributeName: font, NSParagraphStyleAttributeName: paragraphStyle};
 	}
 	[self setAttributedTitle:[NSAttributedString string:title withAttributes:theDictionary]];
 }

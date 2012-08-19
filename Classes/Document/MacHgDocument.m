@@ -218,10 +218,10 @@
 		// ["--rev", "23", "--git", "--force", "--no-merges", "--remotecmd", "blargsplatter"]
 		NSString* ex = @"--rev 23 --git --force --no-merges --remotecmd blargsplatter";
 		NSArray* ans = [TaskExecutions parseArguments:ex];
-		NSArray* res = [NSArray arrayWithObjects:@"--rev", @"23", @"--git", @"--force", @"--no-merges", @"--remotecmd", @"blargsplatter", nil];
+		NSArray* res = @[@"--rev", @"23", @"--git", @"--force", @"--no-merges", @"--remotecmd", @"blargsplatter"];
 		BOOL areEqual = YES;
 		for (int i = 0; i < [res count]; i++)
-			if (![[res objectAtIndex:i] isEqualToString:[ans objectAtIndex:i]])
+			if (![res[i] isEqualToString:ans[i]])
 				areEqual = NO;
 		NSAssert(areEqual, @"string matching not working");
 	}
@@ -580,17 +580,17 @@
 	if ([self currentPane] != eHistoryView)
 	{
 		CIFilter* grayFilter = [CIFilter filterWithName:@"CIWhitePointAdjust" keysAndValues:@"inputColor", [CIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:0.6], nil];
-		[[toolbarSearchField_ layer] setFilters: [NSArray arrayWithObject:grayFilter]];
+		[[toolbarSearchField_ layer] setFilters: @[grayFilter]];
 		return;
 	}
 	if (!toolbarSearchFieldQueryIsValid_ && IsNotEmpty(toolbarSearchFieldValue_))
 	{
 		CIFilter* pinkErrorFilter = [CIFilter filterWithName:@"CIWhitePointAdjust" keysAndValues:@"inputColor", [CIColor colorWithRed:0.9 green:0.6 blue:0.6 alpha:0.6], nil];
-		[[toolbarSearchField_ layer] setFilters: [NSArray arrayWithObject:pinkErrorFilter]];
+		[[toolbarSearchField_ layer] setFilters: @[pinkErrorFilter]];
 		return;
 	}
 
-	[[toolbarSearchField_ layer] setFilters: [NSArray array]];
+	[[toolbarSearchField_ layer] setFilters: @[]];
 }
 
 - (NSView <NSUserInterfaceValidations>*) currentPaneView	{ return [self paneView:currentPane_]; }
@@ -778,7 +778,7 @@
 	{
 		NSArray* items = [currentPaneView performSelector:@selector(quickLookPreviewItems)];
 		if ([items count] > index)
-			return [items objectAtIndex:index];
+			return items[index];
 	}
 	return nil;
 }
@@ -1264,7 +1264,7 @@
 	{
 		if (outError)
 		{
-			NSDictionary* d = [NSDictionary dictionaryWithObject:@"The data is corrupted." forKey:NSLocalizedFailureReasonErrorKey];
+			NSDictionary* d = @{NSLocalizedFailureReasonErrorKey: @"The data is corrupted."};
 			*outError = [NSError errorWithDomain:NSOSStatusErrorDomain code:unimpErr userInfo:d];
 		}
 		return NO;
@@ -1620,7 +1620,7 @@
 - (NSString*)		selectedRepositoryShortName				{ SidebarNode* repo = [sidebar_ selectedNode]; return [repo isLocalRepositoryRef]  ? [repo shortName]  : nil; }
 - (NSString*)		selectedRepositoryPath					{ SidebarNode* repo = [sidebar_ selectedNode]; return [repo isRepositoryRef] ? [repo path] : nil; }
 - (SidebarNode*)	selectedRepositoryRepositoryRef			{ SidebarNode* repo = [sidebar_ selectedNode]; return [repo isRepositoryRef] ? repo : nil; }
-- (NSArray*)		absolutePathOfRepositoryRootAsArray		{ return [NSArray arrayWithObject:[self absolutePathOfRepositoryRoot]]; }
+- (NSArray*)		absolutePathOfRepositoryRootAsArray		{ return @[ [self absolutePathOfRepositoryRoot] ]; }
 
 - (FSViewer*)		theFSViewer								{ return [[self theFilesView] theFSViewer]; }
 - (FSNodeInfo*)		rootNodeInfo							{ return [[self theFSViewer] rootNodeInfo]; }
@@ -2108,7 +2108,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 		NSString* subMessage;
 		NSString* mainMessage;
 		NSString* buttonMessage;
-		BOOL rootOperation = [absolutePaths count] == 1 && [[self absolutePathOfRepositoryRoot] isEqualTo:[absolutePaths objectAtIndex:0]];
+		BOOL rootOperation = [absolutePaths count] == 1 && [[self absolutePathOfRepositoryRoot] isEqualTo:absolutePaths[0]];
 		BOOL useSimilarity = AddRemoveUsesSimilarityFromDefaults();
 		if (useSimilarity && rootOperation)
 		{
@@ -2681,7 +2681,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 + (RepositoryPaths*) fromPath:(NSString*)absolutePath  withRootPath:(NSString*)theRootPath
 {
 	RepositoryPaths* repositoryPaths = [RepositoryPaths alloc];
-	[repositoryPaths setAbsolutePaths:[NSArray arrayWithObject:absolutePath]];
+	[repositoryPaths setAbsolutePaths:@[absolutePath]];
 	[repositoryPaths setRootPath:theRootPath];
 	return repositoryPaths;
 }

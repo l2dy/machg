@@ -14,7 +14,7 @@
 
 - (CGFloat) firstPaneHeight:(NSSplitView*)theSplitView
 {
-	return [[[theSplitView subviews] objectAtIndex:0] frame].size.height;
+	return [[theSplitView subviews][0] frame].size.height;
 }
 
 - (void) splitViewDidResizeSubviews:(NSNotification*)aNotification

@@ -185,9 +185,9 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 	NSNumber* revision    = [entry_ revision];
 	NSInteger revisionInt = numberAsInt(revision);
 	NSInteger theColumnOfRev = NSNotFound;
-	NSArray* lines = [[theLogGraph revisionNumberToLineSegments] objectForKey:revision];
+	NSArray* lines = [theLogGraph revisionNumberToLineSegments][revision];
 	if (!lines)
-		lines = [[theOldLogGraph revisionNumberToLineSegments] objectForKey:revision];
+		lines = [theOldLogGraph revisionNumberToLineSegments][revision];
 	BOOL hasIncompleteRevision = [[logTableView repositoryData] includeIncompleteRevision];
 	NSInteger incompleteRevisionInt = [[[logTableView repositoryData] incompleteRevisionEntry] revisionInt];
 

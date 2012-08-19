@@ -82,7 +82,7 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 
 	// Bind the show / hide of the column to the preferences LogEntryTableDisplayChangesetColumn which is bound to a checkbox in the prefs.
 	id defaults = [NSUserDefaultsController sharedUserDefaultsController];
-	NSDictionary* negateValueTransformer = [NSDictionary dictionaryWithObject:NSNegateBooleanTransformerName forKey:@"NSValueTransformerName"];
+	NSDictionary* negateValueTransformer = @{@"NSValueTransformerName": NSNegateBooleanTransformerName};
 	NSTableColumn* changesetCol = [self tableColumnWithIdentifier:@"changeset"];
 	NSTableColumn* branchesCol  = [self tableColumnWithIdentifier:@"branch"];
 	[changesetCol  bind:@"hidden"  toObject:defaults  withKeyPath:kKeyPathDisplayChangesetColumn  options:negateValueTransformer];
@@ -175,7 +175,7 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 	{
 		if (rowNum < 0 || rowNum >= [theTableRows_ count])
 			return nil;
-		return [theTableRows_ objectAtIndex:rowNum];
+		return theTableRows_[rowNum];
 	}
 	return nil;
 }
@@ -203,11 +203,11 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 		int tableRowCount = [theTableRows_ count];
 		// We call this often and so we do an optimization where we look at the two most likely places first
 		int revInt = numberAsInt(revision);
-		if (tableRowCount <= revInt || [[theTableRows_ objectAtIndex:revInt] isEqualToString:revisionStr])
+		if (tableRowCount <= revInt || [theTableRows_[revInt] isEqualToString:revisionStr])
 			return revInt;
 
 		int oppInt = [theTableRows_ count] - revInt - 1;
-		if (oppInt < 0 || [[theTableRows_ objectAtIndex:oppInt] isEqualToString:revisionStr])
+		if (oppInt < 0 || [theTableRows_[oppInt] isEqualToString:revisionStr])
 			return oppInt;
 	}
 
@@ -229,8 +229,8 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	int rval = numberAsInt(revision);
 	int a = 0;
 	int b = [theTableRows_ count] - 1;
-	int aval = stringAsInt([theTableRows_ objectAtIndex:a]);
-	int bval = stringAsInt([theTableRows_ objectAtIndex:b]);
+	int aval = stringAsInt(theTableRows_[a]);
+	int bval = stringAsInt(theTableRows_[b]);
 	
 	while (YES)
 	{
@@ -242,7 +242,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 			return (abs(aval - rval) <= abs(bval - rval)) ? a : b;
 
 		int c = floor((a+b)/2);
-		int cval = stringAsInt([theTableRows_ objectAtIndex:c]);
+		int cval = stringAsInt(theTableRows_[c]);
 
 		if (between (aval, cval, rval))
 		{
@@ -296,7 +296,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	
 	// return first parent for incomplete revision
 	if(selectedEntry && selectedEntry == [[self repositoryData] incompleteRevisionEntry] && [selectedEntry.parentsArray count] > 0)
-		return [selectedEntry.parentsArray objectAtIndex:0];
+		return (selectedEntry.parentsArray)[0];
 	
 	return [[self selectedEntry] revision];
 }
@@ -305,7 +305,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 {
 	if (![self rowWasClicked] || [[self selectedRowIndexes] containsIndex:[self clickedRow]])
 		return [self selectedEntries];
-	return [NSArray arrayWithObject:[self chosenEntry]];
+	return @[ [self chosenEntry] ];
 }
 - (NSArray*) selectedEntries
 {
@@ -319,7 +319,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 {
 	if (![self rowWasClicked] || [[self selectedRowIndexes] containsIndex:[self clickedRow]])
 		return [self selectedRevisions];
-	return [NSArray arrayWithObject:[self chosenRevision]];
+	return @[ [self chosenRevision] ];
 }
 - (NSArray*) selectedRevisions
 {
@@ -383,7 +383,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	if ([parents count] == 0)
 		parentRevInt = MAX(0, lowRevInt - 1);	// Step back one to see the differences from the previous version to this version.
 	else
-		parentRevInt = numberAsInt([parents objectAtIndex:0]);
+		parentRevInt = numberAsInt(parents[0]);
 	return MakeLowHighPair(parentRevInt, highRevInt);
 }
 
@@ -696,7 +696,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 		if ([obj1 integerValue] > [obj2 integerValue])	return (NSComparisonResult)NSOrderedDescending;
 		if ([obj1 integerValue] < [obj2 integerValue])	return (NSComparisonResult)NSOrderedAscending;
 		return (NSComparisonResult)NSOrderedSame;}];
-	[self setSortDescriptors:[NSArray arrayWithObject:descriptor]];
+	[self setSortDescriptors:@[descriptor]];
 }
 
 - (void) resortTable
@@ -774,7 +774,7 @@ static inline void addRevisionsToTableRowList(NSString* str, NSMutableArray* tab
 		NSNumber* currentRevision     = [repositoryData getHGParent1Revision];
 		NSArray* theSelectedRevisions = [self selectedRevisions];
 		if (IsEmpty(theSelectedRevisions) && currentRevision)
-			theSelectedRevisions = [NSArray arrayWithObject:currentRevision];
+			theSelectedRevisions = @[currentRevision];
 
 		NSMutableArray* newTableRows = [[NSMutableArray alloc] init];
 
@@ -1035,7 +1035,7 @@ static inline void addRevisionsToTableRowList(NSString* str, NSMutableArray* tab
 
 - (NSArray*) writablePasteboardTypes
 {
-	return [NSArray arrayWithObject:NSStringPboardType];
+	return @[NSStringPboardType];
 }
 
 - (BOOL) writeSelectionToPasteboard:(NSPasteboard*)pboard type:(NSString*)type

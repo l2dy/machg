@@ -226,7 +226,7 @@ NSString* filterProgressOutOfErrorString(NSString* rawErrorStr)
 		return;
 
 	NSString* scriptPath = fstr(@"%@/%@",[[NSBundle mainBundle] resourcePath], @"getHTTPSfingerprint.py");
-	ExecutionResult* results = [ShellTask execute:scriptPath withArgs:[NSArray arrayWithObjects:host, port ? numberAsString(port) : @"443", nil] withEnvironment:[TaskExecutions environmentForHg]];
+	ExecutionResult* results = [ShellTask execute:scriptPath withArgs:@[host, port ? numberAsString(port) : @"443"] withEnvironment:[TaskExecutions environmentForHg]];
 	if ([results hasNoErrors])
 		fingerPrint = trimString(results.outStr);
 
@@ -305,7 +305,7 @@ NSString* filterProgressOutOfErrorString(NSString* rawErrorStr)
 		NSString* informativeText = fstr(@"Mercurial reported error number %d", result_);
 	
 		NSTextView* textView = [[NSTextView alloc] initWithFrame:initialSize];
-		NSDictionary* dict = [NSDictionary dictionaryWithObjectsAndKeys: [NSFont systemFontOfSize:25.0], NSFontAttributeName, nil];
+		NSDictionary* dict = @{ NSFontAttributeName : [NSFont systemFontOfSize:25.0] };
 		NSAttributedString* str = [NSAttributedString string:errorDetails withAttributes:dict];
 		[textView setFont:[NSFont systemFontOfSize:[NSFont smallSystemFontSize]]];
 		[textView insertText:str];
@@ -382,7 +382,7 @@ NSString* filterProgressOutOfErrorString(NSString* rawErrorStr)
 static NSString* processedPathEnv(NSDictionary* processEnv)
 {
 	// Ensure /usr/local/bin is on the path
-	NSString* pathEnv = [processEnv objectForKey:@"PATH"];
+	NSString* pathEnv = processEnv[@"PATH"];
 	if ([pathEnv isMatchedByRegex:@"^(.*:)?/usr/local/bin(:.*)?$"])
 		return pathEnv;
 	BOOL colonTerminated = [pathEnv hasSuffix:@":"];
@@ -409,12 +409,12 @@ static NSString* processedPathEnv(NSDictionary* processEnv)
 		[newEnv copyValueOfKey:@"HOME"			from:processEnv];
 		[newEnv copyValueOfKey:@"TMPDIR"		from:processEnv];
 		[newEnv copyValueOfKey:@"USER"			from:processEnv];
-		[newEnv setObject:localMercurialPath	 forKey:@"PYTHONPATH"];
-		[newEnv setObject:executableLocationHG() forKey:@"HG"];
-		[newEnv setObject:PATHenv   forKey:@"PATH"];
-		[newEnv setObject:@"UTF-8"  forKey:@"HGENCODING"];
-		[newEnv setObject:@"1"		forKey:@"HGPLAIN"];
-		[newEnv setObject:hgrc_Path	forKey:@"HGRCPATH"];
+		newEnv[@"PYTHONPATH"] = localMercurialPath;
+		newEnv[@"HG"] = executableLocationHG();
+		newEnv[@"PATH"] = PATHenv;
+		newEnv[@"HGENCODING"] = @"UTF-8";
+		newEnv[@"HGPLAIN"] = @"1";
+		newEnv[@"HGRCPATH"] = hgrc_Path;
 		env = [NSDictionary dictionaryWithDictionary:newEnv];
 	}
 	return env;
@@ -502,7 +502,7 @@ static NSString* processedPathEnv(NSDictionary* processEnv)
 + (NSMutableArray*) preProcessMercurialCommandArgs: (NSMutableArray*)args fromRoot:(NSString*)rootPath
 {
 	NSIndexSet* insertionLocation = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(1, 3)];
-	NSArray* defaultArguments = [NSArray arrayWithObjects: @"--header", @"--cwd", rootPath, nil];
+	NSArray* defaultArguments = @[@"--header", @"--cwd", rootPath];
 	NSMutableArray* newArgs = [NSMutableArray arrayWithArray:args];
 	[newArgs insertObjects:defaultArguments  atIndexes:insertionLocation];
 	return newArgs;

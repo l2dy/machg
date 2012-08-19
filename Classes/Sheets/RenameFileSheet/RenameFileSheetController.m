@@ -158,7 +158,7 @@
 	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
 
 	[myDocument dispatchToMercurialQueuedWithDescription:@"Renaming Files" process:^{
-		NSArray* paths = [NSArray arrayWithObjects:theCurrentNameFieldValue_, theNewNameFieldValue_,nil];
+		NSArray* paths = @[theCurrentNameFieldValue_, theNewNameFieldValue_];
 		[myDocument registerPendingRefresh:paths];
 		NSMutableArray* argsRename = [NSMutableArray arrayWithObjects:@"rename", nil];
 		if ([theAlreadyMovedButtonValue_ boolValue])

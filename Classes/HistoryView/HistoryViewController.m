@@ -234,7 +234,7 @@
 
 - (IBAction) historyMenuDiffAllToChosenRevision:(id)sender
 {
-	NSArray* rootPathAsArray = [NSArray arrayWithObject:[myDocument absolutePathOfRepositoryRoot]];
+	NSArray* rootPathAsArray = @[ [myDocument absolutePathOfRepositoryRoot] ];
 	NSNumber* theSelectedRevision = [[logTableView chosenEntry] revision];
 	[myDocument viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:numberAsString(theSelectedRevision)];
 }
@@ -271,7 +271,7 @@
 	if ([parents count] == 0)
 		pair.lowRevision = MAX(0,pair.lowRevision - 1);	// Step back one to see the differences from the previous version to this version.
 	else
-		pair.lowRevision = numberAsInt([parents objectAtIndex:0]);
+		pair.lowRevision = numberAsInt(parents[0]);
 	NSValue* pairAsValue = MakeNSValue(LowHighPair, pair);
 
 	[myDocument actionSwitchViewToDifferencesView:sender];
@@ -517,7 +517,7 @@
 {	
 	NSArray* entries = [logTableView selectedEntries];
 	if ([entries count] <= 0)
-		return [NSArray array];
+		return @[];
 		
 	for (LogEntry* entry in entries)
 		 if (![entry isFullyLoaded])

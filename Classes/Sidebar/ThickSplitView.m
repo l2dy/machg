@@ -8,6 +8,7 @@
 //
 
 #import "ThickSplitView.h"
+#import "Common.h"
 
 static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val < min) return min; if (val > max) return max; return val; }
 
@@ -36,8 +37,8 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 - (void) splitView:(NSSplitView*)splitView resizeSubviewsWithOldSize:(NSSize)oldSize
 {
 	NSArray* views		= [self subviews];
-	NSView* outline		= [views objectAtIndex:0];
-	NSView* info		= [views objectAtIndex:1];
+	NSView* outline		= views[0];
+	NSView* info		= views[1];
 	NSRect outlineFrame = [outline frame];
 	outlineFrame.size.height = [self frame].size.height - [info frame].size.height;
 	[outline setFrame:outlineFrame];

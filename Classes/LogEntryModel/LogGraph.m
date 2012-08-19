@@ -160,7 +160,7 @@ static NSInteger closestFreeIndex2(NSIndexSet* indexes1, NSIndexSet* indexes2, N
 
 - (LineSegment*) findSegmentFromLow:(NSInteger)l toHigh:(NSInteger)h
 {
-	NSArray* lines = [revisionNumberToLineSegments_ objectForKey:intAsNumber(l)];
+	NSArray* lines = revisionNumberToLineSegments_[intAsNumber(l)];
 	for (LineSegment* line in lines)
 		if ([line lowRev] == l && [line highRev] == h)
 			return line;
@@ -169,7 +169,7 @@ static NSInteger closestFreeIndex2(NSIndexSet* indexes1, NSIndexSet* indexes2, N
 
 - (NSInteger) columnForRevisionInt:(NSInteger)revisionInt
 {
-	NSArray* lines = [revisionNumberToLineSegments_ objectForKey:intAsNumber(revisionInt)];
+	NSArray* lines = revisionNumberToLineSegments_[intAsNumber(revisionInt)];
 	if (!lines)
 		return NSNotFound;
 	for (LineSegment* line in lines)
@@ -199,7 +199,7 @@ static NSInteger closestFreeIndex2(NSIndexSet* indexes1, NSIndexSet* indexes2, N
 	// Make sure we are working with entries high to low
 	//
 	NSSortDescriptor* byRev = [NSSortDescriptor sortDescriptorWithKey:@"revision" ascending:NO  selector:@selector(compare:)];
-	NSArray* descriptors    = [NSArray arrayWithObject:byRev];
+	NSArray* descriptors    = @[byRev];
 	NSArray* sortedEntries  = [entries sortedArrayUsingDescriptors:descriptors];
 	
 	
@@ -333,7 +333,7 @@ static NSInteger closestFreeIndex2(NSIndexSet* indexes1, NSIndexSet* indexes2, N
 	NSMutableSet* setOfLines = [[NSMutableSet alloc]init];
 	for (NSInteger rev = l; rev <= h; rev++)
 	{
-		NSArray* lines = [revisionNumberToLineSegments_ objectForKey:intAsNumber(rev)];
+		NSArray* lines = revisionNumberToLineSegments_[intAsNumber(rev)];
 		if (lines)
 			[setOfLines addObjectsFromArray:lines];
 	}
@@ -393,7 +393,7 @@ static NSInteger closestFreeIndex2(NSIndexSet* indexes1, NSIndexSet* indexes2, N
 	NSMutableSet* setOfLines = [[NSMutableSet alloc]init];
 	for (NSInteger rev = l; rev <= h; rev++)
 	{
-		NSArray* lines = [revisionNumberToLineSegments_ objectForKey:intAsNumber(rev)];
+		NSArray* lines = revisionNumberToLineSegments_[intAsNumber(rev)];
 		if (lines)
 			[setOfLines addObjectsFromArray:lines];
 	}

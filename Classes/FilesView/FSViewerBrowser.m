@@ -119,7 +119,7 @@
 - (NSArray*) selectedNodes
 {
 	if (![self nodesAreSelected])
-		return [NSArray array];
+		return @[];
 	NSArray* theSelectedCells = [self selectedCells];
 	NSMutableArray* nodes = [[NSMutableArray alloc] init];
 	for (FSViewerPaneCell* cell in theSelectedCells)
@@ -353,7 +353,7 @@
 	for (NSString* name in components)
 	{
 		node = childNode;
-		childNode = [[node childNodes] objectForKey:name];
+		childNode = [node childNodes][name];
 		if (childNode)
 		{
 			[self selectRow: [[node sortedChildNodeKeys] indexOfObject:name] inColumn:col];

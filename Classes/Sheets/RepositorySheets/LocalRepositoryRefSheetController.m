@@ -278,7 +278,7 @@
 {
 	[[self window] makeFirstResponder:self];
 	NSPasteboard*  pasteboard  = [info draggingPasteboard];
-	NSString* availableType = [pasteboard availableTypeFromArray:[NSArray arrayWithObjects:NSFilenamesPboardType, NSURLPboardType, NSStringPboardType, NSMultipleTextSelectionPboardType, NSRTFPboardType, nil]];
+	NSString* availableType = [pasteboard availableTypeFromArray:@[NSFilenamesPboardType, NSURLPboardType, NSStringPboardType, NSMultipleTextSelectionPboardType, NSRTFPboardType]];
 	if (availableType)
 	{
 		[[self window] makeFirstResponder:self];

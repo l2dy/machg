@@ -513,7 +513,7 @@
 		[pathsOfCachedItems addObjectIfNonNil:pathOfCachedCopy];
 	}
 
-	[pasteboard declareTypes:[NSArray arrayWithObject:NSFilenamesPboardType] owner:self];
+	[pasteboard declareTypes:@[NSFilenamesPboardType] owner:self];
 	[pasteboard setPropertyList:pathsOfCachedItems forType:NSFilenamesPboardType];
 	
 	return IsNotEmpty(pathsOfCachedItems) ? YES : NO;
@@ -541,7 +541,7 @@
 
 - (CGFloat) firstPaneHeight:(NSSplitView*)theSplitView
 {
-	return [[[theSplitView subviews] objectAtIndex:0] frame].size.height;
+	return [[theSplitView subviews][0] frame].size.height;
 }
 
 - (void) splitViewDidResizeSubviews:(NSNotification*)aNotification
@@ -572,11 +572,11 @@
 - (NSArray*) quickLookPreviewItems
 {
 	if (![theFSViewer nodesAreSelected])
-		return [NSArray array];
+		return @[];
 
 	NSNumber* compareRev       = [compareLogTableView selectedRevision];
 	if (IsEmpty(compareRev))
-		return [NSArray array];
+		return @[];
 	BOOL isNotIncompleteRev    = ![compareRev isEqualTo:[compareLogTableView incompleteRevision]];
 	NSString* compareChangeset = isNotIncompleteRev ? [[compareLogTableView selectedEntry] changeset] : nil;
 

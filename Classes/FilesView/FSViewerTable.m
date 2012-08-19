@@ -51,7 +51,7 @@
 - (void) regenerateTableData
 {
 	if (IsEmpty([[parentViewer_ rootNodeInfo] childNodes]))
-		leafNodeForTableRow_ = [NSArray array];
+		leafNodeForTableRow_ = @[];
 	else
 		leafNodeForTableRow_ = [[parentViewer_ rootNodeInfo] generateFlatLeafNodeListWithStatus:eHGStatusAll];
 }
@@ -87,7 +87,7 @@
 {
 	@try
 	{
-		return [[self leafNodeForTableRow] objectAtIndex:index];
+		return [self leafNodeForTableRow][index];
 	}
 	@catch (NSException* ne)
 	{
@@ -226,7 +226,7 @@
 
 - (id) tableView:(NSTableView*)aTableView objectValueForTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)requestedRow
 {
-	FSNodeInfo* node = [[self leafNodeForTableRow] objectAtIndex:requestedRow];
+	FSNodeInfo* node = [self leafNodeForTableRow][requestedRow];
 	if ([[aTableColumn identifier] isEqualToString:@"name"])
 		return [node relativePathComponent];
 	if ([[aTableColumn identifier] isEqualToString:@"path"])
@@ -240,7 +240,7 @@
 
 - (void) tableView:(NSTableView*)aTableView  willDisplayCell:(id)aCell forTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
 {
-	FSNodeInfo* node = [[self leafNodeForTableRow] objectAtIndex:rowIndex];
+	FSNodeInfo* node = [self leafNodeForTableRow][rowIndex];
 	NSString* columnIdentifier = [aTableColumn identifier];
 	[aCell setNodeInfo:node];
 	if ([columnIdentifier isEqualToString:@"exclude"])
@@ -266,7 +266,7 @@
 
 - (void) tableView:(NSTableView*)aTableView setObjectValue:(id)anObject forTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
 {
-	FSNodeInfo* node = [[self leafNodeForTableRow] objectAtIndex:rowIndex];
+	FSNodeInfo* node = [self leafNodeForTableRow][rowIndex];
 	NSString* columnIdentifier = [aTableColumn identifier];
 
 	if ([columnIdentifier isEqualToString:@"exclude"])
@@ -316,7 +316,7 @@
 {
 	NSMutableArray* paths = [[NSMutableArray alloc] init];
 	[rowIndexes enumerateIndexesUsingBlock:^(NSUInteger row, BOOL* stop) {
-		FSNodeInfo* node = [[self leafNodeForTableRow] objectAtIndex:row];
+		FSNodeInfo* node = [self leafNodeForTableRow][row];
 		[paths addObject:[node absolutePath]];
 	}];
 	return [parentViewer_ writePaths:paths toPasteboard:pasteboard];	// The parent handles writing out the pasteboard items

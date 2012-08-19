@@ -2503,6 +2503,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4346C02A1308E746004C6661 /* MacHG-Debug.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				SDKROOT = macosx;
 			};
 			name = Debug;
 		};
@@ -2510,6 +2512,8 @@
 			isa = XCBuildConfiguration;
 			baseConfigurationReference = 4346C02B1308E746004C6661 /* MacHG-Release.xcconfig */;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				SDKROOT = macosx;
 			};
 			name = Release;
 		};

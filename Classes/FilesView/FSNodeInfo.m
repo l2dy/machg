@@ -89,7 +89,7 @@
 	NSArray* thePathComponents = [theRelativePath pathComponents];
 	FSNodeInfo* node = self;
 	for (NSString* pathPath in thePathComponents)
-		node = [[node childNodes] objectForKey:pathPath];
+		node = [node childNodes][pathPath];
 	return node;
 }
 
@@ -112,7 +112,7 @@
 	for (NSString* pathPath in thePathComponents)
 	{
 		node = childNode;
-		childNode = [[node childNodes] objectForKey:pathPath];
+		childNode = [node childNodes][pathPath];
 		(*column)++;
 	}
 	if (!childNode)
@@ -311,13 +311,13 @@
 		cachedIcons = [[NSMutableDictionary alloc] init];
 	NSNumber* theKey = [NSNumber numberWithInt:[self hgStatus]];
 
-	NSImage* cached = [cachedIcons objectForKey:theKey];
+	NSImage* cached = cachedIcons[theKey];
 	if (cached)
 		return cached;
 	
 	NSArray* icons = [FSNodeInfo notableIconImagesForStatus:[self hgStatus] isDirectory:[self isDirectory]];
 	NSImage* combinedImage = [FSNodeInfo compositeRowOfIcons:icons withOverlap:IconOverlapCompression];
-	[cachedIcons setObject:combinedImage forKey:theKey];
+	cachedIcons[theKey] = combinedImage;
 	return combinedImage;
 }
 
@@ -358,7 +358,7 @@
 	{
 		for (id childNodeKey in childNodes)
 		{
-			FSNodeInfo* childNode = [childNodes objectForKey:childNodeKey];
+			FSNodeInfo* childNode = childNodes[childNodeKey];
 			if (![childNode haveComputedTheProperties])
 				[childNode computeProperties];
 			hgStatus = hgStatus | [childNode hgStatus];
@@ -378,7 +378,7 @@
 		return bitsInCommon(hgStatus, eHGStatusCommittable);
 	int sum = 0;
 	for (id childNodeKey in childNodes)
-		sum += [[childNodes objectForKey:childNodeKey] computeChangeCount];
+		sum += [childNodes[childNodeKey] computeChangeCount];
 	return sum;
 }
 
@@ -389,7 +389,7 @@
 	if (maxIconCountOfSubitems_ == notYetComputedIconCount)
 		for (id childNodeKey in childNodes)
 		{
-			FSNodeInfo* childNode = [childNodes objectForKey:childNodeKey];
+			FSNodeInfo* childNode = childNodes[childNodeKey];
 			maxIconCountOfSubitems_ = MAX(maxIconCountOfSubitems_, [childNode directoryDecorationIconCountForNodeInfo]);
 		}
 	return maxIconCountOfSubitems_;
@@ -438,7 +438,7 @@
 				theChildNodes = newChildNodes;
 			}
 				
-			FSNodeInfo* childNode = [theChildNodes objectForKey:partName];
+			FSNodeInfo* childNode = theChildNodes[partName];
 			[parent markNodeAsUncomputed];
 			if (childNode)
 			{
@@ -447,7 +447,7 @@
 			else
 			{
 				FSNodeInfo* newChild = [[FSNodeInfo alloc] initNewWithParent:parent atRelativePath:partName withParentViewer:viewer];
-				[theChildNodes setObject:newChild forKey:partName];
+				theChildNodes[partName] = newChild;
 				parent = newChild;
 			}
 		}
@@ -468,7 +468,7 @@
 	FSNodeInfo* childNode = [enumerator nextObject];
 	while (childNode)
 	{
-		[[copiedNode childNodes] setObject:[childNode deepCopyAndDirtify] forKey:[childNode relativePathComponent]];
+		[copiedNode childNodes][[childNode relativePathComponent]] = [childNode deepCopyAndDirtify];
 		childNode = [enumerator nextObject];
 	}
 	return copiedNode;
@@ -495,9 +495,9 @@
 			if (IsEmpty(component))
 				break;
 			FSNodeInfo* copiedNode = [node haveComputedTheProperties] ? [[FSNodeInfo alloc] initWithNode:node] : node;	// If we have already copied the node we don't need to copy it again
-			[[parent childNodes] setObject:copiedNode forKey:[copiedNode relativePathComponent]];
+			[parent childNodes][[copiedNode relativePathComponent]] = copiedNode;
 			
-			FSNodeInfo* childNode = [[copiedNode childNodes] objectForKey:component];
+			FSNodeInfo* childNode = [copiedNode childNodes][component];
 			if (!childNode)
 				{ done = YES; break;}
 			parent = copiedNode;
@@ -507,7 +507,7 @@
 			continue;
 
 		// We have arrived at the place we should do a deep copy and dirtify of the tree
-		[[parent childNodes] setObject:[node deepCopyAndDirtify] forKey:[node relativePathComponent]];
+		[parent childNodes][[node relativePathComponent]] = [node deepCopyAndDirtify];
 	}
 	[newRoot computeProperties];
 	return newRoot;
@@ -538,9 +538,9 @@
 			if (IsEmpty(component))
 				break;
 			FSNodeInfo* copiedNode = [node haveComputedTheProperties] ? [[FSNodeInfo alloc] initWithNode:node] : node;	// If we have already copied the node we don't need to copy it again
-			[[parent childNodes] setObject:copiedNode forKey:[copiedNode relativePathComponent]];
+			[parent childNodes][[copiedNode relativePathComponent]] = copiedNode;
 
-			FSNodeInfo* childNode = [[copiedNode childNodes] objectForKey:component];
+			FSNodeInfo* childNode = [copiedNode childNodes][component];
 			if (!childNode)
 				{ done = YES; break;}
 			parent = copiedNode;
@@ -590,7 +590,7 @@
 		return;
 	}
 	for (NSString* key in [self sortedChildNodeKeys])
-		[[childNodes objectForKey:key] addAllLeafNodes:flatNodes withStatus:status];
+		[childNodes[key] addAllLeafNodes:flatNodes withStatus:status];
 }
 
 - (NSArray*) generateFlatLeafNodeListWithStatus:(HGStatus)status

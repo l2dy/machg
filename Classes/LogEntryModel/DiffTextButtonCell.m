@@ -80,9 +80,9 @@
 		NSColor* greenTextColor = rgbColor255(  0.0, 100.0,   0.0);
 		NSColor* blueTextColor  = rgbColor255(  0.0,   0.0, 100.0);
 		
-		theDictionaryAdded    = [NSDictionary dictionaryWithObjectsAndKeys: font, NSFontAttributeName, greenTextColor, NSForegroundColorAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil];
-		theDictionaryModified = [NSDictionary dictionaryWithObjectsAndKeys: font, NSFontAttributeName, blueTextColor,  NSForegroundColorAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil];
-		theDictionaryRemoved  = [NSDictionary dictionaryWithObjectsAndKeys: font, NSFontAttributeName, redTextColor,   NSForegroundColorAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil];
+		theDictionaryAdded    = @{NSFontAttributeName: font, NSForegroundColorAttributeName: greenTextColor, NSParagraphStyleAttributeName: paragraphStyle};
+		theDictionaryModified = @{NSFontAttributeName: font, NSForegroundColorAttributeName: blueTextColor, NSParagraphStyleAttributeName: paragraphStyle};
+		theDictionaryRemoved  = @{NSFontAttributeName: font, NSForegroundColorAttributeName: redTextColor, NSParagraphStyleAttributeName: paragraphStyle};
 	}
 
 	NSDictionary* attributes = nil;
@@ -117,7 +117,7 @@
 	NSNumber* parentRev = [backingLogEntry_ firstParent];
 	NSString* revisionNumbers = fstr(@"%@%:%@", parentRev, rev);
 
-	[document viewDifferencesInCurrentRevisionFor:[NSArray arrayWithObject:absoluteFileName_] toRevision:revisionNumbers];
+	[document viewDifferencesInCurrentRevisionFor:@[absoluteFileName_] toRevision:revisionNumbers];
 }
 
 

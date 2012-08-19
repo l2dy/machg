@@ -187,7 +187,7 @@
 			return  nil;
 	}
 	NSArray* lines = [results.outStr componentsSeparatedByString:@"\n"];
-	return IsNotEmpty(lines) ? lines : [NSArray array];
+	return IsNotEmpty(lines) ? lines : @[];
 }
 
 
@@ -220,7 +220,7 @@
 
 - (BOOL) writePaths:(NSArray*)paths toPasteboard:(NSPasteboard*)pasteboard
 {
-	[pasteboard declareTypes:[NSArray arrayWithObject:NSFilenamesPboardType] owner:self];
+	[pasteboard declareTypes:@[NSFilenamesPboardType] owner:self];
 	[pasteboard setPropertyList:paths forType:NSFilenamesPboardType];	
 	return IsNotEmpty(paths) ? YES : NO;
 }
@@ -261,7 +261,7 @@
 
 - (NSImage*) imageForMultipleNodes:(NSArray*) nodes
 {
-	FSNodeInfo* firstNode = [nodes objectAtIndex:0];
+	FSNodeInfo* firstNode = nodes[0];
 	NSString* extension = [[firstNode absolutePath] pathExtension];
 	for (FSNodeInfo* node in nodes)
 		if (![extension isEqualToString:[[node absolutePath] pathExtension]])
@@ -297,7 +297,7 @@
 		else if ([selectedNodes count] == 1)
 		{
 			// Find the last selected cell and show its information
-			FSNodeInfo* lastSelectedNode = [selectedNodes objectAtIndex:[selectedNodes count] - 1];
+			FSNodeInfo* lastSelectedNode = selectedNodes[[selectedNodes count] - 1];
 			attributedString   = [lastSelectedNode attributedInspectorStringForFSNode];
 			inspectorImage     = [lastSelectedNode iconImageForPreview];
 		}
@@ -454,13 +454,11 @@ const CGFloat  expandedWidth = 148;	// This is the width of the view in its expa
 	float duration = ([[[self window] currentEvent] modifierFlags] & NSShiftKeyMask) ? 1.25 : 0.25;
 	[viewAnimation setDuration:duration];
 	
-	NSDictionary* resizeDictionary = [NSDictionary dictionaryWithObjectsAndKeys:
-									  theContent, NSViewAnimationTargetKey,
-									  [NSValue valueWithRect:[theContent frame]], NSViewAnimationStartFrameKey,
-									  [NSValue valueWithRect:endFrame], NSViewAnimationEndFrameKey,
-									  nil];
+	NSDictionary* resizeDictionary = @{NSViewAnimationTargetKey: theContent,
+									  NSViewAnimationStartFrameKey: [NSValue valueWithRect:[theContent frame]],
+									  NSViewAnimationEndFrameKey: [NSValue valueWithRect:endFrame]};
 	
-	NSArray* animationArray = [NSArray arrayWithObject:resizeDictionary];
+	NSArray* animationArray = @[resizeDictionary];
 	[viewAnimation setViewAnimations:animationArray];
 	[viewAnimation startAnimation];	
 }

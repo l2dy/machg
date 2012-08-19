@@ -475,8 +475,8 @@ NSArray* restrictPathsToPaths(NSArray* inPaths, NSArray* inContainingPaths)
 	NSMutableArray* restrictedPaths = [[NSMutableArray alloc]init];
 	while (i < [paths count] && j < [containingPaths count])
 	{
-		NSString* si = [paths objectAtIndex:i];
-		NSString* sj = [containingPaths objectAtIndex:j];
+		NSString* si = paths[i];
+		NSString* sj = containingPaths[j];
 		if ([sj hasPrefix:si])
 		{
 			[restrictedPaths addObject:sj];
@@ -657,7 +657,7 @@ NSString* applicationSupportVersionedFolder()
 	if (!answer)
 	{
 		NSArray* searchPaths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
-		NSString* applicationSupportFolder = [searchPaths objectAtIndex:0];
+		NSString* applicationSupportFolder = searchPaths[0];
 		NSString* shortVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
 		answer = fstr(@"%@/%@/%@", applicationSupportFolder, [[NSProcessInfo processInfo] processName], shortVersion);
 	}
@@ -670,7 +670,7 @@ NSString* applicationSupportFolder()
 	if (!answer)
 	{
 		NSArray* searchPaths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
-		NSString* applicationSupportFolder = [searchPaths objectAtIndex:0];
+		NSString* applicationSupportFolder = searchPaths[0];
 		answer = fstr(@"%@/%@", applicationSupportFolder, [[NSProcessInfo processInfo] processName]);
 	}
 	return answer;
@@ -694,7 +694,7 @@ NSArray* aliasesForShell(NSString* path)
 	NSString* terminalInfoScriptPath = fstr(@"\"${mhgResources}/terminalinformation.sh\"");
 	NSString* terminalInfo  = fstr(@"%@ %@ %@", terminalInfoScriptPath, LocalHGShellAliasNameFromDefaults(), LocalWhitelistedHGShellAliasNameFromDefaults());
 	NSString* combinedCmd = fstr(@"%@; %@; %@; %@", mhgResources, mhgAlias, ehgAlias, terminalInfo);
-	return [NSArray arrayWithObject:combinedCmd];
+	return @[combinedCmd];
 }
 
 NSString* tempFilePathWithTemplate(NSString* nameTemplate)
@@ -847,7 +847,7 @@ NSDictionary* coloredFontAttributes()
 	if (theDictionary == nil)
 	{
 		NSColor* textColor = [NSColor colorWithDeviceRed:(200.0/255.0) green:(13.0/255.0) blue:(13.0/255.0) alpha:1.0];
-		theDictionary = [NSDictionary dictionaryWithObjectsAndKeys: textColor, NSForegroundColorAttributeName, nil];
+		theDictionary = @{NSForegroundColorAttributeName: textColor};
 	}
 	return theDictionary;
 }
@@ -864,7 +864,7 @@ NSDictionary* emphasizedSheetMessageFontAttributes()
 		[paragraphStyle setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
 		NSColor* textColor = [NSColor colorWithDeviceRed:(190.0/255.0) green:(13.0/255.0) blue:(13.0/255.0) alpha:1.0];
 		NSFont* font = [NSFont boldSystemFontOfSize:[NSFont smallSystemFontSize]];
-		theDictionary = [NSDictionary dictionaryWithObjectsAndKeys: font, NSFontAttributeName, textColor, NSForegroundColorAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil];
+		theDictionary = @{NSFontAttributeName: font, NSForegroundColorAttributeName: textColor, NSParagraphStyleAttributeName: paragraphStyle};
 	}
 	return theDictionary;
 }
@@ -877,7 +877,7 @@ NSDictionary* normalSheetMessageFontAttributes()
 		NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
 		[paragraphStyle setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
 		NSFont* font = [NSFont messageFontOfSize:[NSFont smallSystemFontSize]];
-		theDictionary = [NSDictionary dictionaryWithObjectsAndKeys: font, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil];
+		theDictionary = @{NSFontAttributeName: font, NSParagraphStyleAttributeName: paragraphStyle};
 	}
 	return theDictionary;
 }
@@ -891,7 +891,7 @@ NSDictionary* grayedSheetMessageFontAttributes()
 		[paragraphStyle setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
 		NSColor* textColor = [NSColor grayColor];
 		NSFont* font = [NSFont messageFontOfSize:[NSFont smallSystemFontSize]];
-		theDictionary = [NSDictionary dictionaryWithObjectsAndKeys: font, NSFontAttributeName, textColor, NSForegroundColorAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil];
+		theDictionary = @{NSFontAttributeName: font, NSForegroundColorAttributeName: textColor, NSParagraphStyleAttributeName: paragraphStyle};
 	}
 	return theDictionary;
 }
@@ -906,8 +906,8 @@ NSDictionary* fixedWidthResultsMessageFontAttributes()
 		[paragraphStyle setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
 		float charWidth = [[font screenFontWithRenderingMode:NSFontDefaultRenderingMode] advancementForGlyph:(NSGlyph) ' '].width;
 		[paragraphStyle setDefaultTabInterval:(charWidth * 4)];
-		[paragraphStyle setTabStops:[NSArray array]];
-		theDictionary = [NSDictionary dictionaryWithObjectsAndKeys: font, NSFontAttributeName, paragraphStyle, NSParagraphStyleAttributeName, nil];
+		[paragraphStyle setTabStops:@[]];
+		theDictionary = @{NSFontAttributeName: font, NSParagraphStyleAttributeName: paragraphStyle};
 	}
 	return theDictionary;
 }
@@ -980,7 +980,7 @@ void printChildViewHierarchyWithIndent(NSView* view, NSString* indent)
 	DebugLog(@"%@%@", indent, [view className]);
 	NSArray* subviews = [view subviews];
 	for (int i = 0; i < [subviews count]; i++)
-		printChildViewHierarchyWithIndent([subviews objectAtIndex:i], [indent stringByAppendingString:@"  "]);
+		printChildViewHierarchyWithIndent(subviews[i], [indent stringByAppendingString:@"  "]);
 }
 
 void printChildViewHierarchy(NSView* view)
@@ -1158,7 +1158,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	NSArray* parts = [self captureComponentsMatchedByRegex:regEx];
 	if ([parts count] <= 1)
 		return NO;
-	if (first) *first = [parts objectAtIndex:1];
+	if (first) *first = parts[1];
 	return YES;
 }
 - (BOOL) getCapturesWithRegexAndComponents:(NSString*)regEx  firstComponent:(NSString**)first  secondComponent:(NSString**)second
@@ -1166,8 +1166,8 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	NSArray* parts = [self captureComponentsMatchedByRegex:regEx];
 	if ([parts count] <= 2)
 		return NO;
-	if (first)  *first  = [parts objectAtIndex:1];
-	if (second) *second = [parts objectAtIndex:2];
+	if (first)  *first  = parts[1];
+	if (second) *second = parts[2];
 	return YES;
 }
 - (BOOL) getCapturesWithRegexAndComponents:(NSString*)regEx  firstComponent:(NSString**)first  secondComponent:(NSString**)second  thirdComponent:(NSString**)third
@@ -1175,9 +1175,9 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	NSArray* parts = [self captureComponentsMatchedByRegex:regEx];
 	if ([parts count] <= 3)
 		return NO;
-	if (first)  *first  = [parts objectAtIndex:1];
-	if (second) *second = [parts objectAtIndex:2];
-	if (third)  *third  = [parts objectAtIndex:3];
+	if (first)  *first  = parts[1];
+	if (second) *second = parts[2];
+	if (third)  *third  = parts[3];
 	return YES;
 }
 - (BOOL) getCapturesWithRegexAndComponents:(NSString*)regEx  firstComponent:(NSString**)first  secondComponent:(NSString**)second  thirdComponent:(NSString**)third  fourthComponent:(NSString**)fourth
@@ -1185,10 +1185,10 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	NSArray* parts = [self captureComponentsMatchedByRegex:regEx];
 	if ([parts count] <= 4)
 		return NO;
-	if (first)  *first  = [parts objectAtIndex:1];
-	if (second) *second = [parts objectAtIndex:2];
-	if (third)  *third  = [parts objectAtIndex:3];
-	if (fourth) *fourth = [parts objectAtIndex:4];
+	if (first)  *first  = parts[1];
+	if (second) *second = parts[2];
+	if (third)  *third  = parts[3];
+	if (fourth) *fourth = parts[4];
 	return YES;
 }
 
@@ -1197,7 +1197,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	NSArray* parts = [self captureComponentsMatchedByRegex:regEx];
 	if ([parts count] <= 1)
 		return NO;
-	if (first)  *first = trimString([parts objectAtIndex:1]);
+	if (first)  *first = trimString(parts[1]);
 	return YES;
 }
 - (BOOL) getCapturesWithRegexAndTrimedComponents:(NSString*)regEx  firstComponent:(NSString**)first  secondComponent:(NSString**)second
@@ -1205,8 +1205,8 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	NSArray* parts = [self captureComponentsMatchedByRegex:regEx];
 	if ([parts count] <= 2)
 		return NO;
-	if (first)  *first  = trimString([parts objectAtIndex:1]);
-	if (second) *second = trimString([parts objectAtIndex:2]);
+	if (first)  *first  = trimString(parts[1]);
+	if (second) *second = trimString(parts[2]);
 	return YES;
 }
 - (BOOL) getCapturesWithRegexAndTrimedComponents:(NSString*)regEx  firstComponent:(NSString**)first  secondComponent:(NSString**)second  thirdComponent:(NSString**)third
@@ -1214,9 +1214,9 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	NSArray* parts = [self captureComponentsMatchedByRegex:regEx];
 	if ([parts count] <= 3)
 		return NO;
-	if (first)  *first  = trimString([parts objectAtIndex:1]);
-	if (second) *second = trimString([parts objectAtIndex:2]);
-	if (third)  *third  = trimString([parts objectAtIndex:3]);
+	if (first)  *first  = trimString(parts[1]);
+	if (second) *second = trimString(parts[2]);
+	if (third)  *third  = trimString(parts[3]);
 	return YES;
 }
 - (BOOL) getCapturesWithRegexAndTrimedComponents:(NSString*)regEx  firstComponent:(NSString**)first  secondComponent:(NSString**)second  thirdComponent:(NSString**)third  fourthComponent:(NSString**)fourth
@@ -1224,10 +1224,10 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	NSArray* parts = [self captureComponentsMatchedByRegex:regEx];
 	if ([parts count] <= 4)
 		return NO;
-	if (first)  *first  = trimString([parts objectAtIndex:1]);
-	if (second) *second = trimString([parts objectAtIndex:2]);
-	if (third)  *third  = trimString([parts objectAtIndex:3]);
-	if (fourth) *fourth = trimString([parts objectAtIndex:4]);
+	if (first)  *first  = trimString(parts[1]);
+	if (second) *second = trimString(parts[2]);
+	if (third)  *third  = trimString(parts[3]);
+	if (fourth) *fourth = trimString(parts[4]);
 	return YES;
 }
 
@@ -1270,7 +1270,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
     [attrString beginEditing];
     [attrString addAttribute:NSLinkAttributeName value:[aURL absoluteString]];
     [attrString addAttribute:NSForegroundColorAttributeName value:[NSColor blueColor]];	    // make the text appear in blue
-    [attrString addAttribute:NSUnderlineStyleAttributeName value:[NSNumber numberWithInt:NSSingleUnderlineStyle]];		// next make the text appear with an underline
+    [attrString addAttribute:NSUnderlineStyleAttributeName value:@(NSSingleUnderlineStyle)];		// next make the text appear with an underline
     [attrString endEditing];
     return attrString;
 }
@@ -1437,7 +1437,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 {
 	@try
 	{
-		return [self objectAtIndex:0];
+		return self[0];
 	}
 	@catch (NSException* ne) { return nil; }
 	return nil;	// Keep compiler happy
@@ -1472,11 +1472,11 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 // MARK: -
 @implementation NSDictionary ( NSDictionaryPlusAccessors )
-- (id) synchronizedObjectForKey:(id)aKey			{ @synchronized(self) { return [self objectForKey:aKey]; }; /*keep gcc happy*/ return nil; }
+- (id) synchronizedObjectForKey:(id)aKey			{ @synchronized(self) { return self[aKey]; }; /*keep gcc happy*/ return nil; }
 - (NSArray*) synchronizedAllKeys					{ @synchronized(self) { return [self allKeys]; }; /*keep gcc happy*/ return nil; }
 - (NSInteger) synchronizedCount						{ @synchronized(self) { return [self count]; }; /*keep gcc happy*/ return 0; }
-- (id) synchronizedObjectForIntKey:(NSInteger)key	{ @synchronized(self) { return [self objectForKey:intAsNumber(key)]; }; /*keep gcc happy*/ return nil; }
-- (id) objectForIntKey:(NSInteger)key				{ return [self objectForKey:intAsNumber(key)]; }
+- (id) synchronizedObjectForIntKey:(NSInteger)key	{ @synchronized(self) { return self[intAsNumber(key)]; }; /*keep gcc happy*/ return nil; }
+- (id) objectForIntKey:(NSInteger)key				{ return self[intAsNumber(key)]; }
 @end
 
 
@@ -1484,12 +1484,12 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 // MARK: -
 @implementation NSMutableDictionary ( NSMutableDictionaryPlusAccessors )
-- (void) synchronizedSetObject:(id)anObject forKey:(id)aKey			{ @synchronized(self) { [self setObject:anObject forKey:aKey]; }; }
+- (void) synchronizedSetObject:(id)anObject forKey:(id)aKey			{ @synchronized(self) { self[aKey] = anObject; }; }
 - (void) synchronizedRemoveObjectForKey:(id)aKey					{ @synchronized(self) { [self removeObjectForKey:aKey]; }; }
-- (void) copyValueOfKey:(id)aKey from:(NSDictionary*)aDict			{ id val = [aDict objectForKey:aKey]; if (val) [self setObject:val forKey:aKey]; }
-- (void) synchronizedSetObject:(id)value forIntKey:(NSInteger)key	{ @synchronized(self) { [self setObject:value forKey:intAsNumber(key)]; }; }
-- (void) setObject:(id)value forIntKey:(NSInteger)key				{ [self setObject:value forKey:intAsNumber(key)]; }
-- (id)	 objectForKey:(id)key addingIfNil:(Class)class				{ id val = [self objectForKey:key]; if (!val) { val = [[class performSelector:@selector(alloc)] init]; [self setObject:val forKey:key]; } return val; }
+- (void) copyValueOfKey:(id)aKey from:(NSDictionary*)aDict			{ id val = aDict[aKey]; if (val) self[aKey] = val; }
+- (void) synchronizedSetObject:(id)value forIntKey:(NSInteger)key	{ @synchronized(self) { self[intAsNumber(key)] = value; }; }
+- (void) setObject:(id)value forIntKey:(NSInteger)key				{ self[intAsNumber(key)] = value; }
+- (id)	 objectForKey:(id)key addingIfNil:(Class)class				{ id val = self[key]; if (!val) { val = [[class performSelector:@selector(alloc)] init]; self[key] = val; } return val; }
 @end
 
 
@@ -1947,8 +1947,8 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 - (NSArray*) chosenItems
 {
 	if (![self rowWasClicked] && [self numberOfSelectedRows] == 0)
-		return [NSArray array];
-	return [self isRowSelected:[self chosenRow]] ? [self selectedItems] : [NSArray arrayWithObject:[self chosenItem]];
+		return @[];
+	return [self isRowSelected:[self chosenRow]] ? [self selectedItems] : @[ [self chosenItem] ];
 }
 
 - (void) selectItem:(id)item

@@ -142,7 +142,7 @@ static inline NSInteger rangeCheckIndex(NSInteger index, NSInteger count)	{ retu
 - (void) insertChild:(SidebarNode*)node atIndex:(NSUInteger)index	{ if (!children) children = [[NSMutableArray alloc]init];  [children insertObject:node atIndex:rangeCheckIndex(index, [children count])];	[node setParent:self]; }
 - (void) removeChild:(SidebarNode*)node				{ [children removeObject:node]; }
 - (NSInteger) indexOfChildNode:(SidebarNode*)node	{ return [children indexOfObject:node]; }
-- (SidebarNode*) childNodeAtIndex:(int)index		{ return [children objectAtIndex:index]; }
+- (SidebarNode*) childNodeAtIndex:(int)index		{ return children[index]; }
 - (NSUInteger) numberOfChildren						{ return [children count]; }
 - (NSInteger) level									{ return parent ? (1 + [parent level]) : -1; }	// Should be the same as NSOutlineView::levelForItem:
 
@@ -186,18 +186,18 @@ static inline NSInteger rangeCheckIndex(NSInteger index, NSInteger count)	{ retu
 	
 	NSMutableDictionary* attributesToApply = [standardSidebarFontAttributes mutableCopy];
 	if (selected)
-		[attributesToApply setObject:[NSColor whiteColor] forKey:NSForegroundColorAttributeName];
+		attributesToApply[NSForegroundColorAttributeName] = [NSColor whiteColor];
 	if ([self isVirginRepository])
-		[attributesToApply setObject:selected ? virginSidebarSelectedColor : virginSidebarColor forKey:NSForegroundColorAttributeName];
+		attributesToApply[NSForegroundColorAttributeName] = selected ? virginSidebarSelectedColor : virginSidebarColor;
 	if ([self isServerRepositoryRef])
-		[attributesToApply setObject:[NSNumber numberWithFloat:0.15] forKey:NSObliquenessAttributeName];
+		attributesToApply[NSObliquenessAttributeName] = @0.15f;
 	if ([self isMissingLocalRepositoryRef])
-		[attributesToApply setObject:selected ? missingSidebarSelectedColor : missingSidebarColor forKey:NSForegroundColorAttributeName];
+		attributesToApply[NSForegroundColorAttributeName] = selected ? missingSidebarSelectedColor : missingSidebarColor;
 	if ([self isSectionNode])
 	{
-		[attributesToApply setObject:selected ? [NSColor whiteColor] : [NSColor colorWithDeviceWhite:0.5 alpha:1.0] forKey:NSForegroundColorAttributeName];
-		[attributesToApply setObject:[NSFont boldSystemFontOfSize:[NSFont smallSystemFontSize]] forKey:NSFontAttributeName];
-		[attributesToApply setObject:selected ? noShadow : shadow forKey:NSShadowAttributeName];
+		attributesToApply[NSForegroundColorAttributeName] = selected ? [NSColor whiteColor] : [NSColor colorWithDeviceWhite:0.5 alpha:1.0];
+		attributesToApply[NSFontAttributeName] = [NSFont boldSystemFontOfSize:[NSFont smallSystemFontSize]];
+		attributesToApply[NSShadowAttributeName] = selected ? noShadow : shadow;
 	}
 	return [NSAttributedString string:shortName withAttributes:attributesToApply];
 }

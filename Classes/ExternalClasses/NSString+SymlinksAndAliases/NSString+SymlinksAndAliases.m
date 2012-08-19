@@ -13,6 +13,7 @@
 //
 
 #import "NSString+SymlinksAndAliases.h"
+#import "Common.h"
 #include <sys/stat.h>
 
 @implementation NSString (SymlinksAndAliases)
@@ -41,7 +42,7 @@
 	// we only need to handle subsequent components.
 	//
 	NSArray* pathComponents = [path pathComponents];
-	NSString* resolvedPath = [pathComponents objectAtIndex:0];
+	NSString* resolvedPath = pathComponents[0];
 	pathComponents = [pathComponents
 		subarrayWithRange:NSMakeRange(1, [pathComponents count] - 1)];
 

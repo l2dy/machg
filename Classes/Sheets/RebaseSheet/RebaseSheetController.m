@@ -174,7 +174,7 @@
 		[sourceLogTableView scrollToRevision:[myDocument getHGTipRevision]];
 	else
 	{
-		NSInteger minRev = numberAsInt([revs objectAtIndex:0]);
+		NSInteger minRev = numberAsInt(revs[0]);
 		for (NSNumber* revision in revs)
 		{
 			NSInteger revInt = numberAsInt(revision);
@@ -273,7 +273,7 @@
 
 - (CGFloat) firstPaneHeight:(NSSplitView*)theSplitView
 {
-	return [[[theSplitView subviews] objectAtIndex:0] frame].size.height;
+	return [[theSplitView subviews][0] frame].size.height;
 }
 
 
