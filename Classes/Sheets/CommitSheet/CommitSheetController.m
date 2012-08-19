@@ -261,20 +261,6 @@ NSString* kAmendOption	 = @"amendOption";
 	else if (![myDocument isCurrentRevisionTip])
 		amendTooltipMessage = @"The changeset to be amended must be the tip revision.";
 	[amendButton setToolTip:amendTooltipMessage];
-	
-	NSString* excludeTooltipMessage = @"Exclude files from the commit.";
-	if ([myDocument inMergeState])
-		excludeTooltipMessage = @"Cannot exclude files during a merge commit.";
-	else if (amendOption_)
-		excludeTooltipMessage = @"Exclude files from the amend.";
-	// [excludePathsButton setToolTip:excludeTooltipMessage];
-
-	NSString* includeTooltipMessage = @"Reinclude files for the commit.";
-	if ([myDocument inMergeState])
-		includeTooltipMessage = @"Cannot exclude files during a merge commit.";
-	else if (amendOption_)
-		includeTooltipMessage = @"Reinclude files for the amend.";
-	//[includePathsButton setToolTip:includeTooltipMessage];
 }
 
 - (void) makeMessageFieldFirstResponder

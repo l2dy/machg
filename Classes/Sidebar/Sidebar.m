@@ -1276,7 +1276,9 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 
 - (id) initWithCoder:(NSCoder*)coder
 {
-	[super initWithCoder:coder];
+	self = [super initWithCoder:coder];
+	if (!self)
+		return nil;
 	root_ = [coder decodeObjectForKey:@"sideBarRoot"];
 	root_ = [root_ copyNodeTree];	// We do this to ensure the parent pointers are correct.
 	return self;

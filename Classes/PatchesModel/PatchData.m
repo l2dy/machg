@@ -396,6 +396,9 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 
 - (PatchData*) initWithDiffContents:(NSString*)contents
 {
+	self = [super init];
+    if (!self)
+		return nil;
 	filePatchForFilePathDictionary_ = [[NSMutableDictionary alloc]init];
 	filePatches_ = [[NSMutableArray alloc]init];
 	patchBody_ = contents;

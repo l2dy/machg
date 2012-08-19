@@ -316,7 +316,10 @@ SidebarNodeKind nodeKindFromStoredNodeType(NSInteger storedType)
 
 - (id) initWithCoder:(NSCoder*)coder
 {
-	[super init];
+	self = [super init];
+	if (!self)
+		return nil;
+
 	nodeKind	= nodeKindFromStoredNodeType([coder decodeIntForKey:@"nodeType"]);
 	children	= [coder decodeObjectForKey:@"children"];
 	shortName	= [coder decodeObjectForKey:@"caption"];

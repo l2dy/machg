@@ -17,7 +17,9 @@
 
 - (MyWindowController*) initWithWindowNibName:(NSString*)nibName owner:(id)owner
 {
-	[super initWithWindowNibName:nibName owner:owner];
+	self = [super initWithWindowNibName:nibName owner:owner];
+	if (!self)
+		return nil;
 	[self observe:kSidebarSelectionDidChange from:nil byCalling:@selector(synchronizeWindowTitleWithDocumentName)];
 	return self;
 }

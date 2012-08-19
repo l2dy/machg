@@ -46,6 +46,9 @@
 
 - (ImportPatchesSheetController*) initImportPatchesSheetControllerWithDocument:(MacHgDocument*)doc
 {
+	self = [super init];
+	if (!self)
+		return nil;
 	myDocument = doc;
 	[NSBundle loadNibNamed:@"ImportPatchesSheet" owner:self];
 	hunkExclusions_ = [[HunkExclusions alloc]init];

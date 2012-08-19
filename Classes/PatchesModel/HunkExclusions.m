@@ -55,10 +55,14 @@ NSString* const kHunkHash	= @"HunkHash";
 
 - (id) initWithCoder:(NSCoder*)coder
 {
-	hunkExclusionsDictionary_ = [coder decodeObjectForKey:@"hunkExclusionsDictionary"];
-	validHunkHashDictionary_  = [coder decodeObjectForKey:@"fileExclusionsDictionary"];
-	if (!hunkExclusionsDictionary_) hunkExclusionsDictionary_ = [[NSMutableDictionary alloc]init];
-	if (!validHunkHashDictionary_)  validHunkHashDictionary_  = [[NSMutableDictionary alloc]init];
+	self = [super init];
+    if (!self)
+        return nil;
+
+    hunkExclusionsDictionary_ = [coder decodeObjectForKey:@"hunkExclusionsDictionary"];
+    validHunkHashDictionary_  = [coder decodeObjectForKey:@"fileExclusionsDictionary"];
+    if (!hunkExclusionsDictionary_) hunkExclusionsDictionary_ = [[NSMutableDictionary alloc]init];
+    if (!validHunkHashDictionary_)  validHunkHashDictionary_  = [[NSMutableDictionary alloc]init];
 	return self;
 }
 

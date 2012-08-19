@@ -14,7 +14,9 @@
 
 - (BaseSheetWindowController*) initWithWindowNibName:(NSString*)nibName
 {
-	[super initWithWindowNibName:nibName];
+	self = [super initWithWindowNibName:nibName];
+	if (!self)
+		return nil;
 	[self window]; // force loading of the actual nib (strange that the default initWithWindowNibName) doesn't do this.
 	return self;
 }

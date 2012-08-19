@@ -706,7 +706,10 @@ NSString* tempFilePathWithTemplate(NSString* nameTemplate)
 	int fileDescriptor = mkstemp(tempFileNameCString);
 	
 	if (fileDescriptor == -1)
+	{
+		free(tempFileNameCString);
 		return nil;
+	}
 	
 	NSString* tempFileName = [[NSFileManager defaultManager] stringWithFileSystemRepresentation:tempFileNameCString length:strlen(tempFileNameCString)];
 	close(fileDescriptor);
@@ -727,7 +730,10 @@ NSString* tempDirectoryPathWithTemplate(NSString* nameTemplate, NSString* direct
 	const char* result = mkdtemp(tempDirectoryNameCString);
 	
 	if (!result)
+	{
+		free(tempDirectoryNameCString);
 		return nil;
+	}
 	
 	NSString* tempDirectoryName = [[NSFileManager defaultManager] stringWithFileSystemRepresentation:tempDirectoryNameCString length:strlen(tempDirectoryNameCString)];
 	free(tempDirectoryNameCString);

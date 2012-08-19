@@ -88,6 +88,7 @@ const NSInteger maxRevDistance = 72;
 
 - (LogGraph*) initWithRepositoryData:(RepositoryData*)collection
 {
+	self = [super init];
 	repositoryData = collection;
 	revisionNumberToLineSegments_ = [[NSMutableDictionary alloc] init];
 	maxColumn = 0;
