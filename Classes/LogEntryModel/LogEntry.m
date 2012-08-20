@@ -134,7 +134,8 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 	if (IsEmpty(labels))
 		return @"";
 	NSArray* branchLabels = [LabelData filterLabels:labels byType:eBranchLabel];
-	return IsNotEmpty(branchLabels) ? [branchLabels[0] name] : @"";
+	LabelData* branchHeahLabel = IsNotEmpty(branchLabels) ? branchLabels[0] : nil;
+	return IsNotEmpty(branchHeahLabel) ? [branchHeahLabel name] : @"";
 }
 
 - (BOOL) isClosedBranchHead
