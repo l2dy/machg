@@ -927,11 +927,12 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 
 - (void) updateInformationTextView
 {
+	Sidebar* __weak weakSelf = self;
 	[queueForUpdatingInformationTextView_ addBlockOperation:^{
 		// We do this updating on the main thread since acessing the selectedNode can cause problems while the NSOutlineView
 		// (sidebar) is being updated. 
 		dispatch_async(mainQueue(), ^{
-			SidebarNode* selectedNode = [self selectedNode];
+			SidebarNode* selectedNode = [weakSelf selectedNode];
 			if ([selectedNode isRepositoryRef])
 			{
 				NSAttributedString* newInformativeMessage = [self informationTextViewMessage:selectedNode];

@@ -8,6 +8,7 @@
 
 #import "ParentTextButtonCell.h"
 #import "MacHgDocument.h"
+#import "RepositoryData.h"
 #import "HistoryViewController.h"
 
 @implementation ParentTextButtonCell

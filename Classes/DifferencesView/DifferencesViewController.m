@@ -11,6 +11,7 @@
 #import "AppController.h"
 #import "TaskExecutions.h"
 #import "MacHgDocument.h"
+#import "HistoryViewController.h"
 #import "ResultsWindowController.h"
 #import "LogTableView.h"
 #import "LogEntry.h"

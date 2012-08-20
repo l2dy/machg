@@ -10,6 +10,7 @@
 #import "FSNodeInfo.h"
 #import "FSViewerPaneCell.h"
 #import "HunkExclusions.h"
+#import "MacHgDocument.h"
 
 @interface FSViewerTable (PrivateAPI)
 - (void) regenerateTableData;

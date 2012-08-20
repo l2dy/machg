@@ -12,6 +12,7 @@
 #import "TaskExecutions.h"
 #import "LogEntry.h"
 #import "RepositoryData.h"
+#import "HistoryViewController.h"
 #import "LogTableView.h"
 
 

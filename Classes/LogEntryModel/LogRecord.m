@@ -11,6 +11,7 @@
 #import "TaskExecutions.h"
 #import "MacHgDocument.h"
 #import "FSNodeInfo.h"
+#import "RepositoryData.h"
 
 
 

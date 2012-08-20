@@ -60,7 +60,7 @@
 //#import "LNCStopwatch.h"
 #import <QuartzCore/CIFilter.h>
 
-
+#import "ThickSplitView.h"
 
 
 
@@ -1372,11 +1372,12 @@
 
 	BOOL postNotification = [queueForUnderlyingRepositoryChangedViaEvents_ operationQueued];
 	[queueForUnderlyingRepositoryChangedViaEvents_ resumeQueue];
+	MacHgDocument* __weak weakSelf = self;
 	if (postNotification)
 	{
 		DebugLog(@"resume events: queueing underlying repository changed event.");
 		[queueForUnderlyingRepositoryChangedViaEvents_
-			addBlockOperation: ^{[self postNotificationWithName:kUnderlyingRepositoryChanged];}
+			addBlockOperation: ^{[weakSelf postNotificationWithName:kUnderlyingRepositoryChanged];}
 					withDelay: 0.5];
 	}
 }
@@ -1500,11 +1501,12 @@
 		[filteredPaths addObject:path];
 	}
 
+	MacHgDocument* __weak weakSelf = self;
 	if (postNotification && ![self underlyingRepositoryChangedEventIsQueued])
 	{
 		DebugLog(@"fileEventsOccurredIn : queueing underlying repository changed event.");
 		[queueForUnderlyingRepositoryChangedViaEvents_ addBlockOperation:^{
-			[self postNotificationWithName:kUnderlyingRepositoryChanged]; }];
+			[weakSelf postNotificationWithName:kUnderlyingRepositoryChanged]; }];
 	}
 	
 	NSArray* canonicalized = pruneContainedPaths(filteredPaths);

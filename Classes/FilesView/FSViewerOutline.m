@@ -9,6 +9,7 @@
 #import "FSViewerOutline.h"
 #import "FSNodeInfo.h"
 #import "FSViewerPaneCell.h"
+#import "MacHgDocument.h"
 
 
 

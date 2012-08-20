@@ -16,6 +16,7 @@
 #import "TaskExecutions.h"
 #import "LogGraphCell.h"
 #import "LogGraph.h"
+#import "LogRecord.h"
 #import "SingleTimedQueue.h"
 #import "ScrollToChangesetPanelController.h"
 

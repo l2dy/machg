@@ -306,7 +306,7 @@
 	NSArray* selectedPaths = [parentViewer_ absolutePathsOfSelectedFilesInBrowser];
 	FSViewerSelectionState* newSavedState = [[FSViewerSelectionState alloc] init];
 	int numberOfColumns = [self lastColumn];
-	newSavedState.savedColumnScrollPositions = [[NSMutableArray alloc] init];
+	[newSavedState setSavedColumnScrollPositions:[[NSMutableArray alloc] init]];
 	for (int i = 0; i <= numberOfColumns; i++)
 	{
 		NSMatrix* matrixForColumn = [self matrixInColumn:i];

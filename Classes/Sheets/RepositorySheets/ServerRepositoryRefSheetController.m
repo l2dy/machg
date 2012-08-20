@@ -8,6 +8,7 @@
 //
 
 #import "ServerRepositoryRefSheetController.h"
+#import "LocalRepositoryRefSheetController.h"
 #import "MacHgDocument.h"
 #import "TaskExecutions.h"
 #import "Sidebar.h"
@@ -124,8 +125,9 @@
 	OSStatus myStatus = AuthorizationCopyRights (myAuthorizationRef, &myRights, &environment, myFlags, NULL);
 
 	// We timeout after 60 seconds if we don't use show the password again
+	ServerRepositoryRefSheetController* __weak weakSelf = self;
 	[timeoutQueueForSecurity_ addBlockOperation:^{
-		[self removeAuthorization];
+		[weakSelf removeAuthorization];
 	}];
 	return myStatus == noErr;
 }
@@ -166,11 +168,12 @@
 
 	BOOL valid = ([[self baseServerURLFieldValue] length] > 0) && ([[self shortNameFieldValue] length] > 0);
 	[okButton setEnabled:valid];
+	ServerRepositoryRefSheetController* __weak weakSelf = self;
 	if (sender == theBaseServerTextField || sender == self || sender == theUsernameTextField || sender == theSecurePasswordTextField || sender == theUnsecurePasswordTextField)
 	{
 		[theConnectionValidationController testConnection:sender];
 		[timeoutQueueForSecurity_ addBlockOperation:^{
-			[self removeAuthorization];
+			[weakSelf removeAuthorization];
 		}];
 		
 	}

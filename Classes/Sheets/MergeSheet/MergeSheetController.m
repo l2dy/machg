@@ -9,6 +9,7 @@
 #import "MergeSheetController.h"
 #import "TaskExecutions.h"
 #import "MacHgDocument.h"
+#import "RepositoryData.h"
 #import "ResultsWindowController.h"
 
 

@@ -8,6 +8,7 @@
 //
 
 #import "LocalRepositoryRefSheetController.h"
+#import "ServerRepositoryRefSheetController.h"
 #import "MacHgDocument.h"
 #import "TaskExecutions.h"
 #import "Sidebar.h"

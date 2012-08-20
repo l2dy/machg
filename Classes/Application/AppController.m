@@ -16,6 +16,8 @@
 #import "LogRecord.h"
 #import "EMKeychainItem.h"
 #import "NSURL+Parameters.h"
+#import "MacHgDocument.h"
+
 
 NSString* kKeyPathUseWhichToolForDiffing = @"values.UseWhichToolForDiffing";
 NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";

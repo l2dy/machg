@@ -1495,7 +1495,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 - (void) copyValueOfKey:(id)aKey from:(NSDictionary*)aDict			{ id val = aDict[aKey]; if (val) self[aKey] = val; }
 - (void) synchronizedSetObject:(id)value forIntKey:(NSInteger)key	{ @synchronized(self) { self[intAsNumber(key)] = value; }; }
 - (void) setObject:(id)value forIntKey:(NSInteger)key				{ self[intAsNumber(key)] = value; }
-- (id)	 objectForKey:(id)key addingIfNil:(Class)class				{ id val = self[key]; if (!val) { val = [[class performSelector:@selector(alloc)] init]; self[key] = val; } return val; }
+- (id)	 objectForKey:(id)key addingIfNil:(Class)class				{ id val = self[key]; if (!val) { val = [[class alloc] init]; self[key] = val; } return val; }
 @end
 
 
@@ -1549,13 +1549,14 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 + (NSArray*) applicationsForURL:(NSURL*)url
 {
-	return [NSMakeCollectable(LSCopyApplicationURLsForURL((CFURLRef)url, kLSRolesEditor | kLSRolesViewer)) autorelease];
+	return CFBridgingRelease(LSCopyApplicationURLsForURL((__bridge CFURLRef)url, kLSRolesEditor | kLSRolesViewer));
 }
 
 + (NSURL*) applicationForURL:(NSURL*)url
 {
-	NSURL* appURL = nil;
-	LSGetApplicationForURL ( (CFURLRef)url, kLSRolesEditor | kLSRolesViewer, NULL, (CFURLRef*) &appURL);
+	CFURLRef appCFURL = nil;
+	LSGetApplicationForURL( (__bridge CFURLRef)url, kLSRolesEditor | kLSRolesViewer, NULL, &appCFURL);
+	NSURL* appURL = CFBridgingRelease(appCFURL);
 	return appURL;
 }
 @end

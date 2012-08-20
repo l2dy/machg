@@ -8,7 +8,7 @@
 
 #import "DiffTextButtonCell.h"
 #import "MacHgDocument.h"
-
+#import "RepositoryData.h"
 
 @implementation DiffTextButtonCell
 
