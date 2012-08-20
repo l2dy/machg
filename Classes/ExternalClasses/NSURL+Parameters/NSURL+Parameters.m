@@ -21,10 +21,27 @@
 #import "NSURL+Parameters.h"
 #import "Common.h"
 
-/* See http://www.faqs.org/rfcs/rfc1738.html */
-#define ESCAPE_USER_PASSWORD(_STRING_) [NSMakeCollectable(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)_STRING_, NULL, CFSTR(":@/?!"), kCFStringEncodingUTF8)) autorelease]
-#define ESCAPE_STRING(_STRING_) [NSMakeCollectable(CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, (CFStringRef)_STRING_, NULL, NULL, kCFStringEncodingUTF8)) autorelease]
-#define UNESCAPE_STRING(_STRING_) [NSMakeCollectable(CFURLCreateStringByReplacingPercentEscapesUsingEncoding(kCFAllocatorDefault, (CFStringRef)_STRING_, CFSTR(""), kCFStringEncodingUTF8)) autorelease]
+// See http://www.faqs.org/rfcs/rfc1738.html
+NSString* createEscapedUserPassword(NSString* str)
+{
+	CFStringRef strRef = ( __bridge CFStringRef)str;
+	CFStringRef escapedStr = CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, strRef, NULL, CFSTR(":@/?!"), kCFStringEncodingUTF8);
+	return CFBridgingRelease(escapedStr);
+}
+
+NSString* escapeString(NSString* str)
+{
+	CFStringRef strRef = ( __bridge CFStringRef)str;
+	CFStringRef escapedStr = CFURLCreateStringByAddingPercentEscapes(kCFAllocatorDefault, strRef, NULL, NULL, kCFStringEncodingUTF8);
+	return CFBridgingRelease(escapedStr);
+}
+
+NSString* unescapeString(NSString* str)
+{
+	CFStringRef strRef = ( __bridge CFStringRef)str;
+	CFStringRef escapedStr = CFURLCreateStringByReplacingPercentEscapesUsingEncoding(kCFAllocatorDefault, strRef, CFSTR(""), kCFStringEncodingUTF8);
+	return CFBridgingRelease(escapedStr);
+}
 
 @implementation NSURL (Parameters)
 
@@ -49,13 +66,13 @@
 	
 	if (IsNotEmpty(user))
 	{
-		user = ESCAPE_USER_PASSWORD(user);
-		password = IsNotEmpty(password) ? ESCAPE_USER_PASSWORD(password) : nil;
+		NSString* escapedUser = createEscapedUserPassword(user);
+		NSString* escapedPassword = IsNotEmpty(password) ? createEscapedUserPassword(password) : nil;
 		
-		if (user && password)
-			[string appendFormat:@"%@:%@@", user, password];
+		if (escapedUser && escapedPassword)
+			[string appendFormat:@"%@:%@@", escapedUser, escapedPassword];
 		else
-			[string appendFormat:@"%@@", user];
+			[string appendFormat:@"%@@", escapedUser];
 	}
 	
 	[string appendString:host];
@@ -67,13 +84,13 @@
 	{
 		if ([path characterAtIndex:0] != '/')
 			[string appendString:@"/"];
-		[string appendString:ESCAPE_STRING(path)];
+		[string appendString:escapeString(path)];
 	}
 	
 	if (IsNotEmpty(query))
 	{
 		[string appendString:@"?"];
-		[string appendString:ESCAPE_STRING(query)];
+		[string appendString:escapeString(query)];
 	}
 	
 	return [NSURL URLWithString:string];
@@ -82,13 +99,13 @@
 - (NSString*) passwordByReplacingPercentEscapes
 {
 	NSString* string = [self password];
-	return IsNotEmpty(string) ? UNESCAPE_STRING(string) : nil;
+	return IsNotEmpty(string) ? unescapeString(string) : nil;
 }
 
 - (NSString*) queryByReplacingPercentEscapes
 {
 	NSString* string = [self query];
-	return IsNotEmpty(string) ? UNESCAPE_STRING(string) : nil;
+	return IsNotEmpty(string) ? unescapeString(string) : nil;
 }
 
 - (NSURL*) URLByDeletingPassword
