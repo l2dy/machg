@@ -129,7 +129,6 @@
 // MARK: Tree Construction Nodes
 // ------------------------------------------------------------------------------------
 
-- (void) setHgStatus:(HGStatus) newStatus { hgStatus = newStatus; }
 - (void) setHgStatusAdditively:(HGStatus) newStatus
 {
 	if (bitsInCommon(newStatus, eHGStatusPrimary))
