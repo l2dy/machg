@@ -1388,13 +1388,14 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 		
 		for (SidebarNode* repo in sortedCompatibleRepositories)
 		{
-			__weak ShellTaskController* theOutgoingController = [[ShellTaskController alloc]init];
+			__block ShellTaskController* theOutgoingController = [[ShellTaskController alloc]init];
 			dispatchWithTimeOutBlock(globalQueue(), 30.0 /* try for 30 seconds to get result of "outgoing"*/,
 									 
 									 // Main Block
 									 ^{
 										 NSMutableArray* argsOutgoing = [NSMutableArray arrayWithObjects:@"outgoing", @"--insecure", @"--quiet", @"--noninteractive", @"--template", @"+", [repo fullURLPath], nil];
 										 ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsOutgoing  fromRoot:rootPath  logging:eLoggingNone  withDelegate:theOutgoingController];
+										 theOutgoingController = nil;
 										 dispatch_async(mainQueue(), ^{
 											 if (![rootPath isEqualTo:[[weakSelf selectedNode] path]])
 												 return;
@@ -1410,6 +1411,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 									 // Timeout Block
 									 ^{
 										 [[theOutgoingController shellTask] cancelTask];	// We timed out so kill the task which timed out...
+										 theOutgoingController = nil;
 										 dispatch_async(mainQueue(), ^{
 											 if (![rootPath isEqualTo:[[weakSelf selectedNode] path]])
 												 return;
@@ -1423,13 +1425,14 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	[queueForAutomaticIncomingComputation_ addBlockOperation:^{
 		for (SidebarNode* repo in compatibleRepositories)
 		{
-			__weak ShellTaskController* theIncomingController = [[ShellTaskController alloc]init];
+			__block ShellTaskController* theIncomingController = [[ShellTaskController alloc]init];
 			dispatchWithTimeOutBlock(globalQueue(), 30.0 /* try for 30 seconds to get result of "outgoing"*/,
 									 
 									 // Main Block
 									 ^{
 										 NSMutableArray* argsOutgoing = [NSMutableArray arrayWithObjects:@"incoming", @"--insecure", @"--quiet", @"--noninteractive", @"--template", @"-", [repo fullURLPath], nil];
 										 ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsOutgoing  fromRoot:rootPath  logging:eLoggingNone  withDelegate:theIncomingController];
+										 theIncomingController = nil;
 										 dispatch_async(mainQueue(), ^{
 											 if (![rootPath isEqualTo:[[weakSelf selectedNode] path]])
 												 return;
@@ -1445,6 +1448,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 									 // Timeout Block
 									 ^{
 										 [[theIncomingController shellTask] cancelTask];	// We timed out so kill the task which timed out...
+										 theIncomingController = nil;
 										 dispatch_async(mainQueue(), ^{
 											 if (![rootPath isEqualTo:[[weakSelf selectedNode] path]])
 												 return;
