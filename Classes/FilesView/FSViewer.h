@@ -110,11 +110,11 @@
 
 @interface FSViewer : NSBox <FSViewerProtocol, ControllerForPatchesWebview>
 {
-	IBOutlet id <ControllerForFSViewer> parentController;
+	IBOutlet id <ControllerForFSViewer> __strong parentController;
 	IBOutlet PatchesWebview*	detailedPatchesWebView;
 	IBOutlet NSMenu*			contextualMenuForFSViewerPane;
 
-	NSString*			absolutePathOfRepositoryRoot_;
+	NSString*			__strong absolutePathOfRepositoryRoot_;
 	FSNodeInfo*			rootNodeInfo_;
 	BOOL				areNodesVirtual_;				// Is this browser used to display virtual nodes?
 
@@ -129,9 +129,9 @@
 	dispatch_once_t		theFilesTableInitilizer_;	
 }
 
-@property (readwrite,assign) id <ControllerForFSViewer> parentController;
+@property (readwrite,strong) id <ControllerForFSViewer> parentController;
 @property (readwrite,assign) BOOL		areNodesVirtual;
-@property (readwrite,assign) NSString*	absolutePathOfRepositoryRoot;
+@property (readwrite,strong) NSString*	absolutePathOfRepositoryRoot;
 
 
 // Access the FSViewerPanes
@@ -224,9 +224,9 @@
 }
 
 // Information for saving a Browser state
-@property (readwrite,assign) NSMutableArray*	savedColumnScrollPositions;
+@property (readwrite,strong) NSMutableArray*	savedColumnScrollPositions;
 @property (readwrite,assign) NSPoint			savedHorizontalScrollPosition;
-@property (readwrite,assign) NSArray*			savedSelectedPaths;
+@property (readwrite,strong) NSArray*			savedSelectedPaths;
 @property (readwrite,assign) BOOL				restoreFirstResponderToViewer;
 
 @end

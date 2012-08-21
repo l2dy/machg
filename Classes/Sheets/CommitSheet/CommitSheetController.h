@@ -49,11 +49,11 @@
 	IBOutlet DisclosureBoxController*	disclosureController;	// The disclosure box for the advanced options
 
 	
-	MacHgDocument*	myDocument;
+	MacHgDocument*	__strong myDocument;
 	
 	BOOL			committingAllFiles;				// We need to set this up since some commands like merging need to "commit" all
 													// files.
-	NSArray*		absolutePathsOfFilesToCommit_;	// This array is stored here when the sheet is set up. Later when
+	NSArray*		__strong absolutePathsOfFilesToCommit_;	// This array is stored here when the sheet is set up. Later when
 													// the user hits the commit button it does this commit.
 	NSArray*		logCommentsTableSourceData;		// This array is computed whenever we put up the
 													// sheet, but the tableview in the sheet uses this class as a data
@@ -61,9 +61,9 @@
 	BOOL			amendIsPossible_;				// Is the amend operation even possible. This is determined at sheet opening time.
 	
 	// Advanaced commit options
-	NSString*		committer_;						// The value of the committer option
+	NSString*		__strong committer_;						// The value of the committer option
 	BOOL			committerOption_;				// Has the committer option been specified
-	NSDate*			date_;							// The value of the date option
+	NSDate*			__strong date_;							// The value of the date option
 	BOOL			dateOption_;					// Has the committer option been specified
 	BOOL			amendOption_;					// Has the amend option been specified
 	BOOL			commitSubstateOption_;			// Has the commit substate option been specified
@@ -71,14 +71,14 @@
 													// commit message for the last revision's commit message
 	BOOL			hasHgSub_;						// Does this repository have a .hgsub file
 }
-@property (readwrite,assign) MacHgDocument* myDocument;
+@property (readwrite,strong) MacHgDocument* myDocument;
 @property (readwrite,assign) BOOL			committerOption;
-@property (readwrite,assign) NSString*		committer;
+@property (readwrite,strong) NSString*		committer;
 @property (readwrite,assign) BOOL			dateOption;
-@property (readwrite,assign) NSDate*		date;
+@property (readwrite,strong) NSDate*		date;
 @property (readwrite,assign) BOOL			amendOption;
 @property (readwrite,assign) BOOL			commitSubstateOption;
-@property (readwrite,assign) NSArray*		absolutePathsOfFilesToCommit;
+@property (readwrite,strong) NSArray*		absolutePathsOfFilesToCommit;
 
 - (CommitSheetController*) initCommitSheetControllerWithDocument:(MacHgDocument*)doc;
 

@@ -13,14 +13,14 @@
 @interface LogGraphCell : NSImageCell
 {
 	// These variables reference the table view in which this cell is based, and they get set in tableView:willDisplayCell:...
-	LogEntry*		entry_;				// The entry backing this cell
-	LogTableView*	logTableView;		// This is the table view containing this cell.
-	NSTableColumn*	logTableColumn_;	// This is the table column of the LogTableView containing this LogGraphCell.
+	LogEntry*		__strong entry_;				// The entry backing this cell
+	LogTableView*	__strong logTableView;		// This is the table view containing this cell.
+	NSTableColumn*	__strong logTableColumn_;	// This is the table column of the LogTableView containing this LogGraphCell.
 }
 
-@property (readwrite,assign) LogEntry*			entry;
-@property (readwrite,assign) LogTableView*		logTableView;
-@property (readwrite,assign) NSTableColumn*		logTableColumn;
+@property (readwrite,strong) LogEntry*			entry;
+@property (readwrite,strong) LogTableView*		logTableView;
+@property (readwrite,strong) NSTableColumn*		logTableColumn;
 
 - (void)	drawWithFrame:(NSRect)cellFrame inView:(NSView*)controlView;
 - (void)	drawGraphDot:(NSPoint) dotCenter;

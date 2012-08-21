@@ -26,11 +26,11 @@
 	IBOutlet NSTextField*	optionValueField;
 	NSString*				optionName;
 	BOOL					specialHandling;
-	id						originalTarget;		// We programmatically hijack the action and target of the button to point
+	id						__strong originalTarget;		// We programmatically hijack the action and target of the button to point
 	SEL						originalAction;
 }
 @property (readwrite,assign) BOOL	specialHandling;
-@property (readwrite,assign) id		originalTarget;
+@property (readwrite,strong) id		originalTarget;
 @property (readwrite,assign) SEL	originalAction;
 
 

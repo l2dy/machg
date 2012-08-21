@@ -13,12 +13,12 @@
 
 @interface LabelTextButtonCell : TextButtonCell
 {
-	LabelData* label_;
-	LogEntry*  entry_;
+	LabelData* __strong label_;
+	LogEntry*  __strong entry_;
 }
 
-@property (nonatomic, assign) LogEntry* entry;
-@property (nonatomic, assign) LabelData* label;
+@property (nonatomic, strong) LogEntry* entry;
+@property (nonatomic, strong) LabelData* label;
 
 
 // Initilization

@@ -19,28 +19,28 @@ void setupGlobalsForLogRecordPartsAndTemplate();
 @interface LogRecord : NSObject
 {
 	LogRecordLoadStatus  loadStatus_;
-	NSString* 	author_;
-	NSString* 	fullAuthor_;
-	NSString*   branch_;
+	NSString* 	__strong author_;
+	NSString* 	__strong fullAuthor_;
+	NSString*   __strong branch_;
 	NSDate* 	date_;
-	NSString* 	shortComment_;
-	NSString* 	fullComment_;
-	NSString*	changeset_;
-	NSArray*	filesAdded_;
-	NSArray*	filesModified_;
-	NSArray*	filesRemoved_;
+	NSString* 	__strong shortComment_;
+	NSString* 	__strong fullComment_;
+	NSString*	__strong changeset_;
+	NSArray*	__strong filesAdded_;
+	NSArray*	__strong filesModified_;
+	NSArray*	__strong filesRemoved_;
 }
 
 @property (readwrite,assign) LogRecordLoadStatus loadStatus;
-@property (readwrite,assign) NSString* 	author;
-@property (readwrite,assign) NSString* 	fullAuthor;
-@property (readwrite,assign) NSString* 	branch;
-@property (readwrite,assign) NSString* 	shortComment;
-@property (readwrite,assign) NSString* 	fullComment;
-@property (readwrite,assign) NSString*	changeset;
-@property (readwrite,assign) NSArray*	filesAdded;
-@property (readwrite,assign) NSArray*	filesModified;
-@property (readwrite,assign) NSArray*	filesRemoved;
+@property (readwrite,strong) NSString* 	author;
+@property (readwrite,strong) NSString* 	fullAuthor;
+@property (readwrite,strong) NSString* 	branch;
+@property (readwrite,strong) NSString* 	shortComment;
+@property (readwrite,strong) NSString* 	fullComment;
+@property (readwrite,strong) NSString*	changeset;
+@property (readwrite,strong) NSArray*	filesAdded;
+@property (readwrite,strong) NSArray*	filesModified;
+@property (readwrite,strong) NSArray*	filesRemoved;
 
 
 // Create Log Records

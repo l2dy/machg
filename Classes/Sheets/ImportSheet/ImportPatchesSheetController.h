@@ -15,7 +15,7 @@
 @interface ImportPatchesSheetController : BaseSheetWindowController < ControllerForPatchesTableView >
 {
 
-	MacHgDocument*				myDocument;
+	MacHgDocument*				__strong myDocument;
 
 	// Main window
 	IBOutlet NSWindow*			theImportPatchesSheet;
@@ -30,10 +30,10 @@
 	float						guessSimilarityFactor_;
 }
 
-@property (readwrite,assign) MacHgDocument* myDocument;
+@property (readwrite,strong) MacHgDocument* myDocument;
 @property BOOL								guessRenames;
 @property float								guessSimilarityFactor;
-@property (readonly,assign) HunkExclusions* hunkExclusions;
+@property (readonly) HunkExclusions* hunkExclusions;
 
 
 - (ImportPatchesSheetController*) initImportPatchesSheetControllerWithDocument:(MacHgDocument*)doc;

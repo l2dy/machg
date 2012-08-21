@@ -20,11 +20,11 @@
 	FilePatch*  parentFilePatch;
 	NSString*   hunkHeader;
 	NSArray*    hunkBodyLines;
-	NSString*   hunkHash;
+	NSString*   __strong hunkHash;
 	NSInteger	changeLineCount;	// The number of changed lines in the hunk
 	BOOL		binaryHunk;			// Is this hunk binary data
 }
-@property (readonly,assign) NSString* hunkHash;
+@property (readonly,strong) NSString* hunkHash;
 
 + (HunkObject*) hunkObjectWithLines:(NSMutableArray*)lines andParentFilePatch:(FilePatch*)parentFilePatch;
 - (NSString*)   htmlizedHunk:(BOOL)sublineDiffing;	// The hunk header and hunk body together, but with html insertions for hilighting the diff 
@@ -42,16 +42,16 @@
 
 @interface FilePatch : NSObject
 {
-	NSString* filePath;				// The repository relative path which this patch applies to
-	NSString* filePatchHeader;
+	NSString* __strong filePath;				// The repository relative path which this patch applies to
+	NSString* __strong filePatchHeader;
 	NSMutableArray* hunks;			// An array of HunkObjects
 	NSMutableSet* hunkHashesSet;	// An array of the hases in the hunk Objects
 	BOOL binaryPatch;				// Records wether this file patch is a binary one
 }
-@property (readonly,assign) NSString* filePath;
-@property (readonly,assign) NSString* filePatchHeader;
-@property (readonly,assign) NSMutableArray* hunks;
-@property (readonly,assign) NSMutableSet* hunkHashesSet;
+@property (readonly,strong) NSString* filePath;
+@property (readonly,strong) NSString* filePatchHeader;
+@property (readonly) NSMutableArray* hunks;
+@property (readonly) NSMutableSet* hunkHashesSet;
 @property (readonly,assign) BOOL binaryPatch;
 
 + (FilePatch*) filePatchWithPath:(NSString*)path andHeader:(NSString*)header binary:(BOOL)binary;
@@ -80,11 +80,11 @@
 	
 	NSMutableDictionary* filePatchForFilePathDictionary_;	// Map of (NSString*)sourceCodeFilePath -> (FilePatch*)patch (mirrors filePatches_)
 	NSMutableArray* filePatches_;							// Array of (FilePatch*)patch (mirrors filePatchForFilePath_)
-	NSString*		patchBody_;
+	NSString*		__strong patchBody_;
 	NSString*		cachedPatchBodyHTMLized_;
 }	
-@property (readonly,assign) NSString* patchBody;
-@property (readonly,assign) NSMutableArray* filePatches;
+@property (readonly,strong) NSString* patchBody;
+@property (readonly) NSMutableArray* filePatches;
 
 + (PatchData*) patchDataFromDiffContents:(NSString*)diff;
 
@@ -115,13 +115,13 @@
 
 @interface PatchRecord : NSObject
 {
-	NSString* path_;		// This is the path to the patch file (and not anything to do with the paths in the patch.)
+	NSString* __strong path_;		// This is the path to the patch file (and not anything to do with the paths in the patch.)
 	NSString* author_;
 	NSString* date_;
 	NSString* commitMessage_;
 	NSString* parent_;
-	NSString* nodeID_;
-	PatchData* patchData_;
+	NSString* __strong nodeID_;
+	PatchData* __strong patchData_;
 	
 	BOOL	  forceOption_;
 	BOOL	  exactOption_;
@@ -136,9 +136,9 @@
 	BOOL	  parentIsModified_;
 }
 
-@property (readonly,assign) NSString*	path;
-@property (readonly,assign) NSString*	nodeID;
-@property (readonly,assign) PatchData*	patchData;
+@property (readonly,strong) NSString*	path;
+@property (readonly,strong) NSString*	nodeID;
+@property (readonly,strong) PatchData*	patchData;
 @property BOOL forceOption;
 @property BOOL exactOption;
 @property BOOL dontCommitOption;

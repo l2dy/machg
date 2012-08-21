@@ -20,19 +20,19 @@ void setupGlobalsForLogEntryPartsAndTemplate();
 {
 	LogEntryLoadStatus  loadStatus_;
 	RepositoryData* collection_;
-	NSNumber* 	revision_;
-	NSArray*	parentsArray_;				// Array of parent   revs as NSNumbers
-	NSArray*	childrenArray_;				// Array of children revs as NSNumbers
-	NSString*	changeset_;
-	LogRecord*	fullRecord_;
+	NSNumber* 	__strong revision_;
+	NSArray*	__strong parentsArray_;				// Array of parent   revs as NSNumbers
+	NSArray*	__strong childrenArray_;				// Array of children revs as NSNumbers
+	NSString*	__strong changeset_;
+	LogRecord*	__strong fullRecord_;
 }
 
 @property (readwrite,assign) LogEntryLoadStatus loadStatus;
-@property (readwrite,assign) NSNumber* 	revision;
-@property (readwrite,assign) NSArray*	parentsArray;
-@property (readwrite,assign) NSArray*	childrenArray;
-@property (readwrite,assign) NSString*	changeset;
-@property (readwrite,assign) LogRecord*	fullRecord;
+@property (readwrite,strong) NSNumber* 	revision;
+@property (readwrite,strong) NSArray*	parentsArray;
+@property (readwrite,strong) NSArray*	childrenArray;
+@property (readwrite,strong) NSString*	changeset;
+@property (readwrite,strong) LogRecord*	fullRecord;
 
 - (RepositoryData*) repositoryData;
 

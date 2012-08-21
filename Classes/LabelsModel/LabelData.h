@@ -12,15 +12,15 @@
 
 @interface LabelData : NSObject
 {
-	NSString* name_;
-	NSNumber* revision_;
-	NSString* changeset_;
+	NSString* __strong name_;
+	NSNumber* __strong revision_;
+	NSString* __strong changeset_;
 	LabelType labelType_;
 }
 
-@property (readonly,assign) NSString* name;
-@property (readonly,assign) NSNumber* revision;
-@property (readonly,assign) NSString* changeset;
+@property (readonly,strong) NSString* name;
+@property (readonly,strong) NSNumber* revision;
+@property (readonly,strong) NSString* changeset;
 @property (readonly,assign) LabelType labelType;
 
 // Initilization

@@ -25,29 +25,29 @@ typedef enum
 {
 	SidebarNodeKind	nodeKind;
 	NSMutableArray* children;			// If this is a group node then this contains the sidebar nodes below this one.
-	SidebarNode*	parent;				// The parent sidebar node in the tree of nodes
-	NSString*		shortName;			// This is a name used by you like myproject
-	NSImage*		icon;				// An icon in the sidebar to represent this node
+	SidebarNode*	__strong parent;				// The parent sidebar node in the tree of nodes
+	NSString*		__strong shortName;			// This is a name used by you like myproject
+	NSImage*		__strong icon;				// An icon in the sidebar to represent this node
 	BOOL			isExpanded;			// If this is a group node then this is the status of whether the group node is expanded
 										// or not
 
 	// If this node is a repository reference (local or server) then the following are relevant
-	NSString*		path;				// The local file path or server path; ie something like  http://www.codebase.org/code/main/myproject
+	NSString*		__strong path;				// The local file path or server path; ie something like  http://www.codebase.org/code/main/myproject
 										// if it's a server or /Users/jason/Projects/MyProject if it's a local file path.
-	NSString*		recentPushConnection;	// The path of the most recent push connection if there has been one.
-	NSString*		recentPullConnection;	// The path of the most recent pull connection if there has been one.
+	NSString*		__strong recentPushConnection;	// The path of the most recent push connection if there has been one.
+	NSString*		__strong recentPullConnection;	// The path of the most recent pull connection if there has been one.
 }
 
 @property (assign) SidebarNodeKind nodeKind;
-@property (nonatomic, retain) NSMutableArray* children;
+@property (nonatomic, strong) NSMutableArray* children;
 @property (assign, readwrite) BOOL isExpanded;
-@property (assign, readwrite) SidebarNode* parent;
-@property (assign, readonly)  NSString* shortName;
-@property (readwrite, assign) NSString* path;
-@property (readwrite, assign) NSString* recentPushConnection;
-@property (readwrite, assign) NSString* recentPullConnection;
+@property (strong, readwrite) SidebarNode* parent;
+@property (strong, readonly)  NSString* shortName;
+@property (readwrite, strong) NSString* path;
+@property (readwrite, strong) NSString* recentPushConnection;
+@property (readwrite, strong) NSString* recentPullConnection;
 
-@property (assign) NSImage* icon;
+@property (strong) NSImage* icon;
 
 
 // Constructors

@@ -45,7 +45,6 @@
 	{
         [[displayButton window] removeChildWindow:attachedPopupWindow];
         [attachedPopupWindow orderOut:self];
-        [attachedPopupWindow release];
         attachedPopupWindow = nil;
     }
 }

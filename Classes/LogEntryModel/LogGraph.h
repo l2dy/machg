@@ -51,7 +51,7 @@
 }
 
 @property (readonly) NSInteger maxColumn;
-@property (readonly,assign) NSMutableDictionary* revisionNumberToLineSegments;
+@property (readonly) NSMutableDictionary* revisionNumberToLineSegments;
 
 
 - (LogGraph*)	initWithRepositoryData:(RepositoryData*)collection;

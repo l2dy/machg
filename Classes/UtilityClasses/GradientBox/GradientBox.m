@@ -27,7 +27,6 @@
 
 	// draw gradient
 	[gradient drawInRect:self.bounds angle:270];
-	[gradient release];
 		
 	// drawn TopBorder
 	// [topBorderColor bwDrawPixelThickLineAtPosition:0 withInset:0 inRect:self.bounds inView:self horizontal:YES flip:NO];

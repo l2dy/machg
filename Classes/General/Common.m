@@ -1022,7 +1022,6 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 		fprintf(stderr,"%s/%-40s %s",threadName,funcName,[body UTF8String]);
 	else
 		fprintf(stderr,"%p/%-40s %s",[NSThread currentThread],funcName,[body UTF8String]);
-	[body release];
 }
 
 

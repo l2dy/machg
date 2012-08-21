@@ -32,7 +32,7 @@
 	BOOL					currentSelectionAllowsBadges_;
 }
 
-@property (nonatomic, assign) SidebarNode* root;
+@property (nonatomic) SidebarNode* root;
 
 
 // Actions

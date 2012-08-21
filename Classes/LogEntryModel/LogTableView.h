@@ -41,7 +41,7 @@
 	NSString*				rootPath_;						// The root of the repository
 
 	BOOL					canSelectIncompleteRevision_;	// Are you allowed to select the incomplete revision in this LogTableView
-	NSArray*				theTableRows_;					// Map of table row -> revision number (NSString)
+	NSArray*				__strong theTableRows_;					// Map of table row -> revision number (NSString)
 	BOOL					tableIsFiltered_;				// Are the revisions filtered through some keyword, or revset filter
 	SingleTimedQueue*		queueForDetailedEntryDisplay_;	// When we are asked to display the details of an entry or range of
 															// entries we put the request on this queue. This means when eg drag
@@ -50,7 +50,7 @@
 	BOOL					awake_;							// Has this nib been awakened yet?
 }
 
-@property (readwrite,assign) NSArray*	theTableRows;
+@property (readwrite,strong) NSArray*	theTableRows;
 @property (readonly, assign) BOOL		tableIsFiltered;
 @property BOOL							canSelectIncompleteRevision;
 
@@ -135,13 +135,13 @@
 
 @interface LogTableTextFieldCell : NSTextFieldCell
 {
-	LogEntry*		entry_;				// The entry backing this cell
-	LogTableView*	logTableView_;
-	NSTableColumn*	logTableColumn_;
+	LogEntry*		__strong entry_;				// The entry backing this cell
+	LogTableView*	__strong logTableView_;
+	NSTableColumn*	__strong logTableColumn_;
 }
-@property (readwrite,assign) LogEntry*		entry;
-@property (assign,readwrite) LogTableView*	logTableView;
-@property (assign,readwrite) NSTableColumn*	logTableColumn;
+@property (readwrite,strong) LogEntry*		entry;
+@property (strong,readwrite) LogTableView*	logTableView;
+@property (strong,readwrite) NSTableColumn*	logTableColumn;
 
 - (NSColor*)	highlightColorWithFrame:(NSRect)cellFrame inView:(NSView*)controlView;
 @end

@@ -38,10 +38,10 @@
 	BOOL					keepOriginalRevisions_;
 	BOOL					keepOriginalBranchNames_;
 
-	MacHgDocument*			myDocument;
+	MacHgDocument*			__strong myDocument;
 }
 
-@property (readwrite,assign) MacHgDocument*  myDocument;
+@property (readwrite,strong) MacHgDocument*  myDocument;
 @property (readwrite,assign) BOOL		  keepOriginalRevisions;
 @property (readwrite,assign) BOOL		  keepOriginalBranchNames;
 

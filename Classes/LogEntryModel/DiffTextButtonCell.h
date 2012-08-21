@@ -13,14 +13,14 @@
 
 @interface DiffTextButtonCell : TextButtonCell
 {
-	NSString* absoluteFileName_;
-	LogEntry* backingLogEntry_;
+	NSString* __strong absoluteFileName_;
+	LogEntry* __strong backingLogEntry_;
 	DiffButtonType type_;
 }
 
 @property (nonatomic, assign) DiffButtonType type;
-@property (nonatomic, assign) NSString* absoluteFileName;
-@property (nonatomic, assign) LogEntry* backingLogEntry;
+@property (nonatomic, strong) NSString* absoluteFileName;
+@property (nonatomic, strong) LogEntry* backingLogEntry;
 
 // Initilization
 - (id) initWithLogEntry:(LogEntry*)entry;

@@ -105,14 +105,10 @@ static BOOL _logsErrors;
 
 - (void)dealloc
 {
-	[mUsername release];
-	[mPassword release];
-	[mLabel release];
 	
 	if (mCoreKeychainItem)
 		CFRelease(mCoreKeychainItem);
 	
-	[super dealloc];
 }
 
 #pragma mark -
@@ -122,7 +118,7 @@ static BOOL _logsErrors;
 {
 	@synchronized (self)
 	{
-		return [[mPassword copy] autorelease];
+		return [mPassword copy];
 	}
 	return nil;	// silence warnings
 }
@@ -134,7 +130,6 @@ static BOOL _logsErrors;
 		if (mPassword == newPassword)
 			return;
 		
-		[mPassword release];
 		mPassword = [newPassword copy];
 		
 		const char *newPasswordCString = [newPassword UTF8String];
@@ -148,7 +143,7 @@ static BOOL _logsErrors;
 {
 	@synchronized (self)
 	{
-		return [[mUsername copy] autorelease];
+		return [mUsername copy];
 	}
 	return nil;	// silence warnings
 }
@@ -160,7 +155,6 @@ static BOOL _logsErrors;
 		if (mUsername == newUsername)
 			return;
 		
-		[mUsername release];
 		mUsername = [newUsername copy];
 		
 		const char *newUsernameCString = [newUsername UTF8String];
@@ -174,7 +168,7 @@ static BOOL _logsErrors;
 {
 	@synchronized (self)
 	{
-		return [[mLabel copy] autorelease];
+		return [mLabel copy];
 	}
 	return nil;	// silence warnings
 }
@@ -186,7 +180,6 @@ static BOOL _logsErrors;
 		if (mLabel == newLabel)
 			return;
 		
-		[mLabel release];
 		mLabel = [newLabel copy];
 		
 		const char *newLabelCString = [newLabel UTF8String];
@@ -234,18 +227,12 @@ static BOOL _logsErrors;
 									  username:(NSString *)username
 									  password:(NSString *)password
 {
-	return [[[EMGenericKeychainItem alloc] _initWithCoreKeychainItem:coreKeychainItem
+	return [[EMGenericKeychainItem alloc] _initWithCoreKeychainItem:coreKeychainItem
 														 serviceName:serviceName
 															username:username
-															password:password] autorelease];
+															password:password];
 }
 
-- (void)dealloc
-{
-	[mServiceName release];
-
-	[super dealloc];
-}
 
 #pragma mark -
 + (EMGenericKeychainItem *)genericKeychainItemForService:(NSString *)serviceName 
@@ -268,7 +255,7 @@ static BOOL _logsErrors;
 			NSLog(@"Error (%@) - %@", NSStringFromSelector(_cmd), SecCopyErrorMessageString(returnStatus, NULL));
 		return nil;
 	}
-	NSString *passwordString = [[[NSString alloc] initWithData:[NSData dataWithBytes:password length:passwordLength] encoding:NSUTF8StringEncoding] autorelease];
+	NSString *passwordString = [[NSString alloc] initWithData:[NSData dataWithBytes:password length:passwordLength] encoding:NSUTF8StringEncoding];
 	SecKeychainItemFreeContent(NULL, password);
 	
 	return [EMGenericKeychainItem _genericKeychainItemWithCoreKeychainItem:item forServiceName:serviceName username:username password:passwordString];
@@ -304,7 +291,7 @@ static BOOL _logsErrors;
 {
 	@synchronized (self)
 	{
-		return [[mServiceName copy] autorelease];
+		return [mServiceName copy];
 	}
 	return nil;	// silence warnings
 }
@@ -316,7 +303,6 @@ static BOOL _logsErrors;
 		if (mServiceName == newServiceName)
 			return;
 		
-		[mServiceName release];
 		mServiceName = [newServiceName copy];
 		
 		const char *newServiceNameCString = [newServiceName UTF8String];
@@ -349,13 +335,6 @@ static BOOL _logsErrors;
 	return nil;
 }
 
-- (void)dealloc
-{
-	[mServer release];
-	[mPath release];
-	
-	[super dealloc];
-}
 
 + (id)_internetKeychainItemWithCoreKeychainItem:(SecKeychainItemRef)coreKeychainItem
 									  forServer:(NSString *)server
@@ -365,13 +344,13 @@ static BOOL _logsErrors;
 										   port:(NSInteger)port
 									   protocol:(SecProtocolType)protocol
 {
-	return [[[EMInternetKeychainItem alloc] _initWithCoreKeychainItem:coreKeychainItem
+	return [[EMInternetKeychainItem alloc] _initWithCoreKeychainItem:coreKeychainItem
 															   server:server
 															 username:username
 															 password:password
 																 path:path
 																 port:port
-															 protocol:protocol] autorelease];
+															 protocol:protocol];
 }
 
 #pragma mark -
@@ -411,7 +390,7 @@ static BOOL _logsErrors;
 			NSLog(@"Error (%@) - %@", NSStringFromSelector(_cmd), SecCopyErrorMessageString(returnStatus, NULL));
 		return nil;
 	}
-	NSString *passwordString = [[[NSString alloc] initWithData:[NSData dataWithBytes:password length:passwordLength] encoding:NSUTF8StringEncoding] autorelease];
+	NSString *passwordString = [[NSString alloc] initWithData:[NSData dataWithBytes:password length:passwordLength] encoding:NSUTF8StringEncoding];
 	SecKeychainItemFreeContent(NULL, password);
 	
 	return [EMInternetKeychainItem _internetKeychainItemWithCoreKeychainItem:item forServer:server username:username password:passwordString path:path port:port protocol:protocol];
@@ -454,7 +433,7 @@ static BOOL _logsErrors;
 {
 	@synchronized (self)
 	{
-		return [[mServer copy] autorelease];
+		return [mServer copy];
 	}
 	return nil;	// silence warnings
 }
@@ -466,7 +445,6 @@ static BOOL _logsErrors;
 		if (mServer == newServer)
 			return;
 		
-		[mServer release];
 		mServer = [newServer copy];
 		
 		const char *newServerCString = [newServer UTF8String];
@@ -480,7 +458,7 @@ static BOOL _logsErrors;
 {
 	@synchronized (self)
 	{
-		return [[mPath copy] autorelease];
+		return [mPath copy];
 	}
 	return nil;	// silence warnings
 }
@@ -490,7 +468,6 @@ static BOOL _logsErrors;
 	if (mPath == newPath)
 		return;
 	
-	[mPath release];
 	mPath = [newPath copy];
 	
 	const char *newPathCString = [newPath UTF8String];

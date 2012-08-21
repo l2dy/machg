@@ -34,21 +34,21 @@
 	SingleTimedQueue*	timeoutQueueForSecurity_;
 	SidebarNode*		nodeToConfigure;
 	
-	NSString*			shortNameFieldValue_;
-	NSString*			baseServerURLFieldValue_;
-	NSString*			username_;
-	NSString*			password_;
+	NSString*			__strong shortNameFieldValue_;
+	NSString*			__strong baseServerURLFieldValue_;
+	NSString*			__strong username_;
+	NSString*			__strong password_;
 	BOOL				showRealPassword_;
-	NSString*			repositoryIdentity_;
-	NSString*			fullServerURLFieldValue_;
+	NSString*			__strong repositoryIdentity_;
+	NSString*			__strong fullServerURLFieldValue_;
 	BOOL				cloneAfterAddition_;
 }
-@property (readwrite,assign) NSString*	  shortNameFieldValue;
-@property (readwrite,assign) NSString*	  baseServerURLFieldValue;
-@property (readwrite,assign) NSString*	  username;
-@property (readwrite,assign) NSString*	  password;
-@property (readwrite,assign) NSString*	  repositoryIdentity;
-@property (readwrite,assign) NSString*	  fullServerURLFieldValue;
+@property (readwrite,strong) NSString*	  shortNameFieldValue;
+@property (readwrite,strong) NSString*	  baseServerURLFieldValue;
+@property (readwrite,strong) NSString*	  username;
+@property (readwrite,strong) NSString*	  password;
+@property (readwrite,strong) NSString*	  repositoryIdentity;
+@property (readwrite,strong) NSString*	  fullServerURLFieldValue;
 
 
 - (BOOL) showRealPassword;

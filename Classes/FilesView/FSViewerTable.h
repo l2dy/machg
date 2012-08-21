@@ -12,9 +12,9 @@
 @interface FSViewerTable : NSTableView <FSViewerProtocol, NSTableViewDelegate, NSTableViewDataSource>
 {
 	NSArray*	leafNodeForTableRow_;				// Array FSNodeInfo* (each table row has the associated node)
-	FSViewer*	parentViewer_;
+	FSViewer*	__strong parentViewer_;
 }
-@property (readwrite, assign) FSViewer*	parentViewer;
+@property (readwrite, strong) FSViewer*	parentViewer;
 
 - (NSArray*) leafNodeForTableRow;
 
@@ -25,10 +25,10 @@
 @interface FSViewerTableButtonCell : NSButtonCell
 {
 	//IBOutlet NSTextField* buttonMessage;
-	NSTableColumn*		tableColumn_;
-	FSNodeInfo*			nodeInfo_;
+	NSTableColumn*		__strong tableColumn_;
+	FSNodeInfo*			__strong nodeInfo_;
 }
-@property (assign,readwrite) NSTableColumn*	tableColumn;
-@property (assign,readwrite) FSNodeInfo*	nodeInfo;
+@property (strong,readwrite) NSTableColumn*	tableColumn;
+@property (strong,readwrite) FSNodeInfo*	nodeInfo;
 
 @end

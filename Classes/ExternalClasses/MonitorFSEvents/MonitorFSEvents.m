@@ -125,13 +125,12 @@ static void FSEventsCallBack_(ConstFSEventStreamRef streamRef, void* clientCallB
  */
 - (NSString*) description { return fstr(@"<%@ { watchedPaths = %@ } >", [self className], watchedPaths); }
 
-- (void) finalize
+- (void) dealloc
 {
 	delegate = nil;
 	if (isWatchingPaths)
 		[self stopWatchingPaths];
 
-    [super finalize];
 }
 
 @end
@@ -147,7 +146,7 @@ static void FSEventsCallBack_(ConstFSEventStreamRef streamRef, void* clientCallB
 {
     FSEventStreamContext callbackInfo;
 	callbackInfo.version = 0;
-	callbackInfo.info    = (void*)self;
+	callbackInfo.info    = (__bridge void*)self;
 	callbackInfo.retain  = NULL;
 	callbackInfo.release = NULL;
 	callbackInfo.copyDescription = NULL;

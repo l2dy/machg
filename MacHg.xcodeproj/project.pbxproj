@@ -2504,6 +2504,7 @@
 			baseConfigurationReference = 4346C02A1308E746004C6661 /* MacHG-Debug.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				SDKROOT = macosx;
 			};
 			name = Debug;
@@ -2513,6 +2514,7 @@
 			baseConfigurationReference = 4346C02B1308E746004C6661 /* MacHG-Release.xcconfig */;
 			buildSettings = {
 				ARCHS = "$(ARCHS_STANDARD_64_BIT)";
+				CLANG_ENABLE_OBJC_ARC = YES;
 				SDKROOT = macosx;
 			};
 			name = Release;

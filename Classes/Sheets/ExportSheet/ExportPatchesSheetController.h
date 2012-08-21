@@ -14,7 +14,7 @@
 @interface ExportPatchesSheetController : BaseSheetWindowController < ControllerForLogTableView >
 {
 
-	MacHgDocument*			myDocument;
+	MacHgDocument*			__strong myDocument;
 
 	// Main window
 	IBOutlet NSWindow*		theExportPatchesSheet;
@@ -31,11 +31,11 @@
 	BOOL					gitOption_;
 	BOOL					noDatesOption_;
 	BOOL					reversePatchOption_;
-	NSString*				patchNameOption_;
+	NSString*				__strong patchNameOption_;
 }
 
-@property (readwrite,assign) MacHgDocument*  myDocument;
-@property (readwrite,assign) NSString*	patchNameOption;
+@property (readwrite,strong) MacHgDocument*  myDocument;
+@property (readwrite,strong) NSString*	patchNameOption;
 @property BOOL textOption;
 @property BOOL gitOption;
 @property BOOL noDatesOption;

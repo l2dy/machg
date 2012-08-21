@@ -34,13 +34,13 @@
 																			// currently computing the changesets of.
 	NSTimer*						periodicCheckingForRepositoryIdentity;
 	
-	NSArray*						dragNodesArray;							// This is the array of nodes we are currently dragging in the
+	NSArray*						__strong dragNodesArray;							// This is the array of nodes we are currently dragging in the
 																			// frontmost document. We need this to be in a shared places since we
 																			// want to be able to drag nodes from one document to another. 
 }
 
-@property (readwrite, assign) NSMutableDictionary* repositoryIdentityForPath;
-@property (readwrite, assign) NSArray* dragNodesArray;
+@property (readwrite) NSMutableDictionary* repositoryIdentityForPath;
+@property (readwrite, strong) NSArray* dragNodesArray;
 
 
 + (AppController*)					sharedAppController;

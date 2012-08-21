@@ -25,11 +25,11 @@
 
 @interface HistoryViewController : NSViewController
 {
-	MacHgDocument*			myDocument;
-	IBOutlet HistoryView*	theHistoryView;
+	MacHgDocument*			__strong myDocument;
+	IBOutlet HistoryView*	__strong theHistoryView;
 }
-@property (readwrite,assign) MacHgDocument*	myDocument;
-@property (readwrite,assign) HistoryView*	theHistoryView;
+@property (readwrite,strong) MacHgDocument*	myDocument;
+@property (readwrite,strong) HistoryView*	theHistoryView;
 
 - (HistoryViewController*) initHistoryViewControllerWithDocument:(MacHgDocument*)doc;
 - (void) unload;
@@ -47,14 +47,14 @@
 
 @interface HistoryView : NSView <AccessesDocument, ControllerForLogTableView, ControllerForLabelsTableView, NSUserInterfaceValidations >
 {
-	MacHgDocument*				myDocument;
+	MacHgDocument*				__strong myDocument;
 	IBOutlet HistoryViewController*  parentController;
 
 	// Main concertina view containing the sub panes.
 	IBOutlet JHConcertinaView*	concertinaView;
 	
 	// History SubPane
-	IBOutlet LogTableView*		logTableView;
+	IBOutlet LogTableView*		__strong logTableView;
 
 	// Details SubPane
 	IBOutlet NSView*			detailsView;
@@ -66,8 +66,8 @@
 
 }
 
-@property (readwrite,assign) MacHgDocument*	  myDocument;
-@property (readonly, assign) LogTableView*	  logTableView;
+@property (readwrite,strong) MacHgDocument*	  myDocument;
+@property (readonly, strong) LogTableView*	  logTableView;
 
 
 // Initializations

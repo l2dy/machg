@@ -59,13 +59,13 @@
 
 @interface ProcessController : ShellTaskController
 {
-	ProcessListController* processList_;
-	NSNumber* processNumber_;
-	NSString* baseMessage_;
+	ProcessListController* __strong processList_;
+	NSNumber* __strong processNumber_;
+	NSString* __strong baseMessage_;
 }
-@property (nonatomic, assign) NSNumber*	processNumber;
-@property (nonatomic, assign) NSString*	baseMessage;
-@property (nonatomic, assign) ProcessListController* processList;
+@property (nonatomic, strong) NSNumber*	processNumber;
+@property (nonatomic, strong) NSString*	baseMessage;
+@property (nonatomic, strong) ProcessListController* processList;
 
 + (ProcessController*) processControllerWithMessage:(NSString*)message forList:(ProcessListController*)list;
 - (void) terminateController;

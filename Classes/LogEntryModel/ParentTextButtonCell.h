@@ -14,10 +14,10 @@
 
 @interface ParentTextButtonCell : TextButtonCell
 {
-	LogEntry*  entry_;
+	LogEntry*  __strong entry_;
 }
 
-@property (nonatomic, assign) LogEntry* entry;
+@property (nonatomic, strong) LogEntry* entry;
 
 - (id) initWithLogEntry:(LogEntry*)entry;
 + (NSTextAttachment*) parentButtonAttachmentWithText:(NSString*)label andLogEntry:(LogEntry*)entry;

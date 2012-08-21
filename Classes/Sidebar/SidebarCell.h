@@ -15,16 +15,16 @@
 @interface SidebarCell : NSTextFieldCell
 {
 	@private
-	NSString*	 badgeString_;
+	NSString*	 __strong badgeString_;
 	BOOL		 hasBadge_;
 	NSImage*	 icon_;
-	SidebarNode* node_;
+	SidebarNode* __strong node_;
 }
 
-@property (readwrite,assign) NSString* badgeString;
+@property (readwrite,strong) NSString* badgeString;
 @property (readwrite,assign) BOOL hasBadge;
 @property (readonly) NSImage* icon;
-@property (readwrite,assign) SidebarNode* node;
+@property (readwrite,strong) SidebarNode* node;
 
 - (void) setIcon:(NSImage*)icon;
 

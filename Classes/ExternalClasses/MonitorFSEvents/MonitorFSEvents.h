@@ -20,16 +20,16 @@
 
 @interface MonitorFSEvents : NSObject
 {
-    id <MonitorFSEventListenerProtocol> delegate;    // The delegate that FSEvents is to notify when events occur.
+    id <MonitorFSEventListenerProtocol> __strong delegate;    // The delegate that FSEvents is to notify when events occur.
     
     BOOL             isWatchingPaths;         // Is the events stream currently running.
     FSEventStreamRef eventStream;             // The actual FSEvents stream reference.
     NSMutableArray*  watchedPaths;            // The paths that are to be watched for events.
 }
 
-@property (readwrite, assign) id delegate;
+@property (readwrite, strong) id delegate;
 @property (readonly) BOOL isWatchingPaths;
-@property (readwrite, retain) NSMutableArray* watchedPaths;
+@property (readwrite, strong) NSMutableArray* watchedPaths;
 
 - (BOOL) startWatchingPaths:(NSMutableArray*)paths;
 - (BOOL) startWatchingPaths:(NSMutableArray*)paths onRunLoop:(NSRunLoop*)runLoop;

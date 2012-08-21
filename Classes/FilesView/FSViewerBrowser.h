@@ -11,10 +11,10 @@
 
 @interface FSViewerBrowser : NSBrowser <NSBrowserDelegate, FSViewerProtocol>
 {
-	FSViewer*			parentViewer_;
+	FSViewer*			__strong parentViewer_;
 	NSViewController*	browserLeafPreviewController_;
 	NSIndexPath*		lastSelectedIndexPath_;
 }
-@property (readwrite, assign) FSViewer*	parentViewer;
+@property (readwrite, strong) FSViewer*	parentViewer;
 
 @end

@@ -136,12 +136,11 @@
     return self;
 }
 
-- (void) finalize
+- (void) dealloc
 {
 	[events_ stopWatchingPaths];
 	dispatch_release(refreshBrowserSerialQueue_);
 	dispatch_release(mercurialTaskSerialQueue_);
-	[super finalize];
 }
 
 

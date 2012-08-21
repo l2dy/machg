@@ -13,7 +13,7 @@
 
 @interface MoveLabelSheetController : BaseSheetWindowController < ControllerForLogTableView >
 {
-	MacHgDocument*			myDocument;
+	MacHgDocument*			__strong myDocument;
 	LabelData*				labelToMove_;
 	
 	// Main window
@@ -27,7 +27,7 @@
 }
 
 
-@property (readwrite,assign) MacHgDocument*  myDocument;
+@property (readwrite,strong) MacHgDocument*  myDocument;
 
 
 // Initialization

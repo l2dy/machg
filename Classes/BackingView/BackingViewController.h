@@ -12,16 +12,16 @@
 
 @interface BackingViewController : NSViewController <AccessesDocument>
 {
-	MacHgDocument*			myDocument;
-	IBOutlet NSBox*			backingBox;
-	IBOutlet NSBox*			buttonBox;
-	IBOutlet BackingView*	backingView;
+	MacHgDocument*			__strong myDocument;
+	IBOutlet NSBox*			__strong backingBox;
+	IBOutlet NSBox*			__strong buttonBox;
+	IBOutlet BackingView*	__strong backingView;
 }
 
-@property (readwrite,assign) MacHgDocument*  myDocument;
-@property (nonatomic, assign) NSBox* buttonBox;
-@property (nonatomic, assign) NSBox* backingBox;
-@property (nonatomic, assign) BackingView* backingView;
+@property (readwrite,strong) MacHgDocument*  myDocument;
+@property (nonatomic, strong) NSBox* buttonBox;
+@property (nonatomic, strong) NSBox* backingBox;
+@property (nonatomic, strong) BackingView* backingView;
 
 - (BackingViewController*) initBackingViewControllerWithDocument:(MacHgDocument*)doc;
 
@@ -34,10 +34,10 @@
 @interface BackingView : NSView <AccessesDocument, NSUserInterfaceValidations>
 {
 	IBOutlet BackingViewController* parentContoller;
-	MacHgDocument*					myDocument;
+	MacHgDocument*					__strong myDocument;
 }
 
-@property (readwrite,assign) MacHgDocument*	myDocument;
+@property (readwrite,strong) MacHgDocument*	myDocument;
 
 - (void)	 unload;
 - (void)	 prepareToOpenBackingView;

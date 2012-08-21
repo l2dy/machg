@@ -14,7 +14,7 @@
 @interface UpdateSheetController : BaseSheetWindowController < ControllerForLogTableView >
 {
 
-	MacHgDocument*			myDocument;
+	MacHgDocument*			__strong myDocument;
 
 	// Main window
 	IBOutlet NSWindow*		theUpdateSheet;
@@ -30,7 +30,7 @@
 	BOOL					cleanUpdate_;
 }
 
-@property (readwrite,assign) MacHgDocument*  myDocument;
+@property (readwrite,strong) MacHgDocument*  myDocument;
 @property BOOL cleanUpdate;
 
 // Initilization

@@ -25,13 +25,13 @@
 
 	MacHgDocument*		myDocument;
 
-	NSString*			theCurrentNameFieldValue_;
-	NSString*			theNewNameFieldValue_;
-	NSNumber*			theAlreadyMovedButtonValue_;
+	NSString*			__strong theCurrentNameFieldValue_;
+	NSString*			__strong theNewNameFieldValue_;
+	NSNumber*			__strong theAlreadyMovedButtonValue_;
 }
-@property (readwrite,assign) NSString*	  theCurrentNameFieldValue;
-@property (readwrite,assign) NSString*	  theNewNameFieldValue;
-@property (readwrite,assign) NSNumber*	  theAlreadyMovedButtonValue;
+@property (readwrite,strong) NSString*	  theCurrentNameFieldValue;
+@property (readwrite,strong) NSString*	  theNewNameFieldValue;
+@property (readwrite,strong) NSNumber*	  theAlreadyMovedButtonValue;
 
 
 - (RenameFileSheetController*) initRenameFileSheetControllerWithDocument:(MacHgDocument*)doc;

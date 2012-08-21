@@ -34,11 +34,11 @@
 	NSArray*					cmdOptions;						// The collection of advanced option controllers
 	BOOL						allowOperationWithAnyRepository_;	// Do we list incompatible repositories
 
-	MacHgDocument*				myDocument;
+	MacHgDocument*				__strong myDocument;
 }
 
 @property (readwrite,assign) BOOL			allowOperationWithAnyRepository;
-@property (readwrite,assign) MacHgDocument*	myDocument;
+@property (readwrite,strong) MacHgDocument*	myDocument;
 
 
 // These methods *must* be re-implemented in the children. What I would like to do here is say these methods are pure like in C++

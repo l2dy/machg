@@ -133,7 +133,7 @@ NSAttributedString*   fixedWidthAttributedString(NSString* string);
 		ConnectionValidationController* __weak weakSelf = self;
 		ServerRepositoryRefSheetController* __weak weakServerRefController = theServerRefController;
 		SingleTimedQueue* __weak queueForConnectionValidation = queueForConnectionValidation_;
-		NSTextView* __weak	weakRepositoryConnectionStatusDetails = repositoryConnectionStatusDetails;
+		NSTextView* __unsafe_unretained	weakRepositoryConnectionStatusDetails = repositoryConnectionStatusDetails;
 
 
 		[queueForConnectionValidation_ addBlockOperation:^{

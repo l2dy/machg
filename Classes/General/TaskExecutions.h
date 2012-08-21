@@ -35,9 +35,9 @@ typedef enum
 
 @interface ShellTaskController : NSObject <ShellTaskDelegate>
 {
-	ShellTask* shellTask_;
+	ShellTask* __strong shellTask_;
 }
-@property (nonatomic, assign) ShellTask* shellTask;
+@property (nonatomic, strong) ShellTask* shellTask;
 
 - (void)	shellTaskCreated:(ShellTask*)shellTask;
 @end
@@ -74,21 +74,21 @@ typedef enum
 
 @interface ExecutionResult : NSObject
 {
-	NSString* generatingCmd_;	// The command that was executed
-	NSArray*  generatingArgs_;	// The arguments used to the command
+	NSString* __strong generatingCmd_;	// The command that was executed
+	NSArray*  __strong generatingArgs_;	// The arguments used to the command
 	int		  result_;			// The result of executing the command
-	NSString* outStr_;			// The output received on stdOut due to executing the command
-	NSString* errStr_;			// The output received on stdErr due to executing the command
+	NSString* __strong outStr_;			// The output received on stdOut due to executing the command
+	NSString* __strong errStr_;			// The output received on stdErr due to executing the command
 	BOOL      loggedToAlertOrWindow_;
 	@public
 	ShellTask* theShellTask_;
 }
 
-@property (readonly, assign) NSString* generatingCmd;
-@property (readonly, assign) NSArray*  generatingArgs;
+@property (readonly, strong) NSString* generatingCmd;
+@property (readonly, strong) NSArray*  generatingArgs;
 @property (readonly, assign) int	   result;
-@property (readonly, assign) NSString* outStr;
-@property (readonly, assign) NSString* errStr;
+@property (readonly, strong) NSString* outStr;
+@property (readonly, strong) NSString* errStr;
 @property (readwrite,assign) BOOL	   loggedToAlertOrWindow;
 
 + (ExecutionResult*) resultWithCmd:(NSString*)cmd args:(NSArray*)args result:(int)result outStr:(NSString*)outStr errStr:(NSString*)errStr;

@@ -518,7 +518,7 @@
 		
 		NSArray* appsSorted = [apps sortedArrayUsingDescriptors:nsurlSortDescriptors];
 		NSMutableDictionary* dict = [[NSMutableDictionary alloc] init];
-		NSMenu* subMenu = [[[NSMenu alloc] initWithTitle:@"Open With…"] autorelease];
+		NSMenu* subMenu = [[NSMenu alloc] initWithTitle:@"Open With…"];
 		NSURL* preferedApp = [NSApplication applicationForURL:pathURL];
 		int index = 0;
 		

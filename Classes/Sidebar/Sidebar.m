@@ -928,7 +928,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 - (void) updateInformationTextView
 {
 	Sidebar* __weak weakSelf = self;
-	NSTextView* __weak informationTextView = informationTextView_;
+	NSTextView* __unsafe_unretained informationTextView = informationTextView_;
 	[queueForUpdatingInformationTextView_ addBlockOperation:^{
 		// We do this updating on the main thread since acessing the selectedNode can cause problems while the NSOutlineView
 		// (sidebar) is being updated. 
@@ -1388,7 +1388,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 		
 		for (SidebarNode* repo in sortedCompatibleRepositories)
 		{
-			__block ShellTaskController* theOutgoingController = [[ShellTaskController alloc]init];
+			__weak ShellTaskController* theOutgoingController = [[ShellTaskController alloc]init];
 			dispatchWithTimeOutBlock(globalQueue(), 30.0 /* try for 30 seconds to get result of "outgoing"*/,
 									 
 									 // Main Block
@@ -1423,7 +1423,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	[queueForAutomaticIncomingComputation_ addBlockOperation:^{
 		for (SidebarNode* repo in compatibleRepositories)
 		{
-			__block ShellTaskController* theIncomingController = [[ShellTaskController alloc]init];
+			__weak ShellTaskController* theIncomingController = [[ShellTaskController alloc]init];
 			dispatchWithTimeOutBlock(globalQueue(), 30.0 /* try for 30 seconds to get result of "outgoing"*/,
 									 
 									 // Main Block

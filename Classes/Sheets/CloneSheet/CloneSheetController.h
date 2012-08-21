@@ -35,12 +35,12 @@
 	MacHgDocument*		myDocument;
 	
 	NSArray*			cmdOptions;
-	NSString*			shortNameFieldValue_;
-	NSString*			pathFieldValue_;
+	NSString*			__strong shortNameFieldValue_;
+	NSString*			__strong pathFieldValue_;
 	SidebarNode*		sourceNode_;
 }
-@property (readwrite,assign) NSString*  shortNameFieldValue;
-@property (readwrite,assign) NSString*  pathFieldValue;
+@property (readwrite,strong) NSString*  shortNameFieldValue;
+@property (readwrite,strong) NSString*  pathFieldValue;
 
 - (CloneSheetController*) initCloneSheetControllerWithDocument:(MacHgDocument*)doc;
 

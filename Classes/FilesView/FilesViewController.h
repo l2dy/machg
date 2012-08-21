@@ -25,11 +25,11 @@
 
 @interface FilesViewController : NSViewController
 {
-	MacHgDocument*			myDocument;
-	IBOutlet FilesView*		theFilesView;
+	MacHgDocument*			__strong myDocument;
+	IBOutlet FilesView*		__strong theFilesView;
 }
-@property (readwrite,assign) MacHgDocument*	myDocument;
-@property (readwrite,assign) FilesView*	theFilesView;
+@property (readwrite,strong) MacHgDocument*	myDocument;
+@property (readwrite,strong) FilesView*	theFilesView;
 
 - (FilesViewController*) initFilesViewControllerWithDocument:(MacHgDocument*)doc;
 - (void) unload;
@@ -48,17 +48,17 @@
 @interface FilesView : NSView <AccessesDocument, ControllerForFSViewer, NSUserInterfaceValidations>
 {
 	IBOutlet FilesViewController*		parentContoller;
-	IBOutlet FSViewer*					theFSViewer;
+	IBOutlet FSViewer*					__strong theFSViewer;
 	IBOutlet StatusSidebarSplitView*	statusSidebarSplitView;
 	IBOutlet JHConcertinaView*			concertinaView;	// Main concertina view containing the sub panes.
 	IBOutlet NSImageView*	nodeIconWell;		// Image well showing the selected items icon.
 	IBOutlet NSTextField*	nodeInspector;		// Text field showing the selected items attributes.
-	MacHgDocument*			myDocument;
+	MacHgDocument*			__strong myDocument;
 	
 }
 
-@property (readwrite,assign) MacHgDocument*	myDocument;
-@property (readonly,assign)  FSViewer*		theFSViewer;
+@property (readwrite,strong) MacHgDocument*	myDocument;
+@property (readonly,strong)  FSViewer*		theFSViewer;
 
 - (void)	 unload;
 - (void)	 prepareToOpenFilesView;

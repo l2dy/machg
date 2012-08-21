@@ -24,9 +24,9 @@
 	IBOutlet NSTextView*	confirmationSheetMessage;
 	IBOutlet NSTextField*	sheetConfirmationInformativeMessageTextField;
 
-	MacHgDocument*			myDocument;
+	MacHgDocument*			__strong myDocument;
 }
-@property (readwrite,assign) MacHgDocument*  myDocument;
+@property (readwrite,strong) MacHgDocument*  myDocument;
 
 // Initialization
 - (HistoryEditSheetController*) initHistoryEditSheetControllerWithDocument:(MacHgDocument*)doc;

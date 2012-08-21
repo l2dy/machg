@@ -155,5 +155,5 @@ NSString* quotePath(NSString* path)
 				[quotedPath appendFormat: @"\\%C", [bad characterAtIndex: i]];
     }
     
-	return [quotedPath autorelease];
+	return quotedPath;
 }

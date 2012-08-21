@@ -25,11 +25,11 @@
 
 @interface DifferencesViewController : NSViewController
 {
-	MacHgDocument*				myDocument;
-	IBOutlet DifferencesView*	theDifferencesView;
+	MacHgDocument*				__strong myDocument;
+	IBOutlet DifferencesView*	__strong theDifferencesView;
 }
-@property (readwrite,assign) MacHgDocument*		myDocument;
-@property (readwrite,assign) DifferencesView*	theDifferencesView;
+@property (readwrite,strong) MacHgDocument*		myDocument;
+@property (readwrite,strong) DifferencesView*	theDifferencesView;
 
 - (DifferencesViewController*) initDifferencesViewControllerWithDocument:(MacHgDocument*)doc;
 - (void) unload;
@@ -45,7 +45,7 @@
 @interface DifferencesView : NSView < ControllerForLogTableView, ControllerForFSViewer, NSUserInterfaceValidations >
 {
 	IBOutlet DifferencesViewController*  parentController;
-	MacHgDocument*				myDocument;
+	MacHgDocument*				__strong myDocument;
 
 	IBOutlet DifferencesSplitView*	mainSplitView;
 
@@ -65,7 +65,7 @@
 	IBOutlet LogTableView*		compareLogTableView;
 	IBOutlet NSTextView*		detailedCompareEntryTextView;
 
-	IBOutlet FSViewer*			theFSViewer;
+	IBOutlet FSViewer*			__strong theFSViewer;
 
 	
 	BOOL						showCleanFilesInBrowser_;
@@ -92,8 +92,8 @@
 @property (readwrite,assign) BOOL showUnresolvedFilesInBrowser;
 @property (readwrite,assign) BOOL showResolvedFilesInBrowser;
 @property (readwrite,assign) BOOL autoExpandViewerOutlines;
-@property (readwrite,assign) MacHgDocument*  myDocument;
-@property (readwrite,assign) FSViewer*  theFSViewer;
+@property (readwrite,strong) MacHgDocument*  myDocument;
+@property (readwrite,strong) FSViewer*  theFSViewer;
 
 
 - (void)		restoreDifferencesSplitViewPositions;

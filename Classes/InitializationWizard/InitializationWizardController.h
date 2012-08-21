@@ -16,9 +16,9 @@
 	IBOutlet NSTextField* informativeMessage;
 	IBOutlet NSButton*	  okButton;
 	
-	NSString*			  userNameFieldValue_;
+	NSString*			  __strong userNameFieldValue_;
 }
-@property (readwrite,assign) NSString*	  userNameFieldValue;
+@property (readwrite,strong) NSString*	  userNameFieldValue;
 
 - (InitializationWizardController*) initInitializationWizardController;
 

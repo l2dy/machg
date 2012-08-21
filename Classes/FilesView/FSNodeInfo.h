@@ -21,11 +21,11 @@
 @interface FSNodeInfo : NSObject
 {
   @private
-	FSViewer*	parentFSViewer;				// The parent FSViewer which this node belongs to
-	NSString*   relativePathComponent;		// Path component relative to the parent.
-	NSString*   absolutePath;
+	FSViewer*	__strong parentFSViewer;				// The parent FSViewer which this node belongs to
+	NSString*   __strong relativePathComponent;		// Path component relative to the parent.
+	NSString*   __strong absolutePath;
 	NSMutableDictionary* childNodes;		// map of pathComponent -> childNode
-	NSArray*	sortedChildNodeKeys;		// sorted array of all the keys of childNodes
+	NSArray*	__strong sortedChildNodeKeys;		// sorted array of all the keys of childNodes
 	BOOL		haveComputedTheProperties;	// The final step of updating the properties of a node is to compute the properties of the
 											// node from its children. This is also used as a "dirty" flag when doing incremental
 											// merges of new changes into an existing tree.
@@ -37,11 +37,11 @@
 											// this directory.)
 }
 
-@property (readwrite,assign) FSViewer* parentFSViewer;
-@property (readonly, assign) NSString* relativePathComponent;
-@property (readwrite,assign) NSString* absolutePath;
-@property (readwrite,assign) NSMutableDictionary* childNodes;
-@property (readwrite,assign) NSArray* sortedChildNodeKeys;
+@property (readwrite,strong) FSViewer* parentFSViewer;
+@property (readonly, strong) NSString* relativePathComponent;
+@property (readwrite,strong) NSString* absolutePath;
+@property (readwrite) NSMutableDictionary* childNodes;
+@property (readwrite,strong) NSArray* sortedChildNodeKeys;
 @property (readwrite,assign) BOOL haveComputedTheProperties;
 @property (readwrite,assign) HGStatus hgStatus;
 

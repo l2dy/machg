@@ -66,12 +66,12 @@
 
 @interface PatchesTableCell : NSTextFieldCell
 {
-	NSTableColumn*	patchesTableColumn_;
-	PatchRecord*	patch_;
+	NSTableColumn*	__strong patchesTableColumn_;
+	PatchRecord*	__strong patch_;
 	BOOL			isEditingOrSelecting_;
 }
-@property (assign,readwrite) NSTableColumn*	patchesTableColumn;
-@property (assign,readwrite) PatchRecord*	patch;
+@property (strong,readwrite) NSTableColumn*	patchesTableColumn;
+@property (strong,readwrite) PatchRecord*	patch;
 @end
 
 
@@ -87,10 +87,10 @@
 @interface PatchesTableButtonCell : NSButtonCell
 {
 	IBOutlet NSTextField* buttonMessage;
-	NSTableColumn*		  patchesTableColumn_;
-	PatchRecord*		  patch_;
+	NSTableColumn*		  __strong patchesTableColumn_;
+	PatchRecord*		  __strong patch_;
 }
-@property (assign,readwrite) NSTableColumn*	patchesTableColumn;
-@property (assign,readwrite) PatchRecord*	patch;
+@property (strong,readwrite) NSTableColumn*	patchesTableColumn;
+@property (strong,readwrite) PatchRecord*	patch;
 
 @end

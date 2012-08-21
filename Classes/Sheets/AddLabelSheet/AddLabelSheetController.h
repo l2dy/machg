@@ -30,23 +30,23 @@ typedef enum
 
 	MacHgDocument*		myDocument;
 	
-	NSString*			theNewNameFieldValue_;
-	NSString*			theRevisionFieldValue_;
-	NSAttributedString*	theMovementMessage_;
-	NSAttributedString*	theScopeMessage_;
-	NSAttributedString*	theCommitMessageValue_;
+	NSString*			__strong theNewNameFieldValue_;
+	NSString*			__strong theRevisionFieldValue_;
+	NSAttributedString*	__strong theMovementMessage_;
+	NSAttributedString*	__strong theScopeMessage_;
+	NSAttributedString*	__strong theCommitMessageValue_;
 	BOOL				forceValue_;
 	AddLabelTabEnum		addLabelTabNumber_;
 
 }
 
-@property (readwrite,assign) NSString*				theNewNameFieldValue;
-@property (readwrite,assign) NSString*				theRevisionFieldValue;
+@property (readwrite,strong) NSString*				theNewNameFieldValue;
+@property (readwrite,strong) NSString*				theRevisionFieldValue;
 @property (readwrite,assign) BOOL					forceValue;
 @property (readwrite,assign) AddLabelTabEnum		addLabelTabNumber;
-@property (readwrite,assign) NSAttributedString*	theMovementMessage;
-@property (readwrite,assign) NSAttributedString*	theScopeMessage;
-@property (readwrite,assign) NSAttributedString*	theCommitMessageValue;
+@property (readwrite,strong) NSAttributedString*	theMovementMessage;
+@property (readwrite,strong) NSAttributedString*	theScopeMessage;
+@property (readwrite,strong) NSAttributedString*	theCommitMessageValue;
 
 
 - (AddLabelSheetController*) initAddLabelSheetControllerWithDocument:(MacHgDocument*)doc;

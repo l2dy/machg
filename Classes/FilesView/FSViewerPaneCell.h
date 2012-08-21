@@ -23,11 +23,11 @@
 
 @interface FSViewerPaneCell : NSTextFieldCell
 {
-	FSNodeInfo* nodeInfo;
-	FSNodeInfo* parentNodeInfo;
+	FSNodeInfo* __strong nodeInfo;
+	FSNodeInfo* __strong parentNodeInfo;
 }
-@property (readwrite,assign) FSNodeInfo*	nodeInfo;
-@property (readwrite,assign) FSNodeInfo*	parentNodeInfo;
+@property (readwrite,strong) FSNodeInfo*	nodeInfo;
+@property (readwrite,strong) FSNodeInfo*	parentNodeInfo;
 
 + (NSSize)		iconRowSize:(FSNodeInfo*)parentNodeInfo;	// The maximum size needed for any child's icon row
 - (void)		loadCellContents;
@@ -36,10 +36,10 @@
 
 @interface FSViewerPaneIconedCell : FSViewerPaneCell
 {
-	NSImage*	fileIcon;
+	NSImage*	__strong fileIcon;
 }
 
-@property (readwrite,assign) NSImage*		fileIcon;
+@property (readwrite,strong) NSImage*		fileIcon;
 @end
 
 

@@ -29,7 +29,7 @@
 {
 	IBOutlet NSWindow*			parentWindow;
 	IBOutlet NSButton*			disclosureButton;
-	IBOutlet NSBox*				disclosureBox;
+	IBOutlet NSBox*				__strong disclosureBox;
 	
 	NSMapTable*					savedViewsInfo;			// Dictionary of NSView* view -> SavedViewInfo (We use an NSMapTable instead
 														// of an NSDictionary since our keys are pointer values.)
@@ -38,7 +38,7 @@
 	NSInteger					animationDepth_;
 	BOOL						savedShowsResizeIndicator_;	// Did this window show its resize indicator
 }
-@property (readonly,assign) NSBox*  disclosureBox;
+@property (readonly,strong) NSBox*  disclosureBox;
 
 - (IBAction) disclosureTrianglePressed:(id)sender;
 - (void)     ensureDisclosureBoxIsOpen:(BOOL)animate;

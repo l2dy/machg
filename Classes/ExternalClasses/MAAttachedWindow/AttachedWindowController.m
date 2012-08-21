@@ -57,7 +57,6 @@
 	{
         [parentWindow removeChildWindow:attachedWindow];
         [attachedWindow orderOut:self];
-        [attachedWindow release];
         attachedWindow = nil;
     }
 }
