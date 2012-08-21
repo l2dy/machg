@@ -19,6 +19,8 @@
 	
 	NSString*				pendingMessage;
 	NSString*				pendingWindowTitle;
+	
+	ResultsWindowController* theRetainedSelf;	// up own retain count under arc which goes away when the window is closed.
 }
 
 - (IBAction) doneWithResults:(id)sender;
