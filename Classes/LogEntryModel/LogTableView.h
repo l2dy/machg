@@ -24,10 +24,10 @@
 
 
 
-// -----------------------------------------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------
 // MARK: -
 // MARK: LogTableView
-// -----------------------------------------------------------------------------------------------------------------------------------------
+// ------------------------------------------------------------------------------------
 
 // This class is a subclass of NSTableView which is its own data source and own delegate. It turned out it's easier this way. And
 // thus in the one class we wrap up all the behavior of managing a list of revisions. It only needs the two outlets below connected up.
