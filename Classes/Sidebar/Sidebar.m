@@ -928,6 +928,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 - (void) updateInformationTextView
 {
 	Sidebar* __weak weakSelf = self;
+	NSTextView* __weak informationTextView = informationTextView_;
 	[queueForUpdatingInformationTextView_ addBlockOperation:^{
 		// We do this updating on the main thread since acessing the selectedNode can cause problems while the NSOutlineView
 		// (sidebar) is being updated. 
@@ -935,9 +936,9 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 			SidebarNode* selectedNode = [weakSelf selectedNode];
 			if ([selectedNode isRepositoryRef])
 			{
-				NSAttributedString* newInformativeMessage = [self informationTextViewMessage:selectedNode];
+				NSAttributedString* newInformativeMessage = [weakSelf informationTextViewMessage:selectedNode];
 				dispatch_async(mainQueue(), ^{
-					[[informationTextView_ textStorage] setAttributedString:newInformativeMessage];
+					[[informationTextView textStorage] setAttributedString:newInformativeMessage];
 				});
 			}
 		});
@@ -1373,17 +1374,19 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	// computeIncomingOutgoingToCompatibleRepositories so to be nice to the processor we delay the computation of these things by
 	// putting them in SingleTimedQueue's, and wait until the main document is not so busy.
 
+	Sidebar* __weak weakSelf = self;
+	MacHgDocument* __weak weakMyDocument = myDocument;
+	NSArray* compatibleRepositories = [self allCompatibleRepositories:theSelectedNode];
 	[queueForAutomaticOutgoingComputation_ addBlockOperation:^{
-		NSArray* compatibleRepositories = [self allCompatibleRepositories:theSelectedNode];
 
 		// Order local repositories before server repositories for speed
-		compatibleRepositories = [compatibleRepositories sortedArrayUsingComparator: ^(id obj1, id obj2) {
+		NSArray* sortedCompatibleRepositories = [compatibleRepositories sortedArrayUsingComparator: ^(id obj1, id obj2) {
 			if ([obj1 nodeKind] < [obj2 nodeKind]) return (NSComparisonResult)NSOrderedAscending;
 			if ([obj1 nodeKind] > [obj2 nodeKind]) return (NSComparisonResult)NSOrderedDescending;
 			return (NSComparisonResult)NSOrderedSame;
 		}];
 		
-		for (SidebarNode* repo in compatibleRepositories)
+		for (SidebarNode* repo in sortedCompatibleRepositories)
 		{
 			__block ShellTaskController* theOutgoingController = [[ShellTaskController alloc]init];
 			dispatchWithTimeOutBlock(globalQueue(), 30.0 /* try for 30 seconds to get result of "outgoing"*/,
@@ -1393,14 +1396,14 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 										 NSMutableArray* argsOutgoing = [NSMutableArray arrayWithObjects:@"outgoing", @"--insecure", @"--quiet", @"--noninteractive", @"--template", @"+", [repo fullURLPath], nil];
 										 ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsOutgoing  fromRoot:rootPath  logging:eLoggingNone  withDelegate:theOutgoingController];
 										 dispatch_async(mainQueue(), ^{
-											 if (![rootPath isEqualTo:[[self selectedNode] path]])
+											 if (![rootPath isEqualTo:[[weakSelf selectedNode] path]])
 												 return;
 											 if ([results hasNoErrors])
 												 outgoingCounts[[repo path]] = intAsString([results.outStr length]);
 											 else
 												 outgoingCounts[[repo path]] = @"-";
 											 NSDictionary* info = @{@"sidebarNodePath": [repo path]};
-											 [myDocument postNotificationWithName:kReceivedCompatibleRepositoryCount userInfo:info];
+											 [weakMyDocument postNotificationWithName:kReceivedCompatibleRepositoryCount userInfo:info];
 										 });										 
 									 },
 									 
@@ -1408,17 +1411,16 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 									 ^{
 										 [[theOutgoingController shellTask] cancelTask];	// We timed out so kill the task which timed out...
 										 dispatch_async(mainQueue(), ^{
-											 if (![rootPath isEqualTo:[[self selectedNode] path]])
+											 if (![rootPath isEqualTo:[[weakSelf selectedNode] path]])
 												 return;
 											 outgoingCounts[[repo path]] = @"-";
-											 [self setNeedsDisplayForNodePath:[repo path]];
+											 [weakSelf setNeedsDisplayForNodePath:[repo path]];
 										 });										 
 									 });
 		}
 	}];
 
 	[queueForAutomaticIncomingComputation_ addBlockOperation:^{
-		NSArray* compatibleRepositories = [self allCompatibleRepositories:theSelectedNode];
 		for (SidebarNode* repo in compatibleRepositories)
 		{
 			__block ShellTaskController* theIncomingController = [[ShellTaskController alloc]init];
@@ -1429,14 +1431,14 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 										 NSMutableArray* argsOutgoing = [NSMutableArray arrayWithObjects:@"incoming", @"--insecure", @"--quiet", @"--noninteractive", @"--template", @"-", [repo fullURLPath], nil];
 										 ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsOutgoing  fromRoot:rootPath  logging:eLoggingNone  withDelegate:theIncomingController];
 										 dispatch_async(mainQueue(), ^{
-											 if (![rootPath isEqualTo:[[self selectedNode] path]])
+											 if (![rootPath isEqualTo:[[weakSelf selectedNode] path]])
 												 return;
 											 if ([results hasNoErrors])
 												 incomingCounts[[repo path]] = intAsString([results.outStr length]);
 											 else
 												 incomingCounts[[repo path]] = @"-";
 											 NSDictionary* info = @{@"sidebarNodePath": [repo path]};
-											 [myDocument postNotificationWithName:kReceivedCompatibleRepositoryCount userInfo:info];
+											 [weakMyDocument postNotificationWithName:kReceivedCompatibleRepositoryCount userInfo:info];
 										 });										 
 									 },
 									 
@@ -1444,10 +1446,10 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 									 ^{
 										 [[theIncomingController shellTask] cancelTask];	// We timed out so kill the task which timed out...
 										 dispatch_async(mainQueue(), ^{
-											 if (![rootPath isEqualTo:[[self selectedNode] path]])
+											 if (![rootPath isEqualTo:[[weakSelf selectedNode] path]])
 												 return;
 											 incomingCounts[[repo path]] = @"-";
-											 [self setNeedsDisplayForNodePath:[repo path]];
+											 [weakSelf setNeedsDisplayForNodePath:[repo path]];
 										 });										 
 									 });
 		}

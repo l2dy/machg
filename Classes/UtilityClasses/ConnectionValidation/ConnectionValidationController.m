@@ -130,22 +130,28 @@ NSAttributedString*   fixedWidthAttributedString(NSString* string);
 	{
 		NSInteger validationAttempt = [queueForConnectionValidation_ operationNumber] + 1;	// Once we add the next block operation, the operationNumber will be
 																							// incremented so + 1 will give the operationNumber we are just about to get...
+		ConnectionValidationController* __weak weakSelf = self;
+		ServerRepositoryRefSheetController* __weak weakServerRefController = theServerRefController;
+		SingleTimedQueue* __weak queueForConnectionValidation = queueForConnectionValidation_;
+		NSTextView* __weak	weakRepositoryConnectionStatusDetails = repositoryConnectionStatusDetails;
+
+
 		[queueForConnectionValidation_ addBlockOperation:^{
-			PasswordVisibilityType visibilityInDisclosure = [theServerRefController showRealPassword] ? eAllPasswordsAreVisible : eKeyChainPasswordsAreMangled;
-			NSString* fullServerURL      = [theServerRefController generateFullServerURLIncludingPassword:YES andMaskingPassword:NO];
-			NSString* visibleServerURL   = [theServerRefController generateFullServerURLIncludingPassword:YES andMaskingPassword:visibilityInDisclosure != eAllPasswordsAreVisible];
+			PasswordVisibilityType visibilityInDisclosure = [weakServerRefController showRealPassword] ? eAllPasswordsAreVisible : eKeyChainPasswordsAreMangled;
+			NSString* fullServerURL      = [weakServerRefController generateFullServerURLIncludingPassword:YES andMaskingPassword:NO];
+			NSString* visibleServerURL   = [weakServerRefController generateFullServerURLIncludingPassword:YES andMaskingPassword:visibilityInDisclosure != eAllPasswordsAreVisible];
 			if (IsEmpty(fullServerURL) || IsEmpty(visibleServerURL))
 				return;
 			dispatchWithTimeOutBlock(globalQueue(), 20.0,
 									 
 									 // Main Block
 									 ^{
-										 [self showValidationProgressIndicator];
+										 [weakSelf showValidationProgressIndicator];
 										 NSMutableArray* argsIdentify = [NSMutableArray arrayWithObjects:@"identify", @"--insecure", @"--noninteractive", @"--rev", @"tip", fullServerURL, nil];
 										 ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsIdentify  fromRoot:@"/tmp"  logging:eLogAllToFile];
 										 
 										// If our results are still relevant show the success or failure result
-										 if ([queueForConnectionValidation_ operationNumber] == validationAttempt)
+										 if ([queueForConnectionValidation operationNumber] == validationAttempt)
 										 {
 											 NSString* visibleCommand = fstr(@"chg identify --insecure --noninteractive --rev tip %@", visibleServerURL);
 											 NSMutableAttributedString* resultsStr = [[NSMutableAttributedString alloc]init];
@@ -164,13 +170,13 @@ NSAttributedString*   fixedWidthAttributedString(NSString* string);
 											 }
 											 											 
 											 dispatch_async(mainQueue(), ^{
-												 [[repositoryConnectionStatusDetails textStorage] setAttributedString:resultsStr];
+												 [[weakRepositoryConnectionStatusDetails textStorage] setAttributedString:resultsStr];
 											 
-												 [self hideValidationProgressIndicator];
+												 [weakSelf hideValidationProgressIndicator];
 												 if (IsNotEmpty(results.outStr) && [results.outStr length] >= 12 && [results isClean])
-													 [self showGoodValidationGraphicAndMessage];
+													 [weakSelf showGoodValidationGraphicAndMessage];
 												 else
-													 [self showBadValidationGraphicAndMessage];
+													 [weakSelf showBadValidationGraphicAndMessage];
 											 });
 										 }
 									 },
@@ -178,7 +184,7 @@ NSAttributedString*   fixedWidthAttributedString(NSString* string);
 									 // Time-out Block
 									 ^{
 										 // If our results are still relevant but we timed out show failure result
-										 if ([queueForConnectionValidation_ operationNumber] == validationAttempt)
+										 if ([queueForConnectionValidation operationNumber] == validationAttempt)
 										 {
 											 NSString* visibleCommand = fstr(@"chg identify --insecure --noninteractive --rev tip %@", visibleServerURL);
 											 NSMutableAttributedString* resultsStr = [[NSMutableAttributedString alloc]init];
@@ -190,14 +196,14 @@ NSAttributedString*   fixedWidthAttributedString(NSString* string);
 											 [resultsStr appendAttributedString: fixedWidthAttributedString(@"Operation timed out after 20 seconds.")];
 											 
 											 dispatch_async(mainQueue(), ^{
-												 [[repositoryConnectionStatusDetails textStorage] setAttributedString:resultsStr];
+												 [[weakRepositoryConnectionStatusDetails textStorage] setAttributedString:resultsStr];
 
-												 [self hideValidationProgressIndicator];
-												 [self showBadValidationGraphicAndMessage];
+												 [weakSelf hideValidationProgressIndicator];
+												 [weakSelf showBadValidationGraphicAndMessage];
 											 });
 										 }
 									 }
-									 );
+			);
 		}];
 	}
 	
