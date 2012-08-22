@@ -116,6 +116,9 @@
 	FSNodeInfo*			rootNodeInfo_;
 
  @private
+	NSViewController*	theFilesBrowserParent_;
+	NSViewController*	theFilesOutlineParent_;
+	NSViewController*	theFilesTableParent_;
 	FSViewerBrowser*	theFilesBrowser_;
 	FSViewerOutline*	theFilesOutline_;
 	FSViewerTable*		theFilesTable_;

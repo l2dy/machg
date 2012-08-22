@@ -113,8 +113,8 @@
 		// will call this method for a second time and we will lock at this dispatch_once again. Thus do this dance of loading the
 		// nib and then hooking it up manually.
 		NSString* nibName = [self nibNameForFilesBrowser];
-		NSViewController* controller = [[NSViewController alloc] initWithNibName:nibName bundle:nil];
-		theFilesBrowser_ = DynamicCast(FSViewerBrowser, [controller view]);
+		theFilesBrowserParent_ = [[NSViewController alloc] initWithNibName:nibName bundle:nil];
+		theFilesBrowser_ = DynamicCast(FSViewerBrowser, [theFilesBrowserParent_ view]);
 		[self setupViewerPane:theFilesBrowser_];		
 	});
 	return theFilesBrowser_;
@@ -127,8 +127,8 @@
 		// will call this method for a second time and we will lock at this dispatch_once again. Thus do this dance of loading the
 		// nib and then hooking it up manually. 
 		NSString* nibName = [self nibNameForFilesOutline];
-		NSViewController* controller = [[NSViewController alloc] initWithNibName:nibName bundle:nil];
-		theFilesOutline_ = DynamicCast(FSViewerOutline, [controller view]);
+		theFilesOutlineParent_ = [[NSViewController alloc] initWithNibName:nibName bundle:nil];
+		theFilesOutline_ = DynamicCast(FSViewerOutline, [theFilesOutlineParent_ view]);
 		[self setupViewerPane:theFilesOutline_];		
 	});
 	return theFilesOutline_;
@@ -141,8 +141,8 @@
 		// will call this method for a second time and we will lock at this dispatch_once again. Thus do this dance of loading the
 		// nib and then hooking it up manually.
 		NSString* nibName = [self nibNameForFilesTable];
-		NSViewController* controller = [[NSViewController alloc] initWithNibName:nibName bundle:nil];
-		theFilesTable_ = DynamicCast(FSViewerTable, [controller view]);
+		theFilesTableParent_ = [[NSViewController alloc] initWithNibName:nibName bundle:nil];
+		theFilesTable_ = DynamicCast(FSViewerTable, [theFilesTableParent_ view]);
 		[self setupViewerPane:theFilesTable_];
 	});
 	return theFilesTable_;
