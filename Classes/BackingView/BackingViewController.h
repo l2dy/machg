@@ -14,9 +14,9 @@
 
 @property (weak,readonly) MacHgDocument*  myDocument;
 
-@property (nonatomic) BackingView* backingView;
-@property (nonatomic) NSBox* backingBox;
-@property (nonatomic) NSBox* buttonBox;
+@property (nonatomic) IBOutlet BackingView* backingView;
+@property (nonatomic) IBOutlet NSBox* backingBox;
+@property (nonatomic) IBOutlet NSBox* buttonBox;
 
 - (BackingViewController*) initBackingViewControllerWithDocument:(MacHgDocument*)doc;
 
@@ -27,11 +27,9 @@
 
 
 @interface BackingView : NSView <AccessesDocument, NSUserInterfaceValidations>
-{
-	IBOutlet BackingViewController* parentContoller;
-}
 
-@property (weak,readonly) MacHgDocument*	myDocument;
+@property (weak,readonly) MacHgDocument*			myDocument;
+@property (assign) IBOutlet BackingViewController*	parentContoller;
 
 - (void)	 unload;
 - (void)	 prepareToOpenBackingView;

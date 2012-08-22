@@ -24,12 +24,9 @@
 // MARK: -
 
 @interface DifferencesViewController : NSViewController
-{
-	IBOutlet DifferencesView*	__strong theDifferencesView;
-}
-@property (weak,readonly) MacHgDocument*		myDocument;
 
-@property DifferencesView*	theDifferencesView;
+@property (weak,readonly) MacHgDocument*	myDocument;
+@property IBOutlet DifferencesView*			theDifferencesView;
 
 - (DifferencesViewController*) initDifferencesViewControllerWithDocument:(MacHgDocument*)doc;
 - (void) unload;
@@ -44,7 +41,6 @@
 
 @interface DifferencesView : NSView < ControllerForLogTableView, ControllerForFSViewer, NSUserInterfaceValidations >
 {
-	IBOutlet DifferencesViewController*  parentController;
 	IBOutlet DifferencesSplitView*	mainSplitView;
 
 	IBOutlet NSTextField*		baseHeaderMessage;
@@ -69,6 +65,9 @@
 	NSString*					repositoryRootPath;			// The root of the repository being browsed
 }
 
+@property (weak,readonly) MacHgDocument*  myDocument;
+@property (assign) IBOutlet DifferencesViewController* parentController;
+
 @property BOOL showAddedFilesInBrowser;
 @property BOOL showIgnoredFilesInBrowser;
 @property BOOL showMissingFilesInBrowser;
@@ -79,7 +78,6 @@
 @property BOOL showUnresolvedFilesInBrowser;
 @property BOOL showResolvedFilesInBrowser;
 @property BOOL autoExpandViewerOutlines;
-@property (weak,readonly) MacHgDocument*  myDocument;
 
 @property FSViewer*  theFSViewer;
 

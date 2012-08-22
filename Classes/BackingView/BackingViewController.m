@@ -45,6 +45,7 @@
 
 @implementation BackingView
 
+@synthesize parentContoller = parentContoller_;
 @synthesize myDocument = myDocument;
 
 -(void) unload

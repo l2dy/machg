@@ -43,7 +43,7 @@
 
 @implementation HistoryViewController
 @synthesize myDocument = myDocument;
-@synthesize theHistoryView;
+@synthesize theHistoryView = theHistoryView_;
 
 - (HistoryViewController*) initHistoryViewControllerWithDocument:(MacHgDocument*)doc
 {
@@ -54,7 +54,7 @@
 
 - (void) unload
 {
-	[theHistoryView unload];
+	[theHistoryView_ unload];
 }
 
 @end
@@ -72,7 +72,8 @@
 @implementation HistoryView
 
 @synthesize myDocument = myDocument;
-@synthesize logTableView;
+@synthesize parentController = parentController_;
+@synthesize logTableView = logTableView;
 
 
 
@@ -91,7 +92,7 @@
 
 - (void) awakeFromNib
 {
-	myDocument = [parentController myDocument];
+	myDocument = [parentController_ myDocument];
 	[self observe:kRepositoryDataDidChange	from:[self myDocument]  byCalling:@selector(refreshHistoryView:)];
 	[self observe:kRepositoryDataIsNew		from:[self myDocument]  byCalling:@selector(refreshHistoryView:)];
 	[self observe:kLogEntriesDidChange		from:[self myDocument]  byCalling:@selector(refreshHistoryView:)];

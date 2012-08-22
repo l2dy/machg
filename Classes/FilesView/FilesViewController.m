@@ -31,7 +31,7 @@
 
 @implementation FilesViewController
 @synthesize myDocument = myDocument;
-@synthesize theFilesView;
+@synthesize theFilesView = theFilesView_;
 
 - (FilesViewController*) initFilesViewControllerWithDocument:(MacHgDocument*)doc
 {
@@ -42,7 +42,7 @@
 	return self;
 }
 
-- (void) unload { [theFilesView unload]; }
+- (void) unload { [theFilesView_ unload]; }
 @end
 
 
@@ -58,6 +58,7 @@
 @implementation FilesView
 
 @synthesize myDocument = myDocument;
+@synthesize parentContoller = parentContoller_;
 @synthesize theFSViewer = theFSViewer;
 
 
@@ -76,7 +77,7 @@
 
 - (void) setMyDocumentFromParent
 {
-	myDocument = [parentContoller myDocument];
+	myDocument = [parentContoller_ myDocument];
 }
 
 - (void) awakeFromNib

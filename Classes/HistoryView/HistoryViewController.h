@@ -24,11 +24,8 @@
 // MARK: -
 
 @interface HistoryViewController : NSViewController
-{
-	IBOutlet HistoryView*	__strong theHistoryView;
-}
-@property (weak,readonly) MacHgDocument*	myDocument;
 
+@property (weak,readonly) MacHgDocument*	myDocument;
 @property HistoryView*	theHistoryView;
 
 - (HistoryViewController*) initHistoryViewControllerWithDocument:(MacHgDocument*)doc;
@@ -47,14 +44,10 @@
 
 @interface HistoryView : NSView <AccessesDocument, ControllerForLogTableView, ControllerForLabelsTableView, NSUserInterfaceValidations >
 {
-	IBOutlet HistoryViewController*  parentController;
 
 	// Main concertina view containing the sub panes.
 	IBOutlet JHConcertinaView*	concertinaView;
 	
-	// History SubPane
-	IBOutlet LogTableView*		__strong logTableView;
-
 	// Details SubPane
 	IBOutlet NSView*			detailsView;
 	IBOutlet LogTableTextView*	detailedEntryTextView;
@@ -65,9 +58,9 @@
 
 }
 
-@property (weak,readonly) MacHgDocument*	  myDocument;
-
-@property (readonly, strong) LogTableView*	  logTableView;
+@property (weak,readonly) MacHgDocument*			myDocument;
+@property (assign) IBOutlet HistoryViewController*	parentController;
+@property (readonly) IBOutlet LogTableView*			logTableView;			// History SubPane
 
 
 // Initializations

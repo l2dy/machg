@@ -67,6 +67,7 @@
 @synthesize showResolvedFilesInBrowser   = showResolvedFilesInBrowser_;
 @synthesize autoExpandViewerOutlines	 = autoExpandViewerOutlines_;
 @synthesize myDocument = myDocument;
+@synthesize parentController = parentController_;
 @synthesize theFSViewer;
 
 
@@ -80,7 +81,7 @@
 
 - (void) setMyDocumentFromParent
 {
-	myDocument = [parentController myDocument];
+	myDocument = [parentController_ myDocument];
 }
 
 - (void) awakeFromNib
