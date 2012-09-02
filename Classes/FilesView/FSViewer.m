@@ -148,6 +148,15 @@
 	return theFilesTable_;
 }
 
+- (void)dealloc
+{
+	theFilesBrowserParent_ = nil;
+	theFilesOutlineParent_ = nil;
+	theFilesTableParent_ = nil;
+	theFilesBrowser_ = nil;
+	theFilesOutline_ = nil;
+	theFilesTable_ = nil;
+}
 
 - (void) unload
 {
