@@ -61,8 +61,6 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 	self = [super init];
 	if (self)
 	{
-		theTableRows_ = nil;
-		repositoryData_ = nil;
 		canSelectIncompleteRevision_ = NO;
 		tableIsFiltered_ = NO;
 		rootPath_ = nil;
