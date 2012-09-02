@@ -29,14 +29,9 @@
 
 
 @interface LogGraph : NSObject
-{
-	// Initilized
-	RepositoryData*			repositoryData;
-
-	
+{	
 	NSMutableDictionary*	revisionNumberToLineSegments_;	// Map of (NSNumber*)revision -> (NSMutableArray*)LineSegment LineSegments
 															// passing or intersecting this rev.
-
 	// Computed
 	NSInteger				maxColumn;						// The max column used to draw the connections. 0 based, so if one
 															// column used this will be 0, if two columns used this will be 1,
@@ -47,8 +42,7 @@
 @property (readonly) NSMutableDictionary* revisionNumberToLineSegments;
 
 
-- (LogGraph*)	initWithRepositoryData:(RepositoryData*)collection;
-
+- (LogGraph*)	init;
 - (void) addEntries:(NSArray*)entries;
 - (void) removeEntries:(NSArray*)entries;
 

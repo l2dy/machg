@@ -10,7 +10,6 @@
 #import "LogGraph.h"
 #import "MacHgDocument.h"
 #import "LogEntry.h"
-#import "RepositoryData.h"
 
 
 const NSInteger revNotInitilized = -2;
@@ -86,12 +85,14 @@ const NSInteger maxRevDistance = 72;
 @synthesize revisionNumberToLineSegments = revisionNumberToLineSegments_;
 
 
-- (LogGraph*) initWithRepositoryData:(RepositoryData*)collection
+- (LogGraph*) init
 {
 	self = [super init];
-	repositoryData = collection;
-	revisionNumberToLineSegments_ = [[NSMutableDictionary alloc] init];
-	maxColumn = 0;
+	if (self)
+	{
+		revisionNumberToLineSegments_ = [[NSMutableDictionary alloc] init];
+		maxColumn = 0;
+	}
 	return self;
 }
 

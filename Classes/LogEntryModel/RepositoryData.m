@@ -51,8 +51,8 @@
 		// Main lookup tables
         revisionNumberToLogEntry_    = [[NSMutableDictionary alloc] init];
 		oldRevisionNumberToLogEntry_ = [[NSMutableDictionary alloc] init];
-		logGraph_    = [[LogGraph alloc] initWithRepositoryData:self];
-		oldLogGraph_ = [[LogGraph alloc] initWithRepositoryData:self];
+		logGraph_    = [[LogGraph alloc] init];
+		oldLogGraph_ = [[LogGraph alloc] init];
 		rootPath_ = rootPath;
 		myDocument = doc;
 		hgIgnoreFilesRegEx_      = nil;
@@ -399,7 +399,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 	[oldRevisionNumberToLogEntry_ addEntriesFromDictionary:revisionNumberToLogEntry_];
 	[revisionNumberToLogEntry_ removeAllObjects];
 	oldLogGraph_ = logGraph_;
-	logGraph_ = [[LogGraph alloc] initWithRepositoryData:self];
+	logGraph_ = [[LogGraph alloc] init];
 	includeIncompleteRevision_ = [myDocument repositoryHasFilesWhichContainStatus:eHGStatusCommittable];
 	incompleteRevisionEntry_   = includeIncompleteRevision_ ? [LogEntry unfinishedEntryForRevision:intAsNumber([self computeNumberOfRealRevisions] + 1) forRepositoryData:self] : nil;
 	if (incompleteRevisionEntry_)
