@@ -10,7 +10,7 @@
 #import <Cocoa/Cocoa.h>
 
 
-@interface MyWindowController : NSWindowController
+@interface MainDocumentWindowController : NSWindowController
 
 - (NSString*) windowTitleForDocumentDisplayName:(NSString*)displayName;
 

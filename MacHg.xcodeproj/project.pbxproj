@@ -228,7 +228,7 @@
 		96D25FB612FC8D5800EB6B70 /* TrustedCertificates.pem in Resources */ = {isa = PBXBuildFile; fileRef = 96D25FB512FC8D5800EB6B70 /* TrustedCertificates.pem */; };
 		96D2608012FE420700EB6B70 /* getHTTPSfingerprint.py in Resources */ = {isa = PBXBuildFile; fileRef = 96D2607F12FE420700EB6B70 /* getHTTPSfingerprint.py */; };
 		96D49BB114A47A9B00171F63 /* tb-HistoryViewPane.png in Resources */ = {isa = PBXBuildFile; fileRef = 96D49BB014A47A9B00171F63 /* tb-HistoryViewPane.png */; };
-		96D5FFF81114E83900EE672E /* MyWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D5FFF71114E83900EE672E /* MyWindowController.m */; };
+		96D5FFF81114E83900EE672E /* MainDocumentWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 96D5FFF71114E83900EE672E /* MainDocumentWindowController.m */; };
 		96DADB6614DCB9870092F379 /* AppearancePreferencesMono18.png in Resources */ = {isa = PBXBuildFile; fileRef = 96DADB6514DCB9870092F379 /* AppearancePreferencesMono18.png */; };
 		96DB12A414B25B1D00710B9A /* AppearancePreferencesMono.png in Resources */ = {isa = PBXBuildFile; fileRef = 96DB12A314B25B1D00710B9A /* AppearancePreferencesMono.png */; };
 		96DB336510D43BCB00BB5B08 /* DifferencesView.xib in Resources */ = {isa = PBXBuildFile; fileRef = 96DB336310D43BCB00BB5B08 /* DifferencesView.xib */; };
@@ -613,8 +613,8 @@
 		96D25FB512FC8D5800EB6B70 /* TrustedCertificates.pem */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = TrustedCertificates.pem; sourceTree = "<group>"; };
 		96D2607F12FE420700EB6B70 /* getHTTPSfingerprint.py */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.script.python; path = getHTTPSfingerprint.py; sourceTree = "<group>"; };
 		96D49BB014A47A9B00171F63 /* tb-HistoryViewPane.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "tb-HistoryViewPane.png"; sourceTree = "<group>"; };
-		96D5FFF61114E83900EE672E /* MyWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MyWindowController.h; path = Classes/Document/MyWindowController.h; sourceTree = "<group>"; };
-		96D5FFF71114E83900EE672E /* MyWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MyWindowController.m; path = Classes/Document/MyWindowController.m; sourceTree = "<group>"; };
+		96D5FFF61114E83900EE672E /* MainDocumentWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = MainDocumentWindowController.h; path = Classes/Document/MainDocumentWindowController.h; sourceTree = "<group>"; };
+		96D5FFF71114E83900EE672E /* MainDocumentWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = MainDocumentWindowController.m; path = Classes/Document/MainDocumentWindowController.m; sourceTree = "<group>"; };
 		96DADB6514DCB9870092F379 /* AppearancePreferencesMono18.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AppearancePreferencesMono18.png; sourceTree = "<group>"; };
 		96DB12A314B25B1D00710B9A /* AppearancePreferencesMono.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = AppearancePreferencesMono.png; sourceTree = "<group>"; };
 		96DB336410D43BCB00BB5B08 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/DifferencesView.xib; sourceTree = SOURCE_ROOT; };
@@ -1320,8 +1320,8 @@
 		963DBCA110C7CF8D00189853 /* MyDocument */ = {
 			isa = PBXGroup;
 			children = (
-				96D5FFF61114E83900EE672E /* MyWindowController.h */,
-				96D5FFF71114E83900EE672E /* MyWindowController.m */,
+				96D5FFF61114E83900EE672E /* MainDocumentWindowController.h */,
+				96D5FFF71114E83900EE672E /* MainDocumentWindowController.m */,
 				96A377BC10C8EB9F00FA190A /* MacHgDocument.h */,
 				96A377BD10C8EB9F00FA190A /* MacHgDocument.m */,
 				1DDD58280DA1D0D100B32029 /* MyDocument.xib */,
@@ -2098,7 +2098,7 @@
 				9695C0B81108E230004CE684 /* TransmitSheetController.m in Sources */,
 				9695CB64110A0A76004CE684 /* OutgoingSheetController.m in Sources */,
 				9695CBD3110A101C004CE684 /* IncomingSheetController.m in Sources */,
-				96D5FFF81114E83900EE672E /* MyWindowController.m in Sources */,
+				96D5FFF81114E83900EE672E /* MainDocumentWindowController.m in Sources */,
 				96DD29CA112AE56200A57BD3 /* CollapseSheetController.m in Sources */,
 				969C525B112EC73800FA7C33 /* HistoryEditSheetController.m in Sources */,
 				969C52F8112EE44700FA7C33 /* StripSheetController.m in Sources */,

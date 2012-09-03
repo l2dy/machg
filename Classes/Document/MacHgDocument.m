@@ -9,7 +9,7 @@
 
 
 #import "MacHgDocument.h"
-#import "MyWindowController.h"
+#import "MainDocumentWindowController.h"
 #import "AppController.h"
 
 #import "LogEntry.h"
@@ -147,7 +147,7 @@
 - (void) makeWindowControllers
 {
 	[super makeWindowControllers];
-	MyWindowController* controller = [[MyWindowController alloc] initWithWindowNibName:@"MyDocument" owner:self];
+	MainDocumentWindowController* controller = [[MainDocumentWindowController alloc] initWithWindowNibName:@"MyDocument" owner:self];
 	[self addWindowController:controller];
 }
 

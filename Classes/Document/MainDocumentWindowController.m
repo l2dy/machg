@@ -7,15 +7,15 @@
 //  This software is licensed under the "New BSD License". The full license text is given in the file License.txt
 //
 
-#import "MyWindowController.h"
+#import "MainDocumentWindowController.h"
 #import "Common.h"
 #import "MacHgDocument.h"
 #import "Sidebar.h"
 #import "SidebarNode.h"
 
-@implementation MyWindowController
+@implementation MainDocumentWindowController
 
-- (MyWindowController*) initWithWindowNibName:(NSString*)nibName owner:(id)owner
+- (MainDocumentWindowController*) initWithWindowNibName:(NSString*)nibName owner:(id)owner
 {
 	self = [super initWithWindowNibName:nibName owner:owner];
 	if (!self)
