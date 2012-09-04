@@ -154,6 +154,8 @@
 {
     [super windowControllerDidLoadNib:aController];
 
+	[toolbarSegementedControl_ bind:@"selectedIndex" toObject:self withKeyPath:@"currentPane" options:nil];
+
 	if (loadedDataProxy_)
 	{
 		[sidebar_ setRoot:[loadedDataProxy_->loadedSidebar root]];
@@ -171,6 +173,12 @@
 	if ([hunkExclusions_ class] != [HunkExclusions class])
 		hunkExclusions_ = [[HunkExclusions alloc]init];
 	[self actionSwitchViewToBackingView:self];
+}
+
+- (void) windowWillClose:(NSNotification*) notification
+{
+	if (notification.object == mainWindow_)
+		[toolbarSegementedControl_ unbind:@"selectedIndex"];
 }
 
 - (void) LogNotification:(NSNotification*)aNotification
