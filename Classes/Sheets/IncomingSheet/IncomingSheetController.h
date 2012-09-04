@@ -31,7 +31,6 @@
 	IBOutlet OptionController*	styleOption;
 	IBOutlet OptionController*	templateOption;
 }
-@property (weak,readonly) MacHgDocument* myDocument;
 
 - (IncomingSheetController*) initIncomingSheetControllerWithDocument:(MacHgDocument*)doc;
 

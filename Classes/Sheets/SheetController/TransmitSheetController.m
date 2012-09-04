@@ -30,7 +30,7 @@
 
 @implementation TransmitSheetController
 @synthesize allowOperationWithAnyRepository = allowOperationWithAnyRepository_;
-@synthesize myDocument = myDocument;
+@synthesize myDocument = myDocument_;
 
 
 
@@ -153,7 +153,7 @@
 	NSString* matchingPath = (sourceLabel == compatibleRepositoriesPopup) ? [[self destinationRepository] recentPullConnection] : [[self sourceRepository] recentPushConnection];
 	[orderedPaths addObjectIfNonNil:matchingPath];
 	
-	Sidebar* theSidebar = [[self myDocument] sidebar];
+	Sidebar* theSidebar = myDocument_.sidebar;
 	SidebarNode* selectedNode = [theSidebar selectedNode];
 	NSArray* allServers = [theSidebar serversIfAvailable:[selectedNode path] includingAlreadyPresent:YES];
 	for (SidebarNode* node in allServers)
@@ -185,7 +185,7 @@
 - (void) populateNewAndSetupPopupMenu:(NSPopUpButton*)popup withSubtree:(SidebarNode*)node atLevel:(NSInteger)level
 {
 	// Don't include the currently selected node since we don't push / pull to ourselves.
-	if ([trimmedURL([[[self myDocument] selectedRepositoryRepositoryRef] path]) isEqualToString:trimmedURL([node path])])
+	if ([trimmedURL([[myDocument_ selectedRepositoryRepositoryRef] path]) isEqualToString:trimmedURL([node path])])
 		return;
 	
 	NSMenuItem* item = [[NSMenuItem alloc]init];
@@ -211,7 +211,7 @@
 	[[popup menu] setAutoenablesItems:NO];
 
 	// Get the default servers
-	Sidebar* theSidebar = [[self myDocument] sidebar];
+	Sidebar* theSidebar = myDocument_.sidebar;
 	SidebarNode* selectedNode = [theSidebar selectedNode];
 	NSArray* missingServers   = [theSidebar serversIfAvailable:[selectedNode path] includingAlreadyPresent:NO];
 
@@ -233,8 +233,8 @@
 - (IBAction) populatePopupMenuItemsAndRelayout:(id)sender
 {
 	SidebarNode* oppositeToPopup = (sourceLabel == compatibleRepositoriesPopup) ? [self destinationRepository] : [self sourceRepository];
-	SidebarNode* compatibleRoot = [[[[self myDocument] sidebar] root] copySubtreeCompatibleTo:oppositeToPopup];
-	SidebarNode* root = [sheetButtonAllowOperationWithAnyRepository state] ? [[[self myDocument] sidebar] root] : compatibleRoot;
+	SidebarNode* compatibleRoot = [myDocument_.sidebar.root copySubtreeCompatibleTo:oppositeToPopup];
+	SidebarNode* root = [sheetButtonAllowOperationWithAnyRepository state] ? myDocument_.sidebar.root : compatibleRoot;
 	[self populateNewAndSetupPopupMenu:compatibleRepositoriesPopup withItems:root];
 	[[compatibleRepositoriesPopup menu] setDelegate:self];
 	
@@ -263,13 +263,13 @@
 - (void) setConnectionFromFieldsForSource:(SidebarNode*)source andDestination:(SidebarNode*)destination
 {
 	NSString* partialKey = fstr(@"%@§%@§%@§", [self operationName], nonNil([source path]), nonNil([destination path]));
-	[OptionController setConnections:[[self myDocument] connections] fromOptions:cmdOptions  forKey:partialKey];
+	[OptionController setConnections:myDocument_.connections fromOptions:cmdOptions  forKey:partialKey];
 }
 
 - (void) setFieldsFromConnectionForSource:(SidebarNode*)source andDestination:(SidebarNode*)destination
 {
 	NSString* partialKey = fstr(@"%@§%@§%@§", [self operationName], nonNil([source path]), nonNil([destination path]));
-	[OptionController setOptions:cmdOptions fromConnections:[[self myDocument] connections] forKey:partialKey];
+	[OptionController setOptions:cmdOptions fromConnections:myDocument_.connections forKey:partialKey];
 }
 
 - (void) updateIncomingOutgoingCount	{ [self updateIncomingOutgoingCountForSource:[self sourceRepository] andDestination:[self destinationRepository]]; }
@@ -277,9 +277,9 @@
 {
 	NSString* theCount;
 	if ([[self operationName] isMatchedByRegex:@"Push|Outgoing"])
-		theCount = [[myDocument sidebar] outgoingCountTo:destination];
+		theCount = [myDocument_.sidebar outgoingCountTo:destination];
 	else
-		theCount = [[myDocument sidebar] incomingCountFrom:source];
+		theCount = [myDocument_.sidebar incomingCountFrom:source];
 	NSString* newValue = (!theCount || [theCount isEqualTo:@"-"]) ? @"": theCount;
 	[incomingOutgoingCount setStringValue:newValue];
 }
@@ -308,7 +308,7 @@
 - (IBAction) openSheet:(id)sender
 {
 	// Compute the root of this repository for later comparison.
-	SidebarNode* selectedNode = [[myDocument sidebar] selectedNode];
+	SidebarNode* selectedNode = [myDocument_.sidebar selectedNode];
 	if (!selectedNode || ![selectedNode isLocalRepositoryRef])
 		return;
 
@@ -323,7 +323,7 @@
 		[self recenterMainGroupingBox];
 	});
 	[sheetWindow setDelegate:self];
-	[myDocument beginSheet:sheetWindow];
+	[myDocument_ beginSheet:sheetWindow];
 }
 
 

@@ -27,8 +27,6 @@
 
 @implementation PullSheetController
 
-@synthesize myDocument = myDocument;
-
 
 
 
@@ -39,7 +37,7 @@
 
 - (PullSheetController*) initPullSheetControllerWithDocument:(MacHgDocument*)doc
 {
-	myDocument = doc;
+	myDocument_ = doc;
 	[NSBundle loadNibNamed:@"PullSheet" owner:self];
 	return self;
 }
@@ -70,7 +68,7 @@
 // ------------------------------------------------------------------------------------
 
 - (SidebarNode*)		sourceRepository		{ return [[compatibleRepositoriesPopup selectedItem] representedObject]; }
-- (SidebarNode*)		destinationRepository	{ return [myDocument selectedRepositoryRepositoryRef]; }
+- (SidebarNode*)		destinationRepository	{ return [myDocument_ selectedRepositoryRepositoryRef]; }
 - (NSString*)			operationName			{ return @"Pull"; }
 - (OptionController*)	commonRevOption			{ return revOption; }
 
@@ -102,7 +100,7 @@
 - (IBAction) sheetButtonPull:(id)sender
 {
 	[sheetWindow makeFirstResponder:sheetWindow]; // Make the text fields of the sheet commit any changes they currently have
-	[myDocument endSheet:sheetWindow];
+	[myDocument_ endSheet:sheetWindow];
 	
 	SidebarNode* pullDestination  = [self destinationRepository];
 	SidebarNode* pullSource       = [self sourceRepository];
@@ -120,7 +118,7 @@
 	}
 	
 	// Construct the pull args
-	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
 	NSMutableArray* argsPull = [NSMutableArray arrayWithObjects:@"pull", @"--noninteractive", nil];
 	[argsPull addObjectsFromArray:configurationForProgress];
 	for (OptionController* opt in cmdOptions)
@@ -132,9 +130,9 @@
 	[argsPull addObject:[pullSource fullURLPath]];
 	
 	// Execute the pull command
-	ProcessController* processController = [ProcessController processControllerWithMessage:@"Pulling Changesets" forList:[myDocument theProcessListController]];
-	dispatch_async([myDocument mercurialTaskSerialQueue], ^{
-		ExecutionResult* results = [myDocument executeMercurialWithArgs:argsPull  fromRoot:rootPath  withDelegate:processController  whileDelayingEvents:YES];
+	ProcessController* processController = [ProcessController processControllerWithMessage:@"Pulling Changesets" forList:[myDocument_ theProcessListController]];
+	dispatch_async([myDocument_ mercurialTaskSerialQueue], ^{
+		ExecutionResult* results = [myDocument_ executeMercurialWithArgs:argsPull  fromRoot:rootPath  withDelegate:processController  whileDelayingEvents:YES];
 		[processController terminateController];
 		if (DisplayResultsOfPullingFromDefaults())
 		{
@@ -153,7 +151,7 @@
 - (IBAction) sheetButtonCancel:(id)sender
 {
 	[sheetWindow makeFirstResponder:sheetWindow]; // Make the text fields of the sheet commit any changes they currently have
-	[myDocument endSheet:sheetWindow];
+	[myDocument_ endSheet:sheetWindow];
 	[self setConnectionFromFieldsForSource:[self sourceRepository] andDestination:[self destinationRepository]];
 }
 

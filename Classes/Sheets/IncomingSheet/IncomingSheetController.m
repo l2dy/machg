@@ -26,7 +26,6 @@
 // ------------------------------------------------------------------------------------
 
 @implementation IncomingSheetController
-@synthesize myDocument = myDocument;
 
 
 
@@ -39,7 +38,7 @@
 
 - (IncomingSheetController*) initIncomingSheetControllerWithDocument:(MacHgDocument*)doc
 {
-	myDocument = doc;
+	myDocument_ = doc;
 	[NSBundle loadNibNamed:@"IncomingSheet" owner:self];
 	return self;
 }
@@ -75,7 +74,7 @@
 // ------------------------------------------------------------------------------------
 
 - (SidebarNode*)		sourceRepository		{ return [[compatibleRepositoriesPopup selectedItem] representedObject]; }
-- (SidebarNode*)		destinationRepository	{ return [myDocument selectedRepositoryRepositoryRef]; }
+- (SidebarNode*)		destinationRepository	{ return [myDocument_ selectedRepositoryRepositoryRef]; }
 - (NSString*)			operationName			{ return @"Incoming"; }
 - (OptionController*)	commonRevOption			{ return revOption; }
 
@@ -108,7 +107,7 @@
 - (IBAction) sheetButtonOk:(id)sender
 {
 	[sheetWindow makeFirstResponder:sheetWindow]; // Make the text fields of the sheet commit any changes they currently have
-	[myDocument endSheet:sheetWindow];
+	[myDocument_ endSheet:sheetWindow];
 	
 	SidebarNode* incomingDestination  = [self destinationRepository];
 	SidebarNode* incomingSource       = [self sourceRepository];
@@ -116,7 +115,7 @@
 	NSString* incomingDestinationName = [incomingDestination shortName];
 	
 	// Construct the incoming args
-	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
 	NSMutableArray* argsIncoming = [NSMutableArray arrayWithObjects:@"incoming", @"--noninteractive", nil];
 	[argsIncoming addObjectsFromArray:configurationForProgress];
 	for (OptionController* opt in cmdOptions)
@@ -128,9 +127,9 @@
 	[argsIncoming addObject:[incomingSource fullURLPath]];
 	
 	// Execute the incoming command
-	ProcessController* processController = [ProcessController processControllerWithMessage:@"Incoming Changesets" forList:[myDocument theProcessListController]];
-	dispatch_async([myDocument mercurialTaskSerialQueue], ^{
-		ExecutionResult* results = [myDocument executeMercurialWithArgs:argsIncoming  fromRoot:rootPath  withDelegate:processController  whileDelayingEvents:YES];
+	ProcessController* processController = [ProcessController processControllerWithMessage:@"Incoming Changesets" forList:[myDocument_ theProcessListController]];
+	dispatch_async([myDocument_ mercurialTaskSerialQueue], ^{
+		ExecutionResult* results = [myDocument_ executeMercurialWithArgs:argsIncoming  fromRoot:rootPath  withDelegate:processController  whileDelayingEvents:YES];
 		[processController terminateController];
 		NSString* messageString = fstr(@"Results of Incoming “%@” into “%@”", incomingSourceName, incomingDestinationName);
 		NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
@@ -145,7 +144,7 @@
 - (IBAction) sheetButtonCancel:(id)sender
 {
 	[sheetWindow makeFirstResponder:sheetWindow]; // Make the text fields of the sheet commit any changes they currently have
-	[myDocument endSheet:sheetWindow];
+	[myDocument_ endSheet:sheetWindow];
 	[self setConnectionFromFieldsForSource:[self sourceRepository] andDestination:[self destinationRepository]];
 }
 

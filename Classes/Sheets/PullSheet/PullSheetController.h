@@ -27,8 +27,6 @@
 	IBOutlet OptionController*	updateOption;
 }
 
-@property (weak,readonly) MacHgDocument* myDocument;
-
 - (PullSheetController*) initPullSheetControllerWithDocument:(MacHgDocument*)doc;
 
 // Actions

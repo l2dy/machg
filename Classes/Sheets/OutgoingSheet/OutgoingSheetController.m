@@ -27,7 +27,6 @@
 // MARK: -
 
 @implementation OutgoingSheetController
-@synthesize myDocument = myDocument;
 
 
 
@@ -40,7 +39,7 @@
 
 - (OutgoingSheetController*) initOutgoingSheetControllerWithDocument:(MacHgDocument*)doc
 {
-	myDocument = doc;
+	myDocument_ = doc;
 	[NSBundle loadNibNamed:@"OutgoingSheet" owner:self];
 	return self;
 }
@@ -75,7 +74,7 @@
 // MARK: Accessors
 // ------------------------------------------------------------------------------------
 
-- (SidebarNode*)		sourceRepository		{ return [myDocument selectedRepositoryRepositoryRef]; }
+- (SidebarNode*)		sourceRepository		{ return [myDocument_ selectedRepositoryRepositoryRef]; }
 - (SidebarNode*)		destinationRepository	{ return [[compatibleRepositoriesPopup selectedItem] representedObject]; }
 - (NSString*)			operationName			{ return @"Outgoing"; }
 - (OptionController*)	commonRevOption			{ return revOption; }
@@ -111,7 +110,7 @@
 - (IBAction) sheetButtonOk:(id)sender
 {
 	[sheetWindow makeFirstResponder:sheetWindow]; // Make the text fields of the sheet commit any changes they currently have
-	[myDocument endSheet:sheetWindow];
+	[myDocument_ endSheet:sheetWindow];
 
 	SidebarNode* outgoingDestination  = [self destinationRepository];
 	SidebarNode* outgoingSource       = [self sourceRepository];
@@ -119,7 +118,7 @@
 	NSString* outgoingDestinationName = [outgoingDestination shortName];
 	
 	// Construct the outgoing args
-	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
 	NSMutableArray* argsOutgoing = [NSMutableArray arrayWithObjects:@"outgoing", @"--noninteractive", nil];
 	[argsOutgoing addObjectsFromArray:configurationForProgress];
 	for (OptionController* opt in cmdOptions)
@@ -131,9 +130,9 @@
 	[argsOutgoing addObject:[outgoingDestination fullURLPath]];
 	
 	// Execute the outgoing command
-	ProcessController* processController = [ProcessController processControllerWithMessage:@"Outgoing Changesets" forList:[myDocument theProcessListController]];
-	dispatch_async([myDocument mercurialTaskSerialQueue], ^{
-		ExecutionResult* results = [myDocument executeMercurialWithArgs:argsOutgoing  fromRoot:rootPath  withDelegate:processController  whileDelayingEvents:YES];
+	ProcessController* processController = [ProcessController processControllerWithMessage:@"Outgoing Changesets" forList:[myDocument_ theProcessListController]];
+	dispatch_async([myDocument_ mercurialTaskSerialQueue], ^{
+		ExecutionResult* results = [myDocument_ executeMercurialWithArgs:argsOutgoing  fromRoot:rootPath  withDelegate:processController  whileDelayingEvents:YES];
 		[processController terminateController];
 		NSString* messageString = fstr(@"Results of Outgoing “%@” into “%@”", outgoingSourceName, outgoingDestinationName);
 		NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
@@ -148,7 +147,7 @@
 - (IBAction) sheetButtonCancel:(id)sender
 {
 	[sheetWindow makeFirstResponder:sheetWindow]; // Make the text fields of the sheet commit any changes they currently have
-	[myDocument endSheet:sheetWindow];
+	[myDocument_ endSheet:sheetWindow];
 	[self setConnectionFromFieldsForSource:[self sourceRepository] andDestination:[self destinationRepository]];
 }
 
@@ -164,13 +163,13 @@
 - (void) setConnectionFromFieldsForSource:(SidebarNode*)source andDestination:(SidebarNode*)destination
 {
 	NSString* partialKey = fstr(@"Outgoing§%@§%@§", [source path], [destination path]);
-	[OptionController setConnections:[myDocument connections] fromOptions:cmdOptions  forKey:partialKey];
+	[OptionController setConnections:[myDocument_ connections] fromOptions:cmdOptions  forKey:partialKey];
 }
 
 - (void) setFieldsFromConnectionForSource:(SidebarNode*)source andDestination:(SidebarNode*)destination
 {
 	NSString* partialKey = fstr(@"Outgoing§%@§%@§", [source path], [destination path]);
-	[OptionController setOptions:cmdOptions fromConnections:[myDocument connections] forKey:partialKey];
+	[OptionController setOptions:cmdOptions fromConnections:[myDocument_ connections] forKey:partialKey];
 }
 
 @end

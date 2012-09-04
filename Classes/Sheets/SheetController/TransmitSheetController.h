@@ -32,6 +32,9 @@
 	IBOutlet OptionController*	forceOption;
 	IBOutlet DisclosureBoxController*	disclosureController;	// The disclosure box for the advanced options
 	NSArray*					cmdOptions;						// The collection of advanced option controllers
+
+@protected
+	MacHgDocument* __weak		myDocument_;
 }
 
 @property (weak,readonly) MacHgDocument*	myDocument;
