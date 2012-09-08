@@ -1996,14 +1996,6 @@ wGw</bytes>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
-						<string key="label">logTableView</string>
-						<reference key="source" ref="945562250"/>
-						<reference key="destination" ref="208783626"/>
-					</object>
-					<int key="connectionID">985</int>
-				</object>
-				<object class="IBConnectionRecord">
-					<object class="IBOutletConnection" key="connection">
 						<string key="label">theLabelsTableView_</string>
 						<reference key="source" ref="945562250"/>
 						<reference key="destination" ref="609977039"/>
@@ -2145,6 +2137,14 @@ wGw</bytes>
 						<reference key="destination" ref="1001"/>
 					</object>
 					<int key="connectionID">1070</int>
+				</object>
+				<object class="IBConnectionRecord">
+					<object class="IBOutletConnection" key="connection">
+						<string key="label">logTableView_</string>
+						<reference key="source" ref="945562250"/>
+						<reference key="destination" ref="208783626"/>
+					</object>
+					<int key="connectionID">1071</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBOutletConnection" key="connection">
@@ -3333,7 +3333,7 @@ wGw</bytes>
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">1070</int>
+			<int key="maxID">1071</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -3368,7 +3368,6 @@ wGw</bytes>
 						<string key="toolbarCommitFiles:">id</string>
 						<string key="toolbarDiffFiles:">id</string>
 						<string key="toolbarRevertFiles:">id</string>
-						<string key="validateButtons:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
 						<object class="IBActionInfo" key="forceReinitilizeHistoryViews:">
@@ -3479,16 +3478,12 @@ wGw</bytes>
 							<string key="name">toolbarRevertFiles:</string>
 							<string key="candidateClassName">id</string>
 						</object>
-						<object class="IBActionInfo" key="validateButtons:">
-							<string key="name">validateButtons:</string>
-							<string key="candidateClassName">id</string>
-						</object>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="outlets">
 						<string key="concertinaView">JHConcertinaView</string>
 						<string key="detailedEntryTextView">LogTableTextView</string>
 						<string key="detailsView">NSView</string>
-						<string key="logTableView">LogTableView</string>
+						<string key="logTableView_">LogTableView</string>
 						<string key="parentController">HistoryViewController</string>
 						<string key="removeLabelButton">NSButton</string>
 						<string key="theLabelsTableView_">LabelsTableView</string>
@@ -3506,8 +3501,8 @@ wGw</bytes>
 							<string key="name">detailsView</string>
 							<string key="candidateClassName">NSView</string>
 						</object>
-						<object class="IBToOneOutletInfo" key="logTableView">
-							<string key="name">logTableView</string>
+						<object class="IBToOneOutletInfo" key="logTableView_">
+							<string key="name">logTableView_</string>
 							<string key="candidateClassName">LogTableView</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="parentController">
@@ -4141,7 +4136,10 @@ wGw</bytes>
 						<string key="informationBox_">NSBox</string>
 						<string key="mainContentBox">NSBox</string>
 						<string key="mainSplitView">SidebarSplitView</string>
+						<string key="mainWindow_">NSWindow</string>
 						<string key="sidebarAndInformation_">ThickSplitView</string>
+						<string key="sidebar_">Sidebar</string>
+						<string key="theProcessListController_">ProcessListController</string>
 						<string key="toolbarSegementedControl_">NSSegmentedControl</string>
 						<string key="updateAlertAccessoryAlertSuppressionCheckBox">NSButton</string>
 						<string key="updateAlertAccessoryCleanCheckBox">NSButton</string>
@@ -4164,9 +4162,21 @@ wGw</bytes>
 							<string key="name">mainSplitView</string>
 							<string key="candidateClassName">SidebarSplitView</string>
 						</object>
+						<object class="IBToOneOutletInfo" key="mainWindow_">
+							<string key="name">mainWindow_</string>
+							<string key="candidateClassName">NSWindow</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="sidebarAndInformation_">
 							<string key="name">sidebarAndInformation_</string>
 							<string key="candidateClassName">ThickSplitView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="sidebar_">
+							<string key="name">sidebar_</string>
+							<string key="candidateClassName">Sidebar</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="theProcessListController_">
+							<string key="name">theProcessListController_</string>
+							<string key="candidateClassName">ProcessListController</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="toolbarSegementedControl_">
 							<string key="name">toolbarSegementedControl_</string>
@@ -4232,6 +4242,38 @@ wGw</bytes>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
+					<string key="className">ProcessListController</string>
+					<string key="superclassName">NSObject</string>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="activityBox">NSBox</string>
+						<string key="informationAndActivityBox">NSBox</string>
+						<string key="informationBox">NSBox</string>
+						<string key="processListTableView">NSTableView</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="activityBox">
+							<string key="name">activityBox</string>
+							<string key="candidateClassName">NSBox</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="informationAndActivityBox">
+							<string key="name">informationAndActivityBox</string>
+							<string key="candidateClassName">NSBox</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="informationBox">
+							<string key="name">informationBox</string>
+							<string key="candidateClassName">NSBox</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="processListTableView">
+							<string key="name">processListTableView</string>
+							<string key="candidateClassName">NSTableView</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/ProcessListController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
 					<string key="className">ScrollToForLogTable</string>
 					<string key="superclassName">NSButton</string>
 					<object class="NSMutableDictionary" key="actions">
@@ -4267,6 +4309,107 @@ wGw</bytes>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/ShowResizeUpDownCursorView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">Sidebar</string>
+					<string key="superclassName">NSOutlineView</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="forceRefreshOfSidebarData:">id</string>
+						<string key="mainMenuAddNewSidebarGroupItem:">id</string>
+						<string key="mainMenuCloneRepository:">id</string>
+						<string key="mainMenuConfigureLocalRepositoryRef:">id</string>
+						<string key="mainMenuConfigureRepositoryRef:">id</string>
+						<string key="mainMenuConfigureServerRepositoryRef:">id</string>
+						<string key="mainMenuOpenTerminalHere:">id</string>
+						<string key="mainMenuRemoveSidebarItems:">id</string>
+						<string key="mainMenuRevealRepositoryInFinder:">id</string>
+						<string key="reloadSidebarData:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="forceRefreshOfSidebarData:">
+							<string key="name">forceRefreshOfSidebarData:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="mainMenuAddNewSidebarGroupItem:">
+							<string key="name">mainMenuAddNewSidebarGroupItem:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="mainMenuCloneRepository:">
+							<string key="name">mainMenuCloneRepository:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="mainMenuConfigureLocalRepositoryRef:">
+							<string key="name">mainMenuConfigureLocalRepositoryRef:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="mainMenuConfigureRepositoryRef:">
+							<string key="name">mainMenuConfigureRepositoryRef:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="mainMenuConfigureServerRepositoryRef:">
+							<string key="name">mainMenuConfigureServerRepositoryRef:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="mainMenuOpenTerminalHere:">
+							<string key="name">mainMenuOpenTerminalHere:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="mainMenuRemoveSidebarItems:">
+							<string key="name">mainMenuRemoveSidebarItems:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="mainMenuRevealRepositoryInFinder:">
+							<string key="name">mainMenuRevealRepositoryInFinder:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="reloadSidebarData:">
+							<string key="name">reloadSidebarData:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="informationTextView_">NSTextView</string>
+						<string key="myDocument">MacHgDocument</string>
+						<string key="removeSidebarItemsAlertAccessoryAlertSuppressionCheckBox">NSButton</string>
+						<string key="removeSidebarItemsAlertAccessoryDeleteReposOnDiskCheckBox">NSButton</string>
+						<string key="removeSidebarItemsAlertAccessoryView">NSView</string>
+						<string key="repositoryPathControl_">NSPathControl</string>
+						<string key="sidebarContextualMenu">NSMenu</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="informationTextView_">
+							<string key="name">informationTextView_</string>
+							<string key="candidateClassName">NSTextView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="myDocument">
+							<string key="name">myDocument</string>
+							<string key="candidateClassName">MacHgDocument</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="removeSidebarItemsAlertAccessoryAlertSuppressionCheckBox">
+							<string key="name">removeSidebarItemsAlertAccessoryAlertSuppressionCheckBox</string>
+							<string key="candidateClassName">NSButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="removeSidebarItemsAlertAccessoryDeleteReposOnDiskCheckBox">
+							<string key="name">removeSidebarItemsAlertAccessoryDeleteReposOnDiskCheckBox</string>
+							<string key="candidateClassName">NSButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="removeSidebarItemsAlertAccessoryView">
+							<string key="name">removeSidebarItemsAlertAccessoryView</string>
+							<string key="candidateClassName">NSView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="repositoryPathControl_">
+							<string key="name">repositoryPathControl_</string>
+							<string key="candidateClassName">NSPathControl</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="sidebarContextualMenu">
+							<string key="name">sidebarContextualMenu</string>
+							<string key="candidateClassName">NSMenu</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/Sidebar.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">

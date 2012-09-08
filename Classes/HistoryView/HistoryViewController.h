@@ -26,7 +26,7 @@
 @interface HistoryViewController : NSViewController
 
 @property (weak,readonly) MacHgDocument*	myDocument;
-@property HistoryView*	theHistoryView;
+@property HistoryView* IBOutlet	theHistoryView;
 
 - (HistoryViewController*) initHistoryViewControllerWithDocument:(MacHgDocument*)doc;
 - (void) unload;
@@ -56,11 +56,12 @@
 	IBOutlet LabelsTableView*	theLabelsTableView_;
 	IBOutlet NSButton*			removeLabelButton;
 
+	IBOutlet LogTableView*		logTableView_;
 }
 
 @property (weak,readonly) MacHgDocument*			myDocument;
 @property (assign) IBOutlet HistoryViewController*	parentController;
-@property (readonly) IBOutlet LogTableView*			logTableView;			// History SubPane
+@property (readonly)  LogTableView*					logTableView;			// History SubPane
 
 
 // Initializations
