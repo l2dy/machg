@@ -13,7 +13,6 @@
 @interface Sidebar : NSOutlineView <NSOutlineViewDelegate, NSOutlineViewDataSource>
 {
 	SidebarNode*			root_;
-	IBOutlet MacHgDocument*	myDocument;
 	IBOutlet NSMenu*		sidebarContextualMenu;
 	IBOutlet NSTextView*	informationTextView_;
 	IBOutlet NSPathControl* repositoryPathControl_;
@@ -33,6 +32,7 @@
 }
 
 @property (nonatomic) SidebarNode* root;
+@property (nonatomic, weak) IBOutlet MacHgDocument* myDocument;
 
 
 // Actions

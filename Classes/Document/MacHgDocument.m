@@ -143,14 +143,12 @@
 	dispatch_release(mercurialTaskSerialQueue_);
 }
 
-
 - (void) makeWindowControllers
 {
 	[super makeWindowControllers];
 	MainDocumentWindowController* controller = [[MainDocumentWindowController alloc] initWithWindowNibName:@"MyDocument" owner:self];
 	[self addWindowController:controller];
 }
-
 
 - (void) windowControllerDidLoadNib:(NSWindowController*) aController
 {

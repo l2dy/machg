@@ -42,7 +42,7 @@
 @implementation Sidebar
 
 @synthesize root = root_;
-
+@synthesize myDocument = myDocument_;
 
 
 
@@ -59,11 +59,11 @@
 	queueForUpdatingInformationTextView_  = [SingleTimedQueue SingleTimedQueueExecutingOn:globalQueue() withTimeDelay:0.1 descriptiveName:@"queueForUpdatingInformationTextView"];	// Our updating of the info start after 0.1 seconds
 	
 	root_ = [SidebarNode sectionNodeWithCaption:kSidebarRootInitializationDummy];
-	[self observe:kUnderlyingRepositoryChanged				from:myDocument  byCalling:@selector(underlyingRepositoryDidChange)];
-	[self observe:kCompatibleRepositoryChanged				from:myDocument  byCalling:@selector(computeIncomingOutgoingToCompatibleRepositories)];
-	[self observe:kReceivedCompatibleRepositoryCount		from:myDocument  byCalling:@selector(sidebarNodeDidChange:)];
-	[self observe:kRepositoryDataIsNew						from:myDocument  byCalling:@selector(repositoryDataIsNew:)];
-	[self observe:kRepositoryDataDidChange					from:myDocument  byCalling:@selector(repositoryDataDidChange:)];
+	[self observe:kUnderlyingRepositoryChanged				from:myDocument_  byCalling:@selector(underlyingRepositoryDidChange)];
+	[self observe:kCompatibleRepositoryChanged				from:myDocument_  byCalling:@selector(computeIncomingOutgoingToCompatibleRepositories)];
+	[self observe:kReceivedCompatibleRepositoryCount		from:myDocument_  byCalling:@selector(sidebarNodeDidChange:)];
+	[self observe:kRepositoryDataIsNew						from:myDocument_  byCalling:@selector(repositoryDataIsNew:)];
+	[self observe:kRepositoryDataDidChange					from:myDocument_  byCalling:@selector(repositoryDataDidChange:)];
 
 	// Scroll to the top in case the outline contents is very long
 	[[[self enclosingScrollView] verticalScroller] setFloatValue:0.0];
@@ -425,7 +425,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	
 	if ([[self selectedRowIndexes] containsIndex:rowIndex])
 	{
-		BOOL active = [[[myDocument mainWindow] firstResponder] hasAncestor:self];	// We display active if we are in the rsponde chain
+		BOOL active = [[[myDocument_ mainWindow] firstResponder] hasAncestor:self];	// We display active if we are in the rsponde chain
 		NSRect cellBounds = [self rectOfRow:rowIndex];
 		NSRect bounds =  [node isTopLevelSectionNode] ? offsetRectForSectionNode(cellBounds, rowIndex) : cellBounds;
 		[(active ? gradientActive : gradientInactive) drawInRect:bounds angle:90];
@@ -445,15 +445,15 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	outgoingCounts = [[NSMutableDictionary alloc]init];				// reset the outgoing counts which will get recomputed below.
 	incomingCounts = [[NSMutableDictionary alloc]init];				// reset the outgoing counts which will get recomputed below.
 
-	[myDocument postNotificationWithName:kSidebarSelectionDidChange];
-	[myDocument postNotificationWithName:kRepositoryRootChanged];	// We have switched to a new root (possibly a nil root)
+	[myDocument_ postNotificationWithName:kSidebarSelectionDidChange];
+	[myDocument_ postNotificationWithName:kRepositoryRootChanged];	// We have switched to a new root (possibly a nil root)
 
 	SidebarNode* node = [self selectedNode];
 	currentSelectionAllowsBadges_ = ![self multipleNodesAreSelected] && node && ![node isMissingLocalRepositoryRef];
 	
 	if (selectedNode == nil || [selectedNode nodeKind] == kSidebarNodeKindSection || [self multipleNodesAreSelected])
 	{
-		[myDocument discardCurrentRepository];
+		[myDocument_ discardCurrentRepository];
 		[repositoryPathControl_ setURL:[NSURL URLWithString:@""]];
 		[[informationTextView_ textStorage] setAttributedString:[NSAttributedString string:@"" withAttributes:systemFontAttributes]];
 		[self reloadData];
@@ -465,14 +465,14 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 		NSString* dotHgPath = [[selectedNode path] stringByAppendingString:@"/.hg"];
 		if (![[NSFileManager defaultManager] fileExistsAtPath:dotHgPath])
 		{
-			[myDocument discardCurrentRepository];
+			[myDocument_ discardCurrentRepository];
 			[[informationTextView_ textStorage] setAttributedString:[NSAttributedString string:@"" withAttributes:systemFontAttributes]];
 			[repositoryPathControl_ setURL:[NSURL URLWithString:@""]];
 			[self reloadData];
 			return;
 		}
 		[repositoryPathControl_ setURL:[NSURL fileURLWithPath:[selectedNode path]]];
-		[[myDocument mainWindow] setRepresentedURL:[NSURL fileURLWithPath:dotHgPath]];
+		[[myDocument_ mainWindow] setRepresentedURL:[NSURL fileURLWithPath:dotHgPath]];
 		[[AppController sharedAppController] computeRepositoryIdentityForPath:[selectedNode path]];
 		[self computeIncomingOutgoingToCompatibleRepositories];
 	}
@@ -481,7 +481,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	{
 		[repositoryPathControl_ setURL:[NSURL URLWithString:[selectedNode path]]];
 		[self updateInformationTextView];
-		[myDocument discardCurrentRepository];
+		[myDocument_ discardCurrentRepository];
 		[self computeIncomingOutgoingToCompatibleRepositories];
 	}
 	[self reloadData];
@@ -520,7 +520,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	// Do name change
 	[selectedNode setShortName:newString];
 	[self reloadData];
-	[myDocument postNotificationWithName:kSidebarSelectionDidChange];
+	[myDocument_ postNotificationWithName:kSidebarSelectionDidChange];
 }
 
 - (void) pathControlDoubleClickAction:(id)sender
@@ -737,7 +737,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 		}
 		[self reloadData];
 		[self selectNodes:currentSelectedNodes];
-		[myDocument saveDocumentIfNamed];
+		[myDocument_ saveDocumentIfNamed];
 		return YES;
 	}
 
@@ -769,7 +769,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 			if (pathIsExistentDirectory(path) && !repositoryExistsAtPath(path))
 			{
 				NSString* fileName = [[NSFileManager defaultManager] displayNameAtPath:path];
-				[[myDocument theLocalRepositoryRefSheetController] openSheetForNewRepositoryRefNamed:fileName atPath:path addNewRepositoryRefTo:targetParent atIndex:index];
+				[[myDocument_ theLocalRepositoryRefSheetController] openSheetForNewRepositoryRefNamed:fileName atPath:path addNewRepositoryRefTo:targetParent atIndex:index];
 				return YES;
 			}
 
@@ -777,7 +777,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 		if (newSelectedNode)
 			[self selectNode:newSelectedNode];
 		[self outlineViewSelectionDidChange:nil];
-		[myDocument saveDocumentIfNamed];
+		[myDocument_ saveDocumentIfNamed];
 		return YES;
 	}
 	
@@ -875,7 +875,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	
 	if ([node isExistentLocalRepositoryRef])
 	{
-		RepositoryData* repositoryData = [myDocument repositoryData];
+		RepositoryData* repositoryData = [myDocument_ repositoryData];
 		NSNumber* parentRevision  = [repositoryData getHGParent1Revision];
 		if (!parentRevision)
 			return attrString;
@@ -1020,17 +1020,17 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 {
 	SEL theAction = [anItem action];
 	
-	if (theAction == @selector(mainMenuAddNewSidebarGroupItem:))		return ![myDocument showingASheet];
-	if (theAction == @selector(mainMenuRemoveSidebarItems:))			return [myDocument validateAndSwitchMenuForRemoveSidebarItems:anItem];
-	if (theAction == @selector(mainMenuConfigureRepositoryRef:))		return [myDocument localOrServerRepoIsChosenAndReady];
-	if (theAction == @selector(mainMenuConfigureLocalRepositoryRef:))	return [myDocument localRepoIsChosenAndReady];
-	if (theAction == @selector(mainMenuConfigureServerRepositoryRef:))	return [myDocument localOrServerRepoIsChosenAndReady];
-	if (theAction == @selector(mainMenuCloneRepository:))				return [myDocument localOrServerRepoIsChosenAndReady];
-	if (theAction == @selector(mainMenuRevealRepositoryInFinder:))		return [myDocument localOrServerRepoIsChosenAndReady];
-	if (theAction == @selector(mainMenuOpenTerminalHere:))				return [myDocument localOrServerRepoIsChosenAndReady];
+	if (theAction == @selector(mainMenuAddNewSidebarGroupItem:))		return ![myDocument_ showingASheet];
+	if (theAction == @selector(mainMenuRemoveSidebarItems:))			return [myDocument_ validateAndSwitchMenuForRemoveSidebarItems:anItem];
+	if (theAction == @selector(mainMenuConfigureRepositoryRef:))		return [myDocument_ localOrServerRepoIsChosenAndReady];
+	if (theAction == @selector(mainMenuConfigureLocalRepositoryRef:))	return [myDocument_ localRepoIsChosenAndReady];
+	if (theAction == @selector(mainMenuConfigureServerRepositoryRef:))	return [myDocument_ localOrServerRepoIsChosenAndReady];
+	if (theAction == @selector(mainMenuCloneRepository:))				return [myDocument_ localOrServerRepoIsChosenAndReady];
+	if (theAction == @selector(mainMenuRevealRepositoryInFinder:))		return [myDocument_ localOrServerRepoIsChosenAndReady];
+	if (theAction == @selector(mainMenuOpenTerminalHere:))				return [myDocument_ localOrServerRepoIsChosenAndReady];
 	
-	if (theAction == @selector(mainMenuRevealRepositoryInFinder:))		return [myDocument localRepoIsSelectedAndReady];
-	if (theAction == @selector(mainMenuOpenTerminalHere:))				return [myDocument localRepoIsSelectedAndReady];
+	if (theAction == @selector(mainMenuRevealRepositoryInFinder:))		return [myDocument_ localRepoIsSelectedAndReady];
+	if (theAction == @selector(mainMenuOpenTerminalHere:))				return [myDocument_ localRepoIsSelectedAndReady];
 
 	return NO;
 }
@@ -1044,9 +1044,9 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 // MARK: Actions
 // ------------------------------------------------------------------------------------
 
-- (IBAction) mainMenuConfigureLocalRepositoryRef:(id)sender			{ [myDocument mainMenuConfigureLocalRepositoryRef:sender]; }
-- (IBAction) mainMenuConfigureServerRepositoryRef:(id)sender		{ [myDocument mainMenuConfigureServerRepositoryRef:sender]; }
-- (IBAction) mainMenuCloneRepository:(id)sender						{ [myDocument mainMenuCloneRepository:sender]; }
+- (IBAction) mainMenuConfigureLocalRepositoryRef:(id)sender			{ [myDocument_ mainMenuConfigureLocalRepositoryRef:sender]; }
+- (IBAction) mainMenuConfigureServerRepositoryRef:(id)sender		{ [myDocument_ mainMenuConfigureServerRepositoryRef:sender]; }
+- (IBAction) mainMenuCloneRepository:(id)sender						{ [myDocument_ mainMenuCloneRepository:sender]; }
 
 - (IBAction) reloadSidebarData:(id)sender							{ [self reloadData]; }
 - (IBAction) forceRefreshOfSidebarData:(id)sender					{ [self outlineViewSelectionDidChange:nil]; }
@@ -1056,9 +1056,9 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	SidebarNode* node = [self chosenNode];
 
 	if ([node isLocalRepositoryRef])
-		[myDocument mainMenuConfigureLocalRepositoryRef:sender];
+		[myDocument_ mainMenuConfigureLocalRepositoryRef:sender];
 	else if ([node isServerRepositoryRef])
-		[myDocument mainMenuConfigureServerRepositoryRef:sender];
+		[myDocument_ mainMenuConfigureServerRepositoryRef:sender];
 	else
 		NSBeep();
 }
@@ -1178,15 +1178,15 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	if (deleteRepositoriesAsWell)
 	{
 		moveFilesToTheTrash(existentLocalRepositories);
-		[myDocument removeAllUndoActionsForDocument];
-		[myDocument updateChangeCount:NSChangeDone];
+		[myDocument_ removeAllUndoActionsForDocument];
+		[myDocument_ updateChangeCount:NSChangeDone];
 	}
 	else
 	{
 		[[self prepareUndoWithTarget:self] setRootAndUpdate:[root_ copyNodeTree]];					// With the undo restore the root node tree
 		[[self undoManager] setActionName:[self menuTitleForRemoveSidebarItems]];		
-		NSMutableDictionary* connectionsCopy = [[myDocument connections] mutableCopy];
-		[[self prepareUndoWithTarget:myDocument] setConnections:connectionsCopy];
+		NSMutableDictionary* connectionsCopy = [[myDocument_ connections] mutableCopy];
+		[[self prepareUndoWithTarget:myDocument_] setConnections:connectionsCopy];
 	}
 	
 	for (SidebarNode* node in nodes)
@@ -1197,7 +1197,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 		[self selectNodes:theSelectedNodes];
 	else
 		[self myDeselectAll];	
-	[myDocument saveDocumentIfNamed];
+	[myDocument_ saveDocumentIfNamed];
 }
 
 
@@ -1351,10 +1351,10 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 
 - (void) removeConnectionsFor:(NSString*) deadPath
 {
-	NSMutableArray* allOfTheKeys = [NSMutableArray arrayWithArray:[[myDocument connections] allKeys]];
+	NSMutableArray* allOfTheKeys = [NSMutableArray arrayWithArray:[[myDocument_ connections] allKeys]];
 	for (NSString* key in allOfTheKeys)
 		if ([key containsString:deadPath])
-			[[myDocument connections] removeObjectForKey:key];
+			[[myDocument_ connections] removeObjectForKey:key];
 }
 
 
@@ -1375,7 +1375,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	// putting them in SingleTimedQueue's, and wait until the main document is not so busy.
 
 	Sidebar* __weak weakSelf = self;
-	MacHgDocument* __weak weakMyDocument = myDocument;
+	MacHgDocument* __weak weakMyDocument = myDocument_;
 	NSArray* compatibleRepositories = [self allCompatibleRepositories:theSelectedNode];
 	[queueForAutomaticOutgoingComputation_ addBlockOperation:^{
 
@@ -1391,34 +1391,34 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 			__block ShellTaskController* theOutgoingController = [[ShellTaskController alloc]init];
 			dispatchWithTimeOutBlock(globalQueue(), 30.0 /* try for 30 seconds to get result of "outgoing"*/,
 									 
-									 // Main Block
-									 ^{
-										 NSMutableArray* argsOutgoing = [NSMutableArray arrayWithObjects:@"outgoing", @"--insecure", @"--quiet", @"--noninteractive", @"--template", @"+", [repo fullURLPath], nil];
-										 ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsOutgoing  fromRoot:rootPath  logging:eLoggingNone  withDelegate:theOutgoingController];
-										 theOutgoingController = nil;
-										 dispatch_async(mainQueue(), ^{
-											 if (![rootPath isEqualTo:[[weakSelf selectedNode] path]])
-												 return;
-											 if ([results hasNoErrors])
-												 outgoingCounts[[repo path]] = intAsString([results.outStr length]);
-											 else
-												 outgoingCounts[[repo path]] = @"-";
-											 NSDictionary* info = @{@"sidebarNodePath": [repo path]};
-											 [weakMyDocument postNotificationWithName:kReceivedCompatibleRepositoryCount userInfo:info];
-										 });										 
-									 },
-									 
-									 // Timeout Block
-									 ^{
-										 [[theOutgoingController shellTask] cancelTask];	// We timed out so kill the task which timed out...
-										 theOutgoingController = nil;
-										 dispatch_async(mainQueue(), ^{
-											 if (![rootPath isEqualTo:[[weakSelf selectedNode] path]])
-												 return;
-											 outgoingCounts[[repo path]] = @"-";
-											 [weakSelf setNeedsDisplayForNodePath:[repo path]];
-										 });										 
-									 });
+				 // Main Block
+				 ^{
+					 NSMutableArray* argsOutgoing = [NSMutableArray arrayWithObjects:@"outgoing", @"--insecure", @"--quiet", @"--noninteractive", @"--template", @"+", [repo fullURLPath], nil];
+					 ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsOutgoing  fromRoot:rootPath  logging:eLoggingNone  withDelegate:theOutgoingController];
+					 theOutgoingController = nil;
+					 dispatch_async(mainQueue(), ^{
+						 if (![rootPath isEqualTo:[[weakSelf selectedNode] path]])
+							 return;
+						 if ([results hasNoErrors])
+							 outgoingCounts[[repo path]] = intAsString([results.outStr length]);
+						 else
+							 outgoingCounts[[repo path]] = @"-";
+						 NSDictionary* info = @{@"sidebarNodePath": [repo path]};
+						 [weakMyDocument postNotificationWithName:kReceivedCompatibleRepositoryCount userInfo:info];
+					 });										 
+				 },
+				 
+				 // Timeout Block
+				 ^{
+					 [[theOutgoingController shellTask] cancelTask];	// We timed out so kill the task which timed out...
+					 theOutgoingController = nil;
+					 dispatch_async(mainQueue(), ^{
+						 if (![rootPath isEqualTo:[[weakSelf selectedNode] path]])
+							 return;
+						 outgoingCounts[[repo path]] = @"-";
+						 [weakSelf setNeedsDisplayForNodePath:[repo path]];
+					 });										 
+				 });
 		}
 	}];
 
@@ -1428,34 +1428,34 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 			__block ShellTaskController* theIncomingController = [[ShellTaskController alloc]init];
 			dispatchWithTimeOutBlock(globalQueue(), 30.0 /* try for 30 seconds to get result of "outgoing"*/,
 									 
-									 // Main Block
-									 ^{
-										 NSMutableArray* argsOutgoing = [NSMutableArray arrayWithObjects:@"incoming", @"--insecure", @"--quiet", @"--noninteractive", @"--template", @"-", [repo fullURLPath], nil];
-										 ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsOutgoing  fromRoot:rootPath  logging:eLoggingNone  withDelegate:theIncomingController];
-										 theIncomingController = nil;
-										 dispatch_async(mainQueue(), ^{
-											 if (![rootPath isEqualTo:[[weakSelf selectedNode] path]])
-												 return;
-											 if ([results hasNoErrors])
-												 incomingCounts[[repo path]] = intAsString([results.outStr length]);
-											 else
-												 incomingCounts[[repo path]] = @"-";
-											 NSDictionary* info = @{@"sidebarNodePath": [repo path]};
-											 [weakMyDocument postNotificationWithName:kReceivedCompatibleRepositoryCount userInfo:info];
-										 });										 
-									 },
-									 
-									 // Timeout Block
-									 ^{
-										 [[theIncomingController shellTask] cancelTask];	// We timed out so kill the task which timed out...
-										 theIncomingController = nil;
-										 dispatch_async(mainQueue(), ^{
-											 if (![rootPath isEqualTo:[[weakSelf selectedNode] path]])
-												 return;
-											 incomingCounts[[repo path]] = @"-";
-											 [weakSelf setNeedsDisplayForNodePath:[repo path]];
-										 });										 
-									 });
+				 // Main Block
+				 ^{
+					 NSMutableArray* argsOutgoing = [NSMutableArray arrayWithObjects:@"incoming", @"--insecure", @"--quiet", @"--noninteractive", @"--template", @"-", [repo fullURLPath], nil];
+					 ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsOutgoing  fromRoot:rootPath  logging:eLoggingNone  withDelegate:theIncomingController];
+					 theIncomingController = nil;
+					 dispatch_async(mainQueue(), ^{
+						 if (![rootPath isEqualTo:[[weakSelf selectedNode] path]])
+							 return;
+						 if ([results hasNoErrors])
+							 incomingCounts[[repo path]] = intAsString([results.outStr length]);
+						 else
+							 incomingCounts[[repo path]] = @"-";
+						 NSDictionary* info = @{@"sidebarNodePath": [repo path]};
+						 [weakMyDocument postNotificationWithName:kReceivedCompatibleRepositoryCount userInfo:info];
+					 });										 
+				 },
+				 
+				 // Timeout Block
+				 ^{
+					 [[theIncomingController shellTask] cancelTask];	// We timed out so kill the task which timed out...
+					 theIncomingController = nil;
+					 dispatch_async(mainQueue(), ^{
+						 if (![rootPath isEqualTo:[[weakSelf selectedNode] path]])
+							 return;
+						 incomingCounts[[repo path]] = @"-";
+						 [weakSelf setNeedsDisplayForNodePath:[repo path]];
+					 });										 
+				 });
 		}
 	}];
 
