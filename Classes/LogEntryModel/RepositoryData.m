@@ -540,7 +540,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 		revisionNumberToLogEntry_[rev] = entry;
 		if ([entry parentsArray])
 		{
-			NSArray* entries = [NSMutableArray arrayWithObject:entry];
+			NSArray* entries = @[entry];
 			[logGraph_ addEntries:entries];
 			[oldLogGraph_ removeEntries:entries];
 		}
