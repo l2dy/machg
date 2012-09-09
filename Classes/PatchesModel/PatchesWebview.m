@@ -155,7 +155,7 @@
 	@synchronized(self)
 	{
 		[currentRegenerationTaskController setTaskNumber:[self nextTaskNumber]];
-		@try { [[currentRegenerationTask_ shellTask] terminate]; }
+		@try { [[currentRegenerationTask_ shellTask] cancelTask]; }
 		@catch (NSException * e) { }
 		currentRegenerationTask_ = currentRegenerationTaskController;
 	}
