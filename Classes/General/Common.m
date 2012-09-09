@@ -1089,8 +1089,11 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 // MARK: -
 @implementation NSObject (NSObjectPlusSelectorResponders)
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 - (id) performSelectorIfPossible:(SEL)sel						{ return [self respondsToSelector:sel] ? [self performSelector:sel] : nil; }
 - (id) performSelectorIfPossible:(SEL)sel withObject:(id)obj	{ return [self respondsToSelector:sel] ? [self performSelector:sel withObject:obj] : nil; }
+#pragma clang diagnostic pop
 @end
 
 

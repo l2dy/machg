@@ -52,8 +52,11 @@
 
 - (IBAction) forwardActionAfterTrackedClick:(id)sender
 {
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Warc-performSelector-leaks"
 	if (doActionAfterTrack)
 		[trueTarget performSelector:trueAction withObject:sender];
+#pragma clang diagnostic pop
 }
 
 - (NSRect) buttonFrameSize

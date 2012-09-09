@@ -550,7 +550,7 @@
 		case eFilesView:		return [self theFilesView];
 		case eHistoryView:		return [self theHistoryView];
 		case eDifferencesView:	return [self theDifferencesView];
-		case eBackingView:		return [[self theBackingViewController] view];
+		case eBackingView:		return [[self theBackingViewController] backingView];
 		default:				return nil;
 	}
 }

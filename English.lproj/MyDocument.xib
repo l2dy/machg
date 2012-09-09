@@ -412,7 +412,7 @@
 								<object class="NSSegmentedControl" key="NSToolbarItemView" id="758125634">
 									<reference key="NSNextResponder"/>
 									<int key="NSvFlags">268</int>
-									<string key="NSFrame">{{0, 14}, {104, 25}}</string>
+									<string key="NSFrame">{{0, 14}, {100, 25}}</string>
 									<reference key="NSSuperview"/>
 									<reference key="NSWindow"/>
 									<reference key="NSNextKeyView"/>
@@ -461,13 +461,13 @@
 											</object>
 										</object>
 										<int key="NSSelectedSegment">2</int>
-										<int key="NSSegmentStyle">2</int>
+										<int key="NSSegmentStyle">4</int>
 									</object>
 								</object>
 								<nil key="NSToolbarItemImage"/>
 								<nil key="NSToolbarItemTarget"/>
 								<nil key="NSToolbarItemAction"/>
-								<string key="NSToolbarItemMinSize">{104, 25}</string>
+								<string key="NSToolbarItemMinSize">{100, 25}</string>
 								<string key="NSToolbarItemMaxSize">{104, 25}</string>
 								<bool key="NSToolbarItemEnabled">YES</bool>
 								<bool key="NSToolbarItemAutovalidates">YES</bool>
@@ -4365,7 +4365,7 @@ wGw</bytes>
 							<string>concertinaView</string>
 							<string>detailedEntryTextView</string>
 							<string>detailsView</string>
-							<string>logTableView</string>
+							<string>logTableView_</string>
 							<string>parentController</string>
 							<string>removeLabelButton</string>
 							<string>theLabelsTableView_</string>
@@ -4388,7 +4388,7 @@ wGw</bytes>
 							<string>concertinaView</string>
 							<string>detailedEntryTextView</string>
 							<string>detailsView</string>
-							<string>logTableView</string>
+							<string>logTableView_</string>
 							<string>parentController</string>
 							<string>removeLabelButton</string>
 							<string>theLabelsTableView_</string>
@@ -4408,7 +4408,7 @@ wGw</bytes>
 								<string key="candidateClassName">NSView</string>
 							</object>
 							<object class="IBToOneOutletInfo">
-								<string key="name">logTableView</string>
+								<string key="name">logTableView_</string>
 								<string key="candidateClassName">LogTableView</string>
 							</object>
 							<object class="IBToOneOutletInfo">
@@ -4573,7 +4573,6 @@ wGw</bytes>
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>parentController</string>
 							<string>showBookmarks</string>
 							<string>showBranches</string>
 							<string>showClosedBranches</string>
@@ -4582,7 +4581,6 @@ wGw</bytes>
 						</object>
 						<object class="NSArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>id</string>
 							<string>NSButton</string>
 							<string>NSButton</string>
 							<string>NSButton</string>
@@ -4594,7 +4592,6 @@ wGw</bytes>
 						<bool key="EncodedWithXMLCoder">YES</bool>
 						<object class="NSArray" key="dict.sortedKeys">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>parentController</string>
 							<string>showBookmarks</string>
 							<string>showBranches</string>
 							<string>showClosedBranches</string>
@@ -4603,10 +4600,6 @@ wGw</bytes>
 						</object>
 						<object class="NSArray" key="dict.values">
 							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBToOneOutletInfo">
-								<string key="name">parentController</string>
-								<string key="candidateClassName">id</string>
-							</object>
 							<object class="IBToOneOutletInfo">
 								<string key="name">showBookmarks</string>
 								<string key="candidateClassName">NSButton</string>
@@ -4713,35 +4706,14 @@ wGw</bytes>
 						</object>
 					</object>
 					<object class="NSMutableDictionary" key="outlets">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>detailedEntryTextView</string>
-							<string>parentController</string>
-						</object>
-						<object class="NSArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>LogTableTextView</string>
-							<string>id</string>
-						</object>
+						<string key="NS.key.0">detailedEntryTextView</string>
+						<string key="NS.object.0">LogTableTextView</string>
 					</object>
 					<object class="NSMutableDictionary" key="toOneOutletInfosByName">
-						<bool key="EncodedWithXMLCoder">YES</bool>
-						<object class="NSArray" key="dict.sortedKeys">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<string>detailedEntryTextView</string>
-							<string>parentController</string>
-						</object>
-						<object class="NSArray" key="dict.values">
-							<bool key="EncodedWithXMLCoder">YES</bool>
-							<object class="IBToOneOutletInfo">
-								<string key="name">detailedEntryTextView</string>
-								<string key="candidateClassName">LogTableTextView</string>
-							</object>
-							<object class="IBToOneOutletInfo">
-								<string key="name">parentController</string>
-								<string key="candidateClassName">id</string>
-							</object>
+						<string key="NS.key.0">detailedEntryTextView</string>
+						<object class="IBToOneOutletInfo" key="NS.object.0">
+							<string key="name">detailedEntryTextView</string>
+							<string key="candidateClassName">LogTableTextView</string>
 						</object>
 					</object>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
