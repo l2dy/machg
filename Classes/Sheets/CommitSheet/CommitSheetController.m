@@ -326,7 +326,7 @@ NSString* kAmendOption	 = @"amendOption";
 {
 	NSString* currentMessage = [[commitMessageTextView string] copy];
 	[commitMessageTextView setSelectedRange:NSMakeRange(0, [currentMessage length])];
-	[commitMessageTextView insertText:cachedCommitMessageForAmend_];
+	[commitMessageTextView insertText:nonNil(cachedCommitMessageForAmend_)];
 	cachedCommitMessageForAmend_ = currentMessage;
 	[self validateButtons:self];
 }
