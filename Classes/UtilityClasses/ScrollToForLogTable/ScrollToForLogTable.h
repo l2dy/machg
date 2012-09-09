@@ -12,8 +12,8 @@
 
 @interface ScrollToForLogTable : NSButton <NSMenuDelegate>
 {
-	IBOutlet LogTableView*	logTable;
-	NSMenu*					thePopUpMenu;
+	IBOutlet LogTableView* __weak	logTable;
+	NSMenu*							thePopUpMenu;
 }
 
 - (IBAction) scrollToLabel:(id)sender;

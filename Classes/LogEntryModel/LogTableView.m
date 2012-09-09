@@ -546,7 +546,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	NSNumber* theRevision = stringAsNumber([self revisionForTableRow:rowIndex]);
 	LogEntry* entry = [repositoryData_ entryForRevision:theRevision];
 	[aCell setEntry:entry];
-	[aCell setLogTableView:DynamicCast(LogTableView,aTableView)];
+	[aCell setLogTableView:self];
 	[aCell setLogTableColumn:aTableColumn];
 	if (theSameNumbers(theRevision, [[self repositoryData] incompleteRevision]) && [[self repositoryData] includeIncompleteRevision])
 	{
