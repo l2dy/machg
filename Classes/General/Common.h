@@ -853,6 +853,21 @@ static inline NSString* dupString(NSString* str)		{ return str ? [NSString strin
 #define ExactDynamicCast(type,obj) (([(obj) class] == [type class]) ? ((type*)(obj)) : nil)		// Return the casted object if it is of the exact type which we
 																								// determine at run time
 
+#ifndef ah_weak
+#import <Availability.h>
+#if (__has_feature(objc_arc)) && \
+((defined __IPHONE_OS_VERSION_MIN_REQUIRED && \
+__IPHONE_OS_VERSION_MIN_REQUIRED >= __IPHONE_5_0) || \
+(defined __MAC_OS_X_VERSION_MIN_REQUIRED && \
+__MAC_OS_X_VERSION_MIN_REQUIRED > __MAC_10_7))
+#define ah_weak weak
+#define __ah_weak __weak
+#else
+#define ah_weak unsafe_unretained
+#define __ah_weak __unsafe_unretained
+#endif
+#endif
+
 static inline NSInteger constrainInteger(NSInteger val, NSInteger min, NSInteger max)	{ if (val < min) return min; if (val > max) return max; return val; }
 static inline CGFloat   constrainFloat(  CGFloat   val, CGFloat   min, CGFloat   max)	{ if (val < min) return min; if (val > max) return max; return val; }
 
