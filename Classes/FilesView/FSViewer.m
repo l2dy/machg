@@ -618,19 +618,20 @@
 	if (parentConcertinaView && [parentConcertinaView isSubviewCollapsed:subView])
 		return;
 
+	FSViewer* __weak weakSelf = self;
 	dispatch_async(mainQueue(), ^{
 		WebScriptObject* script = [detailedPatchesWebView windowScriptObject];
-		[script setValue:self forKey:@"machgWebviewController"];
+		[script setValue:detailedPatchesWebView forKey:@"machgWebviewController"];
 		[script callWebScriptMethod:@"changeFontSizeOfDiff" withArguments:@[ fstr(@"%f",FontSizeOfDifferencesWebviewFromDefaults()) ]];
 			
-		NSArray* selectedPaths = [self absolutePathsOfSelectedFilesInBrowser];
+		NSArray* selectedPaths = [weakSelf absolutePathsOfSelectedFilesInBrowser];
 		if (IsEmpty(selectedPaths))
 		{
 			[detailedPatchesWebView setBackingPatch:nil andFallbackMessage:@""];
 			return;
 		}
 		
-		NSString* rootPath = [self absolutePathOfRepositoryRoot];
+		NSString* rootPath = [weakSelf absolutePathOfRepositoryRoot];
 		[detailedPatchesWebView regenerateDifferencesForSelectedPaths:selectedPaths andRoot:rootPath];
 	});
 }

@@ -151,6 +151,7 @@
 
 - (void) regenerateDifferencesForSelectedPaths:(NSArray*)selectedPaths andRoot:(NSString*)rootPath
 {
+	if (IsEmpty(rootPath) || IsEmpty(selectedPaths)) return;
 	RegenerationTaskController* currentRegenerationTaskController = [[RegenerationTaskController alloc]init];
 	@synchronized(self)
 	{
