@@ -150,6 +150,10 @@
 
 - (void)dealloc
 {
+	WebScriptObject* script = [detailedPatchesWebView windowScriptObject];
+	[script removeWebScriptKey:@"machgWebviewController"];
+	[detailedPatchesWebView close];
+	detailedPatchesWebView = nil;
 	theFilesBrowserParent_ = nil;
 	theFilesOutlineParent_ = nil;
 	theFilesTableParent_ = nil;
