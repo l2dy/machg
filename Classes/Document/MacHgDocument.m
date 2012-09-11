@@ -67,6 +67,7 @@
 @interface MacHgDocument (PrivateAPI)
 - (void) populateOutlineContents;
 - (void) validateViewSelector;
+- (void) unload;
 @end
 
 
@@ -138,9 +139,7 @@
 
 - (void) dealloc
 {
-	[events_ stopWatchingPaths];
-	dispatch_release(refreshBrowserSerialQueue_);
-	dispatch_release(mercurialTaskSerialQueue_);
+	[self unload];
 }
 
 - (void) makeWindowControllers
@@ -175,10 +174,20 @@
 	[self actionSwitchViewToBackingView:self];
 }
 
+- (void) unload
+{
+	dispatch_once(&theUnloadSyncronizer_, ^{
+		[toolbarSegementedControl_ unbind:@"selectedIndex"];
+		[events_ stopWatchingPaths];
+		dispatch_release(refreshBrowserSerialQueue_);
+		dispatch_release(mercurialTaskSerialQueue_);
+	});
+}
+
 - (void) windowWillClose:(NSNotification*) notification
 {
 	if (notification.object == mainWindow_)
-		[toolbarSegementedControl_ unbind:@"selectedIndex"];
+		[self unload];
 }
 
 - (void) LogNotification:(NSNotification*)aNotification

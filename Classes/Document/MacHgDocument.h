@@ -108,6 +108,8 @@
 	dispatch_once_t						theServerRepositoryRefSheetControllerInitilizer_;
 	dispatch_once_t						theStripSheetControllerInitilizer_;
 	dispatch_once_t						theUpdateSheetControllerInitilizer_;
+
+	dispatch_once_t						theUnloadSyncronizer_;	// Used to ensure we only unload this document once.
 	
 	
 	QLPreviewPanel*				quickLookPreviewPanel;
