@@ -129,7 +129,7 @@
 	dispatch_once_t		theFilesTableInitilizer_;	
 }
 
-@property (assign) id <ControllerForFSViewer> parentController;
+@property (ah_weak) IBOutlet id <ControllerForFSViewer> parentController;
 @property BOOL		areNodesVirtual;							// Is this browser used to display virtual nodes?
 @property NSString*	absolutePathOfRepositoryRoot;
 

@@ -52,7 +52,7 @@
 
 @property (weak,readonly) MacHgDocument*			myDocument;
 @property (assign) IBOutlet FilesViewController*	parentContoller;
-@property (readonly)  FSViewer*						theFSViewer;
+@property (readonly) IBOutlet FSViewer*				theFSViewer;
 
 - (void)	 unload;
 - (void)	 prepareToOpenFilesView;
@@ -81,7 +81,7 @@
 
 @interface StatusSidebarSplitView : NSSplitView <NSSplitViewDelegate, NSAnimationDelegate>
 {
-	IBOutlet FilesView*		parentView;
+	IBOutlet FilesView* __weak	parentView;
 	IBOutlet NSView*		theContent;
 	IBOutlet NSView*		theSidebar;
 

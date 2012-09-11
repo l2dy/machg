@@ -63,6 +63,7 @@
 								<string key="NSFrameSize">{753, 673}</string>
 								<reference key="NSSuperview" ref="460990162"/>
 								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView" ref="123597883"/>
 								<string key="NSReuseIdentifierKey">_NS:1028</string>
 								<int key="NSDividerStyle">2</int>
 							</object>
@@ -80,12 +81,14 @@
 												<string key="NSFrameSize">{143, 488}</string>
 												<reference key="NSSuperview" ref="701820046"/>
 												<reference key="NSWindow"/>
+												<reference key="NSNextKeyView"/>
 												<string key="NSReuseIdentifierKey">_NS:21</string>
 											</object>
 										</array>
 										<string key="NSFrame">{{0, 184}, {143, 488}}</string>
 										<reference key="NSSuperview" ref="123597883"/>
 										<reference key="NSWindow"/>
+										<reference key="NSNextKeyView" ref="3877436"/>
 										<string key="NSReuseIdentifierKey">_NS:18</string>
 										<string key="NSOffsets">{0, 0}</string>
 										<object class="NSTextFieldCell" key="NSTitleCell">
@@ -121,12 +124,14 @@
 								<string key="NSFrame">{{754, 0}, {148, 673}}</string>
 								<reference key="NSSuperview" ref="460990162"/>
 								<reference key="NSWindow"/>
+								<reference key="NSNextKeyView" ref="701820046"/>
 								<string key="NSClassName">NSView</string>
 							</object>
 						</array>
 						<string key="NSFrame">{{0, -1}, {902, 673}}</string>
 						<reference key="NSSuperview" ref="453712496"/>
 						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView" ref="580918613"/>
 						<string key="NSReuseIdentifierKey">_NS:1080</string>
 						<bool key="NSIsVertical">YES</bool>
 						<int key="NSDividerStyle">2</int>
@@ -135,6 +140,7 @@
 				<string key="NSFrameSize">{902, 671}</string>
 				<reference key="NSSuperview"/>
 				<reference key="NSWindow"/>
+				<reference key="NSNextKeyView" ref="460990162"/>
 				<string key="NSClassName">FilesView</string>
 			</object>
 			<object class="NSUserDefaultsController" id="69413389">
@@ -334,7 +340,7 @@
 				</array>
 			</object>
 			<object class="NSBox" id="264801874">
-				<nil key="NSNextResponder"/>
+				<reference key="NSNextResponder"/>
 				<int key="NSvFlags">4114</int>
 				<array class="NSMutableArray" key="NSSubviews">
 					<object class="NSView" id="710521415">
@@ -342,10 +348,15 @@
 						<int key="NSvFlags">274</int>
 						<string key="NSFrameSize">{713, 610}</string>
 						<reference key="NSSuperview" ref="264801874"/>
+						<reference key="NSWindow"/>
+						<reference key="NSNextKeyView"/>
 						<string key="NSReuseIdentifierKey">_NS:21</string>
 					</object>
 				</array>
 				<string key="NSFrameSize">{713, 610}</string>
+				<reference key="NSSuperview"/>
+				<reference key="NSWindow"/>
+				<reference key="NSNextKeyView" ref="710521415"/>
 				<string key="NSReuseIdentifierKey">_NS:18</string>
 				<string key="NSOffsets">{0, 0}</string>
 				<object class="NSTextFieldCell" key="NSTitleCell">
@@ -1004,7 +1015,7 @@
 				</object>
 			</object>
 			<object class="NSCustomView" id="962846676">
-				<reference key="NSNextResponder"/>
+				<nil key="NSNextResponder"/>
 				<int key="NSvFlags">268</int>
 				<array class="NSMutableArray" key="NSSubviews">
 					<object class="NSImageView" id="584848945">
@@ -1598,7 +1609,6 @@
 					</object>
 				</array>
 				<string key="NSFrameSize">{148, 543}</string>
-				<reference key="NSSuperview"/>
 				<string key="NSReuseIdentifierKey">_NS:1109</string>
 				<string key="NSClassName">NSView</string>
 			</object>
@@ -3097,7 +3107,7 @@
 						<reference key="source" ref="460990162"/>
 						<reference key="destination" ref="453712496"/>
 					</object>
-					<int key="connectionID">542</int>
+					<int key="connectionID">558</int>
 				</object>
 				<object class="IBConnectionRecord">
 					<object class="IBBindingConnection" key="connection">
@@ -5201,7 +5211,7 @@
 			<nil key="activeLocalization"/>
 			<dictionary class="NSMutableDictionary" key="localizations"/>
 			<nil key="sourceID"/>
-			<int key="maxID">557</int>
+			<int key="maxID">558</int>
 		</object>
 		<object class="IBClassDescriber" key="IBDocument.Classes">
 			<array class="NSMutableArray" key="referencedPartialClassDescriptions">
@@ -5474,9 +5484,6 @@
 					<dictionary class="NSMutableDictionary" key="actions">
 						<string key="fsviewerAction:">id</string>
 						<string key="fsviewerDoubleAction:">id</string>
-						<string key="mainMenuOpenSelectedFilesInFinder:">id</string>
-						<string key="mainMenuOpenTerminalHere:">id</string>
-						<string key="mainMenuRevealSelectedFilesInFinder:">id</string>
 						<string key="refreshBrowserContent:">id</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="actionInfosByName">
@@ -5486,18 +5493,6 @@
 						</object>
 						<object class="IBActionInfo" key="fsviewerDoubleAction:">
 							<string key="name">fsviewerDoubleAction:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="mainMenuOpenSelectedFilesInFinder:">
-							<string key="name">mainMenuOpenSelectedFilesInFinder:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="mainMenuOpenTerminalHere:">
-							<string key="name">mainMenuOpenTerminalHere:</string>
-							<string key="candidateClassName">id</string>
-						</object>
-						<object class="IBActionInfo" key="mainMenuRevealSelectedFilesInFinder:">
-							<string key="name">mainMenuRevealSelectedFilesInFinder:</string>
 							<string key="candidateClassName">id</string>
 						</object>
 						<object class="IBActionInfo" key="refreshBrowserContent:">
@@ -5511,6 +5506,7 @@
 						<string key="nodeInspector">NSTextField</string>
 						<string key="parentContoller">FilesViewController</string>
 						<string key="statusSidebarSplitView">StatusSidebarSplitView</string>
+						<string key="theFSViewer">FSViewer</string>
 					</dictionary>
 					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
 						<object class="IBToOneOutletInfo" key="concertinaView">
@@ -5532,6 +5528,10 @@
 						<object class="IBToOneOutletInfo" key="statusSidebarSplitView">
 							<string key="name">statusSidebarSplitView</string>
 							<string key="candidateClassName">StatusSidebarSplitView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="theFSViewer">
+							<string key="name">theFSViewer</string>
+							<string key="candidateClassName">FSViewer</string>
 						</object>
 					</dictionary>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
@@ -6081,7 +6081,10 @@
 						<string key="informationBox_">NSBox</string>
 						<string key="mainContentBox">NSBox</string>
 						<string key="mainSplitView">SidebarSplitView</string>
+						<string key="mainWindow_">NSWindow</string>
 						<string key="sidebarAndInformation_">ThickSplitView</string>
+						<string key="sidebar_">Sidebar</string>
+						<string key="theProcessListController_">ProcessListController</string>
 						<string key="toolbarSegementedControl_">NSSegmentedControl</string>
 						<string key="updateAlertAccessoryAlertSuppressionCheckBox">NSButton</string>
 						<string key="updateAlertAccessoryCleanCheckBox">NSButton</string>
@@ -6104,9 +6107,21 @@
 							<string key="name">mainSplitView</string>
 							<string key="candidateClassName">SidebarSplitView</string>
 						</object>
+						<object class="IBToOneOutletInfo" key="mainWindow_">
+							<string key="name">mainWindow_</string>
+							<string key="candidateClassName">NSWindow</string>
+						</object>
 						<object class="IBToOneOutletInfo" key="sidebarAndInformation_">
 							<string key="name">sidebarAndInformation_</string>
 							<string key="candidateClassName">ThickSplitView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="sidebar_">
+							<string key="name">sidebar_</string>
+							<string key="candidateClassName">Sidebar</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="theProcessListController_">
+							<string key="name">theProcessListController_</string>
+							<string key="candidateClassName">ProcessListController</string>
 						</object>
 						<object class="IBToOneOutletInfo" key="toolbarSegementedControl_">
 							<string key="name">toolbarSegementedControl_</string>
@@ -6235,11 +6250,144 @@
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
+					<string key="className">ProcessListController</string>
+					<string key="superclassName">NSObject</string>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="activityBox">NSBox</string>
+						<string key="informationAndActivityBox">NSBox</string>
+						<string key="informationBox">NSBox</string>
+						<string key="processListTableView">NSTableView</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="activityBox">
+							<string key="name">activityBox</string>
+							<string key="candidateClassName">NSBox</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="informationAndActivityBox">
+							<string key="name">informationAndActivityBox</string>
+							<string key="candidateClassName">NSBox</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="informationBox">
+							<string key="name">informationBox</string>
+							<string key="candidateClassName">NSBox</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="processListTableView">
+							<string key="name">processListTableView</string>
+							<string key="candidateClassName">NSTableView</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/ProcessListController.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
 					<string key="className">ShowResizeUpDownCursorView</string>
 					<string key="superclassName">NSView</string>
 					<object class="IBClassDescriptionSource" key="sourceIdentifier">
 						<string key="majorKey">IBProjectSource</string>
 						<string key="minorKey">./Classes/ShowResizeUpDownCursorView.h</string>
+					</object>
+				</object>
+				<object class="IBPartialClassDescription">
+					<string key="className">Sidebar</string>
+					<string key="superclassName">NSOutlineView</string>
+					<dictionary class="NSMutableDictionary" key="actions">
+						<string key="forceRefreshOfSidebarData:">id</string>
+						<string key="mainMenuAddNewSidebarGroupItem:">id</string>
+						<string key="mainMenuCloneRepository:">id</string>
+						<string key="mainMenuConfigureLocalRepositoryRef:">id</string>
+						<string key="mainMenuConfigureRepositoryRef:">id</string>
+						<string key="mainMenuConfigureServerRepositoryRef:">id</string>
+						<string key="mainMenuOpenTerminalHere:">id</string>
+						<string key="mainMenuRemoveSidebarItems:">id</string>
+						<string key="mainMenuRevealRepositoryInFinder:">id</string>
+						<string key="reloadSidebarData:">id</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="actionInfosByName">
+						<object class="IBActionInfo" key="forceRefreshOfSidebarData:">
+							<string key="name">forceRefreshOfSidebarData:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="mainMenuAddNewSidebarGroupItem:">
+							<string key="name">mainMenuAddNewSidebarGroupItem:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="mainMenuCloneRepository:">
+							<string key="name">mainMenuCloneRepository:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="mainMenuConfigureLocalRepositoryRef:">
+							<string key="name">mainMenuConfigureLocalRepositoryRef:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="mainMenuConfigureRepositoryRef:">
+							<string key="name">mainMenuConfigureRepositoryRef:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="mainMenuConfigureServerRepositoryRef:">
+							<string key="name">mainMenuConfigureServerRepositoryRef:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="mainMenuOpenTerminalHere:">
+							<string key="name">mainMenuOpenTerminalHere:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="mainMenuRemoveSidebarItems:">
+							<string key="name">mainMenuRemoveSidebarItems:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="mainMenuRevealRepositoryInFinder:">
+							<string key="name">mainMenuRevealRepositoryInFinder:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+						<object class="IBActionInfo" key="reloadSidebarData:">
+							<string key="name">reloadSidebarData:</string>
+							<string key="candidateClassName">id</string>
+						</object>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="outlets">
+						<string key="informationTextView_">NSTextView</string>
+						<string key="myDocument">MacHgDocument</string>
+						<string key="removeSidebarItemsAlertAccessoryAlertSuppressionCheckBox">NSButton</string>
+						<string key="removeSidebarItemsAlertAccessoryDeleteReposOnDiskCheckBox">NSButton</string>
+						<string key="removeSidebarItemsAlertAccessoryView">NSView</string>
+						<string key="repositoryPathControl_">NSPathControl</string>
+						<string key="sidebarContextualMenu">NSMenu</string>
+					</dictionary>
+					<dictionary class="NSMutableDictionary" key="toOneOutletInfosByName">
+						<object class="IBToOneOutletInfo" key="informationTextView_">
+							<string key="name">informationTextView_</string>
+							<string key="candidateClassName">NSTextView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="myDocument">
+							<string key="name">myDocument</string>
+							<string key="candidateClassName">MacHgDocument</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="removeSidebarItemsAlertAccessoryAlertSuppressionCheckBox">
+							<string key="name">removeSidebarItemsAlertAccessoryAlertSuppressionCheckBox</string>
+							<string key="candidateClassName">NSButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="removeSidebarItemsAlertAccessoryDeleteReposOnDiskCheckBox">
+							<string key="name">removeSidebarItemsAlertAccessoryDeleteReposOnDiskCheckBox</string>
+							<string key="candidateClassName">NSButton</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="removeSidebarItemsAlertAccessoryView">
+							<string key="name">removeSidebarItemsAlertAccessoryView</string>
+							<string key="candidateClassName">NSView</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="repositoryPathControl_">
+							<string key="name">repositoryPathControl_</string>
+							<string key="candidateClassName">NSPathControl</string>
+						</object>
+						<object class="IBToOneOutletInfo" key="sidebarContextualMenu">
+							<string key="name">sidebarContextualMenu</string>
+							<string key="candidateClassName">NSMenu</string>
+						</object>
+					</dictionary>
+					<object class="IBClassDescriptionSource" key="sourceIdentifier">
+						<string key="majorKey">IBProjectSource</string>
+						<string key="minorKey">./Classes/Sidebar.h</string>
 					</object>
 				</object>
 				<object class="IBPartialClassDescription">
