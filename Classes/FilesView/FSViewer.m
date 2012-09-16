@@ -87,7 +87,7 @@
 	[self observe:kFileDiffsDisplayPreferencesChanged from:nil byCalling:@selector(regenerateDifferencesInWebview)];
 	[self observe:kConcertinaViewContentDidUncollapse from:detailedPatchesWebView byCalling:@selector(regenerateDifferencesInWebview)];
 	
-	[parentController setMyDocumentFromParent];	// Set up the parent's myDocument since the partent's awakeFromNib has not yet been called.
+	[parentController setMyDocumentFromParent];	// Set up the parent's myDocument since the parent's awakeFromNib has not yet been called.
 	rootNodeInfo_ = nil;
 	FSViewerNum viewerNum = [[NSUserDefaults standardUserDefaults] integerForKey:[self viewerAutoSaveName]];
 	if (viewerNum == eFilesNoView)
@@ -528,13 +528,13 @@
 		NSArray* appsSorted = [apps sortedArrayUsingDescriptors:nsurlSortDescriptors];
 		NSMutableDictionary* dict = [[NSMutableDictionary alloc] init];
 		NSMenu* subMenu = [[NSMenu alloc] initWithTitle:@"Open With…"];
-		NSURL* preferedApp = [NSApplication applicationForURL:pathURL];
+		NSURL* preferredApp = [NSApplication applicationForURL:pathURL];
 		int index = 0;
 		
-		// Add the prefered application
-		if (preferedApp)
+		// Add the preferred application
+		if (preferredApp)
 		{
-			NSMenuItem* newItem = [self menuItemForOpenWith:preferedApp usedDictionary:dict];
+			NSMenuItem* newItem = [self menuItemForOpenWith:preferredApp usedDictionary:dict];
 			if (newItem)
 			{
 				[subMenu insertItem:newItem atIndex:index++];
@@ -757,9 +757,10 @@
 		});
 		
 		dispatch_group_async(group, globalQueue(), ^{
-			newRootNode = [rootNodeInfo_ shallowTreeCopyRemoving:absoluteChangedPaths];	// copy the tree and prune the changed paths out of the node tree.
+			if ([rootPath isEqualToString:[rootNodeInfo_ absolutePath]])
+				newRootNode = [rootNodeInfo_ shallowTreeCopyRemoving:absoluteChangedPaths];	// copy the tree and prune the changed paths out of the node tree.
 			if (!newRootNode)
-				newRootNode = [FSNodeInfo newEmptyTreeRootedAt:rootPath];				// regenerate the node tree if we don't have one
+				newRootNode = [FSNodeInfo newEmptyTreeRootedAt:rootPath];					// fully regenerate the node tree if pruning wasn't successful
 		});
 
 		
@@ -823,11 +824,14 @@
 
 - (void) regenerateBrowserDataAndReload
 {
-	rootNodeInfo_ = nil;
 	NSString* rootPath = [self absolutePathOfRepositoryRoot];
 	if (!rootPath)
 	{
 		DebugLog(@"Null Root Path encountered.");
+		dispatch_async(mainQueue(), ^{
+			rootNodeInfo_ = nil;
+			[self reloadData];
+		});
 		return;
 	}
 	NSArray* absoluteChangedPaths = @[rootPath];
