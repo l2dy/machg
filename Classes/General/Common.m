@@ -1463,6 +1463,42 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	return [NSArray arrayWithArray:a];
 }
 
+- (NSArray*) arrayByRemovingFirst
+{
+	if (self.count <= 1)
+		return @[];
+	return [self subarrayWithRange:NSMakeRange(1,self.count -1)];
+}
+
+- (NSArray*) arrayByRemovingLast
+{
+	if (self.count <= 1)
+		return @[];
+	return [self subarrayWithRange:NSMakeRange(0,self.count -1)];
+}
+
+- (NSArray*) trimArray
+{
+	NSRange r;
+	bool foundStart = false;
+	for (int i = 0; i < self.count; i++)
+		if (IsNotEmpty(self[i]))
+		{
+			r.location = i;
+			foundStart = true;
+			break;
+		}
+	if (!foundStart)
+		return @[];
+	for (int i = self.count - 1; i >= r.location; i--)
+		if (IsNotEmpty(self[i]))
+		{
+			r.length = 1 + i - r.location;
+			break;
+		}
+	return [self subarrayWithRange:r];
+}
+
 - (NSArray*) filterArrayWithBlock:(ArrayFilterBlock)block
 {
 	NSMutableArray* filtered = [[NSMutableArray alloc]init];

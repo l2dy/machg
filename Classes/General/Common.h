@@ -1140,6 +1140,9 @@ typedef BOOL (^ArrayFilterBlock)(id);
 - (id)		 firstObject;
 - (NSArray*) reversedArray;
 - (NSArray*) arrayByRemovingObject:(id)object;
+- (NSArray*) arrayByRemovingFirst;
+- (NSArray*) arrayByRemovingLast;
+- (NSArray*) trimArray;
 - (NSArray*) filterArrayWithBlock:(ArrayFilterBlock)block;
 @end
 
