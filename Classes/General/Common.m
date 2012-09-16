@@ -343,6 +343,8 @@ NSString* pathDifference(NSString* base, NSString* path)
 		return @"";
 	if ([[path substringToIndex:baseLength] isNotEqualToString:base])
 		return @"";
+	if ([path characterAtIndex: baseLength] != '/')
+		return @"";
 	return [path substringFromIndex:baseLength+1]; // The +1 gets rid of the /, ie the diff between /foo/bar and
 												   // /foo/bar/fish/rover is /fish/rover but we want to return only fish/rover.
 }
