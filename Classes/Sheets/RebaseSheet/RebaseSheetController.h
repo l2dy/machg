@@ -34,16 +34,12 @@
 	
 	IBOutlet LogTableView*	destinationLogTableView;
 	IBOutlet NSTextView*	detailedDestinationEntryTextView;
-	
-	BOOL					keepOriginalRevisions_;
-	BOOL					keepOriginalBranchNames_;
-
-	MacHgDocument*			__strong myDocument;
 }
 
-@property (readwrite,strong) MacHgDocument*  myDocument;
-@property (readwrite,assign) BOOL		  keepOriginalRevisions;
-@property (readwrite,assign) BOOL		  keepOriginalBranchNames;
+@property (weak,readonly) MacHgDocument*  myDocument;
+
+@property BOOL	keepOriginalRevisions;
+@property BOOL	keepOriginalBranchNames;
 
 
 // Initialization
@@ -63,7 +59,5 @@
 
 
 @interface ClippedStandardSplitView : StandardSplitView <NSSplitViewDelegate>
-{
-}
 @end
 

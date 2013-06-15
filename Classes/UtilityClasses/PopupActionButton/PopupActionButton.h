@@ -10,6 +10,4 @@
 #import <Cocoa/Cocoa.h>
 
 @interface PopupActionButton : NSButton <NSMenuDelegate>
-{
-}
 @end

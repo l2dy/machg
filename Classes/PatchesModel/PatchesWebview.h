@@ -35,10 +35,7 @@
 // ------------------------------------------------------------------------------------
 
 @interface RegenerationTaskController : ShellTaskController
-{
-	NSInteger taskNumber_;
-}
-@property (nonatomic, assign) NSInteger	taskNumber;
+@property NSInteger	taskNumber;
 @end
 
 
@@ -51,20 +48,19 @@
 
 @interface PatchesWebview : WebView
 {
-	IBOutlet id <ControllerForPatchesWebview> parentController;
+	IBOutlet id <ControllerForPatchesWebview> __weak parentController;
 	RegenerationTaskController* currentRegenerationTask_; // The current regenerationTask if there is one.
 	PatchData*	backingPatch_;			// This is the patch to display in the webview.
 	NSString*	fallbackMessage_;		// This is the message to display if we don't have a patch to display.
-	NSInteger	taskNumber_;			// This is the task number that was most reently exectued to process and display a patch.
-										// It happends that if the user chooses a really large patch and then quickly chooses a
-										// smaller patch and the smaller patch is processed and dispalyed first we must make sure
+	NSInteger	taskNumber_;			// This is the task number that was most recently executed to process and display a patch.
+										// It happens that if the user chooses a really large patch and then quickly chooses a
+										// smaller patch and the smaller patch is processed and displayed first we must make sure
 										// that once the bigger patch finishes it doesn't overwrite the later smaller patch and so
 										// we record the task number to prevents this.
 	NSString*  repositoryRootForPatch_;	// When we load up a new patch, record it's root path so we can use this for access into
 										// the hunkExclusions
-	BOOL		showExternalDiffButton_;// Do we show the external diff button in the patches.
 }
-@property (assign,readwrite) BOOL	showExternalDiffButton;
+@property BOOL	showExternalDiffButton;	// Do we show the external diff button in the patches.
 
 
 // Refreshing and Regeneration

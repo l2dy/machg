@@ -27,11 +27,11 @@ const NSInteger maxRevDistance = 72;
 
 @implementation LineSegment
 
-@synthesize lowRev;
-@synthesize lowCol;
-@synthesize highRev;
-@synthesize highCol;
-@synthesize drawCol;
+@synthesize lowRev = lowRev;
+@synthesize lowCol = lowCol;
+@synthesize highRev = highRev;
+@synthesize highCol = highCol;
+@synthesize drawCol = drawCol;
 
 + (LineSegment*) withLowRev:(NSInteger)l  highRev:(NSInteger)h
 {

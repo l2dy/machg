@@ -28,7 +28,7 @@
 
 
 @implementation StripSheetController
-@synthesize myDocument;
+@synthesize myDocument = myDocument;
 @synthesize forceOption = forceOption_;
 @synthesize backupOption = backupOption_;
 

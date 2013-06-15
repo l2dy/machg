@@ -29,17 +29,17 @@
 @interface MacHgDocument : NSDocument <MonitorFSEventListenerProtocol, QLPreviewPanelDataSource, QLPreviewPanelDelegate>
 {
 	IBOutlet NSBox*					mainContentBox;				// This is the view into which the panes will be attached.
-	IBOutlet Sidebar*				__strong sidebar_;					// The sidebar containing all of the repository references in the document
+	IBOutlet Sidebar*				sidebar_;					// The sidebar containing all of the repository references in the document
 	IBOutlet SidebarSplitView*		mainSplitView;				// The splitview containing the sidebar on the lhs and the pane on the rhs
-	IBOutlet NSWindow*				__strong mainWindow_;
+	IBOutlet NSWindow*				mainWindow_;
 	IBOutlet ThickSplitView*		sidebarAndInformation_;		// The thick split view inside the lhs sidebar as a whole.
-	IBOutlet NSSearchField*			__strong toolbarSearchField_;		// This is the search field inside the toolbar item inside the toolbar.
-	IBOutlet NSToolbarItem*			__strong toolbarSearchItem_;			// This is the toolbarItem inside the toolbar. (It contains the search field)
+	IBOutlet NSToolbarItem*	__weak	toolbarSearchItem_;			// This is the toolbarItem inside the toolbar. (It contains the search field)
+	IBOutlet NSSearchField* __weak	toolbarSearchField_;		// This is the search field inside the toolbar item inside the toolbar.
 	IBOutlet NSSegmentedControl*	toolbarSegementedControl_;	// This is the segmented control to switch views.
 
 	
 	// Information and Activity View
-	IBOutlet ProcessListController* __strong theProcessListController_;
+	IBOutlet ProcessListController* theProcessListController_;
 	IBOutlet NSBox*					informationAndActivityBox_;
 	IBOutlet NSBox*					informationBox_;
 
@@ -113,7 +113,6 @@
 	QLPreviewPanel*				quickLookPreviewPanel;
 	SearchFieldCategory			toolbarSearchFieldCategory_;
 	BOOL						toolbarSearchFieldQueryIsValid_;
-	NSString*					__strong toolbarSearchFieldValue_;
 	
 	// Queues and Events
 	dispatch_queue_t			refreshBrowserSerialQueue_;
@@ -137,27 +136,26 @@
 														// object yet so we store the bits we would set, eg which nodes in the
 														// side bar are expanded, etc, then once the object is fully loaded we
 														// use these stored values.
-	NSWindow*					__strong shownSheet_;			// Record if this document is currently showing a sheet at the moment.
-														// Then in validateUserInterfaceItem I can detect if we are showing a
-														// sheet and then not validate the menu items. There should be a
-														// better way to detect this but after googling for a bit I can't see
-														// it. If you know email me!
 }
 
-@property (nonatomic, strong) Sidebar*				sidebar;
-@property (nonatomic, strong) NSWindow*				mainWindow;
-@property (nonatomic, strong) NSWindow*				shownSheet;
-@property (nonatomic) NSMutableDictionary*	connections;
-@property (nonatomic) HunkExclusions*		hunkExclusions;
-@property (readonly,  strong) ProcessListController* theProcessListController;
+@property (nonatomic) Sidebar*						sidebar;
+@property (nonatomic) NSWindow*						mainWindow;
+@property (nonatomic, unsafe_unretained) NSWindow* shownSheet;					// Record if this document is currently showing a sheet at the moment.
+																				// Then in validateUserInterfaceItem I can detect if we are showing a
+																				// sheet and then not validate the menu items. There should be a
+																				// better way to detect this but after googling for a bit I can't see
+																				// it. If you know email me! 
+@property (nonatomic) NSMutableDictionary*			connections;
+@property (nonatomic) HunkExclusions*				hunkExclusions;
+@property (readonly) ProcessListController*			theProcessListController;
 @property (readonly,  assign) dispatch_queue_t		refreshBrowserSerialQueue;
 @property (readonly,  assign) dispatch_queue_t		mercurialTaskSerialQueue;
-@property (readonly) MonitorFSEvents*		events;
-@property (readonly,  strong) NSSearchField*		toolbarSearchField;
-@property (readonly,  strong) NSString*				toolbarSearchFieldValue;
+@property (readonly) MonitorFSEvents*				events;
+@property (readonly,  weak) NSSearchField*			toolbarSearchField;
+@property (readonly) NSString*						toolbarSearchFieldValue;
 @property (readonly,  assign) SearchFieldCategory	toolbarSearchFieldCategory;
 @property (nonatomic, assign) BOOL					toolbarSearchFieldQueryIsValid;
-@property (readonly,  strong) NSToolbarItem*		toolbarSearchItem;
+@property (readonly,  weak) NSToolbarItem*			toolbarSearchItem;
 
 - (FilesView*)						theFilesView;
 - (HistoryView*)					theHistoryView;
@@ -494,13 +492,9 @@
 // ------------------------------------------------------------------------------------
 
 @interface RepositoryPaths : NSObject
-{
-	NSArray* __strong absolutePaths_;	// an array of absolute path NSStrings
-	NSString* __strong rootPath_;		// the absolute root of the repository
-}
 
-@property (readwrite,strong) NSArray*		absolutePaths;
-@property (readwrite,strong) NSString*		rootPath;
+@property NSArray*		absolutePaths;	// an array of absolute path NSStrings
+@property NSString*		rootPath;		// the absolute root of the repository
 
 + (RepositoryPaths*) fromPaths:(NSArray*)theAbsolutePaths withRootPath:(NSString*)theRootPath;
 + (RepositoryPaths*) fromPath:(NSString*)absolutePath     withRootPath:(NSString*)theRootPath;

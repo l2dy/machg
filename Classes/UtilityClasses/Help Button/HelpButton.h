@@ -14,6 +14,6 @@
 {
 	NSString*			helpAnchorName_;
 }
-@property (readwrite, strong) NSString* helpAnchorName;
+@property NSString* helpAnchorName;
 
 @end

@@ -32,13 +32,11 @@
 	IBOutlet OptionController*	forceOption;
 	IBOutlet DisclosureBoxController*	disclosureController;	// The disclosure box for the advanced options
 	NSArray*					cmdOptions;						// The collection of advanced option controllers
-	BOOL						allowOperationWithAnyRepository_;	// Do we list incompatible repositories
-
-	MacHgDocument*				__strong myDocument;
 }
 
-@property (readwrite,assign) BOOL			allowOperationWithAnyRepository;
-@property (readwrite,strong) MacHgDocument*	myDocument;
+@property (weak,readonly) MacHgDocument*	myDocument;
+@property BOOL			allowOperationWithAnyRepository;		// Do we list incompatible repositories
+
 
 
 // These methods *must* be re-implemented in the children. What I would like to do here is say these methods are pure like in C++

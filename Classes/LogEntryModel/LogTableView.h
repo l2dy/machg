@@ -33,16 +33,12 @@
 // thus in the one class we wrap up all the behavior of managing a list of revisions. It only needs the two outlets below connected up.
 @interface LogTableView : NSTableView <NSTableViewDelegate, NSTableViewDataSource, NSUserInterfaceValidations>
 {
-	IBOutlet id	<ControllerForLogTableView> parentController; // Controlling class should be an object which is controlling a sheet or a
+	IBOutlet id	<ControllerForLogTableView> __ah_weak parentController; // Controlling class should be an object which is controlling a sheet or a
 															// window controller.
 	IBOutlet LogTableTextView* detailedEntryTextView;		// This is the field where the details of the log entry are displayed.
-
-	RepositoryData*			repositoryData_;				// The current log entry collection which backs this LogTableView.
+	RepositoryData*	__weak	repositoryData_;				// The current log entry collection which backs this LogTableView.
 	NSString*				rootPath_;						// The root of the repository
 
-	BOOL					canSelectIncompleteRevision_;	// Are you allowed to select the incomplete revision in this LogTableView
-	NSArray*				__strong theTableRows_;					// Map of table row -> revision number (NSString)
-	BOOL					tableIsFiltered_;				// Are the revisions filtered through some keyword, or revset filter
 	SingleTimedQueue*		queueForDetailedEntryDisplay_;	// When we are asked to display the details of an entry or range of
 															// entries we put the request on this queue. This means when eg drag
 															// selecting when the selection is constantly changing we are not
@@ -50,9 +46,9 @@
 	BOOL					awake_;							// Has this nib been awakened yet?
 }
 
-@property (readwrite,strong) NSArray*	theTableRows;
-@property (readonly, assign) BOOL		tableIsFiltered;
-@property BOOL							canSelectIncompleteRevision;
+@property NSArray*			theTableRows;					// Map of table row -> revision number (NSString)
+@property (readonly) BOOL	tableIsFiltered;				// Are the revisions filtered through some keyword, or revset filter
+@property BOOL				canSelectIncompleteRevision;	// Are you allowed to select the incomplete revision in this LogTableView
 
 - (void)		unload;
 - (IBAction)	refreshTable:(id)sender;
@@ -134,14 +130,10 @@
 
 
 @interface LogTableTextFieldCell : NSTextFieldCell
-{
-	LogEntry*		__strong entry_;				// The entry backing this cell
-	LogTableView*	__strong logTableView_;
-	NSTableColumn*	__strong logTableColumn_;
-}
-@property (readwrite,strong) LogEntry*		entry;
-@property (strong,readwrite) LogTableView*	logTableView;
-@property (strong,readwrite) NSTableColumn*	logTableColumn;
+
+@property LogEntry*		entry;					// The entry backing this cell
+@property (weak) LogTableView*	logTableView;
+@property (weak) NSTableColumn*	logTableColumn;
 
 - (NSColor*)	highlightColorWithFrame:(NSRect)cellFrame inView:(NSView*)controlView;
 @end

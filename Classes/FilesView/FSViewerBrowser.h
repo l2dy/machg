@@ -11,10 +11,9 @@
 
 @interface FSViewerBrowser : NSBrowser <NSBrowserDelegate, FSViewerProtocol>
 {
-	FSViewer*			__strong parentViewer_;
 	NSViewController*	browserLeafPreviewController_;
 	NSIndexPath*		lastSelectedIndexPath_;
 }
-@property (readwrite, strong) FSViewer*	parentViewer;
+@property (weak) FSViewer*	parentViewer;
 
 @end

@@ -25,11 +25,11 @@
 
 @interface HistoryViewController : NSViewController
 {
-	MacHgDocument*			__strong myDocument;
 	IBOutlet HistoryView*	__strong theHistoryView;
 }
-@property (readwrite,strong) MacHgDocument*	myDocument;
-@property (readwrite,strong) HistoryView*	theHistoryView;
+@property (weak,readonly) MacHgDocument*	myDocument;
+
+@property HistoryView*	theHistoryView;
 
 - (HistoryViewController*) initHistoryViewControllerWithDocument:(MacHgDocument*)doc;
 - (void) unload;
@@ -47,7 +47,6 @@
 
 @interface HistoryView : NSView <AccessesDocument, ControllerForLogTableView, ControllerForLabelsTableView, NSUserInterfaceValidations >
 {
-	MacHgDocument*				__strong myDocument;
 	IBOutlet HistoryViewController*  parentController;
 
 	// Main concertina view containing the sub panes.
@@ -66,7 +65,8 @@
 
 }
 
-@property (readwrite,strong) MacHgDocument*	  myDocument;
+@property (weak,readonly) MacHgDocument*	  myDocument;
+
 @property (readonly, strong) LogTableView*	  logTableView;
 
 

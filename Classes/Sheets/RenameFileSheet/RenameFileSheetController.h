@@ -22,16 +22,12 @@
 	IBOutlet NSButton*	  theRenameButton;
 	IBOutlet NSTextField* errorMessageTextField;
 	IBOutlet DisclosureBoxController*	errorDisclosureController;	// The disclosure box for any error messages
-
-	MacHgDocument*		myDocument;
-
-	NSString*			__strong theCurrentNameFieldValue_;
-	NSString*			__strong theNewNameFieldValue_;
-	NSNumber*			__strong theAlreadyMovedButtonValue_;
 }
-@property (readwrite,strong) NSString*	  theCurrentNameFieldValue;
-@property (readwrite,strong) NSString*	  theNewNameFieldValue;
-@property (readwrite,strong) NSNumber*	  theAlreadyMovedButtonValue;
+
+@property (weak,readonly) MacHgDocument*  myDocument;
+@property NSString*	  theCurrentNameFieldValue;
+@property NSString*	  theNewNameFieldValue;
+@property NSNumber*	  theAlreadyMovedButtonValue;
 
 
 - (RenameFileSheetController*) initRenameFileSheetControllerWithDocument:(MacHgDocument*)doc;

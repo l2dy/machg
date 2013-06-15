@@ -15,13 +15,13 @@
 
 @implementation FSNodeInfo
 
-@synthesize parentFSViewer;
-@synthesize relativePathComponent;
-@synthesize absolutePath;
-@synthesize childNodes;
-@synthesize sortedChildNodeKeys;
-@synthesize haveComputedTheProperties;
-@synthesize hgStatus;
+@synthesize parentFSViewer = parentFSViewer;
+@synthesize relativePathComponent = relativePathComponent;
+@synthesize absolutePath = absolutePath;
+@synthesize childNodes = childNodes;
+@synthesize sortedChildNodeKeys = sortedChildNodeKeys;
+@synthesize haveComputedTheProperties = haveComputedTheProperties;
+@synthesize hgStatus = hgStatus;
 
 
 // ------------------------------------------------------------------------------------
@@ -153,6 +153,9 @@
 
 - (FSNodeInfo*) initRootNodeAtAbsolutePath: (NSString*)theAbsolutePath
 {
+	self = [super init];
+	if (!self)
+		return nil;
 	relativePathComponent = theAbsolutePath;
 	absolutePath = theAbsolutePath;
 	childNodes = nil;
@@ -163,6 +166,9 @@
 
 - (FSNodeInfo*) initNewWithParent:(FSNodeInfo*)parent atRelativePath:(NSString*)path withParentViewer:(FSViewer*)viewer
 {
+	self = [super init];
+	if (!self)
+		return nil;
 	parentFSViewer = viewer;
 	relativePathComponent = path;
 	absolutePath = [[parent absolutePath] stringByAppendingPathComponent:relativePathComponent];
@@ -177,6 +183,9 @@
 
 - (FSNodeInfo*) initWithNode:(FSNodeInfo*)node
 {
+	self = [super init];
+	if (!self)
+		return nil;
 	parentFSViewer = [node parentFSViewer];
 	relativePathComponent = [node relativePathComponent];
 	absolutePath = [node absolutePath];

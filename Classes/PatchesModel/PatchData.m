@@ -496,7 +496,7 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 			if (IsNotEmpty(filePath))
 			{
 				// We found a valid header, add the current lines as a hunk to the current file patch, then start a new filePatch
-				[self finishHunkObjectWithLines:hunkLines];				
+				[self finishHunkObjectWithLines:hunkLines];
 				hunkLines = [[NSMutableArray alloc]init];
 				[self startNewFilePatchForPath:filePath andHeader:filePatchHeader binary:binaryPatch];
 				i = j-1;

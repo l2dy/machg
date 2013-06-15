@@ -22,11 +22,10 @@
 	IBOutlet NSTextField*	collapseSheetTitle;
 	IBOutlet NSTextView*	combinedCommitMessage;
 	IBOutlet NSTextField*	sheetConfirmationInformativeMessageTextField;
-
-	MacHgDocument*			__strong myDocument;
 }
 
-@property (readwrite,strong) MacHgDocument*  myDocument;
+@property (weak,readonly) MacHgDocument*  myDocument;
+
 
 
 // Initialization

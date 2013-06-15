@@ -13,7 +13,6 @@
 
 @interface RevertSheetController : BaseSheetWindowController < ControllerForLogTableView >
 {
-	MacHgDocument*			__strong myDocument;
 	NSArray*				absolutePathsOfFilesToRevert;	// This array is stored here when the sheet is set up. Later when
 															// the user hits the revert button it is used to do the revert.
 
@@ -27,7 +26,8 @@
 }
 
 
-@property (readwrite,strong) MacHgDocument*  myDocument;
+@property (weak,readonly) MacHgDocument*  myDocument;
+
 
 
 // Initialization

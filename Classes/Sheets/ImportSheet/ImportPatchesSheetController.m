@@ -33,7 +33,7 @@
 @synthesize guessRenames = guessRenames_;
 @synthesize guessSimilarityFactor = guessSimilarityFactor_;
 @synthesize hunkExclusions = hunkExclusions_;
-@synthesize myDocument;
+@synthesize myDocument = myDocument;
 
 
 

@@ -13,9 +13,6 @@
 
 @interface UpdateSheetController : BaseSheetWindowController < ControllerForLogTableView >
 {
-
-	MacHgDocument*			__strong myDocument;
-
 	// Main window
 	IBOutlet NSWindow*		theUpdateSheet;
 	IBOutlet LogTableView*	logTableView;
@@ -25,12 +22,10 @@
 	IBOutlet NSButton*		okButton;
 	
 	// Lower TabView Panes
-	IBOutlet LogTableTextView*	detailedEntryTextView;
-	
-	BOOL					cleanUpdate_;
+	IBOutlet LogTableTextView*	detailedEntryTextView;	
 }
 
-@property (readwrite,strong) MacHgDocument*  myDocument;
+@property (weak,readonly) MacHgDocument*  myDocument;
 @property BOOL cleanUpdate;
 
 // Initilization

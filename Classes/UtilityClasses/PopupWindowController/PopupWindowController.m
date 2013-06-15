@@ -11,7 +11,7 @@
 
 @implementation PopupWindowController
 
-@synthesize attachedPosition;
+@synthesize attachedPosition = attachedPosition_;
 
 
 - (IBAction) toggleAttachedPopupWindow:(id)sender
@@ -19,7 +19,7 @@
 	// Attach/detach window
     if (!attachedPopupWindow)
 	{
-		MAWindowPosition windowPosition = attachedPosition ? [attachedPosition intValue] : MAPositionRightTop;
+		MAWindowPosition windowPosition = attachedPosition_ ? [attachedPosition_ intValue] : MAPositionRightTop;
         NSPoint buttonPoint = NSMakePoint(NSMaxX([displayButton bounds]) - 2.0,
                                           NSMidY([displayButton bounds]) + 3.0);
 		NSPoint pointInWindow = [displayButton convertPoint:buttonPoint toView:nil];

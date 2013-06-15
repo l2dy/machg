@@ -12,13 +12,9 @@
 #import "Common.h"
 
 @interface LabelTextButtonCell : TextButtonCell
-{
-	LabelData* __strong label_;
-	LogEntry*  __strong entry_;
-}
 
-@property (nonatomic, strong) LogEntry* entry;
-@property (nonatomic, strong) LabelData* label;
+@property (nonatomic) LogEntry* entry;
+@property (nonatomic) LabelData* label;
 
 
 // Initilization

@@ -24,7 +24,7 @@
 
 
 @implementation AlterDetailsSheetController
-@synthesize myDocument;
+@synthesize myDocument = myDocument;
 @synthesize commitMessage = commitMessage_;
 @synthesize committer = committer_;
 @synthesize commitDate = commitDate_;

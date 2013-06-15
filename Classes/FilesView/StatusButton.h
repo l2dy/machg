@@ -10,8 +10,6 @@
 
 
 @interface StatusButton : NSButton
-{
-}
 
 - (IBAction) refreshButtonImage:(id)sender;
 

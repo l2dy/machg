@@ -38,7 +38,7 @@
 	NSInteger					animationDepth_;
 	BOOL						savedShowsResizeIndicator_;	// Did this window show its resize indicator
 }
-@property (readonly,strong) NSBox*  disclosureBox;
+@property (readonly) NSBox*  disclosureBox;
 
 - (IBAction) disclosureTrianglePressed:(id)sender;
 - (void)     ensureDisclosureBoxIsOpen:(BOOL)animate;
@@ -70,13 +70,9 @@ typedef enum
 
 
 @interface SavedViewInfo : NSObject
-{
-	NSUInteger		mask_;
-	ViewPosition	position_;
-};
 
-@property (readwrite,assign) NSUInteger		mask;
-@property (readwrite,assign) ViewPosition	position;
+@property NSUInteger	mask;
+@property ViewPosition	position;
 
 + (SavedViewInfo*)	savedViewInfoWithMask:(NSUInteger)mask position:(ViewPosition)position;
 

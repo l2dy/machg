@@ -21,7 +21,7 @@
 
 
 @implementation RevertSheetController
-@synthesize myDocument;
+@synthesize myDocument = myDocument;
 
 
 

@@ -35,9 +35,9 @@ typedef enum
 
 @interface ShellTaskController : NSObject <ShellTaskDelegate>
 {
-	ShellTask* __strong shellTask_;
+	ShellTask* shellTask_;
 }
-@property (nonatomic, strong) ShellTask* shellTask;
+@property (nonatomic) ShellTask* shellTask;
 
 - (void)	shellTaskCreated:(ShellTask*)shellTask;
 @end
@@ -54,7 +54,7 @@ typedef enum
 @interface ShellTask : TLMTask
 {
 	int				result_;			// The result of executing the command
-	id <ShellTaskDelegate> delegate_;
+	id <ShellTaskDelegate> __weak delegate_;
 }
 
 + (ExecutionResult*) execute:(NSString*)cmd withArgs:(NSArray*)args;
@@ -74,22 +74,16 @@ typedef enum
 
 @interface ExecutionResult : NSObject
 {
-	NSString* __strong generatingCmd_;	// The command that was executed
-	NSArray*  __strong generatingArgs_;	// The arguments used to the command
-	int		  result_;			// The result of executing the command
-	NSString* __strong outStr_;			// The output received on stdOut due to executing the command
-	NSString* __strong errStr_;			// The output received on stdErr due to executing the command
-	BOOL      loggedToAlertOrWindow_;
 	@public
 	ShellTask* theShellTask_;
 }
 
-@property (readonly, strong) NSString* generatingCmd;
-@property (readonly, strong) NSArray*  generatingArgs;
-@property (readonly, assign) int	   result;
-@property (readonly, strong) NSString* outStr;
-@property (readonly, strong) NSString* errStr;
-@property (readwrite,assign) BOOL	   loggedToAlertOrWindow;
+@property (readonly) NSString* generatingCmd;	// The command that was executed
+@property (readonly) NSArray*  generatingArgs;	// The arguments used to the command
+@property (readonly) int	   result;			// The result of executing the command
+@property (readonly) NSString* outStr;			// The output received on stdOut due to executing the command
+@property (readonly) NSString* errStr;			// The output received on stdErr due to executing the command
+@property BOOL	   loggedToAlertOrWindow;
 
 + (ExecutionResult*) resultWithCmd:(NSString*)cmd args:(NSArray*)args result:(int)result outStr:(NSString*)outStr errStr:(NSString*)errStr;
 
@@ -115,8 +109,6 @@ typedef enum
 // ------------------------------------------------------------------------------------
 
 @interface TaskExecutions : NSObject
-{
-}
 
 // General Task handling.
 + (NSMutableArray*) parseArguments:(NSString*)args;

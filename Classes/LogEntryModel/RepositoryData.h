@@ -20,14 +20,7 @@
 	NSMutableDictionary*		oldRevisionNumberToLogEntry_;// Map of (NSNumber*)revision number -> (LogEntry*)entry. These are
 															// the old or stale entries.
 
-	NSString*					__strong rootPath_;					// The root of the repository
 	LogEntry*					incompleteRevisionEntry_;	// This is the log entry for the incomplete revision (the next pending commit)
-	BOOL						includeIncompleteRevision_;	// Do we include the incompleteRevision_ in the count of the total number of revisions. and in the LogTable's etc
-	MacHgDocument*				__strong myDocument;
-	
-	LogGraph*					logGraph_;					// All the current line segments
-	LogGraph*					oldLogGraph_;				// All the old line segments
-
 	NSString*					hgIgnoreFilesRegEx_;		// This regular expression represents the combined regular expression
 															// representing all of the .hgignore files on the path.
 	NSDate*						hgIgnoreFilesTimeStamp_;	// This is the timestamp when we determined hgIgnoreFilesRegEx_
@@ -50,11 +43,12 @@
 	BOOL						hasMultipleOpenHeads_;
 }
 
-@property (readonly,strong) NSString*		rootPath;
-@property (readonly,strong) MacHgDocument*  myDocument;
-@property (readonly,assign) BOOL			includeIncompleteRevision;
-@property (readonly) LogGraph*		logGraph;
-@property (readonly) LogGraph*		oldLogGraph;
+@property (readonly,weak) MacHgDocument* myDocument;
+@property (readonly) NSString*	rootPath;					// The root of the repository
+@property (readonly) BOOL		includeIncompleteRevision;	// Do we include the incompleteRevision_ in the count of the total
+															// number of revisions. and in the LogTable's etc 
+@property (readonly) LogGraph*	logGraph;					// All the current line segments
+@property (readonly) LogGraph*	oldLogGraph;				// All the old line segments
 
 
 // Initialization

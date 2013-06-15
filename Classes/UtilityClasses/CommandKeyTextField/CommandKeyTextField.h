@@ -11,7 +11,4 @@
 
 
 @interface CommandKeyTextField : NSTextField
-{
-}
-
 @end

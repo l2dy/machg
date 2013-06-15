@@ -30,7 +30,7 @@
 
 @implementation TransmitSheetController
 @synthesize allowOperationWithAnyRepository = allowOperationWithAnyRepository_;
-@synthesize myDocument;
+@synthesize myDocument = myDocument;
 
 
 

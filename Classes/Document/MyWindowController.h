@@ -11,8 +11,6 @@
 
 
 @interface MyWindowController : NSWindowController
-{
-}
 
 - (NSString*) windowTitleForDocumentDisplayName:(NSString*)displayName;
 

@@ -30,6 +30,7 @@ NSString* kTheRevisionFieldValue = @"theRevisionFieldValue";
 @synthesize theCommitMessageValue	= theCommitMessageValue_;
 @synthesize forceValue				= forceValue_;
 @synthesize addLabelTabNumber		= addLabelTabNumber_;
+@synthesize myDocument = myDocument;
 
 
 

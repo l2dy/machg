@@ -15,7 +15,6 @@
 @interface ProcessListController : NSObject
 {
 	IBOutlet NSTableView*	processListTableView;
-	IBOutlet MacHgDocument*	myDocument;
 	IBOutlet NSBox*			informationAndActivityBox;
 	IBOutlet NSBox*			informationBox;
 	IBOutlet NSBox*			activityBox;
@@ -58,14 +57,10 @@
 
 
 @interface ProcessController : ShellTaskController
-{
-	ProcessListController* __strong processList_;
-	NSNumber* __strong processNumber_;
-	NSString* __strong baseMessage_;
-}
-@property (nonatomic, strong) NSNumber*	processNumber;
-@property (nonatomic, strong) NSString*	baseMessage;
-@property (nonatomic, strong) ProcessListController* processList;
+
+@property (nonatomic) NSNumber*	processNumber;
+@property (nonatomic) NSString*	baseMessage;
+@property (nonatomic) ProcessListController* processList;
 
 + (ProcessController*) processControllerWithMessage:(NSString*)message forList:(ProcessListController*)list;
 - (void) terminateController;

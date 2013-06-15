@@ -30,7 +30,7 @@
 // MARK: -
 
 @implementation DifferencesViewController
-@synthesize myDocument;
+@synthesize myDocument = myDocument;
 @synthesize theDifferencesView;
 
 - (DifferencesViewController*) initDifferencesViewControllerWithDocument:(MacHgDocument*)doc
@@ -66,7 +66,7 @@
 @synthesize showUnresolvedFilesInBrowser = showUnresolvedFilesInBrowser_;
 @synthesize showResolvedFilesInBrowser   = showResolvedFilesInBrowser_;
 @synthesize autoExpandViewerOutlines	 = autoExpandViewerOutlines_;
-@synthesize myDocument;
+@synthesize myDocument = myDocument;
 @synthesize theFSViewer;
 
 

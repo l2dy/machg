@@ -10,7 +10,4 @@
 
 
 @interface RelativePositionedBox : NSBox
-{
-}
-
 @end

@@ -13,9 +13,6 @@
 
 @interface BackoutSheetController : BaseSheetWindowController < ControllerForLogTableView >
 {
-
-	MacHgDocument*			__strong myDocument;
-
 	// Main window
 	IBOutlet NSWindow*		theBackoutSheet;
 	IBOutlet LogTableView*	logTableView;
@@ -28,7 +25,8 @@
 	IBOutlet LogTableTextView*	detailedEntryTextView;
 }
 
-@property (readwrite,strong) MacHgDocument*  myDocument;
+@property (weak,readonly) MacHgDocument*  myDocument;
+
 
 // Initilization
 - (BackoutSheetController*) initBackoutSheetControllerWithDocument:(MacHgDocument*)doc;

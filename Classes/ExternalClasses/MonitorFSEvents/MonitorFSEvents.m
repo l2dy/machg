@@ -24,9 +24,9 @@ static void FSEventsCallBack_(ConstFSEventStreamRef streamRef, void* clientCallB
 
 @implementation MonitorFSEvents
 
-@synthesize delegate;
-@synthesize isWatchingPaths;
-@synthesize watchedPaths;
+@synthesize delegate = delegate_;
+@synthesize isWatchingPaths = isWatchingPaths_;
+@synthesize watchedPaths = watchedPaths_;
 
 
 /**
@@ -36,7 +36,7 @@ static void FSEventsCallBack_(ConstFSEventStreamRef streamRef, void* clientCallB
 {
     if ((self = [super init]))
 	{
-        isWatchingPaths = NO;
+        isWatchingPaths_ = NO;
 	}
     return self;
 }
@@ -55,14 +55,14 @@ static void FSEventsCallBack_(ConstFSEventStreamRef streamRef, void* clientCallB
  */
 - (BOOL) startWatchingPaths:(NSMutableArray*)paths onRunLoop:(NSRunLoop*)runLoop
 {
-    if (([paths count] == 0) || (isWatchingPaths))
+    if (([paths count] == 0) || (isWatchingPaths_))
 		return NO;
     
     [self setWatchedPaths:paths];
     [self setupEventsStream_];
-    FSEventStreamScheduleWithRunLoop(eventStream, [runLoop getCFRunLoop], kCFRunLoopDefaultMode);	    // Schedule the event stream on the supplied run loop
-    FSEventStreamStart(eventStream);	    // Start the event stream
-	isWatchingPaths = YES;
+    FSEventStreamScheduleWithRunLoop(eventStream_, [runLoop getCFRunLoop], kCFRunLoopDefaultMode);	    // Schedule the event stream on the supplied run loop
+    FSEventStreamStart(eventStream_);	    // Start the event stream
+	isWatchingPaths_ = YES;
     return YES;
 }
 
@@ -73,16 +73,16 @@ static void FSEventsCallBack_(ConstFSEventStreamRef streamRef, void* clientCallB
  */
 - (BOOL) stopWatchingPaths
 {
-    if (!isWatchingPaths)
+    if (!isWatchingPaths_)
 		return NO;
 
-    FSEventStreamStop(eventStream);
-    FSEventStreamInvalidate(eventStream);
+    FSEventStreamStop(eventStream_);
+    FSEventStreamInvalidate(eventStream_);
 	
-	if (eventStream)
-		FSEventStreamRelease(eventStream), eventStream = nil;
+	if (eventStream_)
+		FSEventStreamRelease(eventStream_), eventStream_ = nil;
     
-    isWatchingPaths = NO;
+    isWatchingPaths_ = NO;
     return YES;
 }
 
@@ -90,10 +90,10 @@ static void FSEventsCallBack_(ConstFSEventStreamRef streamRef, void* clientCallB
 // Flushes the event stream synchronously by sending events that have already occurred but not yet delivered.
 - (BOOL) flushEventStreamSync
 {
-	if (!isWatchingPaths)
+	if (!isWatchingPaths_)
 		return NO;
 	
-	FSEventStreamFlushSync(eventStream);
+	FSEventStreamFlushSync(eventStream_);
 	
 	return YES;
 }
@@ -102,18 +102,18 @@ static void FSEventsCallBack_(ConstFSEventStreamRef streamRef, void* clientCallB
 //occurred but not yet delivered.
 - (BOOL) flushEventStreamAsync
 {
-	if (!isWatchingPaths)
+	if (!isWatchingPaths_)
 		return NO;
-	FSEventStreamFlushAsync(eventStream);
+	FSEventStreamFlushAsync(eventStream_);
 	return YES;
 }
 
 
 - (NSString*) streamDescription
 {
-	if (!isWatchingPaths)
+	if (!isWatchingPaths_)
 		return @"The event stream is not running. Start it by calling: startWatchingPaths:";
-	CFStringRef desc = FSEventStreamCopyDescription(eventStream);
+	CFStringRef desc = FSEventStreamCopyDescription(eventStream_);
 	NSString* ans = [NSString stringWithString:(__bridge NSString*)desc];
 	CFRelease(desc);
 	return ans;
@@ -123,12 +123,12 @@ static void FSEventsCallBack_(ConstFSEventStreamRef streamRef, void* clientCallB
  * Provides the string used when printing this object in NSLog, etc. Useful for
  * debugging purposes.
  */
-- (NSString*) description { return fstr(@"<%@ { watchedPaths = %@ } >", [self className], watchedPaths); }
+- (NSString*) description { return fstr(@"<%@ { watchedPaths = %@ } >", [self className], watchedPaths_); }
 
 - (void) dealloc
 {
-	delegate = nil;
-	if (isWatchingPaths)
+	delegate_ = nil;
+	if (isWatchingPaths_)
 		[self stopWatchingPaths];
 
 }
@@ -153,9 +153,9 @@ static void FSEventsCallBack_(ConstFSEventStreamRef streamRef, void* clientCallB
 
     CFTimeInterval   notificationLatency = 1.0;
 	
-	if (eventStream)
-		FSEventStreamRelease(eventStream);
-    eventStream = FSEventStreamCreate(kCFAllocatorDefault, &FSEventsCallBack_, &callbackInfo, (__bridge CFArrayRef)watchedPaths, kFSEventStreamEventIdSinceNow, notificationLatency, kFSEventStreamCreateFlagUseCFTypes | kFSEventStreamCreateFlagWatchRoot);
+	if (eventStream_)
+		FSEventStreamRelease(eventStream_);
+    eventStream_ = FSEventStreamCreate(kCFAllocatorDefault, &FSEventsCallBack_, &callbackInfo, (__bridge CFArrayRef)watchedPaths_, kFSEventStreamEventIdSinceNow, notificationLatency, kFSEventStreamCreateFlagUseCFTypes | kFSEventStreamCreateFlagWatchRoot);
 }
 
 /**

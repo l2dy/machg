@@ -50,7 +50,7 @@ NSString* kAmendOption	 = @"amendOption";
 		if (changedNode)
 			[[[self window] contentView] setNeedsDisplayInRect:[self rectInWindowForNode:changedNode]];
 	}
-	[(id)parentController performSelectorIfPossible:@selector(validateButtons:) withObject:self];
+	[(id)self.parentController performSelectorIfPossible:@selector(validateButtons:) withObject:self];
 }
 
 - (NSString*) nibNameForFilesTable   { return @"CommitFilesViewTable"; }
@@ -74,7 +74,7 @@ NSString* kAmendOption	 = @"amendOption";
 @end
 
 @implementation CommitSheetController
-@synthesize myDocument;
+@synthesize myDocument = myDocument;
 @synthesize	committerOption = committerOption_;
 @synthesize	committer = committer_;
 @synthesize	dateOption = dateOption_;

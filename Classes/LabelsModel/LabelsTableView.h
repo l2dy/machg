@@ -20,8 +20,8 @@
 // thus in the one class we wrap up all the behavior of managing a list of revisions. It only needs the two outlets below connected up.
 @interface LabelsTableView : NSTableView <NSTableViewDelegate, NSTableViewDataSource>
 {
-	IBOutlet id	<ControllerForLabelsTableView> parentController;// Controlling class should be an object which is controlling a sheet or a
-																// window controller.
+	IBOutlet id	<ControllerForLabelsTableView> __weak parentController;	// Controlling class should be an object which is controlling a sheet or a
+																		// window controller.
 	IBOutlet NSButton*		showTags;
 	IBOutlet NSButton*		showBookmarks;
 	IBOutlet NSButton*		showBranches;

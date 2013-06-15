@@ -14,8 +14,6 @@
 
 @interface MergeSheetController : BaseSheetWindowController < ControllerForLogTableView >
 {
-	MacHgDocument*			__strong myDocument;
-
 	IBOutlet NSWindow*		mergeSheetWindow;
 	IBOutlet NSButton*		sheetButtonOkForMergeSheet;
 	IBOutlet NSButton*		sheetButtonCancelForMergeSheet;
@@ -24,13 +22,11 @@
 	IBOutlet NSSplitView*	inspectorSplitView;
 	IBOutlet NSTextField*	sheetInformativeMessageTextField;
 	IBOutlet NSTextField*	mergeSheetTitle;
-
-	BOOL					forceTheMerge_;
 }
 
+@property BOOL			forceTheMerge;
+@property (weak,readonly) MacHgDocument*	myDocument;
 
-@property (readwrite,assign) BOOL			forceTheMerge;
-@property (readwrite,strong) MacHgDocument*	myDocument;
 
 
 // Initialization

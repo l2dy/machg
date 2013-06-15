@@ -26,21 +26,20 @@
 	InitializationWizardController* theInitilizationWizardController_;
 	AboutWindowController*			theAboutWindowController_;
 	
-	NSMutableDictionary*			repositoryIdentityForPath_;				// This dictionary contains the collection of root changesets for a given path.
-																			// Ie for /Users/jason/Development/MyProject the value might be 2e7ba9cebde9
 	NSMutableDictionary*			dirtyRepositoryIdentityForPath_;		// This dictionary contains the paths of repositories where we need to recompute
 																			// the root changesets
 	NSMutableDictionary*			computingRepositoryIdentityForPath_;	// This dictionary contains the paths of the repositories we are
 																			// currently computing the changesets of.
 	NSTimer*						periodicCheckingForRepositoryIdentity;
 	
-	NSArray*						__strong dragNodesArray;							// This is the array of nodes we are currently dragging in the
-																			// frontmost document. We need this to be in a shared places since we
-																			// want to be able to drag nodes from one document to another. 
+	NSArray*						dragNodesArray;							
 }
 
-@property (readwrite) NSMutableDictionary* repositoryIdentityForPath;
-@property (readwrite, strong) NSArray* dragNodesArray;
+@property NSMutableDictionary* repositoryIdentityForPath;					// This dictionary contains the collection of root changesets for a given path.
+																			// Ie for /Users/jason/Development/MyProject the value might be 2e7ba9cebde9
+@property NSArray* dragNodesArray;											// This is the array of nodes we are currently dragging in the
+																			// frontmost document. We need this to be in a shared places since we
+																			// want to be able to drag nodes from one document to another. 
 
 
 + (AppController*)					sharedAppController;

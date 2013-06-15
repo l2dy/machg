@@ -942,7 +942,7 @@ static inline void addRevisionsToTableRowList(NSString* str, NSMutableArray* tab
 	if (IsEmpty(message))
 		return NSZeroRect;
 	
-	if ([[[self logTableColumn] identifier] isEqualToString:@"shortComment"])
+	if ([logTableColumn_.identifier isEqualToString:@"shortComment"])
 	{
 		RepositoryData* repositoryData = [[self logTableView] repositoryData];
 		LogEntry* logEntry = [repositoryData entryForRevision:[entry_ revision]];
@@ -972,7 +972,7 @@ static inline void addRevisionsToTableRowList(NSString* str, NSMutableArray* tab
 	if (IsEmpty(message))
 		return;
 	
-	if ([[[self logTableColumn] identifier] isEqualToString:@"shortComment"])
+	if ([logTableColumn_.identifier isEqualToString:@"shortComment"])
 	{
 		RepositoryData* repositoryData = [[self logTableView] repositoryData];
 		LogEntry* logEntry = [repositoryData entryForRevision:[entry_ revision]];

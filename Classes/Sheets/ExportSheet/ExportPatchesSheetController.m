@@ -27,7 +27,7 @@
 @synthesize noDatesOption = noDatesOption_;
 @synthesize reversePatchOption = reversePatchOption_;
 @synthesize patchNameOption = patchNameOption_;
-@synthesize myDocument;
+@synthesize myDocument = myDocument;
 
 
 

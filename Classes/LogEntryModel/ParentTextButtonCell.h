@@ -13,11 +13,8 @@
 
 
 @interface ParentTextButtonCell : TextButtonCell
-{
-	LogEntry*  __strong entry_;
-}
 
-@property (nonatomic, strong) LogEntry* entry;
+@property (nonatomic) LogEntry* entry;
 
 - (id) initWithLogEntry:(LogEntry*)entry;
 + (NSTextAttachment*) parentButtonAttachmentWithText:(NSString*)label andLogEntry:(LogEntry*)entry;

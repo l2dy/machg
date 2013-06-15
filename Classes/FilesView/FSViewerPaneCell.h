@@ -22,12 +22,9 @@
 #define DISCLOSURE_SPACING	 3.0	// The space on either side to reserve for the disclosure arrow if we are in an outline cell
 
 @interface FSViewerPaneCell : NSTextFieldCell
-{
-	FSNodeInfo* __strong nodeInfo;
-	FSNodeInfo* __strong parentNodeInfo;
-}
-@property (readwrite,strong) FSNodeInfo*	nodeInfo;
-@property (readwrite,strong) FSNodeInfo*	parentNodeInfo;
+
+@property FSNodeInfo*	nodeInfo;
+@property FSNodeInfo*	parentNodeInfo;
 
 + (NSSize)		iconRowSize:(FSNodeInfo*)parentNodeInfo;	// The maximum size needed for any child's icon row
 - (void)		loadCellContents;
@@ -35,15 +32,11 @@
 
 
 @interface FSViewerPaneIconedCell : FSViewerPaneCell
-{
-	NSImage*	__strong fileIcon;
-}
 
-@property (readwrite,strong) NSImage*		fileIcon;
+@property NSImage*		fileIcon;
+
 @end
 
 
 @interface FSViewerOutlinePaneIconedCell : FSViewerPaneIconedCell
-{
-}
 @end

@@ -17,6 +17,10 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 
 - (ResultsWindowController*) initWithMessage:(NSString*)message andResults:(NSAttributedString*)results andWindowTitle:(NSString*)windowTitle onScreen:(NSScreen*)screen
 {
+	self = [super init];
+	if (!self)
+		return nil;
+
 	dispatch_async(mainQueue(), ^{
 		[NSBundle loadNibNamed:@"ResultsWindow" owner:self];
 		[titleMessageTextField setStringValue:message];

@@ -25,11 +25,11 @@
 
 @interface DifferencesViewController : NSViewController
 {
-	MacHgDocument*				__strong myDocument;
 	IBOutlet DifferencesView*	__strong theDifferencesView;
 }
-@property (readwrite,strong) MacHgDocument*		myDocument;
-@property (readwrite,strong) DifferencesView*	theDifferencesView;
+@property (weak,readonly) MacHgDocument*		myDocument;
+
+@property DifferencesView*	theDifferencesView;
 
 - (DifferencesViewController*) initDifferencesViewControllerWithDocument:(MacHgDocument*)doc;
 - (void) unload;
@@ -45,8 +45,6 @@
 @interface DifferencesView : NSView < ControllerForLogTableView, ControllerForFSViewer, NSUserInterfaceValidations >
 {
 	IBOutlet DifferencesViewController*  parentController;
-	MacHgDocument*				__strong myDocument;
-
 	IBOutlet DifferencesSplitView*	mainSplitView;
 
 	IBOutlet NSTextField*		baseHeaderMessage;
@@ -65,35 +63,25 @@
 	IBOutlet LogTableView*		compareLogTableView;
 	IBOutlet NSTextView*		detailedCompareEntryTextView;
 
-	IBOutlet FSViewer*			__strong theFSViewer;
+	IBOutlet FSViewer*			theFSViewer;
 
-	
-	BOOL						showCleanFilesInBrowser_;
-	BOOL						showModifiedFilesInBrowser_;
-	BOOL						showAddedFilesInBrowser_;
-	BOOL						showRemovedFilesInBrowser_;
-	BOOL						showMissingFilesInBrowser_;
-	BOOL						showUntrackedFilesInBrowser_;
-	BOOL						showIgnoredFilesInBrowser_;
-	BOOL						showUnresolvedFilesInBrowser_;
-	BOOL						showResolvedFilesInBrowser_;
-	BOOL						autoExpandViewerOutlines_;
 	NSMutableArray*				theTableRows;				// Map of table row -> revision number
 	NSString*					repositoryRootPath;			// The root of the repository being browsed
 }
 
-@property (readwrite,assign) BOOL showAddedFilesInBrowser;
-@property (readwrite,assign) BOOL showIgnoredFilesInBrowser;
-@property (readwrite,assign) BOOL showMissingFilesInBrowser;
-@property (readwrite,assign) BOOL showModifiedFilesInBrowser;
-@property (readwrite,assign) BOOL showRemovedFilesInBrowser;
-@property (readwrite,assign) BOOL showUntrackedFilesInBrowser;
-@property (readwrite,assign) BOOL showCleanFilesInBrowser;
-@property (readwrite,assign) BOOL showUnresolvedFilesInBrowser;
-@property (readwrite,assign) BOOL showResolvedFilesInBrowser;
-@property (readwrite,assign) BOOL autoExpandViewerOutlines;
-@property (readwrite,strong) MacHgDocument*  myDocument;
-@property (readwrite,strong) FSViewer*  theFSViewer;
+@property BOOL showAddedFilesInBrowser;
+@property BOOL showIgnoredFilesInBrowser;
+@property BOOL showMissingFilesInBrowser;
+@property BOOL showModifiedFilesInBrowser;
+@property BOOL showRemovedFilesInBrowser;
+@property BOOL showUntrackedFilesInBrowser;
+@property BOOL showCleanFilesInBrowser;
+@property BOOL showUnresolvedFilesInBrowser;
+@property BOOL showResolvedFilesInBrowser;
+@property BOOL autoExpandViewerOutlines;
+@property (weak,readonly) MacHgDocument*  myDocument;
+
+@property FSViewer*  theFSViewer;
 
 
 - (void)		restoreDifferencesSplitViewPositions;

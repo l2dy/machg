@@ -14,9 +14,6 @@
 
 @interface ImportPatchesSheetController : BaseSheetWindowController < ControllerForPatchesTableView >
 {
-
-	MacHgDocument*				__strong myDocument;
-
 	// Main window
 	IBOutlet NSWindow*			theImportPatchesSheet;
 	IBOutlet PatchesTableView*	patchesTable;
@@ -24,16 +21,12 @@
 	IBOutlet NSTextField*		sheetInformativeMessageTextField;
 	IBOutlet NSTextField*		importSheetTitle;
 	IBOutlet NSButton*			okButton;
-
-	HunkExclusions*				hunkExclusions_;			// Storage of which hunks in the patches are disabled	
-	BOOL						guessRenames_;
-	float						guessSimilarityFactor_;
 }
 
-@property (readwrite,strong) MacHgDocument* myDocument;
-@property BOOL								guessRenames;
-@property float								guessSimilarityFactor;
-@property (readonly) HunkExclusions* hunkExclusions;
+@property (weak,readonly) MacHgDocument*	myDocument;
+@property BOOL					guessRenames;
+@property float					guessSimilarityFactor;
+@property (readonly) HunkExclusions*		hunkExclusions;
 
 
 - (ImportPatchesSheetController*) initImportPatchesSheetControllerWithDocument:(MacHgDocument*)doc;

@@ -23,7 +23,7 @@
 @implementation UpdateSheetController
 
 @synthesize cleanUpdate = cleanUpdate_;
-@synthesize myDocument;
+@synthesize myDocument = myDocument;
 
 
 

@@ -28,27 +28,21 @@
 	IBOutlet DisclosureBoxController*			advancedOptionsDisclosureController;		// The disclosure box for the advanced options
 	IBOutlet DisclosureBoxController*			passwordBoxDisclosureController;			// The disclosure box for the password options
 
-	
-	MacHgDocument*		myDocument;
 	EMGenericKeychainItem* passwordKeyChainItem_;
 	SingleTimedQueue*	timeoutQueueForSecurity_;
 	SidebarNode*		nodeToConfigure;
 	
-	NSString*			__strong shortNameFieldValue_;
-	NSString*			__strong baseServerURLFieldValue_;
-	NSString*			__strong username_;
-	NSString*			__strong password_;
 	BOOL				showRealPassword_;
-	NSString*			__strong repositoryIdentity_;
-	NSString*			__strong fullServerURLFieldValue_;
 	BOOL				cloneAfterAddition_;
 }
-@property (readwrite,strong) NSString*	  shortNameFieldValue;
-@property (readwrite,strong) NSString*	  baseServerURLFieldValue;
-@property (readwrite,strong) NSString*	  username;
-@property (readwrite,strong) NSString*	  password;
-@property (readwrite,strong) NSString*	  repositoryIdentity;
-@property (readwrite,strong) NSString*	  fullServerURLFieldValue;
+
+@property (weak,readonly) MacHgDocument* myDocument;
+@property NSString*	  shortNameFieldValue;
+@property NSString*	  baseServerURLFieldValue;
+@property NSString*	  username;
+@property NSString*	  password;
+@property NSString*	  repositoryIdentity;
+@property NSString*	  fullServerURLFieldValue;
 
 
 - (BOOL) showRealPassword;

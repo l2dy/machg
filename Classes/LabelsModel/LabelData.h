@@ -11,17 +11,11 @@
 #import "Common.h"
 
 @interface LabelData : NSObject
-{
-	NSString* __strong name_;
-	NSNumber* __strong revision_;
-	NSString* __strong changeset_;
-	LabelType labelType_;
-}
 
-@property (readonly,strong) NSString* name;
-@property (readonly,strong) NSNumber* revision;
-@property (readonly,strong) NSString* changeset;
-@property (readonly,assign) LabelType labelType;
+@property (readonly) NSString* name;
+@property (readonly) NSNumber* revision;
+@property (readonly) NSString* changeset;
+@property (readonly) LabelType labelType;
 
 // Initilization
 + (LabelData*) labelWithName:(NSString*)n andType:(LabelType)t revision:(NSString*)r changeset:(NSString*)c;

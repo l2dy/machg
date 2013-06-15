@@ -19,14 +19,9 @@
 	IBOutlet NSSplitView*	inspectorSplitView;
 	IBOutlet NSTextField*	sheetInformativeMessageTextField;
 	IBOutlet NSTextField*	stripSheetTitle;
-
-	MacHgDocument*			__strong myDocument;
-	
-	BOOL					forceOption_;
-	BOOL					backupOption_;
 }
 
-@property (readwrite,strong) MacHgDocument*  myDocument;
+@property (weak,readonly) MacHgDocument*  myDocument;
 @property BOOL forceOption;
 @property BOOL backupOption;
 

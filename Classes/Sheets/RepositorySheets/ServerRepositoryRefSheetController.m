@@ -29,6 +29,7 @@
 
 
 @implementation ServerRepositoryRefSheetController
+@synthesize myDocument				= myDocument;
 @synthesize shortNameFieldValue		= shortNameFieldValue_;
 @synthesize baseServerURLFieldValue = baseServerURLFieldValue_;
 @synthesize password				= password_;

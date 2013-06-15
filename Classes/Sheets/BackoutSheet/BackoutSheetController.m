@@ -23,7 +23,7 @@
 
 @implementation BackoutSheetController
 
-@synthesize myDocument;
+@synthesize myDocument = myDocument;
 
 
 

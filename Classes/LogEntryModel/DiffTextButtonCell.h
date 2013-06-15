@@ -12,15 +12,10 @@
 #import "Common.h"
 
 @interface DiffTextButtonCell : TextButtonCell
-{
-	NSString* __strong absoluteFileName_;
-	LogEntry* __strong backingLogEntry_;
-	DiffButtonType type_;
-}
 
-@property (nonatomic, assign) DiffButtonType type;
-@property (nonatomic, strong) NSString* absoluteFileName;
-@property (nonatomic, strong) LogEntry* backingLogEntry;
+@property (nonatomic) NSString* absoluteFileName;
+@property (nonatomic) LogEntry* backingLogEntry;
+@property DiffButtonType type;
 
 // Initilization
 - (id) initWithLogEntry:(LogEntry*)entry;

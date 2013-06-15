@@ -12,9 +12,9 @@
 
 @implementation OptionController
 
-@synthesize specialHandling;
-@synthesize originalTarget;
-@synthesize originalAction;
+@synthesize specialHandling = specialHandling_;
+@synthesize originalTarget = originalTarget_;
+@synthesize originalAction = originalAction_;
 
 
 
@@ -38,7 +38,7 @@
 	[optionSwitchButton setTarget:self];
 	[optionSwitchButton setContinuous:YES];
 	[optionValueField   setContinuous:YES];
-	specialHandling = NO;
+	specialHandling_ = NO;
 }
 
 
@@ -57,7 +57,7 @@
 - (IBAction)  setOptionValueStateFromButton:(id)sender
 {
 	[self setOverallState:([optionSwitchButton state] == NSOnState)];
-	[optionSwitchButton sendAction:originalAction to:originalTarget];
+	[optionSwitchButton sendAction:originalAction_ to:originalTarget_];
 }
 
 - (void) setOverallState:(BOOL)state
@@ -91,7 +91,7 @@
 
 - (void) addOptionToArgs:(NSMutableArray*)args
 {
-	if (specialHandling || ![self optionIsSet])
+	if (specialHandling_ || ![self optionIsSet])
 		return;
 	[args addObject:fstr(@"--%@", optionName)];
 	if (optionValueField)

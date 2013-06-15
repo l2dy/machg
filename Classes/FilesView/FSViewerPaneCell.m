@@ -49,10 +49,8 @@ void commonLoadCellContents(NSCell* cell)
 
 @implementation FSViewerPaneCell
 
-@synthesize nodeInfo;
-@synthesize parentNodeInfo;
-
-
+@synthesize nodeInfo = nodeInfo_;
+@synthesize parentNodeInfo = parentNodeInfo_;
 
 - (void) loadCellContents
 {
@@ -77,7 +75,7 @@ void commonLoadCellContents(NSCell* cell)
 
 @implementation FSViewerPaneIconedCell
 
-@synthesize fileIcon;
+@synthesize fileIcon = fileIcon;
 
 
 - (NSSize) cellSizeForBounds:(NSRect)aRect
@@ -85,7 +83,7 @@ void commonLoadCellContents(NSCell* cell)
 	// Make our cells a bit higher than normal to give some additional space for the icon to fit.
 	BOOL isOutlineCell = [self isKindOfClass:[FSViewerOutlinePaneIconedCell class]];
 	NSSize theSize  = [super cellSizeForBounds:aRect];
-	NSSize iconRowSize = [FSViewerPaneCell iconRowSize:parentNodeInfo];
+	NSSize iconRowSize = [FSViewerPaneCell iconRowSize:self.parentNodeInfo];
 	theSize.width += ICON_INSET_HORIZ + iconRowSize.width;
 	if (isOutlineCell)
 		theSize.width += DISCLOSURE_SPACING + DISCLOSURE_SIZE + DISCLOSURE_SPACING;
@@ -99,13 +97,13 @@ void commonLoadCellContents(NSCell* cell)
 
 - (void) drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView*)controlView
 {
-	NSImage* combinedIcon = [nodeInfo combinedIconImage];
+	NSImage* combinedIcon = [self.nodeInfo combinedIconImage];
 	BOOL isOutlineCell = [self isKindOfClass:[FSViewerOutlinePaneIconedCell class]];
-	BOOL hasChildren = IsNotEmpty([nodeInfo childNodes]);
+	BOOL hasChildren = IsNotEmpty([self.nodeInfo childNodes]);
 	
 	[self setDrawsBackground:NO];
 
-	CGFloat iconRowWidth = [FSViewerPaneCell iconRowSize:parentNodeInfo].width;	
+	CGFloat iconRowWidth = [FSViewerPaneCell iconRowSize:self.parentNodeInfo].width;
 	NSPoint drawPoint = cellFrame.origin;
 	
 	// Draw IconRow
@@ -161,7 +159,7 @@ void commonLoadCellContents(NSCell* cell)
 	// If we do need an expansion frame, the rect will be non-empty. We need to move it over, and shrink it, since we won't be drawing the icon in it
 	if (!NSIsEmptyRect(expansionFrame))
 	{
-		CGFloat iconsWidth = [FSViewerPaneCell iconRowSize:parentNodeInfo].width;
+		CGFloat iconsWidth = [FSViewerPaneCell iconRowSize:self.parentNodeInfo].width;
 		expansionFrame.origin.x   = expansionFrame.origin.x   +  iconsWidth + ICON_INSET_HORIZ  + ICON_TEXT_SPACING;
 		expansionFrame.size.width = expansionFrame.size.width - (iconsWidth + ICON_TEXT_SPACING + ICON_INSET_HORIZ / 2.0);
 	}

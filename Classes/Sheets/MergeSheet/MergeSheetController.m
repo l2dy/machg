@@ -31,7 +31,7 @@
 @implementation MergeSheetController
 
 @synthesize forceTheMerge = forceTheMerge_;
-@synthesize myDocument;
+@synthesize myDocument = myDocument;
 
 
 

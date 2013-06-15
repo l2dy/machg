@@ -26,7 +26,7 @@
 
 
 @implementation RebaseSheetController
-@synthesize myDocument;
+@synthesize myDocument = myDocument;
 @synthesize keepOriginalRevisions = keepOriginalRevisions_;
 @synthesize keepOriginalBranchNames = keepOriginalBranchNames_;
 

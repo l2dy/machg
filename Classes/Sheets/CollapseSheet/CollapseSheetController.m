@@ -23,7 +23,7 @@
 
 
 @implementation CollapseSheetController
-@synthesize myDocument;
+@synthesize myDocument = myDocument;
 
 
 

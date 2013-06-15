@@ -24,6 +24,7 @@
 	IBOutlet OptionController*	revOption;
 	IBOutlet OptionController*	sshOption;
 }
+@property (weak,readonly) MacHgDocument* myDocument;
 
 - (PushSheetController*) initPushSheetControllerWithDocument:(MacHgDocument*)doc;
 

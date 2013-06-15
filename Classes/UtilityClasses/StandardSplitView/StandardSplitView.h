@@ -11,7 +11,4 @@
 
 
 @interface StandardSplitView : NSSplitView
-{
-}
-
 @end

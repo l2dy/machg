@@ -13,18 +13,11 @@
 #import "Common.h"
 
 @interface SidebarCell : NSTextFieldCell
-{
-	@private
-	NSString*	 __strong badgeString_;
-	BOOL		 hasBadge_;
-	NSImage*	 icon_;
-	SidebarNode* __strong node_;
-}
 
-@property (readwrite,strong) NSString* badgeString;
-@property (readwrite,assign) BOOL hasBadge;
+@property NSString* badgeString;
+@property BOOL hasBadge;
 @property (readonly) NSImage* icon;
-@property (readwrite,strong) SidebarNode* node;
+@property (weak) SidebarNode* node;
 
 - (void) setIcon:(NSImage*)icon;
 

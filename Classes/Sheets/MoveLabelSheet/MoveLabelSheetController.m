@@ -21,7 +21,7 @@
 @end
 
 @implementation MoveLabelSheetController
-@synthesize myDocument;
+@synthesize myDocument = myDocument;
 
 
 

@@ -27,6 +27,7 @@
 // ------------------------------------------------------------------------------------
 
 @implementation PushSheetController
+@synthesize myDocument = myDocument;
 
 
 
@@ -126,7 +127,7 @@
 	[argsPush addObjectsFromArray:configurationForProgress];
 	for (OptionController* opt in cmdOptions)
 		[opt addOptionToArgs:argsPush];
-	if (allowOperationWithAnyRepository_ || [forceOption optionIsSet])
+	if (self.allowOperationWithAnyRepository || [forceOption optionIsSet])
 			[argsPush addObject:@"--force"];
 	if (!RequireVerifiedServerCertificatesFromDefaults())
 		[argsPush addObject:@"--insecure"];

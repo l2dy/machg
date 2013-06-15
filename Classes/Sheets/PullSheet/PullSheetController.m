@@ -27,6 +27,7 @@
 
 @implementation PullSheetController
 
+@synthesize myDocument = myDocument;
 
 
 
@@ -124,7 +125,7 @@
 	[argsPull addObjectsFromArray:configurationForProgress];
 	for (OptionController* opt in cmdOptions)
 		[opt addOptionToArgs:argsPull];
-	if (allowOperationWithAnyRepository_ || [forceOption optionIsSet])
+	if (self.allowOperationWithAnyRepository || [forceOption optionIsSet])
 		[argsPull addObject:@"--force"];
 	if (!RequireVerifiedServerCertificatesFromDefaults())
 		[argsPull addObject:@"--insecure"];

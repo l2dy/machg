@@ -9,8 +9,5 @@
 
 #import <Cocoa/Cocoa.h>
 
-@interface GradientBox : NSView 
-{
-}
-
+@interface GradientBox : NSView
 @end

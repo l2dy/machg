@@ -10,7 +10,4 @@
 
 
 @interface MacHgDocumentController : NSDocumentController
-{
-}
-
 @end

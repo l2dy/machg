@@ -30,7 +30,7 @@
 // MARK: -
 
 @implementation FilesViewController
-@synthesize myDocument;
+@synthesize myDocument = myDocument;
 @synthesize theFilesView;
 
 - (FilesViewController*) initFilesViewControllerWithDocument:(MacHgDocument*)doc
@@ -57,8 +57,8 @@
 
 @implementation FilesView
 
-@synthesize myDocument;
-@synthesize theFSViewer;
+@synthesize myDocument = myDocument;
+@synthesize theFSViewer = theFSViewer;
 
 
 

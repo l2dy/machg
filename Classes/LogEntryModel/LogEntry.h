@@ -18,21 +18,15 @@ void setupGlobalsForLogEntryPartsAndTemplate();
 
 @interface LogEntry : NSObject
 {
-	LogEntryLoadStatus  loadStatus_;
-	RepositoryData* collection_;
-	NSNumber* 	__strong revision_;
-	NSArray*	__strong parentsArray_;				// Array of parent   revs as NSNumbers
-	NSArray*	__strong childrenArray_;				// Array of children revs as NSNumbers
-	NSString*	__strong changeset_;
-	LogRecord*	__strong fullRecord_;
+	RepositoryData* __weak collection_;
 }
 
-@property (readwrite,assign) LogEntryLoadStatus loadStatus;
-@property (readwrite,strong) NSNumber* 	revision;
-@property (readwrite,strong) NSArray*	parentsArray;
-@property (readwrite,strong) NSArray*	childrenArray;
-@property (readwrite,strong) NSString*	changeset;
-@property (readwrite,strong) LogRecord*	fullRecord;
+@property LogEntryLoadStatus loadStatus;
+@property NSNumber*		revision;
+@property NSArray*		parentsArray;		// Array of parent   revs as NSNumbers
+@property NSArray*		childrenArray;		// Array of children revs as NSNumbers
+@property NSString*		changeset;
+@property LogRecord*	fullRecord;
 
 - (RepositoryData*) repositoryData;
 

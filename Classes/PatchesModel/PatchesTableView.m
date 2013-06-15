@@ -581,7 +581,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 {
     NSAttributedString* message = [self attributedStringValue];
 	
-	NSString* fullPath = [patch_ path];
+	NSString* fullPath = [self.patch path];
 	NSDictionary* attributes = [message attributesOfWholeString];
 	message = [NSAttributedString string:fullPath withAttributes:attributes];
 	
@@ -596,7 +596,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 {
     NSAttributedString* message = [self attributedStringValue];
 	
-	NSString* fullPath = [patch_ path];
+	NSString* fullPath = [self.patch path];
 	NSDictionary* attributes = [message attributesOfWholeString];
 	message = [NSAttributedString string:fullPath withAttributes:attributes];
 

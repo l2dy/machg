@@ -22,17 +22,15 @@
 	IBOutlet NSTextField*				theTitleText;
 	IBOutlet NSTextField*				shortNameField;
 	IBOutlet PathTextField*				pathField;
-
-	MacHgDocument*		myDocument;
 	
-	NSString*			__strong shortNameFieldValue_;
-	NSString*			__strong pathFieldValue_;
 	SidebarNode*		nodeToConfigure;			// If we are configuring a node, this is the one to configure
 	SidebarNode*		addNewRepositoryRefTo;		// If we are creating a new RepositoryRef add it after this RepositoryRef
 	NSInteger			addNewRepositoryRefAtIndex;	// If we are creating a new RepositoryRef add it after this RepositoryRef
 }
-@property (readwrite,strong) NSString*	  shortNameFieldValue;
-@property (readwrite,strong) NSString*	  pathFieldValue;
+
+@property (weak,readonly) MacHgDocument* myDocument;
+@property NSString*	  shortNameFieldValue;
+@property NSString*	  pathFieldValue;
 
 - (LocalRepositoryRefSheetController*) initLocalRepositoryRefSheetControllerWithDocument:(MacHgDocument*)doc;
 
@@ -53,6 +51,4 @@
 
 
 @interface PathTextField : NSTextField
-{
-}
 @end

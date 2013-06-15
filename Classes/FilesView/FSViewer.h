@@ -110,13 +110,10 @@
 
 @interface FSViewer : NSBox <FSViewerProtocol, ControllerForPatchesWebview>
 {
-	IBOutlet id <ControllerForFSViewer> __strong parentController;
 	IBOutlet PatchesWebview*	detailedPatchesWebView;
 	IBOutlet NSMenu*			contextualMenuForFSViewerPane;
 
-	NSString*			__strong absolutePathOfRepositoryRoot_;
 	FSNodeInfo*			rootNodeInfo_;
-	BOOL				areNodesVirtual_;				// Is this browser used to display virtual nodes?
 
  @private
 	FSViewerBrowser*	theFilesBrowser_;
@@ -129,9 +126,9 @@
 	dispatch_once_t		theFilesTableInitilizer_;	
 }
 
-@property (readwrite,strong) id <ControllerForFSViewer> parentController;
-@property (readwrite,assign) BOOL		areNodesVirtual;
-@property (readwrite,strong) NSString*	absolutePathOfRepositoryRoot;
+@property (assign) id <ControllerForFSViewer> parentController;
+@property BOOL		areNodesVirtual;							// Is this browser used to display virtual nodes?
+@property NSString*	absolutePathOfRepositoryRoot;
 
 
 // Access the FSViewerPanes
@@ -220,14 +217,12 @@
 
 // This is a way to save the state of any FSViewer, be it browser, outline, or table.
 @interface FSViewerSelectionState : NSObject
-{
-}
 
 // Information for saving a Browser state
-@property (readwrite,strong) NSMutableArray*	savedColumnScrollPositions;
-@property (readwrite,assign) NSPoint			savedHorizontalScrollPosition;
-@property (readwrite,strong) NSArray*			savedSelectedPaths;
-@property (readwrite,assign) BOOL				restoreFirstResponderToViewer;
+@property NSMutableArray*	savedColumnScrollPositions;
+@property NSPoint			savedHorizontalScrollPosition;
+@property NSArray*			savedSelectedPaths;
+@property BOOL				restoreFirstResponderToViewer;
 
 @end
 

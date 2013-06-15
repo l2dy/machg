@@ -17,6 +17,7 @@
 
 
 @implementation LocalRepositoryRefSheetController
+@synthesize myDocument			= myDocument;
 @synthesize shortNameFieldValue = shortNameFieldValue_;
 @synthesize pathFieldValue      = pathFieldValue_;
 

@@ -21,29 +21,22 @@
 @interface FSNodeInfo : NSObject
 {
   @private
-	FSViewer*	__strong parentFSViewer;				// The parent FSViewer which this node belongs to
-	NSString*   __strong relativePathComponent;		// Path component relative to the parent.
-	NSString*   __strong absolutePath;
-	NSMutableDictionary* childNodes;		// map of pathComponent -> childNode
-	NSArray*	__strong sortedChildNodeKeys;		// sorted array of all the keys of childNodes
-	BOOL		haveComputedTheProperties;	// The final step of updating the properties of a node is to compute the properties of the
-											// node from its children. This is also used as a "dirty" flag when doing incremental
-											// merges of new changes into an existing tree.
-
-	HGStatus	hgStatus;					// The status of the node.
 	NSInteger	maxIconCountOfSubitems_;	// The maximum number of icons decorating the files and directories within this
 											// directory. (we need to leave space when drawing for this.) (This is not the icon
 											// count of this directory but the maximum of the icon counts each of the things in
 											// this directory.)
 }
 
-@property (readwrite,strong) FSViewer* parentFSViewer;
-@property (readonly, strong) NSString* relativePathComponent;
-@property (readwrite,strong) NSString* absolutePath;
-@property (readwrite) NSMutableDictionary* childNodes;
-@property (readwrite,strong) NSArray* sortedChildNodeKeys;
-@property (readwrite,assign) BOOL haveComputedTheProperties;
-@property (readwrite,assign) HGStatus hgStatus;
+@property (weak) FSViewer*		parentFSViewer;					// The parent FSViewer which this node belongs to
+@property (readonly) NSString*	relativePathComponent;			// Path component relative to the parent.
+@property NSString*				absolutePath;
+@property HGStatus				hgStatus;						// The status of the node.
+@property NSMutableDictionary*	childNodes;						// map of pathComponent -> childNode
+@property NSArray*				sortedChildNodeKeys;			// sorted array of all the keys of childNodes
+@property BOOL					haveComputedTheProperties;		// The final step of updating the properties of a node is to compute
+																// the properties of the node from its children. This is also used as
+																// a "dirty" flag when doing incremental merges of new changes into an
+																// existing tree. 
 
 
 // Queries

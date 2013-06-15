@@ -22,32 +22,19 @@ typedef enum
 
 
 @interface SidebarNode : NSObject <NSCoding>
-{
-	SidebarNodeKind	nodeKind;
-	NSMutableArray* children;			// If this is a group node then this contains the sidebar nodes below this one.
-	SidebarNode*	__strong parent;				// The parent sidebar node in the tree of nodes
-	NSString*		__strong shortName;			// This is a name used by you like myproject
-	NSImage*		__strong icon;				// An icon in the sidebar to represent this node
-	BOOL			isExpanded;			// If this is a group node then this is the status of whether the group node is expanded
-										// or not
 
-	// If this node is a repository reference (local or server) then the following are relevant
-	NSString*		__strong path;				// The local file path or server path; ie something like  http://www.codebase.org/code/main/myproject
-										// if it's a server or /Users/jason/Projects/MyProject if it's a local file path.
-	NSString*		__strong recentPushConnection;	// The path of the most recent push connection if there has been one.
-	NSString*		__strong recentPullConnection;	// The path of the most recent pull connection if there has been one.
-}
+@property SidebarNodeKind nodeKind;
+@property (nonatomic) NSMutableArray* children;	// If this is a group node then this contains the sidebar nodes below this one.
+@property BOOL isExpanded;						// This is the status of whether the node is expanded or not
+@property (weak) SidebarNode* parent;			// The parent sidebar node in the tree of nodes
+@property (readonly)  NSString* shortName;		// This is a name used by you like myproject
 
-@property (assign) SidebarNodeKind nodeKind;
-@property (nonatomic, strong) NSMutableArray* children;
-@property (assign, readwrite) BOOL isExpanded;
-@property (strong, readwrite) SidebarNode* parent;
-@property (strong, readonly)  NSString* shortName;
-@property (readwrite, strong) NSString* path;
-@property (readwrite, strong) NSString* recentPushConnection;
-@property (readwrite, strong) NSString* recentPullConnection;
-
-@property (strong) NSImage* icon;
+// If this node is a repository reference (local or server) then the following are relevant
+@property NSString* path;						// The local file path or server path; ie something like  http://www.codebase.org/code/main/myproject
+												// if it's a server or /Users/jason/Projects/MyProject if it's a local file path.
+@property NSString* recentPushConnection;		// The path of the most recent push connection if there has been one.
+@property NSString* recentPullConnection;		// The path of the most recent pull connection if there has been one.
+@property (strong) NSImage* icon;				// An icon in the sidebar to represent this node
 
 
 // Constructors

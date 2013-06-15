@@ -26,6 +26,7 @@
 // ------------------------------------------------------------------------------------
 
 @implementation IncomingSheetController
+@synthesize myDocument = myDocument;
 
 
 
@@ -120,7 +121,7 @@
 	[argsIncoming addObjectsFromArray:configurationForProgress];
 	for (OptionController* opt in cmdOptions)
 		[opt addOptionToArgs:argsIncoming];
-	if (allowOperationWithAnyRepository_ || [forceOption optionIsSet])
+	if (self.allowOperationWithAnyRepository || [forceOption optionIsSet])
 		[argsIncoming addObject:@"--force"];
 	if (!RequireVerifiedServerCertificatesFromDefaults())
 		[argsIncoming addObject:@"--insecure"];

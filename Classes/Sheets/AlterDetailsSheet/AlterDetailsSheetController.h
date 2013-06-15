@@ -31,16 +31,12 @@
 	IBOutlet NSDatePicker*	alterDetailsDatePicker;
 	IBOutlet NSButton*		alterDetailsButton;
 
-	MacHgDocument*	__strong myDocument;
 	LogEntry*		entryToAlter_;
-	NSString*		__strong commitMessage_;					// The commit message
-	NSString*		__strong committer_;						// The value of the committer option
-	NSDate*			__strong commitDate_;					// The value of the date option
 }
-@property (readwrite,strong) MacHgDocument* myDocument;
-@property (readwrite,strong) NSString*		commitMessage;
-@property (readwrite,strong) NSString*		committer;
-@property (readwrite,strong) NSDate*		commitDate;
+@property (weak,readonly) MacHgDocument* myDocument;
+@property NSString*		commitMessage;	// The commit message
+@property NSString*		committer;		// The value of the committer option
+@property NSDate*		commitDate;		// The value of the date option
 
 
 - (AlterDetailsSheetController*) initAlterDetailsSheetControllerWithDocument:(MacHgDocument*)doc;

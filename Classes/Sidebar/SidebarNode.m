@@ -21,15 +21,15 @@
 
 @implementation SidebarNode
 
-@synthesize nodeKind;
-@synthesize children;
-@synthesize parent;
-@synthesize shortName;
-@synthesize icon;
-@synthesize isExpanded;
-@synthesize path;
-@synthesize recentPullConnection;
-@synthesize recentPushConnection;
+@synthesize nodeKind = nodeKind;
+@synthesize children = children;
+@synthesize parent = parent;
+@synthesize shortName = shortName;
+@synthesize icon = icon;
+@synthesize isExpanded = isExpanded;
+@synthesize path = path;
+@synthesize recentPullConnection = recentPullConnection;
+@synthesize recentPushConnection = recentPushConnection;
 
 
 

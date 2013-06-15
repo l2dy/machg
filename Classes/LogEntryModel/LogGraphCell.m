@@ -19,7 +19,7 @@
 
 
 @synthesize entry = entry_;
-@synthesize logTableView;
+@synthesize logTableView = logTableView;
 @synthesize logTableColumn = logTableColumn_;
 
 

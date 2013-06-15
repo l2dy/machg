@@ -18,29 +18,19 @@ void setupGlobalsForLogRecordPartsAndTemplate();
 
 @interface LogRecord : NSObject
 {
-	LogRecordLoadStatus  loadStatus_;
-	NSString* 	__strong author_;
-	NSString* 	__strong fullAuthor_;
-	NSString*   __strong branch_;
 	NSDate* 	date_;
-	NSString* 	__strong shortComment_;
-	NSString* 	__strong fullComment_;
-	NSString*	__strong changeset_;
-	NSArray*	__strong filesAdded_;
-	NSArray*	__strong filesModified_;
-	NSArray*	__strong filesRemoved_;
 }
 
-@property (readwrite,assign) LogRecordLoadStatus loadStatus;
-@property (readwrite,strong) NSString* 	author;
-@property (readwrite,strong) NSString* 	fullAuthor;
-@property (readwrite,strong) NSString* 	branch;
-@property (readwrite,strong) NSString* 	shortComment;
-@property (readwrite,strong) NSString* 	fullComment;
-@property (readwrite,strong) NSString*	changeset;
-@property (readwrite,strong) NSArray*	filesAdded;
-@property (readwrite,strong) NSArray*	filesModified;
-@property (readwrite,strong) NSArray*	filesRemoved;
+@property LogRecordLoadStatus loadStatus;
+@property NSString* author;
+@property NSString* fullAuthor;
+@property NSString* branch;
+@property NSString* shortComment;
+@property NSString* fullComment;
+@property NSString*	changeset;
+@property NSArray*	filesAdded;
+@property NSArray*	filesModified;
+@property NSArray*	filesRemoved;
 
 
 // Create Log Records

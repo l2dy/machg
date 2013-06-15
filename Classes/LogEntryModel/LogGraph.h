@@ -11,19 +11,12 @@
 #import "Common.h"
 
 @interface LineSegment : NSObject
-{
-	NSInteger lowRev;
-	NSInteger lowCol;		// This is the column where the line begins.
-	NSInteger highRev;		// This is the revision where the line terminates.
-	NSInteger highCol;		// This is the column where the line terminates.
-	NSInteger drawCol;		// This is the column where the bulk of the line is drawn. It's usually the same as the highCol but not always.
-}
 
-@property (readwrite,assign) NSInteger		lowRev;
-@property (readwrite,assign) NSInteger		lowCol;
-@property (readwrite,assign) NSInteger		highRev;
-@property (readwrite,assign) NSInteger		highCol;
-@property (readwrite,assign) NSInteger		drawCol;
+@property NSInteger	lowRev;
+@property NSInteger	lowCol;		// This is the column where the line begins.
+@property NSInteger	highRev;	// This is the revision where the line terminates.
+@property NSInteger	highCol;	// This is the column where the line terminates.
+@property NSInteger	drawCol;	// This is the column where the bulk of the line is drawn. It's usually the same as the highCol but not always.
 
 + (LineSegment*) withLowRev:(NSInteger)l  highRev:(NSInteger)h;
 + (LineSegment*) withLowRev:(NSInteger)l  highRev:(NSInteger)h  lowColumn:(NSInteger)lCol  highColumn:(NSInteger)hCol  drawColumn:(NSInteger)dCol;

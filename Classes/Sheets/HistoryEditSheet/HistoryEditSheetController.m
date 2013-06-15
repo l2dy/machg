@@ -25,7 +25,7 @@
 
 
 @implementation HistoryEditSheetController
-@synthesize myDocument;
+@synthesize myDocument = myDocument;
 
 
 

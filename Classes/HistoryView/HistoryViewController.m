@@ -42,7 +42,7 @@
 // MARK: -
 
 @implementation HistoryViewController
-@synthesize myDocument;
+@synthesize myDocument = myDocument;
 @synthesize theHistoryView;
 
 - (HistoryViewController*) initHistoryViewControllerWithDocument:(MacHgDocument*)doc
@@ -71,7 +71,7 @@
 
 @implementation HistoryView
 
-@synthesize myDocument;
+@synthesize myDocument = myDocument;
 @synthesize logTableView;
 
 

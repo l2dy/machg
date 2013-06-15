@@ -17,14 +17,14 @@
 
 @interface HunkObject : NSObject
 {
-	FilePatch*  parentFilePatch;
+	FilePatch* __weak parentFilePatch;
 	NSString*   hunkHeader;
 	NSArray*    hunkBodyLines;
-	NSString*   __strong hunkHash;
+	NSString*   hunkHash;
 	NSInteger	changeLineCount;	// The number of changed lines in the hunk
 	BOOL		binaryHunk;			// Is this hunk binary data
 }
-@property (readonly,strong) NSString* hunkHash;
+@property (readonly) NSString* hunkHash;
 
 + (HunkObject*) hunkObjectWithLines:(NSMutableArray*)lines andParentFilePatch:(FilePatch*)parentFilePatch;
 - (NSString*)   htmlizedHunk:(BOOL)sublineDiffing;	// The hunk header and hunk body together, but with html insertions for hilighting the diff 
@@ -42,17 +42,17 @@
 
 @interface FilePatch : NSObject
 {
-	NSString* __strong filePath;				// The repository relative path which this patch applies to
-	NSString* __strong filePatchHeader;
+	NSString* filePath;				// The repository relative path which this patch applies to
+	NSString* filePatchHeader;
 	NSMutableArray* hunks;			// An array of HunkObjects
 	NSMutableSet* hunkHashesSet;	// An array of the hases in the hunk Objects
 	BOOL binaryPatch;				// Records wether this file patch is a binary one
 }
-@property (readonly,strong) NSString* filePath;
-@property (readonly,strong) NSString* filePatchHeader;
+@property (readonly) NSString* filePath;
+@property (readonly) NSString* filePatchHeader;
 @property (readonly) NSMutableArray* hunks;
 @property (readonly) NSMutableSet* hunkHashesSet;
-@property (readonly,assign) BOOL binaryPatch;
+@property (readonly) BOOL binaryPatch;
 
 + (FilePatch*) filePatchWithPath:(NSString*)path andHeader:(NSString*)header binary:(BOOL)binary;
 - (void)	   addHunkObjectWithLines:(NSMutableArray*)lines;
@@ -80,10 +80,10 @@
 	
 	NSMutableDictionary* filePatchForFilePathDictionary_;	// Map of (NSString*)sourceCodeFilePath -> (FilePatch*)patch (mirrors filePatches_)
 	NSMutableArray* filePatches_;							// Array of (FilePatch*)patch (mirrors filePatchForFilePath_)
-	NSString*		__strong patchBody_;
+	NSString*		patchBody_;
 	NSString*		cachedPatchBodyHTMLized_;
 }	
-@property (readonly,strong) NSString* patchBody;
+@property (readonly) NSString* patchBody;
 @property (readonly) NSMutableArray* filePatches;
 
 + (PatchData*) patchDataFromDiffContents:(NSString*)diff;
@@ -115,39 +115,24 @@
 
 @interface PatchRecord : NSObject
 {
-	NSString* __strong path_;		// This is the path to the patch file (and not anything to do with the paths in the patch.)
 	NSString* author_;
 	NSString* date_;
 	NSString* commitMessage_;
 	NSString* parent_;
-	NSString* __strong nodeID_;
-	PatchData* __strong patchData_;
-	
-	BOOL	  forceOption_;
-	BOOL	  exactOption_;
-	BOOL	  dontCommitOption_;
-	BOOL	  importBranchOption_;
-	BOOL	  guessRenames_;
-
-	// If the PatchRecord is interactively modified, then keep track of which values have changed.
-	BOOL	  authorIsModified_;
-	BOOL	  dateIsModified_;
-	BOOL	  commitMessageIsModified_;
-	BOOL	  parentIsModified_;
 }
 
-@property (readonly,strong) NSString*	path;
-@property (readonly,strong) NSString*	nodeID;
-@property (readonly,strong) PatchData*	patchData;
+@property (readonly) NSString*	path;	// This is the path to the patch file (and not anything to do with the paths in the patch.)
+@property (readonly) NSString*	nodeID;
+@property (readonly) PatchData*	patchData;
 @property BOOL forceOption;
 @property BOOL exactOption;
 @property BOOL dontCommitOption;
 @property BOOL importBranchOption;
 @property BOOL guessRenames;
-@property BOOL authorIsModified;
-@property BOOL dateIsModified;
-@property BOOL commitMessageIsModified;
-@property BOOL parentIsModified;
+@property BOOL authorIsModified;		// If the PatchRecord is interactively modified, then keep track of which values have changed.
+@property BOOL dateIsModified;			// If the PatchRecord is interactively modified, then keep track of which values have changed.
+@property BOOL commitMessageIsModified;	// If the PatchRecord is interactively modified, then keep track of which values have changed.
+@property BOOL parentIsModified;		// If the PatchRecord is interactively modified, then keep track of which values have changed.
 
 + (PatchRecord*) patchRecordFromFilePath:(NSString*)path;
 

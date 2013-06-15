@@ -31,8 +31,6 @@
 
 
 @interface UseWhichDiffToolToHideFieldTransformer : NSValueTransformer
-{
-}
 + (Class) transformedValueClass;
 + (BOOL)  allowsReverseTransformation;
 - (id)	  transformedValue:(id)value;
@@ -40,8 +38,6 @@
 
 
 @interface UseWhichMergeToolToHideFieldTransformer : NSValueTransformer
-{
-}
 + (Class) transformedValueClass;
 + (BOOL)  allowsReverseTransformation;
 - (id)	  transformedValue:(id)value;

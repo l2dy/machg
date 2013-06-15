@@ -14,6 +14,8 @@
 #import "DisclosureBoxController.h"
 
 @implementation RenameFileSheetController
+
+@synthesize myDocument					= myDocument;
 @synthesize theCurrentNameFieldValue	= theCurrentNameFieldValue_;
 @synthesize theNewNameFieldValue		= theNewNameFieldValue_;
 @synthesize theAlreadyMovedButtonValue	= theAlreadyMovedButtonValue_;

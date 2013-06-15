@@ -15,8 +15,8 @@
 
 @synthesize buttonBox;
 @synthesize backingBox;
-@synthesize myDocument;
 @synthesize backingView;
+@synthesize myDocument = myDocument;
 
 
 
@@ -45,7 +45,7 @@
 
 @implementation BackingView
 
-@synthesize myDocument;
+@synthesize myDocument = myDocument;
 
 -(void) unload
 {

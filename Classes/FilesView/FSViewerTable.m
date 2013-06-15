@@ -20,7 +20,7 @@
 @implementation FSViewerTable
 
 @synthesize parentViewer = parentViewer_;
-
+@synthesize leafNodeForTableRow = leafNodeForTableRow_;
 
 
 
