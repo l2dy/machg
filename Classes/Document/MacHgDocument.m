@@ -1676,7 +1676,7 @@
 
 
 
-- (void) pushRepositoryCopyForUndo:(NSError**)error
+- (BOOL) pushRepositoryCopyForUndo:(NSError**)error
 {
 	[self delayEventsUntilFinishBlock:^{
 		NSString* root    = [self absolutePathOfRepositoryRoot];
@@ -1735,6 +1735,7 @@
 			}
 		}
 	}];
+	return YES;	// Keep static analyzer happy
 }
 
 - (IBAction) doLinkUp:(id)sender

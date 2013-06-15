@@ -88,7 +88,7 @@
 	if (filename)
 	{
 		[self setPathFieldValue:filename];
-		if ([self shortNameFieldValue] == @"")
+		if ([[self shortNameFieldValue] isEqualToString: @""])
 			[self setShortNameFieldValue:[filename lastPathComponent]];
 	}
 	[self validateButtons:sender];

@@ -1492,6 +1492,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 		}
 	if (!foundStart)
 		return @[];
+	r.length = 0;	// Keep analyzer happy
 	for (int i = self.count - 1; i >= r.location; i--)
 		if (IsNotEmpty(self[i]))
 		{
@@ -1578,13 +1579,14 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 // MARK: -
 @implementation NSApplication ( NSApplicationPlusExtensions )
-- (void) presentAnyErrorsAndClear:(NSError**)err
+- (BOOL) presentAnyErrorsAndClear:(NSError**)err
 {
 	if (err && *err)
 	{
 		[self presentError:*err];
 		*err = nil;
 	}
+	return YES; // Keep static analyzer happy
 }
 
 + (NSArray*) applicationsForURL:(NSURL*)url

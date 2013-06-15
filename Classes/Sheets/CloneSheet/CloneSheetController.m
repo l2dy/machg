@@ -90,7 +90,7 @@
 		if (pathIsExistentDirectory(pathName))
 			pathName = [pathName stringByAppendingPathComponent:filename];
 		[self setPathFieldValue:pathName];
-		if ([self shortNameFieldValue] == @"")
+		if ([[self shortNameFieldValue] isEqualToString:@""])
 			[self setShortNameFieldValue:[pathName lastPathComponent]];
 	}
 	[self validateButtons:sender];
