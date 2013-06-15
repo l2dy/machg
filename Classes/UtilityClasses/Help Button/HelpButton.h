@@ -12,7 +12,7 @@
 
 @interface HelpButton : NSButton
 {
-	NSString*			helpAnchorName_;
+	HelpButton* __weak	weakSelf;				// We need this as the target of the action since setTarget:self creates a retain cycle
 }
 @property NSString* helpAnchorName;
 

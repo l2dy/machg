@@ -17,7 +17,8 @@
 - (void) awakeFromNib
 {
 	[self setAction:@selector(openHelpAnchor:)];
-	[self setTarget:self];
+	weakSelf = self;
+	[self setTarget:weakSelf];
 }
 
 - (void) openHelpAnchor:(id)sender
