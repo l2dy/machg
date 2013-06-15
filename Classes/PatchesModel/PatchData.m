@@ -25,12 +25,12 @@
 static NSString* encodeForHTML(NSString* line)
 {
 	NSMutableString* text = [line mutableCopy];
-	[text replaceOccurrencesOfString:@"&"  withString:@"&amp;" options:NSLiteralSearch range:NSMakeRange(0, text.length)];
-	[text replaceOccurrencesOfString:@"<"  withString:@"&lt;"  options:NSLiteralSearch range:NSMakeRange(0, text.length)];
-	[text replaceOccurrencesOfString:@">"  withString:@"&gt;"  options:NSLiteralSearch range:NSMakeRange(0, text.length)];
-	[text replaceOccurrencesOfString:@">"  withString:@"&gt;"  options:NSLiteralSearch range:NSMakeRange(0, text.length)];
-	[text replaceOccurrencesOfString:@"'"  withString:@"\x27"  options:NSLiteralSearch range:NSMakeRange(0, text.length)];
-	[text replaceOccurrencesOfString:@"\"" withString:@"\x22"  options:NSLiteralSearch range:NSMakeRange(0, text.length)];
+	[text replaceOccurrencesOfString:@"&"  withString:@"&amp;" options:NSLiteralSearch range:[text fullRange]];
+	[text replaceOccurrencesOfString:@"<"  withString:@"&lt;"  options:NSLiteralSearch range:[text fullRange]];
+	[text replaceOccurrencesOfString:@">"  withString:@"&gt;"  options:NSLiteralSearch range:[text fullRange]];
+	[text replaceOccurrencesOfString:@">"  withString:@"&gt;"  options:NSLiteralSearch range:[text fullRange]];
+	[text replaceOccurrencesOfString:@"'"  withString:@"\x27"  options:NSLiteralSearch range:[text fullRange]];
+	[text replaceOccurrencesOfString:@"\"" withString:@"\x22"  options:NSLiteralSearch range:[text fullRange]];
 	return text;
 }
 

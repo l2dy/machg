@@ -1140,6 +1140,11 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	return lines;
 }
 
+- (NSRange) fullRange
+{
+	return NSMakeRange(0, [self length]);
+}
+
 - (NSString*) SHA1HashString
 {
 	const char *cstr = [self UTF8String];
@@ -1289,6 +1294,10 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	NSRange maximumRange = ((NSRange){.location= 0UL, .length= NSUIntegerMax});
 	return [self attributesAtIndex:0 effectiveRange:&maximumRange];
 }
+- (NSRange) fullRange
+{
+	return NSMakeRange(0, [self length]);
+}
 @end
 
 
@@ -1306,7 +1315,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 }
 - (void) addAttribute:(NSString*)name value:(id)value
 {
-	[self addAttribute:name value:value range:NSMakeRange(0, [self length])];
+	[self addAttribute:name value:value range:[self fullRange]];
 }
 @end
 

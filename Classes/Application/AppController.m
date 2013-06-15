@@ -209,7 +209,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	NSMutableParagraphStyle* ps = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
 	[ps setAlignment:NSCenterTextAlignment];
 	NSDictionary* newParagraphStyle = @{NSParagraphStyleAttributeName: ps};
-	[version addAttributes:newParagraphStyle range:NSMakeRange(0, [version length])];
+	[version addAttributes:newParagraphStyle range:[version fullRange]];
 	return version;
 }
 

@@ -1064,6 +1064,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 - (NSComparisonResult)caseInsensitiveNumericCompare:(NSString*)aString;
 - (BOOL)	endsWithNewLine;
 - (NSArray*) stringDividedIntoLines;	// Each line includes the line ending if present
+- (NSRange) fullRange;
 - (NSString*) SHA1HashString;
 @end
 
@@ -1093,6 +1094,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 + (NSAttributedString*) string:(NSString*)s1 withAttributes:(NSDictionary*)a1 andString:(NSString*)s2 withAttributes:(NSDictionary*)a2;
 + (NSAttributedString*) hyperlinkFromString:(NSString*)inString withURL:(NSURL*)aURL;
 - (NSDictionary*)		attributesOfWholeString;
+- (NSRange)				fullRange;
 @end
 // MARK: -
 @interface NSMutableAttributedString ( NSMutableAttributedStringPlusInitilizers)
@@ -1183,7 +1185,7 @@ typedef BOOL (^ArrayFilterBlock)(id);
 
 // MARK: -
 @interface NSApplication ( NSApplicationPlusExtensions )
-- (void)	 presentAnyErrorsAndClear:(NSError**)err;
+- (BOOL)	 presentAnyErrorsAndClear:(NSError**)err;
 + (NSArray*) applicationsForURL:(NSURL*)url;
 + (NSURL*)	 applicationForURL:(NSURL*)url;
 @end

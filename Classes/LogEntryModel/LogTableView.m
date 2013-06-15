@@ -1021,7 +1021,7 @@ static inline void addRevisionsToTableRowList(NSString* str, NSMutableArray* tab
 	// embedd known attachments
 	NSMutableAttributedString* stringToEncode = [selectedText mutableCopy];
 
-	for (NSRange strRange = NSMakeRange(0, [stringToEncode length]); strRange.length > 0; )
+	for (NSRange strRange = [stringToEncode fullRange]; strRange.length > 0; )
 	{
 		NSRange effectiveRange;
 		id attr = [stringToEncode attribute:NSAttachmentAttributeName atIndex:strRange.length - 1 effectiveRange:&effectiveRange];

@@ -228,7 +228,7 @@
 	NSString* newTitle = fstr(@"Alter Details of Changeset “%@”", [entryToAlter_ revisionStr]);
 	[alterDetailsSheetTitle setStringValue:newTitle];
 
-	[alterDetailsCommitMessageTextView setSelectedRange:NSMakeRange(0, [[alterDetailsCommitMessageTextView string] length])];
+	[alterDetailsCommitMessageTextView setSelectedRange:[[alterDetailsCommitMessageTextView string] fullRange]];
 	[alterDetailsCommitMessageTextView insertText:[entryToAlter_ fullComment]];
 	
 	[self setCommitter:[entryToAlter_ fullAuthor]];

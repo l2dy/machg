@@ -196,7 +196,7 @@ NSString* kAmendOption	 = @"amendOption";
 	[commitSubstateButton setHidden:!hasHgSub_];
 	
 	NSString* currentMessage = [commitMessageTextView string];
-	[commitMessageTextView setSelectedRange:NSMakeRange(0, [currentMessage length])];
+	[commitMessageTextView setSelectedRange:[currentMessage fullRange]];
 	[self setSheetTitle];
 	[myDocument_ beginSheet:theCommitSheet];
 	[theCommitSheet makeFirstResponder:commitMessageTextView];
@@ -336,7 +336,7 @@ NSString* kAmendOption	 = @"amendOption";
 - (void) amendOptionChanged
 {
 	NSString* currentMessage = [[commitMessageTextView string] copy];
-	[commitMessageTextView setSelectedRange:NSMakeRange(0, [currentMessage length])];
+	[commitMessageTextView setSelectedRange:[currentMessage fullRange]];
 	[commitMessageTextView insertText:nonNil(cachedCommitMessageForAmend_)];
 	cachedCommitMessageForAmend_ = currentMessage;
 	[self validateButtons:self];
