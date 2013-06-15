@@ -481,13 +481,8 @@
 	FSNodeInfo* copiedNode = [[FSNodeInfo alloc]initWithNode:self];
 	[copiedNode setHgStatus:unionBits([copiedNode hgStatus], eHGStatusDirty)];
 	[[copiedNode childNodes] removeAllObjects];
-	NSEnumerator* enumerator = [[self childNodes] objectEnumerator];
-	FSNodeInfo* childNode = [enumerator nextObject];
-	while (childNode)
-	{
+	for (FSNodeInfo* childNode in [[self childNodes] objectEnumerator])
 		[copiedNode childNodes][[childNode relativePathComponent]] = [childNode deepCopyAndDirtify];
-		childNode = [enumerator nextObject];
-	}
 	return copiedNode;
 }
 
