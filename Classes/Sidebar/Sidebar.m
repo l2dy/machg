@@ -1361,6 +1361,8 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 - (NSString*) outgoingCountTo:(SidebarNode*)destination	{ return outgoingCounts[[destination path]]; }
 - (NSString*) incomingCountFrom:(SidebarNode*)source	{ return incomingCounts[[source path]]; }
 
+- (void) setOutgoingCount:(NSString*)path toValue:(NSString*)val { outgoingCounts[path] = val; }
+- (void) setIncomingCount:(NSString*)path toValue:(NSString*)val { incomingCounts[path] = val; }
 
 - (void) computeIncomingOutgoingToCompatibleRepositories
 {
@@ -1391,34 +1393,40 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 			__block ShellTaskController* theOutgoingController = [[ShellTaskController alloc]init];
 			dispatchWithTimeOutBlock(globalQueue(), 30.0 /* try for 30 seconds to get result of "outgoing"*/,
 									 
-				 // Main Block
-				 ^{
-					 NSMutableArray* argsOutgoing = [NSMutableArray arrayWithObjects:@"outgoing", @"--insecure", @"--quiet", @"--noninteractive", @"--template", @"+", [repo fullURLPath], nil];
-					 ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsOutgoing  fromRoot:rootPath  logging:eLoggingNone  withDelegate:theOutgoingController];
-					 theOutgoingController = nil;
-					 dispatch_async(mainQueue(), ^{
-						 if (![rootPath isEqualTo:[[weakSelf selectedNode] path]])
-							 return;
-						 if ([results hasNoErrors])
-							 outgoingCounts[[repo path]] = intAsString([results.outStr length]);
-						 else
-							 outgoingCounts[[repo path]] = @"-";
-						 NSDictionary* info = @{@"sidebarNodePath": [repo path]};
-						 [weakMyDocument postNotificationWithName:kReceivedCompatibleRepositoryCount userInfo:info];
-					 });										 
-				 },
-				 
-				 // Timeout Block
-				 ^{
-					 [[theOutgoingController shellTask] cancelTask];	// We timed out so kill the task which timed out...
-					 theOutgoingController = nil;
-					 dispatch_async(mainQueue(), ^{
-						 if (![rootPath isEqualTo:[[weakSelf selectedNode] path]])
-							 return;
-						 outgoingCounts[[repo path]] = @"-";
-						 [weakSelf setNeedsDisplayForNodePath:[repo path]];
-					 });										 
-				 });
+				// Main Block
+				^{
+					NSMutableArray* argsOutgoing = [NSMutableArray arrayWithObjects:@"outgoing", @"--insecure", @"--quiet", @"--noninteractive", @"--template", @"+", [repo fullURLPath], nil];
+					ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsOutgoing  fromRoot:rootPath  logging:eLoggingNone  withDelegate:theOutgoingController];
+					theOutgoingController = nil;
+					dispatch_async(mainQueue(), ^{
+						Sidebar* strongSelf = weakSelf;
+						if (!strongSelf)
+							return;
+						if (![rootPath isEqualTo:[[strongSelf selectedNode] path]])
+							return;
+						if ([results hasNoErrors])
+							[strongSelf setOutgoingCount:[repo path] toValue:intAsString([results.outStr length])];
+						else
+							[strongSelf setOutgoingCount:[repo path] toValue:@"-"];
+						NSDictionary* info = @{@"sidebarNodePath": [repo path]};
+						[weakMyDocument postNotificationWithName:kReceivedCompatibleRepositoryCount userInfo:info];
+					});
+				},
+				
+				// Timeout Block
+				^{
+					[[theOutgoingController shellTask] cancelTask];	// We timed out so kill the task which timed out...
+					theOutgoingController = nil;
+					dispatch_async(mainQueue(), ^{
+						Sidebar* strongSelf = weakSelf;
+						if (!strongSelf)
+							return;
+						if (![rootPath isEqualTo:[[weakSelf selectedNode] path]])
+							return;
+						[strongSelf setOutgoingCount:[repo path] toValue:@"-"];
+						[weakSelf setNeedsDisplayForNodePath:[repo path]];
+					});
+				});
 		}
 	}];
 
@@ -1427,35 +1435,41 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 		{
 			__block ShellTaskController* theIncomingController = [[ShellTaskController alloc]init];
 			dispatchWithTimeOutBlock(globalQueue(), 30.0 /* try for 30 seconds to get result of "outgoing"*/,
-									 
-				 // Main Block
-				 ^{
-					 NSMutableArray* argsOutgoing = [NSMutableArray arrayWithObjects:@"incoming", @"--insecure", @"--quiet", @"--noninteractive", @"--template", @"-", [repo fullURLPath], nil];
-					 ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsOutgoing  fromRoot:rootPath  logging:eLoggingNone  withDelegate:theIncomingController];
-					 theIncomingController = nil;
-					 dispatch_async(mainQueue(), ^{
-						 if (![rootPath isEqualTo:[[weakSelf selectedNode] path]])
-							 return;
-						 if ([results hasNoErrors])
-							 incomingCounts[[repo path]] = intAsString([results.outStr length]);
-						 else
-							 incomingCounts[[repo path]] = @"-";
-						 NSDictionary* info = @{@"sidebarNodePath": [repo path]};
-						 [weakMyDocument postNotificationWithName:kReceivedCompatibleRepositoryCount userInfo:info];
-					 });										 
-				 },
-				 
-				 // Timeout Block
-				 ^{
-					 [[theIncomingController shellTask] cancelTask];	// We timed out so kill the task which timed out...
-					 theIncomingController = nil;
-					 dispatch_async(mainQueue(), ^{
-						 if (![rootPath isEqualTo:[[weakSelf selectedNode] path]])
-							 return;
-						 incomingCounts[[repo path]] = @"-";
-						 [weakSelf setNeedsDisplayForNodePath:[repo path]];
-					 });										 
-				 });
+				
+				// Main Block
+				^{
+					NSMutableArray* argsOutgoing = [NSMutableArray arrayWithObjects:@"incoming", @"--insecure", @"--quiet", @"--noninteractive", @"--template", @"-", [repo fullURLPath], nil];
+					ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsOutgoing  fromRoot:rootPath  logging:eLoggingNone  withDelegate:theIncomingController];
+					theIncomingController = nil;
+					dispatch_async(mainQueue(), ^{
+						Sidebar* strongSelf = weakSelf;
+						if (!strongSelf)
+							return;
+						if (![rootPath isEqualTo:[[weakSelf selectedNode] path]])
+							return;
+						if ([results hasNoErrors])
+							[strongSelf setIncomingCount:[repo path] toValue:intAsString([results.outStr length])];
+						else
+							[strongSelf setIncomingCount:[repo path] toValue:@"-"];
+						NSDictionary* info = @{@"sidebarNodePath": [repo path]};
+						[weakMyDocument postNotificationWithName:kReceivedCompatibleRepositoryCount userInfo:info];
+					});
+				},
+				
+				// Timeout Block
+				^{
+					[[theIncomingController shellTask] cancelTask];	// We timed out so kill the task which timed out...
+					theIncomingController = nil;
+					dispatch_async(mainQueue(), ^{
+						Sidebar* strongSelf = weakSelf;
+						if (!strongSelf)
+							return;
+						if (![rootPath isEqualTo:[[weakSelf selectedNode] path]])
+							return;
+						[strongSelf setIncomingCount:[repo path] toValue:@"-"];
+						[weakSelf setNeedsDisplayForNodePath:[repo path]];
+					});
+				});
 		}
 	}];
 
