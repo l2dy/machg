@@ -180,8 +180,7 @@
 	return self;
 }
 
-
-- (FSNodeInfo*) initWithNode:(FSNodeInfo*)node
+- (FSNodeInfo*) initWithNodeEnvironment:(FSNodeInfo*)node
 {
 	self = [super init];
 	if (!self)
@@ -189,13 +188,23 @@
 	parentFSViewer = [node parentFSViewer];
 	relativePathComponent = [node relativePathComponent];
 	absolutePath = [node absolutePath];
-	childNodes = [[node childNodes] mutableCopy];
+	childNodes = nil;
 	sortedChildNodeKeys = nil;
 	haveComputedTheProperties = NO;
 	hgStatus = eHGStatusNoStatus;
 	maxIconCountOfSubitems_ = notYetComputedIconCount;
 	return self;
 }
+
+- (FSNodeInfo*) initWithNode:(FSNodeInfo*)node
+{
+	self = [self initWithNodeEnvironment:node];
+	if (!self)
+		return nil;
+	childNodes = [[node childNodes] mutableCopy];
+	return self;
+}
+
 
 
 + (HGStatus) statusEnumFromLetter:(NSString*)statusLetter
@@ -492,7 +501,7 @@
 		NSString* theRelativePath = pathDifference(repositoryRootPath, theAbsolutePath);
 		
 		// If we have a relative path which is the main repository path or other weirdness fully regenerate things.
-		if ([theRelativePath length] <= 0)
+		if (IsEmpty(theRelativePath))
 			return nil;
 		NSArray*  pathComponents = [theRelativePath componentsSeparatedByString:@"/"];
 		BOOL done = NO;
@@ -525,55 +534,105 @@
 // We basically make a complete copy of the tree but share the nodes which are still the same. Thus if in a forest only one of the
 // leaves changes we need to only duplicate and modify the nodes on the way from the leaf back up to the root of the tree. The
 // rest of the nodes are all shared.
+- (FSNodeInfo*) copyRemoving:(NSArray*)theRelativeComponentPaths
+{
+	// The basic idea is to progress through both lists of exisiting child node keys and first path components (prune keys) at the
+	// same time. These lists have been alphabetized to be in the same order (under localized case insensitve compare). Any
+	// existing child keys which are not being pruned are copied verbatim, and for any child keys matching prune keys we collect
+	// up the subset of paths to be pruned with the same key and then recursively create a new pruned node for that child. 
+	NSInteger i = 0;
+	NSInteger j = 0;
+	NSMutableDictionary* newChildNodes = [[NSMutableDictionary alloc] init];
+	while (i < self.sortedChildNodeKeys.count && j < theRelativeComponentPaths.count)
+	{
+		NSString* existingKey = self.sortedChildNodeKeys[i];
+		NSArray* componentPath = theRelativeComponentPaths[j];
+		NSString* pruneKey = [componentPath firstObject];
+		NSComparisonResult comp = [existingKey localizedCaseInsensitiveCompare:pruneKey];
+		
+		// If the existing key is different then the key to remove then keep this child node
+		if (comp == NSOrderedAscending)
+		{
+			newChildNodes[existingKey] = self.childNodes[existingKey];
+			i++;
+			continue;
+		}
+
+		// If the key to remove doesn't appear in the child nodes than we are done.
+		if (comp == NSOrderedDescending)
+		{
+			j++;
+			continue;
+		}
+
+		// If the path to remove doesn't have any further path components than we are prunning this child node and all it's children
+		if ([componentPath count] == 1)
+		{
+			i++;
+			j++;
+			continue;
+		}
+
+		if (![existingKey isEqualToString:pruneKey])
+		{
+			DebugLog(@"bad string match case in tree construciton");
+		}
+		
+		NSMutableArray* subsetOfPathsToRemove = [[NSMutableArray alloc] init];
+		while (j < theRelativeComponentPaths.count)
+		{
+			componentPath = theRelativeComponentPaths[j];
+			if (![existingKey isEqualToString:[componentPath firstObject]])
+				break;
+			NSArray* childComponentPath = [componentPath arrayByRemovingFirst];
+			[subsetOfPathsToRemove addObject:childComponentPath];
+			j++;
+		}
+		FSNodeInfo* newPrunedChild = [self.childNodes[existingKey] copyRemoving:subsetOfPathsToRemove];
+		if (newPrunedChild)
+			newChildNodes[existingKey] = newPrunedChild;
+		i++;
+	}
+	
+	// If there are remaining existing children nodes than add these
+	while (i < self.sortedChildNodeKeys.count)
+	{
+		NSString* existingKey = self.sortedChildNodeKeys[i];
+		newChildNodes[existingKey] = self.childNodes[existingKey];
+		i++;
+	}
+	
+	if (IsEmpty(newChildNodes))
+		return nil;
+	FSNodeInfo* newPrunedCopy = [[FSNodeInfo alloc] initWithNodeEnvironment:self];
+	newPrunedCopy.childNodes = newChildNodes;
+	return newPrunedCopy;
+}
+
+
+// We basically make a complete copy of the tree but share the nodes which are still the same. Thus if in a forest only one of the
+// leaves changes we need to only duplicate and modify the nodes on the way from the leaf back up to the root of the tree. The
+// rest of the nodes are all shared.
 - (FSNodeInfo*) shallowTreeCopyRemoving:(NSArray*)theAbsolutePaths
 {
 	NSString* repositoryRootPath = absolutePath;
-	FSNodeInfo* newRoot = [[FSNodeInfo alloc] initWithNode:self];
-	for (NSString* theAbsolutePath in theAbsolutePaths)
+	NSMutableArray* theRelativeComponentPaths = [[NSMutableArray alloc] init];
+	NSArray* theSortedAbsolutePaths = [theAbsolutePaths sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+	for (NSString* theAbsolutePath in theSortedAbsolutePaths)
 	{
 		NSString* theRelativePath = pathDifference(repositoryRootPath, theAbsolutePath);
-		
-		// If we have a relative path which is the main repository path or other weirdness fully regenerate things.
-		if ([theRelativePath length] <= 0)
-			return nil;
-		NSArray*  pathComponents = [theRelativePath componentsSeparatedByString:@"/"];
-		BOOL done = NO;
-		FSNodeInfo* node   = newRoot;
-		FSNodeInfo* parent = nil;
-		NSMutableArray* parentChain = [[NSMutableArray alloc] init];	// The stack of parents as we drill down
-		for (NSString* component in pathComponents)
-		{
-			if (IsEmpty(component))
-				break;
-			FSNodeInfo* copiedNode = [node haveComputedTheProperties] ? [[FSNodeInfo alloc] initWithNode:node] : node;	// If we have already copied the node we don't need to copy it again
-			[parent childNodes][[copiedNode relativePathComponent]] = copiedNode;
 
-			FSNodeInfo* childNode = [copiedNode childNodes][component];
-			if (!childNode)
-				{ done = YES; break;}
-			parent = copiedNode;
-			node = childNode;
-			[parentChain addObject:parent];
-		}
-		if (done)
-			continue;
-		
-		// We have arrived at the place we should prune the tree
-		[[parent childNodes] removeObjectForKey:[node relativePathComponent]];
-		
-		// We need to prune directories which only contained this one path and are now empty
-		FSNodeInfo* folder = [parentChain popLast];
-		while (folder && [[folder childNodes] count] == 0)
-		{
-			FSNodeInfo* parentOfFolder = [parentChain popLast];
-			[[parentOfFolder childNodes] removeObjectForKey:[folder relativePathComponent]];
-			folder = parentOfFolder;
-		}
+		// If we have a relative path which is the main repository path or other weirdness fully regenerate things.
+		if (IsEmpty(theRelativePath))
+			return nil;
+		NSArray* componentsPaths = [[theRelativePath componentsSeparatedByString:@"/"] trimArray];
+		[theRelativeComponentPaths addObject:componentsPaths];
 	}
+	
+	FSNodeInfo* newRoot = [self copyRemoving:theRelativeComponentPaths];
 	[newRoot computeProperties];
 	return newRoot;
 }
-
 
 
 - (NSString*) description
