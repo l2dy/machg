@@ -64,6 +64,12 @@ NSString* kTheRevisionFieldValue = @"theRevisionFieldValue";
 		[self updateButtonsAndMessages];
 }
 
+- (void) dealloc
+{
+	[self removeObserver:self forKeyPath:kTheNewNameFieldValue];
+	[self removeObserver:self forKeyPath:kTheRevisionFieldValue];
+}
+
 
 
 

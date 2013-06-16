@@ -41,7 +41,7 @@
 	return self;
 }
 
-- (void) unload { [theFilesView_ unload]; }
+- (void) dealloc { [self stopObserving]; }
 @end
 
 
@@ -86,9 +86,12 @@
 	[theFSViewer setAreNodesVirtual:NO];
 }
 
-- (BOOL) controlsMainFSViewer	{ return YES; }
+- (void) dealloc
+{
+	[self stopObserving];
+}
 
-- (void) unload					{ }
+- (BOOL) controlsMainFSViewer	{ return YES; }
 
 - (void) prepareToOpenFilesView
 {

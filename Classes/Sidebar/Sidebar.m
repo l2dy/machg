@@ -116,6 +116,11 @@
 	[self setNeedsDisplayForNodePath:nodePath];
 }
 
+- (void) dealloc
+{
+	[self stopObserving];
+}
+
 
 
 

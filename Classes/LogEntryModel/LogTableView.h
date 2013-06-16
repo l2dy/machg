@@ -50,7 +50,6 @@
 @property (readonly) BOOL	tableIsFiltered;				// Are the revisions filtered through some keyword, or revset filter
 @property BOOL				canSelectIncompleteRevision;	// Are you allowed to select the incomplete revision in this LogTableView
 
-- (void)		unload;
 - (IBAction)	refreshTable:(id)sender;
 - (IBAction)	resetTable:(id)sender;
 

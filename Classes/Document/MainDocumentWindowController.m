@@ -32,4 +32,6 @@
 	return displayName;
 }
 
+- (void) dealloc	{ [self stopObserving]; }
+
 @end

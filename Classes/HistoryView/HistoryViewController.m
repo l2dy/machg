@@ -53,9 +53,9 @@
 	return self;
 }
 
-- (void) unload
+- (void) dealloc
 {
-	[theHistoryView_ unload];
+	[self stopObserving];
 }
 
 @end
@@ -124,11 +124,9 @@
 }
 
 
--(void) unload
+-(void) dealloc
 {
 	[self stopObserving];
-	[logTableView_ unload];
-	logTableView_ = nil;
 }
 
 

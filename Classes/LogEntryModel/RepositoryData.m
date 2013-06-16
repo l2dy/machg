@@ -82,12 +82,18 @@
 
 - (void) markAsDiscarded
 {
+	[self stopObserving];
 	discarded_ = YES;
 }
 
 - (void) underlyingRepositoryDidChange
 {
 	[self loadCombinedInformationAndNotify:NO];
+}
+
+- (void) dealloc
+{
+	[self stopObserving];
 }
 
 

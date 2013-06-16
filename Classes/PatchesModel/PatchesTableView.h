@@ -30,7 +30,6 @@
 }
 
 - (MacHgDocument*)		myDocument;
-- (void)				unload;
 
 
 // Quieres

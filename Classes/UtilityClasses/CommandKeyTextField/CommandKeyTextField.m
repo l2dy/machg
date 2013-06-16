@@ -38,4 +38,9 @@
 	[self performSelector:@selector(syncronizeToModifierKeys) withObject:nil afterDelay:(NSTimeInterval)1.5];
 }
 
+- (void) dealloc
+{
+	[self stopObserving];
+}
+
 @end

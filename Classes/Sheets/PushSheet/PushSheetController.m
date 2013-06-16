@@ -59,6 +59,8 @@
 	cmdOptions = @[forceOption, bookmarkOption, branchOption, insecureOption, remotecmdOption, revOption, sshOption];
 }
 
+- (void) dealloc	{ [self stopObserving]; }
+
 
 
 

@@ -43,6 +43,21 @@ NSString* kKeyPathShowFileIcons	 = @"values.DisplayFileIconsInBrowser";
 	[self refreshButtonImage:self];
 }
 
+- (void) dealloc
+{
+	id defaults = [NSUserDefaultsController sharedUserDefaultsController];	
+	[defaults  removeObserver:self forKeyPath:kKeyPathShowAdded];
+	[defaults  removeObserver:self forKeyPath:kKeyPathShowModified];
+	[defaults  removeObserver:self forKeyPath:kKeyPathShowClean];
+	[defaults  removeObserver:self forKeyPath:kKeyPathShowRemoved];
+	[defaults  removeObserver:self forKeyPath:kKeyPathShowMissing];
+	[defaults  removeObserver:self forKeyPath:kKeyPathShowUntracked];
+	[defaults  removeObserver:self forKeyPath:kKeyPathShowIgnored];
+	[defaults  removeObserver:self forKeyPath:kKeyPathShowUnResolved];
+	[defaults  removeObserver:self forKeyPath:kKeyPathShowResolved];
+	[defaults  removeObserver:self forKeyPath:kKeyPathShowFileIcons];
+}
+
 - (void) observeValueForKeyPath:(NSString*)keyPath  ofObject:(id)object  change:(NSDictionary*)change  context:(void*)context
 {
     if ([keyPath isEqualToString:kKeyPathShowAdded] ||

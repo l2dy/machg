@@ -49,10 +49,6 @@
 @synthesize parentContoller = parentContoller_;
 @synthesize myDocument = myDocument_;
 
--(void) unload
-{
-}
-
 - (void) prepareToOpenBackingView
 {
 }

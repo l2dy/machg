@@ -141,7 +141,6 @@
 
 
 // Initialization
-- (void)		unload;
 - (FSNodeInfo*) rootNodeInfo;
 
 

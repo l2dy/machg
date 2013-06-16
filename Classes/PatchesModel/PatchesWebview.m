@@ -65,6 +65,8 @@
 	showExternalDiffButton_ = YES;
 }
 
+- (void) dealloc	{ [self stopObserving]; }
+
 
 
 

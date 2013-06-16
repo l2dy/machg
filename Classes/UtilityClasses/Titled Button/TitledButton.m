@@ -55,5 +55,9 @@
 	
 }
 
+- (void) dealloc
+{
+	[self stopObserving];
+}
 
 @end

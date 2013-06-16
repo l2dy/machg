@@ -41,7 +41,7 @@
 	return self;
 }
 
-- (void) unload { [theDifferencesView unload]; }
+- (void) dealloc { [self stopObserving]; }
 
 @end
 
@@ -119,15 +119,9 @@
 
 - (BOOL) controlsMainFSViewer	{ return NO; }
 
-- (void) unload
+- (void) dealloc
 {
 	[self stopObserving];
-	[theFSViewer unload];
-	[baseLogTableView unload];
-	[compareLogTableView unload];
-	theFSViewer = nil;
-	baseLogTableView = nil;
-	compareLogTableView = nil;
 }
 
 

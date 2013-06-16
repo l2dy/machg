@@ -40,6 +40,11 @@ NSString* kAmendOption	 = @"amendOption";
 	[self observe:kFileWasIncluded from:exclusions byCalling:@selector(nodeWasChanged:)];
 }
 
+- (void) dealloc
+{
+	[self stopObserving];
+}
+
 - (void) nodeWasChanged:(NSNotification*)notification
 {
 	if ([self showingFilesTable])
@@ -54,6 +59,7 @@ NSString* kAmendOption	 = @"amendOption";
 }
 
 - (NSString*) nibNameForFilesTable   { return @"CommitFilesViewTable"; }
+
 @end
 
 
@@ -116,6 +122,11 @@ NSString* kAmendOption	 = @"amendOption";
 {
     if ([keyPath isEqualToString:kAmendOption])
 		[self amendOptionChanged];
+}
+
+- (void) dealloc
+{
+	[self removeObserver:self forKeyPath:kAmendOption];
 }
 
 

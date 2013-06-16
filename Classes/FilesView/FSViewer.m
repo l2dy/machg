@@ -150,6 +150,7 @@
 
 - (void)dealloc
 {
+	[self stopObserving];
 	WebScriptObject* script = [detailedPatchesWebView windowScriptObject];
 	[script removeWebScriptKey:@"machgWebviewController"];
 	[detailedPatchesWebView close];
@@ -160,11 +161,6 @@
 	theFilesBrowser_ = nil;
 	theFilesOutline_ = nil;
 	theFilesTable_ = nil;
-}
-
-- (void) unload
-{
-	[self stopObserving];
 }
 
 

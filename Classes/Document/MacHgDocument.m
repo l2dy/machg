@@ -182,6 +182,7 @@
 		dispatch_release(refreshBrowserSerialQueue_);
 		dispatch_release(mercurialTaskSerialQueue_);
 	});
+	[self stopObserving];
 }
 
 - (void) windowWillClose:(NSNotification*) notification
@@ -441,25 +442,6 @@
 	dispatch_once(&theUpdateSheetControllerInitilizer_, ^{
 		theUpdateSheetController_ = [[UpdateSheetController alloc] initUpdateSheetControllerWithDocument:self]; });
 	return theUpdateSheetController_;
-}
-
-
-- (void) unloadFilesView
-{
-	[theFilesViewController_ unload];
-	theFilesViewController_ = nil;
-}
-
-- (void) unloadHistoryView
-{
-	[theHistoryViewController_ unload];
-	theHistoryViewController_ = nil;
-}
-
-- (void) unloadDifferencesView
-{
-	[theDifferencesViewController_ unload];
-	theDifferencesViewController_ = nil;
 }
 
 

@@ -29,7 +29,6 @@
 @property IBOutlet DifferencesView*			theDifferencesView;
 
 - (DifferencesViewController*) initDifferencesViewControllerWithDocument:(MacHgDocument*)doc;
-- (void) unload;
 @end
 
 
@@ -83,7 +82,6 @@
 
 
 - (void)		restoreDifferencesSplitViewPositions;
-- (void)		unload;
 
 
 // Refreshing

@@ -29,7 +29,6 @@
 @property HistoryView* IBOutlet	theHistoryView;
 
 - (HistoryViewController*) initHistoryViewControllerWithDocument:(MacHgDocument*)doc;
-- (void) unload;
 @end
 
 
@@ -65,7 +64,6 @@
 
 
 // Initializations
-- (void)	 unload;
 - (void)	 prepareToOpenHistoryView;
 
 

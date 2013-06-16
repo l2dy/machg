@@ -259,6 +259,11 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 	[[NSNotificationCenter defaultCenter] addObserver:self selector:@selector(savePositionsToDefaults) name:NSSplitViewDidResizeSubviewsNotification object:self];
 }
 
+- (void) dealloc
+{
+	[self stopObserving];
+}
+
 - (void) recordCollapsedState
 {
 	NSMutableArray* oldCollapsedState = [[NSMutableArray alloc]init];

@@ -29,7 +29,6 @@
 @property IBOutlet FilesView*				theFilesView;
 
 - (FilesViewController*) initFilesViewControllerWithDocument:(MacHgDocument*)doc;
-- (void) unload;
 @end
 
 
@@ -54,7 +53,6 @@
 @property (assign) IBOutlet FilesViewController*	parentContoller;
 @property (readonly) IBOutlet FSViewer*				theFSViewer;
 
-- (void)	 unload;
 - (void)	 prepareToOpenFilesView;
 - (NSInteger) numberOfQuickLookPreviewItems;
 

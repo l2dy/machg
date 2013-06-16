@@ -85,10 +85,9 @@
 	[self resetTable:self];
 }
 
-- (MacHgDocument*)		myDocument			{ return [parentController myDocument]; }
+- (MacHgDocument*) myDocument	{ return [parentController myDocument]; }
 
-- (void) unload					{ }
-
+- (void) dealloc				{ [self stopObserving]; }
 
 
 

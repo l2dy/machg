@@ -31,6 +31,5 @@
 @property (weak,readonly) MacHgDocument*			myDocument;
 @property (assign) IBOutlet BackingViewController*	parentContoller;
 
-- (void)	 unload;
 - (void)	 prepareToOpenBackingView;
 @end

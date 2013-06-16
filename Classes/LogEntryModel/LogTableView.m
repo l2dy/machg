@@ -105,9 +105,21 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 	[DynamicCast(NSClipView, [detailedEntryTextView superview]) setCopiesOnScroll:NO];
 }
 
-- (void) unload
+- (void) dealloc
 {
 	[self stopObserving];
+	id defaults = [NSUserDefaultsController sharedUserDefaultsController];
+	[defaults removeObserver:self forKeyPath:kKeyPathTagHighColor];
+	[defaults removeObserver:self forKeyPath:kKeyPathParentHighColor];
+	[defaults removeObserver:self forKeyPath:kKeyPathBranchHighColor];
+	[defaults removeObserver:self forKeyPath:kKeyPathBookmarkHighColor];
+	[defaults removeObserver:self forKeyPath:kKeyPathRevisionSortOrder];
+	[defaults removeObserver:self forKeyPath:kKeyPathDateAndTimeFormat];
+	NSTableColumn* changesetCol = [self tableColumnWithIdentifier:@"changeset"];
+	NSTableColumn* branchesCol  = [self tableColumnWithIdentifier:@"branch"];
+	[changesetCol  unbind:@"hidden"];
+	[branchesCol   unbind:@"hidden"];
+
 	theTableRows_ = nil;
 }
 
@@ -760,7 +772,6 @@ static inline void addRevisionsToTableRowList(NSString* str, NSMutableArray* tab
 	for (NSString* revision in revisions)
 		if (IsNotEmpty(revision))
 			[tableRows addObject:revision];
-
 }
 
 - (IBAction) resetTable:(id)sender

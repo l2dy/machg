@@ -66,6 +66,8 @@
 	cmdOptions = @[forceOption, branchOption, gitOption, graphOption, insecureOption, limitOption, newestfirstOption, nomergesOption, patchOption, remotecmdOption, revOption, sshOption, styleOption, templateOption];
 }
 
+- (void) dealloc	{ [self stopObserving]; }
+
 
 
 
