@@ -45,9 +45,9 @@
 @interface FilesView : NSView <AccessesDocument, ControllerForFSViewer, NSUserInterfaceValidations>
 {
 	IBOutlet StatusSidebarSplitView*	statusSidebarSplitView;
-	IBOutlet JHConcertinaView*			concertinaView;	// Main concertina view containing the sub panes.
-	IBOutlet NSImageView*	nodeIconWell;		// Image well showing the selected items icon.
-	IBOutlet NSTextField*	nodeInspector;		// Text field showing the selected items attributes.
+	IBOutlet JHConcertinaView*			concertinaView;		// Main concertina view containing the sub panes.
+	IBOutlet NSImageView*				nodeIconWell;		// Image well showing the selected items icon.
+	IBOutlet NSTextField*				nodeInspector;		// Text field showing the selected items attributes.
 }
 
 @property (weak,readonly) MacHgDocument*			myDocument;
@@ -64,8 +64,8 @@
 
 
 // Actions
-- (IBAction) fsviewerAction:(id)browser;			// Respond to a single click or a key down event
-- (IBAction) fsviewerDoubleAction:(id)browser;	// Respond to a double click
+- (IBAction) fsviewerAction:(id)browser;					// Respond to a single click or a key down event
+- (IBAction) fsviewerDoubleAction:(id)browser;				// Respond to a double click
 
 @end
 

@@ -15,7 +15,7 @@
 
 @implementation RenameFileSheetController
 
-@synthesize myDocument					= myDocument;
+@synthesize myDocument					= myDocument_;
 @synthesize theCurrentNameFieldValue	= theCurrentNameFieldValue_;
 @synthesize theNewNameFieldValue		= theNewNameFieldValue_;
 @synthesize theAlreadyMovedButtonValue	= theAlreadyMovedButtonValue_;
@@ -31,8 +31,9 @@
 
 - (RenameFileSheetController*) initRenameFileSheetControllerWithDocument:(MacHgDocument*)doc
 {
-	myDocument = doc;
-	[NSBundle loadNibNamed:@"RenameFileSheet" owner:self];
+	myDocument_ = doc;
+	self = [self initWithWindowNibName:@"RenameFileSheet"];
+	[self window];	// force / ensure the nib is loaded
 	return self;
 }
 
@@ -87,7 +88,7 @@
 - (IBAction) openRenameFileSheet:(id)sender
 {
 
-	NSArray* theSelectedFiles = [myDocument absolutePathsOfChosenFiles];
+	NSArray* theSelectedFiles = [myDocument_ absolutePathsOfChosenFiles];
 
 	if ([theSelectedFiles count] < 1)
 	{
@@ -105,7 +106,7 @@
 	
 	NSString* filePath = [theSelectedFiles lastObject];
 	
-	FSNodeInfo* theNode = [myDocument nodeForPath:filePath];
+	FSNodeInfo* theNode = [myDocument_ nodeForPath:filePath];
 	BOOL itemIsDirectory = [theNode isDirectory];
 	if (itemIsDirectory)
 	{
@@ -141,7 +142,7 @@
 	[theRenameFileSheet resizeSoContentsFitInFields:theCurrentNameField, theNewNameField, nil];
 	[self setTheAlreadyMovedButtonValue:newButtonState];
 	[self validateButtons:self];
-	[myDocument beginSheet:theRenameFileSheet];
+	[myDocument_ beginSheet:theRenameFileSheet];
 }
 
 
@@ -156,29 +157,29 @@
 	}
 	[theRenameFileSheet makeFirstResponder:theRenameFileSheet];	// Make the text fields of the sheet commit any changes they currently have
 
-	[myDocument removeAllUndoActionsForDocument];
-	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+	[myDocument_ removeAllUndoActionsForDocument];
+	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
 
-	[myDocument dispatchToMercurialQueuedWithDescription:@"Renaming Files" process:^{
+	[myDocument_ dispatchToMercurialQueuedWithDescription:@"Renaming Files" process:^{
 		NSArray* paths = @[theCurrentNameFieldValue_, theNewNameFieldValue_];
-		[myDocument registerPendingRefresh:paths];
+		[myDocument_ registerPendingRefresh:paths];
 		NSMutableArray* argsRename = [NSMutableArray arrayWithObjects:@"rename", nil];
 		if ([theAlreadyMovedButtonValue_ boolValue])
 			[argsRename addObject:@"--after"];
 		[argsRename addObject:theCurrentNameFieldValue_ followedBy:theNewNameFieldValue_];
 
-		[myDocument delayEventsUntilFinishBlock:^{
+		[myDocument_ delayEventsUntilFinishBlock:^{
 			[TaskExecutions executeMercurialWithArgs:argsRename  fromRoot:rootPath];
-			[myDocument addToChangedPathsDuringSuspension:paths];
+			[myDocument_ addToChangedPathsDuringSuspension:paths];
 		}];		
 	}];
 
-	[myDocument endSheet:theRenameFileSheet];
+	[myDocument_ endSheet:theRenameFileSheet];
 }
 
 - (IBAction) sheetButtonCancel:(id)sender
 {
-	[myDocument endSheet:theRenameFileSheet];
+	[myDocument_ endSheet:theRenameFileSheet];
 }
 
 - (IBAction) browseToPath: (id)sender

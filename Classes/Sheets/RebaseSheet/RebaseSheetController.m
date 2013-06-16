@@ -26,7 +26,7 @@
 
 
 @implementation RebaseSheetController
-@synthesize myDocument = myDocument;
+@synthesize myDocument = myDocument_;
 @synthesize keepOriginalRevisions = keepOriginalRevisions_;
 @synthesize keepOriginalBranchNames = keepOriginalBranchNames_;
 
@@ -41,8 +41,9 @@
 
 - (RebaseSheetController*) initRebaseSheetControllerWithDocument:(MacHgDocument*)doc
 {
-	myDocument = doc;
-	[NSBundle loadNibNamed:@"RebaseSheet" owner:self];
+	myDocument_ = doc;
+	self = [self initWithWindowNibName:@"RebaseSheet"];
+	[self window];	// force / ensure the nib is loaded
 	return self;
 }
 
@@ -71,7 +72,7 @@
 
 - (NSIndexSet*) indexSetForStartingRevision:(NSNumber*)rev
 {
-	NSSet* descendants = [[myDocument repositoryData] descendantsOfRevisionNumber:rev];
+	NSSet* descendants = [[myDocument_ repositoryData] descendantsOfRevisionNumber:rev];
 	NSMutableIndexSet* newIndexes = [[NSMutableIndexSet alloc]init];
 	for (NSNumber* revNum in descendants)
 		[newIndexes addIndex:[sourceLogTableView tableRowForRevision:revNum]];
@@ -126,8 +127,8 @@
 	
 	BOOL abort = (result == NSAlertAlternateReturn);
 	[argsRebase addObject: abort ? @"--abort" : @"--continue"];
-	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
-	ExecutionResult* results = [myDocument  executeMercurialWithArgs:argsRebase  fromRoot:rootPath  whileDelayingEvents:YES];
+	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
+	ExecutionResult* results = [myDocument_  executeMercurialWithArgs:argsRebase  fromRoot:rootPath  whileDelayingEvents:YES];
 	if (results.outStr)
 	{
 		NSString* operation = (abort ? @"Abort" :  @"Continue");
@@ -135,7 +136,7 @@
 		NSRunAlertPanel(titleMessage, @"Mercurial reported the result of the rebase %@:\n\ncode %d:\n%@", @"OK", nil, nil, operation, results.result, results.outStr);
 	}
 	if (abort)
-		[[myDocument repositoryData] deleteRebaseState];
+		[[myDocument_ repositoryData] deleteRebaseState];
 }
 
 
@@ -149,13 +150,13 @@
 
 - (IBAction) openRebaseSheetWithSelectedRevisions:(id)sender
 {
-	if ([[myDocument repositoryData] rebaseInProgress])
+	if ([[myDocument_ repositoryData] rebaseInProgress])
 	{
 		[self doContinueOrAbort];
 		return;
 	}
 
-	if ([myDocument repositoryHasFilesWhichContainStatus:eHGStatusCommittable])
+	if ([myDocument_ repositoryHasFilesWhichContainStatus:eHGStatusCommittable])
 	{
 		NSRunAlertPanel(@"Outstanding Changes", @"Rebasing is only allowed in repositories with no outstanding uncommitted changes.", @"OK", nil, nil);
 		return;
@@ -169,9 +170,9 @@
 	// Initialize Source LogTableView
 	//
 	[sourceLogTableView resetTable:self];
-	NSArray* revs = [[[myDocument theHistoryView] logTableView] chosenRevisions];
+	NSArray* revs = [[[myDocument_ theHistoryView] logTableView] chosenRevisions];
 	if ([revs count] <= 0)
-		[sourceLogTableView scrollToRevision:[myDocument getHGTipRevision]];
+		[sourceLogTableView scrollToRevision:[myDocument_ getHGTipRevision]];
 	else
 	{
 		NSInteger minRev = numberAsInt(revs[0]);
@@ -188,11 +189,11 @@
 	// Initialize Destination LogTableView
 	//
 	[destinationLogTableView resetTable:self];
-	[destinationLogTableView scrollToRevision:[myDocument getHGTipRevision]];
+	[destinationLogTableView scrollToRevision:[myDocument_ getHGTipRevision]];
 	[destinationLogTableView deselectAll:self];
 
 	// Set Sheet Title
-	NSString* newTitle = fstr(@"Rebasing Selected Revisions in “%@”", [myDocument selectedRepositoryShortName]);
+	NSString* newTitle = fstr(@"Rebasing Selected Revisions in “%@”", [myDocument_ selectedRepositoryShortName]);
 	[rebaseSheetTitle setStringValue:newTitle];
 
 	[self setKeepOriginalRevisions:NO];
@@ -202,16 +203,16 @@
 	if ([okButton isEnabled])
 		[sheetInformativeMessageTextField setAttributedStringValue: [self formattedSheetMessage]];
 	
-	[myDocument beginSheet:theRebaseSheet];
+	[myDocument_ beginSheet:theRebaseSheet];
 }
 
 
 - (IBAction) sheetButtonOk:(id)sender
 {
-	[myDocument endSheet:theRebaseSheet];
+	[myDocument_ endSheet:theRebaseSheet];
 
-	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
-	NSString* repositoryName = [[[myDocument sidebar] selectedNode] shortName];
+	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
+	NSString* repositoryName = [[[myDocument_ sidebar] selectedNode] shortName];
 	LowHighPair pair = [sourceLogTableView lowestToHighestSelectedRevisions];
 	NSNumber* destinationRev = [destinationLogTableView selectedRevision];
 	NSString* rebaseDescription = fstr(@"rebasing %d-%d in “%@”", pair.lowRevision, pair.highRevision, repositoryName);
@@ -228,16 +229,16 @@
 	if ([self keepOriginalBranchNames])
 		[argsRebase addObject:@"--keepbranches"];
 
-	ProcessController* processController = [ProcessController processControllerWithMessage:rebaseDescription forList:[myDocument theProcessListController]];
-	dispatch_async([myDocument mercurialTaskSerialQueue], ^{
-		[myDocument executeMercurialWithArgs:argsRebase  fromRoot:rootPath  withDelegate:processController  whileDelayingEvents:YES];
+	ProcessController* processController = [ProcessController processControllerWithMessage:rebaseDescription forList:[myDocument_ theProcessListController]];
+	dispatch_async([myDocument_ mercurialTaskSerialQueue], ^{
+		[myDocument_ executeMercurialWithArgs:argsRebase  fromRoot:rootPath  withDelegate:processController  whileDelayingEvents:YES];
 		[processController terminateController];
 	});		
 }
 
 - (IBAction) sheetButtonCancel:(id)sender
 {
-	[myDocument endSheet:theRebaseSheet];
+	[myDocument_ endSheet:theRebaseSheet];
 }
 
 

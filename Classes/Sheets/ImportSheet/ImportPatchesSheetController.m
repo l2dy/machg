@@ -33,7 +33,7 @@
 @synthesize guessRenames = guessRenames_;
 @synthesize guessSimilarityFactor = guessSimilarityFactor_;
 @synthesize hunkExclusions = hunkExclusions_;
-@synthesize myDocument = myDocument;
+@synthesize myDocument = myDocument_;
 
 
 
@@ -49,8 +49,9 @@
 	self = [super init];
 	if (!self)
 		return nil;
-	myDocument = doc;
-	[NSBundle loadNibNamed:@"ImportPatchesSheet" owner:self];
+	myDocument_ = doc;
+	self = [self initWithWindowNibName:@"ImportPatchesSheet"];
+	[self window];	// force / ensure the nib is loaded
 	hunkExclusions_ = [[HunkExclusions alloc]init];
 	return self;
 }
@@ -92,7 +93,7 @@
 - (IBAction) addPatches:(id)sender
 {
 	NSOpenPanel* panel = [NSOpenPanel openPanel];
-	[panel setDirectoryURL:[NSURL fileURLWithPath:[myDocument absolutePathOfRepositoryRoot]]];
+	[panel setDirectoryURL:[NSURL fileURLWithPath:[myDocument_ absolutePathOfRepositoryRoot]]];
 	[panel setCanChooseFiles:YES];
 	[panel setCanChooseDirectories:NO];
 	[panel setAllowsMultipleSelection:YES];
@@ -144,21 +145,21 @@
 
 - (IBAction) openImportPatchesSheet:(id)sender
 {
-	NSString* newTitle = fstr(@"Importing Patches into %@", [myDocument selectedRepositoryShortName]);
+	NSString* newTitle = fstr(@"Importing Patches into %@", [myDocument_ selectedRepositoryShortName]);
 	[importSheetTitle setStringValue:newTitle];
 	 
 	// Report the branch we are about to import to in the dialog
 	[patchesTable resetTable:self];
 	[self validate:self];
 	
-	[myDocument beginSheet:theImportPatchesSheet];
+	[myDocument_ beginSheet:theImportPatchesSheet];
 }
 
 
 - (IBAction) sheetButtonOk:(id)sender
 {
 	[theImportPatchesSheet makeFirstResponder:theImportPatchesSheet];	// Make the fields of the sheet commit any changes they currently have
-	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
 	NSMutableString* cumulativeMessages = [[NSMutableString alloc] init];
 	BOOL canClose = NO;
 
@@ -205,13 +206,13 @@
 	if (!canClose)
 		return;
 	[theImportPatchesSheet makeFirstResponder:theImportPatchesSheet];	// Make the text fields of the sheet commit any changes they currently have
-	[myDocument endSheet:theImportPatchesSheet];
+	[myDocument_ endSheet:theImportPatchesSheet];
 }
 
 
 - (IBAction) sheetButtonCancel:(id)sender
 {
-	[myDocument endSheet:theImportPatchesSheet];
+	[myDocument_ endSheet:theImportPatchesSheet];
 }
 
 
@@ -226,7 +227,7 @@
 - (NSAttributedString*) formattedSheetMessage
 {
 	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
-	NSString* message = fstr(@"The patches listed above will be imported into the repository %@", [myDocument selectedRepositoryShortName]);
+	NSString* message = fstr(@"The patches listed above will be imported into the repository %@", [myDocument_ selectedRepositoryShortName]);
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(message)];
 	return newSheetMessage;
 }

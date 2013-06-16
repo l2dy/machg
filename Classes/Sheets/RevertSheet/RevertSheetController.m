@@ -21,7 +21,7 @@
 
 
 @implementation RevertSheetController
-@synthesize myDocument = myDocument;
+@synthesize myDocument = myDocument_;
 
 
 
@@ -34,8 +34,9 @@
 
 - (RevertSheetController*) initRevertSheetControllerWithDocument:(MacHgDocument*)doc
 {
-	myDocument = doc;
-	[NSBundle loadNibNamed:@"RevertSheet" owner:self];
+	myDocument_ = doc;
+	self = [self initWithWindowNibName:@"RevertSheet"];
+	[self window];	// force / ensure the nib is loaded
 	return self;
 }
 
@@ -70,51 +71,51 @@
 	
 	[logTableView resetTable:self];
 	[selectedFilesTextView setString:[paths componentsJoinedByString:@"\n"]];
-	[myDocument beginSheet:theRevertSheet];
+	[myDocument_ beginSheet:theRevertSheet];
 	[logTableView scrollToRevision:revision];
 }
 
 
 - (IBAction) openRevertSheetWithAllFiles:(id)sender
 {
-	NSString* newTitle = fstr(@"Reverting All Files in %@", [myDocument selectedRepositoryShortName]);
+	NSString* newTitle = fstr(@"Reverting All Files in %@", [myDocument_ selectedRepositoryShortName]);
 	[revertSheetTitle setStringValue:newTitle];
-	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
-	[self openRevertSheetWithPaths:@[rootPath] andRevision:[myDocument getHGParent1Revision]];
+	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
+	[self openRevertSheetWithPaths:@[rootPath] andRevision:[myDocument_ getHGParent1Revision]];
 }
 
 - (IBAction) openRevertSheetWithSelectedFiles:(id)sender
 {
-	NSString* newTitle = fstr(@"Reverting Selected Files in %@", [myDocument selectedRepositoryShortName]);
+	NSString* newTitle = fstr(@"Reverting Selected Files in %@", [myDocument_ selectedRepositoryShortName]);
 	[revertSheetTitle setStringValue:newTitle];
-	NSArray* paths = [myDocument absolutePathsOfChosenFiles];
+	NSArray* paths = [myDocument_ absolutePathsOfChosenFiles];
 	if ([paths count] <= 0)
 		{ PlayBeep(); DebugLog(@"No files are selected to revert"); return; }
 	
-	[self openRevertSheetWithPaths:paths  andRevision:[myDocument getHGParent1Revision]];
+	[self openRevertSheetWithPaths:paths  andRevision:[myDocument_ getHGParent1Revision]];
 }
 
 
 - (IBAction) sheetButtonOk:(id)sender
 {
 	NSNumber* versionToRevertTo = [logTableView selectedRevision];
-	BOOL didReversion = [myDocument primaryActionRevertFiles:absolutePathsOfFilesToRevert toVersion:versionToRevertTo];
+	BOOL didReversion = [myDocument_ primaryActionRevertFiles:absolutePathsOfFilesToRevert toVersion:versionToRevertTo];
 	if (!didReversion)
 		return;
 
-	[myDocument endSheet:theRevertSheet];
+	[myDocument_ endSheet:theRevertSheet];
 }
 
 - (IBAction) sheetButtonCancel:(id)sender
 {
-	[myDocument endSheet:theRevertSheet];
+	[myDocument_ endSheet:theRevertSheet];
 }
 
 
 - (IBAction) sheetButtonViewDifferencesForRevertSheet:(id)sender
 {
 	NSNumber* versionToRevertTo = [logTableView selectedRevision];
-	[myDocument viewDifferencesInCurrentRevisionFor:absolutePathsOfFilesToRevert toRevision:numberAsString(versionToRevertTo)];
+	[myDocument_ viewDifferencesInCurrentRevisionFor:absolutePathsOfFilesToRevert toRevision:numberAsString(versionToRevertTo)];
 }
 
 

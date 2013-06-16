@@ -23,7 +23,7 @@
 @implementation UpdateSheetController
 
 @synthesize cleanUpdate = cleanUpdate_;
-@synthesize myDocument = myDocument;
+@synthesize myDocument = myDocument_;
 
 
 
@@ -36,8 +36,9 @@
 
 - (UpdateSheetController*) initUpdateSheetControllerWithDocument:(MacHgDocument*)doc
 {
-	myDocument = doc;
-	[NSBundle loadNibNamed:@"UpdateSheet" owner:self];
+	myDocument_ = doc;
+	self = [self initWithWindowNibName:@"UpdateSheet"];
+	[self window];	// force / ensure the nib is loaded
 	return self;
 }
 
@@ -73,7 +74,7 @@
 
 - (void) openUpdateSheetWithRevision:(NSNumber*)revision
 {
-	NSString* newTitle = fstr(@"Updating All Files in %@", [myDocument selectedRepositoryShortName]);
+	NSString* newTitle = fstr(@"Updating All Files in %@", [myDocument_ selectedRepositoryShortName]);
 	[updateSheetTitle setStringValue:newTitle];
 	[self setCleanUpdate:NO];
 
@@ -81,45 +82,45 @@
 	[sheetInformativeMessageTextField setStringValue:@""];
 	
 	[logTableView resetTable:self];
-	[myDocument beginSheet:theUpdateSheet];
-	[logTableView scrollToRevision:revision ? revision : [myDocument getHGParent1Revision]];
+	[myDocument_ beginSheet:theUpdateSheet];
+	[logTableView scrollToRevision:revision ? revision : [myDocument_ getHGParent1Revision]];
 	[self validate:self];
 }
 
 
 - (IBAction) openUpdateSheetWithCurrentRevision:(id)sender
 {
-	[self openUpdateSheetWithRevision:[myDocument getHGParent1Revision]];
+	[self openUpdateSheetWithRevision:[myDocument_ getHGParent1Revision]];
 }
 
 
 - (IBAction) openUpdateSheetWithSelectedRevision:(id)sender
 {
-	[self openUpdateSheetWithRevision:[myDocument getSelectedRevision]];
+	[self openUpdateSheetWithRevision:[myDocument_ getSelectedRevision]];
 }
 
 
 - (IBAction) sheetButtonOk:(id)sender
 {
 	NSNumber* versionToUpdateTo = [logTableView selectedRevision];
-	BOOL didReversion = [myDocument primaryActionUpdateFilesToVersion:versionToUpdateTo withCleanOption:[self cleanUpdate] withConfirmation:NO];
+	BOOL didReversion = [myDocument_ primaryActionUpdateFilesToVersion:versionToUpdateTo withCleanOption:[self cleanUpdate] withConfirmation:NO];
 	if (!didReversion)
 		return;
 
-	[myDocument endSheet:theUpdateSheet];
+	[myDocument_ endSheet:theUpdateSheet];
 }
 
 - (IBAction) sheetButtonCancel:(id)sender
 {
-	[myDocument endSheet:theUpdateSheet];
+	[myDocument_ endSheet:theUpdateSheet];
 }
 
 
 - (IBAction) sheetButtonViewDifferencesForUpdateSheet:(id)sender
 {
-	NSArray* rootPathAsArray = [myDocument absolutePathOfRepositoryRootAsArray];
+	NSArray* rootPathAsArray = [myDocument_ absolutePathOfRepositoryRootAsArray];
 	NSNumber* versionToUpdateTo = [logTableView selectedRevision];
-	[myDocument viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:numberAsString(versionToUpdateTo)];
+	[myDocument_ viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:numberAsString(versionToUpdateTo)];
 }
 
 
@@ -147,7 +148,7 @@
 
 - (NSAttributedString*) formattedSheetMessage
 {
-	BOOL outstandingChanges = [myDocument repositoryHasFilesWhichContainStatus:eHGStatusChangedInSomeWay];
+	BOOL outstandingChanges = [myDocument_ repositoryHasFilesWhichContainStatus:eHGStatusChangedInSomeWay];
 
 	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
 	

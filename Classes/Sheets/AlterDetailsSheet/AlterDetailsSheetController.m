@@ -24,7 +24,7 @@
 
 
 @implementation AlterDetailsSheetController
-@synthesize myDocument = myDocument;
+@synthesize myDocument = myDocument_;
 @synthesize commitMessage = commitMessage_;
 @synthesize committer = committer_;
 @synthesize commitDate = commitDate_;
@@ -40,8 +40,9 @@
 
 - (AlterDetailsSheetController*) initAlterDetailsSheetControllerWithDocument:(MacHgDocument*)doc
 {
-	myDocument = doc;
-	[NSBundle loadNibNamed:@"AlterDetailsSheet" owner:self];
+	myDocument_ = doc;
+	self = [self initWithWindowNibName:@"AlterDetailsSheet"];
+	[self window];	// force / ensure the nib is loaded
 	return self;
 }
 
@@ -76,7 +77,7 @@
 	[entryToAlter_ fullyLoadEntry];
 	
 	
-	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
 	NSString* editRevision = [entryToAlter_ revisionStr];
 	NSString* revPattern = fstr(@"heads(descendants(rev(%@))) or (merge() and descendants(rev(%@)))", editRevision, editRevision);
 	NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log", @"--limit", @"10", @"--template", @"{rev},", @"--rev", revPattern, nil];
@@ -156,32 +157,32 @@
 
 - (IBAction) closeChooseChangesetSheet:(id)sender
 {
-	[myDocument endSheet:theChooseChangesetSheet];
+	[myDocument_ endSheet:theChooseChangesetSheet];
 }
 
 - (IBAction) closeAlterDetailsSheet:(id)sender
 {
-	[myDocument endSheet:theAlterDetailsSheet];
+	[myDocument_ endSheet:theAlterDetailsSheet];
 }
 
 - (IBAction) sheetButtonCancel:(id)sender
 {
-	NSWindow* shownSheet = [myDocument shownSheet];
+	NSWindow* shownSheet = [myDocument_ shownSheet];
 	if (shownSheet && (shownSheet == theChooseChangesetSheet || shownSheet == theAlterDetailsSheet))
-		[myDocument endSheet:shownSheet];
+		[myDocument_ endSheet:shownSheet];
 }
 
 
 - (IBAction) openAlterDetailsChooseChangesetSheet:(id)sender
 {
-	if ([myDocument repositoryHasFilesWhichContainStatus:eHGStatusCommittable])
+	if ([myDocument_ repositoryHasFilesWhichContainStatus:eHGStatusCommittable])
 	{
 		PlayBeep();
 		NSRunAlertPanel(@"Outstanding Changes", @"There are outstanding uncommitted changes. Please commit or discard these changes and repeat the edit operation.", @"Ok", nil, nil);
 		return;
 	}
 
-	if (![[myDocument repositoryData] isTipOfLocalBranch])
+	if (![[myDocument_ repositoryData] isTipOfLocalBranch])
 	{
 		PlayBeep();
 		NSRunAlertPanel(@"Not at Tip", @"The repository is not updated to the local tip of the branch. Please update to the local tip of the branch and redo the operation.", @"Ok", nil, nil);
@@ -190,7 +191,7 @@
 	
 	@try
 	{
-		NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+		NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
 		NSMutableArray*  qseriesArgs   = [NSMutableArray arrayWithObjects:@"qseries", @"--config", @"extensions.hgext.mq=", nil];
 		ExecutionResult* qseriesResult = [TaskExecutions executeMercurialWithArgs:qseriesArgs fromRoot:rootPath logging:eLoggingNone];
 		if ([qseriesResult hasErrors])
@@ -210,15 +211,15 @@
 	}
 	
 	
-	NSString* newTitle = fstr(@"Altering a Selected Revision in “%@”", [myDocument selectedRepositoryShortName]);
+	NSString* newTitle = fstr(@"Altering a Selected Revision in “%@”", [myDocument_ selectedRepositoryShortName]);
 	[chooseChangesetSheetTitle setStringValue:newTitle];
 
 	[logTableView resetTable:self];
 
-	LogEntry* initialEntry = [[[myDocument theHistoryView] logTableView] chosenEntry];
+	LogEntry* initialEntry = [[[myDocument_ theHistoryView] logTableView] chosenEntry];
 
 	[logTableView selectAndScrollToRevision:[initialEntry revision]];
-	[myDocument beginSheet:theChooseChangesetSheet];
+	[myDocument_ beginSheet:theChooseChangesetSheet];
 	[self validateChooseChangesetButtons:self];
 }
 
@@ -235,7 +236,7 @@
 	[theAlterDetailsSheet makeFirstResponder:alterDetailsCommitMessageTextView];
 
 	[self validateAlterDetailsButtons:self];
-	[myDocument beginSheet:theAlterDetailsSheet];
+	[myDocument_ beginSheet:theAlterDetailsSheet];
 }
 
 
@@ -254,11 +255,11 @@
 	BOOL committerIsNew = IsNotEmpty(committer_) && [committer_ isNotEqualToString:[entryToAlter_ fullAuthor]];
 	BOOL dateIsNew = IsNotEmpty(commitDate_) && [commitDate_ isNotEqualTo:[entryToAlter_ rawDate]];
 
-	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
 	NSString* revString = fstr(@"%@:",[entryToAlter_ revisionStr]);
 
-	[myDocument dispatchToMercurialQueuedWithDescription:fstr(@"Altering %@",[entryToAlter_ revisionStr]) process:^{
-		[myDocument delayEventsUntilFinishBlock:^{
+	[myDocument_ dispatchToMercurialQueuedWithDescription:fstr(@"Altering %@",[entryToAlter_ revisionStr]) process:^{
+		[myDocument_ delayEventsUntilFinishBlock:^{
 			@try
 			{
 				NSMutableArray*  qimportArgs   = [NSMutableArray arrayWithObjects:@"qimport", @"--config", @"extensions.hgext.mq=", @"--rev", revString, nil];

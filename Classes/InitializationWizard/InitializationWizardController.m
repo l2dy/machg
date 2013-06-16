@@ -15,7 +15,8 @@
 
 - (InitializationWizardController*) initInitializationWizardController
 {
-	[NSBundle loadNibNamed:@"InitializationWizard" owner:self];
+	self = [self initWithWindowNibName:@"InitializationWizard"];
+	[self window];	// force / ensure the nib is loaded
 	return self;
 }
 

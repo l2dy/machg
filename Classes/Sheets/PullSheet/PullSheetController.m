@@ -38,7 +38,8 @@
 - (PullSheetController*) initPullSheetControllerWithDocument:(MacHgDocument*)doc
 {
 	myDocument_ = doc;
-	[NSBundle loadNibNamed:@"PullSheet" owner:self];
+	self = [self initWithWindowNibName:@"PullSheet"];
+	[self window];	// force / ensure the nib is loaded
 	return self;
 }
 

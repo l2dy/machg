@@ -30,13 +30,14 @@
 // MARK: -
 
 @implementation DifferencesViewController
-@synthesize myDocument = myDocument;
+@synthesize myDocument = myDocument_;
 @synthesize theDifferencesView;
 
 - (DifferencesViewController*) initDifferencesViewControllerWithDocument:(MacHgDocument*)doc
 {
-	myDocument = doc;
-	[NSBundle loadNibNamed:@"DifferencesView" owner:self];
+	myDocument_ = doc;
+	self = [self initWithNibName:@"DifferencesView" bundle:nil];
+	[self loadView];
 	return self;
 }
 
@@ -66,7 +67,7 @@
 @synthesize showUnresolvedFilesInBrowser = showUnresolvedFilesInBrowser_;
 @synthesize showResolvedFilesInBrowser   = showResolvedFilesInBrowser_;
 @synthesize autoExpandViewerOutlines	 = autoExpandViewerOutlines_;
-@synthesize myDocument = myDocument;
+@synthesize myDocument = myDocument_;
 @synthesize parentController = parentController_;
 @synthesize theFSViewer;
 
@@ -81,7 +82,7 @@
 
 - (void) setMyDocumentFromParent
 {
-	myDocument = [parentController_ myDocument];
+	myDocument_ = [parentController_ myDocument];
 }
 
 - (void) awakeFromNib
@@ -92,7 +93,7 @@
 	
 	[compareLogTableView setCanSelectIncompleteRevision:YES];
 	
-	NSString* fileName = [myDocument documentNameForAutosave];
+	NSString* fileName = [myDocument_ documentNameForAutosave];
 	[baseLogTableView setAutosaveTableColumns:YES];
 	[baseLogTableView setAutosaveName:fstr(@"File:%@:DifferencesBaseTableViewColumnPositions", fileName)];
 	[baseLogTableView reloadData];
@@ -102,7 +103,7 @@
 	
 	[self setAutoExpandViewerOutlines:AutoExpandViewerOutlinesFromDefaults()];
 	
-	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
 	if (rootPath)
 		[theFSViewer refreshBrowserPaths:[RepositoryPaths fromRootPath:rootPath] finishingBlock:nil];
 }
@@ -111,7 +112,7 @@
 {
 	if (IsNotEmpty([mainSplitView autosaveName]))
 		return;
-	NSString* fileName = [myDocument documentNameForAutosave];
+	NSString* fileName = [myDocument_ documentNameForAutosave];
 	NSString* autoSaveNameForSplitView = fstr(@"File:%@:DiffrencesViewMainSplitViewPosition", fileName);
 	[mainSplitView setAutosaveName:autoSaveNameForSplitView];
 }
@@ -205,9 +206,9 @@
 - (void) prepareToOpenDifferencesView
 {
 	[self refreshDifferencesView:self];
-	LowHighPair pair  = [[[myDocument theHistoryView] logTableView] parentToHighestSelectedRevisions];
-	NSNumber* lowRev  = (pair.lowRevision  != NSNotFound) ? intAsNumber(pair.lowRevision)  : [myDocument getHGParent1Revision];
-	NSNumber* highRev = (pair.highRevision != NSNotFound) ? intAsNumber(pair.highRevision) : [myDocument getHGParent1Revision];
+	LowHighPair pair  = [[[myDocument_ theHistoryView] logTableView] parentToHighestSelectedRevisions];
+	NSNumber* lowRev  = (pair.lowRevision  != NSNotFound) ? intAsNumber(pair.lowRevision)  : [myDocument_ getHGParent1Revision];
+	NSNumber* highRev = (pair.highRevision != NSNotFound) ? intAsNumber(pair.highRevision) : [myDocument_ getHGParent1Revision];
 	NSInteger lowRow  = [baseLogTableView closestTableRowForRevision:lowRev];
 	NSInteger highRow = [baseLogTableView closestTableRowForRevision:highRev];
 
@@ -226,7 +227,7 @@
 	else if (highRow != NSNotFound)
 		[compareLogTableView scrollToRevision:highRev];
 	
-	[[myDocument mainWindow] makeFirstResponder:self];
+	[[myDocument_ mainWindow] makeFirstResponder:self];
 	[self setButtonStatesToTheirPreferenceValues];
 }
 
@@ -249,7 +250,7 @@
 
 - (IBAction) redisplayBrowser:(id)sender
 {
-	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
 	if (rootPath)
 		[theFSViewer refreshBrowserPaths:[RepositoryPaths fromRootPath:rootPath]  finishingBlock:nil];
 }
@@ -269,7 +270,7 @@
 {
 	// The browser selection might have changed update the quick look preview image if necessary. It would be really nice to have
 	// a NSBrowserSelectionDidChangeNotification
-	if ([myDocument quicklookPreviewIsVisible])
+	if ([myDocument_ quicklookPreviewIsVisible])
 		[[QLPreviewPanel sharedPreviewPanel] reloadData];
 }
 
@@ -313,12 +314,12 @@
 - (IBAction) mainMenuDiffSelectedFiles:(id)sender
 {
 	NSArray* selectedPaths = [theFSViewer absolutePathsOfChosenFiles];
-	[myDocument viewDifferencesInCurrentRevisionFor:selectedPaths toRevision:[self revisionNumbers]];
+	[myDocument_ viewDifferencesInCurrentRevisionFor:selectedPaths toRevision:[self revisionNumbers]];
 }
 - (IBAction) mainMenuDiffAllFiles:(id)sender
 {
-	NSArray* rootPathAsArray = [myDocument absolutePathOfRepositoryRootAsArray];
-	[myDocument viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:[self revisionNumbers]];
+	NSArray* rootPathAsArray = [myDocument_ absolutePathOfRepositoryRootAsArray];
+	[myDocument_ viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:[self revisionNumbers]];
 }
 - (IBAction) toolbarDiffFiles:(id)sender
 {
@@ -333,14 +334,14 @@
 {
 	NSArray* selectedFiles = [theFSViewer absolutePathsOfChosenFiles];
 	NSArray* options = [[AppController sharedAppController] annotationOptionsFromDefaults];
-	[myDocument primaryActionAnnotateSelectedFiles:selectedFiles withRevision:[baseLogTableView selectedCompleteRevision] andOptions:options];
+	[myDocument_ primaryActionAnnotateSelectedFiles:selectedFiles withRevision:[baseLogTableView selectedCompleteRevision] andOptions:options];
 }
 
 - (IBAction) differencesMenuAnnotateCompareRevisionOfSelectedFiles:(id)sender
 {
 	NSArray* selectedFiles = [theFSViewer absolutePathsOfChosenFiles];
 	NSArray* options = [[AppController sharedAppController] annotationOptionsFromDefaults];
-	[myDocument primaryActionAnnotateSelectedFiles:selectedFiles withRevision:[compareLogTableView selectedCompleteRevision] andOptions:options];
+	[myDocument_ primaryActionAnnotateSelectedFiles:selectedFiles withRevision:[compareLogTableView selectedCompleteRevision] andOptions:options];
 }
 
 - (IBAction) differencesMenuNoAction:(id)sender { }
@@ -360,7 +361,7 @@
 		if (IsNotEmpty([node childNodes]))
 			continue;
 		NSString* path = [node absolutePath];
-		NSString* pathOfCachedCopy = [myDocument loadCachedCopyOfPath:path forChangeset:compareChangeset];
+		NSString* pathOfCachedCopy = [myDocument_ loadCachedCopyOfPath:path forChangeset:compareChangeset];
 		if (pathOfCachedCopy)
 			[[NSWorkspace sharedWorkspace] openFile:pathOfCachedCopy];
 	}
@@ -395,19 +396,19 @@
 {
 	SEL theAction = [anItem action];
 
-	if (theAction == @selector(mainMenuDiffSelectedFiles:))				return [myDocument localRepoIsSelectedAndReady] && [self statusOfChosenPathsInFilesContain:eHGStatusModified];
-	if (theAction == @selector(mainMenuDiffAllFiles:))					return [myDocument localRepoIsSelectedAndReady] && [self repositoryHasFilesWhichContainStatus:eHGStatusModified];
-	if (theAction == @selector(toolbarDiffFiles:))						return [myDocument localRepoIsSelectedAndReady] && [self toolbarActionAppliesToFilesWith:eHGStatusModified];
+	if (theAction == @selector(mainMenuDiffSelectedFiles:))				return [myDocument_ localRepoIsSelectedAndReady] && [self statusOfChosenPathsInFilesContain:eHGStatusModified];
+	if (theAction == @selector(mainMenuDiffAllFiles:))					return [myDocument_ localRepoIsSelectedAndReady] && [self repositoryHasFilesWhichContainStatus:eHGStatusModified];
+	if (theAction == @selector(toolbarDiffFiles:))						return [myDocument_ localRepoIsSelectedAndReady] && [self toolbarActionAppliesToFilesWith:eHGStatusModified];
 	
-	if (theAction == @selector(mainMenuOpenSelectedFilesInFinder:))		return [myDocument localRepoIsSelectedAndReady] && [self nodesAreChosenInFilesWhichAreSnapshotable];
-	if (theAction == @selector(mainMenuRevealSelectedFilesInFinder:))	return [myDocument localRepoIsSelectedAndReady];
-	if (theAction == @selector(mainMenuOpenTerminalHere:))				return [myDocument localRepoIsSelectedAndReady];
-	if (theAction == @selector(mainMenuDiffSelectedFiles:))				return [myDocument localRepoIsSelectedAndReady] && [self statusOfChosenPathsInFilesContain:eHGStatusModified];
-	if (theAction == @selector(mainMenuDiffAllFiles:))					return [myDocument localRepoIsSelectedAndReady] && [self repositoryHasFilesWhichContainStatus:eHGStatusModified];
+	if (theAction == @selector(mainMenuOpenSelectedFilesInFinder:))		return [myDocument_ localRepoIsSelectedAndReady] && [self nodesAreChosenInFilesWhichAreSnapshotable];
+	if (theAction == @selector(mainMenuRevealSelectedFilesInFinder:))	return [myDocument_ localRepoIsSelectedAndReady];
+	if (theAction == @selector(mainMenuOpenTerminalHere:))				return [myDocument_ localRepoIsSelectedAndReady];
+	if (theAction == @selector(mainMenuDiffSelectedFiles:))				return [myDocument_ localRepoIsSelectedAndReady] && [self statusOfChosenPathsInFilesContain:eHGStatusModified];
+	if (theAction == @selector(mainMenuDiffAllFiles:))					return [myDocument_ localRepoIsSelectedAndReady] && [self repositoryHasFilesWhichContainStatus:eHGStatusModified];
 
-	if (theAction == @selector(differencesMenuAnnotateBaseRevisionOfSelectedFiles:))	return [myDocument localRepoIsSelectedAndReady] && [self nodesAreChosenInFilesWhichAreSnapshotable];
-	if (theAction == @selector(differencesMenuAnnotateCompareRevisionOfSelectedFiles:))	return [myDocument localRepoIsSelectedAndReady] && [self nodesAreChosenInFilesWhichAreSnapshotable];
-	if (theAction == @selector(differencesMenuOpenSelectedFilesInFinder:))				return [myDocument localRepoIsSelectedAndReady] && [self nodesAreChosenInFilesWhichAreSnapshotable];
+	if (theAction == @selector(differencesMenuAnnotateBaseRevisionOfSelectedFiles:))	return [myDocument_ localRepoIsSelectedAndReady] && [self nodesAreChosenInFilesWhichAreSnapshotable];
+	if (theAction == @selector(differencesMenuAnnotateCompareRevisionOfSelectedFiles:))	return [myDocument_ localRepoIsSelectedAndReady] && [self nodesAreChosenInFilesWhichAreSnapshotable];
+	if (theAction == @selector(differencesMenuOpenSelectedFilesInFinder:))				return [myDocument_ localRepoIsSelectedAndReady] && [self nodesAreChosenInFilesWhichAreSnapshotable];
 
 	return NO;
 }
@@ -511,7 +512,7 @@
 	NSMutableArray* pathsOfCachedItems = [[NSMutableArray alloc] init];
 	for (NSString* path in paths)
 	{
-		NSString* pathOfCachedCopy = [myDocument loadCachedCopyOfPath:path forChangeset:compareChangeset];
+		NSString* pathOfCachedCopy = [myDocument_ loadCachedCopyOfPath:path forChangeset:compareChangeset];
 		[pathsOfCachedItems addObjectIfNonNil:pathOfCachedCopy];
 	}
 
@@ -538,7 +539,7 @@
 	[baseHeaderMessage setStringValue:fstr(@"Base Revision: %@", [baseLogTableView selectedRevision])];
 	[compareHeaderMessage setStringValue:fstr(@"Compare Revision: %@", [compareLogTableView selectedRevision])];
 	[self redisplayBrowser:self];
-	[[myDocument mainWindow] makeFirstResponder:theLogTable];
+	[[myDocument_ mainWindow] makeFirstResponder:theLogTable];
 }
 
 - (CGFloat) firstPaneHeight:(NSSplitView*)theSplitView
@@ -590,7 +591,7 @@
 		if (!path)
 			continue;
 		NSRect screenRect = [theFSViewer screenRectForNode:node];
-		NSString* pathOfCachedCopy = [myDocument loadCachedCopyOfPath:path forChangeset:compareChangeset];
+		NSString* pathOfCachedCopy = [myDocument_ loadCachedCopyOfPath:path forChangeset:compareChangeset];
 		if (pathOfCachedCopy)
 			[quickLookPreviewItems addObject:[PathQuickLookPreviewItem previewItemForPath:pathOfCachedCopy withRect:screenRect]];
 	}
@@ -601,7 +602,7 @@
 {
     NSString* key = [theEvent charactersIgnoringModifiers];
     if ([key isEqual:@" "])
-        [[self myDocument] togglePreviewPanel:self];
+        [myDocument_ togglePreviewPanel:self];
 	else
         [super keyDown:theEvent];
 }

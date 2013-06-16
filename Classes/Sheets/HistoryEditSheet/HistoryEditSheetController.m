@@ -25,7 +25,7 @@
 
 
 @implementation HistoryEditSheetController
-@synthesize myDocument = myDocument;
+@synthesize myDocument = myDocument_;
 
 
 
@@ -38,8 +38,9 @@
 
 - (HistoryEditSheetController*) initHistoryEditSheetControllerWithDocument:(MacHgDocument*)doc
 {
-	myDocument = doc;
-	[NSBundle loadNibNamed:@"HistoryEditSheet" owner:self];
+	myDocument_ = doc;
+	self = [self initWithWindowNibName:@"HistoryEditSheet"];
+	[self window];	// force / ensure the nib is loaded
 	return self;
 }
 
@@ -67,7 +68,7 @@
 
 - (NSIndexSet*) indexSetForStartingRevision:(NSNumber*)rev
 {
-	NSSet* descendants = [[myDocument repositoryData] descendantsOfRevisionNumber:rev];
+	NSSet* descendants = [[myDocument_ repositoryData] descendantsOfRevisionNumber:rev];
 	NSMutableIndexSet* newIndexes = [[NSMutableIndexSet alloc]init];
 	for (NSNumber* revNum in descendants)
 	{
@@ -121,9 +122,9 @@
 
 	BOOL abort = (result == NSAlertAlternateReturn);
 	[argsHistoryEdit addObject: (abort ? @"--abort" : @"--continue")];
-	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
 	
-	ExecutionResult* results = [myDocument  executeMercurialWithArgs:argsHistoryEdit  fromRoot:rootPath  whileDelayingEvents:YES];
+	ExecutionResult* results = [myDocument_  executeMercurialWithArgs:argsHistoryEdit  fromRoot:rootPath  whileDelayingEvents:YES];
 
 	if (results.outStr)
 	{
@@ -132,7 +133,7 @@
 		NSRunAlertPanel(titleMessage, @"Mercurial reported the result of the history edit %@:\n\ncode %d:\n%@", @"OK", nil, nil, operation, results.result, results.outStr);
 	}
 	if (abort)
-		[[myDocument repositoryData] deleteHistoryEditState];
+		[[myDocument_ repositoryData] deleteHistoryEditState];
 }
 
 
@@ -146,13 +147,13 @@
 
 - (IBAction) openHistoryEditSheetWithSelectedRevisions:(id)sender
 {
-	if ([[myDocument repositoryData] historyEditInProgress])
+	if ([[myDocument_ repositoryData] historyEditInProgress])
 	{
 		[self doContinueOrAbort];
 		return;
 	}
 	
-	if ([myDocument repositoryHasFilesWhichContainStatus:eHGStatusCommittable])
+	if ([myDocument_ repositoryHasFilesWhichContainStatus:eHGStatusCommittable])
 	{
 		NSRunAlertPanel(@"Outstanding Changes", @"History editing is only allowed in repositories with no outstanding uncommitted changes.", @"OK", nil, nil);
 		return;
@@ -162,14 +163,14 @@
 	[logTableView setAction:@selector(handleLogTableViewClick:)];
 	[logTableView setTarget:self];
 	
-	NSString* newTitle = fstr(@"Editing Selected Revisions in “%@”", [myDocument selectedRepositoryShortName]);
+	NSString* newTitle = fstr(@"Editing Selected Revisions in “%@”", [myDocument_ selectedRepositoryShortName]);
 	[historyEditSheetTitle setStringValue:newTitle];
 		
 	[logTableView resetTable:self];
 	
-	NSArray* revs = [[[myDocument theHistoryView] logTableView] chosenRevisions];
+	NSArray* revs = [[[myDocument_ theHistoryView] logTableView] chosenRevisions];
 	if ([revs count] <= 0)
-		[logTableView scrollToRevision:[myDocument getHGTipRevision]];
+		[logTableView scrollToRevision:[myDocument_ getHGTipRevision]];
 	{
 		NSInteger minRev = numberAsInt(revs[0]);
 		for (NSNumber* revision in revs)
@@ -185,20 +186,20 @@
 	if ([okButton isEnabled])
 		[sheetInformativeMessageTextField setAttributedStringValue: [self formattedSheetMessage]];
 	[self setWindow:theHistoryEditSheet];
-	[myDocument beginSheet:theHistoryEditSheet];
+	[myDocument_ beginSheet:theHistoryEditSheet];
 	
 }
 
 
 - (IBAction) sheetButtonOkForHistoryEditSheet:(id)sender
 {
-	[myDocument endSheet:theHistoryEditSheet];
+	[myDocument_ endSheet:theHistoryEditSheet];
 	[self openHistoryEditConfirmationSheet:self];
 }
 
 - (IBAction) sheetButtonCancelForHistoryEditSheet:(id)sender
 {
-	[myDocument endSheet:theHistoryEditSheet];
+	[myDocument_ endSheet:theHistoryEditSheet];
 }
 
 
@@ -212,14 +213,14 @@
 
 - (IBAction) openHistoryEditConfirmationSheet:(id)sender
 {
-	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
 	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
 	NSMutableArray* argsHistoryEdit = [NSMutableArray arrayWithObjects:@"histedit", @"--config", @"extensions.hgext.histedit=", nil];
 	
 	[argsHistoryEdit addObject:@"--startingrules"];
 	[argsHistoryEdit addObject:intAsString(pair.lowRevision)];
 		
-	ExecutionResult* results = [myDocument  executeMercurialWithArgs:argsHistoryEdit  fromRoot:rootPath  whileDelayingEvents:YES];
+	ExecutionResult* results = [myDocument_  executeMercurialWithArgs:argsHistoryEdit  fromRoot:rootPath  whileDelayingEvents:YES];
 	if (results.result != 0)
 		return;
 	[[confirmationSheetMessage textStorage] setAttributedString:normalSheetMessageAttributedString(results.outStr)];
@@ -227,30 +228,30 @@
 	
 	[sheetConfirmationInformativeMessageTextField setAttributedStringValue:[sheetInformativeMessageTextField attributedStringValue]];
 	[self setWindow:theHistoryEditConfirmationSheet];
-	[myDocument beginSheet:theHistoryEditConfirmationSheet];
+	[myDocument_ beginSheet:theHistoryEditConfirmationSheet];
 }
 
 - (IBAction) sheetButtonOkForHistoryEditConfirmationSheet:(id)sender
 {
 	[theHistoryEditConfirmationSheet makeFirstResponder:theHistoryEditConfirmationSheet];	// Make the text fields of the sheet commit any changes they currently have
-	[myDocument endSheet:theHistoryEditConfirmationSheet];
+	[myDocument_ endSheet:theHistoryEditConfirmationSheet];
 
-	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
 	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
-	NSString* repositoryName = [[[myDocument sidebar] selectedNode] shortName];
+	NSString* repositoryName = [[[myDocument_ sidebar] selectedNode] shortName];
 	NSString* historyEditDescription = fstr(@"Editing descendants of %d in “%@”", pair.lowRevision, repositoryName);
 	NSMutableArray* argsHistoryEdit = [NSMutableArray arrayWithObjects:@"histedit", @"--config", @"extensions.hgext.histedit=", nil];
 	
 	[argsHistoryEdit addObject:@"--rules" followedBy:[confirmationSheetMessage string]];
 	[argsHistoryEdit addObject:intAsString(pair.lowRevision)];
 
-	[myDocument dispatchToMercurialQueuedWithDescription:historyEditDescription  process:^{
-		[myDocument executeMercurialWithArgs:argsHistoryEdit  fromRoot:rootPath  whileDelayingEvents:YES];
+	[myDocument_ dispatchToMercurialQueuedWithDescription:historyEditDescription  process:^{
+		[myDocument_ executeMercurialWithArgs:argsHistoryEdit  fromRoot:rootPath  whileDelayingEvents:YES];
 	}];	
 }
 - (IBAction) sheetButtonCancelForHistoryEditConfirmationSheet:(id)sender
 {
-	[myDocument endSheet:theHistoryEditConfirmationSheet];
+	[myDocument_ endSheet:theHistoryEditConfirmationSheet];
 }
 
 

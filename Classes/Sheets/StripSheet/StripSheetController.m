@@ -28,7 +28,7 @@
 
 
 @implementation StripSheetController
-@synthesize myDocument = myDocument;
+@synthesize myDocument = myDocument_;
 @synthesize forceOption = forceOption_;
 @synthesize backupOption = backupOption_;
 
@@ -43,8 +43,9 @@
 
 - (StripSheetController*) initStripSheetControllerWithDocument:(MacHgDocument*)doc
 {
-	myDocument = doc;
-	[NSBundle loadNibNamed:@"StripSheet" owner:self];
+	myDocument_ = doc;
+	self = [self initWithWindowNibName:@"StripSheet"];
+	[self window];	// force / ensure the nib is loaded
 	return self;
 }
 
@@ -72,17 +73,17 @@
 
 - (BOOL) incompleteRevisionWillBeStripped
 {
-	NSUInteger incompleteRow = [logTableView tableRowForRevision:[[myDocument repositoryData] incompleteRevision]];
+	NSUInteger incompleteRow = [logTableView tableRowForRevision:[[myDocument_ repositoryData] incompleteRevision]];
 	return (incompleteRow != NSNotFound && [logTableView isRowSelected:incompleteRow]);
 }
 
 - (NSIndexSet*) indexSetForStartingRevision:(NSNumber*)rev
 {
-	LogEntry* incompleteRevisionEntry = [[myDocument repositoryData] incompleteRevisionEntry];
+	LogEntry* incompleteRevisionEntry = [[myDocument_ repositoryData] incompleteRevisionEntry];
 	if (theSameNumbers(rev,[incompleteRevisionEntry revision]))
 		return [NSIndexSet indexSet];
 	
-	NSSet* descendants = [[myDocument repositoryData] descendantsOfRevisionNumber:rev];
+	NSSet* descendants = [[myDocument_ repositoryData] descendantsOfRevisionNumber:rev];
 	NSMutableIndexSet* newIndexes = [[NSMutableIndexSet alloc]init];
 	for (NSNumber* revNum in descendants)
 		[newIndexes addIndex:[logTableView tableRowForRevision:revNum]];
@@ -137,7 +138,7 @@
 	[logTableView setAction:@selector(handleLogTableViewClick:)];
 	[logTableView setTarget:self];
 	
-	NSString* newTitle = fstr(@"Stripping Selected Revisions in “%@”", [myDocument selectedRepositoryShortName]);
+	NSString* newTitle = fstr(@"Stripping Selected Revisions in “%@”", [myDocument_ selectedRepositoryShortName]);
 	[stripSheetTitle setStringValue:newTitle];
 	[self setForceOption:NO];
 	[self setBackupOption:YES];
@@ -145,16 +146,16 @@
 	[logTableView resetTable:self];
 	[logTableView setCanSelectIncompleteRevision:YES];
 	
-	if ([myDocument repositoryHasFilesWhichContainStatus:eHGStatusCommittable])
+	if ([myDocument_ repositoryHasFilesWhichContainStatus:eHGStatusCommittable])
 	{
 		NSInteger result = NSRunAlertPanel(@"Outstanding Changes", @"There are outstanding uncommitted changes. Are you sure you want to continue?", @"Cancel", @"Ok", nil);
 		if (result == NSAlertDefaultReturn)
 			return;
 	}
 	
-	NSArray* revs = [[[myDocument theHistoryView] logTableView] chosenRevisions];
+	NSArray* revs = [[[myDocument_ theHistoryView] logTableView] chosenRevisions];
 	if ([revs count] <= 0)
-		[logTableView scrollToRevision:[myDocument getHGTipRevision]];
+		[logTableView scrollToRevision:[myDocument_ getHGTipRevision]];
 	else
 	{
 		NSInteger minRev = numberAsInt(revs[0]);
@@ -171,16 +172,16 @@
 	if ([okButton isEnabled])
 		[sheetInformativeMessageTextField setAttributedStringValue: [self formattedSheetMessage]];
 
-	[myDocument beginSheet:theStripSheet];
+	[myDocument_ beginSheet:theStripSheet];
 }
 
 
 - (IBAction) sheetButtonOk:(id)sender
 {
-	[myDocument endSheet:theStripSheet];
+	[myDocument_ endSheet:theStripSheet];
 
-	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
-	NSString* repositoryName = [[[myDocument sidebar] selectedNode] shortName];
+	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
+	NSString* repositoryName = [[[myDocument_ sidebar] selectedNode] shortName];
 	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
 	NSString* stripDescription = fstr(@"Stripping %d in “%@”", pair.lowRevision, repositoryName);
 	NSMutableArray* argsStrip = [NSMutableArray arrayWithObjects:@"strip",  @"--config", @"extensions.hgext.mq=", nil];	// We are using MacHgs strip so command we need to specify that it is
@@ -193,16 +194,16 @@
 	NSString* revisionNumber = fstr(@"%d", pair.lowRevision);
 	[argsStrip addObject:revisionNumber];
 
-	ProcessController* processController = [ProcessController processControllerWithMessage:stripDescription forList:[myDocument theProcessListController]];
-	dispatch_async([myDocument mercurialTaskSerialQueue], ^{
-		[myDocument executeMercurialWithArgs:argsStrip  fromRoot:rootPath  withDelegate:processController  whileDelayingEvents:YES];
+	ProcessController* processController = [ProcessController processControllerWithMessage:stripDescription forList:[myDocument_ theProcessListController]];
+	dispatch_async([myDocument_ mercurialTaskSerialQueue], ^{
+		[myDocument_ executeMercurialWithArgs:argsStrip  fromRoot:rootPath  withDelegate:processController  whileDelayingEvents:YES];
 		[processController terminateController];
 	});		
 }
 
 - (IBAction) sheetButtonCancel:(id)sender
 {
-	[myDocument endSheet:theStripSheet];
+	[myDocument_ endSheet:theStripSheet];
 }
 
 

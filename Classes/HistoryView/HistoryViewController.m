@@ -42,13 +42,14 @@
 // MARK: -
 
 @implementation HistoryViewController
-@synthesize myDocument = myDocument;
+@synthesize myDocument = myDocument_;
 @synthesize theHistoryView = theHistoryView_;
 
 - (HistoryViewController*) initHistoryViewControllerWithDocument:(MacHgDocument*)doc
 {
-	myDocument = doc;
-	[NSBundle loadNibNamed:@"HistoryView" owner:self];
+	myDocument_ = doc;
+	self = [self initWithNibName:@"HistoryView" bundle:nil];
+	[self loadView];
 	return self;
 }
 
@@ -71,9 +72,9 @@
 
 @implementation HistoryView
 
-@synthesize myDocument = myDocument;
+@synthesize myDocument = myDocument_;
 @synthesize parentController = parentController_;
-@synthesize logTableView = logTableView;
+@synthesize logTableView = logTableView_;
 
 
 
@@ -92,23 +93,23 @@
 
 - (void) awakeFromNib
 {
-	myDocument = [parentController_ myDocument];
-	[self observe:kRepositoryDataDidChange	from:[self myDocument]  byCalling:@selector(refreshHistoryView:)];
-	[self observe:kRepositoryDataIsNew		from:[self myDocument]  byCalling:@selector(refreshHistoryView:)];
-	[self observe:kLogEntriesDidChange		from:[self myDocument]  byCalling:@selector(refreshHistoryView:)];
+	myDocument_ = [parentController_ myDocument];
+	[self observe:kRepositoryDataDidChange	from:myDocument_  byCalling:@selector(refreshHistoryView:)];
+	[self observe:kRepositoryDataIsNew		from:myDocument_  byCalling:@selector(refreshHistoryView:)];
+	[self observe:kLogEntriesDidChange		from:myDocument_  byCalling:@selector(refreshHistoryView:)];
 
 	[self openSplitViewPaneToDefaultHeight: self];
-	NSString* fileName = [myDocument documentNameForAutosave];
-	[logTableView setAutosaveTableColumns:YES];
-	[logTableView setAutosaveName:fstr(@"File:%@:HistoryTableViewColumnPositions", fileName)];
-	[logTableView resetTable:self];
+	NSString* fileName = [myDocument_ documentNameForAutosave];
+	[logTableView_ setAutosaveTableColumns:YES];
+	[logTableView_ setAutosaveName:fstr(@"File:%@:HistoryTableViewColumnPositions", fileName)];
+	[logTableView_ resetTable:self];
 	[theLabelsTableView_ setAutosaveTableColumns:YES];
 	[theLabelsTableView_ setAutosaveName:fstr(@"File:%@:HistoryLabelsTableViewColumnPositions", fileName)];
 	
-	[logTableView setTarget:self];
-	[logTableView setDoubleAction:@selector(historyMenuDiffSelectedRevisions:)];
+	[logTableView_ setTarget:self];
+	[logTableView_ setDoubleAction:@selector(historyMenuDiffSelectedRevisions:)];
 	
-	[[myDocument mainWindow] makeFirstResponder:logTableView];
+	[[myDocument_ mainWindow] makeFirstResponder:logTableView_];
 }
 
 
@@ -116,7 +117,7 @@
 {
 	if (IsNotEmpty([concertinaView autosavePositionName]))
 		return;
-	NSString* fileName = [myDocument documentNameForAutosave];
+	NSString* fileName = [myDocument_ documentNameForAutosave];
 	NSString* autoSaveNameForConcertina = fstr(@"File:%@:HistoryViewConcertinaPositions", fileName);
 	[concertinaView setAutosavePositionName:autoSaveNameForConcertina];
 	[concertinaView restorePositionsFromDefaults];	
@@ -126,15 +127,15 @@
 -(void) unload
 {
 	[self stopObserving];
-	[logTableView unload];
-	logTableView = nil;
+	[logTableView_ unload];
+	logTableView_ = nil;
 }
 
 
 - (void) prepareToOpenHistoryView
 {
 	[self resetHistoryView:self];
-	[[myDocument mainWindow] makeFirstResponder:logTableView];
+	[[myDocument_ mainWindow] makeFirstResponder:logTableView_];
 }
 
 
@@ -146,37 +147,37 @@
 // MARK: Actions Notifications & Updating
 // ------------------------------------------------------------------------------------
 
-- (NSString*) searchCaption		{ return fstr(@"%d entries shown", [[logTableView theTableRows] count]); }
+- (NSString*) searchCaption		{ return fstr(@"%d entries shown", [[logTableView_ theTableRows] count]); }
 
-- (NSString*) searchFieldValue	{ return [myDocument toolbarSearchFieldValue]; }
+- (NSString*) searchFieldValue	{ return [myDocument_ toolbarSearchFieldValue]; }
 
 
 - (IBAction) refreshHistoryView:(id)sender
 {
-	NSString* newSearchMessage = IsEmpty([[myDocument toolbarSearchField] stringValue]) ? @"Search" : [self searchCaption];
-	[[myDocument toolbarSearchItem] setLabel:newSearchMessage];
-	[logTableView refreshTable:self];
+	NSString* newSearchMessage = IsEmpty([[myDocument_ toolbarSearchField] stringValue]) ? @"Search" : [self searchCaption];
+	[[myDocument_ toolbarSearchItem] setLabel:newSearchMessage];
+	[logTableView_ refreshTable:self];
 	[theLabelsTableView_ refreshTable:self];
 }
 
 - (IBAction) resetHistoryView:(id)sender
 {
-	NSString* newSearchMessage = IsEmpty([[myDocument toolbarSearchField] stringValue]) ? @"Search" : [self searchCaption];
-	[[myDocument toolbarSearchItem] setLabel:newSearchMessage];
-	[logTableView resetTable:self];
+	NSString* newSearchMessage = IsEmpty([[myDocument_ toolbarSearchField] stringValue]) ? @"Search" : [self searchCaption];
+	[[myDocument_ toolbarSearchItem] setLabel:newSearchMessage];
+	[logTableView_ resetTable:self];
 	[theLabelsTableView_ resetTable:self];
 }
 
 - (IBAction) forceReinitilizeHistoryViews:(id)sender
 {
 	changesetHashToLogRecord = [[NSMutableDictionary alloc]init];
-	[myDocument initializeRepositoryData];
+	[myDocument_ initializeRepositoryData];
 	[self resetHistoryView:sender];
 }
 
 - (void) scrollToSelected
 {
-	[logTableView scrollToSelected:self];
+	[logTableView_ scrollToSelected:self];
 }
 
 - (void) expandLabelsTableinConcertina
@@ -186,7 +187,7 @@
 
 - (void) manageLabelsOfType:(LabelType)labelTypes
 {
-	[myDocument actionSwitchViewToHistoryView:self];
+	[myDocument_ actionSwitchViewToHistoryView:self];
 	[self expandLabelsTableinConcertina];
 	[theLabelsTableView_ setButtonsFromLabelType:labelTypes];
 	[theLabelsTableView_ resetTable:self];
@@ -199,7 +200,7 @@
 // MARK:  General Menu Items
 // ------------------------------------------------------------------------------------
 
-- (IBAction) mainMenuRevertAllFiles:(id)sender			{ [myDocument primaryActionRevertFiles:[myDocument absolutePathOfRepositoryRootAsArray] toVersion:nil]; }
+- (IBAction) mainMenuRevertAllFiles:(id)sender			{ [myDocument_ primaryActionRevertFiles:[myDocument_ absolutePathOfRepositoryRootAsArray] toVersion:nil]; }
 - (IBAction) toolbarRevertFiles:(id)sender				{ [self mainMenuRevertAllFiles:sender]; }
 
 
@@ -211,12 +212,12 @@
 // MARK: History Altering Actions
 // ------------------------------------------------------------------------------------
 
-- (IBAction) mainMenuCollapseChangesets:(id)sender		{ [[myDocument theCollapseSheetController]		openCollapseSheetWithSelectedRevisions:sender]; }
-- (IBAction) mainMenuAlterDetails:(id)sender			{ [[myDocument theAlterDetailsSheetController]	openAlterDetailsChooseChangesetSheet:sender]; }
-- (IBAction) mainMenuHistoryEditChangesets:(id)sender	{ [[myDocument theHistoryEditSheetController]	openHistoryEditSheetWithSelectedRevisions:sender]; }
-- (IBAction) mainMenuStripChangesets:(id)sender			{ [[myDocument theStripSheetController]			openStripSheetWithSelectedRevisions:sender]; }
-- (IBAction) mainMenuRebaseChangesets:(id)sender		{ [[myDocument theRebaseSheetController]		openRebaseSheetWithSelectedRevisions:sender]; }
-- (IBAction) mainMenuBackoutChangeset:(id)sender		{ [[myDocument theBackoutSheetController]		openBackoutSheetWithSelectedRevision:sender]; }
+- (IBAction) mainMenuCollapseChangesets:(id)sender		{ [[myDocument_ theCollapseSheetController]		openCollapseSheetWithSelectedRevisions:sender]; }
+- (IBAction) mainMenuAlterDetails:(id)sender			{ [[myDocument_ theAlterDetailsSheetController]	openAlterDetailsChooseChangesetSheet:sender]; }
+- (IBAction) mainMenuHistoryEditChangesets:(id)sender	{ [[myDocument_ theHistoryEditSheetController]	openHistoryEditSheetWithSelectedRevisions:sender]; }
+- (IBAction) mainMenuStripChangesets:(id)sender			{ [[myDocument_ theStripSheetController]		openStripSheetWithSelectedRevisions:sender]; }
+- (IBAction) mainMenuRebaseChangesets:(id)sender		{ [[myDocument_ theRebaseSheetController]		openRebaseSheetWithSelectedRevisions:sender]; }
+- (IBAction) mainMenuBackoutChangeset:(id)sender		{ [[myDocument_ theBackoutSheetController]		openBackoutSheetWithSelectedRevision:sender]; }
 
 
 
@@ -229,45 +230,45 @@
 
 - (IBAction) historyMenuAddLabelToChosenRevision:(id)sender
 {
-	[[myDocument toolbarSearchField] setStringValue:@""];	// reset the search term
-	[[myDocument theAddLabelSheetController] openAddLabelSheet:self];
+	[[myDocument_ toolbarSearchField] setStringValue:@""];	// reset the search term
+	[[myDocument_ theAddLabelSheetController] openAddLabelSheet:self];
 }
 
 - (IBAction) historyMenuDiffAllToChosenRevision:(id)sender
 {
-	NSArray* rootPathAsArray = @[ [myDocument absolutePathOfRepositoryRoot] ];
-	NSNumber* theSelectedRevision = [[logTableView chosenEntry] revision];
-	[myDocument viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:numberAsString(theSelectedRevision)];
+	NSArray* rootPathAsArray = @[ [myDocument_ absolutePathOfRepositoryRoot] ];
+	NSNumber* theSelectedRevision = [[logTableView_ chosenEntry] revision];
+	[myDocument_ viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:numberAsString(theSelectedRevision)];
 }
 
 
 - (IBAction) historyMenuUpdateRepositoryToChosenRevision:(id)sender
 {
-	NSNumber* theSelectedRevision = [[logTableView chosenEntry] revision];
-	[myDocument primaryActionUpdateFilesToVersion:theSelectedRevision withCleanOption:NO withConfirmation:YES];
+	NSNumber* theSelectedRevision = [[logTableView_ chosenEntry] revision];
+	[myDocument_ primaryActionUpdateFilesToVersion:theSelectedRevision withCleanOption:NO withConfirmation:YES];
 }
 
 - (IBAction) historyMenuGotoChangeset:(id)sender
 {
-	[logTableView getAndScrollToChangeset:self];
+	[logTableView_ getAndScrollToChangeset:self];
 }
 
 - (IBAction) historyMenuMergeRevision:(id)sender
 {
-	NSNumber* theSelectedRevision = [[logTableView chosenEntry] revision];
-	[myDocument primaryActionMergeWithVersion:theSelectedRevision andOptions:nil withConfirmation:YES];
+	NSNumber* theSelectedRevision = [[logTableView_ chosenEntry] revision];
+	[myDocument_ primaryActionMergeWithVersion:theSelectedRevision andOptions:nil withConfirmation:YES];
 }
 
 - (IBAction) historyMenuManifestOfChosenRevision:(id)sender
 {
-	NSNumber* theSelectedRevision = [[logTableView chosenEntry] revision];
-	[myDocument primaryActionDisplayManifestForVersion:theSelectedRevision];
+	NSNumber* theSelectedRevision = [[logTableView_ chosenEntry] revision];
+	[myDocument_ primaryActionDisplayManifestForVersion:theSelectedRevision];
 }
 
 - (IBAction) historyMenuViewRevisionDifferences:(id)sender
 {
-	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
-	LogEntry* lowRevEntry = [logTableView entryForTableRow:pair.lowRevision];
+	LowHighPair pair = [logTableView_ lowestToHighestSelectedRevisions];
+	LogEntry* lowRevEntry = [logTableView_ entryForTableRow:pair.lowRevision];
 	NSArray* parents = [lowRevEntry parentsOfEntry];
 	if ([parents count] == 0)
 		pair.lowRevision = MAX(0,pair.lowRevision - 1);	// Step back one to see the differences from the previous version to this version.
@@ -275,17 +276,17 @@
 		pair.lowRevision = numberAsInt(parents[0]);
 	NSValue* pairAsValue = MakeNSValue(LowHighPair, pair);
 
-	[myDocument actionSwitchViewToDifferencesView:sender];
+	[myDocument_ actionSwitchViewToDifferencesView:sender];
 	NSTimeInterval t = [[NSAnimationContext currentContext] duration];
-	[[myDocument theDifferencesView] performSelector:@selector(compareLowHighValue:) withObject:pairAsValue afterDelay:t];
+	[[myDocument_ theDifferencesView] performSelector:@selector(compareLowHighValue:) withObject:pairAsValue afterDelay:t];
 }
 
 - (IBAction) historyMenuDiffSelectedRevisions:(id)sender
 {
-	NSArray* rootPathAsArray = [myDocument absolutePathOfRepositoryRootAsArray];
-	LowHighPair pair = [logTableView parentToHighestSelectedRevisions];
+	NSArray* rootPathAsArray = [myDocument_ absolutePathOfRepositoryRootAsArray];
+	LowHighPair pair = [logTableView_ parentToHighestSelectedRevisions];
 	NSString* revisionNumbers = fstr(@"%d%:%d", pair.lowRevision, pair.highRevision);
-	[myDocument viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:revisionNumbers];
+	[myDocument_ viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:revisionNumbers];
 }
 
 
@@ -300,7 +301,7 @@
 
 - (void) logTableViewSelectionDidChange:(LogTableView*)theLogTable
 {
-	if ([myDocument quicklookPreviewIsVisible])
+	if ([myDocument_ quicklookPreviewIsVisible])
 		[[QLPreviewPanel sharedPreviewPanel] reloadData];
 }
 
@@ -322,7 +323,7 @@
 		NSRunAlertPanel(@"No Label Selected", @"You need to select a label first to move it", @"OK", nil, nil);
 		return;
 	}
-	[[myDocument theMoveLabelSheetController] openMoveLabelSheetForMoveLabel:label];
+	[[myDocument_ theMoveLabelSheetController] openMoveLabelSheetForMoveLabel:label];
 }
 
 
@@ -342,7 +343,7 @@
 	
 	
 	
-	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
 	switch ([label labelType])
 	{
 		case eLocalTag:
@@ -360,7 +361,7 @@
 			if ([label labelType] == eLocalTag)
 				[argsTag addObject:@"--local"];
 			[argsTag addObject:@"--remove" followedBy:name];
-			[myDocument executeMercurialWithArgs:argsTag fromRoot:rootPath whileDelayingEvents:YES];
+			[myDocument_ executeMercurialWithArgs:argsTag fromRoot:rootPath whileDelayingEvents:YES];
 			break;
 		}
 		case eBookmark:
@@ -373,14 +374,14 @@
 					return;
 			}
 			NSMutableArray* argsTag = [NSMutableArray arrayWithObjects:@"bookmarks", @"--delete", name, nil];
-			[myDocument executeMercurialWithArgs:argsTag fromRoot:rootPath whileDelayingEvents:YES];
+			[myDocument_ executeMercurialWithArgs:argsTag fromRoot:rootPath whileDelayingEvents:YES];
 			break;
 		}
 		case eActiveBranch:
 		case eInactiveBranch:
 		case eClosedBranch:
 		{
-			BOOL needToUpdateToNewRevision = (![[[myDocument repositoryData] getHGParent1Revision] isEqualToNumber:rev]);
+			BOOL needToUpdateToNewRevision = (![[[myDocument_ repositoryData] getHGParent1Revision] isEqualToNumber:rev]);
 			
 			if (DisplayWarningForTagRemovalFromDefaults())
 			{
@@ -394,15 +395,15 @@
 				if (result != NSAlertFirstButtonReturn)
 					return;
 			}
-			if (![[[myDocument repositoryData] getHGParent1Revision] isEqualToNumber:rev])
+			if (![[[myDocument_ repositoryData] getHGParent1Revision] isEqualToNumber:rev])
 			{
-				BOOL didUpdateToReversion = [myDocument primaryActionUpdateFilesToVersion:rev withCleanOption:NO withConfirmation:YES];
+				BOOL didUpdateToReversion = [myDocument_ primaryActionUpdateFilesToVersion:rev withCleanOption:NO withConfirmation:YES];
 				if (!didUpdateToReversion)
 					return;
 			}
 			
 			NSMutableArray* argsTag = [NSMutableArray arrayWithObjects:@"branch", @"--clean", nil];
-			[myDocument executeMercurialWithArgs:argsTag fromRoot:rootPath whileDelayingEvents:YES];
+			[myDocument_ executeMercurialWithArgs:argsTag fromRoot:rootPath whileDelayingEvents:YES];
 			break;
 		}
 			
@@ -414,8 +415,8 @@
 - (IBAction) labelsMenuUpdateRepositoryToChosenRevision:(id)sender
 {
 	LabelData* label = [theLabelsTableView_ chosenLabel];
-	[[[myDocument theHistoryView] logTableView] scrollToRevision:[label revision]];
-	[myDocument primaryActionUpdateFilesToVersion:[label revision] withCleanOption:NO withConfirmation:YES];
+	[[[myDocument_ theHistoryView] logTableView] scrollToRevision:[label revision]];
+	[myDocument_ primaryActionUpdateFilesToVersion:[label revision] withCleanOption:NO withConfirmation:YES];
 }
 
 
@@ -425,10 +426,10 @@
 // MARK: Standard  Menu Actions
 // ------------------------------------------------------------------------------------
 
-- (IBAction) mainMenuCommitAllFiles:(id)sender					{ [[myDocument theCommitSheetController] openCommitSheetWithAllFiles:sender]; }
+- (IBAction) mainMenuCommitAllFiles:(id)sender					{ [[myDocument_ theCommitSheetController] openCommitSheetWithAllFiles:sender]; }
 - (IBAction) toolbarCommitFiles:(id)sender						{ [self mainMenuCommitAllFiles:sender]; }
 
-- (IBAction) mainMenuDiffAllFiles:(id)sender					{ [myDocument viewDifferencesInCurrentRevisionFor:[myDocument absolutePathOfRepositoryRootAsArray] toRevision:nil]; }	// nil indicates the current revision
+- (IBAction) mainMenuDiffAllFiles:(id)sender					{ [myDocument_ viewDifferencesInCurrentRevisionFor:[myDocument_ absolutePathOfRepositoryRootAsArray] toRevision:nil]; }	// nil indicates the current revision
 - (IBAction) toolbarDiffFiles:(id)sender						{ [self historyMenuDiffSelectedRevisions:sender]; }
 
 
@@ -442,50 +443,50 @@
 
 - (BOOL) chosenRevisionsContainsIncompleteRevision
 {
-	if (![[myDocument repositoryData] includeIncompleteRevision])
+	if (![[myDocument_ repositoryData] includeIncompleteRevision])
 		return NO;
-	NSString* incompleteRevisionString = intAsString([[myDocument repositoryData] computeNumberOfRevisions]);
-	return [[[self logTableView] chosenRevisions] containsObject:incompleteRevisionString];
+	NSString* incompleteRevisionString = intAsString([[myDocument_ repositoryData] computeNumberOfRevisions]);
+	return [[logTableView_ chosenRevisions] containsObject:incompleteRevisionString];
 }
 
 - (BOOL) validateUserInterfaceItem:(id < NSValidatedUserInterfaceItem, NSObject >)anItem
 {
 	SEL theAction = [anItem action];
 	
-	if (theAction == @selector(mainMenuCommitAllFiles:))						return [myDocument localRepoIsSelectedAndReady] && [myDocument validateAndSwitchMenuForCommitAllFiles:anItem];
-	if (theAction == @selector(toolbarCommitFiles:))							return [myDocument localRepoIsSelectedAndReady] && [myDocument toolbarActionAppliesToFilesWith:eHGStatusCommittable];
+	if (theAction == @selector(mainMenuCommitAllFiles:))						return [myDocument_ localRepoIsSelectedAndReady] && [myDocument_ validateAndSwitchMenuForCommitAllFiles:anItem];
+	if (theAction == @selector(toolbarCommitFiles:))							return [myDocument_ localRepoIsSelectedAndReady] && [myDocument_ toolbarActionAppliesToFilesWith:eHGStatusCommittable];
 
-	if (theAction == @selector(mainMenuDiffAllFiles:))							return [myDocument localRepoIsSelectedAndReady] && [myDocument repositoryHasFilesWhichContainStatus:eHGStatusModified];
-	if (theAction == @selector(toolbarDiffFiles:))								return [myDocument localRepoIsSelectedAndReady] && ![logTableView noRevisionSelected];
+	if (theAction == @selector(mainMenuDiffAllFiles:))							return [myDocument_ localRepoIsSelectedAndReady] && [myDocument_ repositoryHasFilesWhichContainStatus:eHGStatusModified];
+	if (theAction == @selector(toolbarDiffFiles:))								return [myDocument_ localRepoIsSelectedAndReady] && ![logTableView_ noRevisionSelected];
 	
 	// ------
-	if (theAction == @selector(mainMenuRollbackCommit:))						return [myDocument localRepoIsSelectedAndReady] && [myDocument showingFilesOrHistoryView] && [[myDocument repositoryData] isRollbackInformationAvailable];
+	if (theAction == @selector(mainMenuRollbackCommit:))						return [myDocument_ localRepoIsSelectedAndReady] && [myDocument_ showingFilesOrHistoryView] && [[myDocument_ repositoryData] isRollbackInformationAvailable];
 	
 	
 	// History only methods
-	if (theAction == @selector(mainMenuCollapseChangesets:))					return [myDocument localRepoIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();
-	if (theAction == @selector(mainMenuAlterDetails:))							return [myDocument localRepoIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();
-	if (theAction == @selector(mainMenuHistoryEditChangesets:))					return [myDocument localRepoIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();
-	if (theAction == @selector(mainMenuStripChangesets:))						return [myDocument localRepoIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();
-	if (theAction == @selector(mainMenuRebaseChangesets:))						return [myDocument localRepoIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();
-	if (theAction == @selector(mainMenuBackoutChangeset:))						return [myDocument localRepoIsSelectedAndReady] && ![myDocument repositoryHasFilesWhichContainStatus:eHGStatusChangedInSomeWay];
+	if (theAction == @selector(mainMenuCollapseChangesets:))					return [myDocument_ localRepoIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();
+	if (theAction == @selector(mainMenuAlterDetails:))							return [myDocument_ localRepoIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();
+	if (theAction == @selector(mainMenuHistoryEditChangesets:))					return [myDocument_ localRepoIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();
+	if (theAction == @selector(mainMenuStripChangesets:))						return [myDocument_ localRepoIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();
+	if (theAction == @selector(mainMenuRebaseChangesets:))						return [myDocument_ localRepoIsSelectedAndReady] && AllowHistoryEditingOfRepositoryFromDefaults();
+	if (theAction == @selector(mainMenuBackoutChangeset:))						return [myDocument_ localRepoIsSelectedAndReady] && ![myDocument_ repositoryHasFilesWhichContainStatus:eHGStatusChangedInSomeWay];
 	
 	// HistoryView contextual items
-	if (theAction == @selector(historyMenuAddLabelToChosenRevision:))			return [myDocument localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
-	if (theAction == @selector(historyMenuDiffSelectedRevisions:))				return [myDocument localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
-	if (theAction == @selector(historyMenuDiffAllToChosenRevision:))			return [myDocument localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
-	if (theAction == @selector(historyMenuUpdateRepositoryToChosenRevision:))	return [myDocument localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
-	if (theAction == @selector(historyMenuGotoChangeset:))						return [myDocument localRepoIsSelectedAndReady] && [myDocument showingHistoryView];
-	if (theAction == @selector(historyMenuMergeRevision:))						return [myDocument localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
-	if (theAction == @selector(historyMenuManifestOfChosenRevision:))			return [myDocument localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuAddLabelToChosenRevision:))			return [myDocument_ localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuDiffSelectedRevisions:))				return [myDocument_ localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuDiffAllToChosenRevision:))			return [myDocument_ localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuUpdateRepositoryToChosenRevision:))	return [myDocument_ localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuGotoChangeset:))						return [myDocument_ localRepoIsSelectedAndReady] && [myDocument_ showingHistoryView];
+	if (theAction == @selector(historyMenuMergeRevision:))						return [myDocument_ localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuManifestOfChosenRevision:))			return [myDocument_ localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
 	// -------
-	if (theAction == @selector(historyMenuViewRevisionDifferences:))			return [myDocument localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuViewRevisionDifferences:))			return [myDocument_ localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
 
 	// Labels contextual items
-	if (theAction == @selector(labelsMenuMoveChosenLabel:))						return [myDocument localRepoIsSelectedAndReady] && [theLabelsTableView_ chosenLabel] && ![[theLabelsTableView_ chosenLabel] isOpenHead];
-	if (theAction == @selector(labelsMenuRemoveChosenLabel:))					return [myDocument localRepoIsSelectedAndReady] && [theLabelsTableView_ chosenLabel] && ![[theLabelsTableView_ chosenLabel] isOpenHead];
+	if (theAction == @selector(labelsMenuMoveChosenLabel:))						return [myDocument_ localRepoIsSelectedAndReady] && [theLabelsTableView_ chosenLabel] && ![[theLabelsTableView_ chosenLabel] isOpenHead];
+	if (theAction == @selector(labelsMenuRemoveChosenLabel:))					return [myDocument_ localRepoIsSelectedAndReady] && [theLabelsTableView_ chosenLabel] && ![[theLabelsTableView_ chosenLabel] isOpenHead];
 	// -------
-	if (theAction == @selector(labelsMenuUpdateRepositoryToChosenRevision:))	return [myDocument localRepoIsSelectedAndReady] && [theLabelsTableView_ chosenLabel];
+	if (theAction == @selector(labelsMenuUpdateRepositoryToChosenRevision:))	return [myDocument_ localRepoIsSelectedAndReady] && [theLabelsTableView_ chosenLabel];
 	
 	return NO;
 }
@@ -516,7 +517,7 @@
 
 - (NSArray*) quickLookPreviewItems
 {	
-	NSArray* entries = [logTableView selectedEntries];
+	NSArray* entries = [logTableView_ selectedEntries];
 	if ([entries count] <= 0)
 		return @[];
 		
@@ -524,13 +525,13 @@
 		 if (![entry isFullyLoaded])
 			 [entry fullyLoadEntry];
 
-	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
 	NSMutableArray* quickLookPreviewItems = [[NSMutableArray alloc] init];
 	NSMutableSet* absolutePaths = [[NSMutableSet alloc]init];
 
-	LogEntry* highestEntry = [logTableView highestSelectedEntry];
+	LogEntry* highestEntry = [logTableView_ highestSelectedEntry];
 	NSString* highestSelectedChangeset = [highestEntry changeset];
-	NSRect itemRect = [logTableView rectOfRowInWindow:[logTableView tableRowForRevision:[highestEntry revision]]];
+	NSRect itemRect = [logTableView_ rectOfRowInWindow:[logTableView_ tableRowForRevision:[highestEntry revision]]];
 
 	for (LogEntry* entry in entries)
 	{
@@ -542,7 +543,7 @@
 
 	for (NSString* absolutePath in absolutePaths)
 	{
-		NSString* pathOfCachedCopy = [myDocument loadCachedCopyOfPath:absolutePath forChangeset:highestSelectedChangeset];
+		NSString* pathOfCachedCopy = [myDocument_ loadCachedCopyOfPath:absolutePath forChangeset:highestSelectedChangeset];
 		if (pathOfCachedCopy)
 			[quickLookPreviewItems addObject:[PathQuickLookPreviewItem previewItemForPath:pathOfCachedCopy withRect:itemRect]];
 	}
@@ -556,7 +557,7 @@
 {
     NSString* key = [theEvent charactersIgnoringModifiers];
     if ([key isEqual:@" "])
-        [[self myDocument] togglePreviewPanel:self];
+        [myDocument_ togglePreviewPanel:self];
 	else
         [super keyDown:theEvent];
 }

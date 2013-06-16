@@ -31,12 +31,11 @@
 	IBOutlet OptionController*			noupdateOption;
 	IBOutlet OptionController*			pullOption;
 	IBOutlet OptionController*			uncompressedOption;
-	
-	MacHgDocument*		myDocument;
-	
+		
 	NSArray*			cmdOptions;
 	SidebarNode*		sourceNode_;
 }
+@property (weak,readonly) MacHgDocument*  myDocument;
 @property (nonatomic) NSString*  shortNameFieldValue;
 @property (nonatomic) NSString*  pathFieldValue;
 

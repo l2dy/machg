@@ -21,7 +21,7 @@
 @end
 
 @implementation MoveLabelSheetController
-@synthesize myDocument = myDocument;
+@synthesize myDocument = myDocument_;
 
 
 
@@ -34,8 +34,9 @@
 
 - (MoveLabelSheetController*) initMoveLabelSheetControllerWithDocument:(MacHgDocument*)doc
 {
-	myDocument = doc;
-	[NSBundle loadNibNamed:@"MoveLabelSheet" owner:self];
+	myDocument_ = doc;
+	self = [self initWithWindowNibName:@"MoveLabelSheet"];
+	[self window];	// force / ensure the nib is loaded
 	return self;
 }
 
@@ -82,7 +83,7 @@
 	[self validate:self];
 
 	[logTableView resetTable:self];
-	[myDocument beginSheet:theMoveLabelSheet];
+	[myDocument_ beginSheet:theMoveLabelSheet];
 	[logTableView scrollToRevision:[label revision]];
 }
 
@@ -90,7 +91,7 @@
 - (void) sheetButtonOk:(id)sender
 {
 	[theMoveLabelSheet makeFirstResponder:theMoveLabelSheet];	// Make the text fields of the sheet commit any changes they currently have
-	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
 	NSNumber* versionToRevertTo = [logTableView selectedRevision];
 	NSString* versionToRevertToStr = numberAsString(versionToRevertTo);
 
@@ -105,9 +106,9 @@
 		case eInactiveBranch:
 		case eClosedBranch:
 		{
-			if (![versionToRevertTo isEqualToNumber:[[myDocument repositoryData] getHGParent1Revision]])
+			if (![versionToRevertTo isEqualToNumber:[[myDocument_ repositoryData] getHGParent1Revision]])
 			{
-				BOOL updatedToTagetRev = [myDocument primaryActionUpdateFilesToVersion:versionToRevertTo withCleanOption:NO withConfirmation:YES];
+				BOOL updatedToTagetRev = [myDocument_ primaryActionUpdateFilesToVersion:versionToRevertTo withCleanOption:NO withConfirmation:YES];
 				if (!updatedToTagetRev)
 					bailEarly = YES;
 			}
@@ -133,13 +134,13 @@
 		[argsMoveLabel addObject: @"--local"];
 	[argsMoveLabel addObject: @"--force"];
 	[argsMoveLabel addObject:[labelToMove_ name]];
-	ExecutionResult* results = [myDocument executeMercurialWithArgs:argsMoveLabel fromRoot:rootPath whileDelayingEvents:YES];
+	ExecutionResult* results = [myDocument_ executeMercurialWithArgs:argsMoveLabel fromRoot:rootPath whileDelayingEvents:YES];
 	
 	if ([results hasErrors])
 		return;
 	
-	[myDocument endSheet:theMoveLabelSheet];
-	[myDocument postNotificationWithName:kUnderlyingRepositoryChanged];		// Check that we still need to post this notification. The command
+	[myDocument_ endSheet:theMoveLabelSheet];
+	[myDocument_ postNotificationWithName:kUnderlyingRepositoryChanged];		// Check that we still need to post this notification. The command
 																			// should like cause a refresh in any case.
 }
 
@@ -147,7 +148,7 @@
 
 - (IBAction) sheetButtonCancel:(id)sender
 {
-	[myDocument endSheet:theMoveLabelSheet];
+	[myDocument_ endSheet:theMoveLabelSheet];
 }
 
 

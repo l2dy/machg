@@ -28,7 +28,7 @@
 @implementation RepositoryData
 
 @synthesize rootPath   = rootPath_;
-@synthesize myDocument = myDocument;
+@synthesize myDocument = myDocument_;
 @synthesize includeIncompleteRevision = includeIncompleteRevision_;
 @synthesize logGraph = logGraph_;
 @synthesize oldLogGraph = oldLogGraph_;
@@ -54,7 +54,7 @@
 		logGraph_    = [[LogGraph alloc] init];
 		oldLogGraph_ = [[LogGraph alloc] init];
 		rootPath_ = rootPath;
-		myDocument = doc;
+		myDocument_ = doc;
 		hgIgnoreFilesRegEx_      = nil;
 		hgIgnoreFilesTimeStamp_  = nil;
 		badRepositoryReadCount_  = 0;
@@ -124,7 +124,7 @@
 {
 	LogEntry* oldIncompleteRevisionEntry = incompleteRevisionEntry_;
 	BOOL oldIncludeIncompleteRevision = includeIncompleteRevision_;
-	BOOL newIncludeIncompleteRevision = [myDocument repositoryHasFilesWhichContainStatus:eHGStatusCommittable];
+	BOOL newIncludeIncompleteRevision = [myDocument_ repositoryHasFilesWhichContainStatus:eHGStatusCommittable];
 	BOOL changedVisibility = (oldIncludeIncompleteRevision != newIncludeIncompleteRevision);
 	
 	if (!oldIncludeIncompleteRevision && !newIncludeIncompleteRevision)
@@ -153,8 +153,8 @@
 		[self resetEntriesAndLogGraph];
 	}
 	dispatch_async(mainQueue(), ^{
-		[myDocument postNotificationWithName:kRepositoryDataDidChange];
-		[myDocument postNotificationWithName:kLogEntriesDidChange];
+		[myDocument_ postNotificationWithName:kRepositoryDataDidChange];
+		[myDocument_ postNotificationWithName:kLogEntriesDidChange];
 	});
 }
 
@@ -265,7 +265,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 - (void) loadCombinedInformationAndNotify:(BOOL)initializing
 {
 	dispatch_async(globalQueue(), ^{
-		ProcessListController* theProcessListController = [myDocument theProcessListController];
+		ProcessListController* theProcessListController = [myDocument_ theProcessListController];
 		NSNumber* processNum = [theProcessListController addProcessIndicator:@"Loading Repository Information"];
 		NSMutableDictionary* newRevisionToLabels = [[NSMutableDictionary alloc] init];
 		
@@ -348,7 +348,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 		BOOL labelsChanged    = labelArrayDictionariesAreEqual(revisionNumberToLabels_, newRevisionToLabels);
 		
 		dispatch_async(mainQueue(), ^{
-			NSString* browserRoot = [[myDocument theFSViewer] absolutePathOfRepositoryRoot];
+			NSString* browserRoot = [[myDocument_ theFSViewer] absolutePathOfRepositoryRoot];
 			BOOL rootChanged      = !browserRoot || !rootPath_ || [browserRoot isNotEqualToString:rootPath_];
 			BOOL incompleteRevisionChanged;
 			@synchronized(self)
@@ -373,8 +373,8 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 					DebugLog(@"Bad repository read in loadCombinedInformationAndNotify.");
 					badRepositoryReadCount_++;
 					if (repositoryExistsAtPath(rootPath_) && badRepositoryReadCount_ < 4)
-						[[myDocument queueForUnderlyingRepositoryChangedViaEvents] addBlockOperation: ^{
-							[myDocument postNotificationWithName:kUnderlyingRepositoryChanged];
+						[[myDocument_ queueForUnderlyingRepositoryChangedViaEvents] addBlockOperation: ^{
+							[myDocument_ postNotificationWithName:kUnderlyingRepositoryChanged];
 					}];
 				});
 				return;
@@ -383,11 +383,11 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 			DebugLog(@"finished loadCombinedInformationAndNotify");
 
 			if (initializing || rootChanged)
-				[myDocument postNotificationWithName:kRepositoryDataIsNew];
+				[myDocument_ postNotificationWithName:kRepositoryDataIsNew];
 			else if (tipChanged || parentsChanged || labelsChanged || incompleteRevisionChanged)
-				[myDocument postNotificationWithName:kRepositoryDataDidChange];
+				[myDocument_ postNotificationWithName:kRepositoryDataDidChange];
 			badRepositoryReadCount_ = 0;	// We have successfully read the repository information
-			[myDocument postNotificationWithName:kLogEntriesDidChange];
+			[myDocument_ postNotificationWithName:kLogEntriesDidChange];
 		});
 	});
 }
@@ -400,7 +400,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 	[revisionNumberToLogEntry_ removeAllObjects];
 	oldLogGraph_ = logGraph_;
 	logGraph_ = [[LogGraph alloc] init];
-	includeIncompleteRevision_ = [myDocument repositoryHasFilesWhichContainStatus:eHGStatusCommittable];
+	includeIncompleteRevision_ = [myDocument_ repositoryHasFilesWhichContainStatus:eHGStatusCommittable];
 	incompleteRevisionEntry_   = includeIncompleteRevision_ ? [LogEntry unfinishedEntryForRevision:intAsNumber([self computeNumberOfRealRevisions] + 1) forRepositoryData:self] : nil;
 	if (incompleteRevisionEntry_)
 		[self setEntry:incompleteRevisionEntry_];
@@ -456,28 +456,28 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 
 - (BOOL) rebaseInProgress
 {
-	NSString* repositoryDotHGDirPath = [[myDocument absolutePathOfRepositoryRoot] stringByAppendingPathComponent:@".hg"];
+	NSString* repositoryDotHGDirPath = [[myDocument_ absolutePathOfRepositoryRoot] stringByAppendingPathComponent:@".hg"];
 	NSString* histEditStatePath = [repositoryDotHGDirPath stringByAppendingPathComponent:@"rebasestate"];
 	return [[NSFileManager defaultManager] fileExistsAtPath:histEditStatePath];
 }
 
 - (void) deleteRebaseState
 {
-	NSString* repositoryDotHGDirPath = [[myDocument absolutePathOfRepositoryRoot] stringByAppendingPathComponent:@".hg"];
+	NSString* repositoryDotHGDirPath = [[myDocument_ absolutePathOfRepositoryRoot] stringByAppendingPathComponent:@".hg"];
 	NSString* histEditStatePath = [repositoryDotHGDirPath stringByAppendingPathComponent:@"rebasestate"];
 	moveFilesToTheTrash(@[histEditStatePath]);
 }
 
 - (BOOL) historyEditInProgress
 {
-	NSString* repositoryDotHGDirPath = [[myDocument absolutePathOfRepositoryRoot] stringByAppendingPathComponent:@".hg"];
+	NSString* repositoryDotHGDirPath = [[myDocument_ absolutePathOfRepositoryRoot] stringByAppendingPathComponent:@".hg"];
 	NSString* histEditStatePath = [repositoryDotHGDirPath stringByAppendingPathComponent:@"histedit-state"];
 	return [[NSFileManager defaultManager] fileExistsAtPath:histEditStatePath];
 }
 
 - (void) deleteHistoryEditState
 {
-	NSString* repositoryDotHGDirPath = [[myDocument absolutePathOfRepositoryRoot] stringByAppendingPathComponent:@".hg"];
+	NSString* repositoryDotHGDirPath = [[myDocument_ absolutePathOfRepositoryRoot] stringByAppendingPathComponent:@".hg"];
 	NSString* histEditStatePath = [repositoryDotHGDirPath stringByAppendingPathComponent:@"histedit-state"];
 	moveFilesToTheTrash(@[histEditStatePath]);
 }
@@ -646,7 +646,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 			[oldLogGraph_ removeEntries:entries];
 		}
 
-		[myDocument postNotificationWithName:kLogEntriesDidChange];
+		[myDocument_ postNotificationWithName:kLogEntriesDidChange];
 	});
 }
 

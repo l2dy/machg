@@ -31,7 +31,7 @@
 @implementation MergeSheetController
 
 @synthesize forceTheMerge = forceTheMerge_;
-@synthesize myDocument = myDocument;
+@synthesize myDocument = myDocument_;
 
 
 
@@ -44,8 +44,9 @@
 
 - (MergeSheetController*) initMergeSheetControllerWithDocument:(MacHgDocument*)doc
 {
-	myDocument = doc;
-	[NSBundle loadNibNamed:@"MergeSheet" owner:self];
+	myDocument_ = doc;
+	self = [self initWithWindowNibName:@"MergeSheet"];
+	[self window];	// force / ensure the nib is loaded
 	return self;
 }
 
@@ -75,7 +76,7 @@
 - (IBAction) validateButtons:(id)sender
 {
 	NSString* theSelectedRevision = numberAsString([logTableView selectedRevision]);
-	NSString* theParentRevision   = numberAsString([[myDocument repositoryData]getHGParent1Revision]);
+	NSString* theParentRevision   = numberAsString([[myDocument_ repositoryData]getHGParent1Revision]);
 	BOOL canMerge = YES;
 	
 	NSAttributedString* message = nil;
@@ -88,9 +89,9 @@
 	
 	if (!message)
 	{
-		NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+		NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
 		NSMutableArray* argsDebugAncestor = [NSMutableArray arrayWithObjects:@"debugancestor", theSelectedRevision, theParentRevision, nil];
-		ExecutionResult* results = [myDocument executeMercurialWithArgs:argsDebugAncestor fromRoot:rootPath whileDelayingEvents:YES];
+		ExecutionResult* results = [myDocument_ executeMercurialWithArgs:argsDebugAncestor fromRoot:rootPath whileDelayingEvents:YES];
 		if (results.outStr)
 		{
 			NSString* ancestor = trimString([results.outStr stringByMatching:@"(\\d+):[\\d\\w]+\\s*" capture:1L]);
@@ -133,7 +134,7 @@
 
 - (IBAction) openMergeSheet:(id)sender
 {
-	[myDocument beginSheet:mergeSheetWindow];
+	[myDocument_ beginSheet:mergeSheetWindow];
 	[self validateButtons:self];
 	[logTableView resetTable:self];
 }
@@ -142,25 +143,25 @@
 - (IBAction) sheetButtonOk:(id)sender
 {
 	[mergeSheetWindow makeFirstResponder:mergeSheetWindow]; // Make the text fields of the sheet commit any changes they currently have
-	[myDocument endSheet:mergeSheetWindow];
+	[myDocument_ endSheet:mergeSheetWindow];
 	NSNumber* theSelectedRevision = [logTableView selectedRevision];
 	NSArray* theOptions = [self forceTheMerge] ? @[@"--force"] : nil;
-	[myDocument primaryActionMergeWithVersion:theSelectedRevision andOptions:theOptions withConfirmation:NO];
+	[myDocument_ primaryActionMergeWithVersion:theSelectedRevision andOptions:theOptions withConfirmation:NO];
 }
 
 
 - (IBAction) sheetButtonCancel:(id)sender
 {
 	[mergeSheetWindow makeFirstResponder:mergeSheetWindow]; // Make the text fields of the sheet commit any changes they currently have
-	[myDocument endSheet:mergeSheetWindow];
+	[myDocument_ endSheet:mergeSheetWindow];
 }
 
 
 - (IBAction) sheetButtonViewDifferencesForMergeSheet:(id)sender
 {
-	NSArray* rootPathAsArray = [myDocument absolutePathOfRepositoryRootAsArray];
+	NSArray* rootPathAsArray = [myDocument_ absolutePathOfRepositoryRootAsArray];
 	NSNumber* versionToMergeWith = [logTableView selectedRevision];
-	[myDocument viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:numberAsString(versionToMergeWith)];
+	[myDocument_ viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:numberAsString(versionToMergeWith)];
 }
 
 
@@ -189,7 +190,7 @@
 - (NSAttributedString*) normalFormattedSheetMessage
 {
 	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
-	NSNumber* parent1Revision = [myDocument getHGParent1Revision];
+	NSNumber* parent1Revision = [myDocument_ getHGParent1Revision];
 	if (!parent1Revision)
 	{
 		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(@"No parent revision.")];
@@ -199,7 +200,7 @@
 	NSNumber* rev = [logTableView selectedRevision];
 	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(rev ? numberAsString(rev) : @"-")];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@") will be merged into the current revision (")];
-	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString([myDocument isCurrentRevisionTip] ? @"tip" : numberAsString(parent1Revision))];
+	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString([myDocument_ isCurrentRevisionTip] ? @"tip" : numberAsString(parent1Revision))];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@").")];
 	return newSheetMessage;
 }
@@ -212,7 +213,7 @@
 	NSNumber* rev = [logTableView selectedRevision];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(rev ? numberAsString(rev) : @"-")];
 	[newSheetMessage appendAttributedString: grayedSheetMessageAttributedString(@") into the current revision (")];
-	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString([myDocument isCurrentRevisionTip] ? @"tip" : numberAsString([myDocument getHGParent1Revision]))];
+	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString([myDocument_ isCurrentRevisionTip] ? @"tip" : numberAsString([myDocument_ getHGParent1Revision]))];
 	[newSheetMessage appendAttributedString: grayedSheetMessageAttributedString(@") since one of the revisions is a direct ancestor of the other.")];
 	return newSheetMessage;
 }

@@ -30,7 +30,7 @@ NSString* kTheRevisionFieldValue = @"theRevisionFieldValue";
 @synthesize theCommitMessageValue	= theCommitMessageValue_;
 @synthesize forceValue				= forceValue_;
 @synthesize addLabelTabNumber		= addLabelTabNumber_;
-@synthesize myDocument = myDocument;
+@synthesize myDocument = myDocument_;
 
 
 
@@ -43,8 +43,9 @@ NSString* kTheRevisionFieldValue = @"theRevisionFieldValue";
 
 - (AddLabelSheetController*) initAddLabelSheetControllerWithDocument:(MacHgDocument*)doc
 {
-	myDocument = doc;
-	[NSBundle loadNibNamed:@"AddLabelSheet" owner:self];
+	myDocument_ = doc;
+	self = [self initWithWindowNibName:@"AddLabelSheet"];
+	[self window];	// force / ensure the nib is loaded
 	return self;
 }
 
@@ -193,10 +194,10 @@ NSString* kTheRevisionFieldValue = @"theRevisionFieldValue";
 
 - (IBAction) openAddLabelSheet:(id)sender
 {
-	HistoryView* theHistoryView = [myDocument theHistoryView];
-	BOOL wasShowingHistoryView  = [myDocument showingHistoryView];
-	[myDocument actionSwitchViewToHistoryView:sender];				// Open the log inspector
-	[[myDocument toolbarSearchField] setStringValue:@""];			// reset the search term
+	HistoryView* theHistoryView = [myDocument_ theHistoryView];
+	BOOL wasShowingHistoryView  = [myDocument_ showingHistoryView];
+	[myDocument_ actionSwitchViewToHistoryView:sender];				// Open the log inspector
+	[[myDocument_ toolbarSearchField] setStringValue:@""];			// reset the search term
 	if (!wasShowingHistoryView)
 		[[theHistoryView logTableView] scrollToCurrentRevision:sender];			// Scroll to the current revision
 	[self setTheNewNameFieldValue:@""];
@@ -204,14 +205,14 @@ NSString* kTheRevisionFieldValue = @"theRevisionFieldValue";
 	[commitMessageTextView setString:@""];
 	[self setForceValue:NO];
 	[self updateButtonsAndMessages];
-	[myDocument beginSheet:theAddLabelSheet];
+	[myDocument_ beginSheet:theAddLabelSheet];
 }
 
 
 - (void) sheetButtonOk:(id)sender
 {
 	[theAddLabelSheet makeFirstResponder:theAddLabelSheet];	// Make the text fields of the sheet commit any changes they currently have
-	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
 
 	NSString* command = @"";
 	switch (addLabelTabNumber_)
@@ -231,13 +232,13 @@ NSString* kTheRevisionFieldValue = @"theRevisionFieldValue";
 	if (addLabelTabNumber_ == eAddLabelTabBranch && [[commitMessageTextView string] length] > 0)
 		[argsLabel addObject: @"--message" followedBy:[commitMessageTextView string]];
 	[argsLabel addObject:theNewNameFieldValue_];
-	ExecutionResult* results = [myDocument executeMercurialWithArgs:argsLabel fromRoot:rootPath whileDelayingEvents:YES];
+	ExecutionResult* results = [myDocument_ executeMercurialWithArgs:argsLabel fromRoot:rootPath whileDelayingEvents:YES];
 	
 	if ([results hasErrors])
 		return;
 	
-	[myDocument endSheet:theAddLabelSheet];
-	[myDocument postNotificationWithName:kUnderlyingRepositoryChanged];	// Check that we still need to post this notification. The command
+	[myDocument_ endSheet:theAddLabelSheet];
+	[myDocument_ postNotificationWithName:kUnderlyingRepositoryChanged];	// Check that we still need to post this notification. The command
 																		// should like cause a refresh in any case.
 }
 
@@ -245,7 +246,7 @@ NSString* kTheRevisionFieldValue = @"theRevisionFieldValue";
 - (IBAction) sheetButtonCancel:(id)sender
 {
 	[theAddLabelSheet makeFirstResponder:theAddLabelSheet];	// Make the text fields of the sheet commit any changes they currently have
-	[myDocument endSheet:theAddLabelSheet];
+	[myDocument_ endSheet:theAddLabelSheet];
 }
 
 

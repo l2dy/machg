@@ -23,7 +23,7 @@
 
 @implementation BackoutSheetController
 
-@synthesize myDocument = myDocument;
+@synthesize myDocument = myDocument_;
 
 
 
@@ -36,8 +36,9 @@
 
 - (BackoutSheetController*) initBackoutSheetControllerWithDocument:(MacHgDocument*)doc
 {
-	myDocument = doc;
-	[NSBundle loadNibNamed:@"BackoutSheet" owner:self];
+	myDocument_ = doc;
+	self = [self initWithWindowNibName:@"BackoutSheet"];
+	[self window];	// force / ensure the nib is loaded
 	return self;
 }
 
@@ -73,7 +74,7 @@
 
 - (void) openBackoutSheetWithRevision:(NSNumber*)revision
 {
-	NSString* newTitle = fstr(@"Backout Selected Changeset in %@", [myDocument selectedRepositoryShortName]);
+	NSString* newTitle = fstr(@"Backout Selected Changeset in %@", [myDocument_ selectedRepositoryShortName]);
 	[backoutSheetTitle setStringValue:newTitle];
 
 	// Report the branch we are about to backout to in the dialog
@@ -81,7 +82,7 @@
 
 	
 	[logTableView resetTable:self];
-	[myDocument beginSheet:theBackoutSheet];
+	[myDocument_ beginSheet:theBackoutSheet];
 	[logTableView selectAndScrollToRevision:revision];
 	[self validate:self];
 }
@@ -89,7 +90,7 @@
 
 - (IBAction) openBackoutSheetWithSelectedRevision:(id)sender
 {
-	NSArray* revs = [[[myDocument theHistoryView] logTableView] chosenRevisions];
+	NSArray* revs = [[[myDocument_ theHistoryView] logTableView] chosenRevisions];
 	if ([revs count] > 0)
 	{
 		NSInteger minRev = numberAsInt(revs[0]);
@@ -103,31 +104,31 @@
 		[self openBackoutSheetWithRevision:intAsNumber(minRev)];
 	}
 	else
-		[self openBackoutSheetWithRevision:[myDocument getHGParent1Revision]];
+		[self openBackoutSheetWithRevision:[myDocument_ getHGParent1Revision]];
 }
 
 
 - (IBAction) sheetButtonOk:(id)sender
 {
 	NSNumber* versionToBackoutTo = [logTableView selectedRevision];
-	BOOL didReversion = [myDocument primaryActionBackoutFilesToVersion:versionToBackoutTo];
+	BOOL didReversion = [myDocument_ primaryActionBackoutFilesToVersion:versionToBackoutTo];
 	if (!didReversion)
 		return;
 
-	[myDocument endSheet:theBackoutSheet];
+	[myDocument_ endSheet:theBackoutSheet];
 }
 
 - (IBAction) sheetButtonCancel:(id)sender
 {
-	[myDocument endSheet:theBackoutSheet];
+	[myDocument_ endSheet:theBackoutSheet];
 }
 
 
 - (IBAction) sheetButtonViewDifferencesForBackoutSheet:(id)sender
 {
-	NSArray* rootPathAsArray = [myDocument absolutePathOfRepositoryRootAsArray];
+	NSArray* rootPathAsArray = [myDocument_ absolutePathOfRepositoryRootAsArray];
 	NSNumber* versionToBackoutTo = [logTableView selectedRevision];
-	[myDocument viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:numberAsString(versionToBackoutTo)];
+	[myDocument_ viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:numberAsString(versionToBackoutTo)];
 }
 
 
@@ -155,7 +156,7 @@
 
 - (NSAttributedString*) formattedSheetMessage
 {
-	BOOL outstandingChanges = [myDocument repositoryHasFilesWhichContainStatus:eHGStatusChangedInSomeWay];
+	BOOL outstandingChanges = [myDocument_ repositoryHasFilesWhichContainStatus:eHGStatusChangedInSomeWay];
 
 	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
 	
@@ -172,7 +173,7 @@
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" will be backed out (reversed).")];
 		
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" The backout will be transplanted directly on top of the current parent ")];
-	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(numberAsString([myDocument getHGParent1Revision]))];
+	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(numberAsString([myDocument_ getHGParent1Revision]))];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@".")];
 
 	return newSheetMessage;

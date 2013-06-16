@@ -29,7 +29,7 @@
 
 
 @implementation ServerRepositoryRefSheetController
-@synthesize myDocument				= myDocument;
+@synthesize myDocument				= myDocument_;
 @synthesize shortNameFieldValue		= shortNameFieldValue_;
 @synthesize baseServerURLFieldValue = baseServerURLFieldValue_;
 @synthesize password				= password_;
@@ -48,8 +48,9 @@
 
 - (ServerRepositoryRefSheetController*) initServerRepositoryRefSheetControllerWithDocument:(MacHgDocument*)doc
 {
-	myDocument = doc;
-	[NSBundle loadNibNamed:@"ServerRepositoryRefSheet" owner:self];
+	myDocument_ = doc;
+	self = [self initWithWindowNibName:@"ServerRepositoryRefSheet"];
+	[self window];	// force / ensure the nib is loaded
 	return self;
 }
 
@@ -198,7 +199,7 @@
 	[theTitleText setStringValue:@"Add Server Repository"];
 	[okButton setTitle:@"Add Server"];
 	[theConnectionValidationController resetForSheetOpen];
-	[myDocument beginSheet:theWindow];
+	[myDocument_ beginSheet:theWindow];
 }
 
 
@@ -214,7 +215,7 @@
 	[theTitleText setStringValue:@"Add and Clone Server Repository"];
 	[okButton setTitle:@"Add and Clone"];
 	[theConnectionValidationController resetForSheetOpen];
-	[myDocument beginSheet:theWindow];
+	[myDocument_ beginSheet:theWindow];
 }
 
 
@@ -223,7 +224,7 @@
 	// If the user has chosen the wrong type of configuration do the correct thing.
 	if ([node isLocalRepositoryRef])
 	{
-		[[myDocument theLocalRepositoryRefSheetController] openSheetForConfigureRepositoryRef:node];
+		[[myDocument_ theLocalRepositoryRefSheetController] openSheetForConfigureRepositoryRef:node];
 		return;
 	}
 
@@ -258,7 +259,7 @@
 	cloneAfterAddition_ = NO;
 	[theConnectionValidationController resetForSheetOpen];
 	[self validateButtons:self];
-	[myDocument beginSheet:theWindow];
+	[myDocument_ beginSheet:theWindow];
 }
 
 
@@ -311,7 +312,7 @@
 {
 	[theWindow makeFirstResponder:theWindow];	// Make the text fields of the sheet commit any changes they currently have
 
-	Sidebar* theSidebar = [myDocument sidebar];
+	Sidebar* theSidebar = [myDocument_ sidebar];
 	[[theSidebar prepareUndoWithTarget:theSidebar] setRootAndUpdate:[[theSidebar root] copyNodeTree]];
 	[[theSidebar undoManager] setActionName: (nodeToConfigure ? @"Configure Repository" : @"Add Server Repository")];
 
@@ -329,7 +330,7 @@
 	{
 		SidebarNode* newNode = [SidebarNode nodeWithCaption:newName  forServerPath:newPath];
 		[newNode refreshNodeIcon];
-		[[myDocument sidebar] addSidebarNode:newNode];
+		[[myDocument_ sidebar] addSidebarNode:newNode];
 		[theSidebar selectNode:newNode];
 	}
 
@@ -360,18 +361,18 @@
 
 	[[AppController sharedAppController] computeRepositoryIdentityForPath:newPath];
 	
-	[myDocument endSheet:theWindow];
-	[[myDocument sidebar] reloadData];
-	[myDocument saveDocumentIfNamed];
-	[myDocument postNotificationWithName:kSidebarSelectionDidChange];
+	[myDocument_ endSheet:theWindow];
+	[[myDocument_ sidebar] reloadData];
+	[myDocument_ saveDocumentIfNamed];
+	[myDocument_ postNotificationWithName:kSidebarSelectionDidChange];
 	if (cloneAfterAddition_)
-		[myDocument mainMenuCloneRepository:self];
+		[myDocument_ mainMenuCloneRepository:self];
 }
 
 - (IBAction) sheetButtonCancel:(id)sender
 {
 	[theWindow makeFirstResponder:theWindow];	// Make the text fields of the sheet commit any changes they currently have
-	[myDocument endSheet:theWindow];
+	[myDocument_ endSheet:theWindow];
 }
 
 

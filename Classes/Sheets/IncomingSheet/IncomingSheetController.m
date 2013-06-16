@@ -39,7 +39,8 @@
 - (IncomingSheetController*) initIncomingSheetControllerWithDocument:(MacHgDocument*)doc
 {
 	myDocument_ = doc;
-	[NSBundle loadNibNamed:@"IncomingSheet" owner:self];
+	self = [self initWithWindowNibName:@"IncomingSheet"];
+	[self window];	// force / ensure the nib is loaded
 	return self;
 }
 

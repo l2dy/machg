@@ -251,7 +251,10 @@
 - (FilesViewController*) theFilesViewController
 {
 	dispatch_once(&theFilesViewControllerInitilizer_, ^{
-		theFilesViewController_ = [[FilesViewController alloc] initFilesViewControllerWithDocument:self]; });
+		dispatchSpliced(mainQueue(), ^{
+			theFilesViewController_ = [[FilesViewController alloc] initFilesViewControllerWithDocument:self];	// The web kit parts need to be laoded on the main thread.
+		});
+	});
 	return theFilesViewController_;
 }
 

@@ -30,15 +30,14 @@
 // MARK: -
 
 @implementation FilesViewController
-@synthesize myDocument = myDocument;
+@synthesize myDocument = myDocument_;
 @synthesize theFilesView = theFilesView_;
 
 - (FilesViewController*) initFilesViewControllerWithDocument:(MacHgDocument*)doc
 {
-	myDocument = doc;
-	dispatchSpliced(mainQueue(), ^{
-		[NSBundle loadNibNamed:@"FilesView" owner:self];
-	});
+	myDocument_ = doc;
+	self = [self initWithNibName:@"FilesView" bundle:nil];
+	[self loadView];
 	return self;
 }
 
@@ -57,7 +56,7 @@
 
 @implementation FilesView
 
-@synthesize myDocument = myDocument;
+@synthesize myDocument = myDocument_;
 @synthesize parentContoller = parentContoller_;
 @synthesize theFSViewer = theFSViewer;
 
@@ -77,13 +76,13 @@
 
 - (void) setMyDocumentFromParent
 {
-	myDocument = [parentContoller_ myDocument];
+	myDocument_ = [parentContoller_ myDocument];
 }
 
 - (void) awakeFromNib
 {
 	[self setMyDocumentFromParent];
-	[self observe:kRepositoryDataIsNew		from:[self myDocument]  byCalling:@selector(repositoryDataIsNew)];
+	[self observe:kRepositoryDataIsNew		from:myDocument_  byCalling:@selector(repositoryDataIsNew)];
 	[theFSViewer setAreNodesVirtual:NO];
 }
 
@@ -93,7 +92,7 @@
 
 - (void) prepareToOpenFilesView
 {
-	[[myDocument mainWindow] makeFirstResponder:self];
+	[[myDocument_ mainWindow] makeFirstResponder:self];
 	[theFSViewer prepareToOpenFSViewerPane];
 }
 
@@ -138,13 +137,13 @@
 
 - (void) didSwitchViewTo:(FSViewerNum)viewNumber	{ }
 - (void) repositoryDataIsNew						{ [theFSViewer repositoryDataIsNew]; }
-- (IBAction) refreshBrowserContent:(id)sender		{ return [myDocument refreshBrowserContent:myDocument]; }
+- (IBAction) refreshBrowserContent:(id)sender		{ return [myDocument_ refreshBrowserContent:myDocument_]; }
 
 - (void) restoreConcertinaSplitViewPositions
 {
 	if (IsNotEmpty([concertinaView autosavePositionName]))
 		return;
-	NSString* fileName = [myDocument documentNameForAutosave];
+	NSString* fileName = [myDocument_ documentNameForAutosave];
 	NSString* autoSaveNameForConcertina = fstr(@"File:%@:FilesViewConcertinaPositions", fileName);
 	[concertinaView setAutosavePositionName:autoSaveNameForConcertina];
 	[concertinaView restorePositionsFromDefaults];	
@@ -227,7 +226,7 @@
 }
 
 - (BOOL)			autoExpandViewerOutlines	{ return AutoExpandViewerOutlinesFromDefaults(); } 
-- (HunkExclusions*) hunkExclusions		{ return [myDocument hunkExclusions]; }
+- (HunkExclusions*) hunkExclusions		{ return [myDocument_ hunkExclusions]; }
 
 
 
@@ -246,7 +245,7 @@
 {
     NSString* key = [theEvent charactersIgnoringModifiers];
     if ([key isEqual:@" "])
-        [[self myDocument] togglePreviewPanel:self];
+        [myDocument_ togglePreviewPanel:self];
 	else
         [super keyDown:theEvent];
 }
@@ -309,7 +308,7 @@
 	
 	// The browser selection might have changed update the quick look preview image if necessary. It would be really nice to have
 	// a NSBrowserSelectionDidChangeNotification
-	if ([myDocument quicklookPreviewIsVisible])
+	if ([myDocument_ quicklookPreviewIsVisible])
 		[[QLPreviewPanel sharedPreviewPanel] reloadData];
 }
 
@@ -344,9 +343,9 @@
 {
 	if (!menuItem)
 		return NO;
-	BOOL inMergeState = [[myDocument repositoryData] inMergeState];
+	BOOL inMergeState = [[myDocument_ repositoryData] inMergeState];
 	[menuItem setTitle: inMergeState ? @"Commit Merged Files…" : @"Commit Selected Files…"];
-	return inMergeState ? [myDocument repositoryHasFilesWhichContainStatus:eHGStatusCommittable] : ([myDocument statusOfChosenPathsInFilesContain:eHGStatusCommittable] && [myDocument showingFilesView]);
+	return inMergeState ? [myDocument_ repositoryHasFilesWhichContainStatus:eHGStatusCommittable] : ([myDocument_ statusOfChosenPathsInFilesContain:eHGStatusCommittable] && [myDocument_ showingFilesView]);
 }
 
 - (BOOL) validateAndSwitchMenuForRenameSelectedItem:(NSMenuItem*)menuItem
@@ -365,40 +364,40 @@
 {
 	SEL theAction = [anItem action];
 
-	if (theAction == @selector(mainMenuCommitSelectedFiles:))			return [myDocument localRepoIsSelectedAndReady] && [self validateAndSwitchMenuForCommitSelectedFiles:DynamicCast(NSMenuItem, anItem)];
-	if (theAction == @selector(mainMenuCommitAllFiles:))				return [myDocument localRepoIsSelectedAndReady] && [myDocument validateAndSwitchMenuForCommitAllFiles:anItem];
-	if (theAction == @selector(toolbarCommitFiles:))					return [myDocument localRepoIsSelectedAndReady] && ([[myDocument repositoryData] inMergeState] || [self toolbarActionAppliesToFilesWith:eHGStatusCommittable]);
+	if (theAction == @selector(mainMenuCommitSelectedFiles:))			return [myDocument_ localRepoIsSelectedAndReady] && [self validateAndSwitchMenuForCommitSelectedFiles:DynamicCast(NSMenuItem, anItem)];
+	if (theAction == @selector(mainMenuCommitAllFiles:))				return [myDocument_ localRepoIsSelectedAndReady] && [myDocument_ validateAndSwitchMenuForCommitAllFiles:anItem];
+	if (theAction == @selector(toolbarCommitFiles:))					return [myDocument_ localRepoIsSelectedAndReady] && ([[myDocument_ repositoryData] inMergeState] || [self toolbarActionAppliesToFilesWith:eHGStatusCommittable]);
 	
-	if (theAction == @selector(mainMenuDiffSelectedFiles:))				return [myDocument localRepoIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusModified];
-	if (theAction == @selector(mainMenuDiffAllFiles:))					return [myDocument localRepoIsSelectedAndReady] && [theFSViewer repositoryHasFilesWhichContainStatus:eHGStatusModified];
-	if (theAction == @selector(toolbarDiffFiles:))						return [myDocument localRepoIsSelectedAndReady] && [self toolbarActionAppliesToFilesWith:eHGStatusModified];
+	if (theAction == @selector(mainMenuDiffSelectedFiles:))				return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusModified];
+	if (theAction == @selector(mainMenuDiffAllFiles:))					return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer repositoryHasFilesWhichContainStatus:eHGStatusModified];
+	if (theAction == @selector(toolbarDiffFiles:))						return [myDocument_ localRepoIsSelectedAndReady] && [self toolbarActionAppliesToFilesWith:eHGStatusModified];
 
-	if (theAction == @selector(mainMenuAddRenameRemoveSelectedFiles:))	return [myDocument localRepoIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusAddableOrRemovable];
-	if (theAction == @selector(mainMenuAddRenameRemoveAllFiles:))		return [myDocument localRepoIsSelectedAndReady] && [theFSViewer repositoryHasFilesWhichContainStatus:eHGStatusAddableOrRemovable];
-	if (theAction == @selector(toolbarAddRenameRemoveFiles:))			return [myDocument localRepoIsSelectedAndReady] && [self toolbarActionAppliesToFilesWith:eHGStatusAddableOrRemovable];
+	if (theAction == @selector(mainMenuAddRenameRemoveSelectedFiles:))	return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusAddableOrRemovable];
+	if (theAction == @selector(mainMenuAddRenameRemoveAllFiles:))		return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer repositoryHasFilesWhichContainStatus:eHGStatusAddableOrRemovable];
+	if (theAction == @selector(toolbarAddRenameRemoveFiles:))			return [myDocument_ localRepoIsSelectedAndReady] && [self toolbarActionAppliesToFilesWith:eHGStatusAddableOrRemovable];
 	// ------	
-	if (theAction == @selector(mainMenuRevertSelectedFiles:))			return [myDocument localRepoIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusChangedInSomeWay];
-	if (theAction == @selector(mainMenuRevertAllFiles:))				return [myDocument localRepoIsSelectedAndReady] && [theFSViewer repositoryHasFilesWhichContainStatus:eHGStatusChangedInSomeWay];
-	if (theAction == @selector(mainMenuRevertSelectedFilesToVersion:))	return [myDocument localRepoIsSelectedAndReady] && [theFSViewer nodesAreChosen];
-	if (theAction == @selector(toolbarRevertFiles:))					return [myDocument localRepoIsSelectedAndReady] && [self toolbarActionAppliesToFilesWith:eHGStatusChangedInSomeWay];
+	if (theAction == @selector(mainMenuRevertSelectedFiles:))			return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusChangedInSomeWay];
+	if (theAction == @selector(mainMenuRevertAllFiles:))				return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer repositoryHasFilesWhichContainStatus:eHGStatusChangedInSomeWay];
+	if (theAction == @selector(mainMenuRevertSelectedFilesToVersion:))	return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer nodesAreChosen];
+	if (theAction == @selector(toolbarRevertFiles:))					return [myDocument_ localRepoIsSelectedAndReady] && [self toolbarActionAppliesToFilesWith:eHGStatusChangedInSomeWay];
 	
-	if (theAction == @selector(mainMenuDeleteSelectedFiles:))			return [myDocument localRepoIsSelectedAndReady] && [theFSViewer nodesAreChosen];
-	if (theAction == @selector(mainMenuAddSelectedFiles:))				return [myDocument localRepoIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusAddable];
-	if (theAction == @selector(mainMenuUntrackSelectedFiles:))			return [myDocument localRepoIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusInRepository];
-	if (theAction == @selector(mainMenuRenameSelectedItem:))			return [myDocument localRepoIsSelectedAndReady] && [self validateAndSwitchMenuForRenameSelectedItem:DynamicCast(NSMenuItem, anItem)];
+	if (theAction == @selector(mainMenuDeleteSelectedFiles:))			return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer nodesAreChosen];
+	if (theAction == @selector(mainMenuAddSelectedFiles:))				return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusAddable];
+	if (theAction == @selector(mainMenuUntrackSelectedFiles:))			return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusInRepository];
+	if (theAction == @selector(mainMenuRenameSelectedItem:))			return [myDocument_ localRepoIsSelectedAndReady] && [self validateAndSwitchMenuForRenameSelectedItem:DynamicCast(NSMenuItem, anItem)];
 	// ------
-	if (theAction == @selector(mainMenuRemergeSelectedFiles:))			return [myDocument localRepoIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusSecondary];
-	if (theAction == @selector(mainMenuMarkResolvedSelectedFiles:))		return [myDocument localRepoIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusUnresolved];
+	if (theAction == @selector(mainMenuRemergeSelectedFiles:))			return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusSecondary];
+	if (theAction == @selector(mainMenuMarkResolvedSelectedFiles:))		return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusUnresolved];
 	// ------
-	if (theAction == @selector(mainMenuIgnoreSelectedFiles:))			return [myDocument localRepoIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusNotIgnored];
-	if (theAction == @selector(mainMenuUnignoreSelectedFiles:))			return [myDocument localRepoIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusIgnored];
-	if (theAction == @selector(mainMenuAnnotateSelectedFiles:))			return [myDocument localRepoIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusInRepository];
+	if (theAction == @selector(mainMenuIgnoreSelectedFiles:))			return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusNotIgnored];
+	if (theAction == @selector(mainMenuUnignoreSelectedFiles:))			return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusIgnored];
+	if (theAction == @selector(mainMenuAnnotateSelectedFiles:))			return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusInRepository];
 	// ------
-	if (theAction == @selector(mainMenuRollbackCommit:))				return [myDocument localRepoIsSelectedAndReady] && [[myDocument repositoryData] isRollbackInformationAvailable];
+	if (theAction == @selector(mainMenuRollbackCommit:))				return [myDocument_ localRepoIsSelectedAndReady] && [[myDocument_ repositoryData] isRollbackInformationAvailable];
 
-	if (theAction == @selector(mainMenuOpenSelectedFilesInFinder:))		return [myDocument localRepoIsSelectedAndReady] && [theFSViewer nodesAreChosen];
-	if (theAction == @selector(mainMenuRevealSelectedFilesInFinder:))	return [myDocument localRepoIsSelectedAndReady];
-	if (theAction == @selector(mainMenuOpenTerminalHere:))				return [myDocument localRepoIsSelectedAndReady];
+	if (theAction == @selector(mainMenuOpenSelectedFilesInFinder:))		return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer nodesAreChosen];
+	if (theAction == @selector(mainMenuRevealSelectedFilesInFinder:))	return [myDocument_ localRepoIsSelectedAndReady];
+	if (theAction == @selector(mainMenuOpenTerminalHere:))				return [myDocument_ localRepoIsSelectedAndReady];
 
 	return NO;
 }

@@ -23,7 +23,7 @@
 
 
 @implementation CollapseSheetController
-@synthesize myDocument = myDocument;
+@synthesize myDocument = myDocument_;
 
 
 
@@ -36,8 +36,9 @@
 
 - (CollapseSheetController*) initCollapseSheetControllerWithDocument:(MacHgDocument*)doc
 {
-	myDocument = doc;
-	[NSBundle loadNibNamed:@"CollapseSheet" owner:self];
+	myDocument_ = doc;
+	self = [self initWithWindowNibName:@"CollapseSheet"];
+	[self window];	// force / ensure the nib is loaded
 	return self;
 }
 
@@ -126,13 +127,13 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 - (IBAction) openCollapseSheetWithSelectedRevisions:(id)sender
 {
 	
-	if ([myDocument repositoryHasFilesWhichContainStatus:eHGStatusCommittable])
+	if ([myDocument_ repositoryHasFilesWhichContainStatus:eHGStatusCommittable])
 	{
 		NSRunAlertPanel(@"Outstanding Changes", @"Collapsing is only allowed in repositories with no outstanding uncommitted changes.", @"OK", nil, nil);
 		return;
 	}	
 	
-	NSString* newTitle = fstr(@"Collapsing Selected Revisions in “%@”", [myDocument selectedRepositoryShortName]);
+	NSString* newTitle = fstr(@"Collapsing Selected Revisions in “%@”", [myDocument_ selectedRepositoryShortName]);
 	[collapseSheetTitle setStringValue:newTitle];
 	
 	// Report the branch we are about to collapse on in the dialog
@@ -141,9 +142,9 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 	
 	[logTableView resetTable:self];
 	
-	NSArray* revs = [[[myDocument theHistoryView] logTableView] chosenRevisions];
+	NSArray* revs = [[[myDocument_ theHistoryView] logTableView] chosenRevisions];
 	if ([revs count] <= 0)
-		[logTableView selectAndScrollToRevision:[myDocument getHGTipRevision]];
+		[logTableView selectAndScrollToRevision:[myDocument_ getHGTipRevision]];
 	else
 	{
 		NSInteger minRev = numberAsInt(revs[0]);
@@ -162,19 +163,19 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 	
 	[self validateButtons:self];
 	[self setWindow:theCollapseSheet];
-	[myDocument beginSheet:theCollapseSheet];
+	[myDocument_ beginSheet:theCollapseSheet];
 }
 
 
 - (IBAction) sheetButtonOkForCollapseSheet:(id)sender
 {
-	[myDocument endSheet:theCollapseSheet];
+	[myDocument_ endSheet:theCollapseSheet];
 	[self openCollapseSheetWithCombinedCommitMessage:self];
 }
 
 - (IBAction) sheetButtonCancelForCollapseSheet:(id)sender
 {
-	[myDocument endSheet:theCollapseSheet];
+	[myDocument_ endSheet:theCollapseSheet];
 }
 
 
@@ -190,17 +191,17 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 
 	[sheetConfirmationInformativeMessageTextField setAttributedStringValue:[sheetInformativeMessageTextField attributedStringValue]];
 	[self setWindow:theCollapseConfirmationSheet];
-	[myDocument beginSheet:theCollapseConfirmationSheet];
+	[myDocument_ beginSheet:theCollapseConfirmationSheet];
 	[[[sheetConfirmationInformativeMessageTextField enclosingScrollView] contentView] scrollToPoint:NSMakePoint(0,0)];
 }
 
 - (IBAction) sheetButtonOkForCollapseConfirmationSheet:(id)sender
 {
 	[theCollapseConfirmationSheet makeFirstResponder:theCollapseConfirmationSheet];	// Make the text fields of the sheet commit any changes they currently have
-	[myDocument endSheet:theCollapseConfirmationSheet];
+	[myDocument_ endSheet:theCollapseConfirmationSheet];
 
-	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
-	NSString* repositoryName = [[[myDocument sidebar] selectedNode] shortName];
+	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
+	NSString* repositoryName = [[[myDocument_ sidebar] selectedNode] shortName];
 	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
 	NSString* collapseDescription = fstr(@"Collapsing %d-%d in “%@”", pair.lowRevision, pair.highRevision, repositoryName);
 	NSMutableArray* argsCollapse  = [NSMutableArray arrayWithObjects:@"collapse",  @"--config", @"extensions.hgext.collapse=", nil];
@@ -210,24 +211,24 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 	[argsCollapse addObject:@"--force"];
 	[argsCollapse addObject:@"--message" followedBy:[combinedCommitMessage string]];
 
-	[myDocument dispatchToMercurialQueuedWithDescription:collapseDescription  process:^{
-		[myDocument delayEventsUntilFinishBlock:^{
+	[myDocument_ dispatchToMercurialQueuedWithDescription:collapseDescription  process:^{
+		[myDocument_ delayEventsUntilFinishBlock:^{
 			[TaskExecutions executeMercurialWithArgs:argsCollapse  fromRoot:rootPath];
 			NSNumber* collapsedRevision = intAsNumber(pair.lowRevision);
-			[[[myDocument theHistoryView] logTableView] selectAndScrollToRevision:collapsedRevision];
+			[[[myDocument_ theHistoryView] logTableView] selectAndScrollToRevision:collapsedRevision];
 		}];			
 	}];	
 }
 - (IBAction) sheetButtonCancelForCollapseConfirmationSheet:(id)sender
 {
-	[myDocument endSheet:theCollapseConfirmationSheet];
+	[myDocument_ endSheet:theCollapseConfirmationSheet];
 }
 
 - (IBAction) sheetButtonCancel:(id)sender
 {
-	NSWindow* shownSheet = [myDocument shownSheet];
+	NSWindow* shownSheet = [myDocument_ shownSheet];
 	if (shownSheet && (shownSheet == theCollapseSheet || shownSheet == theCollapseConfirmationSheet))
-		[myDocument endSheet:shownSheet];
+		[myDocument_ endSheet:shownSheet];
 }
 
 

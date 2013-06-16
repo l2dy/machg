@@ -27,7 +27,7 @@
 @synthesize noDatesOption = noDatesOption_;
 @synthesize reversePatchOption = reversePatchOption_;
 @synthesize patchNameOption = patchNameOption_;
-@synthesize myDocument = myDocument;
+@synthesize myDocument = myDocument_;
 
 
 
@@ -40,9 +40,10 @@
 
 - (ExportPatchesSheetController*) initExportPatchesSheetControllerWithDocument:(MacHgDocument*)doc
 {
-	myDocument = doc;
+	myDocument_ = doc;
 	gitOption_ = YES;
-	[NSBundle loadNibNamed:@"ExportPatchesSheet" owner:self];
+	self = [self initWithWindowNibName:@"ExportPatchesSheet"];
+	[self window];	// force / ensure the nib is loaded
 	return self;
 }
 
@@ -79,7 +80,7 @@
 
 - (IBAction) openExportPatchesSheetWithSelectedRevisions:(id)sender
 {
-	NSString* newTitle = fstr(@"Exporting Selected Patches in %@", [myDocument selectedRepositoryShortName]);
+	NSString* newTitle = fstr(@"Exporting Selected Patches in %@", [myDocument_ selectedRepositoryShortName]);
 	[exportSheetTitle setStringValue:newTitle];
 	 
 	// Report the branch we are about to export to in the dialog
@@ -88,7 +89,7 @@
 	
 	[logTableView resetTable:self];
 	
-	NSArray* revs = [[[myDocument theHistoryView] logTableView] chosenRevisions];
+	NSArray* revs = [[[myDocument_ theHistoryView] logTableView] chosenRevisions];
 	if ([revs count] > 0)
 	{
 		NSInteger minRev = numberAsInt(revs[0]);
@@ -106,11 +107,11 @@
 	}
 	else
 	{
-		[logTableView scrollToRevision:[myDocument getHGTipRevision]];
-		[logTableView selectAndScrollToRevision:[myDocument getHGTipRevision]];
+		[logTableView scrollToRevision:[myDocument_ getHGTipRevision]];
+		[logTableView selectAndScrollToRevision:[myDocument_ getHGTipRevision]];
 	}
 	
-	[myDocument beginSheet:theExportPatchesSheet];
+	[myDocument_ beginSheet:theExportPatchesSheet];
 }
 
 
@@ -139,9 +140,9 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 - (IBAction) sheetButtonOk:(id)sender
 {
 	[theExportPatchesSheet makeFirstResponder:theExportPatchesSheet];	// Make the text fields of the sheet commit any changes they currently have
-	[myDocument endSheet:theExportPatchesSheet];
+	[myDocument_ endSheet:theExportPatchesSheet];
 	
-	NSString* rootPath = [myDocument absolutePathOfRepositoryRoot];
+	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
 	NSArray* entries = [logTableView selectedEntries];
 	NSInteger incompleteRev = numberAsInt([logTableView incompleteRevision]);
 	BOOL singleEntrySelected = [entries count] == 1;
@@ -173,8 +174,8 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 	NSString* countFormat    = [@[@"%0", intAsString([intAsString(numberOfPatches) length]), @"d"] componentsJoinedByString:@""];
 	NSString* revisionFormat = [@[@"%0", intAsString([intAsString(MAX(start, end)) length]), @"d"] componentsJoinedByString:@""];
 	
-	[myDocument dispatchToMercurialQueuedWithDescription:exportDescription  process:^{
-		[myDocument delayEventsUntilFinishBlock:^{
+	[myDocument_ dispatchToMercurialQueuedWithDescription:exportDescription  process:^{
+		[myDocument_ delayEventsUntilFinishBlock:^{
 			NSInteger count = 1;
 			for (LogEntry* entry in entries)
 			{
@@ -187,7 +188,7 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 				if (rev != incompleteRev)
 					[argsDiff addObject:@"--change" followedBy:intAsString(rev)];
 				
-				ExecutionResult* result = [myDocument  executeMercurialWithArgs:argsDiff  fromRoot:rootPath  whileDelayingEvents:YES];
+				ExecutionResult* result = [myDocument_  executeMercurialWithArgs:argsDiff  fromRoot:rootPath  whileDelayingEvents:YES];
 				if (result.outStr)
 				{
 					/*
@@ -202,10 +203,10 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 					{
 						[entry fullyLoadEntry];
 						NSNumber* firstParentRev = [entry firstParent];
-						LogEntry* parent = [[myDocument repositoryData] entryForRevision:firstParentRev];
+						LogEntry* parent = [[myDocument_ repositoryData] entryForRevision:firstParentRev];
 						[parent fullyLoadEntry];
 						
-						LogEntry* entry = [[myDocument repositoryData] entryForRevision:intAsNumber(rev)];
+						LogEntry* entry = [[myDocument_ repositoryData] entryForRevision:intAsNumber(rev)];
 						NSString* header1 = @"# HG changeset patch";
 						NSString* header2 = fstr(@"# User %@", [entry fullAuthor]);
 						NSString* header3 = fstr(@"# Date %@", [entry isoDate]);
@@ -217,10 +218,10 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 					else if (rev != incompleteRev && reversePatchOption_)
 					{
 						[entry fullyLoadEntry];
-						LogEntry* parent = [[myDocument repositoryData] entryForRevision:[entry firstParent]];
+						LogEntry* parent = [[myDocument_ repositoryData] entryForRevision:[entry firstParent]];
 						[parent fullyLoadEntry];
 						
-						LogEntry* entry = [[myDocument repositoryData] entryForRevision:intAsNumber(rev)];
+						LogEntry* entry = [[myDocument_ repositoryData] entryForRevision:intAsNumber(rev)];
 						NSString* header1 = @"# HG changeset patch";
 						NSString* header2 = fstr(@"# User %@", [entry fullAuthor]);
 						NSString* header3 = fstr(@"Backout: %@\n", [entry fullComment]);
@@ -250,7 +251,7 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 
 - (IBAction) sheetButtonCancel:(id)sender
 {
-	[myDocument endSheet:theExportPatchesSheet];
+	[myDocument_ endSheet:theExportPatchesSheet];
 }
 
 
@@ -262,10 +263,10 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 
 - (IBAction) sheetButtonViewDifferencesForExportPatchesSheet:(id)sender
 {
-	NSArray* rootPathAsArray = [myDocument absolutePathOfRepositoryRootAsArray];
+	NSArray* rootPathAsArray = [myDocument_ absolutePathOfRepositoryRootAsArray];
 	LowHighPair pair = [logTableView parentToHighestSelectedRevisions];
 	NSString* revisionNumbers = fstr(@"%d%:%d", pair.lowRevision, pair.highRevision);
-	[myDocument viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:revisionNumbers];
+	[myDocument_ viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:revisionNumbers];
 }
 
 

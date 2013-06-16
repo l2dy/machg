@@ -40,7 +40,8 @@
 - (PushSheetController*) initPushSheetControllerWithDocument:(MacHgDocument*)doc
 {
 	myDocument_ = doc;
-	[NSBundle loadNibNamed:@"PushSheet" owner:self];
+	self = [self initWithWindowNibName:@"PushSheet"];
+	[self window];	// force / ensure the nib is loaded
 	return self;
 }
 

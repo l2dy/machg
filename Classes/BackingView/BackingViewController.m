@@ -16,7 +16,7 @@
 @synthesize buttonBox;
 @synthesize backingBox;
 @synthesize backingView;
-@synthesize myDocument = myDocument;
+@synthesize myDocument = myDocument_;
 
 
 
@@ -29,8 +29,9 @@
 
 - (BackingViewController*) initBackingViewControllerWithDocument:(MacHgDocument*)doc
 {
-	myDocument = doc;
-	[NSBundle loadNibNamed:@"BackingView" owner:self];
+	myDocument_ = doc;
+	self = [self initWithNibName:@"BackingView" bundle:nil];
+	[self loadView];
 	return self;
 }
 
@@ -46,7 +47,7 @@
 @implementation BackingView
 
 @synthesize parentContoller = parentContoller_;
-@synthesize myDocument = myDocument;
+@synthesize myDocument = myDocument_;
 
 -(void) unload
 {
