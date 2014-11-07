@@ -24,7 +24,6 @@
 #import "JHConcertinaView.h"
 #import "Common.h"
 
-static inline CGFloat square(CGFloat f)									{ return f*f; }
 static inline CGFloat lowest(CGFloat val)								{ return (val > 0) ? floor(val) : ceil(val); }
 static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val < min) return min; if (val > max) return max; return val; }
 

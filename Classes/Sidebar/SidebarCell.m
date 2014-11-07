@@ -68,7 +68,6 @@
 	if (icon_ != icon)
 	{
 		icon_ = icon;
-		[icon_ setFlipped:NO];
 		[icon_ setSize:NSMakeSize(TSBADGECELL_ICON_SIZE, TSBADGECELL_ICON_SIZE)];
 	}
 }

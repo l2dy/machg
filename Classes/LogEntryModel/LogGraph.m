@@ -113,40 +113,12 @@ static NSInteger firstFreeIndex(NSIndexSet* indexes)
 	return i;
 }
 
-static NSInteger firstFreeIndex2(NSIndexSet* indexes1, NSIndexSet* indexes2)
-{
-	NSInteger i = 0;
-	while ([indexes1 containsIndex:i] || [indexes2 containsIndex:i])
-		i++;
-	return i;
-}
-
-static NSInteger firstFreeIndex3(NSIndexSet* indexes1, NSIndexSet* indexes2, NSIndexSet* indexes3)
-{
-	NSInteger i = 0;
-	while ([indexes1 containsIndex:i] || [indexes2 containsIndex:i] || [indexes3 containsIndex:i])
-		i++;
-	return i;
-}
-
 static NSInteger closestFreeIndex(NSIndexSet* indexes, NSInteger desiredIndex)
 {
 	NSInteger i = 0;
 	while ([indexes containsIndex:ABS(desiredIndex - i)] && [indexes containsIndex:desiredIndex + i])
 		i++;
 	if (![indexes containsIndex:ABS(desiredIndex - i)])
-		return ABS(desiredIndex - i);
-	return desiredIndex + i;
-}
-
-static NSInteger closestFreeIndex2(NSIndexSet* indexes1, NSIndexSet* indexes2, NSInteger desiredIndex)
-{
-	NSInteger i = 0;
-	while (
-		   ([indexes1 containsIndex:ABS(desiredIndex - i)] || [indexes2 containsIndex:ABS(desiredIndex - i)]) &&
-		   ([indexes1 containsIndex:ABS(desiredIndex + i)] || [indexes2 containsIndex:ABS(desiredIndex + i)]))
-		i++;
-	if (![indexes1 containsIndex:ABS(desiredIndex - i)] && ![indexes2 containsIndex:ABS(desiredIndex - i)])
 		return ABS(desiredIndex - i);
 	return desiredIndex + i;
 }

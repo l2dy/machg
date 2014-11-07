@@ -423,8 +423,6 @@
 
 // Validation
 - (BOOL)		validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem>)anItem;
-- (BOOL)		localRepoIsSelectedAndReady;
-- (BOOL)		localOrServerRepoIsSelectedAndReady;
 - (BOOL)		toolbarActionAppliesToFilesWith:(HGStatus)status;
 - (BOOL)		validateAndSwitchMenuForCommitAllFiles:(id)menuItem;
 - (BOOL)		validateAndSwitchMenuForRemoveSidebarItems:(id)menuItem;
