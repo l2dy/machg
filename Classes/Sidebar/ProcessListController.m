@@ -144,7 +144,6 @@
 - (void) setProgress:(NSString*)progress forKey:(NSNumber*)key
 {
 	processProgressStrings_[key] = progress;
-	[processListTableView reloadData];
 }
 
 
