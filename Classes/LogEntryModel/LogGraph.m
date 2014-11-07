@@ -59,7 +59,7 @@ const NSInteger maxRevDistance = 72;
 - (BOOL) drawColKnown	{ return drawCol != NSNotFound; }
 
 
-- (NSString*) description { return fstr(@"Line from (%d,%d) to (%d,%d) drawn in col %d", lowRev, lowCol, highRev, highCol, drawCol); }
+- (NSString*) description { return fstr(@"Line from (%ld,%ld) to (%ld,%ld) drawn in col %ld", lowRev, lowCol, highRev, highCol, drawCol); }
 
 @end
 
@@ -419,7 +419,7 @@ static NSInteger closestFreeIndex2(NSIndexSet* indexes1, NSIndexSet* indexes2, N
 		if (h == hs && l == ls)
 		{
 			// Shouldn't happen should almost be an assert
-			//				DebugLog(@"found existing line %d..%d", ls, hs);
+			//				DebugLog(@"found existing line %ld..%ld", ls, hs);
 			return NO;
 		}
 		

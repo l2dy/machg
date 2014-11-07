@@ -161,8 +161,8 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 	
 	if      ( singleEntrySelected && !reversePatchOption_ &&  incompleteRevSelected)	exportDescription =      @"exporting current changes";
 	else if ( singleEntrySelected &&  reversePatchOption_ &&  incompleteRevSelected)	exportDescription =      @"exporting current changes (reversed)";
-	else if ( singleEntrySelected && !reversePatchOption_ && !incompleteRevSelected)	exportDescription = fstr(@"exporting %d", start);
-	else if ( singleEntrySelected &&  reversePatchOption_ && !incompleteRevSelected)	exportDescription = fstr(@"exporting %d (reversed)", start);
+	else if ( singleEntrySelected && !reversePatchOption_ && !incompleteRevSelected)	exportDescription = fstr(@"exporting %ld", start);
+	else if ( singleEntrySelected &&  reversePatchOption_ && !incompleteRevSelected)	exportDescription = fstr(@"exporting %ld (reversed)", start);
 	else if (!singleEntrySelected && !reversePatchOption_                          )	exportDescription =      @"exporting selected revisions";
 	else if (!singleEntrySelected &&  reversePatchOption_                          )	exportDescription =      @"exporting selected revisions (reversed)";
 	
@@ -265,7 +265,7 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 {
 	NSArray* rootPathAsArray = [myDocument_ absolutePathOfRepositoryRootAsArray];
 	LowHighPair pair = [logTableView parentToHighestSelectedRevisions];
-	NSString* revisionNumbers = fstr(@"%d%:%d", pair.lowRevision, pair.highRevision);
+	NSString* revisionNumbers = fstr(@"%ld:%ld", pair.lowRevision, pair.highRevision);
 	[myDocument_ viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:revisionNumbers];
 }
 

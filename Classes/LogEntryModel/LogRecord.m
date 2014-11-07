@@ -325,13 +325,13 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 		NSString* description;
 		BOOL inPast = [date_ isBefore:now];
 		NSString* relation = inPast ? @"ago" : @"in the future";
-		if      (delta >= 2 * kYear)	description = fstr(@"%d years %@",   lround(floor(delta / kYear)),   relation);
-		else if (delta >= 2 * kMonth)	description = fstr(@"%d months %@",  lround(floor(delta / kMonth)),  relation);
-		else if (delta >= 2 * kWeek)	description = fstr(@"%d weeks %@",   lround(floor(delta / kWeek)),   relation);
-		else if (delta >= 2 * kDay)		description = fstr(@"%d days %@",    lround(floor(delta / kDay)),    relation);
-		else if (delta >= 2 * kHour)	description = fstr(@"%d hours %@",   lround(floor(delta / kHour)),   relation);
-		else if (delta >= 2 * kMinute)	description = fstr(@"%d minutes %@", lround(floor(delta / kMinute)), relation);
-		else							description = fstr(@"%d seconds %@", lround(floor(delta / kSecond)), relation);
+		if      (delta >= 2 * kYear)	description = fstr(@"%ld years %@",   lround(floor(delta / kYear)),   relation);
+		else if (delta >= 2 * kMonth)	description = fstr(@"%ld months %@",  lround(floor(delta / kMonth)),  relation);
+		else if (delta >= 2 * kWeek)	description = fstr(@"%ld weeks %@",   lround(floor(delta / kWeek)),   relation);
+		else if (delta >= 2 * kDay)		description = fstr(@"%ld days %@",    lround(floor(delta / kDay)),    relation);
+		else if (delta >= 2 * kHour)	description = fstr(@"%ld hours %@",   lround(floor(delta / kHour)),   relation);
+		else if (delta >= 2 * kMinute)	description = fstr(@"%ld minutes %@", lround(floor(delta / kMinute)), relation);
+		else							description = fstr(@"%ld seconds %@", lround(floor(delta / kSecond)), relation);
 		return description;
 	}
 	else
@@ -364,8 +364,8 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 		}
 		NSDateComponents* nowComponents = [gregorian components:NSYearCalendarUnit fromDate:now];
 		if (year < [nowComponents year])
-			return fstr(@"%2d %@ %d", day, monthString, year);
-		return fstr(@"%2d %@ %02d:%02d", day, monthString, hour, minute);		
+			return fstr(@"%2ld %@ %ld", (long)day, monthString, (long)year);
+		return fstr(@"%2ld %@ %02ld:%02ld", (long)day, monthString, (long)hour, (long)minute);		
 	}
 
 }

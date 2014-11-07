@@ -115,7 +115,7 @@
 	MacHgDocument* document = [[backingLogEntry_ repositoryData] myDocument];
 	NSNumber* rev       = [backingLogEntry_ revision];
 	NSNumber* parentRev = [backingLogEntry_ firstParent];
-	NSString* revisionNumbers = fstr(@"%@%:%@", parentRev, rev);
+	NSString* revisionNumbers = fstr(@"%@:%@", parentRev, rev);
 
 	[document viewDifferencesInCurrentRevisionFor:@[absoluteFileName_] toRevision:revisionNumbers];
 }

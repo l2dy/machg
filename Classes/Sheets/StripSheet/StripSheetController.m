@@ -183,7 +183,7 @@
 	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
 	NSString* repositoryName = [[[myDocument_ sidebar] selectedNode] shortName];
 	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
-	NSString* stripDescription = fstr(@"Stripping %d in “%@”", pair.lowRevision, repositoryName);
+	NSString* stripDescription = fstr(@"Stripping %ld in “%@”", pair.lowRevision, repositoryName);
 	NSMutableArray* argsStrip = [NSMutableArray arrayWithObjects:@"strip",  @"--config", @"extensions.hgext.mq=", nil];	// We are using MacHgs strip so command we need to specify that it is
 																													// in the extensions folder of the included Mercurial
     [argsStrip addObjectsFromArray:configurationForProgress];
@@ -191,7 +191,7 @@
 		[argsStrip addObject:@"--force"];		
 	if (![self backupOption])
 		[argsStrip addObject:@"--no-backup"];		
-	NSString* revisionNumber = fstr(@"%d", pair.lowRevision);
+	NSString* revisionNumber = fstr(@"%ld", pair.lowRevision);
 	[argsStrip addObject:revisionNumber];
 
 	ProcessController* processController = [ProcessController processControllerWithMessage:stripDescription forList:[myDocument_ theProcessListController]];

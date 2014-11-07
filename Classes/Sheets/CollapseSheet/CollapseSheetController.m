@@ -87,18 +87,18 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 		NSInteger entryIntRev = [entry revisionInt];
 
 		if (RevOutside(entryIntRev, low, high))
-			return fstr(@"Unable to perform collapse because the revision %@ lies outside the range %d to %d.", [entry revision], low, high);
+			return fstr(@"Unable to perform collapse because the revision %@ lies outside the range %ld to %ld.", [entry revision], low, high);
 
 		NSArray* parentsOfRev  = [entry parentsOfEntry];
 		NSArray* childrenOfRev = [entry childrenOfEntry];
 		if (entryIntRev != low)
 			for (NSNumber* parent in parentsOfRev)
 				if (RevOutside(numberAsInt(parent), low, high) && RevOutside(numberAsInt(parent), entryIntRev - 1, entryIntRev + 1))
-					return fstr(@"Unable to perform collapse because one of the selected revisions, %@, has a parent revision %d which lies outside the selected range of revisions %d to %d. All revisions to collapse must have their parents contained in the selected range of revisions.", [entry revision], numberAsInt(parent), low, high);
+					return fstr(@"Unable to perform collapse because one of the selected revisions, %@, has a parent revision %d which lies outside the selected range of revisions %ld to %ld. All revisions to collapse must have their parents contained in the selected range of revisions.", [entry revision], numberAsInt(parent), low, high);
 		if (entryIntRev != high)
 			for (NSNumber* child in childrenOfRev)
 				if (RevOutside(numberAsInt(child), low, high) && RevOutside(numberAsInt(child), entryIntRev - 1, entryIntRev + 1))
-					return fstr(@"Unable to perform collapse because one of the selected revisions, %@, has a child %d which lies outside the selected revisions %d to %d. All revisions to collapse (except the last) must have their children contained in the selected range of revisions.", [entry revision], numberAsInt(child), low, high);
+					return fstr(@"Unable to perform collapse because one of the selected revisions, %@, has a child %d which lies outside the selected revisions %ld to %ld. All revisions to collapse (except the last) must have their children contained in the selected range of revisions.", [entry revision], numberAsInt(child), low, high);
 	}
 	return nil;
 }
@@ -203,10 +203,10 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
 	NSString* repositoryName = [[[myDocument_ sidebar] selectedNode] shortName];
 	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
-	NSString* collapseDescription = fstr(@"Collapsing %d-%d in “%@”", pair.lowRevision, pair.highRevision, repositoryName);
+	NSString* collapseDescription = fstr(@"Collapsing %ld-%ld in “%@”", pair.lowRevision, pair.highRevision, repositoryName);
 	NSMutableArray* argsCollapse  = [NSMutableArray arrayWithObjects:@"collapse",  @"--config", @"extensions.hgext.collapse=", nil];
 
-	NSString* revisionNumbers = fstr(@"%d%:%d", pair.lowRevision, pair.highRevision);
+	NSString* revisionNumbers = fstr(@"%ld:%ld", pair.lowRevision, pair.highRevision);
 	[argsCollapse addObject:@"--rev" followedBy:revisionNumbers];
 	[argsCollapse addObject:@"--force"];
 	[argsCollapse addObject:@"--message" followedBy:[combinedCommitMessage string]];

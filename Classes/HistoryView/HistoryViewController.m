@@ -145,7 +145,7 @@
 // MARK: Actions Notifications & Updating
 // ------------------------------------------------------------------------------------
 
-- (NSString*) searchCaption		{ return fstr(@"%d entries shown", [[logTableView_ theTableRows] count]); }
+- (NSString*) searchCaption		{ return fstr(@"%lu entries shown", (unsigned long)[[logTableView_ theTableRows] count]); }
 
 - (NSString*) searchFieldValue	{ return [myDocument_ toolbarSearchFieldValue]; }
 
@@ -283,7 +283,7 @@
 {
 	NSArray* rootPathAsArray = [myDocument_ absolutePathOfRepositoryRootAsArray];
 	LowHighPair pair = [logTableView_ parentToHighestSelectedRevisions];
-	NSString* revisionNumbers = fstr(@"%d%:%d", pair.lowRevision, pair.highRevision);
+	NSString* revisionNumbers = fstr(@"%ld:%ld", pair.lowRevision, pair.highRevision);
 	[myDocument_ viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:revisionNumbers];
 }
 

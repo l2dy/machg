@@ -634,7 +634,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 		// If we have more than MaxNumberOfDetailedEntriesToShow things selected or something went wrong then we don't try and
 		// give the details of each entry.
 		LowHighPair lowHigh = [self lowestToHighestSelectedRevisions];
-		NSString* descriptiveString = fstr(@"Multiple Selection: %d revisions in range %d to %d", [rows count], lowHigh.lowRevision, lowHigh.highRevision);
+		NSString* descriptiveString = fstr(@"Multiple Selection: %ld revisions in range %ld to %ld", [rows count], lowHigh.lowRevision, lowHigh.highRevision);
 		[self queuedSetDetailedEntryTextView:grayedAttributedString(descriptiveString)];
 		return;
 	}

@@ -928,13 +928,14 @@ static inline NSRect	UnionWidthHeight(NSRect r, CGFloat w, CGFloat h) { r.size.w
 static inline NSRect	UnionRectWithSize(NSRect r, NSSize s) { r.size.width = MAX(r.size.width, s.width); r.size.height = MAX(r.size.height, s.height); return r;}
 static inline NSSize	UnionSizeWIthSize(NSSize r, NSSize s) { return NSMakeSize(MAX(r.width, s.width), MAX(r.height, s.height)); }
 
+static inline NSString* fstr(NSString* format, ...) NS_FORMAT_FUNCTION(1,2);
 static inline NSString* fstr(NSString* format, ...)
 {
-    va_list args;
-    va_start(args, format);
-    NSString* string = [[NSString alloc] initWithFormat:format arguments:args];
-    va_end(args);
-    return string;
+	va_list args;
+	va_start(args, format);
+	NSString* string = [[NSString alloc] initWithFormat:format arguments:args];
+	va_end(args);
+	return string;
 }
 
 #define MakeNSValue(type,obj) ([NSValue value:&obj  withObjCType:@encode(type)])

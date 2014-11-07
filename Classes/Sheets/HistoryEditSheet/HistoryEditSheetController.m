@@ -239,7 +239,7 @@
 	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
 	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
 	NSString* repositoryName = [[[myDocument_ sidebar] selectedNode] shortName];
-	NSString* historyEditDescription = fstr(@"Editing descendants of %d in “%@”", pair.lowRevision, repositoryName);
+	NSString* historyEditDescription = fstr(@"Editing descendants of %ld in “%@”", pair.lowRevision, repositoryName);
 	NSMutableArray* argsHistoryEdit = [NSMutableArray arrayWithObjects:@"histedit", @"--config", @"extensions.hgext.histedit=", nil];
 	
 	[argsHistoryEdit addObject:@"--rules" followedBy:[confirmationSheetMessage string]];

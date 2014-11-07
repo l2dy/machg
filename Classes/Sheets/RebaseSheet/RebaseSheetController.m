@@ -215,7 +215,7 @@
 	NSString* repositoryName = [[[myDocument_ sidebar] selectedNode] shortName];
 	LowHighPair pair = [sourceLogTableView lowestToHighestSelectedRevisions];
 	NSNumber* destinationRev = [destinationLogTableView selectedRevision];
-	NSString* rebaseDescription = fstr(@"rebasing %d-%d in “%@”", pair.lowRevision, pair.highRevision, repositoryName);
+	NSString* rebaseDescription = fstr(@"rebasing %ld-%ld in “%@”", pair.lowRevision, pair.highRevision, repositoryName);
 	NSMutableArray* argsRebase = [NSMutableArray arrayWithObjects:@"rebase", @"--config", @"extensions.hgext.rebase=", nil];	// We are using MacHgs rebase command so we need to specify that it is
 																														// in the extensions folder of the included Mercurial
 	[argsRebase addObjectsFromArray:configurationForProgress];

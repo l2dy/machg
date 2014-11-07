@@ -664,7 +664,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 		return;
 	
 	// Now we just fetch the entries from the high limit to the low limit.
-	NSString* revLimits     = fstr(@"%d:%d", highLimit, lowLimit);
+	NSString* revLimits     = fstr(@"%ld:%ld", highLimit, lowLimit);
 	DebugLog(@"filling revLimits : %@", revLimits);
 	NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log", @"--rev", revLimits, @"--template", templateLogEntryString, nil];	// templateLogEntryString is global set in setupGlobalsForLogEntryPartsAndTemplate()
 	dispatch_async(globalQueue(), ^{

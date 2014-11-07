@@ -176,7 +176,7 @@
 		return nil;
 	if ([compareRev isEqualTo:[compareLogTableView incompleteRevision]])
 		return numberAsString(baseRev);
-	return fstr(@"%@%:%@", baseRev, compareRev);
+	return fstr(@"%@:%@", baseRev, compareRev);
 }
 
 - (BOOL) equalRevisionsAreSelected

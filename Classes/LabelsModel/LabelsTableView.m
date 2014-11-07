@@ -245,7 +245,7 @@
 
 - (id) tableView:(NSTableView*)aTableView objectValueForTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)requestedRow
 {
-	if ([self numberOfRowsInTableView:aTableView] <= requestedRow)	return fstr(@"%d",requestedRow);
+	if ([self numberOfRowsInTableView:aTableView] <= requestedRow)	return fstr(@"%ld",requestedRow);
 
 	LabelData* label = [self labelsTableData][requestedRow];
 	NSString* requestedColumn = [aTableColumn identifier];

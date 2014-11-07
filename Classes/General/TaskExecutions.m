@@ -294,7 +294,7 @@ NSString* filterProgressOutOfErrorString(NSString* rawErrorStr)
 		NSInteger lineCount = [[errorDetails componentsSeparatedByString:@"\n"] count];
 		if ([errorDetails length] < 400 && lineCount <= 8)
 		{
-			NSString* fullErrorMessage = fstr(@"Mercurial reported error number %d:\n%@", errorNumber, errorDetails);
+			NSString* fullErrorMessage = fstr(@"Mercurial reported error number %ld:\n%@", errorNumber, errorDetails);
 			NSRunAlertPanel(errorMessage, fullErrorMessage, @"OK", nil, nil);
 			return;
 		}

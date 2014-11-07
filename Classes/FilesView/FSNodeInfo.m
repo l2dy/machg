@@ -677,7 +677,7 @@ static NSString* stringFromFileSize(NSInteger theSize)
 {
 	float floatSize = theSize;
 	if (theSize<1023)
-		return fstr(@"%i bytes\n",theSize);
+		return fstr(@"%li bytes\n",theSize);
 	floatSize = floatSize / 1024;
 	if (floatSize<1023)
 		return fstr(@"%1.1f KB\n",floatSize);
@@ -693,7 +693,7 @@ static NSString* stringFromItemCount(NSInteger theCount)
 {
 	if (theCount == 1)
 		return @"1 item\n";
-	return fstr( @"%d items\n", theCount);
+	return fstr( @"%ld items\n", theCount);
 }
 
 - (NSAttributedString*) attributedInspectorStringForFSNode
