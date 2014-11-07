@@ -781,7 +781,7 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 	NSString* tempFilePath = tempFilePathWithTemplate(@"MacHgFilteredPatch.XXXXXXXXXX");
 	if (!tempFilePath)
 	{
-		NSRunAlertPanel(@"Temporary File", @"MacHg could not create a temporary file for the filtered patch. Aborting the operation.", @"OK", nil, nil);
+		RunAlertPanel(@"Temporary File", @"MacHg could not create a temporary file for the filtered patch. Aborting the operation.", @"OK", nil, nil);
 		return nil;
 	}
 	NSError* err = nil;

@@ -2239,7 +2239,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 	BOOL containsChangedFiles = [self repositoryHasFilesWhichContainStatus:eHGStatusCommittable];
 	if (containsChangedFiles)
 	{
-		NSRunAlertPanel(@"Backout Aborted", @"There are uncommitted changes in the repository. Backing out (Reversing) a changeset can only be performed on “clean” repositories.", @"OK", nil, nil);
+		RunAlertPanel(@"Backout Aborted", @"There are uncommitted changes in the repository. Backing out (Reversing) a changeset can only be performed on “clean” repositories.", @"OK", nil, nil);
 		return NO;
 	}
 	
@@ -2276,7 +2276,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:windowTitle onScreen:[[self mainWindow] screen]];
 		}
 		
-		NSRunAlertPanel(@"Backed out Changeset",
+		RunAlertPanel(@"Backed out Changeset",
 						fstr(@"The changeset “%@” has been backed out. You now need to examine the modified files, resolve any conflicts, and finally commit all the changes to complete the backout.", version), @"OK", nil, nil);
 		
 	}];
@@ -2338,7 +2338,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 	}
 	
 	if (DisplayWarningForPostMergeFromDefaults())
-		NSRunAlertPanel(@"Merged Files", @"You now need to examine the merged files, resolve any conflicts, and finally commit all the merged files to complete the merge.", @"OK", nil, nil);
+		RunAlertPanel(@"Merged Files", @"You now need to examine the merged files, resolve any conflicts, and finally commit all the merged files to complete the merge.", @"OK", nil, nil);
 
 	switch (AfterMergeDoFromDefaults())
 	{
@@ -2415,7 +2415,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 {
 	if ([self repositoryHasFilesWhichContainStatus:eHGStatusCommittable])
 	{
-		NSInteger result = NSRunAlertPanel(@"Outstanding Changes", @"There are outstanding uncommitted changes. Are you sure you want to continue?", @"Cancel", @"Ok", nil);
+		NSInteger result = RunAlertPanel(@"Outstanding Changes", @"There are outstanding uncommitted changes. Are you sure you want to continue?", @"Cancel", @"Ok", nil);
 		if (result == NSAlertDefaultReturn)
 			return NO;
 	}	
@@ -2493,7 +2493,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 		{ PlayBeep(); return; }
 	if (numberOfFilesToAnnotate > 10)
 	{
-		int choice = NSRunAlertPanel(@"Many Annotations", @"There are %d files which will have annotations, are you sure you want to display all these annotations?", @"Show Annotations", @"Cancel", nil, numberOfFilesToAnnotate);
+		int choice = RunAlertPanel(@"Many Annotations", fstr(@"There are %d files which will have annotations, are you sure you want to display all these annotations?",numberOfFilesToAnnotate), @"Show Annotations", @"Cancel", nil);
 		if (choice != NSAlertDefaultReturn)
 			return;
 	}
@@ -2534,7 +2534,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 		int numberOfFilesToDiff = [filesWhichHaveDifferences count];
 		if (numberOfFilesToDiff > 20)
 		{
-			int choice = NSRunAlertPanel(@"Many Differences", @"There are %d files which will have changes, are you sure you want to display all these differences?", @"Show Differences", @"Cancel", nil, numberOfFilesToDiff);
+			int choice = RunAlertPanel(@"Many Differences", fstr(@"There are %d files which will have changes, are you sure you want to display all these differences?",numberOfFilesToDiff), @"Show Differences", @"Cancel", nil);
 			if (choice != NSAlertDefaultReturn)
 				return;
 		}

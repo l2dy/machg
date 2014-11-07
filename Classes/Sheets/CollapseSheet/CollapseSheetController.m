@@ -129,7 +129,7 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 	
 	if ([myDocument_ repositoryHasFilesWhichContainStatus:eHGStatusCommittable])
 	{
-		NSRunAlertPanel(@"Outstanding Changes", @"Collapsing is only allowed in repositories with no outstanding uncommitted changes.", @"OK", nil, nil);
+		RunAlertPanel(@"Outstanding Changes", @"Collapsing is only allowed in repositories with no outstanding uncommitted changes.", @"OK", nil, nil);
 		return;
 	}	
 	

@@ -1224,14 +1224,14 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	if (!node)
 	{
 		PlayBeep();
-		NSRunAlertPanel(@"No Bookmark Selected", @"You need to select a local bookmark", @"OK", nil, nil);
+		RunAlertPanel(@"No Bookmark Selected", @"You need to select a local bookmark", @"OK", nil, nil);
 		return;
 	}
 
 	if (![node isLocalRepositoryRef])
 	{
 		PlayBeep();
-		NSRunAlertPanel(@"No Local Bookmark Selected", @"You need to select a local bookmark", @"OK", nil, nil);
+		RunAlertPanel(@"No Local Bookmark Selected", @"You need to select a local bookmark", @"OK", nil, nil);
 		return;
 	}
 	

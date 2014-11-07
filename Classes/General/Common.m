@@ -290,9 +290,9 @@ void dispatchWithTimeOutBlock(dispatch_queue_t q, NSTimeInterval t, BlockProcess
 NSAlert* NewAlertPanel(NSString* title, NSString* message, NSString* defaultButton, NSString* alternateButton, NSString* otherButton)
 {
 	NSAlert* alert = [NSAlert new];
-	[alert setInformativeText:message];
-	[alert setMessageText:title];
-	[alert setAlertStyle:NSCriticalAlertStyle];
+	alert.informativeText = message;
+	alert.messageText = title;
+	alert.alertStyle = NSCriticalAlertStyle;
 	[alert addButtonWithTitle:defaultButton];
 	if (alternateButton != nil)
 		[alert addButtonWithTitle:alternateButton];
@@ -301,10 +301,23 @@ NSAlert* NewAlertPanel(NSString* title, NSString* message, NSString* defaultButt
 	return alert;
 }
 
+NSInteger RunAlertPanel(NSString* title, NSString* message, NSString* defaultButton, NSString* alternateButton, NSString* otherButton)
+{
+	NSAlert* alert = NewAlertPanel(title, message, defaultButton, alternateButton, otherButton);
+	alert.alertStyle = NSWarningAlertStyle;
+	return [alert runModal];
+}
+
+NSInteger RunCriticalAlertPanel(NSString* title, NSString* message, NSString* defaultButton, NSString* alternateButton, NSString* otherButton)
+{
+	NSAlert* alert = NewAlertPanel(title, message, defaultButton, alternateButton, otherButton);
+	return [alert runModal];
+}
+
 NSInteger RunAlertExtractingSuppressionResult(NSAlert* alert, NSString* keyForBooleanDefault)
 {
 	int result = [alert runModal];
-	if ([[alert suppressionButton] state] == NSOnState)
+	if (alert.suppressionButton.state == NSOnState)
 		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:keyForBooleanDefault];
 	return result;
 }
@@ -320,7 +333,6 @@ NSInteger RunCriticalAlertPanelOptionsWithSuppression(NSString* title, NSString*
 	[alert addSuppressionCheckBox];
 	return RunAlertExtractingSuppressionResult(alert, keyForBooleanDefault);
 }
-
 
 
 

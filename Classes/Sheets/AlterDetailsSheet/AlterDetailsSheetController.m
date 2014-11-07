@@ -178,14 +178,14 @@
 	if ([myDocument_ repositoryHasFilesWhichContainStatus:eHGStatusCommittable])
 	{
 		PlayBeep();
-		NSRunAlertPanel(@"Outstanding Changes", @"There are outstanding uncommitted changes. Please commit or discard these changes and repeat the edit operation.", @"Ok", nil, nil);
+		RunAlertPanel(@"Outstanding Changes", @"There are outstanding uncommitted changes. Please commit or discard these changes and repeat the edit operation.", @"Ok", nil, nil);
 		return;
 	}
 
 	if (![[myDocument_ repositoryData] isTipOfLocalBranch])
 	{
 		PlayBeep();
-		NSRunAlertPanel(@"Not at Tip", @"The repository is not updated to the local tip of the branch. Please update to the local tip of the branch and redo the operation.", @"Ok", nil, nil);
+		RunAlertPanel(@"Not at Tip", @"The repository is not updated to the local tip of the branch. Please update to the local tip of the branch and redo the operation.", @"Ok", nil, nil);
 		return;
 	}	
 	
@@ -198,14 +198,14 @@
 			[NSException raise:@"QSeries" format:@"The Alter Details operation could not proceed. The process of testing for the presence of a mercurial queue reported: %@.", [qseriesResult errStr], nil];
 		if (IsNotEmpty([qseriesResult outStr]))
 		{
-			NSRunAlertPanel(@"Existing Mercurial Queue", @"An existing mercurial queue is present in the repository. Please finish the mercurial queue and retry.", @"Ok", nil, nil);
+			RunAlertPanel(@"Existing Mercurial Queue", @"An existing mercurial queue is present in the repository. Please finish the mercurial queue and retry.", @"Ok", nil, nil);
 			return;
 		}
 	}
 	@catch (NSException* e)
 	{
 		dispatch_async(mainQueue(), ^{
-			NSRunCriticalAlertPanel(@"Aborted Altering Details", [e reason], @"OK", nil, nil);
+			RunCriticalAlertPanel(@"Aborted Altering Details", [e reason], @"OK", nil, nil);
 		});
 		return;
 	}
@@ -307,7 +307,7 @@
 			@catch (NSException* e)
 			{
 				dispatch_async(mainQueue(), ^{
-					NSRunCriticalAlertPanel(@"Aborted Altering Details", [e reason], @"OK", nil, nil);
+					RunCriticalAlertPanel(@"Aborted Altering Details", [e reason], @"OK", nil, nil);
 				});
 				return;
 			}

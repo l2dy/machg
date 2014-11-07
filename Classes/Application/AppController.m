@@ -334,7 +334,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 			bodyMessage = fstr(@"MacHg's configuration file 'hgrc' located in %@ has been updated.\n\nThe old configuration file has been moved to the trash. If you made any personal modifications to this support file for specific tools or extensions outside MacHg then you may need to replicate these changes in the updated file.", applicationSupportFolder());
 		else if (replacedHgignore)
 			bodyMessage = fstr(@"MacHg's ignore file 'hgignore' located in %@ has been updated.\n\nThe old ignore file has been moved to the trash. If you made any personal modifications to this support file for specific tools or extensions outside MacHg then you may need to replicate these changes in the updated file.", applicationSupportFolder());
-		NSRunCriticalAlertPanel(titleMessage, bodyMessage, @"OK", @"", @"");
+		RunCriticalAlertPanel(titleMessage, bodyMessage, @"OK", @"", @"");
 	}
 
 }
@@ -457,10 +457,10 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		if (pathIsExistent(@"/Developer/Applications/Utilities/FileMerge.app"))
 			[[NSWorkspace sharedWorkspace] launchApplicationAtURL:[NSURL fileURLWithPath:@"/Developer/Applications/Utilities/FileMerge.app"] options:NSWorkspaceLaunchAsync|NSWorkspaceLaunchAndHide configuration:nil error:nil];
 		else
-			NSRunCriticalAlertPanel(@"FileMerge not found", @"FileMerge was not found on this system. Please install the full developer tools for your computer (they contain the application FileMerge). (Alternatively you can install a different diffing and merging tool and select it in the preferences.) (Sometimes you need to run FileMerge once so that OSX \"recognizes it exists\".)", @"OK", nil, nil);
+			RunCriticalAlertPanel(@"FileMerge not found", @"FileMerge was not found on this system. Please install the full developer tools for your computer (they contain the application FileMerge). (Alternatively you can install a different diffing and merging tool and select it in the preferences.) (Sometimes you need to run FileMerge once so that OSX \"recognizes it exists\".)", @"OK", nil, nil);
 	}
 	if (!pathIsExistent(@"/usr/bin/opendiff") && !pathIsExistent(@"/Developer/usr/bin/opendiff") && !pathIsExistent(@"/Applications/Xcode.app/Contents/Developer/usr/bin/opendiff"))
-		NSRunCriticalAlertPanel(@"Opendiff not found", @"Neither /usr/bin/opendiff nor /Developer/usr/bin/opendiff nor /Applications/Xcode.app/Contents/Developer/usr/bin/opendiff was found on this system. Please install the full XCode developer tools (they contain the application FileMerge). (Alternatively you can install a different diffing and merging tool and select it in the preferences.).", @"OK", nil, nil);
+		RunCriticalAlertPanel(@"Opendiff not found", @"Neither /usr/bin/opendiff nor /Developer/usr/bin/opendiff nor /Applications/Xcode.app/Contents/Developer/usr/bin/opendiff was found on this system. Please install the full XCode developer tools (they contain the application FileMerge). (Alternatively you can install a different diffing and merging tool and select it in the preferences.).", @"OK", nil, nil);
 }
 
 - (void) checkForAraxisScripts
@@ -487,7 +487,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	if ([results hasErrors])
 	{
 		NSString* mainMessage = fstr(@"The version of Mercurial included with MacHg is producing the following Errors:\n\n%@\n\nMacHg cannot proceed. To resolve this check your configuration settings in your .hgrc file.", results.errStr);
-		NSRunCriticalAlertPanel(@"Mercurial Errors", mainMessage, @"OK", nil, nil);
+		RunCriticalAlertPanel(@"Mercurial Errors", mainMessage, @"OK", nil, nil);
 		[NSApp terminate:self];
 	}
 }
@@ -547,19 +547,19 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	if ((tool == eUseP4MergeForDiffs) && !pathIsExistent(@"/Applications/p4merge.app"))
 	{
 		NSString* path = @"/Applications/p4merge.app";
-		NSRunCriticalAlertPanel(fstr(@"%@ not found", applicationName), fstr(@"%@ was not found at %@. Please download and install %@ and place it at %@ in order to view diffs using %@.", applicationName, path, applicationName, path, applicationName), @"OK", nil, nil);
+		RunCriticalAlertPanel(fstr(@"%@ not found", applicationName), fstr(@"%@ was not found at %@. Please download and install %@ and place it at %@ in order to view diffs using %@.", applicationName, path, applicationName, path, applicationName), @"OK", nil, nil);
 		revert = YES;
 	}
 	
 	if (!revert && ![[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:bundleIdentifier])
 	{
-		NSRunCriticalAlertPanel(fstr(@"%@ not found", applicationName), fstr(@"%@ was not found on this system. Please download and install %@ in order to view diffs using %@.", applicationName, applicationName, applicationName), @"OK", nil, nil);
+		RunCriticalAlertPanel(fstr(@"%@ not found", applicationName), fstr(@"%@ was not found on this system. Please download and install %@ in order to view diffs using %@.", applicationName, applicationName, applicationName), @"OK", nil, nil);
 		revert = YES;
 	}
 
 	if (!revert && (tool == eUseKaleidoscopeForDiffs) && !pathIsExistentFile(@"/usr/local/bin/ksdiff-wrapper"))
 	{
-		NSRunCriticalAlertPanel(fstr(@"%@ scripts not found", applicationName), @"The Kaleidoscope scripts are not installed on this system. Please open Kaleidoscope and install the Kaleidoscope Command Line Tool from the menu Kaleidoscope > Integration... in order to use Kaleidoscope with MacHg.", @"OK", nil, nil);
+		RunCriticalAlertPanel(fstr(@"%@ scripts not found", applicationName), @"The Kaleidoscope scripts are not installed on this system. Please open Kaleidoscope and install the Kaleidoscope Command Line Tool from the menu Kaleidoscope > Integration... in order to use Kaleidoscope with MacHg.", @"OK", nil, nil);
 		revert = YES;
 	}
 
@@ -727,13 +727,13 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	if ((tool == eUseP4MergeForMerges) && !pathIsExistent(@"/Applications/p4merge.app"))
 	{
 		NSString* path = @"/Applications/p4merge.app";
-		NSRunCriticalAlertPanel(fstr(@"%@ not found", applicationName), fstr(@"%@ was not found at %@. Please download and install %@ and place it at %@ in order to view merges using %@.", applicationName, path, applicationName, path, applicationName), @"OK", nil, nil);
+		RunCriticalAlertPanel(fstr(@"%@ not found", applicationName), fstr(@"%@ was not found at %@. Please download and install %@ and place it at %@ in order to view merges using %@.", applicationName, path, applicationName, path, applicationName), @"OK", nil, nil);
 		revert = YES;
 	}
 	
 	if (!revert && ![[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:bundleIdentifier])
 	{
-		NSRunCriticalAlertPanel(fstr(@"%@ not found", applicationName), fstr(@"%@ was not found on this system. Please download and install %@ in order to view merges using %@.", applicationName, applicationName, applicationName), @"OK", nil, nil);
+		RunCriticalAlertPanel(fstr(@"%@ not found", applicationName), fstr(@"%@ was not found on this system. Please download and install %@ in order to view merges using %@.", applicationName, applicationName, applicationName), @"OK", nil, nil);
 		revert = YES;
 	}
 

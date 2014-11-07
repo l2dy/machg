@@ -117,7 +117,7 @@
 
 - (void) doContinueOrAbort
 {
-	NSInteger result = NSRunCriticalAlertPanel(@"Rebase in Progress", @"A rebase operation is in progress, continue with the operation or abort the operation", @"Continue", @"Abort", @"Cancel");
+	NSInteger result = RunCriticalAlertPanel(@"Rebase in Progress", @"A rebase operation is in progress, continue with the operation or abort the operation", @"Continue", @"Abort", @"Cancel");
 	
 	// If we are canceling the operation we are done.
 	if (result == NSAlertOtherReturn)
@@ -133,7 +133,8 @@
 	{
 		NSString* operation = (abort ? @"Abort" :  @"Continue");
 		NSString* titleMessage = fstr(@"Results of Rebase %@",operation);
-		NSRunAlertPanel(titleMessage, @"Mercurial reported the result of the rebase %@:\n\ncode %d:\n%@", @"OK", nil, nil, operation, results.result, results.outStr);
+		NSString* message = fstr(@"Mercurial reported the result of the rebase %@:\n\ncode %d:\n%@", operation, results.result, results.outStr);
+		RunAlertPanel(titleMessage, message, @"OK", nil, nil);
 	}
 	if (abort)
 		[[myDocument_ repositoryData] deleteRebaseState];
@@ -158,7 +159,7 @@
 
 	if ([myDocument_ repositoryHasFilesWhichContainStatus:eHGStatusCommittable])
 	{
-		NSRunAlertPanel(@"Outstanding Changes", @"Rebasing is only allowed in repositories with no outstanding uncommitted changes.", @"OK", nil, nil);
+		RunAlertPanel(@"Outstanding Changes", @"Rebasing is only allowed in repositories with no outstanding uncommitted changes.", @"OK", nil, nil);
 		return;
 	}	
 	

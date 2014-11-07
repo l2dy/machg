@@ -240,7 +240,8 @@ NSString* filterProgressOutOfErrorString(NSString* rawErrorStr)
 	ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
 	if ([result hasNoErrors] && IsNotEmpty(result.outStr))
 	{
-		NSRunCriticalAlertPanel(@"Mismatched Fingerprint Key", fstr(@"The key stored for the host '%@' is different than the key returned by connecting to %@. This could indicate the connection has been compromised. Check your configuration settings!", host, host), @"OK", @"", @"");
+		
+		RunCriticalAlertPanel(@"Mismatched Fingerprint Key", fstr(@"The key stored for the host '%@' is different than the key returned by connecting to %@. This could indicate the connection has been compromised. Check your configuration settings!", host, host), @"OK", @"", @"");
 		return;
 	}
 
@@ -260,14 +261,14 @@ NSString* filterProgressOutOfErrorString(NSString* rawErrorStr)
 			NSString* macHgHGRCFilePath = fstr(@"%@/hgrc",applicationSupportFolder());
 			if (!pathIsExistent(macHgHGRCFilePath))
 			{
-				NSRunCriticalAlertPanel(@"Missing Configuration File", fstr(@"MacHg's configuration file %@ is missing. Please restart MacHg to recreate this file.", macHgHGRCFilePath), @"OK", @"", @"");
+				RunCriticalAlertPanel(@"Missing Configuration File", fstr(@"MacHg's configuration file %@ is missing. Please restart MacHg to recreate this file.", macHgHGRCFilePath), @"OK", @"", @"");
 				return;
 			}					
 			NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"extensions.hgext.cedit=", @"--add", fstr(@"hostfingerprints.%@ = %@", host, fingerPrint), @"--file", macHgHGRCFilePath, nil];
 			[TaskExecutions executeMercurialWithArgs:argsCedit  fromRoot:@"/tmp"];
 			
 			NSString* successMessage = fstr(@"Permanently recorded for host '%@' the fingerprint:\n\n%@\n\nso it can be verifiably recognized in the future.", host, fingerPrint);
-			NSRunAlertPanel(@"Fingerprint Added", successMessage, @"Ok", @"", @"");
+			RunAlertPanel(@"Fingerprint Added", successMessage, @"Ok", @"", @"");
 		});	
 }
 
@@ -290,12 +291,12 @@ NSString* filterProgressOutOfErrorString(NSString* rawErrorStr)
 - (void) reportMercurialError:(NSInteger)errorNumber withMessage:(NSString*)errorMessage andDetails:(NSString*)errorDetails
 {
 	dispatch_async(mainQueue(), ^{
-		// If we have a short enough error message then we can report the error simply using NSRunAlertPanel
+		// If we have a short enough error message then we can report the error simply using RunAlertPanel
 		NSInteger lineCount = [[errorDetails componentsSeparatedByString:@"\n"] count];
 		if ([errorDetails length] < 400 && lineCount <= 8)
 		{
 			NSString* fullErrorMessage = fstr(@"Mercurial reported error number %ld:\n%@", errorNumber, errorDetails);
-			NSRunAlertPanel(errorMessage, fullErrorMessage, @"OK", nil, nil);
+			RunAlertPanel(errorMessage, fullErrorMessage, @"OK", nil, nil);
 			return;
 		}
 		

@@ -516,7 +516,7 @@ NSString* kAmendOption	 = @"amendOption";
 	{
 		if ([[e name] isEqualToString:@"UserCanceled"])
 			return;
-		NSRunCriticalAlertPanel(errorTitle, [e reason], @"OK", nil, nil);
+		RunCriticalAlertPanel(errorTitle, [e reason], @"OK", nil, nil);
 		return;
 	}
 	
@@ -584,7 +584,7 @@ NSString* kAmendOption	 = @"amendOption";
 			@catch (NSException * e)
 			{
 				[amendButton setState:NSOffState];
-				NSRunCriticalAlertPanel(errorTitle, [e reason], @"OK", nil, nil);
+				RunCriticalAlertPanel(errorTitle, [e reason], @"OK", nil, nil);
 			}
 			@finally
 			{

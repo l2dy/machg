@@ -318,7 +318,7 @@
 	if (!label)
 	{
 		PlayBeep();
-		NSRunAlertPanel(@"No Label Selected", @"You need to select a label first to move it", @"OK", nil, nil);
+		RunAlertPanel(@"No Label Selected", @"You need to select a label first to move it", @"OK", nil, nil);
 		return;
 	}
 	[[myDocument_ theMoveLabelSheetController] openMoveLabelSheetForMoveLabel:label];
@@ -332,7 +332,7 @@
 	if (!label)
 	{
 		PlayBeep();
-		NSRunAlertPanel(@"No Label Selected", @"You need to select a label first to remove it", @"OK", nil, nil);
+		RunAlertPanel(@"No Label Selected", @"You need to select a label first to remove it", @"OK", nil, nil);
 		return;
 	}
 	

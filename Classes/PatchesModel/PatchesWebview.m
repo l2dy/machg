@@ -262,7 +262,7 @@
 	if ([[parentController myDocument] inMergeState])
 	{
 		PlayBeep();
-		NSRunAlertPanel(@"Exclusion Forbidden", @"All files must be committed in their entirty during a merge.", @"OK", nil, nil);
+		RunAlertPanel(@"Exclusion Forbidden", @"All files must be committed in their entirty during a merge.", @"OK", nil, nil);
 		return;
 	}
 	[[parentController hunkExclusions] disableHunk:hunkHash forRoot:repositoryRootForPatch_ andFile:trimString(fileName)];

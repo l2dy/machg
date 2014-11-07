@@ -192,7 +192,7 @@
 		[argsImport addObject:patchPath];
 		ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsImport  fromRoot:rootPath];
 		if ([result hasWarnings])
-			NSRunAlertPanel(@"Results of Import", [result errStr], @"OK", nil, nil);
+			RunAlertPanel(@"Results of Import", [result errStr], @"OK", nil, nil);
 
 //		if ([result hasWarnings])
 //			[cumulativeMessages appendString:[result errStr]];
@@ -202,7 +202,7 @@
 	}
 
 	if (IsNotEmpty(cumulativeMessages))
-		NSRunAlertPanel(@"Results of Import", cumulativeMessages, @"OK", nil, nil);
+		RunAlertPanel(@"Results of Import", cumulativeMessages, @"OK", nil, nil);
 	if (!canClose)
 		return;
 	[theImportPatchesSheet makeFirstResponder:theImportPatchesSheet];	// Make the text fields of the sheet commit any changes they currently have

@@ -340,7 +340,7 @@ SidebarNodeKind nodeKindFromStoredNodeType(NSInteger storedType)
 				path = cachedPath;
 		}
 		else
-			NSRunCriticalAlertPanel(@"Max Path Length exceeded", fstr(@"The maximum path length for the path to the repository root was exceeded. Functionality for this repository could be erratic. The path is", path), @"OK", nil, nil);
+			RunCriticalAlertPanel(@"Max Path Length exceeded", fstr(@"The maximum path length for the path to the repository root was exceeded. Functionality for this repository could be erratic. The path is", path), @"OK", nil, nil);
 	}
 	
 	if ([self isRepositoryRef] && path)

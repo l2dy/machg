@@ -739,11 +739,11 @@ dispatch_once(&doOnce, (block));\
 // MARK: Dialogs
 // ------------------------------------------------------------------------------------
 
-NSAlert*	NewAlertPanel(NSString* title, NSString* message, NSString* defaultButton, NSString* alternateButton, NSString* otherButton);
-NSInteger	RunAlertExtractingSuppressionResult(NSAlert* alert, NSString* keyForBooleanDefault);
+NSAlert*	NewAlertPanel(		  NSString* title, NSString* message, NSString* defaultButton, NSString* alternateButton, NSString* otherButton);
+NSInteger	RunAlertPanel(		  NSString* title, NSString* message, NSString* defaultButton, NSString* alternateButton, NSString* otherButton);
+NSInteger	RunCriticalAlertPanel(NSString* title, NSString* message, NSString* defaultButton, NSString* alternateButton, NSString* otherButton);
 NSInteger	RunCriticalAlertPanelWithSuppression(		NSString* title, NSString* message, NSString* defaultButton, NSString* alternateButton, NSString* keyForBooleanDefault);
 NSInteger	RunCriticalAlertPanelOptionsWithSuppression(NSString* title, NSString* message, NSString* defaultButton, NSString* alternateButton, NSString* otherButton, NSString* keyForBooleanDefault);
-
 
 
 
