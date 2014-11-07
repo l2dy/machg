@@ -385,7 +385,7 @@
 			{
 				NSString* subMessage;
 				if (needToUpdateToNewRevision)
-					subMessage = fstr(@"Are you sure you want to remove the branch “%@” from revision “%@”? (To do this Mercurial needs to update your repository to revision “%@”.)", name, rev);
+					subMessage = fstr(@"Are you sure you want to remove the branch “%@” from revision “%@”? (To do this Mercurial needs to update your repository to revision “%@”.)", name, rev, rev);
 				else
 					subMessage = fstr(@"Are you sure you want to remove the branch “%@” from revision “%@”?", name, rev);
 				

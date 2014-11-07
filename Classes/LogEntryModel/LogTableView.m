@@ -807,7 +807,7 @@ static inline void addRevisionsToTableRowList(NSString* str, NSMutableArray* tab
 			}
 			else if (theSearchFieldCategory == eSearchByKeyword)
 			{
-				NSString* revLimits     = fstr(@"%d:%d", 0, [repositoryData computeNumberOfRealRevisions]);
+				NSString* revLimits     = fstr(@"%d:%ld", 0, [repositoryData computeNumberOfRealRevisions]);
 				NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log",  @"--rev", revLimits, @"--template", @"{rev}\n", @"--keyword", theSearchFilter, nil];
 				hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:rootPath  logging:eLoggingNone];
 			}

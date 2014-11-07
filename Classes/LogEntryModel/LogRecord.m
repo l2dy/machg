@@ -185,7 +185,7 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 	if (lowLimit < 0 || highLimit < 0)
 		return;
 	// Now we just fetch the entries from the high limit to the low limit.
-	NSString* revLimits     = fstr(@"%d:%d", highLimit, lowLimit);
+	NSString* revLimits     = fstr(@"%ld:%ld", highLimit, lowLimit);
 	NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log", @"--rev", revLimits, @"--template", templateLogRecordString, nil];	// templateLogEntryString is global set in setupGlobalsForLogEntryPartsAndTemplate()
 	dispatch_async(globalQueue(), ^{
 		ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:[repository rootPath]  logging:eLoggingNone];
