@@ -1279,7 +1279,9 @@
 {
 	NSString* fileName = [[[self fileURL] path] lastPathComponent];
 	if (fileName)
-		[self saveDocument:self];
+		dispatch_async(mainQueue(), ^{
+			[self saveDocument:self];
+		});
 }
 
 
