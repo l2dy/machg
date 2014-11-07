@@ -171,7 +171,7 @@ const float CTSmallLabelSize = 11.;
 	
 	[badgeImage lockFocus];
 	[badgeGradient drawInRect:NSMakeRect(origin.x, origin.y, floorf(badgeSize.width), floorf(badgeSize.height)) angle:angle];			//apply the gradient
-	[badgeMask compositeToPoint:origin operation: NSCompositeDestinationAtop];															//knock out the badge area
+	[badgeMask drawAtPoint:origin fromRect:NSZeroRect operation:NSCompositeDestinationAtop fraction:1.0];
 	[label drawInRect:NSMakeRect(origin.x+floorf((badgeSize.width-labelSize.width)/2), origin.y+floorf((badgeSize.height-labelSize.height)/2), badgeSize.width, labelSize.height)];	//draw label in center
 	[badgeImage unlockFocus];
 	
@@ -186,7 +186,7 @@ const float CTSmallLabelSize = 11.;
 	[theShadow setShadowBlurRadius:shadowBlurRadius];
 	[theShadow setShadowColor:[[NSColor blackColor] colorWithAlphaComponent:shadowOpacity]];
 	[theShadow set];
-	[badgeImage compositeToPoint:NSZeroPoint operation:NSCompositeSourceOver];
+	[badgeImage drawAtPoint:NSZeroPoint fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
 	[NSGraphicsContext restoreGraphicsState];
 	[image unlockFocus];
 	
@@ -203,7 +203,7 @@ const float CTSmallLabelSize = 11.;
 	//draw large icon in the upper right corner of the overlay image
 	[overlayImage lockFocus];
 	NSSize badgeSize = [badgeImage size];
-	[badgeImage compositeToPoint:NSMakePoint(128-dx-badgeSize.width,128-dy-badgeSize.height) operation:NSCompositeSourceOver];  
+	[badgeImage drawAtPoint:NSMakePoint(128-dx-badgeSize.width,128-dy-badgeSize.height) fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
 	[overlayImage unlockFocus];
 	
 	return overlayImage;
@@ -216,7 +216,7 @@ const float CTSmallLabelSize = 11.;
 	
 	//Put the appIcon underneath the badgeOverlay
 	[badgeOverlay lockFocus];
-	[appIcon compositeToPoint:NSZeroPoint operation:NSCompositeDestinationOver];
+	[appIcon drawAtPoint:NSZeroPoint fromRect:NSZeroRect operation:NSCompositeDestinationOver fraction:1.0];
 	[badgeOverlay unlockFocus];
 	
 	[NSApp setApplicationIconImage:badgeOverlay];
