@@ -17,7 +17,6 @@
 #import "TaskExecutions.h"
 #import "RepositoryData.h"
 #import "JHConcertinaView.h"
-#import "MAAttachedWindow.h"
 
 
 

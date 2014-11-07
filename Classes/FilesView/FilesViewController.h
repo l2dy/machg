@@ -11,7 +11,6 @@
 #import "Common.h"
 #import "FSViewer.h"
 @class StatusSidebarSplitView;
-@class MAAttachedWindow;
 
 
 

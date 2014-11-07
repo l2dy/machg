@@ -96,8 +96,6 @@
 		9631D0711107A7E90007FDF2 /* DTCPathView.m in Sources */ = {isa = PBXBuildFile; fileRef = 9631D05D1107A7E90007FDF2 /* DTCPathView.m */; };
 		9631D0721107A7E90007FDF2 /* DTCPathViewController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9631D05F1107A7E90007FDF2 /* DTCPathViewController.m */; };
 		9631D0731107A7E90007FDF2 /* LNCStopwatch.m in Sources */ = {isa = PBXBuildFile; fileRef = 9631D0621107A7E90007FDF2 /* LNCStopwatch.m */; };
-		9631D0741107A7E90007FDF2 /* AttachedWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9631D0651107A7E90007FDF2 /* AttachedWindowController.m */; };
-		9631D0751107A7E90007FDF2 /* MAAttachedWindow.m in Sources */ = {isa = PBXBuildFile; fileRef = 9631D0671107A7E90007FDF2 /* MAAttachedWindow.m */; };
 		9631D0761107A7E90007FDF2 /* RegexKitLite.m in Sources */ = {isa = PBXBuildFile; fileRef = 9631D06A1107A7E90007FDF2 /* RegexKitLite.m */; settings = {COMPILER_FLAGS = "-w -fno-objc-arc"; }; };
 		9631D2E01107A8380007FDF2 /* CloneSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9631D2DE1107A8380007FDF2 /* CloneSheet.xib */; };
 		9631D2E31107A84A0007FDF2 /* CommitSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9631D2E11107A84A0007FDF2 /* CommitSheet.xib */; };
@@ -179,7 +177,7 @@
 		9695CB6A110A0AD4004CE684 /* IncomingSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 9695CB68110A0AD4004CE684 /* IncomingSheet.xib */; };
 		9695CBD3110A101C004CE684 /* IncomingSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9695CBD2110A101C004CE684 /* IncomingSheetController.m */; };
 		9698090F13170E0D006088CA /* NSURL+Parameters.m in Sources */ = {isa = PBXBuildFile; fileRef = 9698090E13170E0D006088CA /* NSURL+Parameters.m */; };
-		9699215214DC1AFE006DC6EB /* PopupWindowController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9699215114DC1AFE006DC6EB /* PopupWindowController.m */; };
+		9699215214DC1AFE006DC6EB /* ButtonPopoverController.m in Sources */ = {isa = PBXBuildFile; fileRef = 9699215114DC1AFE006DC6EB /* ButtonPopoverController.m */; };
 		969BD94511953E43007AA6D9 /* AddLabelSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 969BD94411953E43007AA6D9 /* AddLabelSheetController.m */; };
 		969BD94811953E54007AA6D9 /* AddLabelSheet.xib in Resources */ = {isa = PBXBuildFile; fileRef = 969BD94611953E54007AA6D9 /* AddLabelSheet.xib */; };
 		969BD95511953FAA007AA6D9 /* MoveLabelSheetController.m in Sources */ = {isa = PBXBuildFile; fileRef = 969BD95411953FAA007AA6D9 /* MoveLabelSheetController.m */; };
@@ -413,10 +411,6 @@
 		9631D05F1107A7E90007FDF2 /* DTCPathViewController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = DTCPathViewController.m; sourceTree = "<group>"; };
 		9631D0611107A7E90007FDF2 /* LNCStopwatch.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = LNCStopwatch.h; sourceTree = "<group>"; };
 		9631D0621107A7E90007FDF2 /* LNCStopwatch.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = LNCStopwatch.m; sourceTree = "<group>"; };
-		9631D0641107A7E90007FDF2 /* AttachedWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AttachedWindowController.h; sourceTree = "<group>"; };
-		9631D0651107A7E90007FDF2 /* AttachedWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AttachedWindowController.m; sourceTree = "<group>"; };
-		9631D0661107A7E90007FDF2 /* MAAttachedWindow.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = MAAttachedWindow.h; sourceTree = "<group>"; };
-		9631D0671107A7E90007FDF2 /* MAAttachedWindow.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = MAAttachedWindow.m; sourceTree = "<group>"; };
 		9631D0691107A7E90007FDF2 /* RegexKitLite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = RegexKitLite.h; sourceTree = "<group>"; };
 		9631D06A1107A7E90007FDF2 /* RegexKitLite.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = RegexKitLite.m; sourceTree = "<group>"; };
 		9631D2DF1107A8380007FDF2 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/CloneSheet.xib; sourceTree = SOURCE_ROOT; };
@@ -543,8 +537,8 @@
 		9695CBD2110A101C004CE684 /* IncomingSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IncomingSheetController.m; sourceTree = "<group>"; };
 		9698090D13170E0D006088CA /* NSURL+Parameters.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "NSURL+Parameters.h"; sourceTree = "<group>"; };
 		9698090E13170E0D006088CA /* NSURL+Parameters.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "NSURL+Parameters.m"; sourceTree = "<group>"; };
-		9699215014DC1AFE006DC6EB /* PopupWindowController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = PopupWindowController.h; sourceTree = "<group>"; };
-		9699215114DC1AFE006DC6EB /* PopupWindowController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = PopupWindowController.m; sourceTree = "<group>"; };
+		9699215014DC1AFE006DC6EB /* ButtonPopoverController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; name = ButtonPopoverController.h; path = ../ButtonPopoverController/ButtonPopoverController.h; sourceTree = "<group>"; };
+		9699215114DC1AFE006DC6EB /* ButtonPopoverController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; name = ButtonPopoverController.m; path = ../ButtonPopoverController/ButtonPopoverController.m; sourceTree = "<group>"; };
 		969BD94311953E43007AA6D9 /* AddLabelSheetController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AddLabelSheetController.h; sourceTree = "<group>"; };
 		969BD94411953E43007AA6D9 /* AddLabelSheetController.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = AddLabelSheetController.m; sourceTree = "<group>"; };
 		969BD94711953E54007AA6D9 /* English */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = English; path = English.lproj/AddLabelSheet.xib; sourceTree = SOURCE_ROOT; };
@@ -1182,7 +1176,6 @@
 				9605BBCD119C0D7D002EEA47 /* EMKeychainItem */,
 				968D76DE14A66A85007E6AA2 /* JHConcertinaView */,
 				9631D0601107A7E90007FDF2 /* LNCStopwatch */,
-				9631D0631107A7E90007FDF2 /* MAAttachedWindow */,
 				969064E811601E2400F30915 /* MonitorFSEvents */,
 				9637C8C6118E9C5A0000C14B /* NSString+SymlinksAndAliases */,
 				9698090C13170E0D006088CA /* NSURL+Parameters */,
@@ -1213,17 +1206,6 @@
 				9631D0621107A7E90007FDF2 /* LNCStopwatch.m */,
 			);
 			path = LNCStopwatch;
-			sourceTree = "<group>";
-		};
-		9631D0631107A7E90007FDF2 /* MAAttachedWindow */ = {
-			isa = PBXGroup;
-			children = (
-				9631D0641107A7E90007FDF2 /* AttachedWindowController.h */,
-				9631D0651107A7E90007FDF2 /* AttachedWindowController.m */,
-				9631D0661107A7E90007FDF2 /* MAAttachedWindow.h */,
-				9631D0671107A7E90007FDF2 /* MAAttachedWindow.m */,
-			);
-			path = MAAttachedWindow;
 			sourceTree = "<group>";
 		};
 		9631D0681107A7E90007FDF2 /* RegexKitLite */ = {
@@ -1433,7 +1415,7 @@
 				9606EE15115670FD00968DE8 /* Help Button */,
 				9672AC57114B796A00312CE2 /* OptionController */,
 				96DC168014BA0EDF00A6E61B /* PopupActionButton */,
-				9699214F14DC1AFE006DC6EB /* PopupWindowController */,
+				9699214F14DC1AFE006DC6EB /* ButtonPopoverController */,
 				96DF426211B48DC700D986FF /* RadialGradiantBox */,
 				96DF436E11B5209C00D986FF /* RelativePositionedBox */,
 				9672AC5A114B796A00312CE2 /* ResultsWindow */,
@@ -1610,13 +1592,13 @@
 			path = "NSURL+Parameters";
 			sourceTree = "<group>";
 		};
-		9699214F14DC1AFE006DC6EB /* PopupWindowController */ = {
+		9699214F14DC1AFE006DC6EB /* ButtonPopoverController */ = {
 			isa = PBXGroup;
 			children = (
-				9699215014DC1AFE006DC6EB /* PopupWindowController.h */,
-				9699215114DC1AFE006DC6EB /* PopupWindowController.m */,
+				9699215014DC1AFE006DC6EB /* ButtonPopoverController.h */,
+				9699215114DC1AFE006DC6EB /* ButtonPopoverController.m */,
 			);
-			path = PopupWindowController;
+			path = ButtonPopoverController;
 			sourceTree = "<group>";
 		};
 		969BD94211953E43007AA6D9 /* AddLabelSheet */ = {
@@ -2090,8 +2072,6 @@
 				9631D0711107A7E90007FDF2 /* DTCPathView.m in Sources */,
 				9631D0721107A7E90007FDF2 /* DTCPathViewController.m in Sources */,
 				9631D0731107A7E90007FDF2 /* LNCStopwatch.m in Sources */,
-				9631D0741107A7E90007FDF2 /* AttachedWindowController.m in Sources */,
-				9631D0751107A7E90007FDF2 /* MAAttachedWindow.m in Sources */,
 				9631D0761107A7E90007FDF2 /* RegexKitLite.m in Sources */,
 				9695C0AD1108E1C5004CE684 /* PullSheetController.m in Sources */,
 				9695C0AE1108E1C5004CE684 /* PushSheetController.m in Sources */,
@@ -2172,7 +2152,7 @@
 				968FFA0A14CB5815004D4444 /* NSString+UriCompatibility.m in Sources */,
 				9637607314CEB04B00ECB9D6 /* HunkExclusions.m in Sources */,
 				963E431914D5A4CC004C6CAB /* PatchesWebview.m in Sources */,
-				9699215214DC1AFE006DC6EB /* PopupWindowController.m in Sources */,
+				9699215214DC1AFE006DC6EB /* ButtonPopoverController.m in Sources */,
 				96F2C6C214F18C34006C6FEC /* AlterDetailsSheetController.m in Sources */,
 				960E55AE14FB68B500F577BC /* StatusButton.m in Sources */,
 			);

@@ -103,7 +103,7 @@
 // Utilities
 @class LNCStopwatch;
 @class AttachedWindowController;
-@class PopupWindowController;
+@class ButtonPopoverController;
 @class DisclosureBoxController;
 @class ConnectionValidationController;
 @class RadialGradientBox;

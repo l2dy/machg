@@ -8,7 +8,7 @@
 //
 
 #import "CloneSheetController.h"
-#import "AttachedWindowController.h"
+#import "ButtonPopoverController.h"
 #import "MacHgDocument.h"
 #import "TaskExecutions.h"
 #import "Sidebar.h"
