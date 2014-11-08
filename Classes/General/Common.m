@@ -305,20 +305,27 @@ NSInteger RunAlertPanel(NSString* title, NSString* message, NSString* defaultBut
 {
 	NSAlert* alert = NewAlertPanel(title, message, defaultButton, alternateButton, otherButton);
 	alert.alertStyle = NSWarningAlertStyle;
-	return [alert runModal];
+	__block int result;
+	dispatchSpliced(mainQueue(), ^{result = [alert runModal];});
+	return result;
 }
 
 NSInteger RunCriticalAlertPanel(NSString* title, NSString* message, NSString* defaultButton, NSString* alternateButton, NSString* otherButton)
 {
 	NSAlert* alert = NewAlertPanel(title, message, defaultButton, alternateButton, otherButton);
-	return [alert runModal];
+	__block int result;
+	dispatchSpliced(mainQueue(), ^{result = [alert runModal];});
+	return result;
 }
 
 NSInteger RunAlertExtractingSuppressionResult(NSAlert* alert, NSString* keyForBooleanDefault)
 {
-	int result = [alert runModal];
-	if (alert.suppressionButton.state == NSOnState)
-		[NSUserDefaults.standardUserDefaults setBool:NO forKey:keyForBooleanDefault];
+	__block int result;
+	dispatchSpliced(mainQueue(), ^{
+		result = [alert runModal];
+		if (alert.suppressionButton.state == NSOnState)
+			[NSUserDefaults.standardUserDefaults setBool:NO forKey:keyForBooleanDefault];
+		});
 	return result;
 }
 
