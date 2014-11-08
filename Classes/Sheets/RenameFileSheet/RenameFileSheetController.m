@@ -113,7 +113,7 @@
 		PlayBeep();
 		NSString* subMessage = fstr(@"“%@” is a directory. Renaming the directory will effectively rename evey file in the directory. Do you want to continue?", filePath.lastPathComponent);
 		int result = RunCriticalAlertPanel(@"Directory Rename", subMessage, @"Cancel", @"Rename", nil);
-		if (result != NSAlertAlternateReturn)
+		if (result != NSAlertSecondButtonReturn)
 			return;
 	}
 

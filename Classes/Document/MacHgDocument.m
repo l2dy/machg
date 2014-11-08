@@ -2414,7 +2414,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 	if ([self repositoryHasFilesWhichContainStatus:eHGStatusCommittable])
 	{
 		NSInteger result = RunAlertPanel(@"Outstanding Changes", @"There are outstanding uncommitted changes. Are you sure you want to continue?", @"Cancel", @"Ok", nil);
-		if (result == NSAlertDefaultReturn)
+		if (result == NSAlertFirstButtonReturn)
 			return NO;
 	}	
 
@@ -2492,7 +2492,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 	if (numberOfFilesToAnnotate > 10)
 	{
 		int choice = RunAlertPanel(@"Many Annotations", fstr(@"There are %d files which will have annotations, are you sure you want to display all these annotations?",numberOfFilesToAnnotate), @"Show Annotations", @"Cancel", nil);
-		if (choice != NSAlertDefaultReturn)
+		if (choice != NSAlertFirstButtonReturn)
 			return;
 	}
 
@@ -2533,7 +2533,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 		if (numberOfFilesToDiff > 20)
 		{
 			int choice = RunAlertPanel(@"Many Differences", fstr(@"There are %d files which will have changes, are you sure you want to display all these differences?",numberOfFilesToDiff), @"Show Differences", @"Cancel", nil);
-			if (choice != NSAlertDefaultReturn)
+			if (choice != NSAlertFirstButtonReturn)
 				return;
 		}
 		

@@ -115,12 +115,12 @@
 	NSInteger result = RunCriticalAlertPanel(@"Edit in Progress", @"A history edit operation is in progress, continue with the operation or abort the operation", @"Continue", @"Abort", @"Cancel");
 
 	// If we are canceling the operation we are done.
-	if (result == NSAlertOtherReturn)
+	if (result == NSAlertThirdButtonReturn)
 		return;
 	
 	NSMutableArray* argsHistoryEdit = [NSMutableArray arrayWithObjects:@"histedit", @"--config", @"extensions.hgext.histedit=", nil];
 
-	BOOL abort = (result == NSAlertAlternateReturn);
+	BOOL abort = (result == NSAlertSecondButtonReturn);
 	[argsHistoryEdit addObject: (abort ? @"--abort" : @"--continue")];
 	NSString* rootPath = myDocument_.absolutePathOfRepositoryRoot;
 	

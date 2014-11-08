@@ -149,7 +149,7 @@
 	if ([myDocument_ repositoryHasFilesWhichContainStatus:eHGStatusCommittable])
 	{
 		NSInteger result = RunAlertPanel(@"Outstanding Changes", @"There are outstanding uncommitted changes. Are you sure you want to continue?", @"Cancel", @"Ok", nil);
-		if (result == NSAlertDefaultReturn)
+		if (result == NSAlertFirstButtonReturn)
 			return;
 	}
 	

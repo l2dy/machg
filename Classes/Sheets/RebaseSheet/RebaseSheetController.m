@@ -120,12 +120,12 @@
 	NSInteger result = RunCriticalAlertPanel(@"Rebase in Progress", @"A rebase operation is in progress, continue with the operation or abort the operation", @"Continue", @"Abort", @"Cancel");
 	
 	// If we are canceling the operation we are done.
-	if (result == NSAlertOtherReturn)
+	if (result == NSAlertThirdButtonReturn)
 		return;
 	
 	NSMutableArray* argsRebase = [NSMutableArray arrayWithObjects:@"rebase", nil];
 	
-	BOOL abort = (result == NSAlertAlternateReturn);
+	BOOL abort = (result == NSAlertSecondButtonReturn);
 	[argsRebase addObject: abort ? @"--abort" : @"--continue"];
 	NSString* rootPath = myDocument_.absolutePathOfRepositoryRoot;
 	ExecutionResult* results = [myDocument_  executeMercurialWithArgs:argsRebase  fromRoot:rootPath  whileDelayingEvents:YES];
