@@ -905,15 +905,20 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		if ([[docController recentDocumentURLs] count] > 0)
 			for (NSURL* url in [docController recentDocumentURLs])
 				if ([[NSFileManager defaultManager] fileExistsAtPath:[url path]])
-					if ([docController openDocumentWithContentsOfURL:url display:YES error:nil])
-						return NO;
+				{
+					[docController openDocumentWithContentsOfURL:url display:YES completionHandler:nil];
+					return NO;
+				}
+		
 
 		// look for ~/Application Support/MacHg/Repositories.machg
 		NSString* defaultDocumentPath = fstr(@"%@/Repositories.mchg", applicationSupportFolder());
 		NSURL* defaultURL = [NSURL fileURLWithPath:defaultDocumentPath];
 		if ([[NSFileManager defaultManager] fileExistsAtPath:[defaultURL path]])
-			if ([docController openDocumentWithContentsOfURL:defaultURL display:YES error:nil])
-				return NO;
+		{
+			[docController openDocumentWithContentsOfURL:defaultURL display:YES completionHandler:nil];
+			return NO;
+		}
 
 		// create document ~/Application Support/MacHg/Repositories.machg
 		NSError* err = nil;
@@ -921,7 +926,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		[NSApp presentAnyErrorsAndClear:&err];
 		if (newDoc)
 		{
-			[newDoc saveToURL:defaultURL ofType:@"MacHgDocument" forSaveOperation:NSSaveAsOperation error:&err];
+			[newDoc saveToURL:defaultURL ofType:@"MacHgDocument" forSaveOperation:NSSaveAsOperation completionHandler:nil];
 			[NSApp presentAnyErrorsAndClear:&err];
 			[newDoc showWindows];
 			return NO;
