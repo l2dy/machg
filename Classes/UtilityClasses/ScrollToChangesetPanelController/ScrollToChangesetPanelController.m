@@ -37,7 +37,7 @@
 	if (result == NSRunAbortedResponse)
 		return nil;
 	if (result == NSRunStoppedResponse)
-		return [scrollToChangesetPanelField stringValue];
+		return scrollToChangesetPanelField.stringValue;
 	return nil;
 }
 

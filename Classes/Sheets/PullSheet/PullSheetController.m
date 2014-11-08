@@ -46,7 +46,7 @@
 - (void) awakeFromNib
 {
 	[self observe:kReceivedCompatibleRepositoryCount byCalling:@selector(updateIncomingOutgoingCount)];
-	[forceOption setSpecialHandling:YES];
+	forceOption.specialHandling = YES;
 	[forceOption		setName:@"force"];
 	[bookmarkOption		setName:@"bookmark"];
 	[branchOption		setName:@"branch"];
@@ -70,8 +70,8 @@
 // MARK: Accessors
 // ------------------------------------------------------------------------------------
 
-- (SidebarNode*)		sourceRepository		{ return [[compatibleRepositoriesPopup selectedItem] representedObject]; }
-- (SidebarNode*)		destinationRepository	{ return [myDocument_ selectedRepositoryRepositoryRef]; }
+- (SidebarNode*)		sourceRepository		{ return compatibleRepositoriesPopup.selectedItem.representedObject; }
+- (SidebarNode*)		destinationRepository	{ return myDocument_.selectedRepositoryRepositoryRef; }
 - (NSString*)			operationName			{ return @"Pull"; }
 - (OptionController*)	commonRevOption			{ return revOption; }
 
@@ -83,7 +83,7 @@
 
 - (void)	 clearSheetFieldValues { }
 - (IBAction) validateButtons:(id)sender { }
-- (void)	 controlTextDidChange:(NSNotification*)aNotification { [self validateButtons:[aNotification object]]; }
+- (void)	 controlTextDidChange:(NSNotification*)aNotification { [self validateButtons:aNotification.object]; }
 
 
 
@@ -95,7 +95,7 @@
 
 - (IBAction) openSheet:(id)sender
 {
-	[titleText setStringValue:fstr(@"Pull to “%@”", self.destinationRepositoryName)];
+	titleText.stringValue = fstr(@"Pull to “%@”", self.destinationRepositoryName);
 	[super openSheet:sender];
 }
 
@@ -107,8 +107,8 @@
 	
 	SidebarNode* pullDestination  = self.destinationRepository;
 	SidebarNode* pullSource       = self.sourceRepository;
-	NSString* pullSourceName      = [pullSource shortName];
-	NSString* pullDestinationName = [pullDestination shortName];
+	NSString* pullSourceName      = pullSource.shortName;
+	NSString* pullDestinationName = pullDestination.shortName;
 
 	// Display warning if prefs say we should
 	if (DisplayWarningForPullingFromDefaults())
@@ -121,20 +121,20 @@
 	}
 	
 	// Construct the pull args
-	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
+	NSString* rootPath = myDocument_.absolutePathOfRepositoryRoot;
 	NSMutableArray* argsPull = [NSMutableArray arrayWithObjects:@"pull", @"--noninteractive", nil];
 	[argsPull addObjectsFromArray:configurationForProgress];
 	for (OptionController* opt in cmdOptions)
 		[opt addOptionToArgs:argsPull];
-	if (self.allowOperationWithAnyRepository || [forceOption optionIsSet])
+	if (self.allowOperationWithAnyRepository || forceOption.optionIsSet)
 		[argsPull addObject:@"--force"];
 	if (!RequireVerifiedServerCertificatesFromDefaults())
 		[argsPull addObject:@"--insecure"];
-	[argsPull addObject:[pullSource fullURLPath]];
+	[argsPull addObject:pullSource.fullURLPath];
 	
 	// Execute the pull command
-	ProcessController* processController = [ProcessController processControllerWithMessage:@"Pulling Changesets" forList:[myDocument_ theProcessListController]];
-	dispatch_async([myDocument_ mercurialTaskSerialQueue], ^{
+	ProcessController* processController = [ProcessController processControllerWithMessage:@"Pulling Changesets" forList:myDocument_.theProcessListController];
+	dispatch_async(myDocument_.mercurialTaskSerialQueue, ^{
 		ExecutionResult* results = [myDocument_ executeMercurialWithArgs:argsPull  fromRoot:rootPath  withDelegate:processController  whileDelayingEvents:YES];
 		[processController terminateController];
 		if (DisplayResultsOfPullingFromDefaults())
@@ -142,13 +142,13 @@
 			NSString* messageString = fstr(@"Results of Pulling “%@” into “%@”", pullSourceName, pullDestinationName);
 			NSString* mainMessage = [results.outStr stringByReplacingOccurrencesOfString:@"(run 'hg heads' to see heads, 'hg merge' to merge)" withString:@""];
 			NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(mainMessage);
-			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"Pull Results - %@", pullDestinationName) onScreen:[sheetWindow screen]];
+			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"Pull Results - %@", pullDestinationName) onScreen:sheetWindow.screen];
 		}
 	});
 	
 	// Cache the connection parameters
 	[self setConnectionFromFieldsForSource:pullSource andDestination:pullDestination];
-	[pullDestination setRecentPullConnection:[pullSource path]];
+	pullDestination.recentPullConnection = pullSource.path;
 }
 
 - (IBAction) sheetButtonCancel:(id)sender

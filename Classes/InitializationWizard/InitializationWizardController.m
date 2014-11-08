@@ -23,14 +23,14 @@
 - (void) awakeFromNib
 {
 	// both are needed, otherwise hyperlink won't accept mousedown
-    [informativeMessage setAllowsEditingTextAttributes: YES];
-    [informativeMessage setSelectable: YES];
+    informativeMessage.allowsEditingTextAttributes =  YES;
+    informativeMessage.selectable =  YES;
 	
     NSURL* url = [NSURL URLWithString:@"http://hgtip.com/tips/beginner/2009-09-30-configuring-mercurial/"];
-    NSMutableAttributedString* string = [NSMutableAttributedString string:[informativeMessage stringValue] withAttributes:smallSystemFontAttributes];
+    NSMutableAttributedString* string = [NSMutableAttributedString string:informativeMessage.stringValue withAttributes:smallSystemFontAttributes];
     [string appendAttributedString: [NSAttributedString hyperlinkFromString:@"more..." withURL:url]];
-	[informativeMessage setAttributedStringValue:string];
-	[self setUserNameFieldValue:@""];
+	informativeMessage.attributedStringValue = string;
+	self.userNameFieldValue = @"";
 }
 
 - (void) showWizard
@@ -51,7 +51,7 @@
 {
 	NSString* macHgHGRCFilePath = fstr(@"%@/hgrc",applicationSupportFolder());
 	NSString* addition = fstr(@"\n[ui]\nusername = %@\n",self.userNameFieldValue);
-	[[NSFileManager defaultManager] appendString:addition toFilePath:macHgHGRCFilePath];
+	[NSFileManager.defaultManager appendString:addition toFilePath:macHgHGRCFilePath];
 	
 	[self closeWizard];
 }
@@ -63,8 +63,8 @@
 
 - (IBAction) validateButtons:(id)sender
 {
-	BOOL valid = ([self.userNameFieldValue length] > 0);
-	[okButton setEnabled:valid];
+	BOOL valid = (self.userNameFieldValue.length > 0);
+	okButton.enabled = valid;
 }
 
 
@@ -78,7 +78,7 @@
 
 - (void) controlTextDidChange:(NSNotification*)aNotification
 {
-	[self validateButtons:[aNotification object]];
+	[self validateButtons:aNotification.object];
 }
 
 

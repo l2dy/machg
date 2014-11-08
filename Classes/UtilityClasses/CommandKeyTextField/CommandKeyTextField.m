@@ -12,8 +12,8 @@
 
 @implementation CommandKeyTextField
 
-- (void) showCommandKeyEquivalent	{ [self setHidden:NO]; }
-- (void) hideCommandKeyEquivalent	{ [self setHidden:YES]; }
+- (void) showCommandKeyEquivalent	{ self.hidden = NO; }
+- (void) hideCommandKeyEquivalent	{ self.hidden = YES; }
 
 - (void) syncronizeToModifierKeys
 {
@@ -30,7 +30,7 @@
 
 - (void) awakeFromNib
 {
-	[self setHidden:YES];
+	self.hidden = YES;
 	[self observe:kCommandKeyIsDown		from:nil  byCalling:@selector(showCommandKeyEquivalent)];
 	[self observe:kCommandKeyIsUp		from:nil  byCalling:@selector(hideCommandKeyEquivalent)];
 	

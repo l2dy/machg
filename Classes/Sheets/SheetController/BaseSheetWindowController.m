@@ -14,7 +14,7 @@
 
 - (void) flagsChanged:(NSEvent*)theEvent
 {
-	NSUInteger modifiers = [theEvent modifierFlags];
+	NSUInteger modifiers = theEvent.modifierFlags;
 	BOOL isCommandDown  = bitsInCommon(modifiers, NSCommandKeyMask);
 	[self postNotificationWithName:isCommandDown ? kCommandKeyIsDown : kCommandKeyIsUp ];
 	[self.nextResponder flagsChanged:theEvent];

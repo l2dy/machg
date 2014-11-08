@@ -58,8 +58,8 @@
 {
 	[self openSplitViewPaneToDefaultHeight: self];
 	[theExportPatchesSheet makeFirstResponder:logTableView];
-	[logTableView setCanSelectIncompleteRevision:YES];
-	[self setPatchNameOption:@"%b-feature%n.patch"];
+	logTableView.canSelectIncompleteRevision = YES;
+	self.patchNameOption = @"%b-feature%n.patch";
 }
 
 
@@ -73,24 +73,24 @@
 
 - (IBAction) validate:(id)sender
 {
-	BOOL valid = ![logTableView noRevisionSelected];
-	[okButton setEnabled:valid];
+	BOOL valid = !logTableView.noRevisionSelected;
+	okButton.enabled = valid;
 	[sheetInformativeMessageTextField setAttributedStringValue: (valid ? self.formattedSheetMessage : normalSheetMessageAttributedString(@"You need to select one or more revisions in order to export a patch."))];
 }
 
 - (IBAction) openExportPatchesSheetWithSelectedRevisions:(id)sender
 {
-	NSString* newTitle = fstr(@"Exporting Selected Patches in %@", [myDocument_ selectedRepositoryShortName]);
-	[exportSheetTitle setStringValue:newTitle];
+	NSString* newTitle = fstr(@"Exporting Selected Patches in %@", myDocument_.selectedRepositoryShortName);
+	exportSheetTitle.stringValue = newTitle;
 	 
 	// Report the branch we are about to export to in the dialog
-	NSString* newSheetMessage = fstr(@"The following files will be exported to the versions as of the revision selected below (%@)", [logTableView selectedRevision]);
-	[sheetInformativeMessageTextField setStringValue: newSheetMessage];
+	NSString* newSheetMessage = fstr(@"The following files will be exported to the versions as of the revision selected below (%@)", logTableView.selectedRevision);
+	sheetInformativeMessageTextField.stringValue =  newSheetMessage;
 	
 	[logTableView resetTable:self];
 	
-	NSArray* revs = [[[myDocument_ theHistoryView] logTableView] chosenRevisions];
-	if ([revs count] > 0)
+	NSArray* revs = [myDocument_.theHistoryView.logTableView chosenRevisions];
+	if (revs.count > 0)
 	{
 		NSInteger minRev = numberAsInt(revs[0]);
 		NSInteger maxRev = numberAsInt(revs[0]);
@@ -107,8 +107,8 @@
 	}
 	else
 	{
-		[logTableView scrollToRevision:[myDocument_ getHGTipRevision]];
-		[logTableView selectAndScrollToRevision:[myDocument_ getHGTipRevision]];
+		[logTableView scrollToRevision:myDocument_.getHGTipRevision];
+		[logTableView selectAndScrollToRevision:myDocument_.getHGTipRevision];
 	}
 	
 	[myDocument_ beginSheet:theExportPatchesSheet];
@@ -142,10 +142,10 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 	[theExportPatchesSheet makeFirstResponder:theExportPatchesSheet];	// Make the text fields of the sheet commit any changes they currently have
 	[myDocument_ endSheet:theExportPatchesSheet];
 	
-	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
-	NSArray* entries = [logTableView selectedEntries];
-	NSInteger incompleteRev = numberAsInt([logTableView incompleteRevision]);
-	BOOL singleEntrySelected = [entries count] == 1;
+	NSString* rootPath = myDocument_.absolutePathOfRepositoryRoot;
+	NSArray* entries = logTableView.selectedEntries;
+	NSInteger incompleteRev = numberAsInt(logTableView.incompleteRevision);
+	BOOL singleEntrySelected = entries.count == 1;
 
 	// Sort the entries into the correct order.
 	if (reversePatchOption_)
@@ -153,8 +153,8 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 	else
 		entries = [entries sortedArrayUsingFunction:entrySort context:NULL];
 	
-	NSInteger start = [[entries firstObject] revisionInt];
-	NSInteger end   = [[entries lastObject] revisionInt];
+	NSInteger start = [entries.firstObject revisionInt];
+	NSInteger end   = [entries.lastObject revisionInt];
 	BOOL incompleteRevSelected = (incompleteRev == start || incompleteRev == end);
 	
 	NSString* exportDescription;
@@ -166,7 +166,7 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 	else if (!singleEntrySelected && !reversePatchOption_                          )	exportDescription =      @"exporting selected revisions";
 	else if (!singleEntrySelected &&  reversePatchOption_                          )	exportDescription =      @"exporting selected revisions (reversed)";
 	
-	NSInteger numberOfPatches  = [entries count];
+	NSInteger numberOfPatches  = entries.count;
 	NSString* fileNameTemplate = self.patchNameOption;
 	fileNameTemplate      = [fileNameTemplate stringByReplacingOccurrencesOfRegex:@"\\%N" withString:intAsString(numberOfPatches)];
 	BOOL changingFileName = [fileNameTemplate isMatchedByRegex:@"\\%[nrRhH]" options:RKLNoOptions];
@@ -202,37 +202,37 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 					if (rev != incompleteRev && !reversePatchOption_)
 					{
 						[entry fullyLoadEntry];
-						NSNumber* firstParentRev = [entry firstParent];
-						LogEntry* parent = [[myDocument_ repositoryData] entryForRevision:firstParentRev];
+						NSNumber* firstParentRev = entry.firstParent;
+						LogEntry* parent = [myDocument_.repositoryData entryForRevision:firstParentRev];
 						[parent fullyLoadEntry];
 						
-						LogEntry* entry = [[myDocument_ repositoryData] entryForRevision:intAsNumber(rev)];
+						LogEntry* entry = [myDocument_.repositoryData entryForRevision:intAsNumber(rev)];
 						NSString* header1 = @"# HG changeset patch";
-						NSString* header2 = fstr(@"# User %@", [entry fullAuthor]);
-						NSString* header3 = fstr(@"# Date %@", [entry isoDate]);
-						NSString* header4 = fstr(@"# Node ID %@", [entry changeset]);
-						NSString* header5 = fstr(@"# Parent  %@", [parent changeset]);
-						NSString* header6 = fstr(@"%@\n", [entry fullComment]);
+						NSString* header2 = fstr(@"# User %@", entry.fullAuthor);
+						NSString* header3 = fstr(@"# Date %@", entry.isoDate);
+						NSString* header4 = fstr(@"# Node ID %@", entry.changeset);
+						NSString* header5 = fstr(@"# Parent  %@", parent.changeset);
+						NSString* header6 = fstr(@"%@\n", entry.fullComment);
 						content = [@[header1, header2, header3, header4, header5, header6, content] componentsJoinedByString:@"\n"];
 					}
 					else if (rev != incompleteRev && reversePatchOption_)
 					{
 						[entry fullyLoadEntry];
-						LogEntry* parent = [[myDocument_ repositoryData] entryForRevision:[entry firstParent]];
+						LogEntry* parent = [myDocument_.repositoryData entryForRevision:entry.firstParent];
 						[parent fullyLoadEntry];
 						
-						LogEntry* entry = [[myDocument_ repositoryData] entryForRevision:intAsNumber(rev)];
+						LogEntry* entry = [myDocument_.repositoryData entryForRevision:intAsNumber(rev)];
 						NSString* header1 = @"# HG changeset patch";
-						NSString* header2 = fstr(@"# User %@", [entry fullAuthor]);
-						NSString* header3 = fstr(@"Backout: %@\n", [entry fullComment]);
+						NSString* header2 = fstr(@"# User %@", entry.fullAuthor);
+						NSString* header3 = fstr(@"Backout: %@\n", entry.fullComment);
 						content = [@[header1, header2, header3, content] componentsJoinedByString:@"\n"];
 					}
 					NSString* patchFileName = fileNameTemplate;
 					patchFileName = [patchFileName stringByReplacingOccurrencesOfRegex:@"\\%R" withString:intAsString(rev)];
-					patchFileName = [patchFileName stringByReplacingOccurrencesOfRegex:@"\\%b" withString:[rootPath lastPathComponent]];
+					patchFileName = [patchFileName stringByReplacingOccurrencesOfRegex:@"\\%b" withString:rootPath.lastPathComponent];
 					patchFileName = [patchFileName stringByReplacingOccurrencesOfRegex:@"\\%n" withString:fstr(countFormat,  count)];
 					patchFileName = [patchFileName stringByReplacingOccurrencesOfRegex:@"\\%r" withString:fstr(revisionFormat, rev)];
-					if (![patchFileName isAbsolutePath])
+					if (!patchFileName.isAbsolutePath)
 						patchFileName = [rootPath stringByAppendingPathComponent:patchFileName];
 					if (changingFileName)
 					{
@@ -241,7 +241,7 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 						[NSApp presentAnyErrorsAndClear:&err];
 					}
 					else
-						[[NSFileManager defaultManager] appendString:fstr(@"\n\n%@", content) toFilePath:patchFileName];
+						[NSFileManager.defaultManager appendString:fstr(@"\n\n%@", content) toFilePath:patchFileName];
 				}
 				count++;
 			}
@@ -263,8 +263,8 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 
 - (IBAction) sheetButtonViewDifferencesForExportPatchesSheet:(id)sender
 {
-	NSArray* rootPathAsArray = [myDocument_ absolutePathOfRepositoryRootAsArray];
-	LowHighPair pair = [logTableView parentToHighestSelectedRevisions];
+	NSArray* rootPathAsArray = myDocument_.absolutePathOfRepositoryRootAsArray;
+	LowHighPair pair = logTableView.parentToHighestSelectedRevisions;
 	NSString* revisionNumbers = fstr(@"%ld:%ld", pair.lowRevision, pair.highRevision);
 	[myDocument_ viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:revisionNumbers];
 }
@@ -294,7 +294,7 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 
 - (void) controlTextDidChange:(NSNotification*)aNotification
 {
-	[self validate:[aNotification object]];
+	[self validate:aNotification.object];
 }
 
 
@@ -310,9 +310,9 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 {
 	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
 
-	NSArray* entries = [logTableView selectedEntries];
-	NSInteger incompleteRev = numberAsInt([logTableView incompleteRevision]);
-	BOOL singleEntrySelected = [entries count] == 1;
+	NSArray* entries = logTableView.selectedEntries;
+	NSInteger incompleteRev = numberAsInt(logTableView.incompleteRevision);
+	BOOL singleEntrySelected = entries.count == 1;
 	
 	// Sort the entries into the correct order.
 	if (reversePatchOption_)
@@ -320,8 +320,8 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 	else
 		entries = [entries sortedArrayUsingFunction:entrySort context:NULL];
 	
-	NSInteger start = [[entries firstObject] revisionInt];
-	NSInteger end   = [[entries lastObject] revisionInt];
+	NSInteger start = [entries.firstObject revisionInt];
+	NSInteger end   = [entries.lastObject revisionInt];
 
 	NSString* fileNameTemplate = self.patchNameOption;
 	BOOL changingFileName = [fileNameTemplate isMatchedByRegex:@"\\%[nrRhH]" options:RKLNoOptions];
@@ -346,7 +346,7 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 	else if (singleEntrySelected && !incompleteRevSelected && !reversePatchOption_)
 	{
 		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"A patch corresponding to revision ")];
-		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString([[entries firstObject] revisionStr])];
+		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString([entries.firstObject revisionStr])];
 		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" will be written to the given filename.")];
 	}
 	else if (singleEntrySelected && !incompleteRevSelected && reversePatchOption_)
@@ -354,7 +354,7 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"A patch corresponding to the ")];
 		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(@"opposite")];
 		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" of revision ")];
-		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString([[entries firstObject] revisionStr])];
+		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString([entries.firstObject revisionStr])];
 		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" will be written to the given filename.")];
 	}
 	else if (reversePatchOption_ && changingFileName)

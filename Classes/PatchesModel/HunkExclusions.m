@@ -136,11 +136,11 @@ NSString* const kHunkHash	= @"HunkHash";
 	NSMutableDictionary* repositoryHunkExclusions  = hunkExclusionsDictionary_[root];
 	
 	// For all file patches in the new patch data update them
-	for (FilePatch* filePatch in [patchData filePatches])
+	for (FilePatch* filePatch in patchData.filePatches)
 		if (filePatch)
 		{
-			NSString* fileName = [filePatch filePath];
-			NSSet* validHunkHases = [filePatch hunkHashesSet];
+			NSString* fileName = filePatch.filePath;
+			NSSet* validHunkHases = filePatch.hunkHashesSet;
 			repositoryValidHunkHashes[fileName] = validHunkHases;
 
 			NSMutableSet* currentSet = repositoryHunkExclusions[fileName];
@@ -184,7 +184,7 @@ NSString* const kHunkHash	= @"HunkHash";
 	if (IsEmpty(repositoryHunkExclusions))
 		return @[];
 	NSMutableArray* paths = [[NSMutableArray alloc]init];
-	for (NSString* key in [repositoryHunkExclusions allKeys])
+	for (NSString* key in repositoryHunkExclusions.allKeys)
 		[paths addObject:fstr(@"%@/%@",root,key)];
 	return paths;
 }
@@ -198,7 +198,7 @@ NSString* const kHunkHash	= @"HunkHash";
 	
 	NSMutableSet* setOfPaths = [NSMutableSet setWithArray:paths];
 	[setOfPaths intersectSet:[NSSet setWithArray:pathsWithExclusions]];
-	return [[setOfPaths allObjects] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+	return [setOfPaths.allObjects sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
 }
 
 - (NSArray*) uncontestedPathsIn:(NSArray*)paths forRoot:(NSString*)root
@@ -209,12 +209,12 @@ NSString* const kHunkHash	= @"HunkHash";
 	
 	NSMutableSet* setOfPaths = [NSMutableSet setWithArray:paths];
 	[setOfPaths minusSet:[NSSet setWithArray:pathsWithExclusions]];
-	return [[setOfPaths allObjects] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+	return [setOfPaths.allObjects sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
 }
 
 - (NSString*) description
 {
-	return fstr(@"HunkExclusions:\n%@\nValidHunks:\n%@", [hunkExclusionsDictionary_ description], [validHunkHashDictionary_ description]);
+	return fstr(@"HunkExclusions:\n%@\nValidHunks:\n%@", hunkExclusionsDictionary_.description, validHunkHashDictionary_.description);
 }
 
 @end

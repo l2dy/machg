@@ -14,7 +14,7 @@
 
 - (CGFloat) firstPaneHeight:(NSSplitView*)theSplitView
 {
-	return [[theSplitView subviews][0] frame].size.height;
+	return [theSplitView.subviews[0] frame].size.height;
 }
 
 - (void) splitViewDidResizeSubviews:(NSNotification*)aNotification
@@ -22,11 +22,11 @@
 	CGFloat svOnePosition = [self firstPaneHeight:splitViewOne];
 	CGFloat svTwoPosition = [self firstPaneHeight:splitViewTwo ];
 
-	if ([aNotification object] == splitViewOne)
+	if (aNotification.object == splitViewOne)
 		if (svOnePosition != svTwoPosition)
 			[splitViewTwo setPosition:svOnePosition ofDividerAtIndex:0];
 
-	if ([aNotification object] == splitViewTwo)
+	if (aNotification.object == splitViewTwo)
 		if (svOnePosition != svTwoPosition)
 			[splitViewOne setPosition:svTwoPosition ofDividerAtIndex:0];
 }

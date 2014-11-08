@@ -52,12 +52,12 @@
 
 - (void) awakeFromNib
 {	
-	NSURL* patchDetailURL = [parentController patchDetailURL];
+	NSURL* patchDetailURL = parentController.patchDetailURL;
 	[self.mainFrame loadRequest:[NSURLRequest requestWithURL:patchDetailURL]];
 	[self.windowScriptObject setValue:self forKey:@"machgWebviewController"];
 	fallbackMessage_ = @"";
 
-	HunkExclusions* exclusions = [parentController hunkExclusions];
+	HunkExclusions* exclusions = parentController.hunkExclusions;
 	[self observe:kHunkWasExcluded from:exclusions byCalling:@selector(hunkWasExcluded:)];
 	[self observe:kHunkWasIncluded from:exclusions byCalling:@selector(hunkWasIncluded:)];
 	[self observe:kFileWasExcluded from:exclusions byCalling:@selector(fileWasExcluded:)];
@@ -96,7 +96,7 @@
 	dispatch_async(globalQueue(), ^{
 		NSString* htmlizedDiffString = [backingPatch_ patchBodyHTMLized];
 
-		if ([htmlizedDiffString length] > DiffDisplaySizeLimitFromDefaults() * 1000000)
+		if (htmlizedDiffString.length > DiffDisplaySizeLimitFromDefaults() * 1000000)
 		{
 			dispatch_async(mainQueue(), ^{
 				if ([self taskIsNotStale:taskNumber])
@@ -105,7 +105,7 @@
 			return;
 		}
 
-		NSString* allowHunkSelection = [[parentController myDocument] inMergeState] ? @"no" : @"yes";
+		NSString* allowHunkSelection = parentController.myDocument.inMergeState ? @"no" : @"yes";
 		NSString* showExternalDiff = showExternalDiffButton_ ? @"yes" : @"no";
 
 		NSArray* showDiffArgs = @[htmlizedDiffString, fstr(@"%f",FontSizeOfDifferencesWebviewFromDefaults()), stringOfDifferencesWebviewDiffStyle(), allowHunkSelection, showExternalDiff];
@@ -133,7 +133,7 @@
 			return;
 		fallbackMessage_ = fallbackMessage;
 		backingPatch_ = patchData;
-		repositoryRootForPatch_ = [[parentController myDocument] absolutePathOfRepositoryRoot];
+		repositoryRootForPatch_ = parentController.myDocument.absolutePathOfRepositoryRoot;
 		[self redisplayViewForTaskNumber: taskNumber];
 	});
 }
@@ -141,9 +141,9 @@
 
 - (void) putUpGeneratingDifferencesNotice:(RegenerationTaskController*)theRegenerationTaskContoller
 {
-	if ([self taskIsStale:[theRegenerationTaskContoller taskNumber]])
+	if ([self taskIsStale:theRegenerationTaskContoller.taskNumber])
 		return;
-	if ([[theRegenerationTaskContoller shellTask] isRunning])
+	if (theRegenerationTaskContoller.shellTask.isRunning)
 		dispatch_async(mainQueue(), ^{
 			WebScriptObject* script = self.windowScriptObject;
 			[script callWebScriptMethod:@"showGeneratingMessage" withArguments:@[@"Generating Differences… "]];
@@ -157,8 +157,8 @@
 	RegenerationTaskController* currentRegenerationTaskController = [[RegenerationTaskController alloc]init];
 	@synchronized(self)
 	{
-		[currentRegenerationTaskController setTaskNumber:self.nextTaskNumber];
-		@try { [[currentRegenerationTask_ shellTask] cancelTask]; }
+		currentRegenerationTaskController.taskNumber = self.nextTaskNumber;
+		@try { [currentRegenerationTask_.shellTask cancelTask]; }
 		@catch (NSException * e) { }
 		currentRegenerationTask_ = currentRegenerationTaskController;
 	}
@@ -166,21 +166,21 @@
 	// FIXME : If the webscriptObject is now nil then reload the page.
 	[self performSelector:@selector(putUpGeneratingDifferencesNotice:) withObject:currentRegenerationTaskController afterDelay:0.5];
 	dispatch_async(globalQueue(), ^{
-		if ([self taskIsStale:[currentRegenerationTaskController taskNumber]]) return;
+		if ([self taskIsStale:currentRegenerationTaskController.taskNumber]) return;
 
 		NSMutableArray* argsDiff = [NSMutableArray arrayWithObjects:@"diff", nil];
 		[argsDiff addObject:@"--unified" followedBy:fstr(@"%d",NumContextLinesForDifferencesWebviewFromDefaults())];
 		[argsDiff addObjectsFromArray:selectedPaths];
 
-		if ([self taskIsStale:[currentRegenerationTaskController taskNumber]]) return;
+		if ([self taskIsStale:currentRegenerationTaskController.taskNumber]) return;
 		
 		ExecutionResult* diffResult = [TaskExecutions executeMercurialWithArgs:argsDiff  fromRoot:rootPath logging:eLoggingNone  withDelegate:currentRegenerationTaskController];
 
-		if ([self taskIsStale:[currentRegenerationTaskController taskNumber]]) return;
+		if ([self taskIsStale:currentRegenerationTaskController.taskNumber]) return;
 
 		PatchData* patchData = IsNotEmpty(diffResult.outStr) ? [PatchData patchDataFromDiffContents:diffResult.outStr] : nil;
-		[[parentController hunkExclusions] updateExclusionsForPatchData:patchData andRoot:rootPath within:selectedPaths];
-		[self setBackingPatch:patchData andFallbackMessage:@"" withTaskNumber:[currentRegenerationTaskController taskNumber]];
+		[parentController.hunkExclusions updateExclusionsForPatchData:patchData andRoot:rootPath within:selectedPaths];
+		[self setBackingPatch:patchData andFallbackMessage:@"" withTaskNumber:currentRegenerationTaskController.taskNumber];
 	});	
 }
 
@@ -207,7 +207,7 @@
 - (void) hunkWasExcluded:(NSNotification*)notification
 {
 	dispatch_async(mainQueue(), ^{
-		NSString* hunkHash = [notification userInfo][kHunkHash];
+		NSString* hunkHash = notification.userInfo[kHunkHash];
 		[self.windowScriptObject callWebScriptMethod:@"excludeViewHunkStatus" withArguments:@[hunkHash]];
 	});
 }
@@ -215,20 +215,20 @@
 - (void) hunkWasIncluded:(NSNotification*)notification
 {
 	dispatch_async(mainQueue(), ^{
-		NSString* hunkHash = [notification userInfo][kHunkHash];
+		NSString* hunkHash = notification.userInfo[kHunkHash];
 		[self.windowScriptObject callWebScriptMethod:@"inludeViewHunkStatus" withArguments:@[hunkHash]];
 	});
 }
 
 - (void) fileWasExcluded:(NSNotification*)notification
 {
-	NSString* fileName = [notification userInfo][kFileName];
+	NSString* fileName = notification.userInfo[kFileName];
 	FilePatch* filePatch = [backingPatch_ filePatchForFilePath:fileName];
 	if (!filePatch)
 		return;
 	
 	dispatch_async(mainQueue(), ^{
-		NSSet* hunkExclusionSet = [[parentController hunkExclusions] hunkExclusionSetForRoot:repositoryRootForPatch_ andFile:fileName];
+		NSSet* hunkExclusionSet = [parentController.hunkExclusions hunkExclusionSetForRoot:repositoryRootForPatch_ andFile:fileName];
 		for (NSString* hunkHash in hunkExclusionSet)
 			[self.windowScriptObject callWebScriptMethod:@"excludeViewHunkStatus" withArguments:@[hunkHash]];
 	});
@@ -236,13 +236,13 @@
 
 - (void) fileWasIncluded:(NSNotification*)notification
 {
-	NSString* fileName = [notification userInfo][kFileName];
+	NSString* fileName = notification.userInfo[kFileName];
 	FilePatch* filePatch = [backingPatch_ filePatchForFilePath:fileName];
 	if (!filePatch)
 		return;
 
 	dispatch_async(mainQueue(), ^{
-		NSSet* validHunkHashSet = [[parentController hunkExclusions] validHunkHashSetForRoot:repositoryRootForPatch_ andFile:fileName];
+		NSSet* validHunkHashSet = [parentController.hunkExclusions validHunkHashSetForRoot:repositoryRootForPatch_ andFile:fileName];
 		for (NSString* hunkHash in validHunkHashSet)
 			[self.windowScriptObject callWebScriptMethod:@"includeViewHunkStatus" withArguments:@[hunkHash]];
 	});
@@ -259,30 +259,30 @@
 
 - (void) disableHunk:(NSString*)hunkHash forFile:(NSString*)fileName 
 {
-	if ([[parentController myDocument] inMergeState])
+	if (parentController.myDocument.inMergeState)
 	{
 		PlayBeep();
 		RunAlertPanel(@"Exclusion Forbidden", @"All files must be committed in their entirty during a merge.", @"OK", nil, nil);
 		return;
 	}
-	[[parentController hunkExclusions] disableHunk:hunkHash forRoot:repositoryRootForPatch_ andFile:trimString(fileName)];
+	[parentController.hunkExclusions disableHunk:hunkHash forRoot:repositoryRootForPatch_ andFile:trimString(fileName)];
 }
 
 - (void) enableHunk:(NSString*)hunkHash forFile:(NSString*)fileName 
 {
-	[[parentController hunkExclusions] enableHunk:hunkHash forRoot:repositoryRootForPatch_ andFile:trimString(fileName)];
+	[parentController.hunkExclusions enableHunk:hunkHash forRoot:repositoryRootForPatch_ andFile:trimString(fileName)];
 }
 
 - (void) excludeHunksAccordingToModel
 {
-	if ([[parentController myDocument] inMergeState])
+	if (parentController.myDocument.inMergeState)
 		return;
 	dispatch_async(mainQueue(), ^{
 		WebScriptObject* script = self.windowScriptObject;
-		for (FilePatch* filePatch in [backingPatch_ filePatches])
+		for (FilePatch* filePatch in backingPatch_.filePatches)
 		{
-			NSString* path = [filePatch filePath];
-			NSSet* hunkExclusionSet = [[parentController hunkExclusions] hunkExclusionSetForRoot:repositoryRootForPatch_ andFile:path];
+			NSString* path = filePatch.filePath;
+			NSSet* hunkExclusionSet = [parentController.hunkExclusions hunkExclusionSetForRoot:repositoryRootForPatch_ andFile:path];
 			for (NSString* hunkHash in hunkExclusionSet)
 				[script callWebScriptMethod:@"excludeViewHunkStatus" withArguments:@[hunkHash]];
 		}
@@ -292,7 +292,7 @@
 - (void) doExternalDiffOfFile:(NSString*)fileName 
 {
 	NSArray* absolutePathOfFile = @[fstr(@"%@/%@", repositoryRootForPatch_, trimString(fileName))];
-	[[parentController myDocument] viewDifferencesInCurrentRevisionFor:absolutePathOfFile toRevision:nil];
+	[parentController.myDocument viewDifferencesInCurrentRevisionFor:absolutePathOfFile toRevision:nil];
 }
 
 

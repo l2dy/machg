@@ -20,7 +20,7 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 + (DBPrefsWindowController *)sharedPrefsWindowController
 {
 	if (!_sharedPrefsWindowController) {
-		_sharedPrefsWindowController = [self.alloc initWithWindowNibName:self.nibName];
+		_sharedPrefsWindowController = [[self alloc] initWithWindowNibName:self.nibName];
 	}
 	return _sharedPrefsWindowController;
 }

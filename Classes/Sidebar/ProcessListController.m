@@ -32,21 +32,21 @@
 - (NSNumber*) addProcessIndicator:(NSString*)processDescription
 {
 	NSProgressIndicator* indicator = [[NSProgressIndicator alloc]init];
-	[indicator setStyle:NSProgressIndicatorSpinningStyle];
-	[indicator setControlSize:NSMiniControlSize];
+	indicator.style = NSProgressIndicatorSpinningStyle;
+	indicator.controlSize = NSMiniControlSize;
 	[indicator startAnimation:nil];
-	[indicator setHidden:NO];
+	indicator.hidden = NO;
 
 	NSNumber* processNum;
 	@synchronized(self)
 	{
 		processNum = [NSNumber numberWithInt:(processNumber_++)];
-		BOOL switchToActivityBox = ([progressIndicators_ synchronizedCount] == 0);
+		BOOL switchToActivityBox = (progressIndicators_.synchronizedCount == 0);
 		[processDescriptions_ synchronizedSetObject:processDescription forKey:processNum];
 		[progressIndicators_ synchronizedSetObject:indicator forKey:processNum];
 		dispatch_async(mainQueue(), ^{
 			if (switchToActivityBox)
-				[[informationAndActivityBox animator] setContentView:activityBox];
+				[informationAndActivityBox.animator setContentView:activityBox];
 			[processListTableView addSubview:indicator];
 			[processListTableView reloadData];
 		});
@@ -62,13 +62,13 @@
 		[processDescriptions_ synchronizedRemoveObjectForKey:processNum];
 		[progressIndicators_ synchronizedRemoveObjectForKey:processNum];
 		dispatch_async(mainQueue(), ^{
-			[indicator setHidden:YES];
+			indicator.hidden = YES;
 			[indicator removeFromSuperview];
 			[processListTableView reloadData];
-			if ([progressIndicators_ synchronizedCount] == 0)
+			if (progressIndicators_.synchronizedCount == 0)
 			{
-				[[informationAndActivityBox animator] setContentView:informationBox];
-				[informationBox setNeedsDisplay:YES];
+				[informationAndActivityBox.animator setContentView:informationBox];
+				informationBox.needsDisplay = YES;
 			}
 		});
 	}
@@ -85,7 +85,7 @@
 
 - (NSNumber*) keyForRow:(NSInteger)requestedRow
 {
-	NSArray* allKeys = [processDescriptions_ synchronizedAllKeys];
+	NSArray* allKeys = processDescriptions_.synchronizedAllKeys;
 	NSArray* sortedKeys = [allKeys sortedArrayUsingComparator: ^(id obj1, id obj2) {
 		if ([obj1 integerValue] > [obj2 integerValue])
 			return (NSComparisonResult)NSOrderedDescending;
@@ -93,7 +93,7 @@
 			return (NSComparisonResult)NSOrderedAscending;
 		return (NSComparisonResult)NSOrderedSame;
 	}];
-	return ([sortedKeys count] > requestedRow) ? sortedKeys[requestedRow] : nil;
+	return (sortedKeys.count > requestedRow) ? sortedKeys[requestedRow] : nil;
 }
 
 - (NSProgressIndicator*) indicatorForRow:(NSInteger)requestedRow
@@ -113,7 +113,7 @@
 
 - (NSInteger) numberOfRowsInTableView:(NSTableView*)aTableView
 {
-	return [processDescriptions_ synchronizedCount];
+	return processDescriptions_.synchronizedCount;
 }
 
 - (id) tableView:(NSTableView*)aTableView objectValueForTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)requestedRow
@@ -162,7 +162,7 @@
 	const int spinnerSize = 16;
 	NSDivideRect (cellFrame, &spinningFrame, &textFrame, spinnerSize, NSMinXEdge);
 
-	[indicator_ setFrame:spinningFrame];
+	indicator_.frame = spinningFrame;
 	[indicator_ sizeToFit];
 
 	[super drawInteriorWithFrame:textFrame inView:controlView];	// drawText
@@ -181,9 +181,9 @@
 {
 	ProcessController* newProcess = [[ProcessController alloc]init];
 	NSNumber* processNum = [list addProcessIndicator:message];
-	[newProcess setProcessList:list];
-	[newProcess setBaseMessage:message];
-	[newProcess setProcessNumber:processNum];
+	newProcess.processList = list;
+	newProcess.baseMessage = message;
+	newProcess.processNumber = processNum;
 	return newProcess;
 }
 

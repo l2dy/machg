@@ -45,7 +45,7 @@ static void FSEventsCallBack_(ConstFSEventStreamRef streamRef, void* clientCallB
 /**
  * Starts watching the supplied array of paths for events on the current run loop.
  */
-- (BOOL) startWatchingPaths:(NSMutableArray*)paths { return [self startWatchingPaths:paths onRunLoop:[NSRunLoop currentRunLoop]]; }
+- (BOOL) startWatchingPaths:(NSMutableArray*)paths { return [self startWatchingPaths:paths onRunLoop:NSRunLoop.currentRunLoop]; }
 
 /**
  * Starts watching the supplied array of paths for events on the supplied run loop.
@@ -55,12 +55,12 @@ static void FSEventsCallBack_(ConstFSEventStreamRef streamRef, void* clientCallB
  */
 - (BOOL) startWatchingPaths:(NSMutableArray*)paths onRunLoop:(NSRunLoop*)runLoop
 {
-    if (([paths count] == 0) || (isWatchingPaths_))
+    if ((paths.count == 0) || (isWatchingPaths_))
 		return NO;
     
-    [self setWatchedPaths:paths];
+    self.watchedPaths = paths;
     [self setupEventsStream_];
-    FSEventStreamScheduleWithRunLoop(eventStream_, [runLoop getCFRunLoop], kCFRunLoopDefaultMode);	    // Schedule the event stream on the supplied run loop
+    FSEventStreamScheduleWithRunLoop(eventStream_, runLoop.getCFRunLoop, kCFRunLoopDefaultMode);	    // Schedule the event stream on the supplied run loop
     FSEventStreamStart(eventStream_);	    // Start the event stream
 	isWatchingPaths_ = YES;
     return YES;
@@ -123,7 +123,7 @@ static void FSEventsCallBack_(ConstFSEventStreamRef streamRef, void* clientCallB
  * Provides the string used when printing this object in NSLog, etc. Useful for
  * debugging purposes.
  */
-- (NSString*) description { return fstr(@"<%@ { watchedPaths = %@ } >", self.className, watchedPaths_); }
+- (NSString*) description { return fstr(@"<%@ { watchedPaths = %@ } >", [self className], watchedPaths_); }
 
 - (void) dealloc
 {
@@ -166,8 +166,8 @@ static void FSEventsCallBack_(ConstFSEventStreamRef streamRef, void* clientCallB
 static void FSEventsCallBack_(ConstFSEventStreamRef streamRef, void* clientCallBackInfo, size_t numEvents, void* eventPaths, const FSEventStreamEventFlags eventFlags[], const FSEventStreamEventId eventIds[])
 {
     MonitorFSEvents* pathWatcher = (__bridge MonitorFSEvents*)clientCallBackInfo;
-	if ([[pathWatcher delegate] conformsToProtocol:@protocol(MonitorFSEventListenerProtocol)])
-		[[pathWatcher delegate] fileEventsOccurredIn:(__bridge NSArray *)(eventPaths)];
+	if ([pathWatcher.delegate conformsToProtocol:@protocol(MonitorFSEventListenerProtocol)])
+		[pathWatcher.delegate fileEventsOccurredIn:(__bridge NSArray *)(eventPaths)];
 }
 
 @end

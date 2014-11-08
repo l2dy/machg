@@ -32,11 +32,11 @@
 
 -(void) awakeFromNib
 {
-	[self setOriginalTarget:[optionSwitchButton target]];
-	[self setOriginalAction:[optionSwitchButton action]];
+	self.originalTarget = optionSwitchButton.target;
+	self.originalAction = optionSwitchButton.action;
 	[optionSwitchButton setAction:@selector(setOptionValueStateFromButton:)];
-	[optionSwitchButton setTarget:self];
-	[optionSwitchButton setContinuous:YES];
+	optionSwitchButton.target = self;
+	optionSwitchButton.continuous = YES;
 	[optionValueField   setContinuous:YES];
 	specialHandling_ = NO;
 }
@@ -50,13 +50,13 @@
 // MARK: Accessors and Setters
 // ------------------------------------------------------------------------------------
 
-- (BOOL)      optionIsSet								{ return ([optionSwitchButton state] == NSOnState); }
-- (NSString*) optionValue								{ return self.optionIsSet ? [optionValueField stringValue] : nil; }
-- (void)	  setOptionValue:(NSString*)value			{ [optionValueField setStringValue:nonNil(value)]; [self setOverallState:value?YES:NO]; }
+- (BOOL)      optionIsSet								{ return (optionSwitchButton.state == NSOnState); }
+- (NSString*) optionValue								{ return self.optionIsSet ? optionValueField.stringValue : nil; }
+- (void)	  setOptionValue:(NSString*)value			{ optionValueField.stringValue = nonNil(value); [self setOverallState:value?YES:NO]; }
 
 - (IBAction)  setOptionValueStateFromButton:(id)sender
 {
-	[self setOverallState:([optionSwitchButton state] == NSOnState)];
+	self.overallState = (optionSwitchButton.state == NSOnState);
 	[optionSwitchButton sendAction:originalAction_ to:originalTarget_];
 }
 
@@ -64,27 +64,27 @@
 {
 	if (state == YES)
 	{
-		[optionSwitchButton setState:NSOnState];
-		[optionValueField setAlphaValue:0.0];
-		[optionValueField setHidden:NO];
+		optionSwitchButton.state = NSOnState;
+		optionValueField.alphaValue = 0.0;
+		optionValueField.hidden = NO;
 		[NSAnimationContext beginGrouping];
-		[[NSAnimationContext currentContext] setDuration:0.2];
-		[[optionValueField animator] setAlphaValue:1.0];
+		[NSAnimationContext.currentContext setDuration:0.2];
+		[optionValueField.animator setAlphaValue:1.0];
 		[NSAnimationContext endGrouping];
-		[optionValueField setSelectable:YES];
-		[optionValueField setEditable:YES];
+		optionValueField.selectable = YES;
+		optionValueField.editable = YES;
 	}
 	else
 	{
-		[optionSwitchButton setState:NSOffState];
-		[optionValueField setSelectable:NO];
-		[optionValueField setEditable:NO];
+		optionSwitchButton.state = NSOffState;
+		optionValueField.selectable = NO;
+		optionValueField.editable = NO;
 		[NSAnimationContext beginGrouping];
-		[[NSAnimationContext currentContext] setDuration:0.2];
-		[[optionValueField animator] setAlphaValue:0.0];
+		[NSAnimationContext.currentContext setDuration:0.2];
+		[optionValueField.animator setAlphaValue:0.0];
 		[NSAnimationContext endGrouping];
 		[optionValueField performSelector:@selector(setHidden:) withObject:YESasNumber afterDelay:0.2];
-		NSWindow* parentWindow = [optionValueField window];
+		NSWindow* parentWindow = optionValueField.window;
 		[parentWindow performSelector:@selector(makeFirstResponder:) withObject:parentWindow afterDelay:0.2];
 	}
 }
@@ -136,7 +136,7 @@
 {
 	NSString* fullKey = [key stringByAppendingString:optionName];
 	id val = connections[fullKey];
-	[self setOptionValue:val];
+	self.optionValue = val;
 }
 
 + (void) setOptions:(NSArray*)options  fromConnections:(NSMutableDictionary*)connections  forKey:(NSString*)key

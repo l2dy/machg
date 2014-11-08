@@ -75,14 +75,14 @@
 
 - (void) setMyDocumentFromParent
 {
-	myDocument_ = [parentContoller_ myDocument];
+	myDocument_ = parentContoller_.myDocument;
 }
 
 - (void) awakeFromNib
 {
 	[self setMyDocumentFromParent];
 	[self observe:kRepositoryDataIsNew		from:myDocument_  byCalling:@selector(repositoryDataIsNew)];
-	[theFSViewer setAreNodesVirtual:NO];
+	theFSViewer.areNodesVirtual = NO;
 }
 
 - (void) dealloc
@@ -94,7 +94,7 @@
 
 - (void) prepareToOpenFilesView
 {
-	[[myDocument_ mainWindow] makeFirstResponder:self];
+	[myDocument_.mainWindow makeFirstResponder:self];
 	[theFSViewer prepareToOpenFSViewerPane];
 }
 
@@ -124,8 +124,8 @@
 - (IBAction) fsviewerAction:(id)browser	{ [self updateCurrentPreviewImage]; }
 - (IBAction) fsviewerDoubleAction:(id)browser
 {
-	SEL theAction = [self actionForDoubleClickEnum:[theFSViewer actionEnumForBrowserDoubleClick]];
-	[[NSApplication sharedApplication] sendAction:theAction to:nil from:browser];
+	SEL theAction = [self actionForDoubleClickEnum:theFSViewer.actionEnumForBrowserDoubleClick];
+	[NSApplication.sharedApplication sendAction:theAction to:nil from:browser];
 }
 
 
@@ -143,11 +143,11 @@
 
 - (void) restoreConcertinaSplitViewPositions
 {
-	if (IsNotEmpty([concertinaView autosavePositionName]))
+	if (IsNotEmpty(concertinaView.autosavePositionName))
 		return;
-	NSString* fileName = [myDocument_ documentNameForAutosave];
+	NSString* fileName = myDocument_.documentNameForAutosave;
 	NSString* autoSaveNameForConcertina = fstr(@"File:%@:FilesViewConcertinaPositions", fileName);
-	[concertinaView setAutosavePositionName:autoSaveNameForConcertina];
+	concertinaView.autosavePositionName = autoSaveNameForConcertina;
 	[concertinaView restorePositionsFromDefaults];	
 }
 
@@ -175,17 +175,17 @@
 	
 	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:rootPath  logging:eLoggingNone];
 	
-	if ([results hasErrors])
+	if (results.hasErrors)
 	{
 		// Try a second time
 		sleep(0.5);
 		results = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:rootPath  logging:eLoggingNone];
 	}
-	if ([results.errStr length] > 0)
+	if (results.errStr.length > 0)
 	{
 		[results logMercurialResult];
 		// for an error rather than warning fail by returning nil. Maybe later we will return error codes.
-		if ([results hasErrors])
+		if (results.hasErrors)
 			return  nil;
 	}
 	NSArray* lines = [results.outStr componentsSeparatedByString:@"\n"];
@@ -202,7 +202,7 @@
 	[argsResolveStatus addObjectsFromArray:absolutePaths];
 	
 	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsResolveStatus fromRoot:rootPath  logging:eLoggingNone];
-	if ([results hasErrors])
+	if (results.hasErrors)
 	{
 		[results logMercurialResult];
 		return nil;
@@ -228,7 +228,7 @@
 }
 
 - (BOOL)			autoExpandViewerOutlines	{ return AutoExpandViewerOutlinesFromDefaults(); } 
-- (HunkExclusions*) hunkExclusions		{ return [myDocument_ hunkExclusions]; }
+- (HunkExclusions*) hunkExclusions		{ return myDocument_.hunkExclusions; }
 
 
 
@@ -239,13 +239,13 @@
 // MARK:  Quicklook Handling
 // ------------------------------------------------------------------------------------
 
-- (NSInteger) numberOfQuickLookPreviewItems		{ return [theFSViewer numberOfQuickLookPreviewItems]; }
+- (NSInteger) numberOfQuickLookPreviewItems		{ return theFSViewer.numberOfQuickLookPreviewItems; }
 
-- (NSArray*) quickLookPreviewItems				{ return [theFSViewer quickLookPreviewItems]; }
+- (NSArray*) quickLookPreviewItems				{ return theFSViewer.quickLookPreviewItems; }
 
 - (void) keyDown:(NSEvent *)theEvent
 {
-    NSString* key = [theEvent charactersIgnoringModifiers];
+    NSString* key = theEvent.charactersIgnoringModifiers;
     if ([key isEqual:@" "])
         [myDocument_ togglePreviewPanel:self];
 	else
@@ -264,11 +264,11 @@
 - (NSImage*) imageForMultipleNodes:(NSArray*) nodes
 {
 	FSNodeInfo* firstNode = nodes[0];
-	NSString* extension = [[firstNode absolutePath] pathExtension];
+	NSString* extension = firstNode.absolutePath.pathExtension;
 	for (FSNodeInfo* node in nodes)
-		if (![extension isEqualToString:[[node absolutePath] pathExtension]])
+		if (![extension isEqualToString:node.absolutePath.pathExtension])
 			return nil;
-	return [firstNode iconImageForPreview];
+	return firstNode.iconImageForPreview;
 }
 
 - (void) updateCurrentPreviewImage
@@ -276,7 +276,7 @@
 	// In order to improve performance, we only want to update the preview image if the user pauses for at
 	// least a moment on a select node. This allows one to scroll through the nodes at a more acceptable pace.
 	// First, we cancel the previous request so we don't get a whole bunch of them queued up.
-	[self.class cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateCurrentPreviewImageDoIt) object:nil];
+	[[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateCurrentPreviewImageDoIt) object:nil];
 	[self performSelector:@selector(updateCurrentPreviewImageDoIt) withObject:nil afterDelay:0.05];
 }
 
@@ -286,32 +286,32 @@
 	// Determine the selection and display it's icon and inspector information on the right side of the UI.
 	NSImage* inspectorImage = nil;
 	NSAttributedString* attributedString = nil;
-	if (![theFSViewer nodesAreSelected])
+	if (!theFSViewer.nodesAreSelected)
 		attributedString = [NSAttributedString string:@"No Selection" withAttributes:smallCenteredSystemFontAttributes];
 	else
 	{
-		NSArray* selectedNodes = [theFSViewer selectedNodes];
-		if ([selectedNodes count] > 1)
+		NSArray* selectedNodes = theFSViewer.selectedNodes;
+		if (selectedNodes.count > 1)
 		{
 			attributedString = [NSAttributedString string:@"Multiple Selection" withAttributes:smallCenteredSystemFontAttributes];
 			inspectorImage = [self imageForMultipleNodes:selectedNodes];
 		}
-		else if ([selectedNodes count] == 1)
+		else if (selectedNodes.count == 1)
 		{
 			// Find the last selected cell and show its information
-			FSNodeInfo* lastSelectedNode = selectedNodes[[selectedNodes count] - 1];
-			attributedString   = [lastSelectedNode attributedInspectorStringForFSNode];
-			inspectorImage     = [lastSelectedNode iconImageForPreview];
+			FSNodeInfo* lastSelectedNode = selectedNodes[selectedNodes.count - 1];
+			attributedString   = lastSelectedNode.attributedInspectorStringForFSNode;
+			inspectorImage     = lastSelectedNode.iconImageForPreview;
 		}
 	}
     
-	[nodeInspector setAttributedStringValue:attributedString];
-	[nodeIconWell setImage:inspectorImage];
+	nodeInspector.attributedStringValue = attributedString;
+	nodeIconWell.image = inspectorImage;
 	
 	// The browser selection might have changed update the quick look preview image if necessary. It would be really nice to have
 	// a NSBrowserSelectionDidChangeNotification
-	if ([myDocument_ quicklookPreviewIsVisible])
-		[[QLPreviewPanel sharedPreviewPanel] reloadData];
+	if (myDocument_.quicklookPreviewIsVisible)
+		[QLPreviewPanel.sharedPreviewPanel reloadData];
 }
 
 
@@ -339,67 +339,67 @@
 // MARK: Action Validation
 // ------------------------------------------------------------------------------------
 
-- (BOOL) toolbarActionAppliesToFilesWith:(HGStatus)status	{ return ([theFSViewer statusOfChosenPathsInFilesContain:status] || (![theFSViewer nodesAreChosen] && [theFSViewer repositoryHasFilesWhichContainStatus:status])); }
+- (BOOL) toolbarActionAppliesToFilesWith:(HGStatus)status	{ return ([theFSViewer statusOfChosenPathsInFilesContain:status] || (!theFSViewer.nodesAreChosen && [theFSViewer repositoryHasFilesWhichContainStatus:status])); }
 
 - (BOOL) validateAndSwitchMenuForCommitSelectedFiles:(NSMenuItem*)menuItem
 {
 	if (!menuItem)
 		return NO;
-	BOOL inMergeState = [[myDocument_ repositoryData] inMergeState];
+	BOOL inMergeState = myDocument_.repositoryData.inMergeState;
 	[menuItem setTitle: inMergeState ? @"Commit Merged Files…" : @"Commit Selected Files…"];
-	return inMergeState ? [myDocument_ repositoryHasFilesWhichContainStatus:eHGStatusCommittable] : ([myDocument_ statusOfChosenPathsInFilesContain:eHGStatusCommittable] && [myDocument_ showingFilesView]);
+	return inMergeState ? [myDocument_ repositoryHasFilesWhichContainStatus:eHGStatusCommittable] : ([myDocument_ statusOfChosenPathsInFilesContain:eHGStatusCommittable] && myDocument_.showingFilesView);
 }
 
 - (BOOL) validateAndSwitchMenuForRenameSelectedItem:(NSMenuItem*)menuItem
 {
 	if (!menuItem)
 		return NO;
-	NSArray* chosenNodes = [theFSViewer chosenNodes];
-	if ([chosenNodes count] != 1)
+	NSArray* chosenNodes = theFSViewer.chosenNodes;
+	if (chosenNodes.count != 1)
 		return NO;
-	BOOL isDirectory = [[chosenNodes firstObject] isDirectory];
+	BOOL isDirectory = [chosenNodes.firstObject isDirectory];
 	[menuItem setTitle: isDirectory ? @"Rename Selected Directory…" : @"Rename Selected File…"];
 	return [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusInRepository];
 }
 
 - (BOOL) validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem, NSObject>)anItem
 {
-	SEL theAction = [anItem action];
+	SEL theAction = anItem.action;
 
-	if (theAction == @selector(mainMenuCommitSelectedFiles:))			return [myDocument_ localRepoIsSelectedAndReady] && [self validateAndSwitchMenuForCommitSelectedFiles:DynamicCast(NSMenuItem, anItem)];
-	if (theAction == @selector(mainMenuCommitAllFiles:))				return [myDocument_ localRepoIsSelectedAndReady] && [myDocument_ validateAndSwitchMenuForCommitAllFiles:anItem];
-	if (theAction == @selector(toolbarCommitFiles:))					return [myDocument_ localRepoIsSelectedAndReady] && ([[myDocument_ repositoryData] inMergeState] || [self toolbarActionAppliesToFilesWith:eHGStatusCommittable]);
+	if (theAction == @selector(mainMenuCommitSelectedFiles:))			return myDocument_.localRepoIsSelectedAndReady && [self validateAndSwitchMenuForCommitSelectedFiles:DynamicCast(NSMenuItem, anItem)];
+	if (theAction == @selector(mainMenuCommitAllFiles:))				return myDocument_.localRepoIsSelectedAndReady && [myDocument_ validateAndSwitchMenuForCommitAllFiles:anItem];
+	if (theAction == @selector(toolbarCommitFiles:))					return myDocument_.localRepoIsSelectedAndReady && (myDocument_.repositoryData.inMergeState || [self toolbarActionAppliesToFilesWith:eHGStatusCommittable]);
 	
-	if (theAction == @selector(mainMenuDiffSelectedFiles:))				return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusModified];
-	if (theAction == @selector(mainMenuDiffAllFiles:))					return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer repositoryHasFilesWhichContainStatus:eHGStatusModified];
-	if (theAction == @selector(toolbarDiffFiles:))						return [myDocument_ localRepoIsSelectedAndReady] && [self toolbarActionAppliesToFilesWith:eHGStatusModified];
+	if (theAction == @selector(mainMenuDiffSelectedFiles:))				return myDocument_.localRepoIsSelectedAndReady && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusModified];
+	if (theAction == @selector(mainMenuDiffAllFiles:))					return myDocument_.localRepoIsSelectedAndReady && [theFSViewer repositoryHasFilesWhichContainStatus:eHGStatusModified];
+	if (theAction == @selector(toolbarDiffFiles:))						return myDocument_.localRepoIsSelectedAndReady && [self toolbarActionAppliesToFilesWith:eHGStatusModified];
 
-	if (theAction == @selector(mainMenuAddRenameRemoveSelectedFiles:))	return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusAddableOrRemovable];
-	if (theAction == @selector(mainMenuAddRenameRemoveAllFiles:))		return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer repositoryHasFilesWhichContainStatus:eHGStatusAddableOrRemovable];
-	if (theAction == @selector(toolbarAddRenameRemoveFiles:))			return [myDocument_ localRepoIsSelectedAndReady] && [self toolbarActionAppliesToFilesWith:eHGStatusAddableOrRemovable];
+	if (theAction == @selector(mainMenuAddRenameRemoveSelectedFiles:))	return myDocument_.localRepoIsSelectedAndReady && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusAddableOrRemovable];
+	if (theAction == @selector(mainMenuAddRenameRemoveAllFiles:))		return myDocument_.localRepoIsSelectedAndReady && [theFSViewer repositoryHasFilesWhichContainStatus:eHGStatusAddableOrRemovable];
+	if (theAction == @selector(toolbarAddRenameRemoveFiles:))			return myDocument_.localRepoIsSelectedAndReady && [self toolbarActionAppliesToFilesWith:eHGStatusAddableOrRemovable];
 	// ------	
-	if (theAction == @selector(mainMenuRevertSelectedFiles:))			return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusChangedInSomeWay];
-	if (theAction == @selector(mainMenuRevertAllFiles:))				return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer repositoryHasFilesWhichContainStatus:eHGStatusChangedInSomeWay];
-	if (theAction == @selector(mainMenuRevertSelectedFilesToVersion:))	return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer nodesAreChosen];
-	if (theAction == @selector(toolbarRevertFiles:))					return [myDocument_ localRepoIsSelectedAndReady] && [self toolbarActionAppliesToFilesWith:eHGStatusChangedInSomeWay];
+	if (theAction == @selector(mainMenuRevertSelectedFiles:))			return myDocument_.localRepoIsSelectedAndReady && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusChangedInSomeWay];
+	if (theAction == @selector(mainMenuRevertAllFiles:))				return myDocument_.localRepoIsSelectedAndReady && [theFSViewer repositoryHasFilesWhichContainStatus:eHGStatusChangedInSomeWay];
+	if (theAction == @selector(mainMenuRevertSelectedFilesToVersion:))	return myDocument_.localRepoIsSelectedAndReady && theFSViewer.nodesAreChosen;
+	if (theAction == @selector(toolbarRevertFiles:))					return myDocument_.localRepoIsSelectedAndReady && [self toolbarActionAppliesToFilesWith:eHGStatusChangedInSomeWay];
 	
-	if (theAction == @selector(mainMenuDeleteSelectedFiles:))			return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer nodesAreChosen];
-	if (theAction == @selector(mainMenuAddSelectedFiles:))				return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusAddable];
-	if (theAction == @selector(mainMenuUntrackSelectedFiles:))			return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusInRepository];
-	if (theAction == @selector(mainMenuRenameSelectedItem:))			return [myDocument_ localRepoIsSelectedAndReady] && [self validateAndSwitchMenuForRenameSelectedItem:DynamicCast(NSMenuItem, anItem)];
+	if (theAction == @selector(mainMenuDeleteSelectedFiles:))			return myDocument_.localRepoIsSelectedAndReady && theFSViewer.nodesAreChosen;
+	if (theAction == @selector(mainMenuAddSelectedFiles:))				return myDocument_.localRepoIsSelectedAndReady && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusAddable];
+	if (theAction == @selector(mainMenuUntrackSelectedFiles:))			return myDocument_.localRepoIsSelectedAndReady && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusInRepository];
+	if (theAction == @selector(mainMenuRenameSelectedItem:))			return myDocument_.localRepoIsSelectedAndReady && [self validateAndSwitchMenuForRenameSelectedItem:DynamicCast(NSMenuItem, anItem)];
 	// ------
-	if (theAction == @selector(mainMenuRemergeSelectedFiles:))			return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusSecondary];
-	if (theAction == @selector(mainMenuMarkResolvedSelectedFiles:))		return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusUnresolved];
+	if (theAction == @selector(mainMenuRemergeSelectedFiles:))			return myDocument_.localRepoIsSelectedAndReady && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusSecondary];
+	if (theAction == @selector(mainMenuMarkResolvedSelectedFiles:))		return myDocument_.localRepoIsSelectedAndReady && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusUnresolved];
 	// ------
-	if (theAction == @selector(mainMenuIgnoreSelectedFiles:))			return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusNotIgnored];
-	if (theAction == @selector(mainMenuUnignoreSelectedFiles:))			return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusIgnored];
-	if (theAction == @selector(mainMenuAnnotateSelectedFiles:))			return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusInRepository];
+	if (theAction == @selector(mainMenuIgnoreSelectedFiles:))			return myDocument_.localRepoIsSelectedAndReady && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusNotIgnored];
+	if (theAction == @selector(mainMenuUnignoreSelectedFiles:))			return myDocument_.localRepoIsSelectedAndReady && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusIgnored];
+	if (theAction == @selector(mainMenuAnnotateSelectedFiles:))			return myDocument_.localRepoIsSelectedAndReady && [theFSViewer statusOfChosenPathsInFilesContain:eHGStatusInRepository];
 	// ------
-	if (theAction == @selector(mainMenuRollbackCommit:))				return [myDocument_ localRepoIsSelectedAndReady] && [[myDocument_ repositoryData] isRollbackInformationAvailable];
+	if (theAction == @selector(mainMenuRollbackCommit:))				return myDocument_.localRepoIsSelectedAndReady && myDocument_.repositoryData.isRollbackInformationAvailable;
 
-	if (theAction == @selector(mainMenuOpenSelectedFilesInFinder:))		return [myDocument_ localRepoIsSelectedAndReady] && [theFSViewer nodesAreChosen];
-	if (theAction == @selector(mainMenuRevealSelectedFilesInFinder:))	return [myDocument_ localRepoIsSelectedAndReady];
-	if (theAction == @selector(mainMenuOpenTerminalHere:))				return [myDocument_ localRepoIsSelectedAndReady];
+	if (theAction == @selector(mainMenuOpenSelectedFilesInFinder:))		return myDocument_.localRepoIsSelectedAndReady && theFSViewer.nodesAreChosen;
+	if (theAction == @selector(mainMenuRevealSelectedFilesInFinder:))	return myDocument_.localRepoIsSelectedAndReady;
+	if (theAction == @selector(mainMenuOpenTerminalHere:))				return myDocument_.localRepoIsSelectedAndReady;
 
 	return NO;
 }
@@ -424,20 +424,20 @@ const CGFloat  expandedWidth = 148;	// This is the width of the view in its expa
 
 @implementation StatusSidebarSplitView
 
-- (NSString*) isMinimizedAutoSaveName { return fstr(@"File:%@:StatusSidebarIsMinimized", [[parentView myDocument] documentNameForAutosave]); }
+- (NSString*) isMinimizedAutoSaveName { return fstr(@"File:%@:StatusSidebarIsMinimized", parentView.myDocument.documentNameForAutosave); }
 
 - (void) awakeFromNib
 {
-	[self setDelegate:self];
+	self.delegate = self;
 
-	[statusSidebarContent setContentView:expandedStatusSidebarGroup];
+	statusSidebarContent.contentView = expandedStatusSidebarGroup;
 
 	viewAnimation = [[NSViewAnimation alloc] init];
-	[viewAnimation setAnimationBlockingMode:NSAnimationBlocking];
-	[viewAnimation setAnimationCurve:NSAnimationEaseInOut];
-	[viewAnimation setDelegate:self];
+	viewAnimation.animationBlockingMode = NSAnimationBlocking;
+	viewAnimation.animationCurve = NSAnimationEaseInOut;
+	viewAnimation.delegate = self;
 	
-	BOOL shouldBeMinimized = [[NSUserDefaults standardUserDefaults] boolForKey:self.isMinimizedAutoSaveName];
+	BOOL shouldBeMinimized = [NSUserDefaults.standardUserDefaults boolForKey:self.isMinimizedAutoSaveName];
 	if (shouldBeMinimized)
 		[self minimize:self];
 	else
@@ -453,15 +453,15 @@ const CGFloat  expandedWidth = 148;	// This is the width of the view in its expa
 {
 	[viewAnimation stopAnimation];
 	
-	float duration = ([[self.window currentEvent] modifierFlags] & NSShiftKeyMask) ? 1.25 : 0.25;
-	[viewAnimation setDuration:duration];
+	float duration = ([self.window.currentEvent modifierFlags] & NSShiftKeyMask) ? 1.25 : 0.25;
+	viewAnimation.duration = duration;
 	
 	NSDictionary* resizeDictionary = @{NSViewAnimationTargetKey: theContent,
-									  NSViewAnimationStartFrameKey: [NSValue valueWithRect:[theContent frame]],
+									  NSViewAnimationStartFrameKey: [NSValue valueWithRect:theContent.frame],
 									  NSViewAnimationEndFrameKey: [NSValue valueWithRect:endFrame]};
 	
 	NSArray* animationArray = @[resizeDictionary];
-	[viewAnimation setViewAnimations:animationArray];
+	viewAnimation.viewAnimations = animationArray;
 	[viewAnimation startAnimation];	
 }
 
@@ -476,11 +476,11 @@ const CGFloat  expandedWidth = 148;	// This is the width of the view in its expa
 
 - (IBAction) maximize:(id)sender
 {
-	[[NSUserDefaults standardUserDefaults] setBool:NO  forKey:self.isMinimizedAutoSaveName];
+	[NSUserDefaults.standardUserDefaults setBool:NO  forKey:self.isMinimizedAutoSaveName];
 	if (!minimized)
 		return;
 
-	[dividerStatusBox setHidden:YES];
+	dividerStatusBox.hidden = YES;
 	[toggleStatusSidebarButton setImage:[NSImage imageNamed:@"SidebarClose"]];
 	[toggleStatusSidebarButton setAction:@selector(minimize:)];
 
@@ -492,11 +492,11 @@ const CGFloat  expandedWidth = 148;	// This is the width of the view in its expa
 
 - (IBAction) minimize:(id)sender
 {
-	[[NSUserDefaults standardUserDefaults] setBool:YES  forKey:self.isMinimizedAutoSaveName];
+	[NSUserDefaults.standardUserDefaults setBool:YES  forKey:self.isMinimizedAutoSaveName];
 	if (minimized)
 		return;
 
-	[dividerStatusBox setHidden:NO];
+	dividerStatusBox.hidden = NO;
 	[toggleStatusSidebarButton setImage:[NSImage imageNamed:@"SidebarOpen"]];
 	[toggleStatusSidebarButton setAction:@selector(maximize:)];
 
@@ -517,7 +517,7 @@ const CGFloat  expandedWidth = 148;	// This is the width of the view in its expa
 
 - (CGFloat) splitView:(NSSplitView*)splitView constrainSplitPosition:(CGFloat)proposedPosition ofSubviewAt:(NSInteger)dividerIndex
 {
-	if ([viewAnimation isAnimating])
+	if (viewAnimation.isAnimating)
 		return theContent.frame.size.width;
 
 	CGFloat crossOverPoint = self.frame.size.width - (expandedWidth+collapsedWidth)/2;
@@ -540,9 +540,9 @@ const CGFloat  expandedWidth = 148;	// This is the width of the view in its expa
 
 - (void) splitView:(NSSplitView*)splitView resizeSubviewsWithOldSize:(NSSize)oldSize
 {	
-	NSRect contentFrame	= [theContent frame];
-	NSRect sidebarFrame	= [theSidebar frame];
-	if ([viewAnimation isAnimating])
+	NSRect contentFrame	= theContent.frame;
+	NSRect sidebarFrame	= theSidebar.frame;
+	if (viewAnimation.isAnimating)
 	{
 		sidebarFrame.origin.x = contentFrame.size.width;		
 		sidebarFrame.size.width = self.frame.size.width - contentFrame.size.width;
@@ -553,8 +553,8 @@ const CGFloat  expandedWidth = 148;	// This is the width of the view in its expa
 		contentFrame.size.width = self.frame.size.width - sidebarFrame.size.width;
 		sidebarFrame.origin.x = contentFrame.size.width;
 	}
-	[theContent setFrame:contentFrame];
-	[theSidebar setFrame:sidebarFrame];
+	theContent.frame = contentFrame;
+	theSidebar.frame = sidebarFrame;
 	[self adjustSubviews];
 }
 

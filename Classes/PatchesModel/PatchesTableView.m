@@ -68,22 +68,22 @@
 //	[self observe:kLogEntriesDidChange		from:self.myDocument  byCalling:@selector(logEntriesDidChange:)];
 	
 	// Tell the browser to send us messages when it is clicked.
-	[self setTarget:self];
+	self.target = self;
 	[self setAction:@selector(patchTableSingleClick:)];
 	[self setDoubleAction:@selector(patchTableDoubleClick:)];
-	[self setDelegate:self];
-	[self setDataSource:self];
+	self.delegate = self;
+	self.dataSource = self;
 
 	[self observe:kFileDiffsDisplayPreferencesChanged from:nil byCalling:@selector(tableViewSelectionDidChange:)];
-	[detailedPatchesWebView setShowExternalDiffButton:NO];
+	detailedPatchesWebView.showExternalDiffButton = NO;
 
 	// drag and drop support
 	[self registerForDraggedTypes:@[kPatchesTablePBoardType, NSFilenamesPboardType]];
 
-	[self setRowHeight:30];
+	self.rowHeight = 30;
 }
 
-- (MacHgDocument*)	myDocument	{ return [parentController myDocument]; }
+- (MacHgDocument*)	myDocument	{ return parentController.myDocument; }
 
 - (void) dealloc				{ [self stopObserving]; }
 
@@ -95,7 +95,7 @@
 // MARK:  Quieres
 // ------------------------------------------------------------------------------------
 
-- (BOOL)		 patchIsSelected { return 0 <= self.selectedRow && self.selectedRow < [patchesTableData_ count]; }
+- (BOOL)		 patchIsSelected { return 0 <= self.selectedRow && self.selectedRow < patchesTableData_.count; }
 - (BOOL)		 patchIsClicked	 { return self.clickedRow != -1; }
 - (PatchRecord*) selectedPatch	 { return self.patchIsSelected ? patchesTableData_[self.selectedRow] : nil; }
 - (PatchRecord*) clickedPatch	 { return self.patchIsClicked  ? patchesTableData_[self.clickedRow]  : nil; }
@@ -145,7 +145,7 @@
 
 - (BOOL) removePatchAtIndex:(NSInteger)index
 {
-	if (index < 0 || index >= [patchesTableData_ count])
+	if (index < 0 || index >= patchesTableData_.count)
 		return NO;
 	NSMutableArray* newTableData = [NSMutableArray arrayWithArray:patchesTableData_];
 	[newTableData removeObjectAtIndex:index];
@@ -201,13 +201,13 @@
 
 - (NSInteger) numberOfRowsInTableView:(NSTableView*)aTableView
 {
-	return [self.patchesTableData count];
+	return self.patchesTableData.count;
 }
 
 - (id) tableView:(NSTableView*)aTableView objectValueForTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)requestedRow
 {
 	PatchRecord* patch = self.patchesTableData[requestedRow];
-	NSString* requestedColumn = [aTableColumn identifier];
+	NSString* requestedColumn = aTableColumn.identifier;
 
 	id value = [patch valueForKey:requestedColumn];
 	return value;
@@ -216,11 +216,11 @@
 - (void) tableView:(NSTableView*)aTableView setObjectValue:(id)anObject forTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
 {
 	PatchRecord* clickedPatch = self.patchesTableData[rowIndex];
-	NSString* columnIdentifier = [aTableColumn identifier];
+	NSString* columnIdentifier = aTableColumn.identifier;
 	[clickedPatch setValue:anObject forKey:columnIdentifier];
 
 	NSEvent* currentEvent = [NSApp currentEvent];
-    unsigned flags = [currentEvent modifierFlags];
+    unsigned flags = currentEvent.modifierFlags;
 	if (flags & NSAlternateKeyMask)
 		if ([columnIdentifier isEqualToString:@"forceOption"] || [columnIdentifier isEqualToString:@"exactOption"] || [columnIdentifier isEqualToString:@"commitOption"] || [columnIdentifier isEqualToString:@"importBranchOption"])
 			for (PatchRecord* patch in patchesTableData_)
@@ -237,7 +237,7 @@
 
 - (BOOL)tableView:(NSTableView*)aTableView shouldEditTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
 {
-	NSString* requestedColumn = [aTableColumn identifier];
+	NSString* requestedColumn = aTableColumn.identifier;
 	if ([requestedColumn isEqualToString:@"patchName"])
 		return NO;
 	return YES;
@@ -255,14 +255,14 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 
 - (void) tableViewSelectionDidChange:(NSNotification*)aNotification
 {
-	NSInteger currentTaskNumber = [detailedPatchesWebView nextTaskNumber];
-	NSInteger selectedRowCount = [self.selectedRowIndexes count];
+	NSInteger currentTaskNumber = detailedPatchesWebView.nextTaskNumber;
+	NSInteger selectedRowCount = self.selectedRowIndexes.count;
 	if (selectedRowCount == 0)
 		[detailedPatchesWebView setBackingPatch:nil andFallbackMessage:@"No Patch Selected" withTaskNumber:currentTaskNumber];
 	else if (selectedRowCount > 1)
 		[detailedPatchesWebView setBackingPatch:nil andFallbackMessage:@"Multiple Patches Selected" withTaskNumber:currentTaskNumber];
 	else
-		[detailedPatchesWebView setBackingPatch:[self.selectedPatch patchData] andFallbackMessage:@"" withTaskNumber:currentTaskNumber];
+		[detailedPatchesWebView setBackingPatch:self.selectedPatch.patchData andFallbackMessage:@"" withTaskNumber:currentTaskNumber];
 }
 
 // Clicking on the checkboxes in the table view shouldn't change the selection.
@@ -272,7 +272,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 	if (column < 0)
 		return YES;
 	NSTableColumn* clickedTableColumn = self.tableColumns[column];
-	NSString* columnIdentifier = [clickedTableColumn identifier];
+	NSString* columnIdentifier = clickedTableColumn.identifier;
 	if ([columnIdentifier isEqualToString:@"forceOption"] || [columnIdentifier isEqualToString:@"exactOption"] || [columnIdentifier isEqualToString:@"commitOption"] || [columnIdentifier isEqualToString:@"importBranchOption"])
 		return NO;
 	return YES;
@@ -293,7 +293,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 	if (theEditedColumn < 0 || theEditedColumn >= self.tableColumns.count)
 		return NO;
 	NSTableColumn* editedTableColumn = self.tableColumns[theEditedColumn];
-	NSString* columnIdentifier = [editedTableColumn identifier];
+	NSString* columnIdentifier = editedTableColumn.identifier;
 	if ([columnIdentifier isNotEqualToString:@"commitMessage"])
 		return NO;
 
@@ -325,7 +325,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 - (NSDragOperation) tableView:(NSTableView*)tv validateDrop:(id <NSDraggingInfo>)info proposedRow:(NSInteger)row proposedDropOperation:(NSTableViewDropOperation)op
 {
     // Add code here to validate the drop
-	NSPasteboard* pboard = [info draggingPasteboard];	// get the pasteboard
+	NSPasteboard* pboard = info.draggingPasteboard;	// get the pasteboard
 	if ([pboard availableTypeFromArray:@[kPatchesTablePBoardType]])
 	{
 		if (op == NSTableViewDropAbove)
@@ -334,7 +334,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 	else if ([pboard availableTypeFromArray:@[NSFilenamesPboardType]])
 	{
 		NSArray* filenames = [pboard propertyListForType:NSFilenamesPboardType];
-		NSArray* resolvedFilenames = [filenames resolveSymlinksAndAliasesInPaths];
+		NSArray* resolvedFilenames = filenames.resolveSymlinksAndAliasesInPaths;
 		for (NSString* file in resolvedFilenames)
 			if (pathIsExistentFile(file))
 				return NSDragOperationCopy;
@@ -348,7 +348,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 
 - (BOOL) tableView:(NSTableView*)aTableView acceptDrop:(id <NSDraggingInfo>)info row:(NSInteger)dropRow dropOperation:(NSTableViewDropOperation)operation
 {
-    NSPasteboard* pboard = [info draggingPasteboard];
+    NSPasteboard* pboard = info.draggingPasteboard;
 	if ([pboard availableTypeFromArray:@[kPatchesTablePBoardType]])
 	{
 		NSData* rowData = [pboard dataForType:kPatchesTablePBoardType];
@@ -357,7 +357,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 		[newTableData removeObjectsAtIndexes:rowIndexes];
 		NSArray* patchesToMove = [patchesTableData_ objectsAtIndexes:rowIndexes];
 		NSInteger rowsRemovedBeforeDropRow = [rowIndexes countOfIndexesInRange:NSMakeRange(0, dropRow)];
-		NSIndexSet* insertionIndexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(dropRow - rowsRemovedBeforeDropRow, [rowIndexes count])];
+		NSIndexSet* insertionIndexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(dropRow - rowsRemovedBeforeDropRow, rowIndexes.count)];
 		[newTableData insertObjects:patchesToMove atIndexes:insertionIndexes];
 		patchesTableData_ = newTableData;
 		[self reloadData];
@@ -369,7 +369,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 	if ([pboard availableTypeFromArray:@[NSFilenamesPboardType]])
 	{
 		NSArray* filenames = [pboard propertyListForType:NSFilenamesPboardType];
-		NSArray* resolvedFilenames = [filenames resolveSymlinksAndAliasesInPaths];
+		NSArray* resolvedFilenames = filenames.resolveSymlinksAndAliasesInPaths;
 		NSMutableArray* newPatches = [[NSMutableArray alloc]init];
 		for (NSString* path in resolvedFilenames)
 			if (pathIsExistentFile(path))
@@ -378,7 +378,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 				[newPatches addObject:patch];
 			}
 		NSMutableArray* newTableData = [[NSMutableArray alloc] initWithArray:patchesTableData_];
-		NSIndexSet* insertionIndexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(dropRow, [newPatches count])];
+		NSIndexSet* insertionIndexes = [NSIndexSet indexSetWithIndexesInRange:NSMakeRange(dropRow, newPatches.count)];
 		[newTableData insertObjects:newPatches atIndexes:insertionIndexes];
 		patchesTableData_ = newTableData;
 		[self reloadData];
@@ -401,12 +401,12 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 
 - (NSURL*) patchDetailURL
 {
-	return [NSURL fileURLWithPath:fstr(@"%@/Webviews/htmlForDifferences/%@",[[NSBundle mainBundle] resourcePath], @"index.html")];
+	return [NSURL fileURLWithPath:fstr(@"%@/Webviews/htmlForDifferences/%@",NSBundle.mainBundle.resourcePath, @"index.html")];
 }
 
 - (HunkExclusions*) hunkExclusions
 {
-	return [parentController hunkExclusions];
+	return parentController.hunkExclusions;
 }
 
 @end
@@ -428,15 +428,15 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 - (NSColor*) cellBackingColor
 {
 	PatchRecord* patch = self.patch;
-	if (![patch isModified])
+	if (!patch.isModified)
 		return nil;
 	
-	NSString* columnIdentifier = [self.patchesTableColumn identifier];
+	NSString* columnIdentifier = self.patchesTableColumn.identifier;
 	if (
-		([patch authorIsModified]			&& [columnIdentifier isEqualToString:@"author"]) ||
-		([patch dateIsModified]				&& [columnIdentifier isEqualToString:@"date"]) ||
-		([patch parentIsModified]			&& [columnIdentifier isEqualToString:@"parent"]) ||
-		([patch commitMessageIsModified]	&& [columnIdentifier isEqualToString:@"commitMessage"])
+		(patch.authorIsModified			&& [columnIdentifier isEqualToString:@"author"]) ||
+		(patch.dateIsModified				&& [columnIdentifier isEqualToString:@"date"]) ||
+		(patch.parentIsModified			&& [columnIdentifier isEqualToString:@"parent"]) ||
+		(patch.commitMessageIsModified	&& [columnIdentifier isEqualToString:@"commitMessage"])
 		)
 		return [NSColor colorWithCalibratedRed:1.0 green:0.9 blue:0.9 alpha:1.0];
 	
@@ -487,7 +487,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 
 - (void) selectWithFrame:(NSRect)aRect inView:(NSView*)controlView editor:(NSText*)textObj delegate:(id)anObject start:(NSInteger)selStart length:(NSInteger)selLength
 {
-	aRect = UnionRectWithSize(aRect, [self.attributedStringValue size]);
+	aRect = UnionRectWithSize(aRect, self.attributedStringValue.size);
 	aRect.size.width *= 1.2;
 	isEditingOrSelecting_ = YES;
 	[super selectWithFrame:aRect inView:controlView editor:textObj delegate:anObject start:selStart length:selLength];
@@ -496,7 +496,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 
 - (void)editWithFrame:(NSRect)aRect inView:(NSView*)controlView editor:(NSText*)textObj delegate:(id)anObject event:(NSEvent*)theEvent
 {
-	aRect = UnionRectWithSize(aRect, [self.attributedStringValue size]);
+	aRect = UnionRectWithSize(aRect, self.attributedStringValue.size);
 	aRect.size.width *= 1.2;
 	isEditingOrSelecting_ = YES;
 	[super editWithFrame:aRect inView:controlView editor:textObj delegate:anObject event:theEvent];
@@ -521,7 +521,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 - (void) editWithFrame:(NSRect)aRect inView:(NSView*)controlView editor:(NSText*)textObj delegate:(id)anObject event:(NSEvent*)theEvent
 {
 	aRect = UnionWidthHeight(aRect, 340, 45);
-	aRect = UnionRectWithSize(aRect, [self.attributedStringValue size]);
+	aRect = UnionRectWithSize(aRect, self.attributedStringValue.size);
 	isEditingOrSelecting_ = YES;
     [super editWithFrame:aRect inView:controlView editor:textObj delegate:anObject event:theEvent];
 	isEditingOrSelecting_ = NO;
@@ -532,7 +532,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 - (void) selectWithFrame:(NSRect)aRect inView:(NSView*)controlView editor:(NSText*)textObj delegate:(id)anObject start:(NSInteger)selStart length:(NSInteger)selLength
 {
 	aRect = UnionWidthHeight(aRect, 340, 45);
-	aRect = UnionRectWithSize(aRect, [self.attributedStringValue size]);
+	aRect = UnionRectWithSize(aRect, self.attributedStringValue.size);
 	isEditingOrSelecting_ = YES;
     [super selectWithFrame:aRect inView:controlView editor:textObj delegate:anObject start:selStart length:selLength];
 	isEditingOrSelecting_ = NO;
@@ -541,7 +541,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 // Expansion tool tip support
 - (NSRect) expansionFrameWithFrame:(NSRect)cellFrame inView:(NSView*)view
 {
-	cellFrame = UnionRectWithSize(cellFrame, [self.attributedStringValue size]);
+	cellFrame = UnionRectWithSize(cellFrame, self.attributedStringValue.size);
 	
 	// We want to make the cell *slightly* larger; it looks better when showing the expansion tool tip.
 	cellFrame.size.width += 4.0;
@@ -552,8 +552,8 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 - (void) drawWithExpansionFrame:(NSRect)cellFrame inView:(NSView*)view
 {
     NSAttributedString* message = self.attributedStringValue;
-	cellFrame = UnionRectWithSize(cellFrame, [message size]);
-    if ([message length] > 0)
+	cellFrame = UnionRectWithSize(cellFrame, message.size);
+    if (message.length > 0)
 	{
         cellFrame.origin.x += 2.0;
         cellFrame.size.width -= 2.0;
@@ -580,11 +580,11 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 {
     NSAttributedString* message = self.attributedStringValue;
 	
-	NSString* fullPath = [self.patch path];
-	NSDictionary* attributes = [message attributesOfWholeString];
+	NSString* fullPath = self.patch.path;
+	NSDictionary* attributes = message.attributesOfWholeString;
 	message = [NSAttributedString string:fullPath withAttributes:attributes];
 	
-	cellFrame = UnionRectWithSize(cellFrame, [message size]);
+	cellFrame = UnionRectWithSize(cellFrame, message.size);
 	// We want to make the cell *slightly* larger; it looks better when showing the expansion tool tip.
 	cellFrame.size.width += 4.0;
 	cellFrame.origin.x   -= 2.0;
@@ -595,12 +595,12 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 {
     NSAttributedString* message = self.attributedStringValue;
 	
-	NSString* fullPath = [self.patch path];
-	NSDictionary* attributes = [message attributesOfWholeString];
+	NSString* fullPath = self.patch.path;
+	NSDictionary* attributes = message.attributesOfWholeString;
 	message = [NSAttributedString string:fullPath withAttributes:attributes];
 
-	cellFrame = UnionRectWithSize(cellFrame, [message size]);
-    if ([message length] > 0)
+	cellFrame = UnionRectWithSize(cellFrame, message.size);
+    if (message.length > 0)
 	{
         cellFrame.origin.x += 2.0;
         cellFrame.size.width -= 2.0;
@@ -626,15 +626,15 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 - (void) mouseEntered:(NSEvent*)event
 {
 	[NSAnimationContext beginGrouping];
-	[[NSAnimationContext currentContext] setDuration:1.0];
-	[[buttonMessage animator] setHidden:NO];
+	[NSAnimationContext.currentContext setDuration:1.0];
+	[buttonMessage.animator setHidden:NO];
 	[NSAnimationContext endGrouping];
 }
 - (void) mouseExited:(NSEvent*)event
 {
 	[NSAnimationContext beginGrouping];
-	[[NSAnimationContext currentContext] setDuration:1.0];
-	[[buttonMessage animator] setHidden:YES];
+	[NSAnimationContext.currentContext setDuration:1.0];
+	[buttonMessage.animator setHidden:YES];
 	[NSAnimationContext endGrouping];
 }
 

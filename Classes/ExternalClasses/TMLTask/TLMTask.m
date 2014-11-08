@@ -71,7 +71,7 @@
 {
     NSParameterAssert([output isKindOfClass:[NSPipe class]]);
     if (self.standardOutput)
-        [NSException raise:NSInternalInconsistencyException format:@"%@ manages its own stdio channels", self.class];
+        [NSException raise:NSInternalInconsistencyException format:@"%@ manages its own stdio channels", [self class]];
     [super setStandardOutput:output];
 }
 
@@ -79,7 +79,7 @@
 {
     NSParameterAssert([error isKindOfClass:[NSPipe class]]);
     if (self.standardError)
-        [NSException raise:NSInternalInconsistencyException format:@"%@ manages its own stdio channels", self.class];
+        [NSException raise:NSInternalInconsistencyException format:@"%@ manages its own stdio channels", [self class]];
     [super setStandardError:error];
 }
 

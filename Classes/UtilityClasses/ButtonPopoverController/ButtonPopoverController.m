@@ -21,8 +21,8 @@
 
 - (IBAction)togglePopover:(id)sender;
 {
-	if (self.popoverTriggerButton.intValue == 1)
-		[self.popover showRelativeToRect:[self.popoverTriggerButton bounds] ofView:self.popoverTriggerButton preferredEdge:NSMaxXEdge];
+	if ([self.popoverTriggerButton intValue] == 1)
+		[self.popover showRelativeToRect:self.popoverTriggerButton.bounds ofView:self.popoverTriggerButton preferredEdge:NSMaxXEdge];
 	else
 		[self.popover close];
 }

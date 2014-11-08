@@ -31,7 +31,7 @@ static NSInteger disclosureAnimationCount = 0;
 
 - (void) awakeFromNib
 {
-	NSString* frameName  = [parentWindow frameAutosaveName];
+	NSString* frameName  = parentWindow.frameAutosaveName;
 	autoSaveName_        = IsNotEmpty(frameName) ? fstr(@"%@:disclosed", frameName) : nil;
 	animationDepth_      = 0;
 	disclosureIsVisible_ = YES;		// The disclosure is always open on initialization
@@ -42,7 +42,7 @@ static NSInteger disclosureAnimationCount = 0;
 // If we need to optionally restore the state of the disclosure to its last saved state we can easily do so
 - (void) resoreToSavedState
 {
-	BOOL disclosed       = autoSaveName_ ? [[NSUserDefaults standardUserDefaults] boolForKey:autoSaveName_] : NO;
+	BOOL disclosed       = autoSaveName_ ? [NSUserDefaults.standardUserDefaults boolForKey:autoSaveName_] : NO;
 	[self setToOpenState:disclosed withAnimation:NO];
 }
 
@@ -55,9 +55,9 @@ static NSInteger disclosureAnimationCount = 0;
 // MARK:  Styling
 // ------------------------------------------------------------------------------------
 
-- (void)	 setBackgroundToBad	 { [disclosureBox setFillColor:[NSColor errorColor]]; }
-- (void)	 setBackgroundToGood { [disclosureBox setFillColor:[NSColor successColor]]; }
-- (void)	 roundTheBoxCorners  { [disclosureBox setCornerRadius:6]; }
+- (void)	 setBackgroundToBad	 { disclosureBox.fillColor = NSColor.errorColor; }
+- (void)	 setBackgroundToGood { disclosureBox.fillColor = NSColor.successColor; }
+- (void)	 roundTheBoxCorners  { disclosureBox.cornerRadius = 6; }
 
 
 
@@ -73,16 +73,16 @@ static NSInteger disclosureAnimationCount = 0;
 	@synchronized(self)
 	{
 		if (!savedViewsInfo)
-			savedViewsInfo = [NSMapTable mapTableWithWeakToStrongObjects];
+			savedViewsInfo = NSMapTable.mapTableWithWeakToStrongObjects;
 	}
 
-	NSRect discloseRect = [disclosureBox frame];
-	NSArray* viewsInWindow = [[parentWindow contentView] subviews];
+	NSRect discloseRect = disclosureBox.frame;
+	NSArray* viewsInWindow = [parentWindow.contentView subviews];
 	for (NSView* view in viewsInWindow)
 		if (![savedViewsInfo objectForKey:view])
 		{
-			ViewPosition position = (NSMaxY([view frame]) > NSMaxY(discloseRect)) ? eViewAboveDisclosure : eViewBelowDisclosure;
-			SavedViewInfo* info = [SavedViewInfo savedViewInfoWithMask:[view autoresizingMask] position:position];
+			ViewPosition position = (NSMaxY(view.frame) > NSMaxY(discloseRect)) ? eViewAboveDisclosure : eViewBelowDisclosure;
+			SavedViewInfo* info = [SavedViewInfo savedViewInfoWithMask:view.autoresizingMask position:position];
 			[savedViewsInfo setObject:info forKey:view];
 		}
 }
@@ -103,18 +103,18 @@ static NSInteger disclosureAnimationCount = 0;
 			return;
 
 
-		savedShowsResizeIndicator_ = [parentWindow showsResizeIndicator];
-		[parentWindow setShowsResizeIndicator:NO];
+		savedShowsResizeIndicator_ = parentWindow.showsResizeIndicator;
+		parentWindow.showsResizeIndicator = NO;
 		
 		for (NSView* view in savedViewsInfo)
 		{
 			SavedViewInfo* info = DynamicCast(SavedViewInfo,[savedViewsInfo objectForKey:view]);
 			if (!info)
 				continue;	// Should we raise an assert here?
-			if ([info position] == eViewAboveDisclosure)
-				[view setAutoresizingMask:NSViewWidthSizable | NSViewMinYMargin];
+			if (info.position == eViewAboveDisclosure)
+				view.autoresizingMask = NSViewWidthSizable | NSViewMinYMargin;
 			else
-				[view setAutoresizingMask:NSViewWidthSizable | NSViewMaxYMargin];
+				view.autoresizingMask = NSViewWidthSizable | NSViewMaxYMargin;
 		}
 	}
 }
@@ -133,11 +133,11 @@ static NSInteger disclosureAnimationCount = 0;
 			{
 				SavedViewInfo* info = DynamicCast(SavedViewInfo,[savedViewsInfo objectForKey:view]);
 				if (info)
-					[view setAutoresizingMask:[info mask]];
+					view.autoresizingMask = info.mask;
 			}
 			
 			if (savedShowsResizeIndicator_)
-				[parentWindow setShowsResizeIndicator:YES];
+				parentWindow.showsResizeIndicator = YES;
 		}
 		
 		disclosureAnimationCount--;
@@ -145,7 +145,7 @@ static NSInteger disclosureAnimationCount = 0;
 }
 
 
-- (CGFloat) sizeChange	{ return [disclosureBox frame].size.height + 5; } 		// The extra +5 accounts for the space between the box and its neighboring views
+- (CGFloat) sizeChange	{ return disclosureBox.frame.size.height + 5; } 		// The extra +5 accounts for the space between the box and its neighboring views
 
 - (BOOL)	disclosureIsVisible { return disclosureIsVisible_; }
 
@@ -161,7 +161,7 @@ static NSInteger disclosureAnimationCount = 0;
 {
 	@synchronized(self)
 	{
-		[self setToOpenState:([disclosureButton state] == NSOnState) withAnimation:YES];
+		[self setToOpenState:(disclosureButton.state == NSOnState) withAnimation:YES];
 	}
 }
 
@@ -169,7 +169,7 @@ static NSInteger disclosureAnimationCount = 0;
 {
 	@synchronized(self)
 	{
-		[disclosureButton setState:NSOnState];
+		disclosureButton.state = NSOnState;
 		if (disclosureIsVisible_)
 			return;
 		[self openDisclosureBoxWithAnimation:animate];
@@ -181,7 +181,7 @@ static NSInteger disclosureAnimationCount = 0;
 {
 	@synchronized(self)
 	{
-		[disclosureButton setState:NSOffState];
+		disclosureButton.state = NSOffState;
 		if (!disclosureIsVisible_)
 			return;
 		[self closeDisclosureBoxWithAnimation:animate];
@@ -204,9 +204,9 @@ static NSInteger disclosureAnimationCount = 0;
 	
 	[self saveAutosizingMasksAndRelativePositions];
 	if (autoSaveName_)
-		[[NSUserDefaults standardUserDefaults] setBool:disclosureIsVisible_ forKey:autoSaveName_];
+		[NSUserDefaults.standardUserDefaults setBool:disclosureIsVisible_ forKey:autoSaveName_];
 	
-	NSRect windowFrame = [parentWindow frame];
+	NSRect windowFrame = parentWindow.frame;
 	CGFloat sizeChange = self.sizeChange;
 	
 	NSTimeInterval resizeTime = [parentWindow animationResizeTime:windowFrame];
@@ -217,18 +217,18 @@ static NSInteger disclosureAnimationCount = 0;
 	windowFrame.origin.y    -= sizeChange;			// Move the origin.
 	
 	// Adjust the min and max window sizes to account for showing the disclosure box. This content sizing doesn't affect the
-	// resizing via [parentWindow setFrame:...] below
-	NSSize contentMinSize = [parentWindow contentMinSize];
-	NSSize contentMaxSize = [parentWindow contentMaxSize];
+	// resizing via parentWindow.frame = ... below
+	NSSize contentMinSize = parentWindow.contentMinSize;
+	NSSize contentMaxSize = parentWindow.contentMaxSize;
 	if (isfinite(contentMinSize.height) && contentMinSize.height > 0)
 	{
 		contentMinSize.height += sizeChange;
-		[parentWindow setContentMinSize:contentMinSize];
+		parentWindow.contentMinSize = contentMinSize;
 	}
 	if (isfinite(contentMaxSize.height) && contentMaxSize.height > 0)
 	{
 		contentMaxSize.height += sizeChange;
-		[parentWindow setContentMaxSize:contentMaxSize];
+		parentWindow.contentMaxSize = contentMaxSize;
 	}
 	
 	[disclosureBox performSelector:@selector(setHidden:) withObject:NOasNumber afterDelay: (animate ? resizeTime : 0.0)];
@@ -246,9 +246,9 @@ static NSInteger disclosureAnimationCount = 0;
 	disclosureIsVisible_ = NO;
 	[self saveAutosizingMasksAndRelativePositions];
 	if (autoSaveName_)
-		[[NSUserDefaults standardUserDefaults] setBool:disclosureIsVisible_ forKey:autoSaveName_];
+		[NSUserDefaults.standardUserDefaults setBool:disclosureIsVisible_ forKey:autoSaveName_];
 	
-	NSRect windowFrame = [parentWindow frame];
+	NSRect windowFrame = parentWindow.frame;
 	CGFloat sizeChange = self.sizeChange;
 
 	NSTimeInterval resizeTime = [parentWindow animationResizeTime:windowFrame];
@@ -259,22 +259,22 @@ static NSInteger disclosureAnimationCount = 0;
 	windowFrame.origin.y    += sizeChange;			// Move the origin.
 
 	// Adjust the min and max window sizes to account for hiding the disclosure box. This content sizing doesn't affect the
-	// resizing via [parentWindow setFrame:...] below
-	NSSize contentMinSize = [parentWindow contentMinSize];
-	NSSize contentMaxSize = [parentWindow contentMaxSize];
+	// resizing via parentWindow.frame = ... below
+	NSSize contentMinSize = parentWindow.contentMinSize;
+	NSSize contentMaxSize = parentWindow.contentMaxSize;
 	if (isfinite(contentMinSize.height) && contentMinSize.height > sizeChange)
 	{
 		contentMinSize.height -= sizeChange;
-		[parentWindow setContentMinSize:contentMinSize];
+		parentWindow.contentMinSize = contentMinSize;
 	}
 	if (isfinite(contentMaxSize.height) && contentMaxSize.height > sizeChange)
 	{
 		contentMaxSize.height -= sizeChange;
-		[parentWindow setContentMaxSize:contentMaxSize];
+		parentWindow.contentMaxSize = contentMaxSize;
 	}
 	
 	[NSObject cancelPreviousPerformRequestsWithTarget:disclosureBox selector:@selector(setHidden:) object:NOasNumber];	// Cancel any other requests to show the object
-	[disclosureBox setHidden:YES];
+	disclosureBox.hidden = YES;
 	[parentWindow setFrame:windowFrame display:YES animate:animate];
 
 	if (animate)
@@ -303,8 +303,8 @@ static NSInteger disclosureAnimationCount = 0;
 + (SavedViewInfo*)	savedViewInfoWithMask:(NSUInteger)mask position:(ViewPosition)position
 {
 	SavedViewInfo* info = [[SavedViewInfo alloc]init];
-	[info setMask:mask];
-	[info setPosition:position];
+	info.mask = mask;
+	info.position = position;
 	return info;
 }
 @end

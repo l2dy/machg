@@ -59,23 +59,23 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	setupGlobalsForLogRecordPartsAndTemplate();
 	
 	// Cache the two attribute cases for the sidebar fonts to help improve speed. This will be called a lot, and helps improve performance.
-	//NSFontManager* fontManager = [NSFontManager sharedFontManager];
-	//NSFont* textFont = [NSFont fontWithName:@"Verdana" size:[NSFont smallSystemFontSize]];
-	NSMutableParagraphStyle* ps  = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-	NSMutableParagraphStyle* cps = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
+	//NSFontManager* fontManager = NSFontManager.sharedFontManager;
+	//NSFont* textFont = [NSFont fontWithName:@"Verdana" size:NSFont.smallSystemFontSize];
+	NSMutableParagraphStyle* ps  = [NSParagraphStyle.defaultParagraphStyle mutableCopy];
+	NSMutableParagraphStyle* cps = [NSParagraphStyle.defaultParagraphStyle mutableCopy];
 
-	[ps setLineBreakMode:NSLineBreakByTruncatingMiddle];
-	[cps setLineBreakMode:NSLineBreakByTruncatingMiddle];
-	[cps setAlignment:NSCenterTextAlignment];
+	ps.lineBreakMode = NSLineBreakByTruncatingMiddle;
+	cps.lineBreakMode = NSLineBreakByTruncatingMiddle;
+	cps.alignment = NSCenterTextAlignment;
 	NSFont* systemFont			= [NSFont systemFontOfSize:		[NSFont systemFontSize]];
-	NSFont* boldSystemFont		= [NSFont boldSystemFontOfSize:	[NSFont systemFontSize]];
+	NSFont* boldSystemFont		= [NSFont boldSystemFontOfSize:	NSFont.systemFontSize];
 	NSFont* smallSystemFont		= [NSFont systemFontOfSize:		[NSFont smallSystemFontSize]];
-	NSFont* smallBoldSystemFont = [NSFont boldSystemFontOfSize:	[NSFont smallSystemFontSize]];
-	NSFont* smallFixedPitchUserFont = [NSFont userFixedPitchFontOfSize:	[NSFont smallSystemFontSize]];
+	NSFont* smallBoldSystemFont = [NSFont boldSystemFontOfSize:	NSFont.smallSystemFontSize];
+	NSFont* smallFixedPitchUserFont = [NSFont userFixedPitchFontOfSize:	NSFont.smallSystemFontSize];
 
 	// There is no italic version of the system font so we use NSObliquenessAttributeName
 	// NSFont* italicTextFont = [fontManager convertFont:textFont toHaveTrait:NSItalicFontMask];
-	NSColor* grayColor				= [NSColor grayColor];
+	NSColor* grayColor				= NSColor.grayColor;
 	virginSidebarColor				= rgbColor255 (  0,  89,   0);
 	virginSidebarSelectedColor		= rgbColor255 (216, 255, 216);
 	missingSidebarColor				= rgbaColor255(127,   0,   0, 0.4);
@@ -110,7 +110,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	changesetHashToLogRecord			= [[NSMutableDictionary alloc]init];
 
 	// Receive a notification when the diff tool and merge tool change in the preferences.
-	id defaults = [NSUserDefaultsController sharedUserDefaultsController];
+	id defaults = NSUserDefaultsController.sharedUserDefaultsController;
 	[defaults  addObserver:self  forKeyPath:kKeyPathUseWhichToolForDiffing	options:NSKeyValueObservingOptionNew  context:NULL];
 	[defaults  addObserver:self  forKeyPath:kKeyPathUseWhichToolForMerging	options:NSKeyValueObservingOptionNew  context:NULL];
 	
@@ -159,13 +159,13 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 // MARK: Version Utilities
 // ------------------------------------------------------------------------------------
 
-- (NSString*) shortVersionNumberString	{ return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]; }
+- (NSString*) shortVersionNumberString	{ return [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"]; }
 - (NSString*) shortVersionString		{ return fstr(@"Version:%@", self.shortVersionNumberString); }
 - (NSString*) shortMacHgVersionString	{ return fstr(@"MacHg %@", self.shortVersionNumberString); }
 
 - (NSString*) macHgBuildHashKeyString
 {
-	NSString* key = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"BuildHashKey"];
+	NSString* key = [NSBundle.mainBundle objectForInfoDictionaryKey: @"BuildHashKey"];
 	return nonNil(key);
 }
 
@@ -177,7 +177,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"version", @"--quiet", nil];
 		ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
 		NSArray* versionParts = [result.outStr componentsSeparatedByString:@"\n"];
-		versionString = ([versionParts count] > 0) ? versionParts[0] : nil;
+		versionString = (versionParts.count > 0) ? versionParts[0] : nil;
 	}
 	return versionString ? versionString : @"";
 }
@@ -206,10 +206,10 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	[version appendString:fstr(@" (%@)",self.macHgBuildHashKeyString) withAttributes:smallGraySystemFontAttributes];
 	
 	// Switch the version string to center aligned
-	NSMutableParagraphStyle* ps = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-	[ps setAlignment:NSCenterTextAlignment];
+	NSMutableParagraphStyle* ps = [NSParagraphStyle.defaultParagraphStyle mutableCopy];
+	ps.alignment = NSCenterTextAlignment;
 	NSDictionary* newParagraphStyle = @{NSParagraphStyleAttributeName: ps};
-	[version addAttributes:newParagraphStyle range:[version fullRange]];
+	[version addAttributes:newParagraphStyle range:version.fullRange];
 	return version;
 }
 
@@ -267,15 +267,15 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	if (pathIsExistent(filePath))
 		return;
 	
-	NSFileManager* fileManager = [NSFileManager defaultManager];
+	NSFileManager* fileManager = NSFileManager.defaultManager;
 
-	if (!pathIsExistent([filePath stringByDeletingLastPathComponent]))
+	if (!pathIsExistent(filePath.stringByDeletingLastPathComponent))
 	{
-		[fileManager createDirectoryAtPath:[filePath stringByDeletingLastPathComponent] withIntermediateDirectories:YES attributes:nil error:&err];
+		[fileManager createDirectoryAtPath:filePath.stringByDeletingLastPathComponent withIntermediateDirectories:YES attributes:nil error:&err];
 		[NSApp presentAnyErrorsAndClear:&err];
 	}
 
-	NSString* sourcePath = fstr(@"%@/%@",[[NSBundle mainBundle] resourcePath], resourceName);
+	NSString* sourcePath = fstr(@"%@/%@",NSBundle.mainBundle.resourcePath, resourceName);
 	[fileManager copyItemAtPath:sourcePath toPath:filePath error:&err];
 	[NSApp presentAnyErrorsAndClear:&err];
 }
@@ -286,9 +286,9 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	@synchronized(self)
 	{
 		BOOL oldIncludeHomeHgrc  = IncludeHomeHgrcInHGRCPATHFromDefaults();
-		[[NSUserDefaults standardUserDefaults] setBool:include			   forKey:MHGIncludeHomeHgrcInHGRCPATH];	// Temporarily include / exclude ~/.hgrc
+		[NSUserDefaults.standardUserDefaults setBool:include			   forKey:MHGIncludeHomeHgrcInHGRCPATH];	// Temporarily include / exclude ~/.hgrc
 		block();
-		[[NSUserDefaults standardUserDefaults] setBool:oldIncludeHomeHgrc  forKey:MHGIncludeHomeHgrcInHGRCPATH];	// Restore HGRC path
+		[NSUserDefaults.standardUserDefaults setBool:oldIncludeHomeHgrc  forKey:MHGIncludeHomeHgrcInHGRCPATH];	// Restore HGRC path
 	}
 }
 
@@ -296,7 +296,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 - (void) checkForOutdatedSupportFiles
 {
 	NSString* currentBundleString = self.shortVersionNumberString;
-	NSString* mostModernMacHgVersionExecuted = [[NSUserDefaults standardUserDefaults] stringForKey:@"MostModernMacHgVersionExecuted"];
+	NSString* mostModernMacHgVersionExecuted = [NSUserDefaults.standardUserDefaults stringForKey:@"MostModernMacHgVersionExecuted"];
 	BOOL replacedHgrc = NO;
 	BOOL replacedHgignore = NO;
 	BOOL olderVersionThan_0_9_20 = ([self bundleVersion:mostModernMacHgVersionExecuted comparedTo:@"0.9.20"] == NSOrderedAscending);
@@ -322,7 +322,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	}
 
 	if (olderThanCurent)
-		[[NSUserDefaults standardUserDefaults] setObject:currentBundleString forKey:@"MostModernMacHgVersionExecuted"];
+		[NSUserDefaults.standardUserDefaults setObject:currentBundleString forKey:@"MostModernMacHgVersionExecuted"];
 
 	if (replacedHgrc || replacedHgignore)
 	{
@@ -344,7 +344,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	if (pathIsExistent(applicationSupportFolder()))
 		return;
 
-	NSFileManager* fileManager = [NSFileManager defaultManager];
+	NSFileManager* fileManager = NSFileManager.defaultManager;
 	NSError* err = nil;
 	[fileManager createDirectoryAtPath:applicationSupportFolder() withIntermediateDirectories:YES attributes:nil error:&err];
 	[NSApp presentAnyErrorsAndClear:&err];
@@ -358,7 +358,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		return;
 
 	NSError* err = nil;
-	NSString* sourceMacHgHGRCpath = fstr(@"%@/%@",[[NSBundle mainBundle] resourcePath], @"hgrc");
+	NSString* sourceMacHgHGRCpath = fstr(@"%@/%@",NSBundle.mainBundle.resourcePath, @"hgrc");
 	NSString* hgrcContents = [NSString stringWithContentsOfFile:sourceMacHgHGRCpath encoding:NSUTF8StringEncoding error:&err];
 	[NSApp presentAnyErrorsAndClear:&err];
 
@@ -401,7 +401,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
 		
 		// If we currently don't have a certificate then point to our TrustedCertificates
-		if ([result hasErrors] || [result hasWarnings] || IsEmpty([result outStr]))
+		if (result.hasErrors || result.hasWarnings || IsEmpty(result.outStr))
 		{
 			NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"extensions.hgext.cedit=", @"--add", fstr(@"web.cacerts = %@", macHgCertFilePath), @"--file", macHgHGRCFilePath, nil];
 			[TaskExecutions executeMercurialWithArgs:argsCedit  fromRoot:@"/tmp"];
@@ -433,7 +433,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		// support file.
 		if (IsNotEmpty(result.outStr))
 		{
-			NSFileManager* fileManager = [NSFileManager defaultManager];
+			NSFileManager* fileManager = NSFileManager.defaultManager;
 			NSString* macHgHGRCpath = fstr(@"%@/hgrc", applicationSupportFolder());
 			[fileManager appendString:@"\n[ui]\n" toFilePath:macHgHGRCpath];
 			[fileManager appendString:fstr(@"username = %@\n",	result.outStr) toFilePath:macHgHGRCpath];
@@ -452,10 +452,10 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 {
 	if (UseWhichToolForDiffingFromDefaults() != eUseFileMergeForDiffs && UseWhichToolForMergingFromDefaults() != eUseFileMergeForMerges)
 		return;
-	if (![[NSWorkspace sharedWorkspace] fullPathForApplication:@"FileMerge"])
+	if (![NSWorkspace.sharedWorkspace fullPathForApplication:@"FileMerge"])
 	{
 		if (pathIsExistent(@"/Developer/Applications/Utilities/FileMerge.app"))
-			[[NSWorkspace sharedWorkspace] launchApplicationAtURL:[NSURL fileURLWithPath:@"/Developer/Applications/Utilities/FileMerge.app"] options:NSWorkspaceLaunchAsync|NSWorkspaceLaunchAndHide configuration:nil error:nil];
+			[NSWorkspace.sharedWorkspace launchApplicationAtURL:[NSURL fileURLWithPath:@"/Developer/Applications/Utilities/FileMerge.app"] options:NSWorkspaceLaunchAsync|NSWorkspaceLaunchAndHide configuration:nil error:nil];
 		else
 			RunCriticalAlertPanel(@"FileMerge not found", @"FileMerge was not found on this system. Please install the full developer tools for your computer (they contain the application FileMerge). (Alternatively you can install a different diffing and merging tool and select it in the preferences.) (Sometimes you need to run FileMerge once so that OSX \"recognizes it exists\".)", @"OK", nil, nil);
 	}
@@ -478,13 +478,13 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 {
 	NSArray* versionArgs = @[@"--header", @"version"];
 	NSString* hgBinary = executableLocationHG();
-	ExecutionResult* results = [ShellTask execute:hgBinary withArgs:versionArgs withEnvironment:[TaskExecutions environmentForHg]];
-	if ([results hasWarnings] && WarnAboutBadMercurialConfigurationFromDefaults())
+	ExecutionResult* results = [ShellTask execute:hgBinary withArgs:versionArgs withEnvironment:TaskExecutions.environmentForHg];
+	if (results.hasWarnings && WarnAboutBadMercurialConfigurationFromDefaults())
 	{
 		NSString* mainMessage = fstr(@"The version of Mercurial included with MacHg is producing the following warnings:\n\n%@\n\nMacHg might not function as intended. To resolve this check your configuration settings in your .hgrc file.", results.errStr);
 		RunCriticalAlertPanelWithSuppression(@"Mercurial Warnings", mainMessage, @"OK", nil, MHGWarnAboutBadMercurialConfiguration);
 	}	
-	if ([results hasErrors])
+	if (results.hasErrors)
 	{
 		NSString* mainMessage = fstr(@"The version of Mercurial included with MacHg is producing the following Errors:\n\n%@\n\nMacHg cannot proceed. To resolve this check your configuration settings in your .hgrc file.", results.errStr);
 		RunCriticalAlertPanel(@"Mercurial Errors", mainMessage, @"OK", nil, nil);
@@ -508,18 +508,18 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	if (IsNotEmpty(runningApplications))
 		return;
 	
-	[[NSWorkspace sharedWorkspace] launchAppWithBundleIdentifier:bundleIdentifier options:NSWorkspaceLaunchDefault additionalEventParamDescriptor:nil launchIdentifier:nil];
+	[NSWorkspace.sharedWorkspace launchAppWithBundleIdentifier:bundleIdentifier options:NSWorkspaceLaunchDefault additionalEventParamDescriptor:nil launchIdentifier:nil];
 }
 
 -(void) installExtToolConfiguration:(NSString*)configurationString forApplicationWithBundleID:(NSString*)bundleIdentifier
 {
 	if (!bundleIdentifier)
 		return;
-	NSString* toolPath = [[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:bundleIdentifier];
+	NSString* toolPath = [NSWorkspace.sharedWorkspace absolutePathForAppBundleWithIdentifier:bundleIdentifier];
 	if (!toolPath)
 		return;
 	NSString* macHgHGRCFilePath = fstr(@"%@/hgrc",applicationSupportFolder());
-	NSString* macHgBundleResourcePath = [[NSBundle mainBundle] resourcePath];
+	NSString* macHgBundleResourcePath = NSBundle.mainBundle.resourcePath;
 	NSString* configurationString1 = [configurationString  stringByReplacingOccurrencesOfRegex:@"TOOL_PATH" withString:toolPath];
 	NSString* configurationString2 = [configurationString1 stringByReplacingOccurrencesOfRegex:@"MACHG_RESOURCE_PATH" withString:macHgBundleResourcePath];
 	NSMutableArray* argsCedit = [NSMutableArray arrayWithObjects:@"cedit", @"--config", @"extensions.hgext.cedit=", @"--add", configurationString2, @"--file", macHgHGRCFilePath, nil];
@@ -551,7 +551,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		revert = YES;
 	}
 	
-	if (!revert && ![[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:bundleIdentifier])
+	if (!revert && ![NSWorkspace.sharedWorkspace absolutePathForAppBundleWithIdentifier:bundleIdentifier])
 	{
 		RunCriticalAlertPanel(fstr(@"%@ not found", applicationName), fstr(@"%@ was not found on this system. Please download and install %@ in order to view diffs using %@.", applicationName, applicationName, applicationName), @"OK", nil, nil);
 		revert = YES;
@@ -566,7 +566,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	if (revert)
 		dispatch_async(globalQueue(), ^{
 			usleep(0.3 * USEC_PER_SEC);
-			[[NSUserDefaults standardUserDefaults] setInteger:eUseNothingForDiffs forKey:MHGUseWhichToolForDiffing];
+			[NSUserDefaults.standardUserDefaults setInteger:eUseNothingForDiffs forKey:MHGUseWhichToolForDiffing];
 		});
 }
 
@@ -731,7 +731,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		revert = YES;
 	}
 	
-	if (!revert && ![[NSWorkspace sharedWorkspace] absolutePathForAppBundleWithIdentifier:bundleIdentifier])
+	if (!revert && ![NSWorkspace.sharedWorkspace absolutePathForAppBundleWithIdentifier:bundleIdentifier])
 	{
 		RunCriticalAlertPanel(fstr(@"%@ not found", applicationName), fstr(@"%@ was not found on this system. Please download and install %@ in order to view merges using %@.", applicationName, applicationName, applicationName), @"OK", nil, nil);
 		revert = YES;
@@ -740,7 +740,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	if (revert)
 		dispatch_async(globalQueue(), ^{
 			usleep(0.3 * USEC_PER_SEC);
-			[[NSUserDefaults standardUserDefaults] setInteger:eUseNothingForMerges forKey:MHGUseWhichToolForMerging];
+			[NSUserDefaults.standardUserDefaults setInteger:eUseNothingForMerges forKey:MHGUseWhichToolForMerging];
 		});
 }
 
@@ -877,8 +877,8 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 - (void) applicationDidFinishLaunching:(NSNotification*)aNotification
 {
 	// Increment launch count
-	NSInteger launchCount = [[NSUserDefaults standardUserDefaults] integerForKey:MHGLaunchCount];
-	[[NSUserDefaults standardUserDefaults] setInteger:launchCount +1 forKey:MHGLaunchCount];
+	NSInteger launchCount = [NSUserDefaults.standardUserDefaults integerForKey:MHGLaunchCount];
+	[NSUserDefaults.standardUserDefaults setInteger:launchCount +1 forKey:MHGLaunchCount];
 
 	[self checkForOutdatedSupportFiles];
 	[self checkForSupportDirectory];
@@ -901,10 +901,10 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	if (OnActivationOpenFromDefaults() == eOpenLastDocument)
 	{
 		// Reopen last document
-		NSDocumentController* docController = [NSDocumentController sharedDocumentController];
-		if ([[docController recentDocumentURLs] count] > 0)
-			for (NSURL* url in [docController recentDocumentURLs])
-				if ([[NSFileManager defaultManager] fileExistsAtPath:[url path]])
+		NSDocumentController* docController = NSDocumentController.sharedDocumentController;
+		if (docController.recentDocumentURLs.count > 0)
+			for (NSURL* url in docController.recentDocumentURLs)
+				if ([NSFileManager.defaultManager fileExistsAtPath:url.path])
 				{
 					[docController openDocumentWithContentsOfURL:url display:YES completionHandler:nil];
 					return NO;
@@ -914,7 +914,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		// look for ~/Application Support/MacHg/Repositories.machg
 		NSString* defaultDocumentPath = fstr(@"%@/Repositories.mchg", applicationSupportFolder());
 		NSURL* defaultURL = [NSURL fileURLWithPath:defaultDocumentPath];
-		if ([[NSFileManager defaultManager] fileExistsAtPath:[defaultURL path]])
+		if ([NSFileManager.defaultManager fileExistsAtPath:defaultURL.path])
 		{
 			[docController openDocumentWithContentsOfURL:defaultURL display:YES completionHandler:nil];
 			return NO;
@@ -956,9 +956,9 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 {
 	NSString* cacheDir = nil;
 	NSArray* paths = NSSearchPathForDirectoriesInDomains(NSCachesDirectory, NSUserDomainMask, YES);
-	if ([paths count])
+	if (paths.count)
 	{
-		NSString* bundleName = [[NSBundle mainBundle] infoDictionary][@"CFBundleIdentifier"];
+		NSString* bundleName = NSBundle.mainBundle.infoDictionary[@"CFBundleIdentifier"];
 		cacheDir = [paths[0] stringByAppendingPathComponent:bundleName];
 	}
 	return cacheDir;
@@ -970,7 +970,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 	NSString* cacheDir = self.cacheDirectory;
 	if (cacheDir)
 	{
-		NSFileManager* fileManager = [NSFileManager defaultManager];
+		NSFileManager* fileManager = NSFileManager.defaultManager;
 		NSString* snapshotsDir = [cacheDir stringByAppendingPathComponent:@"snapshots"];
 		[fileManager removeItemAtPath:snapshotsDir error:nil];
 	}
@@ -987,7 +987,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 + (void) initializePreferenceDefaults
 {
 	// load the default values for the user defaults
-	NSString*	  userDefaultsValuesPath = [[NSBundle mainBundle] pathForResource:@"UserDefaults" ofType:@"plist"];
+	NSString*	  userDefaultsValuesPath = [NSBundle.mainBundle pathForResource:@"UserDefaults" ofType:@"plist"];
 	NSDictionary* userDefaultsValuesDict = [NSDictionary dictionaryWithContentsOfFile:userDefaultsValuesPath];
 #ifdef DEBUG
 	NSMutableDictionary* allowWebKitInspection = [userDefaultsValuesDict mutableCopy];
@@ -996,25 +996,25 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 #endif
 
 	// set them in the standard user defaults
-	[[NSUserDefaults standardUserDefaults] registerDefaults:userDefaultsValuesDict];
+	[NSUserDefaults.standardUserDefaults registerDefaults:userDefaultsValuesDict];
 }
 
 + (void) resetUserPreferences
 {
 	// load the default values for the user defaults
-	NSString*	  userDefaultsValuesPath = [[NSBundle mainBundle] pathForResource:@"UserDefaults" ofType:@"plist"];
+	NSString*	  userDefaultsValuesPath = [NSBundle.mainBundle pathForResource:@"UserDefaults" ofType:@"plist"];
 	NSDictionary* userDefaultsValuesDict = [NSDictionary dictionaryWithContentsOfFile:userDefaultsValuesPath];
 
-	[[NSUserDefaultsController sharedUserDefaultsController] setInitialValues:userDefaultsValuesDict];
-	[[NSUserDefaultsController sharedUserDefaultsController] revertToInitialValues:nil];
+	[NSUserDefaultsController.sharedUserDefaultsController setInitialValues:userDefaultsValuesDict];
+	[NSUserDefaultsController.sharedUserDefaultsController revertToInitialValues:nil];
 }
 
 - (IBAction) resetPreferences:(id)sender			{ [AppController resetUserPreferences]; }
-- (IBAction) showPreferences:(id)sender				{ [[PreferenceController sharedPrefsWindowController] showWindow:nil]; }
+- (IBAction) showPreferences:(id)sender				{ [PreferenceController.sharedPrefsWindowController showWindow:nil]; }
 - (IBAction) showAppearancesPreferences:(id)sender
 {
-	[[PreferenceController sharedPrefsWindowController] showWindow:nil];
-	[[PreferenceController sharedPrefsWindowController] switchToViewForIdentifier:@"Appearance" animate:NO];
+	[PreferenceController.sharedPrefsWindowController showWindow:nil];
+	[PreferenceController.sharedPrefsWindowController switchToViewForIdentifier:@"Appearance" animate:NO];
 }
 
 - (NSArray*) annotationOptionsFromDefaults
@@ -1051,23 +1051,23 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 
 - (IBAction) openQuickStartPage:(id)sender
 {
-	NSString* locBookName = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleHelpBookName"];
-	[[NSHelpManager sharedHelpManager] openHelpAnchor:@"QuickStart" inBook:locBookName];
+	NSString* locBookName = [NSBundle.mainBundle objectForInfoDictionaryKey: @"CFBundleHelpBookName"];
+	[NSHelpManager.sharedHelpManager openHelpAnchor:@"QuickStart" inBook:locBookName];
 }
 - (IBAction) openBugReportPage:(id)sender
 {
 	NSURL* bugReportPage = [NSURL URLWithString:@"http://bitbucket.org/jfh/machg/issues?status=new&status=open"];
-	[[NSWorkspace sharedWorkspace] openURL:bugReportPage];
+	[NSWorkspace.sharedWorkspace openURL:bugReportPage];
 }
 - (IBAction) openReleaseNotes:(id)sender
 {
 	NSURL* bugReportPage = [NSURL URLWithString:@"http://jasonfharris.com/machg/downloads/notes/releasenotes.html"];
-	[[NSWorkspace sharedWorkspace] openURL:bugReportPage];
+	[NSWorkspace.sharedWorkspace openURL:bugReportPage];
 }
 - (IBAction) openWebsite:(id)sender
 {
 	NSURL* bugReportPage = [NSURL URLWithString:@"http://jasonfharris.com/machg"];
-	[[NSWorkspace sharedWorkspace] openURL:bugReportPage];
+	[NSWorkspace.sharedWorkspace openURL:bugReportPage];
 }
 
 
@@ -1081,7 +1081,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 
 - (void) checkRepositoryIdentities:(NSTimer*)theTimer
 {
-	NSArray* allDirtyRepos = [dirtyRepositoryIdentityForPath_ synchronizedAllKeys];
+	NSArray* allDirtyRepos = dirtyRepositoryIdentityForPath_.synchronizedAllKeys;
 	for (NSString* path in allDirtyRepos)
 		if ([computingRepositoryIdentityForPath_ synchronizedObjectForKey:path] == nil)
 			[self computeRepositoryIdentityForPath:path];
@@ -1135,7 +1135,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 
 		[computingRepositoryIdentityForPath_ synchronizedRemoveObjectForKey:nodePath];
 	
-		if (![[theTaskController shellTask] isRunning] && results.result == 0 && IsEmpty(results.errStr) && IsNotEmpty(results.outStr))
+		if (!theTaskController.shellTask.isRunning && results.result == 0 && IsEmpty(results.errStr) && IsNotEmpty(results.outStr))
 		{
 			// We look for the 12 digit hashKey which is optionally seperated from other bits by whitespace.
 			static NSString* pickOutHashKeyRegex = @"^(.*\\s+)?([0-9abcdefABCDEF]{12})(\\s+.*)?$";
@@ -1156,12 +1156,12 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 			return;
 		}
 
-		//if ([[theTaskController task] isRunning])
+		//if (theTaskController.task.isRunning)
 		//	DebugLog(@"Determining root changeset for the repository at %@ timed out after %f seconds on attempt %d", path, timeOutInSeconds, attempts);
 		//else
 		//	DebugLog(@"Unable to determine root changeset for the repository at %@ on attempt %d", path, attempts);
 		
-		[[theTaskController shellTask] cancelTask];
+		[theTaskController.shellTask cancelTask];
 	});
 }
 
@@ -1180,11 +1180,11 @@ NSString* FullServerURL(NSString* baseURLString, PasswordVisibilityType visibili
 {
 	NSString* password = nil;
 	NSURL* baseURL = [NSURL URLWithString:baseURLString];
-	if (!baseURL || ![baseURL scheme] || ![baseURL host])
+	if (!baseURL || !baseURL.scheme || !baseURL.host)
 		return baseURLString;
 
 	EMGenericKeychainItem* newKeychainItem = [EMGenericKeychainItem genericKeychainItemForService:kMacHgApp withUsername:baseURLString];
-	BOOL hasPassword = newKeychainItem || [baseURL password];
+	BOOL hasPassword = newKeychainItem || baseURL.password;
 	if (hasPassword && visibility == eAllPasswordsAreMangled)
 		password = @"***";
 	else if (newKeychainItem && visibility == eKeyChainPasswordsAreMangled)
@@ -1192,7 +1192,7 @@ NSString* FullServerURL(NSString* baseURLString, PasswordVisibilityType visibili
 	else if (newKeychainItem)
 		password = nonNil(newKeychainItem.password);
 	else
-		password = [baseURL password];
+		password = baseURL.password;
 
 	NSString* fullURLString = [[baseURL URLByReplacingPassword:password] absoluteString];
 	return fullURLString ? fullURLString : baseURLString;

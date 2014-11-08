@@ -47,13 +47,13 @@
 {
 	NSTextAttachment* attachment     = [[NSTextAttachment alloc] init];
 	DiffTextButtonCell* diffCell = [[DiffTextButtonCell alloc] initWithLogEntry:entry];
-	[diffCell setType:t];
-	[diffCell setButtonTitle:file];
-	[diffCell setFileNameFromRelativeName:file];
-	[diffCell setBezelStyle:NSRoundRectBezelStyle];
-	[diffCell setTarget:diffCell];
+	diffCell.type = t;
+	diffCell.buttonTitle = file;
+	diffCell.fileNameFromRelativeName = file;
+	diffCell.bezelStyle = NSRoundRectBezelStyle;
+	diffCell.target = diffCell;
 	[diffCell setAction:@selector(displayDiff:)];
-	[attachment setAttachmentCell:diffCell];
+	attachment.attachmentCell = diffCell;
 	return attachment;
 }
 
@@ -72,9 +72,9 @@
 	if (theDictionaryAdded == nil)
 	{
 		NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-		[paragraphStyle setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
-		[paragraphStyle setAlignment:NSCenterTextAlignment];
-		NSFont* font = [NSFont controlContentFontOfSize:[NSFont systemFontSize]];
+		paragraphStyle.paragraphStyle = NSParagraphStyle.defaultParagraphStyle;
+		paragraphStyle.alignment = NSCenterTextAlignment;
+		NSFont* font = [NSFont controlContentFontOfSize:NSFont.systemFontSize];
 		
 		NSColor* redTextColor   = rgbColor255(100.0,   0.0,   0.0);
 		NSColor* greenTextColor = rgbColor255(  0.0, 100.0,   0.0);
@@ -97,8 +97,8 @@
 
 - (void) setFileNameFromRelativeName:(NSString*)relativeName
 {
-	MacHgDocument* document = [[backingLogEntry_ repositoryData] myDocument];
-	absoluteFileName_ = [[document absolutePathOfRepositoryRoot] stringByAppendingPathComponent:relativeName];
+	MacHgDocument* document = backingLogEntry_.repositoryData.myDocument;
+	absoluteFileName_ = [document.absolutePathOfRepositoryRoot stringByAppendingPathComponent:relativeName];
 }
 
 
@@ -112,9 +112,9 @@
 
 - (IBAction) displayDiff:(id)sender
 {
-	MacHgDocument* document = [[backingLogEntry_ repositoryData] myDocument];
-	NSNumber* rev       = [backingLogEntry_ revision];
-	NSNumber* parentRev = [backingLogEntry_ firstParent];
+	MacHgDocument* document = backingLogEntry_.repositoryData.myDocument;
+	NSNumber* rev       = backingLogEntry_.revision;
+	NSNumber* parentRev = backingLogEntry_.firstParent;
 	NSString* revisionNumbers = fstr(@"%@:%@", parentRev, rev);
 
 	[document viewDifferencesInCurrentRevisionFor:@[absoluteFileName_] toRevision:revisionNumbers];

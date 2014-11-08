@@ -48,7 +48,7 @@
 - (void) awakeFromNib
 {
 	[self observe:kReceivedCompatibleRepositoryCount byCalling:@selector(updateIncomingOutgoingCount)];
-	[forceOption setSpecialHandling:YES];
+	forceOption.specialHandling = YES;
 	[forceOption		setName:@"force"];
 	[bookmarkOption		setName:@"bookmark"];
 	[branchOption		setName:@"branch"];
@@ -70,8 +70,8 @@
 // MARK: Accessors
 // ------------------------------------------------------------------------------------
 
-- (SidebarNode*)		sourceRepository		{ return [myDocument_ selectedRepositoryRepositoryRef]; }
-- (SidebarNode*)		destinationRepository	{ return [[compatibleRepositoriesPopup selectedItem] representedObject]; }
+- (SidebarNode*)		sourceRepository		{ return myDocument_.selectedRepositoryRepositoryRef; }
+- (SidebarNode*)		destinationRepository	{ return compatibleRepositoriesPopup.selectedItem.representedObject; }
 - (NSString*)			operationName			{ return @"Push"; }
 - (OptionController*)	commonRevOption			{ return revOption; }
 
@@ -85,7 +85,7 @@
 
 - (void)	 clearSheetFieldValues { }
 - (IBAction) validateButtons:(id)sender { }
-- (void)	 controlTextDidChange:(NSNotification*)aNotification { [self validateButtons:[aNotification object]]; }
+- (void)	 controlTextDidChange:(NSNotification*)aNotification { [self validateButtons:aNotification.object]; }
 
 
 
@@ -98,7 +98,7 @@
 
 - (IBAction) openSheet:(id)sender
 {
-	[titleText setStringValue:fstr(@"Push from “%@”", self.sourceRepositoryName)];
+	titleText.stringValue = fstr(@"Push from “%@”", self.sourceRepositoryName);
 	[super openSheet:sender];
 }
 
@@ -110,8 +110,8 @@
 
 	SidebarNode* pushDestination  = self.destinationRepository;
 	SidebarNode* pushSource       = self.sourceRepository;
-	NSString* pushSourceName      = [pushSource shortName];
-	NSString* pushDestinationName = [pushDestination shortName];
+	NSString* pushSourceName      = pushSource.shortName;
+	NSString* pushDestinationName = pushDestination.shortName;
 	
 	// Display warning if prefs say we should
 	if (DisplayWarningForPushingFromDefaults())
@@ -124,20 +124,20 @@
 	}
 	
 	// Construct the push args
-	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
+	NSString* rootPath = myDocument_.absolutePathOfRepositoryRoot;
 	NSMutableArray* argsPush = [NSMutableArray arrayWithObjects:@"push", @"--noninteractive", nil];
 	[argsPush addObjectsFromArray:configurationForProgress];
 	for (OptionController* opt in cmdOptions)
 		[opt addOptionToArgs:argsPush];
-	if (self.allowOperationWithAnyRepository || [forceOption optionIsSet])
+	if (self.allowOperationWithAnyRepository || forceOption.optionIsSet)
 			[argsPush addObject:@"--force"];
 	if (!RequireVerifiedServerCertificatesFromDefaults())
 		[argsPush addObject:@"--insecure"];
-	[argsPush addObject:[pushDestination fullURLPath]];
+	[argsPush addObject:pushDestination.fullURLPath];
 	
 	// Execute the push command
-	ProcessController* processController = [ProcessController processControllerWithMessage:@"Pushing Changesets" forList:[myDocument_ theProcessListController]];
-	dispatch_async([myDocument_ mercurialTaskSerialQueue], ^{
+	ProcessController* processController = [ProcessController processControllerWithMessage:@"Pushing Changesets" forList:myDocument_.theProcessListController];
+	dispatch_async(myDocument_.mercurialTaskSerialQueue, ^{
 		ExecutionResult* results = [myDocument_ executeMercurialWithArgs:argsPush  fromRoot:rootPath  withDelegate:processController  whileDelayingEvents:YES];
 		[processController terminateController];
 		[myDocument_ postNotificationWithName:kCompatibleRepositoryChanged];
@@ -145,15 +145,15 @@
 		{
 			NSString* messageString = fstr(@"Results of Pushing “%@” into “%@”", pushSourceName, pushDestinationName);
 			NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
-			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"Push Results - %@", pushSourceName) onScreen:[sheetWindow screen]];
+			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"Push Results - %@", pushSourceName) onScreen:sheetWindow.screen];
 		}
-		if ([pushDestination isVirginRepository])
-			[[AppController sharedAppController] computeRepositoryIdentityForPath:[pushDestination path]];
+		if (pushDestination.isVirginRepository)
+			[AppController.sharedAppController computeRepositoryIdentityForPath:pushDestination.path];
 	});
 	
 	// Cache the connection parameters
 	[self setConnectionFromFieldsForSource:pushSource andDestination:pushDestination];
-	[pushSource setRecentPushConnection:[pushDestination path]];
+	pushSource.recentPushConnection = pushDestination.path;
 }
 
 - (IBAction) sheetButtonCancel:(id)sender

@@ -113,7 +113,7 @@
 - (NSDictionary*) revisionNumberToLabels	{ return revisionNumberToLabels_; }
 - (NSNumber*)	  getHGTipRevision			{ return tipRevision_; }
 - (NSString*)	  getHGTipChangeset			{ return tipChangeset_; }
-- (NSNumber*)	  incompleteRevision		{ return [incompleteRevisionEntry_ revision]; }
+- (NSNumber*)	  incompleteRevision		{ return incompleteRevisionEntry_.revision; }
 - (LogEntry*)	  incompleteRevisionEntry	{ return incompleteRevisionEntry_; }
 - (NSNumber*)	  minimumParent				{ return (parent1Revision_ && parent2Revision_) ? intAsNumber(MIN(numberAsInt(parent1Revision_), numberAsInt(parent2Revision_))) : parent1Revision_; }
 
@@ -137,7 +137,7 @@
 		return NO;
 	
 	NSNumber* ip1 = [oldIncompleteRevisionEntry  firstParent];
-	NSNumber* ip2 = [oldIncompleteRevisionEntry secondParent];
+	NSNumber* ip2 = oldIncompleteRevisionEntry.secondParent;
 	NSNumber*  p1 = self.getHGParent1Revision;
 	NSNumber*  p2 = self.getHGParent2Revision;
 	BOOL parents1Differ = (p1 && !ip1) || (!p1 && ip1) || (p1 && ip1 && ![p1 isEqualToNumber:ip1]);
@@ -180,14 +180,14 @@
 		return YES;
 
 	// The following stat checks are fairly fast around the order of 3 milli-seconds on 10.6, dual core 2.66Ghz imac.
-	NSFileManager* fileManager = [NSFileManager defaultManager];
+	NSFileManager* fileManager = NSFileManager.defaultManager;
 	NSString* userHgignorePath = [NSHomeDirectory() stringByAppendingPathComponent:@".hgignore"];
 	NSString* repohgIgnorePath = fstr(@"%@/.hgignore",  rootPath_);
 	NSString* macHgIgnorePath  = fstr(@"%@/hgignore", applicationSupportFolder());
 	NSDate* userhgIgnore = [[fileManager attributesOfItemAtPath:userHgignorePath error:nil] fileModificationDate];
 	NSDate* repohgIgnore = [[fileManager attributesOfItemAtPath:repohgIgnorePath error:nil] fileModificationDate];
 	NSDate* appshgIgnore = [[fileManager attributesOfItemAtPath:macHgIgnorePath error:nil] fileModificationDate];
-	NSDate* now = [NSDate date];
+	NSDate* now = NSDate.date;
 	if (userhgIgnore && [userhgIgnore isBefore:now] && [hgIgnoreFilesTimeStamp_ isBefore:userhgIgnore])
 		return YES;
 	if (repohgIgnore && [repohgIgnore isBefore:now] && [hgIgnoreFilesTimeStamp_ isBefore:repohgIgnore])
@@ -204,9 +204,9 @@
 		return hgIgnoreFilesRegEx_;
 	NSMutableArray* argsDebugIgnore = [NSMutableArray arrayWithObjects:@"debugignore", nil];
 	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsDebugIgnore  fromRoot:rootPath_  logging:eLoggingNone];
-	if ([results hasErrors])
+	if (results.hasErrors)
 		return nil;
-	hgIgnoreFilesTimeStamp_ = [NSDate date];
+	hgIgnoreFilesTimeStamp_ = NSDate.date;
 	hgIgnoreFilesRegEx_ = trimString(results.outStr);
 	return hgIgnoreFilesRegEx_;
 }
@@ -225,7 +225,7 @@ static void addLabelToDictionary(NSMutableDictionary* revisionToLabelArray, Labe
 	if (!label)
 		return;
 
-	NSNumber* rev = [label revision];
+	NSNumber* rev = label.revision;
 	if (!rev)
 		return;
 
@@ -237,11 +237,11 @@ static void addLabelToDictionary(NSMutableDictionary* revisionToLabelArray, Labe
 static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* dict2)
 {
 	return YES;
-//	for (LabelData* label in [revisionNumberToLabels_ allValues])
-//		if (![label isEqualToLabel:[newRevisionToLabels objectForKey:[label revision]]])
+//	for (LabelData* label in revisionNumberToLabels_.allValues)
+//		if (![label isEqualToLabel:[newRevisionToLabels objectForKey:label.revision]])
 //			labelsChanged = YES;
-//	for (LabelData* label in [newRevisionToLabels allValues])
-//		if (![label isEqualToLabel:[revisionNumberToLabels_ objectForKey:[label revision]]])
+//	for (LabelData* label in newRevisionToLabels.allValues)
+//		if (![label isEqualToLabel:[revisionNumberToLabels_ objectForKey:label.revision]])
 //			labelsChanged = YES;
 }
 
@@ -271,7 +271,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 - (void) loadCombinedInformationAndNotify:(BOOL)initializing
 {
 	dispatch_async(globalQueue(), ^{
-		ProcessListController* theProcessListController = [myDocument_ theProcessListController];
+		ProcessListController* theProcessListController = myDocument_.theProcessListController;
 		NSNumber* processNum = [theProcessListController addProcessIndicator:@"Loading Repository Information"];
 		NSMutableDictionary* newRevisionToLabels = [[NSMutableDictionary alloc] init];
 		
@@ -317,21 +317,21 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 			if ([labelType isEqualToString:@"tip"])
 			{
 				newTipRevision  = stringAsNumber(revString);
-				newTipChangeset = [changesetString copy];
+				newTipChangeset = changesetString.copy;
 				continue;
 			}
 			
 			if ([labelType isEqualToString:@"parent1"])
 			{
 				newParent1Revision  = stringAsNumber(revString);
-				newParent1Changeset = [changesetString copy];
+				newParent1Changeset = changesetString.copy;
 				continue;
 			}
 			
 			if ([labelType isEqualToString:@"parent2"])
 			{
 				newParent2Revision  = stringAsNumber(revString);
-				newParent2Changeset = [changesetString copy];
+				newParent2Changeset = changesetString.copy;
 				continue;
 			}
 			
@@ -354,7 +354,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 		BOOL labelsChanged    = labelArrayDictionariesAreEqual(revisionNumberToLabels_, newRevisionToLabels);
 		
 		dispatch_async(mainQueue(), ^{
-			NSString* browserRoot = [[myDocument_ theFSViewer] absolutePathOfRepositoryRoot];
+			NSString* browserRoot = myDocument_.theFSViewer.absolutePathOfRepositoryRoot;
 			BOOL rootChanged      = !browserRoot || !rootPath_ || [browserRoot isNotEqualToString:rootPath_];
 			BOOL incompleteRevisionChanged;
 			@synchronized(self)
@@ -379,7 +379,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 					DebugLog(@"Bad repository read in loadCombinedInformationAndNotify.");
 					badRepositoryReadCount_++;
 					if (repositoryExistsAtPath(rootPath_) && badRepositoryReadCount_ < 4)
-						[[myDocument_ queueForUnderlyingRepositoryChangedViaEvents] addBlockOperation: ^{
+						[myDocument_.queueForUnderlyingRepositoryChangedViaEvents addBlockOperation: ^{
 							[myDocument_ postNotificationWithName:kUnderlyingRepositoryChanged];
 					}];
 				});
@@ -409,7 +409,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 	includeIncompleteRevision_ = [myDocument_ repositoryHasFilesWhichContainStatus:eHGStatusCommittable];
 	incompleteRevisionEntry_   = includeIncompleteRevision_ ? [LogEntry unfinishedEntryForRevision:intAsNumber(self.computeNumberOfRealRevisions + 1) forRepositoryData:self] : nil;
 	if (incompleteRevisionEntry_)
-		[self setEntry:incompleteRevisionEntry_];
+		self.entry = incompleteRevisionEntry_;
 }
 
 
@@ -443,12 +443,12 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 	NSString* revPattern = fstr(@"descendants(rev(%@))", parentRevision);
 	NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log", @"--limit", @"10", @"--template", @"{rev},", @"--rev", revPattern, nil];
 	ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:self.rootPath  logging:eLoggingNone];
-	if ([hgLogResults hasErrors])
+	if (hgLogResults.hasErrors)
 		return NO;
 	
 	NSArray* descdentRevs = [hgLogResults.outStr componentsSeparatedByString:@","];
-	NSInteger count = [descdentRevs count];
-	if (IsEmpty([descdentRevs lastObject]))
+	NSInteger count = descdentRevs.count;
+	if (IsEmpty(descdentRevs.lastObject))
 		count--;
 	return (count <= 1);
 }
@@ -462,28 +462,28 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 
 - (BOOL) rebaseInProgress
 {
-	NSString* repositoryDotHGDirPath = [[myDocument_ absolutePathOfRepositoryRoot] stringByAppendingPathComponent:@".hg"];
+	NSString* repositoryDotHGDirPath = [myDocument_.absolutePathOfRepositoryRoot stringByAppendingPathComponent:@".hg"];
 	NSString* histEditStatePath = [repositoryDotHGDirPath stringByAppendingPathComponent:@"rebasestate"];
-	return [[NSFileManager defaultManager] fileExistsAtPath:histEditStatePath];
+	return [NSFileManager.defaultManager fileExistsAtPath:histEditStatePath];
 }
 
 - (void) deleteRebaseState
 {
-	NSString* repositoryDotHGDirPath = [[myDocument_ absolutePathOfRepositoryRoot] stringByAppendingPathComponent:@".hg"];
+	NSString* repositoryDotHGDirPath = [myDocument_.absolutePathOfRepositoryRoot stringByAppendingPathComponent:@".hg"];
 	NSString* histEditStatePath = [repositoryDotHGDirPath stringByAppendingPathComponent:@"rebasestate"];
 	moveFilesToTheTrash(@[histEditStatePath]);
 }
 
 - (BOOL) historyEditInProgress
 {
-	NSString* repositoryDotHGDirPath = [[myDocument_ absolutePathOfRepositoryRoot] stringByAppendingPathComponent:@".hg"];
+	NSString* repositoryDotHGDirPath = [myDocument_.absolutePathOfRepositoryRoot stringByAppendingPathComponent:@".hg"];
 	NSString* histEditStatePath = [repositoryDotHGDirPath stringByAppendingPathComponent:@"histedit-state"];
-	return [[NSFileManager defaultManager] fileExistsAtPath:histEditStatePath];
+	return [NSFileManager.defaultManager fileExistsAtPath:histEditStatePath];
 }
 
 - (void) deleteHistoryEditState
 {
-	NSString* repositoryDotHGDirPath = [[myDocument_ absolutePathOfRepositoryRoot] stringByAppendingPathComponent:@".hg"];
+	NSString* repositoryDotHGDirPath = [myDocument_.absolutePathOfRepositoryRoot stringByAppendingPathComponent:@".hg"];
 	NSString* histEditStatePath = [repositoryDotHGDirPath stringByAppendingPathComponent:@"histedit-state"];
 	moveFilesToTheTrash(@[histEditStatePath]);
 }
@@ -499,12 +499,12 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 - (NSArray*) parentsOfRevision:(NSNumber*)rev
 {
 	LogEntry* entry = [self entryForRevision:rev];
-	return [entry parentsOfEntry];
+	return entry.parentsOfEntry;
 }
 - (NSArray*) childrenOfRevision:(NSNumber*)rev
 {
 	LogEntry* entry = [self entryForRevision:rev];
-	return [entry childrenOfEntry];
+	return entry.childrenOfEntry;
 }
 
 
@@ -537,14 +537,14 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 
 - (void) setEntry:(LogEntry*)entry
 {
-	NSNumber* rev = [entry revision];
+	NSNumber* rev = entry.revision;
 	if (!rev)
 		return;
 	
 	@synchronized(revisionNumberToLogEntry_)
 	{
 		revisionNumberToLogEntry_[rev] = entry;
-		if ([entry parentsArray])
+		if (entry.parentsArray)
 		{
 			NSArray* entries = @[entry];
 			[logGraph_ addEntries:entries];
@@ -558,16 +558,16 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 - (void) relinkParentsAndChildrenOf:(NSNumber*)revision
 {
 	LogEntry* entry = revisionNumberToLogEntry_[revision];
-	for (NSNumber* parentRevision in [entry parentsOfEntry])
+	for (NSNumber* parentRevision in entry.parentsOfEntry)
 	{
 		LogEntry* parentEntry = revisionNumberToLogEntry_[parentRevision];
 		[parentEntry addChildRevisionNum:revision];
 	}
 	NSMutableArray* childrenToRemove = nil;
-	for (NSNumber* childRevision in [entry childrenOfEntry])
+	for (NSNumber* childRevision in entry.childrenOfEntry)
 	{
 		LogEntry* childEntry = revisionNumberToLogEntry_[childRevision];
-		if (!childEntry || ![[childEntry parentsOfEntry] containsObject:revision])
+		if (!childEntry || ![childEntry.parentsOfEntry containsObject:revision])
 		{
 			if (!childrenToRemove)
 				childrenToRemove = [NSMutableArray arrayWithObject:childRevision];
@@ -589,24 +589,24 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 
 	for (LogEntry* entry in entries)
 	{
-		NSNumber* revision = [entry revision];
+		NSNumber* revision = entry.revision;
 		
 		BOOL needToLoadLogRecord = YES;
-		NSString* changeset = [entry changeset];
+		NSString* changeset = entry.changeset;
 		if (changeset)
 		{
 			LogRecord* logRecord = changesetHashToLogRecord[changeset];
-			if ([logRecord detailsAreLoadingOrLoaded])
+			if (logRecord.detailsAreLoadingOrLoaded)
 				needToLoadLogRecord = NO;
 			if (!logRecord)
 				logRecord = [LogRecord createPendingEntryForChangeset:changeset];	// Create dummy record where we are parsing
-			[entry setFullRecord:logRecord];
+			entry.fullRecord = logRecord;
 		}
 		if (needToLoadLogRecord)
 			[revisionsToLoadLogRecord addIndex:numberAsInt(revision)];
 	}
 	if (IsNotEmpty(revisionsToLoadLogRecord))
-		[LogRecord  fillDetailsOfLogRecordsFrom:[revisionsToLoadLogRecord firstIndex]  to:[revisionsToLoadLogRecord lastIndex]  forRepository:self];
+		[LogRecord  fillDetailsOfLogRecordsFrom:revisionsToLoadLogRecord.firstIndex  to:revisionsToLoadLogRecord.lastIndex  forRepository:self];
 	
 }
 
@@ -629,12 +629,12 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 			NSMutableSet* revisionsToReconnect = [[NSMutableSet alloc] init];
 			for (LogEntry* entry in entries)
 			{
-				NSNumber* revision = [entry revision];
+				NSNumber* revision = entry.revision;
 				
 				LogEntry* oldEntry = oldRevisionNumberToLogEntry_[revision];
-				if ([oldEntry childrenArray]) [revisionsToReconnect addObjectsFromArray:[oldEntry childrenArray]];
-				if ([oldEntry parentsArray])  [revisionsToReconnect addObjectsFromArray:[oldEntry parentsArray]];
-				if ([entry parentsArray])	  [revisionsToReconnect addObjectsFromArray:[entry parentsArray]];
+				if (oldEntry.childrenArray) [revisionsToReconnect addObjectsFromArray:oldEntry.childrenArray];
+				if (oldEntry.parentsArray)  [revisionsToReconnect addObjectsFromArray:oldEntry.parentsArray];
+				if (entry.parentsArray)	  [revisionsToReconnect addObjectsFromArray:entry.parentsArray];
 				[revisionsToReconnect addObject:revision];
 				revisionNumberToLogEntry_[revision] = entry;
 			}
@@ -701,7 +701,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 				for (NSInteger rev = maxFoundEntry; rev <= highLimit; rev++)
 					[revisionNumberToLogEntry_ synchronizedRemoveObjectForKey:intAsNumber(rev)];
 		}
-		[self setEntriesAndNotify:entries];
+		self.entriesAndNotify = entries;
 	});
 }
 
@@ -714,10 +714,10 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 	LogEntry* requestedLogEntry = [revisionNumberToLogEntry_ synchronizedObjectForKey:revision];
 
 	// If the entry is still loading and we have an entry to fall back to, then use that.
-	if (requestedLogEntry && [requestedLogEntry isLoading])
+	if (requestedLogEntry && requestedLogEntry.isLoading)
 	{
 		LogEntry* oldRequestedLogEntry = [oldRevisionNumberToLogEntry_ synchronizedObjectForKey:revision];
-		if (oldRequestedLogEntry && [oldRequestedLogEntry isLoaded])
+		if (oldRequestedLogEntry && oldRequestedLogEntry.isLoaded)
 			return oldRequestedLogEntry;
 	}
 
@@ -771,9 +771,9 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 
 	// Start a new entry which is loading, but if we have an old entry use that in the meantime
 	LogEntry* newPendingEntry = [LogEntry pendingLogEntryForRevision:revision forRepositoryData:self];
-	[self setEntry:newPendingEntry];
+	self.entry = newPendingEntry;
 	LogEntry* oldRequestedLogEntry = [oldRevisionNumberToLogEntry_ synchronizedObjectForKey:revision];
-	return (oldRequestedLogEntry && [oldRequestedLogEntry isLoaded]) ? oldRequestedLogEntry : newPendingEntry;
+	return (oldRequestedLogEntry && oldRequestedLogEntry.isLoaded) ? oldRequestedLogEntry : newPendingEntry;
 }
 
 

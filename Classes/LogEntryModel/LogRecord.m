@@ -96,8 +96,8 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 + (LogRecord*) createPendingEntryForChangeset:(NSString*)changeset
 {
 	LogRecord* record = [[LogRecord alloc] init];
-	[record setChangeset:changeset];
-	[record setLoadStatus:eLogRecordDetailsLoading];
+	record.changeset = changeset;
+	record.loadStatus = eLogRecordDetailsLoading;
 	@synchronized(changesetHashToLogRecord)
 	{
 		LogRecord* stored = changesetHashToLogRecord[changeset];
@@ -114,11 +114,11 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 	static LogRecord* unfinishedRecord = nil;	
     exectueOnlyOnce(^{
 		unfinishedRecord = [[LogRecord alloc] init];
-		[unfinishedRecord setChangeset:incompleteChangeset];
-		[unfinishedRecord setShortComment:@" - current modifications - "];
-		[unfinishedRecord setFullComment: @" - current modifications - "];
-		[unfinishedRecord setAuthor:@" - "];
-		[unfinishedRecord setLoadStatus:eLogRecordDetailsAndFilesLoaded];
+		unfinishedRecord.changeset = incompleteChangeset;
+		unfinishedRecord.shortComment = @" - current modifications - ";
+		unfinishedRecord.fullComment =  @" - current modifications - ";
+		unfinishedRecord.author = @" - ";
+		unfinishedRecord.loadStatus = eLogRecordDetailsAndFilesLoaded;
 		changesetHashToLogRecord[incompleteChangeset] = unfinishedRecord;
     });
 
@@ -152,16 +152,16 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 
 + (BOOL) parseAndStoreLogRecordDetailsLine:(NSString*)line
 {
-	int itemCount  = [namesOfLogRecordDetailsParts count];
+	int itemCount  = namesOfLogRecordDetailsParts.count;
 	NSArray* parts = [line componentsSeparatedByString:LogRecordDetailsPartSeparator];
-	if ([parts count] < itemCount)
+	if (parts.count < itemCount)
 		return NO;
 	
 	NSString* changeset = parts[0];
 	
 	// If we already have an entry for this changeset we are done.
 	LogRecord* stored = [changesetHashToLogRecord synchronizedObjectForKey:changeset];
-	if (stored && [stored detailsLoaded])
+	if (stored && stored.detailsLoaded)
 		return NO;
 
 	LogRecord* record = stored ? stored : [[LogRecord alloc] init];
@@ -170,10 +170,10 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 		for (int item = 0; item <itemCount; item++)
 			[record setValue:parts[item] forKey:namesOfLogRecordDetailsParts[item]];
 		
-		LogRecordLoadStatus status = [record loadStatus];
+		LogRecordLoadStatus status = record.loadStatus;
 		status = unsetBits(status, eLogRecordDetailsLoading);
 		status = unionBits(status, eLogRecordDetailsLoaded);
-		[record setLoadStatus:status];
+		record.loadStatus = status;
 		[changesetHashToLogRecord synchronizedSetObject:record forKey:changeset];
 	}
 	return YES;
@@ -188,14 +188,14 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 	NSString* revLimits     = fstr(@"%ld:%ld", highLimit, lowLimit);
 	NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log", @"--rev", revLimits, @"--template", templateLogRecordString, nil];	// templateLogEntryString is global set in setupGlobalsForLogEntryPartsAndTemplate()
 	dispatch_async(globalQueue(), ^{
-		ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:[repository rootPath]  logging:eLoggingNone];
+		ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:repository.rootPath  logging:eLoggingNone];
 		NSArray* lines = [hgLogResults.outStr componentsSeparatedByString:LogRecordSeparator];
 		BOOL foundNewRecord = NO;
 		for (NSString* line in lines)
 			foundNewRecord |= [LogRecord parseAndStoreLogRecordDetailsLine:line];
 		
 		if (foundNewRecord)
-			[[repository myDocument] postNotificationWithName:kLogEntriesDidChange];
+			[repository.myDocument postNotificationWithName:kLogEntriesDidChange];
 	});
 }
 
@@ -207,14 +207,14 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 	
 	dispatch_async(globalQueue(), ^{
 		NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log", @"--rev", changeset_, @"--template", templateLogRecordString, nil];	// templateLogEntryString is global set in setupGlobalsForLogEntryPartsAndTemplate()
-		ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:[repository rootPath]  logging:eLoggingNone];
+		ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:repository.rootPath  logging:eLoggingNone];
 		NSArray* lines = [hgLogResults.outStr componentsSeparatedByString:LogRecordSeparator];
 		BOOL foundNewRecord = NO;
 		for (NSString* line in lines)
 			foundNewRecord |= [LogRecord parseAndStoreLogRecordDetailsLine:line];
 		
 		if (foundNewRecord)
-			[[repository myDocument] postNotificationWithName:kLogEntriesDidChange];
+			[repository.myDocument postNotificationWithName:kLogEntriesDidChange];
 	});
 }
 
@@ -231,7 +231,7 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 		
 		LogRecordLoadStatus status = self.loadStatus;
 		status = unionBits(status, eLogRecordFilesLoading);
-		[self setLoadStatus:status];
+		self.loadStatus = status;
 
 		dispatch_async(globalQueue(), ^{
 			// Load the added files, modified files, and removed files
@@ -240,12 +240,12 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 			NSMutableArray* removed  = nil;
 			
 			NSMutableArray* argsStatus = [NSMutableArray arrayWithObjects:@"status", @"--change", changeset_, @"--added", @"--removed", @"--modified", nil];
-			ExecutionResult* hgStatusResults = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:[repository rootPath]  logging:eLoggingNone];
+			ExecutionResult* hgStatusResults = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:repository.rootPath  logging:eLoggingNone];
 			NSArray* hgStatusLines = [hgStatusResults.outStr componentsSeparatedByString:@"\n"];
 			for (NSString* statusLine in hgStatusLines)
 			{
 				// If this particular status line is malformed skip this line.
-				if ([statusLine length] < 3)
+				if (statusLine.length < 3)
 					continue;
 				
 				NSString* statusLetter   = [statusLine substringToIndex:1];
@@ -273,12 +273,12 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 			status = unionBits(status, eLogRecordFilesLoaded);
 			@synchronized(self)
 			{		
-				[self setLoadStatus:status];
+				self.loadStatus = status;
 				[self setFilesAdded:[NSArray arrayWithArray:added]];
 				[self setFilesModified:[NSArray arrayWithArray:modified]];
 				[self setFilesRemoved:[NSArray arrayWithArray:removed]];
 			}
-			[[repository myDocument] postNotificationWithName:kLogEntriesDidChange];
+			[repository.myDocument postNotificationWithName:kLogEntriesDidChange];
 		});
 	}
 	
@@ -315,10 +315,10 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 	static double kMonth  = 3600 * 24 * 30;
 	static double kYear   = 3600 * 24 * 365;
 	
-	if (self == [LogRecord unfinishedRecord])
+	if (self == LogRecord.unfinishedRecord)
 		return @"now";
 
-	NSTimeInterval delta = ABS([date_ timeIntervalSinceNow]);
+	NSTimeInterval delta = ABS(date_.timeIntervalSinceNow);
 	NSDate* now = [NSDate dateWithTimeIntervalSinceNow:0];
 	if (DateAndTimeFormatFromDefaults() == eDateRelative)
 	{		
@@ -338,11 +338,11 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 	{
 		NSCalendar* gregorian = [[NSCalendar alloc] initWithCalendarIdentifier:NSGregorianCalendar];
 		NSDateComponents* dateComponents = [gregorian components:NSYearCalendarUnit | NSMonthCalendarUnit | NSDayCalendarUnit | NSHourCalendarUnit | NSMinuteCalendarUnit fromDate:date_];
-		NSInteger year   = [dateComponents year];
-		NSInteger month  = [dateComponents month];
-		NSInteger day    = [dateComponents day];
-		NSInteger hour   = [dateComponents hour];
-		NSInteger minute = [dateComponents minute];
+		NSInteger year   = dateComponents.year;
+		NSInteger month  = dateComponents.month;
+		NSInteger day    = dateComponents.day;
+		NSInteger hour   = dateComponents.hour;
+		NSInteger minute = dateComponents.minute;
 		
 
 		NSString* monthString = nil;
@@ -363,7 +363,7 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 			default: monthString = @"-";   break;
 		}
 		NSDateComponents* nowComponents = [gregorian components:NSYearCalendarUnit fromDate:now];
-		if (year < [nowComponents year])
+		if (year < nowComponents.year)
 			return fstr(@"%2ld %@ %ld", (long)day, monthString, (long)year);
 		return fstr(@"%2ld %@ %02ld:%02ld", (long)day, monthString, (long)hour, (long)minute);		
 	}
@@ -372,15 +372,15 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 
 - (NSString*) fullDate
 {
-	if (self == [LogRecord unfinishedRecord])
+	if (self == LogRecord.unfinishedRecord)
 		return @"now";
 
 	static NSDateFormatter* fullDateFormatter = nil;
     exectueOnlyOnce( ^{
 		fullDateFormatter = [[NSDateFormatter alloc] init];
-		[fullDateFormatter setDateStyle:NSDateFormatterLongStyle];
-		[fullDateFormatter setTimeStyle:NSDateFormatterShortStyle];
-		[fullDateFormatter setDoesRelativeDateFormatting:YES];
+		fullDateFormatter.dateStyle = NSDateFormatterLongStyle;
+		fullDateFormatter.timeStyle = NSDateFormatterShortStyle;
+		fullDateFormatter.doesRelativeDateFormatting = YES;
     });
 
 	return [fullDateFormatter stringFromDate:date_];
@@ -388,7 +388,7 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 
 - (NSDate*) rawDate { return date_; }
 
-- (NSString*) isoDate { return [date_ isodateDescription]; }
+- (NSString*) isoDate { return date_.isodateDescription; }
 
 - (void) setDate:(NSString*)dateString
 {

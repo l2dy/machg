@@ -47,7 +47,7 @@
 - (void) awakeFromNib
 {
 	[self observe:kReceivedCompatibleRepositoryCount byCalling:@selector(updateIncomingOutgoingCount)];
-	[forceOption setSpecialHandling:YES];
+	forceOption.specialHandling = YES;
 	[forceOption		setName:@"force"];
 	[branchOption		setName:@"branch"];
 	[gitOption			setName:@"git"];
@@ -79,8 +79,8 @@
 // MARK: Accessors
 // ------------------------------------------------------------------------------------
 
-- (SidebarNode*)		sourceRepository		{ return [[compatibleRepositoriesPopup selectedItem] representedObject]; }
-- (SidebarNode*)		destinationRepository	{ return [myDocument_ selectedRepositoryRepositoryRef]; }
+- (SidebarNode*)		sourceRepository		{ return compatibleRepositoriesPopup.selectedItem.representedObject; }
+- (SidebarNode*)		destinationRepository	{ return myDocument_.selectedRepositoryRepositoryRef; }
 - (NSString*)			operationName			{ return @"Incoming"; }
 - (OptionController*)	commonRevOption			{ return revOption; }
 
@@ -93,7 +93,7 @@
 
 - (void)	 clearSheetFieldValues { }
 - (IBAction) validateButtons:(id)sender { }
-- (void)	 controlTextDidChange:(NSNotification*)aNotification { [self validateButtons:[aNotification object]]; }
+- (void)	 controlTextDidChange:(NSNotification*)aNotification { [self validateButtons:aNotification.object]; }
 
 
 
@@ -105,7 +105,7 @@
 
 - (IBAction) openSheet:(id)sender
 {
-	[titleText setStringValue:fstr(@"Incoming to “%@”", self.destinationRepositoryName)];
+	titleText.stringValue = fstr(@"Incoming to “%@”", self.destinationRepositoryName);
 	[super openSheet:sender];
 }
 
@@ -117,34 +117,34 @@
 	
 	SidebarNode* incomingDestination  = self.destinationRepository;
 	SidebarNode* incomingSource       = self.sourceRepository;
-	NSString* incomingSourceName      = [incomingSource shortName];
-	NSString* incomingDestinationName = [incomingDestination shortName];
+	NSString* incomingSourceName      = incomingSource.shortName;
+	NSString* incomingDestinationName = incomingDestination.shortName;
 	
 	// Construct the incoming args
-	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
+	NSString* rootPath = myDocument_.absolutePathOfRepositoryRoot;
 	NSMutableArray* argsIncoming = [NSMutableArray arrayWithObjects:@"incoming", @"--noninteractive", nil];
 	[argsIncoming addObjectsFromArray:configurationForProgress];
 	for (OptionController* opt in cmdOptions)
 		[opt addOptionToArgs:argsIncoming];
-	if (self.allowOperationWithAnyRepository || [forceOption optionIsSet])
+	if (self.allowOperationWithAnyRepository || forceOption.optionIsSet)
 		[argsIncoming addObject:@"--force"];
 	if (!RequireVerifiedServerCertificatesFromDefaults())
 		[argsIncoming addObject:@"--insecure"];
-	[argsIncoming addObject:[incomingSource fullURLPath]];
+	[argsIncoming addObject:incomingSource.fullURLPath];
 	
 	// Execute the incoming command
-	ProcessController* processController = [ProcessController processControllerWithMessage:@"Incoming Changesets" forList:[myDocument_ theProcessListController]];
-	dispatch_async([myDocument_ mercurialTaskSerialQueue], ^{
+	ProcessController* processController = [ProcessController processControllerWithMessage:@"Incoming Changesets" forList:myDocument_.theProcessListController];
+	dispatch_async(myDocument_.mercurialTaskSerialQueue, ^{
 		ExecutionResult* results = [myDocument_ executeMercurialWithArgs:argsIncoming  fromRoot:rootPath  withDelegate:processController  whileDelayingEvents:YES];
 		[processController terminateController];
 		NSString* messageString = fstr(@"Results of Incoming “%@” into “%@”", incomingSourceName, incomingDestinationName);
 		NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
-		[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"Incoming Results - %@", incomingDestinationName) onScreen:[sheetWindow screen]];
+		[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:fstr(@"Incoming Results - %@", incomingDestinationName) onScreen:sheetWindow.screen];
 	});
 	
 	// Cache the connection parameters
 	[self setConnectionFromFieldsForSource:incomingSource andDestination:incomingDestination];
-	[incomingDestination setRecentPullConnection:[incomingSource path]];
+	incomingDestination.recentPullConnection = incomingSource.path;
 }
 
 - (IBAction) sheetButtonCancel:(id)sender

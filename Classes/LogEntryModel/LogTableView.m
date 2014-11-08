@@ -80,7 +80,7 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 	queueForDetailedEntryDisplay_ = [SingleTimedQueue SingleTimedQueueExecutingOn:globalQueue() withTimeDelay:0.10 descriptiveName:@"queueForDetailedEntryDisplay"];	// Our display of the detailed entry information will occur after 0.10 seconds
 
 	// Bind the show / hide of the column to the preferences LogEntryTableDisplayChangesetColumn which is bound to a checkbox in the prefs.
-	id defaults = [NSUserDefaultsController sharedUserDefaultsController];
+	id defaults = NSUserDefaultsController.sharedUserDefaultsController;
 	NSDictionary* negateValueTransformer = @{@"NSValueTransformerName": NSNegateBooleanTransformerName};
 	NSTableColumn* changesetCol = [self tableColumnWithIdentifier:@"changeset"];
 	NSTableColumn* branchesCol  = [self tableColumnWithIdentifier:@"branch"];
@@ -95,20 +95,20 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 	[defaults  addObserver:self  forKeyPath:kKeyPathRevisionSortOrder	options:NSKeyValueObservingOptionNew  context:NULL];
 	[defaults  addObserver:self  forKeyPath:kKeyPathDateAndTimeFormat	options:NSKeyValueObservingOptionNew  context:NULL];
 
-	[self setDataSource:self];
-	[self setDelegate:self];		// This table handles its own delegate methods
+	self.dataSource = self;
+	self.delegate = self;		// This table handles its own delegate methods
 	awake_ = YES;
 	[self resetTable:self];
     
 	// Stop garbage littering on Lion see issue #273
 	[DynamicCast(NSClipView, self.superview) setCopiesOnScroll:NO];
-	[DynamicCast(NSClipView, [detailedEntryTextView superview]) setCopiesOnScroll:NO];
+	[DynamicCast(NSClipView, detailedEntryTextView.superview) setCopiesOnScroll:NO];
 }
 
 - (void) dealloc
 {
 	[self stopObserving];
-	id defaults = [NSUserDefaultsController sharedUserDefaultsController];
+	id defaults = NSUserDefaultsController.sharedUserDefaultsController;
 	[defaults removeObserver:self forKeyPath:kKeyPathTagHighColor];
 	[defaults removeObserver:self forKeyPath:kKeyPathParentHighColor];
 	[defaults removeObserver:self forKeyPath:kKeyPathBranchHighColor];
@@ -134,9 +134,9 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 
 - (void) repositoryDataIsNew
 {
-	repositoryData_ = [self.myDocument repositoryData];
+	repositoryData_ = self.myDocument.repositoryData;
 	[self resetTable:self];
-	NSString* newRepositoryRootPath = [repositoryData_ rootPath];
+	NSString* newRepositoryRootPath = repositoryData_.rootPath;
 	if ([newRepositoryRootPath isNotEqualToString:rootPath_])
 		[self scrollToCurrentRevision:self];
 	rootPath_ = newRepositoryRootPath;
@@ -168,13 +168,13 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 // MARK: Internal Utilities
 // ------------------------------------------------------------------------------------
 
-- (MacHgDocument*)		myDocument			{ return [parentController myDocument]; }
+- (MacHgDocument*)		myDocument			{ return parentController.myDocument; }
 - (RepositoryData*)	repositoryData
 {
 	if (repositoryData_)
 		return repositoryData_;
-	repositoryData_ = [[parentController myDocument] repositoryData];
-	rootPath_ = [repositoryData_ rootPath];
+	repositoryData_ = parentController.myDocument.repositoryData;
+	rootPath_ = repositoryData_.rootPath;
 	return repositoryData_;
 }
 
@@ -184,7 +184,7 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 {
 	@synchronized(self)
 	{
-		if (rowNum < 0 || rowNum >= [theTableRows_ count])
+		if (rowNum < 0 || rowNum >= theTableRows_.count)
 			return nil;
 		return theTableRows_[rowNum];
 	}
@@ -211,13 +211,13 @@ NSString* kKeyPathRevisionSortOrder			= @"values.RevisionSortOrder";
 	NSString* revisionStr = numberAsString(revision);
 	if (!tableIsFiltered_)
 	{
-		int tableRowCount = [theTableRows_ count];
+		int tableRowCount = theTableRows_.count;
 		// We call this often and so we do an optimization where we look at the two most likely places first
 		int revInt = numberAsInt(revision);
 		if (tableRowCount <= revInt || [theTableRows_[revInt] isEqualToString:revisionStr])
 			return revInt;
 
-		int oppInt = [theTableRows_ count] - revInt - 1;
+		int oppInt = theTableRows_.count - revInt - 1;
 		if (oppInt < 0 || [theTableRows_[oppInt] isEqualToString:revisionStr])
 			return oppInt;
 	}
@@ -239,7 +239,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 
 	int rval = numberAsInt(revision);
 	int a = 0;
-	int b = [theTableRows_ count] - 1;
+	int b = theTableRows_.count - 1;
 	int aval = stringAsInt(theTableRows_[a]);
 	int bval = stringAsInt(theTableRows_[b]);
 	
@@ -271,8 +271,8 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 }
 
 
-- (BOOL)	  includeIncompleteRevision	{ return [self.repositoryData includeIncompleteRevision]; }
-- (NSNumber*) incompleteRevision		{ return [self.repositoryData incompleteRevision]; }
+- (BOOL)	  includeIncompleteRevision	{ return self.repositoryData.includeIncompleteRevision; }
+- (NSNumber*) incompleteRevision		{ return self.repositoryData.incompleteRevision; }
 
 
 
@@ -283,10 +283,10 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 // MARK: Test Selection
 // ------------------------------------------------------------------------------------
 
-- (BOOL)		noRevisionSelected			{ return [self.selectedRowIndexes count] == 0; }
-- (BOOL)		revisionsAreSelected		{ return [self.selectedRowIndexes count] >= 1; }
-- (BOOL)		singleRevisionSelected		{ return [self.selectedRowIndexes count] == 1; }
-- (BOOL)		multipleRevisionsSelected	{ return [self.selectedRowIndexes count] > 1; }
+- (BOOL)		noRevisionSelected			{ return self.selectedRowIndexes.count == 0; }
+- (BOOL)		revisionsAreSelected		{ return self.selectedRowIndexes.count >= 1; }
+- (BOOL)		singleRevisionSelected		{ return self.selectedRowIndexes.count == 1; }
+- (BOOL)		multipleRevisionsSelected	{ return self.selectedRowIndexes.count > 1; }
 
 
 
@@ -298,18 +298,18 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 
 - (LogEntry*) chosenEntry		{ return [self entryForTableRow:self.chosenRow]; }
 - (LogEntry*) selectedEntry		{ return [self entryForTableRow:self.selectedRow]; }
-- (NSNumber*) chosenRevision	{ return [self.chosenEntry revision]; }
-- (NSNumber*) selectedRevision	{ return [self.selectedEntry revision]; }
+- (NSNumber*) chosenRevision	{ return self.chosenEntry.revision; }
+- (NSNumber*) selectedRevision	{ return self.selectedEntry.revision; }
 
 - (NSNumber*) selectedCompleteRevision
 {
 	LogEntry* selectedEntry = self.selectedEntry;
 	
 	// return first parent for incomplete revision
-	if(selectedEntry && selectedEntry == [self.repositoryData incompleteRevisionEntry] && [selectedEntry.parentsArray count] > 0)
+	if(selectedEntry && selectedEntry == self.repositoryData.incompleteRevisionEntry && selectedEntry.parentsArray.count > 0)
 		return (selectedEntry.parentsArray)[0];
 	
-	return [self.selectedEntry revision];
+	return self.selectedEntry.revision;
 }
 
 - (NSArray*) chosenEntries
@@ -322,7 +322,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 {
 	NSIndexSet* rows = self.selectedRowIndexes;
 	NSMutableArray* entries = [[NSMutableArray alloc]init];
-	for (NSInteger row = [rows firstIndex]; row != NSNotFound; row = [rows indexGreaterThanIndex: row])
+	for (NSInteger row = rows.firstIndex; row != NSNotFound; row = [rows indexGreaterThanIndex: row])
 		[entries addObjectIfNonNil:[self entryForTableRow:row]];
 	return entries;
 }
@@ -336,7 +336,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 {
 	NSIndexSet* rows = self.selectedRowIndexes;
 	NSMutableArray* revisions = [[NSMutableArray alloc]init];
-	for (NSInteger row = [rows firstIndex]; row != NSNotFound; row = [rows indexGreaterThanIndex: row])
+	for (NSInteger row = rows.firstIndex; row != NSNotFound; row = [rows indexGreaterThanIndex: row])
 		[revisions addObjectIfNonNil:[[self entryForTableRow:row] revision]];
 	return revisions;
 }
@@ -347,8 +347,8 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	if (!rows || IsEmpty(rows))
 		return nil;
 	
-	LogEntry* entryFirst = [self entryForTableRow:[rows firstIndex]];
-	LogEntry* entryLast  = [self entryForTableRow:[rows lastIndex]];
+	LogEntry* entryFirst = [self entryForTableRow:rows.firstIndex];
+	LogEntry* entryLast  = [self entryForTableRow:rows.lastIndex];
 	return ([entryFirst revisionInt] < [entryLast revisionInt]) ? entryFirst : entryLast;
 }
 
@@ -358,8 +358,8 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	if (!rows || IsEmpty(rows))
 		return nil;
 	
-	LogEntry* entryFirst = [self entryForTableRow:[rows firstIndex]];
-	LogEntry* entryLast  = [self entryForTableRow:[rows lastIndex]];
+	LogEntry* entryFirst = [self entryForTableRow:rows.firstIndex];
+	LogEntry* entryLast  = [self entryForTableRow:rows.lastIndex];
 	return ([entryFirst revisionInt] < [entryLast revisionInt]) ? entryLast : entryFirst;
 }
 
@@ -369,8 +369,8 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	if (!rows || IsEmpty(rows))
 		return MakeLowHighPair(NSNotFound, NSNotFound);
 	
-	NSInteger firstRev = stringAsInt([self revisionForTableRow:[rows firstIndex]]);
-	NSInteger lastRev  = stringAsInt([self revisionForTableRow:[rows lastIndex]]);
+	NSInteger firstRev = stringAsInt([self revisionForTableRow:rows.firstIndex]);
+	NSInteger lastRev  = stringAsInt([self revisionForTableRow:rows.lastIndex]);
 	return MakeLowHighPair(MIN(firstRev, lastRev), MAX(firstRev, lastRev));
 }
 
@@ -380,8 +380,8 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	if (!rows || IsEmpty(rows))
 		return MakeLowHighPair(NSNotFound, NSNotFound);
 	
-	NSString* firstRev    = [self revisionForTableRow:[rows firstIndex]];
-	NSString* lastRev     = [self revisionForTableRow:[rows lastIndex]];
+	NSString* firstRev    = [self revisionForTableRow:rows.firstIndex];
+	NSString* lastRev     = [self revisionForTableRow:rows.lastIndex];
 	NSInteger firstRevInt = stringAsInt(firstRev);
 	NSInteger lastRevInt  = stringAsInt(lastRev);
 	NSInteger lowRevInt   = MIN(firstRevInt, lastRevInt);
@@ -389,9 +389,9 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	NSString* lowRev      = (lowRevInt == firstRevInt) ? firstRev : lastRev;
 
 	LogEntry* lowRevEntry = [self.repositoryData entryForRevision:stringAsNumber(lowRev)];
-	NSArray* parents = [lowRevEntry parentsOfEntry];
+	NSArray* parents = lowRevEntry.parentsOfEntry;
 	NSInteger parentRevInt;
-	if ([parents count] == 0)
+	if (parents.count == 0)
 		parentRevInt = MAX(0, lowRevInt - 1);	// Step back one to see the differences from the previous version to this version.
 	else
 		parentRevInt = numberAsInt(parents[0]);
@@ -409,15 +409,15 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 
 - (void) scrollToRevision:(NSNumber*)revision	{ [self selectAndScrollToRevision:revision]; }
 - (IBAction) scrollToBeginning:(id)sender		{ [self scrollToRevision:intAsNumber(0)]; }
-- (IBAction) scrollToCurrentRevision:(id)sender	{ [self scrollToRevision:[self.repositoryData getHGParent1Revision]]; }
-- (IBAction) scrollToEnd:(id)sender				{ [self scrollToRevision:[self.repositoryData getHGTipRevision]]; }
+- (IBAction) scrollToCurrentRevision:(id)sender	{ [self scrollToRevision:self.repositoryData.getHGParent1Revision]; }
+- (IBAction) scrollToEnd:(id)sender				{ [self scrollToRevision:self.repositoryData.getHGTipRevision]; }
 - (IBAction) scrollToSelected:(id)sender
 {
 	NSIndexSet* rows = self.selectedRowIndexes;
 	if (IsEmpty(rows))
 		return;
 	dispatch_async(mainQueue(), ^{
-		[self  scrollToRangeOfRowsLow:[rows firstIndex] high:[rows lastIndex]];
+		[self  scrollToRangeOfRowsLow:rows.firstIndex high:rows.lastIndex];
 	});
 }
 
@@ -449,7 +449,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	if (IsEmpty(indexSet))
 		return;
 	dispatch_async(mainQueue(), ^{
-		[self  scrollToRangeOfRowsLow:[indexSet firstIndex] high:[indexSet lastIndex]];
+		[self  scrollToRangeOfRowsLow:indexSet.firstIndex high:indexSet.lastIndex];
 		[self selectRowIndexes:indexSet byExtendingSelection:NO];
 	});
 }
@@ -477,14 +477,14 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 
 - (IBAction) getAndScrollToChangeset:(id)sender
 {
-	NSString* changestRevOrLabel = [[ScrollToChangesetPanelController sharedScrollToChangesetPanelController] getChangesetToScrollTo];
+	NSString* changestRevOrLabel = ScrollToChangesetPanelController.sharedScrollToChangesetPanelController.getChangesetToScrollTo;
 	if (!changestRevOrLabel)
 		return;
 	
 	NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log", @"--rev", changestRevOrLabel, @"--template", @"{rev}\n", nil];
-	NSString* rootPath = [self.repositoryData rootPath];
+	NSString* rootPath = self.repositoryData.rootPath;
 	ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:rootPath  logging:eLoggingNone];
-	if ([hgLogResults hasErrors])
+	if (hgLogResults.hasErrors)
 	{
 		PlayBeep();
 		return;
@@ -512,7 +512,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 
 - (BOOL) validateUserInterfaceItem:(id < NSValidatedUserInterfaceItem, NSObject >)anItem
 {
-	SEL theAction = [anItem action];
+	SEL theAction = anItem.action;
 	if (theAction == @selector(mainMenuGotoChangeset:))							return YES;
 	if (theAction == @selector(getAndScrollToChangeset:))						return YES;
 	return NO;
@@ -529,7 +529,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 
 - (NSInteger) numberOfRowsInTableView:(NSTableView*)aTableView
 {
-	return [theTableRows_ count];
+	return theTableRows_.count;
 }
 
 
@@ -537,7 +537,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 {
 	LogEntry* requestedLogEntry = [self entryForTableRow:requestedRow];
 	
-	NSString* requestedColumn = [aTableColumn identifier];
+	NSString* requestedColumn = aTableColumn.identifier;
 	if ([requestedColumn isEqualToString:@"graph"])
 		return [NSImage imageNamed:@"StatusAdded.png"];
 	
@@ -545,7 +545,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	if (requestedRowCol)
 		return requestedRowCol;
 	
-	if ([requestedLogEntry isLoading] || [[requestedLogEntry fullRecord] isLoading])
+	if (requestedLogEntry.isLoading || requestedLogEntry.fullRecord.isLoading)
 		return grayedAttributedString(@"Loading");
 
 	return @"missing";
@@ -554,13 +554,13 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 
 - (void) tableView:(NSTableView*)aTableView  willDisplayCell:(id)aCell forTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
 {
-	NSString* requestedColumn = [aTableColumn identifier];
+	NSString* requestedColumn = aTableColumn.identifier;
 	NSNumber* theRevision = stringAsNumber([self revisionForTableRow:rowIndex]);
 	LogEntry* entry = [repositoryData_ entryForRevision:theRevision];
 	[aCell setEntry:entry];
 	[aCell setLogTableView:self];
 	[aCell setLogTableColumn:aTableColumn];
-	if (theSameNumbers(theRevision, [self.repositoryData incompleteRevision]) && [self.repositoryData includeIncompleteRevision])
+	if (theSameNumbers(theRevision, self.repositoryData.incompleteRevision) && self.repositoryData.includeIncompleteRevision)
 	{
 		if ([requestedColumn isEqualToString:@"graph"])
 			return;
@@ -570,7 +570,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 		else
 		{
 			NSMutableAttributedString* str = [[aCell attributedStringValue] mutableCopy];
-			[str addAttribute:NSForegroundColorAttributeName value:[NSColor grayColor]];
+			[str addAttribute:NSForegroundColorAttributeName value:NSColor.grayColor];
 			[aCell setAttributedStringValue:str];
 		}
 	}
@@ -580,7 +580,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 - (void) queuedSetDetailedEntryTextView:(NSAttributedString*)fullEntry
 {
 	dispatch_async(mainQueue(), ^{
-		[[detailedEntryTextView textStorage] setAttributedString:fullEntry];
+		[detailedEntryTextView.textStorage setAttributedString:fullEntry];
 	});
 }
 
@@ -603,10 +603,10 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 			[self queuedSetDetailedEntryTextView:grayedAttributedString(@"No Selection")];
 			return;
 		}
-		if (![entry isFullyLoaded])
+		if (!entry.isFullyLoaded)
 			[queueForDetailedEntryDisplay_ addBlockOperation:^{[entry fullyLoadEntry];}];
 
-		[self queuedSetDetailedEntryTextView:[entry formattedVerboseEntry]];
+		[self queuedSetDetailedEntryTextView:entry.formattedVerboseEntry];
 		return;
 	}
 	
@@ -614,13 +614,13 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	{
 		NSIndexSet* rows = self.selectedRowIndexes;
 
-		if ([rows count] <= MaxNumberOfDetailedEntriesToShow)
+		if (rows.count <= MaxNumberOfDetailedEntriesToShow)
 		{
 			NSArray* entries = self.selectedEntries;
 			NSMutableAttributedString* combinedString = [[NSMutableAttributedString alloc] init];
 			for (LogEntry* entry in entries)
 			{
-				NSAttributedString* briefEntry = [entry formattedBriefEntry];
+				NSAttributedString* briefEntry = entry.formattedBriefEntry;
 				if (briefEntry)
 					[combinedString appendAttributedString:briefEntry];
 			}
@@ -634,7 +634,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 		// If we have more than MaxNumberOfDetailedEntriesToShow things selected or something went wrong then we don't try and
 		// give the details of each entry.
 		LowHighPair lowHigh = self.lowestToHighestSelectedRevisions;
-		NSString* descriptiveString = fstr(@"Multiple Selection: %ld revisions in range %ld to %ld", [rows count], lowHigh.lowRevision, lowHigh.highRevision);
+		NSString* descriptiveString = fstr(@"Multiple Selection: %ld revisions in range %ld to %ld", rows.count, lowHigh.lowRevision, lowHigh.highRevision);
 		[self queuedSetDetailedEntryTextView:grayedAttributedString(descriptiveString)];
 		return;
 	}
@@ -665,7 +665,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 		NSMutableIndexSet* newIndexes = [[NSMutableIndexSet alloc]init];
 		[newIndexes addIndexes:indexes];
 		[newIndexes removeIndex:[self tableRowForRevision:self.incompleteRevision]];
-		if ([newIndexes count] == 0)
+		if (newIndexes.count == 0)
 			return;
 		dispatch_async(mainQueue(), ^{
 			[super selectRowIndexes:newIndexes byExtendingSelection:extend]; });
@@ -677,10 +677,10 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 
 - (void)tableView:(NSTableView*)tableView didClickTableColumn:(NSTableColumn*)tableColumn
 {
-	if (tableColumn && [[tableColumn identifier] isEqualToString:@"revision"])
+	if (tableColumn && [tableColumn.identifier isEqualToString:@"revision"])
 	{
 		RevisionSortOrderOption newOrder = self.sortRevisionOrder ? eSortRevisionsDescending : eSortRevisionsAscending;
-		[[NSUserDefaults standardUserDefaults] setInteger:newOrder forKey:MHGRevisionSortOrder];
+		[NSUserDefaults.standardUserDefaults setInteger:newOrder forKey:MHGRevisionSortOrder];
 	}
 }
 
@@ -732,12 +732,12 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 - (LowHighPair) logGraphLimits
 {
 	const int spillOverGraph = 10;
-	NSRect clippedView = [self.enclosingScrollView documentVisibleRect];
+	NSRect clippedView = self.enclosingScrollView.documentVisibleRect;
 	NSRange theRange = [self rowsInRect: clippedView];
 	
 	// From the table rows find the low and high revisions
 	NSString* r1 = [self revisionForTableRow:MAX(theRange.location, 0)];
-	NSString* r2 = [self revisionForTableRow:MIN(theRange.location + theRange.length, [theTableRows_ count] -1)];
+	NSString* r2 = [self revisionForTableRow:MIN(theRange.location + theRange.length, theTableRows_.count -1)];
 	int i1 = stringAsInt(r1);
 	int i2 = stringAsInt(r2);
 	int ilow    = MIN(i1,i2);
@@ -745,7 +745,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 	
 	// include the spill over and constrain
 	int lowRevision  = MAX(ilow  - spillOverGraph, 0);
-	int highRevision = MIN(ihigh + spillOverGraph, [self.repositoryData computeNumberOfRevisions]);
+	int highRevision = MIN(ihigh + spillOverGraph, self.repositoryData.computeNumberOfRevisions);
 	return MakeLowHighPair(lowRevision, highRevision);
 }
 
@@ -781,7 +781,7 @@ static inline void addRevisionsToTableRowList(NSString* str, NSMutableArray* tab
 	@synchronized(self)
 	{
 		RepositoryData* repositoryData = self.repositoryData;
-		NSNumber* currentRevision     = [repositoryData getHGParent1Revision];
+		NSNumber* currentRevision     = repositoryData.getHGParent1Revision;
 		NSArray* theSelectedRevisions = self.selectedRevisions;
 		if (IsEmpty(theSelectedRevisions) && currentRevision)
 			theSelectedRevisions = @[currentRevision];
@@ -790,15 +790,15 @@ static inline void addRevisionsToTableRowList(NSString* str, NSMutableArray* tab
 
 		[self.myDocument setToolbarSearchFieldQueryIsValid:YES];
 		[self.myDocument syncronizeSearchFieldTint];
-		NSString* theSearchFilter = [parentController respondsToSelector:@selector(searchFieldValue)] ? [parentController searchFieldValue] : nil;
+		NSString* theSearchFilter = [parentController respondsToSelector:@selector(searchFieldValue)] ? parentController.searchFieldValue : nil;
 		BOOL filtered = IsNotEmpty(theSearchFilter);
 		BOOL validQuery = YES;
 		if (filtered)
 		{
 			tableIsFiltered_ = YES;
-			SearchFieldCategory	theSearchFieldCategory = [self.myDocument toolbarSearchFieldCategory];
+			SearchFieldCategory	theSearchFieldCategory = self.myDocument.toolbarSearchFieldCategory;
 
-			NSString* rootPath      = [repositoryData rootPath];
+			NSString* rootPath      = repositoryData.rootPath;
 			ExecutionResult* hgLogResults = nil;
 			if (theSearchFieldCategory == eSearchByRevesetQuery)
 			{
@@ -807,7 +807,7 @@ static inline void addRevisionsToTableRowList(NSString* str, NSMutableArray* tab
 			}
 			else if (theSearchFieldCategory == eSearchByKeyword)
 			{
-				NSString* revLimits     = fstr(@"%d:%ld", 0, [repositoryData computeNumberOfRealRevisions]);
+				NSString* revLimits     = fstr(@"%d:%ld", 0, repositoryData.computeNumberOfRealRevisions);
 				NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log",  @"--rev", revLimits, @"--template", @"{rev}\n", @"--keyword", theSearchFilter, nil];
 				hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:rootPath  logging:eLoggingNone];
 			}
@@ -817,7 +817,7 @@ static inline void addRevisionsToTableRowList(NSString* str, NSMutableArray* tab
 				hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:rootPath  logging:eLoggingNone];
 			}
 
-			validQuery = [hgLogResults hasNoErrors];
+			validQuery = hgLogResults.hasNoErrors;
 			[self.myDocument setToolbarSearchFieldQueryIsValid:validQuery];
 			if (validQuery)
 				addRevisionsToTableRowList(hgLogResults.outStr, newTableRows);
@@ -828,7 +828,7 @@ static inline void addRevisionsToTableRowList(NSString* str, NSMutableArray* tab
 		if (!filtered || !validQuery)
 		{
 			tableIsFiltered_ = NO;
-			int numberOfRevisions	= [repositoryData computeNumberOfRevisions];
+			int numberOfRevisions	= repositoryData.computeNumberOfRevisions;
 			for (int tableRow = 0; tableRow < numberOfRevisions + 1; tableRow++)  // We go from 0 to numberOfRevisions so need +1 here.
 				[newTableRows addObject:intAsString(tableRow)];
 		}
@@ -859,25 +859,25 @@ static inline void addRevisionsToTableRowList(NSString* str, NSMutableArray* tab
 		return nil;
 
 	NSColor* backColor = nil;
-	if ([repositoryData revisionIsParent:[entry revision]])
+	if ([repositoryData revisionIsParent:entry.revision])
 		backColor = LogEntryTableParentHighlightColor();
-//	else if (IsNotEmpty([entry branch]))
+//	else if (IsNotEmpty(entry.branch))
 //		backColor = LogEntryTableBranchHighlightColor();
-//	else if (IsNotEmpty([entry bookmarks]))
+//	else if (IsNotEmpty(entry.bookmarks))
 //		backColor = LogEntryTableBookmarkHighlightColor();
-//	else if (IsNotEmpty([entry tags]))
+//	else if (IsNotEmpty(entry.tags))
 //		backColor = LogEntryTableTagHighlightColor();
 	
 	// If we have no special backing return nil and let callers call their super class and get normal highlighting.
 	if (!backColor)
-		return [self.selectedRowIndexes containsIndex:rowIndex] ? [[NSColor selectedTextBackgroundColor] blendedColorWithFraction:0.3 ofColor:[NSColor blackColor]] : nil;
+		return [self.selectedRowIndexes containsIndex:rowIndex] ? [NSColor.selectedTextBackgroundColor blendedColorWithFraction:0.3 ofColor:NSColor.blackColor] : nil;
 	
 	// If we don't have a selected row then draw then draw the backing like normal.
 	if (![self.selectedRowIndexes containsIndex:rowIndex])
 		return backColor;
 	
 	// Finally if we have a selected row and it's tagged or the current revision then blend the colors to indicate this.
-	NSColor* theHighlightColor = [NSColor selectedTextColor];
+	NSColor* theHighlightColor = NSColor.selectedTextColor;
 	return backColor ? [backColor blendedColorWithFraction:0.3 ofColor:theHighlightColor] : theHighlightColor;
 }
 
@@ -934,7 +934,7 @@ static inline void addRevisionsToTableRowList(NSString* str, NSMutableArray* tab
 - (NSColor*) highlightColorWithFrame:(NSRect)cellFrame inView:(NSView*)controlView
 {
 	LogTableView* theLogTableView = (LogTableView*)controlView;
-	int rowIndex = [theLogTableView tableRowForRevision:[entry_ revision]];
+	int rowIndex = [theLogTableView tableRowForRevision:entry_.revision];
 	NSColor* backColor =[theLogTableView specialBackingColorForRow:rowIndex];
 	return backColor ? backColor : [super highlightColorWithFrame:cellFrame inView:controlView];
 }
@@ -948,21 +948,21 @@ static inline void addRevisionsToTableRowList(NSString* str, NSMutableArray* tab
 	
 	if ([logTableColumn_.identifier isEqualToString:@"shortComment"])
 	{
-		RepositoryData* repositoryData = [self.logTableView repositoryData];
-		LogEntry* logEntry = [repositoryData entryForRevision:[entry_ revision]];
-		NSString* fullMessageText = [logEntry fullComment];
+		RepositoryData* repositoryData = self.logTableView.repositoryData;
+		LogEntry* logEntry = [repositoryData entryForRevision:entry_.revision];
+		NSString* fullMessageText = logEntry.fullComment;
 		if (IsEmpty(fullMessageText))
 			return NSZeroRect;
-		NSDictionary* attributes = [message attributesOfWholeString];
+		NSDictionary* attributes = message.attributesOfWholeString;
 		message = [NSAttributedString string:fullMessageText withAttributes:attributes];
 	}
-	NSSize messageSize = [message size];
+	NSSize messageSize = message.size;
 	
 	// If we don't need the expansionFrame then return the zero rect to signal this.
 	if (messageSize.width <= cellFrame.size.width && messageSize.height <= cellFrame.size.height)
 		return NSZeroRect;
 	
-	cellFrame = UnionRectWithSize(cellFrame, [message size]);
+	cellFrame = UnionRectWithSize(cellFrame, message.size);
 	
 	// We want to make the cell *slightly* larger; it looks better when showing the expansion tool tip.
 	cellFrame.size.width += 4.0;
@@ -978,17 +978,17 @@ static inline void addRevisionsToTableRowList(NSString* str, NSMutableArray* tab
 	
 	if ([logTableColumn_.identifier isEqualToString:@"shortComment"])
 	{
-		RepositoryData* repositoryData = [self.logTableView repositoryData];
-		LogEntry* logEntry = [repositoryData entryForRevision:[entry_ revision]];
-		NSString* fullMessageText = [logEntry fullComment];
+		RepositoryData* repositoryData = self.logTableView.repositoryData;
+		LogEntry* logEntry = [repositoryData entryForRevision:entry_.revision];
+		NSString* fullMessageText = logEntry.fullComment;
 		if (IsEmpty(fullMessageText))
 			return;
-		NSDictionary* attributes = [message attributesOfWholeString];
+		NSDictionary* attributes = message.attributesOfWholeString;
 		message = [NSAttributedString string:fullMessageText withAttributes:attributes];
 	}
 	
-	cellFrame = UnionRectWithSize(cellFrame, [message size]);
-    if ([message length] > 0)
+	cellFrame = UnionRectWithSize(cellFrame, message.size);
+    if (message.length > 0)
 	{
         cellFrame.origin.x += 2.0;
         cellFrame.size.width -= 2.0;
@@ -1010,13 +1010,13 @@ static inline void addRevisionsToTableRowList(NSString* str, NSMutableArray* tab
 - (NSString*) getTextWithStringizedAttachments
 {
 	NSAttributedString* selectedText = [self.textStorage attributedSubstringFromRange:self.selectedRange];
-	if (![selectedText containsAttachments])
-		return [selectedText string];
+	if (!selectedText.containsAttachments)
+		return selectedText.string;
 	
 	// embedd known attachments
 	NSMutableAttributedString* stringToEncode = [selectedText mutableCopy];
 
-	for (NSRange strRange = [stringToEncode fullRange]; strRange.length > 0; )
+	for (NSRange strRange = stringToEncode.fullRange; strRange.length > 0; )
 	{
 		NSRange effectiveRange;
 		id attr = [stringToEncode attribute:NSAttachmentAttributeName atIndex:strRange.length - 1 effectiveRange:&effectiveRange];
@@ -1035,7 +1035,7 @@ static inline void addRevisionsToTableRowList(NSString* str, NSMutableArray* tab
 		strRange.length = effectiveRange.location;
 	}
 		
-	return [stringToEncode string];
+	return stringToEncode.string;
 }
 
 - (NSArray*) writablePasteboardTypes

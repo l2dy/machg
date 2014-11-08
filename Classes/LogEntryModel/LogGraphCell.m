@@ -34,11 +34,11 @@
 
 - (CGFloat) columnSpacingWithinFrame:(NSRect)bounds
 {
-	RepositoryData* data = [logTableView repositoryData];
-	if (![data logGraph] && ![data oldLogGraph])
+	RepositoryData* data = logTableView.repositoryData;
+	if (!data.logGraph && !data.oldLogGraph)
 		return 0;
 
-	NSInteger maxColumn = MAX([[data logGraph] maxColumn], [[data oldLogGraph] maxColumn]);
+	NSInteger maxColumn = MAX(data.logGraph.maxColumn, data.oldLogGraph.maxColumn);
 	return bounds.size.width/ (maxColumn + 2);
 }
 
@@ -56,9 +56,9 @@
 - (CGFloat) yCoordOfRevision:(NSInteger)rev withinFrame:(NSRect)bounds
 {
 	CGFloat rowHeight = bounds.size.height;
-	int thisRow   = [logTableView tableRowForRevision:[entry_ revision]];
+	int thisRow   = [logTableView tableRowForRevision:entry_.revision];
 	int targetRow = [logTableView tableRowForRevision:intAsNumber(rev)];
-	return floor(NSMidY(bounds) + ([self.controlView isFlipped] ? 1 : -1) * (targetRow - thisRow) * rowHeight);
+	return floor(NSMidY(bounds) + (self.controlView.isFlipped ? 1 : -1) * (targetRow - thisRow) * rowHeight);
 }
 
 
@@ -167,41 +167,41 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 - (void) drawWithFrame:(NSRect)cellFrame inView:(NSView*)controlView
 {
 	
-	LogGraph* theLogGraph    = [[logTableView repositoryData] logGraph];
-	LogGraph* theOldLogGraph = [[logTableView repositoryData] oldLogGraph];
+	LogGraph* theLogGraph    = logTableView.repositoryData.logGraph;
+	LogGraph* theOldLogGraph = logTableView.repositoryData.oldLogGraph;
 	if (!theLogGraph)
 		return;
 		
-	if ([logTableView tableIsFiltered])
+	if (logTableView.tableIsFiltered)
 		return;
 
-	//DebugLog(@"drawingLines for %@", [entry revision]);
+	//DebugLog(@"drawingLines for %@", entry.revision);
 	NSRect cellBounds = NSInsetRect(cellFrame, -1, -1);  	// This should be a method somewhere so we can always be sure the cell frame is just a single pixel.
 
 	[NSGraphicsContext saveGraphicsState];
 	NSRectClip(cellBounds);
-	[[NSColor greenColor] set];
+	[NSColor.greenColor set];
 	
-	NSNumber* revision    = [entry_ revision];
+	NSNumber* revision    = entry_.revision;
 	NSInteger revisionInt = numberAsInt(revision);
 	NSInteger theColumnOfRev = NSNotFound;
-	NSArray* lines = [theLogGraph revisionNumberToLineSegments][revision];
+	NSArray* lines = theLogGraph.revisionNumberToLineSegments[revision];
 	if (!lines)
-		lines = [theOldLogGraph revisionNumberToLineSegments][revision];
-	BOOL hasIncompleteRevision = [[logTableView repositoryData] includeIncompleteRevision];
-	NSInteger incompleteRevisionInt = [[[logTableView repositoryData] incompleteRevisionEntry] revisionInt];
+		lines = theOldLogGraph.revisionNumberToLineSegments[revision];
+	BOOL hasIncompleteRevision = logTableView.repositoryData.includeIncompleteRevision;
+	NSInteger incompleteRevisionInt = [logTableView.repositoryData.incompleteRevisionEntry revisionInt];
 
 	for (LineSegment* line in lines)
 	{
-		NSBezierPath* thePath = [NSBezierPath bezierPath];
-		int startColInt = [line highCol];
-		int stopColInt  = [line lowCol];
-		int drawColInt = [line drawCol];
+		NSBezierPath* thePath = NSBezierPath.bezierPath;
+		int startColInt = line.highCol;
+		int stopColInt  = line.lowCol;
+		int drawColInt = line.drawCol;
 		CGFloat startx = round([self xCoordOfColumn:startColInt withinFrame:cellBounds]);
 		CGFloat stopx  = round([self xCoordOfColumn:stopColInt  withinFrame:cellBounds]);
 		CGFloat drawx  = round([self xCoordOfColumn:drawColInt  withinFrame:cellBounds]);
-		CGFloat starty = round([self yCoordOfRevision:[line highRev] withinFrame:cellBounds]);
-		CGFloat stopy  = round([self yCoordOfRevision:[line lowRev]  withinFrame:cellBounds]);
+		CGFloat starty = round([self yCoordOfRevision:line.highRev withinFrame:cellBounds]);
+		CGFloat stopy  = round([self yCoordOfRevision:line.lowRev  withinFrame:cellBounds]);
 		CGFloat drawy  = round((starty+stopy)/2);
 	
 		NSPoint a = NSMakePoint(startx, starty);
@@ -216,7 +216,7 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 		hue = hue - floor(hue);
 		[[NSColor colorWithDeviceHue:hue saturation:1.0 brightness:0.6 alpha:1.0] set];
 		
-		if (hasIncompleteRevision && incompleteRevisionInt == [line highRev])
+		if (hasIncompleteRevision && incompleteRevisionInt == line.highRev)
 		{
 			CGFloat lineDash[2];
 			lineDash[0] = 4.0;
@@ -225,12 +225,12 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 			[[NSColor colorWithDeviceHue:hue saturation:0.5 brightness:0.5 alpha:0.5] set];
 		}
 
-		[thePath setLineWidth:1.5];
+		thePath.lineWidth = 1.5;
 		[thePath stroke];
 		
-		if ([line highRev] == revisionInt)
+		if (line.highRev == revisionInt)
 			theColumnOfRev = startColInt;
-		else if ([line lowRev] == revisionInt)
+		else if (line.lowRev == revisionInt)
 			theColumnOfRev = stopColInt;
 	}
 	[NSGraphicsContext restoreGraphicsState];
@@ -253,39 +253,39 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 	NSColor* fillColor   = defaultRed;
 	NSColor* strokeColor = nil;
 	BOOL entryIsClosed   = NO;
-	BOOL hasLabels = IsNotEmpty([entry_ labels]);
+	BOOL hasLabels = IsNotEmpty(entry_.labels);
 	
-	if ([[logTableView repositoryData] incompleteRevisionEntry] == entry_)
+	if (logTableView.repositoryData.incompleteRevisionEntry == entry_)
 	{
-		fillColor   = [NSColor whiteColor];
-		strokeColor = [NSColor grayColor];
+		fillColor   = NSColor.whiteColor;
+		strokeColor = NSColor.grayColor;
 	}
-	else if ([[logTableView repositoryData] revisionIsParent:[entry_ revision]])
+	else if ([logTableView.repositoryData revisionIsParent:entry_.revision])
 	{
 		fillColor   = [LogEntryTableParentHighlightColor() intensifySaturationAndBrightness:4.0];
 		strokeColor = defaultRed;
 	}
-	else if (hasLabels && IsNotEmpty([entry_ branchHead]))
+	else if (hasLabels && IsNotEmpty(entry_.branchHead))
 	{
 		fillColor   = [LogEntryTableBranchHighlightColor() intensifySaturationAndBrightness:4.0];
 		strokeColor = defaultRed;
 	}
-	else if (hasLabels && IsNotEmpty([entry_ bookmarks]))
+	else if (hasLabels && IsNotEmpty(entry_.bookmarks))
 	{
 		fillColor = [LogEntryTableBookmarkHighlightColor() intensifySaturationAndBrightness:4.0];
 		strokeColor = defaultRed;
 	}
-	else if (hasLabels && IsNotEmpty([entry_ tags]))
+	else if (hasLabels && IsNotEmpty(entry_.tags))
 	{
 		fillColor = [LogEntryTableTagHighlightColor() intensifySaturationAndBrightness:4.0];
 		strokeColor = defaultRed;
 	}
 
-	if (hasLabels && [entry_ isClosedBranchHead])
+	if (hasLabels && entry_.isClosedBranchHead)
 	{
 		entryIsClosed = YES;
-		fillColor   = [NSColor grayColor];
-		strokeColor = [NSColor blackColor];
+		fillColor   = NSColor.grayColor;
+		strokeColor = NSColor.blackColor;
 	}
 	
 	
@@ -333,9 +333,9 @@ void addNewRoundedLine(NSBezierPath* path, NSPoint a, NSPoint m, NSPoint g)
 
 - (NSSize) cellSize
 {
-    // NSSize cellSize = [super cellSize];
+    // NSSize cellSize = super.cellSize;
 	// DebugLog(@"naturalSize is %f,%f", cellSize.width, cellSize.height);
-	//    cellSize.width += (image ? [image size].width : 0) + 3;
+	//    cellSize.width += (image ? image.size.width : 0) + 3;
     return NSMakeSize(84,19);
 }
 

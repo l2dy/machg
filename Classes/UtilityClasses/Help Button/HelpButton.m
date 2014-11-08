@@ -18,13 +18,13 @@
 {
 	[self setAction:@selector(openHelpAnchor:)];
 	weakSelf = self;
-	[self setTarget:weakSelf];
+	self.target = weakSelf;
 }
 
 - (void) openHelpAnchor:(id)sender
 {
-	NSString* locBookName = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleHelpBookName"];
-	[[NSHelpManager sharedHelpManager] openHelpAnchor:self.helpAnchorName inBook:locBookName];
+	NSString* locBookName = [NSBundle.mainBundle objectForInfoDictionaryKey: @"CFBundleHelpBookName"];
+	[NSHelpManager.sharedHelpManager openHelpAnchor:self.helpAnchorName inBook:locBookName];
 }
 	 
 @end

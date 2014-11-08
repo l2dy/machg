@@ -193,7 +193,7 @@
 
 - (void) LogNotification:(NSNotification*)aNotification
 {
-	DebugLog(@"received notification: %@", [aNotification name]);
+	DebugLog(@"received notification: %@", aNotification.name);
 }
 
 
@@ -203,13 +203,13 @@
 	[self observe:kRepositoryRootChanged		from:self		  byCalling:@selector(repositoryRootDidChange)];
 	[self observe:NSWindowDidMoveNotification	from:mainWindow_  byCalling:@selector(recordWindowFrameToDefaults)];
 	[self observe:NSWindowDidResizeNotification	from:mainWindow_  byCalling:@selector(recordWindowFrameToDefaults)];
-	[self observe:kRepositoryIdentityChanged	from:[AppController sharedAppController]  byCalling:@selector(saveDocumentIfNamed)];
+	[self observe:kRepositoryIdentityChanged	from:AppController.sharedAppController  byCalling:@selector(saveDocumentIfNamed)];
 	
 	currentPane_ = -1;
-	[informationAndActivityBox_ setContentView:informationBox_];
-	[mainContentBox setWantsLayer:NO];		// We don't do cross fades since it speeds things up not to have the animation on. The
+	informationAndActivityBox_.contentView = informationBox_;
+	mainContentBox.wantsLayer = NO;		// We don't do cross fades since it speeds things up not to have the animation on. The
 											// frames are still animated when going from one view to another.
-	[[mainWindow_ windowController] setShouldCascadeWindows: NO];
+	[mainWindow_.windowController setShouldCascadeWindows: NO];
 	NSString* fileName = self.documentNameForAutosave;
 	[sidebarAndInformation_ setAutosaveName:fstr(@"File:%@:LHSSidebarSplitPosition", fileName)];
 	[mainSplitView setAutosaveName:fstr(@"File:%@:LHSMainSidebarSplitPosition", fileName)];
@@ -221,10 +221,10 @@
 	if ([toolbarSearchField_ respondsToSelector:@selector(setLayerUsesCoreImageFilters:)])
 		toolbarSearchField_.layerUsesCoreImageFilters = YES;
 	
-	NSMenu* theSearchFieldMenu = [[self.toolbarSearchField cell] searchMenuTemplate];
+	NSMenu* theSearchFieldMenu = [self.toolbarSearchField.cell searchMenuTemplate];
 	[self setSearchCategory:[theSearchFieldMenu itemWithTag:eSearchByKeyword]];
-	for (NSMenuItem* item in [theSearchFieldMenu itemArray])
-		[item setAttributedTitle:normalSheetMessageAttributedString([item title])];
+	for (NSMenuItem* item in theSearchFieldMenu.itemArray)
+		item.attributedTitle = normalSheetMessageAttributedString(item.title);
 	
 	[self validateViewSelector];
 
@@ -237,7 +237,7 @@
 		NSArray* ans = [TaskExecutions parseArguments:ex];
 		NSArray* res = @[@"--rev", @"23", @"--git", @"--force", @"--no-merges", @"--remotecmd", @"blargsplatter"];
 		BOOL areEqual = YES;
-		for (int i = 0; i < [res count]; i++)
+		for (int i = 0; i < res.count; i++)
 			if (![res[i] isEqualToString:ans[i]])
 				areEqual = NO;
 		NSAssert(areEqual, @"string matching not working");
@@ -455,9 +455,9 @@
 // MARK:  The Views
 // ------------------------------------------------------------------------------------
 
-- (FilesView*)			theFilesView		{ return [self.theFilesViewController theFilesView]; }
-- (HistoryView*)		theHistoryView		{ return [self.theHistoryViewController theHistoryView]; }
-- (DifferencesView*)	theDifferencesView	{ return [self.theDifferencesViewController theDifferencesView]; }
+- (FilesView*)			theFilesView		{ return self.theFilesViewController.theFilesView; }
+- (HistoryView*)		theHistoryView		{ return self.theHistoryViewController.theHistoryView; }
+- (DifferencesView*)	theDifferencesView	{ return self.theDifferencesViewController.theDifferencesView; }
 
 
 
@@ -470,7 +470,7 @@
 
 - (NSString*)	documentNameForAutosave
 {
-	NSString* fileName = [[self.fileURL path] lastPathComponent];
+	NSString* fileName = [self.fileURL.path lastPathComponent];
 	return fileName ? fileName : @"UntitledDocument";
 }
 
@@ -504,11 +504,11 @@
 	NSString* fileName = self.documentNameForAutosave;
 	NSString* originKeyForAutoSave = fstr(@"File:%@:originPos", fileName);
 	NSString* rectKeyForAutoSave   = fstr(@"File:%@:windowPosForView", fileName);
-	NSRect frm = [mainWindow_ frame];
+	NSRect frm = mainWindow_.frame;
 	NSString* topLeftOriginString = NSStringFromPoint(NSMakePoint(NSMinX(frm), NSMaxY(frm)));	// Record window origin top left
 	NSString* rectString = NSStringFromRect(frm);
-	[[NSUserDefaults standardUserDefaults] setObject:topLeftOriginString forKey:originKeyForAutoSave];
-	[[NSUserDefaults standardUserDefaults] setObject:rectString forKey:rectKeyForAutoSave];
+	[NSUserDefaults.standardUserDefaults setObject:topLeftOriginString forKey:originKeyForAutoSave];
+	[NSUserDefaults.standardUserDefaults setObject:rectString forKey:rectKeyForAutoSave];
 }
 
 - (NSRect) getWindowFrameFromDefaults
@@ -516,8 +516,8 @@
 	NSString* fileName = self.documentNameForAutosave;
 	NSString* originKeyForAutoSave = fstr(@"File:%@:originPos", fileName);
 	NSString* rectKeyForAutoSave   = fstr(@"File:%@:windowPosForView", fileName);
-	NSString* topLeftOriginString  = [[NSUserDefaults standardUserDefaults] objectForKey:originKeyForAutoSave];
-	NSString* rectString           = [[NSUserDefaults standardUserDefaults] objectForKey:rectKeyForAutoSave];
+	NSString* topLeftOriginString  = [NSUserDefaults.standardUserDefaults objectForKey:originKeyForAutoSave];
+	NSString* rectString           = [NSUserDefaults.standardUserDefaults objectForKey:rectKeyForAutoSave];
 	if (!topLeftOriginString || !rectString)
 		return NSZeroRect;
 	NSPoint topLeftOrigin = NSPointFromString(topLeftOriginString);	// This is the window top left
@@ -543,7 +543,7 @@
 		case eFilesView:		return self.theFilesView;
 		case eHistoryView:		return self.theHistoryView;
 		case eDifferencesView:	return self.theDifferencesView;
-		case eBackingView:		return [self.theBackingViewController backingView];
+		case eBackingView:		return self.theBackingViewController.backingView;
 		default:				return nil;
 	}
 }
@@ -556,8 +556,8 @@
 	if (!NSEqualRects(rectFromDefaults,NSZeroRect))
 		return rectFromDefaults;
 
-	NSRect oldWindowFrame  = [mainWindow_ frame];
-	NSRect oldContentFrame = [mainContentBox frame];
+	NSRect oldWindowFrame  = mainWindow_.frame;
+	NSRect oldContentFrame = mainContentBox.frame;
 	NSRect newWindowFrame  = oldWindowFrame;
 	newWindowFrame.size.height += (newContentFrame.size.height - oldContentFrame.size.height);
 	newWindowFrame.size.width  += (newContentFrame.size.width  - oldContentFrame.size.width);
@@ -572,7 +572,7 @@
 {
 	[toolbarSearchField_ setStringValue:enabled ? nonNil(value) : @""];
 	[toolbarSearchItem_	 setLabel: (enabled && IsNotEmpty(value)) ? caption : @"Search"];
-	[toolbarSearchField_ setEnabled:enabled];
+	toolbarSearchField_.enabled = enabled;
 	[toolbarSearchItem_  setEnabled:enabled];
 }
 
@@ -581,17 +581,17 @@
 	if (self.currentPane != eHistoryView)
 	{
 		CIFilter* grayFilter = [CIFilter filterWithName:@"CIWhitePointAdjust" keysAndValues:@"inputColor", [CIColor colorWithRed:0.9 green:0.9 blue:0.9 alpha:0.6], nil];
-		[[toolbarSearchField_ layer] setFilters: @[grayFilter]];
+		[toolbarSearchField_.layer setFilters: @[grayFilter]];
 		return;
 	}
 	if (!toolbarSearchFieldQueryIsValid_ && IsNotEmpty(toolbarSearchFieldValue_))
 	{
 		CIFilter* pinkErrorFilter = [CIFilter filterWithName:@"CIWhitePointAdjust" keysAndValues:@"inputColor", [CIColor colorWithRed:0.9 green:0.6 blue:0.6 alpha:0.6], nil];
-		[[toolbarSearchField_ layer] setFilters: @[pinkErrorFilter]];
+		[toolbarSearchField_.layer setFilters: @[pinkErrorFilter]];
 		return;
 	}
 
-	[[toolbarSearchField_ layer] setFilters: @[]];
+	[toolbarSearchField_.layer setFilters: @[]];
 }
 
 - (NSView <NSUserInterfaceValidations>*) currentPaneView	{ return [self paneView:currentPane_]; }
@@ -603,7 +603,7 @@
 
 	if ((newPaneNum != eBackingView) && !self.localRepoIsSelectedAndReady)
 	{
-		[self setCurrentPane:eBackingView];
+		self.currentPane = eBackingView;
 		return;
 	}
 
@@ -626,14 +626,14 @@
 	currentPane_ = newPaneNum;
 
 	NSString* searchTerm    = toolbarSearchFieldValue_;
-	NSString* searchCaption = theHistoryViewController_ ? [self.theHistoryView searchCaption] : @"Search";
+	NSString* searchCaption = theHistoryViewController_ ? self.theHistoryView.searchCaption : @"Search";
 	[self setSearchFieldEnabled:(newPaneNum == eHistoryView) value:searchTerm caption:searchCaption];
 	[self syncronizeSearchFieldTint];
 
 	NSView* newView = [self paneView:newPaneNum];
-	NSRect newFrame = [self newWindowFrameWhenSwitchingContentTo:[newView frame]];	// Figure out new frame size
+	NSRect newFrame = [self newWindowFrameWhenSwitchingContentTo:newView.frame];	// Figure out new frame size
 	
-	[mainContentBox setContentView:newView];
+	mainContentBox.contentView = newView;
 	[mainWindow_ setFrame:newFrame display:YES];
 
 	// After the pane switch the selected rows in the logtables might actually be out of visible range due to the resizing of the
@@ -651,7 +651,7 @@
 
 	[self recordWindowFrameToDefaults];
 	if (self.quicklookPreviewIsVisible)
-		[[QLPreviewPanel sharedPreviewPanel] reloadData];
+		[QLPreviewPanel.sharedPreviewPanel reloadData];
 }
 
 
@@ -671,7 +671,7 @@
 - (BOOL)	showingFilesOrDifferencesView					{ return currentPane_ == eFilesView || currentPane_ == eDifferencesView; }
 - (BOOL)	showingFilesOrHistoryOrDifferencesView			{ return currentPane_ == eFilesView || currentPane_ == eHistoryView || currentPane_ == eDifferencesView; }
 - (BOOL)	showingASheet									{ return shownSheet_ != nil; }
-- (BOOL)	showingSheetOf:(NSWindowController*)controller	{ return shownSheet_ && ([controller window] == shownSheet_); }
+- (BOOL)	showingSheetOf:(NSWindowController*)controller	{ return shownSheet_ && (controller.window == shownSheet_); }
 
 
 
@@ -682,13 +682,13 @@
 // MARK: Actions
 // ------------------------------------------------------------------------------------
 
-- (IBAction) actionSwitchViewToFilesView:(id)sender			{ [self setCurrentPane:eFilesView]; }
-- (IBAction) actionSwitchViewToBackingView:(id)sender		{ [self setCurrentPane:eBackingView]; }
-- (IBAction) actionSwitchViewToDifferencesView:(id)sender	{ [self setCurrentPane:eDifferencesView]; }
-- (IBAction) actionSwitchViewToHistoryView:(id)sender		{ [self setCurrentPane:eHistoryView]; }
-- (IBAction) actionSwitchViewToFilesBrowserView:(id)sender	{ [self setCurrentPane:eFilesView]; [[self.theFilesView theFSViewer] actionSwitchToFilesBrowser:sender]; }
-- (IBAction) actionSwitchViewToFilesOutlineView:(id)sender	{ [self setCurrentPane:eFilesView]; [[self.theFilesView theFSViewer] actionSwitchToFilesOutline:sender]; }
-- (IBAction) actionSwitchViewToFilesTableView:(id)sender	{ [self setCurrentPane:eFilesView]; [[self.theFilesView theFSViewer] actionSwitchToFilesTable:sender]; }
+- (IBAction) actionSwitchViewToFilesView:(id)sender			{ self.currentPane = eFilesView; }
+- (IBAction) actionSwitchViewToBackingView:(id)sender		{ self.currentPane = eBackingView; }
+- (IBAction) actionSwitchViewToDifferencesView:(id)sender	{ self.currentPane = eDifferencesView; }
+- (IBAction) actionSwitchViewToHistoryView:(id)sender		{ self.currentPane = eHistoryView; }
+- (IBAction) actionSwitchViewToFilesBrowserView:(id)sender	{ self.currentPane = eFilesView; [self.theFilesView.theFSViewer actionSwitchToFilesBrowser:sender]; }
+- (IBAction) actionSwitchViewToFilesOutlineView:(id)sender	{ self.currentPane = eFilesView; [self.theFilesView.theFSViewer actionSwitchToFilesOutline:sender]; }
+- (IBAction) actionSwitchViewToFilesTableView:(id)sender	{ self.currentPane = eFilesView; [self.theFilesView.theFSViewer actionSwitchToFilesTable:sender]; }
 
 
 
@@ -704,7 +704,7 @@
 	SidebarNode* root         = [SidebarNode sectionNodeWithCaption:@"ROOT"];	// This isn't shown its the children of this which are shown.
 	SidebarNode* repositories = [SidebarNode sectionNodeWithCaption:@"REPOSITORIES"];
 	[root addChild:repositories];
-	[sidebar_ setRoot:root];
+	sidebar_.root = root;
 	
 	//	[sidebar_ expandItem:other];
 	[sidebar_ reloadData];
@@ -721,7 +721,7 @@
 // MARK: Window Delegate Methods
 // ------------------------------------------------------------------------------------
 
-- (void) windowWillBeginSheet:(NSNotification*)notification	{ if (!shownSheet_) shownSheet_ = [notification object]; }
+- (void) windowWillBeginSheet:(NSNotification*)notification	{ if (!shownSheet_) shownSheet_ = notification.object; }
 - (void) windowDidEndSheet:(NSNotification*)notification	{ shownSheet_ = nil;  }
 - (void) windowDidBecomeMain:(NSNotification*)notification	{ [sidebar_ becomeMain]; }
 - (void) windowDidResignMain:(NSNotification*)notification	{ [sidebar_ resignMain]; }
@@ -761,7 +761,7 @@
 
 - (BOOL) quicklookPreviewIsVisible
 {
-	return [QLPreviewPanel sharedPreviewPanelExists] && [[QLPreviewPanel sharedPreviewPanel] isVisible];
+	return QLPreviewPanel.sharedPreviewPanelExists && QLPreviewPanel.sharedPreviewPanel.isVisible;
 }
 
 - (NSInteger) numberOfPreviewItemsInPreviewPanel:(QLPreviewPanel*)panel
@@ -778,7 +778,7 @@
 	if ([currentPaneView respondsToSelector:@selector(quickLookPreviewItems)])
 	{
 		NSArray* items = [currentPaneView performSelector:@selector(quickLookPreviewItems)];
-		if ([items count] > index)
+		if (items.count > index)
 			return items[index];
 	}
 	return nil;
@@ -787,7 +787,7 @@
 - (BOOL) previewPanel:(QLPreviewPanel*)panel handleEvent:(NSEvent*)event
 {
     // redirect all key down events to the files view
-    if ([event type] == NSKeyDown)
+    if (event.type == NSKeyDown)
 	{
         [self.theFSViewer keyDown:event];
         return YES;
@@ -799,15 +799,15 @@
 - (NSRect) previewPanel:(QLPreviewPanel*)panel sourceFrameOnScreenForPreviewItem:(id <QLPreviewItem>)item
 {
 	PathQuickLookPreviewItem* previewItem = DynamicCast(PathQuickLookPreviewItem, item);
-	return previewItem ? [previewItem frameRectOfPath] : NSZeroRect;
+	return previewItem ? previewItem.frameRectOfPath : NSZeroRect;
 }
 
 - (IBAction) togglePreviewPanel:(id)previewPanel
 {
     if (self.quicklookPreviewIsVisible)
-        [[QLPreviewPanel sharedPreviewPanel] orderOut:nil];
+        [QLPreviewPanel.sharedPreviewPanel orderOut:nil];
 	else
-        [[QLPreviewPanel sharedPreviewPanel] makeKeyAndOrderFront:nil];
+        [QLPreviewPanel.sharedPreviewPanel makeKeyAndOrderFront:nil];
 }
 
 
@@ -825,12 +825,12 @@
 	NSMenuItem* theChoosenMenuItem = DynamicCast(NSMenuItem, sender);
 	if (!theChoosenMenuItem)
 		return;
-	NSSearchFieldCell* searchCell = [self.toolbarSearchField cell];
-	NSMenu* searchFieldMenu = [searchCell searchMenuTemplate];
+	NSSearchFieldCell* searchCell = self.toolbarSearchField.cell;
+	NSMenu* searchFieldMenu = searchCell.searchMenuTemplate;
 	[[searchFieldMenu itemWithTag:toolbarSearchFieldCategory_] setState:NSOffState];
-	toolbarSearchFieldCategory_ = [theChoosenMenuItem tag];
+	toolbarSearchFieldCategory_ = theChoosenMenuItem.tag;
 	[[searchFieldMenu itemWithTag:toolbarSearchFieldCategory_] setState:NSOnState];
-	[searchCell setSearchMenuTemplate:searchFieldMenu];
+	searchCell.searchMenuTemplate = searchFieldMenu;
 	[self.toolbarSearchField setStringValue:@""];
 	[self searchFieldChanged:self];
 }
@@ -844,16 +844,16 @@
 // MARK: Action Validation
 // ------------------------------------------------------------------------------------
 
-- (BOOL) localRepoIsSelectedAndReady						{ return !self.showingASheet && [sidebar_ localRepoIsSelected]; }
-- (BOOL) localRepoIsChosenAndReady							{ return !self.showingASheet && [sidebar_ localRepoIsChosen]; }
-- (BOOL) localOrServerRepoIsSelectedAndReady				{ return !self.showingASheet && [sidebar_ localOrServerRepoIsSelected]; }
-- (BOOL) localOrServerRepoIsChosenAndReady					{ return !self.showingASheet && [sidebar_ localOrServerRepoIsChosen]; }
+- (BOOL) localRepoIsSelectedAndReady						{ return !self.showingASheet && sidebar_.localRepoIsSelected; }
+- (BOOL) localRepoIsChosenAndReady							{ return !self.showingASheet && sidebar_.localRepoIsChosen; }
+- (BOOL) localOrServerRepoIsSelectedAndReady				{ return !self.showingASheet && sidebar_.localOrServerRepoIsSelected; }
+- (BOOL) localOrServerRepoIsChosenAndReady					{ return !self.showingASheet && sidebar_.localOrServerRepoIsChosen; }
 - (BOOL) toolbarActionAppliesToFilesWith:(HGStatus)status	{ return ([self statusOfChosenPathsInFilesContain:status] || (!self.nodesAreChosenInFiles && [self repositoryHasFilesWhichContainStatus:status])); }
 
 - (BOOL) validateAndSwitchMenuForCommitAllFiles:(id)anItem
 {
 	NSMenuItem* menuItem = DynamicCast(NSMenuItem, anItem);
-	[menuItem setTitle:([self.repositoryData inMergeState] ? @"Commit Merged Files…" : @"Commit All Files…")];
+	[menuItem setTitle:(self.repositoryData.inMergeState ? @"Commit Merged Files…" : @"Commit All Files…")];
 	return [self repositoryHasFilesWhichContainStatus:eHGStatusCommittable];
 }
 - (BOOL) validateAndSwitchMenuForPreviewSelectedFiles:(id)anItem
@@ -863,20 +863,20 @@
 		[menuItem setTitle: self.quicklookPreviewIsVisible ? @"Close Quick Look panel" : @"Open Quick Look panel"];
 	return self.localRepoIsSelectedAndReady &&
 			((self.showingFilesView       && [[self.theFilesView       theFSViewer] nodesAreChosen]) ||
-			 (self.showingDifferencesView && [[self.theDifferencesView theFSViewer] nodesAreChosen]) ||
+			 (self.showingDifferencesView && [self.theDifferencesView.theFSViewer nodesAreChosen]) ||
 			 (self.showingHistoryView     && [[self.theHistoryView   logTableView] revisionsAreSelected]));
 }
 - (BOOL) validateAndSwitchMenuForRemoveSidebarItems:(id)anItem
 {
 	NSMenuItem* menuItem = DynamicCast(NSMenuItem, anItem);
-	[menuItem setTitle:[sidebar_ menuTitleForRemoveSidebarItems]];
-	return !self.showingASheet && [sidebar_ chosenNode];
+	menuItem.title = sidebar_.menuTitleForRemoveSidebarItems;
+	return !self.showingASheet && sidebar_.chosenNode;
 }
 
 
 - (BOOL) validateUserInterfaceItem:(id <NSValidatedUserInterfaceItem, NSObject>)anItem
 {
-	SEL theAction = [anItem action];
+	SEL theAction = anItem.action;
 	
 	if (theAction == @selector(actionSwitchViewToFilesView:))			return self.localRepoIsSelectedAndReady;
 	if (theAction == @selector(actionSwitchViewToHistoryView:))			return self.localRepoIsSelectedAndReady;
@@ -966,7 +966,7 @@
 	// ------
 	if (theAction == @selector(mainMenuRevealRepositoryInFinder:))		return self.localRepoIsSelectedAndReady;
 	if (theAction == @selector(mainMenuOpenTerminalHere:))				return self.localRepoIsSelectedAndReady;
-	if (theAction == @selector(actionTestListingItem:))					return !self.showingASheet && ([sidebar_ selectedNode] ? YES : NO);
+	if (theAction == @selector(actionTestListingItem:))					return !self.showingASheet && (sidebar_.selectedNode ? YES : NO);
 
 	
 	if (theAction == @selector(mainMenuOpenSelectedFilesInFinder:))		return self.localRepoIsSelectedAndReady && self.nodesAreChosenInFiles;
@@ -992,7 +992,7 @@
 	// -------                                                       
 
 	
-	if (theAction == @selector(mainMenuNoAction:))						return !self.showingASheet && ([sidebar_ selectedNode] ? YES : NO);
+	if (theAction == @selector(mainMenuNoAction:))						return !self.showingASheet && (sidebar_.selectedNode ? YES : NO);
 	if (theAction == @selector(togglePreviewPanel:))					return [self validateAndSwitchMenuForPreviewSelectedFiles:anItem];
 	
 
@@ -1048,7 +1048,7 @@
 
 - (IBAction) toolbarCommitFiles:(id)sender
 {
-	if ([self.theFSViewer nodesAreChosen] && ![self.repositoryData inMergeState])
+	if (self.theFSViewer.nodesAreChosen && !self.repositoryData.inMergeState)
 		[self mainMenuCommitSelectedFiles:sender];
 	else
 		[self mainMenuCommitAllFiles:sender];
@@ -1056,7 +1056,7 @@
 
 - (IBAction) toolbarDiffFiles:(id)sender
 {
-	if ([self.theFSViewer nodesAreChosen])
+	if (self.theFSViewer.nodesAreChosen)
 		[self mainMenuDiffSelectedFiles:sender];
 	else
 		[self mainMenuDiffAllFiles:sender];
@@ -1064,7 +1064,7 @@
 
 - (IBAction) toolbarAddRenameRemoveFiles:(id)sender
 {
-	if ([self.theFSViewer nodesAreChosen])
+	if (self.theFSViewer.nodesAreChosen)
 		[self mainMenuAddRenameRemoveSelectedFiles:sender];
 	else
 		[self mainMenuAddRenameRemoveAllFiles:sender];
@@ -1072,7 +1072,7 @@
 
 - (IBAction) toolbarRevertFiles:(id)sender
 {
-	if ([self.theFSViewer nodesAreChosen])
+	if (self.theFSViewer.nodesAreChosen)
 		[self mainMenuRevertSelectedFilesToVersion:sender];
 	else
 		[self mainMenuRevertAllFiles:sender];
@@ -1122,7 +1122,7 @@
 
 - (IBAction) mainMenuCloneRepository:(id)sender
 {
-	SidebarNode* node = [sidebar_ chosenNode];
+	SidebarNode* node = sidebar_.chosenNode;
 	if (!node)
 		return;
 	
@@ -1192,8 +1192,8 @@
 
 - (IBAction) mainMenuAddLocalRepositoryRef:(id)sender			{ [[self  theLocalRepositoryRefSheetController]	openSheetForNewRepositoryRef]; }
 - (IBAction) mainMenuAddServerRepositoryRef:(id)sender			{ [self.theServerRepositoryRefSheetController	openSheetForNewRepositoryRef]; }
-- (IBAction) mainMenuConfigureLocalRepositoryRef:(id)sender		{ [[self  theLocalRepositoryRefSheetController]	openSheetForConfigureRepositoryRef:[sidebar_ chosenNode]]; }
-- (IBAction) mainMenuConfigureServerRepositoryRef:(id)sender	{ [self.theServerRepositoryRefSheetController	openSheetForConfigureRepositoryRef:[sidebar_ chosenNode]]; }
+- (IBAction) mainMenuConfigureLocalRepositoryRef:(id)sender		{ [[self  theLocalRepositoryRefSheetController]	openSheetForConfigureRepositoryRef:sidebar_.chosenNode]; }
+- (IBAction) mainMenuConfigureServerRepositoryRef:(id)sender	{ [self.theServerRepositoryRefSheetController	openSheetForConfigureRepositoryRef:sidebar_.chosenNode]; }
 
 - (IBAction) mainMenuConfigureRepositoryRef:(id)sender			{ return [sidebar_ mainMenuConfigureRepositoryRef:sender]; }
 - (IBAction) mainMenuAddNewSidebarGroupItem:(id)sender			{ return [sidebar_ mainMenuAddNewSidebarGroupItem:sender]; }
@@ -1220,7 +1220,7 @@
 
     NSMutableData* data = [[NSMutableData alloc] init];
     NSKeyedArchiver* archiver = [[NSKeyedArchiver alloc] initForWritingWithMutableData: data];
-    [archiver setOutputFormat: NSPropertyListBinaryFormat_v1_0];
+    archiver.outputFormat =  NSPropertyListBinaryFormat_v1_0;
 	
     [archiver encodeObject:sidebar_ forKey: @"sidebar"];
 	[archiver encodeObject:connections_ forKey:@"connections"];
@@ -1277,7 +1277,7 @@
 
 - (void) saveDocumentIfNamed
 {
-	NSString* fileName = [[self.fileURL path] lastPathComponent];
+	NSString* fileName = [self.fileURL.path lastPathComponent];
 	if (fileName)
 		dispatch_async(mainQueue(), ^{
 			[self saveDocument:self];
@@ -1298,7 +1298,7 @@
 // file then simply return the path of this cached snapshot of the file.
 - (NSString*) loadCachedCopyOfPath:(NSString*)absolutePath forChangeset:(NSString*)changeset
 {
-	NSString* cacheDir = [[AppController sharedAppController] cacheDirectory];
+	NSString* cacheDir = AppController.sharedAppController.cacheDirectory;
 	if (!cacheDir)
 		return nil;
 	
@@ -1316,18 +1316,18 @@
 		return newPath;
 	
 	// Create the intermediate directories if we have to
-	NSString* containingDir = [newPath stringByDeletingLastPathComponent];
+	NSString* containingDir = newPath.stringByDeletingLastPathComponent;
 	if (!pathIsExistentDirectory(containingDir))
 	{
 		NSError* err = nil;
-		NSFileManager* fileManager = [NSFileManager defaultManager];
+		NSFileManager* fileManager = NSFileManager.defaultManager;
 		[fileManager createDirectoryAtPath:containingDir withIntermediateDirectories:YES attributes:nil error:&err];
 		[NSApp presentAnyErrorsAndClear:&err];
 	}
 	
 	NSMutableArray* argsCat = [NSMutableArray arrayWithObjects:@"cat", @"--output", newPath, @"--rev", changeset, theRelativePath, nil];
 	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsCat  fromRoot:rootPath  logging:eLogAllToFile];
-	if ([results hasErrors])
+	if (results.hasErrors)
 		return nil;
 	return newPath;
 }
@@ -1342,7 +1342,7 @@
 // ------------------------------------------------------------------------------------
 
 - (BOOL) eventsAreSuspended											{ return eventsSuspensionCount_ > 0; }
-- (BOOL) underlyingRepositoryChangedEventIsQueued					{ return [queueForUnderlyingRepositoryChangedViaEvents_ operationQueued]; }
+- (BOOL) underlyingRepositoryChangedEventIsQueued					{ return queueForUnderlyingRepositoryChangedViaEvents_.operationQueued; }
 - (SingleTimedQueue*) queueForUnderlyingRepositoryChangedViaEvents	{ return queueForUnderlyingRepositoryChangedViaEvents_; }
 
 - (void) suspendEvents
@@ -1373,7 +1373,7 @@
 		return;
 	}
 
-	BOOL postNotification = [queueForUnderlyingRepositoryChangedViaEvents_ operationQueued];
+	BOOL postNotification = queueForUnderlyingRepositoryChangedViaEvents_.operationQueued;
 	[queueForUnderlyingRepositoryChangedViaEvents_ resumeQueue];
 	MacHgDocument* __weak weakSelf = self;
 	if (postNotification)
@@ -1433,13 +1433,13 @@
 // When looking at FSEvents we should discard event paths which match something in the regex which represents the .hgignore files
 - (BOOL) absolutePathMatchedByHGIgnore:(NSString*)path
 {
-	NSString* regex = [self.repositoryData combinedHGIgnoreRegEx];
+	NSString* regex = self.repositoryData.combinedHGIgnoreRegEx;
 	if (IsEmpty(regex))
 		return NO;
 	
 	// Check all sub directories for a match
-	NSString* relativePath = pathDifference([self.repositoryData rootPath], path);
-	NSArray* pathComponents = [relativePath pathComponents];
+	NSString* relativePath = pathDifference(self.repositoryData.rootPath, path);
+	NSArray* pathComponents = relativePath.pathComponents;
 	NSString* builtPath = @"";
 	for (NSString* component in pathComponents)
 	{
@@ -1456,7 +1456,7 @@
 - (void) setupEventlistener
 {
 	dispatchSpliced(mainQueue(), ^{
-		[events_ setDelegate:self];
+		events_.delegate = self;
 		NSMutableArray* paths = [NSMutableArray arrayWithObject:self.absolutePathOfRepositoryRoot];
 		[events_ stopWatchingPaths];
 		[events_ startWatchingPaths:paths];
@@ -1543,10 +1543,10 @@
 - (IBAction)	actionTestListingItem:(id)sender
 {	
 	return;
-//	DebugLog(@"Currently watching Paths:%@", [events_ isWatchingPaths] ? @"Yes":@"No");
-//	NSMutableArray* watchedPaths  = [events_ watchedPaths];
+//	DebugLog(@"Currently watching Paths:%@", events_.isWatchingPaths ? @"Yes":@"No");
+//	NSMutableArray* watchedPaths  = events_.watchedPaths;
 //	DebugLog(@"The currently watched  Paths : %@", watchedPaths);
-//	DebugLog(@"streamDescription %@", [events_ streamDescription]);
+//	DebugLog(@"streamDescription %@", events_.streamDescription);
 }
 
 
@@ -1600,16 +1600,16 @@
 // MARK: Version Information
 // ------------------------------------------------------------------------------------
 
-- (NSNumber*) getHGParent1Revision		{ return [self.repositoryData getHGParent1Revision]; }
-- (NSNumber*) getHGParent2Revision		{ return [self.repositoryData getHGParent2Revision]; }
-- (NSString*) getHGParent1Changeset		{ return [self.repositoryData getHGParent1Changeset]; }
-- (NSString*) getHGParent2Changeset		{ return [self.repositoryData getHGParent2Changeset]; }
-- (NSNumber*) getHGTipRevision			{ return [self.repositoryData getHGTipRevision]; }
-- (NSString*) getHGTipChangeset			{ return [self.repositoryData getHGTipChangeset]; }
-- (NSNumber*) getSelectedRevision		{ return theHistoryViewController_ ? [[self.theHistoryView logTableView] selectedRevision] : nil; }
-- (BOOL)      isCurrentRevisionTip		{ return [self.repositoryData isCurrentRevisionTip]; }
-- (BOOL)	  inMergeState				{ return [self.repositoryData inMergeState]; }
-- (NSInteger) computeNumberOfRevisions	{ return [self.repositoryData computeNumberOfRevisions]; }
+- (NSNumber*) getHGParent1Revision		{ return self.repositoryData.getHGParent1Revision; }
+- (NSNumber*) getHGParent2Revision		{ return self.repositoryData.getHGParent2Revision; }
+- (NSString*) getHGParent1Changeset		{ return self.repositoryData.getHGParent1Changeset; }
+- (NSString*) getHGParent2Changeset		{ return self.repositoryData.getHGParent2Changeset; }
+- (NSNumber*) getHGTipRevision			{ return self.repositoryData.getHGTipRevision; }
+- (NSString*) getHGTipChangeset			{ return self.repositoryData.getHGTipChangeset; }
+- (NSNumber*) getSelectedRevision		{ return theHistoryViewController_ ? [self.theHistoryView.logTableView selectedRevision] : nil; }
+- (BOOL)      isCurrentRevisionTip		{ return self.repositoryData.isCurrentRevisionTip; }
+- (BOOL)	  inMergeState				{ return self.repositoryData.inMergeState; }
+- (NSInteger) computeNumberOfRevisions	{ return self.repositoryData.computeNumberOfRevisions; }
 
 
 
@@ -1620,25 +1620,25 @@
 // MARK: Path and Selection Operations
 // ------------------------------------------------------------------------------------
 
-- (NSString*)		absolutePathOfRepositoryRoot			{ return [repositoryData_ rootPath]; }
-- (NSString*)		absolutePathOfRepositoryRootFromSidebar	{ SidebarNode* repo = [sidebar_ selectedNode]; return [repo isLocalRepositoryRef] ? [repo path] : nil; }
-- (NSString*)		selectedRepositoryShortName				{ SidebarNode* repo = [sidebar_ selectedNode]; return [repo isLocalRepositoryRef]  ? [repo shortName]  : nil; }
-- (NSString*)		selectedRepositoryPath					{ SidebarNode* repo = [sidebar_ selectedNode]; return [repo isRepositoryRef] ? [repo path] : nil; }
-- (SidebarNode*)	selectedRepositoryRepositoryRef			{ SidebarNode* repo = [sidebar_ selectedNode]; return [repo isRepositoryRef] ? repo : nil; }
+- (NSString*)		absolutePathOfRepositoryRoot			{ return repositoryData_.rootPath; }
+- (NSString*)		absolutePathOfRepositoryRootFromSidebar	{ SidebarNode* repo = sidebar_.selectedNode; return repo.isLocalRepositoryRef ? repo.path : nil; }
+- (NSString*)		selectedRepositoryShortName				{ SidebarNode* repo = sidebar_.selectedNode; return repo.isLocalRepositoryRef  ? repo.shortName  : nil; }
+- (NSString*)		selectedRepositoryPath					{ SidebarNode* repo = sidebar_.selectedNode; return repo.isRepositoryRef ? repo.path : nil; }
+- (SidebarNode*)	selectedRepositoryRepositoryRef			{ SidebarNode* repo = sidebar_.selectedNode; return repo.isRepositoryRef ? repo : nil; }
 - (NSArray*)		absolutePathOfRepositoryRootAsArray		{ return @[ self.absolutePathOfRepositoryRoot ]; }
 
-- (FSViewer*)		theFSViewer								{ return [self.theFilesView theFSViewer]; }
-- (FSNodeInfo*)		rootNodeInfo							{ return [self.theFSViewer rootNodeInfo]; }
+- (FSViewer*)		theFSViewer								{ return self.theFilesView.theFSViewer; }
+- (FSNodeInfo*)		rootNodeInfo							{ return self.theFSViewer.rootNodeInfo; }
 - (FSNodeInfo*)		nodeForPath:(NSString*)absolutePath		{ return [self.rootNodeInfo nodeForPathFromRoot:absolutePath]; }
-- (BOOL)			singleFileIsChosenInFiles				{ return [self.theFSViewer singleFileIsChosenInFiles]; }
-- (BOOL)			singleItemIsChosenInFiles				{ return [self.theFSViewer singleItemIsChosenInFiles]; }
-- (BOOL)			nodesAreChosenInFiles					{ return [self.theFSViewer nodesAreChosen]; }
-- (HGStatus)		statusOfChosenPathsInFiles				{ return [self.theFSViewer statusOfChosenPathsInFiles]; }
-- (NSArray*)		absolutePathsOfChosenFiles				{ return [self.theFSViewer absolutePathsOfChosenFiles]; }
-- (NSString*)		enclosingDirectoryOfChosenFiles			{ return [self.theFSViewer enclosingDirectoryOfChosenFiles]; }
+- (BOOL)			singleFileIsChosenInFiles				{ return self.theFSViewer.singleFileIsChosenInFiles; }
+- (BOOL)			singleItemIsChosenInFiles				{ return self.theFSViewer.singleItemIsChosenInFiles; }
+- (BOOL)			nodesAreChosenInFiles					{ return self.theFSViewer.nodesAreChosen; }
+- (HGStatus)		statusOfChosenPathsInFiles				{ return self.theFSViewer.statusOfChosenPathsInFiles; }
+- (NSArray*)		absolutePathsOfChosenFiles				{ return self.theFSViewer.absolutePathsOfChosenFiles; }
+- (NSString*)		enclosingDirectoryOfChosenFiles			{ return self.theFSViewer.enclosingDirectoryOfChosenFiles; }
 
-- (BOOL) statusOfChosenPathsInFilesContain:(HGStatus)status	{ return bitsInCommon(status, [self.theFSViewer statusOfChosenPathsInFiles]); }
-- (BOOL) repositoryHasFilesWhichContainStatus:(HGStatus)status	{ return bitsInCommon(status, [[self.theFSViewer rootNodeInfo] hgStatus]); }
+- (BOOL) statusOfChosenPathsInFilesContain:(HGStatus)status	{ return bitsInCommon(status, self.theFSViewer.statusOfChosenPathsInFiles); }
+- (BOOL) repositoryHasFilesWhichContainStatus:(HGStatus)status	{ return bitsInCommon(status, [self.theFSViewer.rootNodeInfo hgStatus]); }
 
 // Move any "unknown" files ending in .orig to the trash.
 - (void) pruneDotOrigFiles:(NSArray*)paths
@@ -1649,7 +1649,7 @@
 
 	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:rootPath  logging:eLoggingNone];
 	
-	if ([results hasErrors])
+	if (results.hasErrors)
 	{
 		PlayBeep();
 		return;
@@ -1657,7 +1657,7 @@
 	NSArray* prunePaths = [results.outStr componentsSeparatedByString:@"\n"];
 	NSMutableArray* filesToTrash = [[NSMutableArray alloc]init];
 	for (NSString* prunePath in prunePaths)
-		if ([[prunePath pathExtension] isEqualToString:@"orig"])
+		if ([prunePath.pathExtension isEqualToString:@"orig"])
 			[filesToTrash addObject:[rootPath stringByAppendingPathComponent:prunePath]];
 	
 	moveFilesToTheTrash(filesToTrash);
@@ -1674,7 +1674,7 @@
 
 - (void) removeAllUndoActionsForDocument
 {
-	NSUndoManager* undo = [sidebar_ undoManager];
+	NSUndoManager* undo = sidebar_.undoManager;
 	[undo removeAllActionsWithTarget:sidebar_];
 }
 
@@ -1702,10 +1702,10 @@
 		NSDirectoryEnumerator* dirEnum = [localFileManager enumeratorAtPath:root];
 		
 		NSString* path;
-		while ( (path = [dirEnum nextObject]) )
+		while ( (path = dirEnum.nextObject) )
 		{
-			NSDictionary* pathAttributes = [dirEnum fileAttributes];
-			NSString* pathType = [pathAttributes fileType];
+			NSDictionary* pathAttributes = dirEnum.fileAttributes;
+			NSString* pathType = pathAttributes.fileType;
 			NSString* srcPath = [root stringByAppendingPathComponent:path];
 			NSString* dstPath = [copyDir stringByAppendingPathComponent:path];
 			
@@ -1767,24 +1767,24 @@
 
 - (void) repositoryRootDidChange
 {
-	SidebarNode* node = [sidebar_ selectedNode];
-	BOOL multipleSelection = [[sidebar_ selectedRowIndexes] count] > 1;
+	SidebarNode* node = sidebar_.selectedNode;
+	BOOL multipleSelection = sidebar_.selectedRowIndexes.count > 1;
 	
-	if (![node isExistentLocalRepositoryRef] || multipleSelection)
+	if (!node.isExistentLocalRepositoryRef || multipleSelection)
 	{
 		[self discardCurrentRepository];
 		return;
 	}
 
-	if ([node isLocalRepositoryRef] && self.showingBackingView)
+	if (node.isLocalRepositoryRef && self.showingBackingView)
 		[self actionSwitchViewToFilesView:self];
 
 	NSString* rootPath = self.absolutePathOfRepositoryRootFromSidebar;
-	BOOL rootPathChanged = !repositoryData_ || ![[repositoryData_ rootPath] isEqualToString:rootPath];
+	BOOL rootPathChanged = !repositoryData_ || ![repositoryData_.rootPath isEqualToString:rootPath];
 	if (rootPathChanged)
 		[self initializeRepositoryData];
 
-	if ([node isLocalRepositoryRef])
+	if (node.isLocalRepositoryRef)
 		[self setupEventlistener];
 }
 
@@ -1794,8 +1794,8 @@
 	if (self.showingHistoryView)
 	{
 		HistoryView* hpv = self.theHistoryView;
-		LogTableView* logTableView = [hpv logTableView];	
-		toolbarSearchFieldValue_ = [self.toolbarSearchField stringValue];
+		LogTableView* logTableView = hpv.logTableView;	
+		toolbarSearchFieldValue_ = self.toolbarSearchField.stringValue;
 		[logTableView resetTable:hpv];
 		[hpv refreshHistoryView:sender];
 	}
@@ -1819,7 +1819,7 @@
 
 - (IBAction) refreshBrowserContent:(id)sender
 {
-	if (![sidebar_ localRepoIsSelected])
+	if (!sidebar_.localRepoIsSelected)
 		return;		
 	NSString* rootPath = self.absolutePathOfRepositoryRoot;
 	[self.theFSViewer refreshBrowserPaths:[RepositoryPaths fromRootPath:rootPath] finishingBlock:nil];
@@ -1895,7 +1895,7 @@
 	
 	[self removeAllUndoActionsForDocument];
 	NSArray* pathsForHGToUntrack = [self.theFSViewer filterPaths:theSelectedFiles byBitfield:eHGStatusInRepository];
-	if ([pathsForHGToUntrack count] > 0)
+	if (pathsForHGToUntrack.count > 0)
 		[self dispatchToMercurialQueuedWithDescription:@"Untrack Files" process:^{
 			[self registerPendingRefresh:pathsForHGToUntrack];
 			NSString* rootPath = self.absolutePathOfRepositoryRoot;
@@ -1942,7 +1942,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 		NSMutableString* hgignoreContents = [NSMutableString stringWithContentsOfFile:hgignorePath encoding:NSUTF8StringEncoding error:nil];
 		if (!hgignoreContents)
 			hgignoreContents = [[NSMutableString alloc] init];
-		else if (![hgignoreContents endsWithNewLine])
+		else if (!hgignoreContents.endsWithNewLine)
 			[hgignoreContents appendString:@"\n"];
 		
 		for (NSString* file in theSelectedFiles)
@@ -1996,7 +1996,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 - (BOOL) primaryActionAnnotateSelectedFiles:(NSArray*)theSelectedFiles
 {	
 	NSNumber* revision = self.getHGParent1Revision;
-	NSArray* options = [[AppController sharedAppController] annotationOptionsFromDefaults];
+	NSArray* options = AppController.sharedAppController.annotationOptionsFromDefaults;
 	[self primaryActionAnnotateSelectedFiles:theSelectedFiles withRevision:revision andOptions:options];
 	return YES;
 }
@@ -2049,12 +2049,12 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 {
 	NSArray* filteredPaths = version ? absolutePaths : [self.theFSViewer filterPaths:absolutePaths byBitfield:eHGStatusChangedInSomeWay];
 	
-	if ([filteredPaths count] <= 0)
+	if (filteredPaths.count <= 0)
 		{ PlayBeep(); DebugLog(@"No files selected to revert"); return NO; }
 	
 	if (DisplayWarningForRevertingFilesFromDefaults())
 	{
-		BOOL pathsAreRootPath = [[filteredPaths lastObject] isEqual:self.absolutePathOfRepositoryRoot];
+		BOOL pathsAreRootPath = [filteredPaths.lastObject isEqual:self.absolutePathOfRepositoryRoot];
 		NSString* mainMessage = fstr(@"Reverting %@ Files", pathsAreRootPath ? @"All" : @"Selected");
 		NSString* subMessage  = fstr( @"Are you sure you want to revert %@ in the repository “%@” to %@? (Any modified files will be moved to the trash)",
 								 pathsAreRootPath ? @"all files" : @"the selected files",
@@ -2105,14 +2105,14 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 		{ PlayBeep(); DebugLog(@"No files selected to AddRenameRemove"); return NO; }
 	
 	NSArray* theSelectedFiles = absolutePaths;
-	if ([theSelectedFiles count] <= 0)
+	if (theSelectedFiles.count <= 0)
 		return NO;
 	if (DisplayWarningForAddRemoveRenameFilesFromDefaults())
 	{
 		NSString* subMessage;
 		NSString* mainMessage;
 		NSString* buttonMessage;
-		BOOL rootOperation = [absolutePaths count] == 1 && [self.absolutePathOfRepositoryRoot isEqualTo:absolutePaths[0]];
+		BOOL rootOperation = absolutePaths.count == 1 && [self.absolutePathOfRepositoryRoot isEqualTo:absolutePaths[0]];
 		BOOL useSimilarity = AddRemoveUsesSimilarityFromDefaults();
 		if (useSimilarity && rootOperation)
 		{
@@ -2165,7 +2165,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 			NSString* messageString = fstr(@"Results of Add Remove Files in “%@”", self.selectedRepositoryShortName);
 			NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
 			NSString* windowTitle = fstr(@"AddRemove Results - %@", self.selectedRepositoryShortName);
-			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:windowTitle onScreen:[self.mainWindow screen]];
+			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:windowTitle onScreen:self.mainWindow.screen];
 		}		
 	}];
 	return YES;
@@ -2187,14 +2187,14 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 		BOOL showingUpdateSheet = [self showingSheetOf:self.theUpdateSheetController];
 		NSString* thirdButton = showingUpdateSheet ? nil : @"Options…";
 		NSAlert* alert = NewAlertPanel(mainMessage, subMessage, @"Update", @"Cancel", thirdButton);
-		[updateAlertAccessoryCleanCheckBox setState:clean];
-		[updateAlertAccessoryAlertSuppressionCheckBox setHidden:containsChangedFiles];
-		[updateAlertAccessoryAlertSuppressionCheckBox setState:NO];
-		[alert setAccessoryView:updateAlertAccessoryView];
-		int result = [alert runModal];
-		if ([updateAlertAccessoryAlertSuppressionCheckBox state] == NSOnState)
-			[[NSUserDefaults standardUserDefaults] setBool:NO forKey:MHGDisplayWarningForUpdating];
-		clean = [updateAlertAccessoryCleanCheckBox state];
+		updateAlertAccessoryCleanCheckBox.state = clean;
+		updateAlertAccessoryAlertSuppressionCheckBox.hidden = containsChangedFiles;
+		updateAlertAccessoryAlertSuppressionCheckBox.state = NO;
+		alert.accessoryView = updateAlertAccessoryView;
+		int result = alert.runModal;
+		if (updateAlertAccessoryAlertSuppressionCheckBox.state == NSOnState)
+			[NSUserDefaults.standardUserDefaults setBool:NO forKey:MHGDisplayWarningForUpdating];
+		clean = updateAlertAccessoryCleanCheckBox.state;
 		if (result == NSAlertThirdButtonReturn) // Options
 		{
 			[self.theUpdateSheetController openUpdateSheetWithRevision:version];
@@ -2226,7 +2226,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 			NSString* messageString = fstr(@"Results of Updating “%@”",  self.selectedRepositoryShortName);
 			NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
 			NSString* windowTitle = fstr(@"Update Results - %@", self.selectedRepositoryShortName);
-			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:windowTitle onScreen:[self.mainWindow screen]];
+			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:windowTitle onScreen:self.mainWindow.screen];
 		}
 	}];
 	return YES;
@@ -2262,7 +2262,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 	NSString* rootPath = self.absolutePathOfRepositoryRoot;
 	NSString* versionStr = numberAsString(version);
 	[self dispatchToMercurialQueuedWithDescription:@"Backout" process:^{
-		NSString* scriptName = [[AppController sharedAppController] scriptNameForMergeTool:UseWhichToolForMergingFromDefaults()];
+		NSString* scriptName = [AppController.sharedAppController scriptNameForMergeTool:UseWhichToolForMergingFromDefaults()];
 		NSMutableArray* argsBackout = [NSMutableArray arrayWithObjects:@"backout", @"--rev", versionStr, @"--tool", scriptName, nil];
 		ExecutionResult* results = [self executeMercurialWithArgs:argsBackout  fromRoot:rootPath whileDelayingEvents:YES];
 
@@ -2271,7 +2271,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 			NSString* messageString = fstr(@"Results of Backing out “%@” in “%@”",  version, self.selectedRepositoryShortName);
 			NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
 			NSString* windowTitle = fstr(@"Backout Results - %@", self.selectedRepositoryShortName);
-			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:windowTitle onScreen:[self.mainWindow screen]];
+			[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:windowTitle onScreen:self.mainWindow.screen];
 		}
 		
 		RunAlertPanel(@"Backed out Changeset",
@@ -2308,7 +2308,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 	[self registerPendingRefresh:rootPathAsArray];
 
 	NSString* mergeVersionStr = numberAsString(mergeVersion);
-	NSString* scriptName = [[AppController sharedAppController] scriptNameForMergeTool:UseWhichToolForMergingFromDefaults()];
+	NSString* scriptName = [AppController.sharedAppController scriptNameForMergeTool:UseWhichToolForMergingFromDefaults()];
 	NSMutableArray* argsMerge = [NSMutableArray arrayWithObjects:@"merge", @"--rev", mergeVersionStr, @"--tool", scriptName, nil];
 	[argsMerge addObjectsFromArray:options];
 
@@ -2318,7 +2318,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 		[self addToChangedPathsDuringSuspension:rootPathAsArray];
 	}];
 	
-	if ([results hasErrors])
+	if (results.hasErrors)
 		return NO;
 
 	switch (AfterMergeSwitchToFromDefaults())
@@ -2332,7 +2332,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 		NSString* messageString = fstr(@"Results of Merging “%@”",  self.selectedRepositoryShortName);
 		NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
 		NSString* windowTitle = fstr(@"Merge Results - %@", self.selectedRepositoryShortName);
-		[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:windowTitle onScreen:[self.mainWindow screen]];
+		[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:windowTitle onScreen:self.mainWindow.screen];
 	}
 	
 	if (DisplayWarningForPostMergeFromDefaults())
@@ -2353,7 +2353,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 {
 	if (confirm && DisplayWarningForMergingFromDefaults())
 	{
-		NSString* what = ([absolutePaths count] == 1) ? [[absolutePaths lastObject] lastPathComponent] : @"the selected files";
+		NSString* what = (absolutePaths.count == 1) ? [absolutePaths.lastObject lastPathComponent] : @"the selected files";
 		NSString* mainMessage = fstr(@"Remerging %@", what);
 		NSString* subMessage  = fstr( @"Are you sure you want to throw away any changes you have made to %@ and remerge versions %@ and %@ in the repository “%@”?",
 									 what,
@@ -2384,7 +2384,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 {
 	if (confirm && DisplayWarningForMarkingFilesResolvedFromDefaults())
 	{
-		NSString* what = ([absolutePaths count] == 1) ? [[absolutePaths lastObject] lastPathComponent] : @"the selected files";
+		NSString* what = (absolutePaths.count == 1) ? [absolutePaths.lastObject lastPathComponent] : @"the selected files";
 		NSString* mainMessage = fstr(@"Marking %@ as resolved", what);
 		NSString* subMessage  = fstr( @"Are you sure you want to mark %@ as resolved in the repository “%@”?",
 								 what,
@@ -2418,7 +2418,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 			return NO;
 	}	
 
-	NSString* branchName = [self.repositoryData getHGBranchName];
+	NSString* branchName = self.repositoryData.getHGBranchName;
 	NSString* mainMessage = fstr(@"Closing the branch “%@”", branchName);
 
 	if (confirm && DisplayWarningForCloseBranchFromDefaults())
@@ -2451,7 +2451,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 		NSString* messageString = fstr(@"Manifest of “%@” revision “%@”", thisRepositoryName, version);
 		NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(results.outStr);
 		NSString* windowTitle =	fstr(@"Manifest Results - %@", self.selectedRepositoryShortName);
-		[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:windowTitle onScreen:[self.mainWindow screen]];
+		[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:windowTitle onScreen:self.mainWindow.screen];
 	}];
 }
 
@@ -2465,7 +2465,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 	NSMutableSet* allPaths = [[NSMutableSet alloc]init];
 	for (NSString* file in allFiles)
 	{
-		NSArray* pathComponents = [file pathComponents];
+		NSArray* pathComponents = file.pathComponents;
 		NSString* builtPath = @"";
 		for (NSString* component in pathComponents)
 		{
@@ -2486,7 +2486,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 	NSString* rootPath = self.absolutePathOfRepositoryRoot;
 	NSArray* filteredPaths = [self filterPaths:absolutePaths byManifestOfRevision:version];
 	
-	int numberOfFilesToAnnotate = [filteredPaths count];
+	int numberOfFilesToAnnotate = filteredPaths.count;
 	if (numberOfFilesToAnnotate < 1)
 		{ PlayBeep(); return; }
 	if (numberOfFilesToAnnotate > 10)
@@ -2505,11 +2505,11 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 				[argsAnnotate addObjectsFromArray:options];
 				[argsAnnotate addObject:file];
 				ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsAnnotate  fromRoot:rootPath];
-				NSString* fileName = [file lastPathComponent];
+				NSString* fileName = file.lastPathComponent;
 				NSString* messageString = fstr(@"Annotations of “%@” for revision “%@”", fileName, version);
 				NSString* windowTitle   = fstr(@"%@ : %@ Annotations", fileName, version);
 				NSAttributedString* resultsString = fixedWidthResultsMessageAttributedString(nonNil(results.outStr));
-				[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:windowTitle onScreen:[self.mainWindow screen]];
+				[ResultsWindowController createWithMessage:messageString andResults:resultsString andWindowTitle:windowTitle onScreen:self.mainWindow.screen];
 			});
 		dispatchGroupWaitAndFinish(group);
 	}];
@@ -2529,7 +2529,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 			return;
 		NSArray* filesWhichHaveDifferences = [trimTrailingString(statusResults.outStr) componentsSeparatedByString:@"\n"];
 		
-		int numberOfFilesToDiff = [filesWhichHaveDifferences count];
+		int numberOfFilesToDiff = filesWhichHaveDifferences.count;
 		if (numberOfFilesToDiff > 20)
 		{
 			int choice = RunAlertPanel(@"Many Differences", fstr(@"There are %d files which will have changes, are you sure you want to display all these differences?",numberOfFilesToDiff), @"Show Differences", @"Cancel", nil);
@@ -2540,9 +2540,9 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 		DispatchGroup group = dispatch_group_create();
 
 		ToolForDiffing diffTool = UseWhichToolForDiffingFromDefaults();
-		[[AppController sharedAppController] preLaunchDiffToolIfNeeded:diffTool];
-		NSString* cmd = [[AppController sharedAppController] scriptNameForDiffTool:diffTool];
-		if ([[AppController sharedAppController] diffToolWantsGroupedFiles:diffTool])
+		[AppController.sharedAppController preLaunchDiffToolIfNeeded:diffTool];
+		NSString* cmd = [AppController.sharedAppController scriptNameForDiffTool:diffTool];
+		if ([AppController.sharedAppController diffToolWantsGroupedFiles:diffTool])
 		{
 			dispatch_group_async(group, globalQueue(), ^{
 				NSMutableArray* diffArgs = [NSMutableArray arrayWithObjects: cmd, @"--config", @"extensions.hgext.extdiff=", @"--cwd", rootPath, nil];
@@ -2552,9 +2552,9 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 				
 				TLMTask* task     = [[TLMTask alloc] init];
 				NSString* hgPath = executableLocationHG();
-				[task setLaunchPath: hgPath];
-				[task setEnvironment:[TaskExecutions environmentForHg]];
-				[task setArguments:diffArgs];
+				task.launchPath =  hgPath;
+				task.environment = TaskExecutions.environmentForHg;
+				task.arguments = diffArgs;
 				[task launch];			// Start the process
 			});
 		}
@@ -2570,9 +2570,9 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 						
 						TLMTask* task     = [[TLMTask alloc] init];
 						NSString* hgPath = executableLocationHG();
-						[task setLaunchPath: hgPath];
-						[task setEnvironment:[TaskExecutions environmentForHg]];
-						[task setArguments:diffArgs];
+						task.launchPath =  hgPath;
+						task.environment = TaskExecutions.environmentForHg;
+						task.arguments = diffArgs;
 						[task launch];			// Start the process
 					});
 		}
@@ -2629,7 +2629,7 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 
 - (void) awakeFromNib
 {
-	[self setDelegate:self];
+	self.delegate = self;
 }
 
 - (CGFloat)splitView:(NSSplitView*)splitView constrainMaxCoordinate:(CGFloat)proposedMaximumPosition ofSubviewAt:(NSInteger)dividerIndex	{ return 400.0; }
@@ -2639,8 +2639,8 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 - (void) splitView:(NSSplitView*)splitView resizeSubviewsWithOldSize:(NSSize)oldSize
 {
 	NSRect splitViewFrame        = self.frame;
-	NSRect sidebarGroupFrame	 = [sidebarGroup frame];
-	NSRect contentGroupFrame	 = [contentGroup frame];
+	NSRect sidebarGroupFrame	 = sidebarGroup.frame;
+	NSRect contentGroupFrame	 = contentGroup.frame;
 	CGFloat dividerThickness     = self.dividerThickness;
 	sidebarGroupFrame.size.width = constrainFloat(sidebarGroupFrame.size.width, 150.0, 400.0);
 	
@@ -2649,13 +2649,13 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 	sidebarGroupFrame.size.height = splitViewFrame.size.height;
 	contentGroupFrame.size.height = splitViewFrame.size.height;
 	
-	[contentGroup setFrame:contentGroupFrame];
-	[sidebarGroup setFrame:sidebarGroupFrame];
+	contentGroup.frame = contentGroupFrame;
+	sidebarGroup.frame = sidebarGroupFrame;
 }
 
 - (NSRect) splitView:(NSSplitView*)splitView additionalEffectiveRectOfDividerAtIndex:(NSInteger)dividerIndex
 {
-	return [resizeThumb convertRect:[resizeThumb bounds] toView:splitView]; 
+	return [resizeThumb convertRect:resizeThumb.bounds toView:splitView]; 
 }
 
 @end
@@ -2678,15 +2678,15 @@ static inline NSString* QuoteRegExCharacters(NSString* theName)
 + (RepositoryPaths*) fromPaths:(NSArray*)theAbsolutePaths withRootPath:(NSString*)theRootPath
 {
 	RepositoryPaths* repositoryPaths = [RepositoryPaths alloc];
-	[repositoryPaths setAbsolutePaths:theAbsolutePaths];
-	[repositoryPaths setRootPath:theRootPath];
+	repositoryPaths.absolutePaths = theAbsolutePaths;
+	repositoryPaths.rootPath = theRootPath;
 	return repositoryPaths;
 }
 + (RepositoryPaths*) fromPath:(NSString*)absolutePath  withRootPath:(NSString*)theRootPath
 {
 	RepositoryPaths* repositoryPaths = [RepositoryPaths alloc];
 	[repositoryPaths setAbsolutePaths:@[absolutePath]];
-	[repositoryPaths setRootPath:theRootPath];
+	repositoryPaths.rootPath = theRootPath;
 	return repositoryPaths;
 }
 + (RepositoryPaths*) fromRootPath:(NSString*)theRootPath { return [RepositoryPaths fromPath:theRootPath withRootPath:theRootPath]; }

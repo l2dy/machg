@@ -30,11 +30,11 @@
 		
 	// drawn TopBorder
 	// [topBorderColor bwDrawPixelThickLineAtPosition:0 withInset:0 inRect:self.bounds inView:self horizontal:YES flip:NO];
-	// [[[NSColor whiteColor] colorWithAlphaComponent:topInsetAlpha] bwDrawPixelThickLineAtPosition:1 withInset:0 inRect:self.bounds inView:self horizontal:YES flip:NO];
+	// [[NSColor.whiteColor colorWithAlphaComponent:topInsetAlpha] bwDrawPixelThickLineAtPosition:1 withInset:0 inRect:self.bounds inView:self horizontal:YES flip:NO];
 		
 	// draw BottomBorder
 	[bottomBorderColor bwDrawPixelThickLineAtPosition:0 withInset:0 inRect:self.bounds inView:self horizontal:YES flip:NO];
-	//[[[NSColor whiteColor] colorWithAlphaComponent:bottomInsetAlpha] bwDrawPixelThickLineAtPosition:1 withInset:0 inRect:self.bounds inView:self horizontal:YES flip:YES];		
+	//[[NSColor.whiteColor colorWithAlphaComponent:bottomInsetAlpha] bwDrawPixelThickLineAtPosition:1 withInset:0 inRect:self.bounds inView:self horizontal:YES flip:YES];		
 }
 
 - (BOOL)isFlipped

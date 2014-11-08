@@ -55,7 +55,7 @@
 
 - (CIVector*) recomputePosition
 {
-	NSRect buttonBoxFrame = [centeringObject bounds];
+	NSRect buttonBoxFrame = centeringObject.bounds;
 	NSRect other = [centeringObject convertRect:buttonBoxFrame toView:self];
 	CIVector* center = [CIVector vectorWithX:NSMidX(other)+offsetFromCenter_.x Y:NSMidY(other)+offsetFromCenter_.y];
 	return center;

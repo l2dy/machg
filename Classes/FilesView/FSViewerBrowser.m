@@ -24,8 +24,8 @@
 
 - (void) awakeFromNib
 {
-	[self setDelegate:self];
-	[self setTarget:self];
+	self.delegate = self;
+	self.target = self;
 	[self setAction:@selector(fsviewerAction:)];
 	[self setDoubleAction:@selector(fsviewerDoubleAction:)];	
 	
@@ -33,11 +33,11 @@
 	[self setCellClass: [FSViewerPaneIconedCell class]];
 }
 
-- (FSNodeInfo*) rootNodeInfo		{ return [parentViewer_ rootNodeInfo]; }
+- (FSNodeInfo*) rootNodeInfo		{ return parentViewer_.rootNodeInfo; }
 
 - (void) reloadData
 {
-	[self setRowHeight:[parentViewer_ rowHeightForFont]];
+	self.rowHeight = parentViewer_.rowHeightForFont;
 	[self loadColumnZero];
 	[parentViewer_ updateCurrentPreviewImage];
 }
@@ -45,7 +45,7 @@
 - (void) reloadDataSin
 {
 	FSViewerSelectionState* theSavedState = self.saveViewerSelectionState;
-	[self setDefaultColumnWidth:sizeOfBrowserColumnsFromDefaults()];
+	self.defaultColumnWidth = sizeOfBrowserColumnsFromDefaults();
 	[self reloadData];
 	[self restoreViewerSelectionState:theSavedState];				// restore the selection and the scroll positions of the columns and the horizontal scroll
 	[parentViewer_ updateCurrentPreviewImage];
@@ -53,20 +53,20 @@
 
 - (void) repositoryDataIsNew
 {
-	MacHgDocument* myDocument = [parentViewer_ myDocument];
-	if ([[myDocument sidebar] localRepoIsSelected])
+	MacHgDocument* myDocument = parentViewer_.myDocument;
+	if (myDocument.sidebar.localRepoIsSelected)
 	{
-		NSString* fileName = [myDocument documentNameForAutosave];
-		NSString* repositoryName = [myDocument selectedRepositoryShortName];
+		NSString* fileName = myDocument.documentNameForAutosave;
+		NSString* repositoryName = myDocument.selectedRepositoryShortName;
 		NSString* columnAutoSaveName = fstr(@"File:%@:Repository:%@", fileName ? fileName : @"Untitled", repositoryName ? repositoryName : @"Unnamed");
-		[self setColumnsAutosaveName:columnAutoSaveName];
+		self.columnsAutosaveName = columnAutoSaveName;
 	}
 }
 
 - (void) prepareToOpenFSViewerPane
 {
 	[self reloadDataSin];
-	[[[parentViewer_ myDocument] mainWindow] makeFirstResponder:self];
+	[[parentViewer_.myDocument mainWindow] makeFirstResponder:self];
 }
 
 
@@ -123,14 +123,14 @@
 	NSArray* theSelectedCells = self.selectedCells;
 	NSMutableArray* nodes = [[NSMutableArray alloc] init];
 	for (FSViewerPaneCell* cell in theSelectedCells)
-		[nodes addObjectIfNonNil:[cell nodeInfo]];
+		[nodes addObjectIfNonNil:cell.nodeInfo];
 	return nodes;
 }
 
 
 - (BOOL) singleFileIsChosenInFiles
 {
-	if (self.nodeIsClicked && [self.clickedNode isFile])
+	if (self.nodeIsClicked && self.clickedNode.isFile)
 		return YES;
 	
 	int selectedColumn = self.selectedColumn;
@@ -144,7 +144,7 @@
 
 - (BOOL) singleItemIsChosenInFiles
 {
-	if (self.nodeIsClicked && [self.clickedNode isDirectory])
+	if (self.nodeIsClicked && self.clickedNode.isDirectory)
 		return YES;
 	
 	int selectedColumn = self.selectedColumn;
@@ -179,7 +179,7 @@
 	
 	// Find the selected item leading up to this column and grab its FSNodeInfo stored in that cell
 	FSViewerPaneCell* selectedCell = [self selectedCellInColumn:column-1];
-	return [selectedCell nodeInfo];
+	return selectedCell.nodeInfo;
 }
 
 
@@ -231,9 +231,9 @@
 // ------------------------------------------------------------------------------------
 
 - (id) rootItemForBrowser:(NSBrowser*)browser										{ return self.rootNodeInfo; }
-- (NSInteger) browser:(NSBrowser*)browser numberOfChildrenOfItem:(FSNodeInfo*)item	{ return [item childNodeCount]; }
-- (BOOL) browser:(NSBrowser*)browser isLeafItem:(FSNodeInfo*)item					{ return ![item isDirectory]; }
-- (id) browser:(NSBrowser*)browser objectValueForItem:(FSNodeInfo*)item				{ return [item lastPathComponent]; }
+- (NSInteger) browser:(NSBrowser*)browser numberOfChildrenOfItem:(FSNodeInfo*)item	{ return item.childNodeCount; }
+- (BOOL) browser:(NSBrowser*)browser isLeafItem:(FSNodeInfo*)item					{ return !item.isDirectory; }
+- (id) browser:(NSBrowser*)browser objectValueForItem:(FSNodeInfo*)item				{ return item.lastPathComponent; }
 - (id) browser:(NSBrowser*)browser child:(NSInteger)index ofItem:(FSNodeInfo*)item	{ return [item childNodeAtIndex:index]; }
 
 
@@ -241,12 +241,12 @@
 {
 	// Find our parent FSNodeInfo and access the child at this particular row
 	FSNodeInfo* parentNodeInfo = [self parentNodeInfoForColumn:column];
-	if (!parentNodeInfo || [[parentNodeInfo sortedChildNodeKeys] count] <= row)
+	if (!parentNodeInfo || parentNodeInfo.sortedChildNodeKeys.count <= row)
 		return;
 	FSNodeInfo* currentNodeInfo = [parentNodeInfo childNodeAtIndex:row];
-	[cell setParentNodeInfo:parentNodeInfo];
-	[cell setNodeInfo:currentNodeInfo];
-	[cell setStringValue:[currentNodeInfo lastPathComponent]];
+	cell.parentNodeInfo = parentNodeInfo;
+	cell.nodeInfo = currentNodeInfo;
+	cell.stringValue = currentNodeInfo.lastPathComponent;
 	[cell loadCellContents];
 }
 
@@ -256,7 +256,7 @@
 	if (!ShowFilePreviewInBrowserFromDefaults())
 		return nil;
 	if (!browserLeafPreviewController_)
-		browserLeafPreviewController_ = [[NSViewController alloc] initWithNibName:@"BrowserPreviewView" bundle:[NSBundle bundleForClass:self.class]];
+		browserLeafPreviewController_ = [[NSViewController alloc] initWithNibName:@"BrowserPreviewView" bundle:[NSBundle bundleForClass:[self class]]];
 	return browserLeafPreviewController_; // NSBrowser will set the representedObject for us
 }
 
@@ -286,7 +286,7 @@
 	NSMutableArray* paths = [[NSMutableArray alloc] init];
 	[rowIndexes enumerateIndexesUsingBlock:^(NSUInteger row, BOOL* stop) {
 		FSNodeInfo* node = [self itemAtRow:row inColumn:column];
-		[paths addObject:[node absolutePath]];
+		[paths addObject:node.absolutePath];
 	}];
 	return [parentViewer_ writePaths:paths toPasteboard:pasteboard];	// The parent handles writing out the pasteboard items
 }
@@ -303,23 +303,23 @@
 - (FSViewerSelectionState*)	saveViewerSelectionState
 {
 	// Save scroll positions of the columns
-	NSArray* selectedPaths = [parentViewer_ absolutePathsOfSelectedFilesInBrowser];
+	NSArray* selectedPaths = parentViewer_.absolutePathsOfSelectedFilesInBrowser;
 	FSViewerSelectionState* newSavedState = [[FSViewerSelectionState alloc] init];
 	int numberOfColumns = self.lastColumn;
 	[newSavedState setSavedColumnScrollPositions:[[NSMutableArray alloc] init]];
 	for (int i = 0; i <= numberOfColumns; i++)
 	{
 		NSMatrix* matrixForColumn = [self matrixInColumn:i];
-		NSScrollView* enclosingSV = [matrixForColumn enclosingScrollView];
-		NSPoint currentScrollPosition = [[enclosingSV contentView] bounds].origin;
+		NSScrollView* enclosingSV = matrixForColumn.enclosingScrollView;
+		NSPoint currentScrollPosition = enclosingSV.contentView.bounds.origin;
 		[newSavedState.savedColumnScrollPositions addObject:[NSValue valueWithPoint:currentScrollPosition]];
 	}
 	
 	// Save the horizontal scroll position
 	NSScrollView* horizontalSV = [[[self matrixInColumn:0] enclosingScrollView] enclosingScrollView];
-	newSavedState.savedHorizontalScrollPosition = [[horizontalSV contentView] bounds].origin;
+	newSavedState.savedHorizontalScrollPosition = horizontalSV.contentView.bounds.origin;
 	
-	BOOL restoreFirstResponderToViewer = [[[parentViewer_ parentWindow] firstResponder] hasAncestor:self];
+	BOOL restoreFirstResponderToViewer = [parentViewer_.parentWindow.firstResponder hasAncestor:self];
 	
 	// Save the selectedPaths
 	newSavedState.savedSelectedPaths = selectedPaths;
@@ -331,32 +331,32 @@
 
 - (void) restoreViewerSelectionState:(FSViewerSelectionState*)savedState
 {
-	NSArray* savedSelectedPaths            = [savedState savedSelectedPaths];
-	NSArray* savedColumnScrollPositions    = [savedState savedColumnScrollPositions];
-	NSPoint  savedHorizontalScrollPosition = [savedState savedHorizontalScrollPosition];
-	BOOL     restoreFirstResponderToViewer = [savedState restoreFirstResponderToViewer];
+	NSArray* savedSelectedPaths            = savedState.savedSelectedPaths;
+	NSArray* savedColumnScrollPositions    = savedState.savedColumnScrollPositions;
+	NSPoint  savedHorizontalScrollPosition = savedState.savedHorizontalScrollPosition;
+	BOOL     restoreFirstResponderToViewer = savedState.restoreFirstResponderToViewer;
 
-	if ([savedSelectedPaths count] <1)
+	if (savedSelectedPaths.count <1)
 		return;
 	
 	// Restore the selection
-	NSString* rootPath = [parentViewer_ absolutePathOfRepositoryRoot];
-	NSString* relativeSelectedPath = pathDifference(rootPath, [savedSelectedPaths lastObject]);
+	NSString* rootPath = parentViewer_.absolutePathOfRepositoryRoot;
+	NSString* relativeSelectedPath = pathDifference(rootPath, savedSelectedPaths.lastObject);
 	
 	// Loop through and select the correct row in each column until we get to the last column
 	if (restoreFirstResponderToViewer)
-		[[parentViewer_ parentWindow] makeFirstResponder:self];
-	NSArray* components = [relativeSelectedPath pathComponents];
+		[parentViewer_.parentWindow makeFirstResponder:self];
+	NSArray* components = relativeSelectedPath.pathComponents;
 	FSNodeInfo* childNode = self.rootNodeInfo;
 	FSNodeInfo* node = childNode;
 	int col = 0;
 	for (NSString* name in components)
 	{
 		node = childNode;
-		childNode = [node childNodes][name];
+		childNode = node.childNodes[name];
 		if (childNode)
 		{
-			[self selectRow: [[node sortedChildNodeKeys] indexOfObject:name] inColumn:col];
+			[self selectRow: [node.sortedChildNodeKeys indexOfObject:name] inColumn:col];
 			col++;
 		}
 		else
@@ -367,13 +367,13 @@
 	// code the next column will also be displayed although nothing will be selected in it.) If this is the
 	// case then we can't call the method selectRowIndexes because this will blow away the display of this next
 	// column. Thus if we have more than one thing selected go ahead and select the multiple items.
-	if ([savedSelectedPaths count] > 1)
+	if (savedSelectedPaths.count > 1)
 	{
 		NSMutableIndexSet* rowIndexes = [[NSMutableIndexSet alloc] init];
 		for (NSString* path in savedSelectedPaths)
 		{
-			NSString* name = [path lastPathComponent];
-			NSInteger rowIndex = [[node sortedChildNodeKeys] indexOfObject:name];
+			NSString* name = path.lastPathComponent;
+			NSInteger rowIndex = [node.sortedChildNodeKeys indexOfObject:name];
 			if (rowIndex != NSNotFound)
 				[rowIndexes addIndex:rowIndex];
 		}
@@ -388,16 +388,16 @@
 	int i = 0;
 	for (NSValue* position in savedColumnScrollPositions)
 	{
-		NSPoint savedScrollPosition = [position pointValue];
+		NSPoint savedScrollPosition = position.pointValue;
 		NSMatrix* matrixForColumn = [self matrixInColumn:i];
-		NSScrollView* enclosingSV = [matrixForColumn enclosingScrollView];
-		[[enclosingSV documentView] scrollPoint:savedScrollPosition];
+		NSScrollView* enclosingSV = matrixForColumn.enclosingScrollView;
+		[enclosingSV.documentView scrollPoint:savedScrollPosition];
 		i++;
 	}
 	
 	// restore horizontal scroll position
 	NSScrollView* horizontalSV = [[[self matrixInColumn:0] enclosingScrollView] enclosingScrollView];
-	[[horizontalSV documentView] scrollPoint:savedHorizontalScrollPosition];
+	[horizontalSV.documentView scrollPoint:savedHorizontalScrollPosition];
 }
 
 

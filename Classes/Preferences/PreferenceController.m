@@ -33,16 +33,16 @@
 	[self addView:updatePreferenceView		label:@"Updates"	imageName:@"UpdatePreferences"];
 	
 	// Optional configuration settings.
-	[self setCrossFade:[[NSUserDefaults standardUserDefaults] boolForKey:@"PreferencesFadeSwitch"]];
-	[self setShiftSlowsAnimation:[[NSUserDefaults standardUserDefaults] boolForKey:@"PreferencesShiftSlowsAnimation"]];
+	[self setCrossFade:[NSUserDefaults.standardUserDefaults boolForKey:@"PreferencesFadeSwitch"]];
+	[self setShiftSlowsAnimation:[NSUserDefaults.standardUserDefaults boolForKey:@"PreferencesShiftSlowsAnimation"]];
 }
 
 - (IBAction) displayPreferencesChanged:(id)sender			{ [self postNotificationWithName:kBrowserDisplayPreferencesChanged]; }
 - (IBAction) differencesDisplayPreferencesChanged:(id)sender{ [self postNotificationWithName:kFileDiffsDisplayPreferencesChanged]; }
 - (IBAction) resetPreferences:(id)sender					{ [AppController resetUserPreferences]; }
 - (IBAction) repositoryEditingPreferencesChanged:(id)sender	{ ; }
-- (IBAction) openMacHgHGRCFileInExternalEditor:(id)sender	{ [[NSWorkspace sharedWorkspace] openFile:fstr(@"%@/hgrc", applicationSupportFolder())]; }
-- (IBAction) openHomeHGRCFileInExternalEditor:(id)sender	{ [[NSWorkspace sharedWorkspace] openFile:[NSHomeDirectory() stringByAppendingPathComponent:@".hgrc"]]; }
+- (IBAction) openMacHgHGRCFileInExternalEditor:(id)sender	{ [NSWorkspace.sharedWorkspace openFile:fstr(@"%@/hgrc", applicationSupportFolder())]; }
+- (IBAction) openHomeHGRCFileInExternalEditor:(id)sender	{ [NSWorkspace.sharedWorkspace openFile:[NSHomeDirectory() stringByAppendingPathComponent:@".hgrc"]]; }
 @end
 
 

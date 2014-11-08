@@ -14,16 +14,16 @@
 
 - (NSAttributedString*) determineDecoratedTitle
 {
-	NSMutableParagraphStyle* ps = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-	[ps setAlignment:NSCenterTextAlignment];
+	NSMutableParagraphStyle* ps = [NSParagraphStyle.defaultParagraphStyle mutableCopy];
+	ps.alignment = NSCenterTextAlignment;
 	NSUInteger mask = self.keyEquivalentModifierMask;
 	NSMutableString* modifiers = [[NSMutableString alloc] init];
 	if (mask & NSControlKeyMask)	[modifiers appendString:@"⌃"];
 	if (mask & NSAlternateKeyMask)	[modifiers appendString:@"⌥"];
 	if (mask & NSCommandKeyMask)	[modifiers appendString:@"⌘"];
 	
-	NSString* key   = [self.keyEquivalent uppercaseString];
-	NSFont* keyFont = [NSFont systemFontOfSize:[NSFont systemFontSize]];
+	NSString* key   = self.keyEquivalent.uppercaseString;
+	NSFont* keyFont = [NSFont systemFontOfSize:NSFont.systemFontSize];
 	
 	NSDictionary* standardAttributes = @{NSFontAttributeName: keyFont, NSParagraphStyleAttributeName: ps};
 	NSDictionary* grayedAttributes   = @{NSFontAttributeName: keyFont, NSForegroundColorAttributeName: [NSColor colorWithDeviceHue:0.0 saturation:0.0 brightness:0.8 alpha:1.0], NSParagraphStyleAttributeName: ps};
@@ -32,8 +32,8 @@
 	return constructDecoratedTitle;
 }
 
-- (void) switchToDecoratedTitle	{ [self setAttributedTitle:decoratedTitle]; }
-- (void) switchToStandardTitle	{ [self setTitle:originalTitle]; }
+- (void) switchToDecoratedTitle	{ self.attributedTitle = decoratedTitle; }
+- (void) switchToStandardTitle	{ self.title = originalTitle; }
 
 - (void) awakeFromNib
 {

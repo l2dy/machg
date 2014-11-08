@@ -73,11 +73,11 @@
 	[self observe:kLogEntriesDidChange		from:self.myDocument  byCalling:@selector(logEntriesDidChange:)];
 	
 	// Tell the browser to send us messages when it is clicked.
-	[self setTarget:self];
+	self.target = self;
 	[self setAction:@selector(labelTableSingleClick:)];
 	[self setDoubleAction:@selector(labelTableDoubleClick:)];
-	[self setDelegate:self];
-	[self setDataSource:self];
+	self.delegate = self;
+	self.dataSource = self;
 	
 	// Stop garbage littering on Lion see issue #273
 	[DynamicCast(NSClipView, self.superview) setCopiesOnScroll:NO];
@@ -85,7 +85,7 @@
 	[self resetTable:self];
 }
 
-- (MacHgDocument*) myDocument	{ return [parentController myDocument]; }
+- (MacHgDocument*) myDocument	{ return parentController.myDocument; }
 
 - (void) dealloc				{ [self stopObserving]; }
 
@@ -98,7 +98,7 @@
 // MARK:  Quieres
 // ------------------------------------------------------------------------------------
 
-- (BOOL)	  labelIsSelected	{ return 0 <= self.selectedRow && self.selectedRow < [labelsTableData_ count]; }
+- (BOOL)	  labelIsSelected	{ return 0 <= self.selectedRow && self.selectedRow < labelsTableData_.count; }
 - (BOOL)	  labelIsClicked	{ return self.clickedRow != -1; }
 - (LabelData*) selectedLabel	{ return self.labelIsSelected ? labelsTableData_[self.selectedRow] : nil; }
 - (LabelData*) clickedLabel		{ return self.labelIsClicked  ? labelsTableData_[self.clickedRow]  : nil; }
@@ -144,8 +144,8 @@
 - (IBAction) labelTableSingleClick:(id) sender
 {
 	LabelData* label = self.chosenLabel;
-	LogTableView* logTable = [[self.myDocument theHistoryView] logTableView];
-	[logTable scrollToRevision:[label revision]];
+	LogTableView* logTable = [self.myDocument.theHistoryView logTableView];
+	[logTable scrollToRevision:label.revision];
 }
 
 - (IBAction) labelTableDoubleClick:(id) sender
@@ -164,21 +164,21 @@
 
 - (void) setButtonsFromLabelType:(LabelType)labelType
 {
-	[showTags setState:bitsInCommon(eTagLabel, labelType)];
-	[showBookmarks setState:bitsInCommon(eBookmarkLabel, labelType)];
-	[showBranches setState:bitsInCommon(eOpenBranchLabel, labelType)];
-	[showClosedBranches setState:bitsInCommon(eClosedBranch, labelType)];
-	[showOpenHeads setState:bitsInCommon(eOpenHead, labelType)];
+	showTags.state = bitsInCommon(eTagLabel, labelType);
+	showBookmarks.state = bitsInCommon(eBookmarkLabel, labelType);
+	showBranches.state = bitsInCommon(eOpenBranchLabel, labelType);
+	showClosedBranches.state = bitsInCommon(eClosedBranch, labelType);
+	showOpenHeads.state = bitsInCommon(eOpenHead, labelType);
 }
 
 - (LabelType) labelTypeFilterOfButtons
 {
 	return
-		([showTags state] ? eTagLabel : eNoLabelType) |
-		([showBookmarks state] ? eBookmarkLabel : eNoLabelType) |
-		([showBranches state] ? eOpenBranchLabel : eNoLabelType) |
-		([showClosedBranches state] ? eClosedBranch : eNoLabelType) |
-		([showOpenHeads state] ? eOpenHead : eNoLabelType);
+		(showTags.state ? eTagLabel : eNoLabelType) |
+		(showBookmarks.state ? eBookmarkLabel : eNoLabelType) |
+		(showBranches.state ? eOpenBranchLabel : eNoLabelType) |
+		(showClosedBranches.state ? eClosedBranch : eNoLabelType) |
+		(showOpenHeads.state ? eOpenHead : eNoLabelType);
 }
 
 - (void) recomputeLabelsTableData
@@ -186,8 +186,8 @@
 	@synchronized(self)
 	{
 		labelsTableFilterType_ = self.labelTypeFilterOfButtons;
-		RepositoryData* collection = [[parentController myDocument] repositoryData];
-		NSArray* newTableData = [LabelData filterLabelsDictionary:[collection revisionNumberToLabels] byType:labelsTableFilterType_];
+		RepositoryData* collection = parentController.myDocument.repositoryData;
+		NSArray* newTableData = [LabelData filterLabelsDictionary:collection.revisionNumberToLabels byType:labelsTableFilterType_];
 		NSArray* descriptors = self.sortDescriptors;
 		labelsTableData_ = [LabelData removeDuplicateLabels:newTableData];
 		labelsTableData_ = [labelsTableData_ sortedArrayUsingDescriptors:descriptors];
@@ -240,7 +240,7 @@
 
 - (NSInteger) numberOfRowsInTableView:(NSTableView*)aTableView
 {
-	return [self.labelsTableData count];
+	return self.labelsTableData.count;
 }
 
 - (id) tableView:(NSTableView*)aTableView objectValueForTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)requestedRow
@@ -248,7 +248,7 @@
 	if ([self numberOfRowsInTableView:aTableView] <= requestedRow)	return fstr(@"%ld",requestedRow);
 
 	LabelData* label = self.labelsTableData[requestedRow];
-	NSString* requestedColumn = [aTableColumn identifier];
+	NSString* requestedColumn = aTableColumn.identifier;
 	return [label valueForKey:requestedColumn];
 }
 
@@ -282,8 +282,8 @@
 	LabelData* label = self.chosenLabel;
 	if (label)
 	{
-		LogTableView* logTable = [[self.myDocument theHistoryView] logTableView];
-		[logTable scrollToRevision:[label revision]];
+		LogTableView* logTable = [self.myDocument.theHistoryView logTableView];
+		[logTable scrollToRevision:label.revision];
 	}
 	[parentController labelsChanged];
 }

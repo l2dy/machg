@@ -57,8 +57,8 @@ NSAttributedString*   fixedWidthAttributedString(NSString* string);
 
 - (void) hideValidationGraphicAndMessage
 {
-	if (![showConnectionDetailsButton isHidden])
-		detailsWasOpen_ = [connectionDetailsDisclosure disclosureIsVisible];
+	if (!showConnectionDetailsButton.isHidden)
+		detailsWasOpen_ = connectionDetailsDisclosure.disclosureIsVisible;
 	[repositoryConnectionStatusImage	setHidden:YES];
 	[repositoryDetailsStatusImage		setHidden:YES];
 	[showConnectionDetailsButton		setHidden:YES];
@@ -89,13 +89,13 @@ NSAttributedString*   fixedWidthAttributedString(NSString* string);
 
 - (void) showValidationProgressIndicator
 {
-	[validationProgressIndicator setHidden:NO];
+	validationProgressIndicator.hidden = NO;
 	[validationProgressIndicator startAnimation:self];
 }
 
 - (void) hideValidationProgressIndicator
 {
-	[validationProgressIndicator setHidden:YES];
+	validationProgressIndicator.hidden = YES;
 	[validationProgressIndicator stopAnimation:self];
 }
 
@@ -126,9 +126,9 @@ NSAttributedString*   fixedWidthAttributedString(NSString* string);
 	// Once we are validating we try to validate during 20 seconds, upon doing the validation if our results are still relevant
 	// (ie another verification hasn't yet been requested) then we put up the success / fail of the validation. If we timed out
 	// and again our results are still relevant then we put up the failure of the validation.
-	if (IsNotEmpty([theServerRefController baseServerURLFieldValue]))
+	if (IsNotEmpty(theServerRefController.baseServerURLFieldValue))
 	{
-		NSInteger validationAttempt = [queueForConnectionValidation_ operationNumber] + 1;	// Once we add the next block operation, the operationNumber will be
+		NSInteger validationAttempt = queueForConnectionValidation_.operationNumber + 1;	// Once we add the next block operation, the operationNumber will be
 																							// incremented so + 1 will give the operationNumber we are just about to get...
 		ConnectionValidationController* __weak weakSelf = self;
 		ServerRepositoryRefSheetController* __weak weakServerRefController = theServerRefController;
@@ -137,7 +137,7 @@ NSAttributedString*   fixedWidthAttributedString(NSString* string);
 
 
 		[queueForConnectionValidation_ addBlockOperation:^{
-			PasswordVisibilityType visibilityInDisclosure = [weakServerRefController showRealPassword] ? eAllPasswordsAreVisible : eKeyChainPasswordsAreMangled;
+			PasswordVisibilityType visibilityInDisclosure = weakServerRefController.showRealPassword ? eAllPasswordsAreVisible : eKeyChainPasswordsAreMangled;
 			NSString* fullServerURL      = [weakServerRefController generateFullServerURLIncludingPassword:YES andMaskingPassword:NO];
 			NSString* visibleServerURL   = [weakServerRefController generateFullServerURLIncludingPassword:YES andMaskingPassword:visibilityInDisclosure != eAllPasswordsAreVisible];
 			if (IsEmpty(fullServerURL) || IsEmpty(visibleServerURL))
@@ -151,7 +151,7 @@ NSAttributedString*   fixedWidthAttributedString(NSString* string);
 										 ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsIdentify  fromRoot:@"/tmp"  logging:eLogAllToFile];
 										 
 										// If our results are still relevant show the success or failure result
-										 if ([queueForConnectionValidation operationNumber] == validationAttempt)
+										 if (queueForConnectionValidation.operationNumber == validationAttempt)
 										 {
 											 NSString* visibleCommand = fstr(@"chg identify --insecure --noninteractive --rev tip %@", visibleServerURL);
 											 NSMutableAttributedString* resultsStr = [[NSMutableAttributedString alloc]init];
@@ -170,10 +170,10 @@ NSAttributedString*   fixedWidthAttributedString(NSString* string);
 											 }
 											 											 
 											 dispatch_async(mainQueue(), ^{
-												 [[weakRepositoryConnectionStatusDetails textStorage] setAttributedString:resultsStr];
+												 [weakRepositoryConnectionStatusDetails.textStorage setAttributedString:resultsStr];
 											 
 												 [weakSelf hideValidationProgressIndicator];
-												 if (IsNotEmpty(results.outStr) && [results.outStr length] >= 12 && [results isClean])
+												 if (IsNotEmpty(results.outStr) && results.outStr.length >= 12 && results.isClean)
 													 [weakSelf showGoodValidationGraphicAndMessage];
 												 else
 													 [weakSelf showBadValidationGraphicAndMessage];
@@ -184,7 +184,7 @@ NSAttributedString*   fixedWidthAttributedString(NSString* string);
 									 // Time-out Block
 									 ^{
 										 // If our results are still relevant but we timed out show failure result
-										 if ([queueForConnectionValidation operationNumber] == validationAttempt)
+										 if (queueForConnectionValidation.operationNumber == validationAttempt)
 										 {
 											 NSString* visibleCommand = fstr(@"chg identify --insecure --noninteractive --rev tip %@", visibleServerURL);
 											 NSMutableAttributedString* resultsStr = [[NSMutableAttributedString alloc]init];
@@ -196,7 +196,7 @@ NSAttributedString*   fixedWidthAttributedString(NSString* string);
 											 [resultsStr appendAttributedString: fixedWidthAttributedString(@"Operation timed out after 20 seconds.")];
 											 
 											 dispatch_async(mainQueue(), ^{
-												 [[weakRepositoryConnectionStatusDetails textStorage] setAttributedString:resultsStr];
+												 [weakRepositoryConnectionStatusDetails.textStorage setAttributedString:resultsStr];
 
 												 [weakSelf hideValidationProgressIndicator];
 												 [weakSelf showBadValidationGraphicAndMessage];

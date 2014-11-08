@@ -68,7 +68,7 @@
 
 - (NSIndexSet*) indexSetForStartingRevision:(NSNumber*)rev
 {
-	NSSet* descendants = [[myDocument_ repositoryData] descendantsOfRevisionNumber:rev];
+	NSSet* descendants = [myDocument_.repositoryData descendantsOfRevisionNumber:rev];
 	NSMutableIndexSet* newIndexes = [[NSMutableIndexSet alloc]init];
 	for (NSNumber* revNum in descendants)
 	{
@@ -81,9 +81,9 @@
 
 - (NSString*) reasonForInvalidityOfSelectedEntries
 {
-	NSArray* entries = [logTableView selectedEntries];
+	NSArray* entries = logTableView.selectedEntries;
 	
-	if ([entries count] < 1)
+	if (entries.count < 1)
 		return @"Unable to edit the history because no revisions are selected to edit. Select one or more consecutive revisions to edit.";
 	
 	return nil;
@@ -93,11 +93,11 @@
 {
 	NSString* reasonForNonValid = self.reasonForInvalidityOfSelectedEntries;
 	if (!reasonForNonValid)
-		[okButton setEnabled:YES];
+		okButton.enabled = YES;
 	else
 	{
-		[okButton setEnabled:NO];
-		[sheetInformativeMessageTextField setStringValue: reasonForNonValid];
+		okButton.enabled = NO;
+		sheetInformativeMessageTextField.stringValue =  reasonForNonValid;
 	}
 }
 
@@ -122,7 +122,7 @@
 
 	BOOL abort = (result == NSAlertAlternateReturn);
 	[argsHistoryEdit addObject: (abort ? @"--abort" : @"--continue")];
-	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
+	NSString* rootPath = myDocument_.absolutePathOfRepositoryRoot;
 	
 	ExecutionResult* results = [myDocument_  executeMercurialWithArgs:argsHistoryEdit  fromRoot:rootPath  whileDelayingEvents:YES];
 
@@ -134,7 +134,7 @@
 		RunAlertPanel(titleMessage, message, @"OK", nil, nil);
 	}
 	if (abort)
-		[[myDocument_ repositoryData] deleteHistoryEditState];
+		[myDocument_.repositoryData deleteHistoryEditState];
 }
 
 
@@ -148,7 +148,7 @@
 
 - (IBAction) openHistoryEditSheetWithSelectedRevisions:(id)sender
 {
-	if ([[myDocument_ repositoryData] historyEditInProgress])
+	if (myDocument_.repositoryData.historyEditInProgress)
 	{
 		[self doContinueOrAbort];
 		return;
@@ -162,16 +162,16 @@
 	
 	// Retarget a single click to select that entry and all descendants.
 	[logTableView setAction:@selector(handleLogTableViewClick:)];
-	[logTableView setTarget:self];
+	logTableView.target = self;
 	
-	NSString* newTitle = fstr(@"Editing Selected Revisions in “%@”", [myDocument_ selectedRepositoryShortName]);
-	[historyEditSheetTitle setStringValue:newTitle];
+	NSString* newTitle = fstr(@"Editing Selected Revisions in “%@”", myDocument_.selectedRepositoryShortName);
+	historyEditSheetTitle.stringValue = newTitle;
 		
 	[logTableView resetTable:self];
 	
-	NSArray* revs = [[[myDocument_ theHistoryView] logTableView] chosenRevisions];
-	if ([revs count] <= 0)
-		[logTableView scrollToRevision:[myDocument_ getHGTipRevision]];
+	NSArray* revs = [myDocument_.theHistoryView.logTableView chosenRevisions];
+	if (revs.count <= 0)
+		[logTableView scrollToRevision:myDocument_.getHGTipRevision];
 	{
 		NSInteger minRev = numberAsInt(revs[0]);
 		for (NSNumber* revision in revs)
@@ -184,9 +184,9 @@
 	}
 	
 	[self validateButtons:self];
-	if ([okButton isEnabled])
-		[sheetInformativeMessageTextField setAttributedStringValue: self.formattedSheetMessage];
-	[self setWindow:theHistoryEditSheet];
+	if (okButton.isEnabled)
+		sheetInformativeMessageTextField.attributedStringValue =  self.formattedSheetMessage;
+	self.window = theHistoryEditSheet;
 	[myDocument_ beginSheet:theHistoryEditSheet];
 	
 }
@@ -214,8 +214,8 @@
 
 - (IBAction) openHistoryEditConfirmationSheet:(id)sender
 {
-	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
-	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
+	NSString* rootPath = myDocument_.absolutePathOfRepositoryRoot;
+	LowHighPair pair = logTableView.lowestToHighestSelectedRevisions;
 	NSMutableArray* argsHistoryEdit = [NSMutableArray arrayWithObjects:@"histedit", @"--config", @"extensions.hgext.histedit=", nil];
 	
 	[argsHistoryEdit addObject:@"--startingrules"];
@@ -224,11 +224,11 @@
 	ExecutionResult* results = [myDocument_  executeMercurialWithArgs:argsHistoryEdit  fromRoot:rootPath  whileDelayingEvents:YES];
 	if (results.result != 0)
 		return;
-	[[confirmationSheetMessage textStorage] setAttributedString:normalSheetMessageAttributedString(results.outStr)];
+	[confirmationSheetMessage.textStorage setAttributedString:normalSheetMessageAttributedString(results.outStr)];
 	[theHistoryEditConfirmationSheet makeFirstResponder:confirmationSheetMessage];
 	
-	[sheetConfirmationInformativeMessageTextField setAttributedStringValue:[sheetInformativeMessageTextField attributedStringValue]];
-	[self setWindow:theHistoryEditConfirmationSheet];
+	sheetConfirmationInformativeMessageTextField.attributedStringValue = sheetInformativeMessageTextField.attributedStringValue;
+	self.window = theHistoryEditConfirmationSheet;
 	[myDocument_ beginSheet:theHistoryEditConfirmationSheet];
 }
 
@@ -237,13 +237,13 @@
 	[theHistoryEditConfirmationSheet makeFirstResponder:theHistoryEditConfirmationSheet];	// Make the text fields of the sheet commit any changes they currently have
 	[myDocument_ endSheet:theHistoryEditConfirmationSheet];
 
-	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
-	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
-	NSString* repositoryName = [[[myDocument_ sidebar] selectedNode] shortName];
+	NSString* rootPath = myDocument_.absolutePathOfRepositoryRoot;
+	LowHighPair pair = logTableView.lowestToHighestSelectedRevisions;
+	NSString* repositoryName = [myDocument_.sidebar.selectedNode shortName];
 	NSString* historyEditDescription = fstr(@"Editing descendants of %ld in “%@”", pair.lowRevision, repositoryName);
 	NSMutableArray* argsHistoryEdit = [NSMutableArray arrayWithObjects:@"histedit", @"--config", @"extensions.hgext.histedit=", nil];
 	
-	[argsHistoryEdit addObject:@"--rules" followedBy:[confirmationSheetMessage string]];
+	[argsHistoryEdit addObject:@"--rules" followedBy:confirmationSheetMessage.string];
 	[argsHistoryEdit addObject:intAsString(pair.lowRevision)];
 
 	[myDocument_ dispatchToMercurialQueuedWithDescription:historyEditDescription  process:^{
@@ -267,21 +267,21 @@
 - (void) logTableViewSelectionDidChange:(LogTableView*)theLogTable
 {
 	[self validateButtons:self];
-	if ([okButton isEnabled])
-		[sheetInformativeMessageTextField setAttributedStringValue: self.formattedSheetMessage];
+	if (okButton.isEnabled)
+		sheetInformativeMessageTextField.attributedStringValue =  self.formattedSheetMessage;
 }
 
 - (NSIndexSet*) tableView:(NSTableView*)tableView selectionIndexesForProposedSelection:(NSIndexSet*)proposedSelectionIndexes
 {
 	return proposedSelectionIndexes;
-	if (![logTableView rowWasClicked])
-		return [self indexSetForStartingRevision:stringAsNumber([logTableView revisionForTableRow:[proposedSelectionIndexes firstIndex]])];
-	return [self indexSetForStartingRevision:[logTableView chosenRevision]];
+	if (!logTableView.rowWasClicked)
+		return [self indexSetForStartingRevision:stringAsNumber([logTableView revisionForTableRow:proposedSelectionIndexes.firstIndex])];
+	return [self indexSetForStartingRevision:logTableView.chosenRevision];
 }
 
 - (IBAction) handleLogTableViewClick:(id)sender
 {
-	NSIndexSet* newIndexes = [self indexSetForStartingRevision:[logTableView chosenRevision]];
+	NSIndexSet* newIndexes = [self indexSetForStartingRevision:logTableView.chosenRevision];
 	[logTableView selectRowIndexes:newIndexes byExtendingSelection:NO];
 }
 
@@ -297,7 +297,7 @@
 - (NSAttributedString*) formattedSheetMessage
 {
 	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
-	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
+	LowHighPair pair = logTableView.lowestToHighestSelectedRevisions;
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"The revisions from ")];
 	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(intAsString(pair.lowRevision))];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" through to ")];

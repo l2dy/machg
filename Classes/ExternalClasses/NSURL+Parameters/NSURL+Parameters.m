@@ -131,9 +131,9 @@ NSString* unescapeString(NSString* str)
 - (NSURL*) URLByReplacingBaseURL:(NSString*)newBase
 {
 	NSURL* newBaseURL = [NSURL URLWithString:newBase];
-	NSString* newUserIfAny     = IsNotEmpty([newBaseURL user])     ? [newBaseURL user]     : self.user;
-	NSString* newPasswordIfAny = IsNotEmpty([newBaseURL password]) ? [newBaseURL password] : self.password;
-	return [NSURL URLWithScheme:[newBaseURL scheme] user:newUserIfAny password:newPasswordIfAny host:[newBaseURL host] port:[[newBaseURL port] unsignedShortValue] path:[newBaseURL path]];
+	NSString* newUserIfAny     = IsNotEmpty([newBaseURL user])     ? newBaseURL.user     : self.user;
+	NSString* newPasswordIfAny = IsNotEmpty([newBaseURL password]) ? newBaseURL.password : self.password;
+	return [NSURL URLWithScheme:[newBaseURL scheme] user:newUserIfAny password:newPasswordIfAny host:[newBaseURL host] port:[newBaseURL.port unsignedShortValue] path:[newBaseURL path]];
 }
 
 @end

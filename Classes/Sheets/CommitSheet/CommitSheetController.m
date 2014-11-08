@@ -49,7 +49,7 @@ NSString* kAmendOption	 = @"amendOption";
 {
 	if (self.showingFilesTable)
 	{
-		NSDictionary* userInfo = [notification userInfo];
+		NSDictionary* userInfo = notification.userInfo;
 		NSString* absolutePath = fstr(@"%@/%@", nonNil(userInfo[kRootPath]), nonNil(userInfo[kFileName]));
 		FSNodeInfo* changedNode = [self.rootNodeInfo nodeForPathFromRoot:absolutePath];
 		if (changedNode)
@@ -112,7 +112,7 @@ NSString* kAmendOption	 = @"amendOption";
 	[self  addObserver:self  forKeyPath:kAmendOption  options:NSKeyValueObservingOptionNew  context:NULL];
 	cachedCommitMessageForAmend_ = nil;
 	
-	[previousCommitMessagesTableView setTarget:self];
+	previousCommitMessagesTableView.target = self;
 	[previousCommitMessagesTableView setDoubleAction:@selector(handlePreviousCommitMessagesTableDoubleClick:)];
 	[previousCommitMessagesTableView setAction:@selector(handlePreviousCommitMessagesTableClick:)];
 }
@@ -144,7 +144,7 @@ NSString* kAmendOption	 = @"amendOption";
 
 - (IBAction) handlePreviousCommitMessagesTableDoubleClick:(id)sender
 {
-	NSString* message = logCommentsTableSourceData[[previousCommitMessagesTableView clickedRow]];
+	NSString* message = logCommentsTableSourceData[previousCommitMessagesTableView.clickedRow];
 	[commitMessageTextView insertText:message];
 	[theCommitSheet makeFirstResponder:commitMessageTextView];
 }
@@ -171,38 +171,38 @@ NSString* kAmendOption	 = @"amendOption";
 - (void) openCommitSheetWithPaths:(NSArray*)paths
 {
 	logCommentsTableSourceData = nil;
-	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
+	NSString* rootPath = myDocument_.absolutePathOfRepositoryRoot;
 
 	// Report the branch we are about to commit on in the dialog
 	NSMutableArray* argsBranch = [NSMutableArray arrayWithObjects:@"branch", nil];
 	ExecutionResult* hgBranchResults = [TaskExecutions executeMercurialWithArgs:argsBranch  fromRoot:rootPath  logging:eLoggingNone];
 	NSString* newBranchSheetString = fstr(@"to branch: %@", hgBranchResults.outStr);
-	[commitSheetBranchString setStringValue: newBranchSheetString];
+	commitSheetBranchString.stringValue =  newBranchSheetString;
 
 	NSMutableArray* argsGetUserName = [NSMutableArray arrayWithObjects:@"showconfig", @"ui.username", nil];
 	ExecutionResult* userNameResult = [TaskExecutions executeMercurialWithArgs:argsGetUserName  fromRoot:rootPath];
 
 	//[disclosureController setToOpenState:NO withAnimation:NO];
-	[self setCommitter:nonNil(userNameResult.outStr)];
-	[self setCommitterOption:NO];
-	[self setDate:[NSDate date]];
-	[self setDateOption:NO];
-	if ([amendButton state] == NSOnState)
-		[self setAmendOption:NO];
+	self.committer = nonNil(userNameResult.outStr);
+	self.committerOption = NO;
+	self.date = NSDate.date;
+	self.dateOption = NO;
+	if (amendButton.state == NSOnState)
+		self.amendOption = NO;
 
 	// Handle the commit substate option
 	hasHgSub_ = pathIsExistentFile(fstr(@"%@/.hgsub",rootPath));
-	[self setCommitSubstateOption:SubrepoSubstateCommitFromDefauts() == eSubrepositorySubstateDoCommit];
-	[commitSubstateButton setHidden:!hasHgSub_];
+	self.commitSubstateOption = SubrepoSubstateCommitFromDefauts() == eSubrepositorySubstateDoCommit;
+	commitSubstateButton.hidden = !hasHgSub_;
 	
-	NSString* currentMessage = [commitMessageTextView string];
-	[commitMessageTextView setSelectedRange:[currentMessage fullRange]];
+	NSString* currentMessage = commitMessageTextView.string;
+	commitMessageTextView.selectedRange = currentMessage.fullRange;
 	[self setSheetTitle];
 	[myDocument_ beginSheet:theCommitSheet];
 	[theCommitSheet makeFirstResponder:commitMessageTextView];
 
 	// Store the paths of the files to be committed
-	absolutePathsOfFilesToCommit_ = pruneContainedPaths([[myDocument_ theFSViewer] filterPaths:paths byBitfield:eHGStatusChangedInSomeWay]);
+	absolutePathsOfFilesToCommit_ = pruneContainedPaths([myDocument_.theFSViewer filterPaths:paths byBitfield:eHGStatusChangedInSomeWay]);
 	
 	[commitFilesViewer	actionSwitchToFilesTable:self];
 	[commitFilesViewer	repositoryDataIsNew];
@@ -213,11 +213,11 @@ NSString* kAmendOption	 = @"amendOption";
 	logCommentsTableSourceData = [hgLogResults.outStr componentsSeparatedByString:@"\n#^&^#\n"];
 	[previousCommitMessagesTableView reloadData];
 	
-	LogEntry* parent = [[myDocument_ repositoryData] entryForRevision:[myDocument_ getHGParent1Revision]];
+	LogEntry* parent = [myDocument_.repositoryData entryForRevision:myDocument_.getHGParent1Revision];
 	[parent fullyLoadEntry];
-	cachedCommitMessageForAmend_ = [parent fullComment];
+	cachedCommitMessageForAmend_ = parent.fullComment;
 
-	amendIsPossible_ = ![myDocument_ inMergeState] && [[myDocument_ repositoryData] isTipOfLocalBranch];
+	amendIsPossible_ = !myDocument_.inMergeState && myDocument_.repositoryData.isTipOfLocalBranch;
 	
 	[self validateButtons:self];
 }
@@ -226,20 +226,20 @@ NSString* kAmendOption	 = @"amendOption";
 - (IBAction) openCommitSheetWithAllFiles:(id)sender
 {
 	committingAllFiles = YES;
-	[self openCommitSheetWithPaths:[myDocument_ absolutePathOfRepositoryRootAsArray]];
+	[self openCommitSheetWithPaths:myDocument_.absolutePathOfRepositoryRootAsArray];
 }
 
 - (IBAction) openCommitSheetWithSelectedFiles:(id)sender
 {
-	if ([[myDocument_ repositoryData] inMergeState])
+	if (myDocument_.repositoryData.inMergeState)
 	{
 		[self openCommitSheetWithAllFiles:sender];
 		return;
 	}
 	
 	committingAllFiles = NO;
-	NSArray* paths = [myDocument_ absolutePathsOfChosenFiles];
-	if ([paths count] <= 0)
+	NSArray* paths = myDocument_.absolutePathsOfChosenFiles;
+	if (paths.count <= 0)
 		{ PlayBeep(); DebugLog(@"No files are selected to commit"); return; }
 
 	[self openCommitSheetWithPaths:paths];
@@ -249,9 +249,9 @@ NSString* kAmendOption	 = @"amendOption";
 - (void) setSheetTitle
 {
 	NSString* newTitle = nil;
-	BOOL mergedState = [[myDocument_ repositoryData] inMergeState];
+	BOOL mergedState = myDocument_.repositoryData.inMergeState;
 	BOOL allFiles = committingAllFiles;
-	NSString* repositoryShortName = [myDocument_ selectedRepositoryShortName];
+	NSString* repositoryShortName = myDocument_.selectedRepositoryShortName;
 	if (mergedState)
 		newTitle = fstr(@"Committing Merged Files in %@", repositoryShortName);
 	else if (allFiles && !amendOption_)
@@ -260,7 +260,7 @@ NSString* kAmendOption	 = @"amendOption";
 		newTitle = fstr(@"Amending Selected Files in %@", repositoryShortName);
 	else
 		newTitle = fstr(@"Committing Selected Files in %@", repositoryShortName);
-	[commitSheetTitle setStringValue:newTitle];
+	commitSheetTitle.stringValue = newTitle;
 }
 
 - (void) setTooltipMessgaes
@@ -268,11 +268,11 @@ NSString* kAmendOption	 = @"amendOption";
 	NSString* amendTooltipMessage = @"Amend will incorporate the files to be committed into the last changeset.";
 	if (!AllowHistoryEditingOfRepositoryFromDefaults())
 		amendTooltipMessage = @"History editing needs to be enabled in order to use the amend option.";
-	else if ([myDocument_ inMergeState])
+	else if (myDocument_.inMergeState)
 		amendTooltipMessage = @"The changeset to be amended cannot be a merge changeset.";
-	else if (![myDocument_ isCurrentRevisionTip])
+	else if (!myDocument_.isCurrentRevisionTip)
 		amendTooltipMessage = @"The changeset to be amended must be the tip revision.";
-	[amendButton setToolTip:amendTooltipMessage];
+	amendButton.toolTip = amendTooltipMessage;
 }
 
 - (void) makeMessageFieldFirstResponder
@@ -291,19 +291,19 @@ NSString* kAmendOption	 = @"amendOption";
 
 - (BOOL) validateUserInterfaceItem:(id < NSValidatedUserInterfaceItem >)anItem
 {
-	SEL theAction = [anItem action];
+	SEL theAction = anItem.action;
 	// CommitSheet contextual items
-	if (theAction == @selector(commitSheetDiffAction:))			return [commitFilesViewer nodesAreSelected];
+	if (theAction == @selector(commitSheetDiffAction:))			return commitFilesViewer.nodesAreSelected;
 	return NO;
 }
 
 - (BOOL) anyHunksToCommit
 {
-	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
+	NSString* rootPath = myDocument_.absolutePathOfRepositoryRoot;
 	HunkExclusions* hunkExclusions = self.hunkExclusions;
 	for(FSNodeInfo* node in self.tableLeafNodes)
 	{
-		NSString* fileName = pathDifference(rootPath, [node absolutePath]);
+		NSString* fileName = pathDifference(rootPath, node.absolutePath);
 		NSSet* hunkExclusionSet = [hunkExclusions hunkExclusionSetForRoot:rootPath andFile:fileName];
 		if (IsEmpty(hunkExclusionSet))
 			return YES;
@@ -316,15 +316,15 @@ NSString* kAmendOption	 = @"amendOption";
 
 - (IBAction) validateButtons:(id)sender
 {
-	BOOL pathsAreSelected = [commitFilesViewer nodesAreSelected];
-	BOOL canAllowAmend = AllowHistoryEditingOfRepositoryFromDefaults() && amendIsPossible_ && ![myDocument_ inMergeState];
-	BOOL okToCommit = IsNotEmpty([commitMessageTextView string]) && self.anyHunksToCommit;
+	BOOL pathsAreSelected = commitFilesViewer.nodesAreSelected;
+	BOOL canAllowAmend = AllowHistoryEditingOfRepositoryFromDefaults() && amendIsPossible_ && !myDocument_.inMergeState;
+	BOOL okToCommit = IsNotEmpty(commitMessageTextView.string) && self.anyHunksToCommit;
 	NSString* diffButtonMessage = pathsAreSelected ? @"Diff Selected" : @"Diff All";
 	
 	dispatch_async(mainQueue(), ^{
-		[diffButton setTitle:diffButtonMessage];
-		[okButton setEnabled:okToCommit];
-		[amendButton setEnabled:canAllowAmend];
+		diffButton.title = diffButtonMessage;
+		okButton.enabled = okToCommit;
+		amendButton.enabled = canAllowAmend;
 		[self setTooltipMessgaes];
 		[self setSheetTitle];
 	});
@@ -335,8 +335,8 @@ NSString* kAmendOption	 = @"amendOption";
 // message, forthe old message, etc.
 - (void) amendOptionChanged
 {
-	NSString* currentMessage = [[commitMessageTextView string] copy];
-	[commitMessageTextView setSelectedRange:[currentMessage fullRange]];
+	NSString* currentMessage = commitMessageTextView.string.copy;
+	commitMessageTextView.selectedRange = currentMessage.fullRange;
 	[commitMessageTextView insertText:nonNil(cachedCommitMessageForAmend_)];
 	cachedCommitMessageForAmend_ = currentMessage;
 	[self validateButtons:self];
@@ -353,7 +353,7 @@ NSString* kAmendOption	 = @"amendOption";
 - (NSInteger) numberOfRowsInTableView:(NSTableView*)aTableView
 {
 	if (aTableView == previousCommitMessagesTableView)
-		return [logCommentsTableSourceData count];
+		return logCommentsTableSourceData.count;
 	return 0;
 }
 
@@ -366,12 +366,12 @@ NSString* kAmendOption	 = @"amendOption";
 
 - (NSArray*) tableLeafNodes
 {
-	return [[commitFilesViewer theFilesTable] leafNodeForTableRow];
+	return commitFilesViewer.theFilesTable.leafNodeForTableRow;
 }
 
 - (NSArray*) tableLeafPaths
 {
-	return pathsOfFSNodes([[commitFilesViewer theFilesTable] leafNodeForTableRow]);
+	return pathsOfFSNodes(commitFilesViewer.theFilesTable.leafNodeForTableRow);
 }
 
 
@@ -385,19 +385,19 @@ NSString* kAmendOption	 = @"amendOption";
 
 - (NSArray*) argumentsForUserDataMessage
 {
-	NSString* theMessage = [commitMessageTextView string];
+	NSString* theMessage = commitMessageTextView.string;
 	NSMutableArray* args = [NSMutableArray arrayWithObjects:@"--message", theMessage, nil];
 	if (self.committerOption && IsNotEmpty(self.committer))
 		[args addObject:@"--user" followedBy:self.committer];
 	if (self.dateOption && IsNotEmpty(self.date))
-		[args addObject:@"--date" followedBy:[self.date isodateDescription]];
+		[args addObject:@"--date" followedBy:self.date.isodateDescription];
 	return args;
 }
 
 
 - (void) handleCommitSubrepoSubstateOption:(NSMutableArray*)commandArgs
 {
-	if (hasHgSub_ && [commitSubstateButton state] == NSOffState)
+	if (hasHgSub_ && commitSubstateButton.state == NSOffState)
 	{
 		[commandArgs addObject:@"-X" followedBy:@".hgsub"];
 		[commandArgs addObject:@"-X" followedBy:@".hgsubstate"];
@@ -406,13 +406,13 @@ NSString* kAmendOption	 = @"amendOption";
 
 - (void) sheetActionSimpleCommit:(NSArray*)pathsToCommit
 {
-	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
+	NSString* rootPath = myDocument_.absolutePathOfRepositoryRoot;
 	[myDocument_ dispatchToMercurialQueuedWithDescription:@"Committing Files" process:^{
 		NSMutableArray* args = [NSMutableArray arrayWithObjects:@"commit", nil];
 		[self handleCommitSubrepoSubstateOption:args];
 		[myDocument_ registerPendingRefresh:pathsToCommit];
 		[args addObjectsFromArray:self.argumentsForUserDataMessage];
-		if (![myDocument_ inMergeState])
+		if (!myDocument_.inMergeState)
 			[args addObjectsFromArray:pathsToCommit];
 		
 		[myDocument_ delayEventsUntilFinishBlock:^{
@@ -424,30 +424,30 @@ NSString* kAmendOption	 = @"amendOption";
 
 - (BOOL) commit_setupForAmend
 {
-	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
+	NSString* rootPath = myDocument_.absolutePathOfRepositoryRoot;
 	
 	if (DisplayWarningForAmendFromDefaults())
 	{
-		BOOL pathsAreRootPath = [[absolutePathsOfFilesToCommit_ lastObject] isEqual:rootPath];
+		BOOL pathsAreRootPath = [absolutePathsOfFilesToCommit_.lastObject isEqual:rootPath];
 		NSString* mainMessage = fstr(@"Amending the latest revision with %@ files", pathsAreRootPath ? @"all" : @"the selected");
-		NSString* subMessage  = fstr(@"Are you sure you want to amend the latest revision in the repository “%@”.", [myDocument_ selectedRepositoryShortName]);
+		NSString* subMessage  = fstr(@"Are you sure you want to amend the latest revision in the repository “%@”.", myDocument_.selectedRepositoryShortName);
 		int result = RunCriticalAlertPanelOptionsWithSuppression(mainMessage, subMessage, @"Amend", @"Cancel", nil, MHGDisplayWarningForAmend);
 		if (result != NSAlertFirstButtonReturn)
 			[NSException raise:@"UserCanceled" format:@"The user canceled this operation", nil];
 	}	
 	
-	NSString* parent1RevisionStr = numberAsString([myDocument_ getHGParent1Revision]);
+	NSString* parent1RevisionStr = numberAsString(myDocument_.getHGParent1Revision);
 
-	if ([myDocument_ inMergeState])
+	if (myDocument_.inMergeState)
 		[NSException raise:@"Merge" format:@"The Amend operation could not proceed. The repository is in a merge state.", nil];
 
-	if (![[myDocument_ repositoryData] isTipOfLocalBranch])
+	if (!myDocument_.repositoryData.isTipOfLocalBranch)
 		[NSException raise:@"Descendants" format:@"The Amend operation could not proceed. The revision to amend %@ has other descedants.", parent1RevisionStr, nil];
 
 	NSMutableArray*  qimportArgs   = [NSMutableArray arrayWithObjects:@"qimport", @"--config", @"extensions.hgext.mq=", @"--rev", parent1RevisionStr, @"--name", @"macHgAmendPatch", @"--git", nil];
 	ExecutionResult* qimportResult = [myDocument_ executeMercurialWithArgs:qimportArgs  fromRoot:rootPath  whileDelayingEvents:YES];
-	if ([qimportResult hasErrors])
-		[NSException raise:@"QImporting" format:@"The Amend operation could not proceed. The process of importing the existing patch reported the error: %@.", [qimportResult errStr], nil];
+	if (qimportResult.hasErrors)
+		[NSException raise:@"QImporting" format:@"The Amend operation could not proceed. The process of importing the existing patch reported the error: %@.", qimportResult.errStr, nil];
 	return YES;
 }
 
@@ -461,11 +461,11 @@ NSString* kAmendOption	 = @"amendOption";
 	{
 		NSError* err = nil;
 		NSString* backupPath =  fstr(@"%@/%@",tempDirectoryPath, pathDifference(rootPath, originalPath));
-		[[NSFileManager defaultManager] copyItemAtPath:originalPath toPath:backupPath withIntermediateDirectories:YES error:&err];
+		[NSFileManager.defaultManager copyItemAtPath:originalPath toPath:backupPath withIntermediateDirectories:YES error:&err];
 		if (err)
 		{
-			NSString* operation = ([amendButton state] == NSOnState) ? @"amend" : @"commit";
-			[NSException raise:@"Backup" format:@"Unable to backup files before the main %@ (Mac OS reports: %@). Aborting the %@.", operation, [err localizedDescription], operation, nil];
+			NSString* operation = (amendButton.state == NSOnState) ? @"amend" : @"commit";
+			[NSException raise:@"Backup" format:@"Unable to backup files before the main %@ (Mac OS reports: %@). Aborting the %@.", operation, err.localizedDescription, operation, nil];
 		}
 	}	
 }
@@ -476,9 +476,9 @@ NSString* kAmendOption	 = @"amendOption";
 	{
 		NSError* err = nil;
 		NSString* backupPath =  fstr(@"%@/%@",tempDirectoryPath, pathDifference(rootPath, originalPath));
-		[[NSFileManager defaultManager] removeItemAtPath:originalPath error:&err];
+		[NSFileManager.defaultManager removeItemAtPath:originalPath error:&err];
 		[NSApp presentAnyErrorsAndClear:&err];
-		[[NSFileManager defaultManager] copyItemAtPath:backupPath toPath:originalPath error:&err];
+		[NSFileManager.defaultManager copyItemAtPath:backupPath toPath:originalPath error:&err];
 		[NSApp presentAnyErrorsAndClear:&err];
 	}
 	moveFilesToTheTrash(@[tempDirectoryPath]);
@@ -486,7 +486,7 @@ NSString* kAmendOption	 = @"amendOption";
 
 - (void) sheetActionCommitWithUncontestedPaths:(NSArray*)uncontestedPaths andContestedPaths:(NSArray*)contestedPaths amending:(BOOL)amend
 {
-	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
+	NSString* rootPath = myDocument_.absolutePathOfRepositoryRoot;
 	NSString* operation = amend ? @"amend" : @"commit";
 	NSString* errorTitle = fstr(@"Aborted %@", amend ? @"Amend" : @"Commit");
 	NSString* operationTitle = fstr(@"%@ Files", amend ? @"Amending" : @"Committing");
@@ -514,9 +514,9 @@ NSString* kAmendOption	 = @"amendOption";
 	}
 	@catch (NSException* e)
 	{
-		if ([[e name] isEqualToString:@"UserCanceled"])
+		if ([e.name isEqualToString:@"UserCanceled"])
 			return;
-		RunCriticalAlertPanel(errorTitle, [e reason], @"OK", nil, nil);
+		RunCriticalAlertPanel(errorTitle, e.reason, @"OK", nil, nil);
 		return;
 	}
 	
@@ -536,8 +536,8 @@ NSString* kAmendOption	 = @"amendOption";
 					NSMutableArray* argsRevert = [NSMutableArray arrayWithObjects:@"revert", @"--no-backup", nil];
 					[argsRevert addObjectsFromArray:contestedPaths];
 					ExecutionResult* revertResult = [TaskExecutions executeMercurialWithArgs:argsRevert  fromRoot:rootPath logging:eLoggingNone];
-					if ([revertResult hasErrors])
-						[NSException raise:@"Reverting" format:@"During the process needed to %@ the files, the step of reverting the files with excluded hunks reported the error: %@.", operation, [revertResult errStr], nil];
+					if (revertResult.hasErrors)
+						[NSException raise:@"Reverting" format:@"During the process needed to %@ the files, the step of reverting the files with excluded hunks reported the error: %@.", operation, revertResult.errStr, nil];
 				}
 
 				// Patch the contested files to the desired state, (if all the hunks are descelected in the contested files the
@@ -546,8 +546,8 @@ NSString* kAmendOption	 = @"amendOption";
 				{
 					NSMutableArray*  importArgs   = [NSMutableArray arrayWithObjects:@"import", @"--no-commit", @"--force", contestedPatchFile, nil];
 					ExecutionResult* importResult = [TaskExecutions executeMercurialWithArgs:importArgs  fromRoot:rootPath logging:eLoggingNone];
-					if ([importResult hasErrors])
-						[NSException raise:@"Importing" format:@"During the process needed to %@ the files, the step of adjusting the files to exclude the specified hunks reported the error: %@.", operation, [importResult errStr], nil];
+					if (importResult.hasErrors)
+						[NSException raise:@"Importing" format:@"During the process needed to %@ the files, the step of adjusting the files to exclude the specified hunks reported the error: %@.", operation, importResult.errStr, nil];
 				}
 				
 				if (!amend)
@@ -559,8 +559,8 @@ NSString* kAmendOption	 = @"amendOption";
 					[commitArgs addObjectsFromArray:uncontestedPaths];
 					[commitArgs addObjectsFromArray:contestedPaths];
 					ExecutionResult* commitResult = [TaskExecutions executeMercurialWithArgs:commitArgs  fromRoot:rootPath logging:eLoggingNone];
-					if ([commitResult hasErrors])
-						[NSException raise:@"Committing" format:@"During the process needed to %@ the files, the step of commiting the adjusted files reported the error: %@.", operation, [commitResult errStr], nil];
+					if (commitResult.hasErrors)
+						[NSException raise:@"Committing" format:@"During the process needed to %@ the files, the step of commiting the adjusted files reported the error: %@.", operation, commitResult.errStr, nil];
 				}
 				else
 				{
@@ -571,20 +571,20 @@ NSString* kAmendOption	 = @"amendOption";
 					[qrefreshArgs addObjectsFromArray:uncontestedPaths];
 					[qrefreshArgs addObjectsFromArray:contestedPaths];
 					ExecutionResult* qrefreshResult = [myDocument_ executeMercurialWithArgs:qrefreshArgs  fromRoot:rootPath  whileDelayingEvents:YES];
-					if ([qrefreshResult hasErrors])
-						[NSException raise:@"Refreshing" format:@"The amend operation could not proceed. The patch refresh process reported the error: %@. Please back out any patch operations.", [qrefreshResult errStr], nil];
+					if (qrefreshResult.hasErrors)
+						[NSException raise:@"Refreshing" format:@"The amend operation could not proceed. The patch refresh process reported the error: %@. Please back out any patch operations.", qrefreshResult.errStr, nil];
 					
 					// Do the queue finish
 					NSMutableArray*  qfinishArgs   = [NSMutableArray arrayWithObjects:@"qfinish", @"--config", @"extensions.hgext.mq=", @"macHgAmendPatch", nil];
 					ExecutionResult* qfinishResult = [myDocument_ executeMercurialWithArgs:qfinishArgs  fromRoot:rootPath  whileDelayingEvents:YES];
-					if ([qfinishResult hasErrors])
-						[NSException raise:@"Finishing" format:@"The amend operation could not proceed. The patch finish process reported the error: %@. Please back out any patch operations.", [qfinishResult errStr], nil];
+					if (qfinishResult.hasErrors)
+						[NSException raise:@"Finishing" format:@"The amend operation could not proceed. The patch finish process reported the error: %@. Please back out any patch operations.", qfinishResult.errStr, nil];
 				}
 			}
 			@catch (NSException * e)
 			{
-				[amendButton setState:NSOffState];
-				RunCriticalAlertPanel(errorTitle, [e reason], @"OK", nil, nil);
+				amendButton.state = NSOffState;
+				RunCriticalAlertPanel(errorTitle, e.reason, @"OK", nil, nil);
 			}
 			@finally
 			{
@@ -608,16 +608,16 @@ NSString* kAmendOption	 = @"amendOption";
 
 - (IBAction) sheetButtonOk:(id)sender
 {
-	NSString* root = [myDocument_ absolutePathOfRepositoryRoot];
+	NSString* root = myDocument_.absolutePathOfRepositoryRoot;
 	
 	[theCommitSheet makeFirstResponder:theCommitSheet];	// Make the fields of the sheet commit any changes they currently have
 
 	NSArray* commitData = self.tableLeafPaths;
 	NSArray*   contestedPaths = [self.hunkExclusions   contestedPathsIn:commitData  forRoot:root];
 	NSArray* uncontestedPaths = [self.hunkExclusions uncontestedPathsIn:commitData  forRoot:root];
-	BOOL inMerge = [[myDocument_ repositoryData] inMergeState];
+	BOOL inMerge = myDocument_.repositoryData.inMergeState;
 	BOOL simpleOperation = 	IsEmpty(contestedPaths);
-	BOOL amend = ([amendButton state] == NSOnState);
+	BOOL amend = (amendButton.state == NSOnState);
 	
 	// This is more a check here, error handling should have caught this before now if the files were empty.
 	if (IsEmpty(commitData))
@@ -642,7 +642,7 @@ NSString* kAmendOption	 = @"amendOption";
 
 - (IBAction) commitSheetDiffAction:(id)sender
 {
-	NSArray* nodesToDiff = [commitFilesViewer nodesAreSelected] ? [commitFilesViewer chosenNodes] : self.tableLeafNodes;
+	NSArray* nodesToDiff = commitFilesViewer.nodesAreSelected ? commitFilesViewer.chosenNodes : self.tableLeafNodes;
 	NSArray* pathsToDiff = pathsOfFSNodes(nodesToDiff);
 	[myDocument_ viewDifferencesInCurrentRevisionFor:pathsToDiff toRevision:nil]; // nil indicates the current revision
 	[self makeMessageFieldFirstResponder];
@@ -657,7 +657,7 @@ NSString* kAmendOption	 = @"amendOption";
 
 - (void)textDidChange:(NSNotification*) aNotification
 {
-	[self validateButtons:[aNotification object]];
+	[self validateButtons:aNotification.object];
 }
 
 
@@ -680,17 +680,17 @@ NSString* kAmendOption	 = @"amendOption";
 	
 	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:rootPath  logging:eLoggingNone];
 	
-	if ([results hasErrors])
+	if (results.hasErrors)
 	{
 		// Try a second time
 		sleep(0.5);
 		results = [TaskExecutions executeMercurialWithArgs:argsStatus  fromRoot:rootPath  logging:eLoggingNone];
 	}
-	if ([results.errStr length] > 0)
+	if (results.errStr.length > 0)
 	{
 		[results logMercurialResult];
 		// for an error rather than warning fail by returning nil. Maybe later we will return error codes.
-		if ([results hasErrors])
+		if (results.hasErrors)
 			return  nil;
 	}
 	NSArray* lines = [results.outStr componentsSeparatedByString:@"\n"];
@@ -708,7 +708,7 @@ NSString* kAmendOption	 = @"amendOption";
 	[argsResolveStatus addObjectsFromArray:restrictedPaths];
 	
 	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsResolveStatus fromRoot:rootPath  logging:eLoggingNone];
-	if ([results hasErrors])
+	if (results.hasErrors)
 	{
 		[results logMercurialResult];
 		return nil;
@@ -734,7 +734,7 @@ NSString* kAmendOption	 = @"amendOption";
 }
 
 - (BOOL)			autoExpandViewerOutlines						{ return NO; }
-- (HunkExclusions*) hunkExclusions							{ return [myDocument_ hunkExclusions]; }
+- (HunkExclusions*) hunkExclusions							{ return myDocument_.hunkExclusions; }
 - (void)			setMyDocumentFromParent					{ };
 - (void)			didSwitchViewTo:(FSViewerNum)viewNumber { };
 - (BOOL)			controlsMainFSViewer					{ return NO; }

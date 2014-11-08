@@ -57,7 +57,7 @@
 
 - (void) awakeFromNib
 {
-	[self setFont:[NSFont systemFontOfSize:[NSFont smallSystemFontSize]]];
+	[self setFont:[NSFont systemFontOfSize:NSFont.smallSystemFontSize]];
 	badgeString_ = nil;
 	hasBadge_ = NO;
 	icon_ = nil;
@@ -68,7 +68,7 @@
 	if (icon_ != icon)
 	{
 		icon_ = icon;
-		[icon_ setSize:NSMakeSize(TSBADGECELL_ICON_SIZE, TSBADGECELL_ICON_SIZE)];
+		icon_.size = NSMakeSize(TSBADGECELL_ICON_SIZE, TSBADGECELL_ICON_SIZE);
 	}
 }
 
@@ -159,8 +159,8 @@
 	NSRect badgeRect = NSMakeRect(badgeX, badgeY, badgeWidth, TSBADGECELL_TEXT_HEIGHT);
 	NSBezierPath* badgePath = [NSBezierPath bezierPathWithRoundedRect:badgeRect  xRadius:TSBADGECELL_RADIUS_X  yRadius:TSBADGECELL_RADIUS_Y];
 	
-	BOOL isWindowFront = [[NSApp mainWindow] isVisible];
-	BOOL isViewInFocus = [[[self.controlView window] firstResponder] isEqual:self.controlView];
+	BOOL isWindowFront = [NSApp mainWindow].isVisible;
+	BOOL isViewInFocus = [[self.controlView.window firstResponder] isEqual:self.controlView];
 	BOOL isCellHighlighted = self.isHighlighted;
 	
 	NSDictionary* dict = [[NSMutableDictionary alloc] init];
@@ -168,28 +168,28 @@
 	
 	if (isWindowFront && isViewInFocus && isCellHighlighted)
 	{
-		[[NSColor whiteColor] set];
-		[dict setValue:[NSColor alternateSelectedControlColor] forKey:NSForegroundColorAttributeName];
+		[NSColor.whiteColor set];
+		[dict setValue:NSColor.alternateSelectedControlColor forKey:NSForegroundColorAttributeName];
 	}
 	else if (isWindowFront && isViewInFocus && !isCellHighlighted)
 	{
 		[[NSColor colorWithCalibratedRed:0.53 green:0.60 blue:0.74 alpha:1.0] set];
-		[dict setValue:[NSColor whiteColor] forKey:NSForegroundColorAttributeName];
+		[dict setValue:NSColor.whiteColor forKey:NSForegroundColorAttributeName];
 	}
 	else if (isWindowFront && isCellHighlighted)
 	{
-		[[NSColor whiteColor] set];
+		[NSColor.whiteColor set];
 		[dict setValue:[NSColor colorWithCalibratedRed:0.51 green:0.58 blue:0.72 alpha:1.0] forKey:NSForegroundColorAttributeName];
 	}
 	else if (!isWindowFront && isCellHighlighted)
 	{
-		[[NSColor whiteColor] set];
-		[dict setValue:[NSColor disabledControlTextColor] forKey:NSForegroundColorAttributeName];
+		[NSColor.whiteColor set];
+		[dict setValue:NSColor.disabledControlTextColor forKey:NSForegroundColorAttributeName];
 	}
 	else
 	{
-		[[NSColor disabledControlTextColor] set];
-		[dict setValue:[NSColor whiteColor] forKey:NSForegroundColorAttributeName];
+		[NSColor.disabledControlTextColor set];
+		[dict setValue:NSColor.whiteColor forKey:NSForegroundColorAttributeName];
 	}
 	
 	[badgePath fill];

@@ -16,7 +16,7 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 
 - (void) awakeFromNib
 {
-	[self setDelegate:self];
+	self.delegate = self;
 }
 
 - (NSRect) splitView:(NSSplitView*)splitView effectiveRect:(NSRect)proposedEffectiveRect forDrawnRect:(NSRect)drawnRect ofDividerAtIndex:(NSInteger)dividerIndex
@@ -39,9 +39,9 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 	NSArray* views		= self.subviews;
 	NSView* outline		= views[0];
 	NSView* info		= views[1];
-	NSRect outlineFrame = [outline frame];
-	outlineFrame.size.height = self.frame.size.height - [info frame].size.height;
-	[outline setFrame:outlineFrame];
+	NSRect outlineFrame = outline.frame;
+	outlineFrame.size.height = self.frame.size.height - info.frame.size.height;
+	outline.frame = outlineFrame;
 	[self adjustSubviews];
 }
 

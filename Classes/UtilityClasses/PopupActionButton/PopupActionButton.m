@@ -43,8 +43,8 @@
 	CGFloat offset = (controlSize == NSRegularControlSize) ? 3 : 4;
 	
     NSPoint menuOrigin = [self convertPoint:NSMakePoint(0, frame.size.height + offset) toView:nil];
-	NSEvent* event = [NSEvent mouseEventWithType:NSLeftMouseDown location:menuOrigin modifierFlags:NSLeftMouseDownMask timestamp:[theEvent timestamp]
-									windowNumber:[theEvent windowNumber] context:[theEvent context] eventNumber:[theEvent eventNumber] clickCount:1 pressure:1.0];
+	NSEvent* event = [NSEvent mouseEventWithType:NSLeftMouseDown location:menuOrigin modifierFlags:NSLeftMouseDownMask timestamp:theEvent.timestamp
+									windowNumber:theEvent.windowNumber context:theEvent.context eventNumber:theEvent.eventNumber clickCount:1 pressure:1.0];
     [NSMenu popUpContextMenu:self.menu withEvent:event forView:self];
 }
 

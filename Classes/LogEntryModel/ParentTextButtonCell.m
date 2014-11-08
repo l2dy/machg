@@ -44,11 +44,11 @@
 {
 	NSTextAttachment* attachment   = [[NSTextAttachment alloc] init];
 	ParentTextButtonCell* parentCell = [[ParentTextButtonCell alloc] initWithLogEntry:entry];
-	[parentCell setButtonTitle:text];
-	[parentCell setBezelStyle:NSRoundRectBezelStyle];
-	[parentCell setTarget:parentCell];
+	parentCell.buttonTitle = text;
+	parentCell.bezelStyle = NSRoundRectBezelStyle;
+	parentCell.target = parentCell;
 	[parentCell setAction:@selector(gotoParent:)];
-	[attachment setAttachmentCell:parentCell];
+	attachment.attachmentCell = parentCell;
 	return attachment;
 }
 
@@ -67,9 +67,9 @@
 	if (theDictionary == nil)
 	{
 		NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-		[paragraphStyle setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
-		[paragraphStyle setAlignment:NSCenterTextAlignment];
-		NSFont* font = [NSFont fontWithName:@"Helvetica"  size:[NSFont smallSystemFontSize]];
+		paragraphStyle.paragraphStyle = NSParagraphStyle.defaultParagraphStyle;
+		paragraphStyle.alignment = NSCenterTextAlignment;
+		NSFont* font = [NSFont fontWithName:@"Helvetica"  size:NSFont.smallSystemFontSize];
 		theDictionary = @{NSFontAttributeName: font, NSParagraphStyleAttributeName: paragraphStyle};
 	}
 	[self setAttributedTitle:[NSAttributedString string:title withAttributes:theDictionary]];
@@ -86,14 +86,14 @@
 
 - (IBAction) gotoParent:(id)sender
 {
-	MacHgDocument* document = [[entry_ repositoryData] myDocument];
-	if (![document showingASheet] && [document showingHistoryView])
+	MacHgDocument* document = entry_.repositoryData.myDocument;
+	if (!document.showingASheet && document.showingHistoryView)
 	{
 		NSString* title = self.title;
 		NSString* revision = nil;
 		//		if ([title getCapturesWithRegexAndComponents:@"(\\d+):[\\d\\w]+" firstComponent:&revision])
 		if ([title getCapturesWithRegexAndComponents:@"(\\d+)" firstComponent:&revision])
-			[[[document theHistoryView] logTableView] scrollToRevision:stringAsNumber(revision)];
+			[[document.theHistoryView logTableView] scrollToRevision:stringAsNumber(revision)];
 	}
 }
 

@@ -71,7 +71,7 @@
 // MARK: initialization
 // ------------------------------------------------------------------------------------
 
-- (NSString*) viewerAutoSaveName { return fstr(@"File:%@:primaryViewer", [[parentController myDocument] documentNameForAutosave]); }
+- (NSString*) viewerAutoSaveName { return fstr(@"File:%@:primaryViewer", parentController.myDocument.documentNameForAutosave); }
 
 - (id) init
 {
@@ -89,11 +89,11 @@
 	
 	[parentController setMyDocumentFromParent];	// Set up the parent's myDocument since the parent's awakeFromNib has not yet been called.
 	rootNodeInfo_ = nil;
-	FSViewerNum viewerNum = [[NSUserDefaults standardUserDefaults] integerForKey:self.viewerAutoSaveName];
+	FSViewerNum viewerNum = [NSUserDefaults.standardUserDefaults integerForKey:self.viewerAutoSaveName];
 	if (viewerNum == eFilesNoView)
 		viewerNum = DefaultFilesViewFromDefaults() + 1;
 	
-	[self setCurrentFSViewerPane:viewerNum];
+	self.currentFSViewerPane = viewerNum;
 }
 
 - (void) setupViewerPane:(id)view
@@ -114,8 +114,8 @@
 		// nib and then hooking it up manually.
 		NSString* nibName = self.nibNameForFilesBrowser;
 		theFilesBrowserParent_ = [[NSViewController alloc] initWithNibName:nibName bundle:nil];
-		theFilesBrowser_ = DynamicCast(FSViewerBrowser, [theFilesBrowserParent_ view]);
-		[self setupViewerPane:theFilesBrowser_];		
+		theFilesBrowser_ = DynamicCast(FSViewerBrowser, theFilesBrowserParent_.view);
+		[self setupViewerPane:theFilesBrowser_];
 	});
 	return theFilesBrowser_;
 }
@@ -128,8 +128,8 @@
 		// nib and then hooking it up manually. 
 		NSString* nibName = self.nibNameForFilesOutline;
 		theFilesOutlineParent_ = [[NSViewController alloc] initWithNibName:nibName bundle:nil];
-		theFilesOutline_ = DynamicCast(FSViewerOutline, [theFilesOutlineParent_ view]);
-		[self setupViewerPane:theFilesOutline_];		
+		theFilesOutline_ = DynamicCast(FSViewerOutline, theFilesOutlineParent_.view);
+		[self setupViewerPane:theFilesOutline_];
 	});
 	return theFilesOutline_;
 }
@@ -142,7 +142,7 @@
 		// nib and then hooking it up manually.
 		NSString* nibName = self.nibNameForFilesTable;
 		theFilesTableParent_ = [[NSViewController alloc] initWithNibName:nibName bundle:nil];
-		theFilesTable_ = DynamicCast(FSViewerTable, [theFilesTableParent_ view]);
+		theFilesTable_ = DynamicCast(FSViewerTable, theFilesTableParent_.view);
 		[self setupViewerPane:theFilesTable_];
 	});
 	return theFilesTable_;
@@ -151,7 +151,7 @@
 - (void)dealloc
 {
 	[self stopObserving];
-	WebScriptObject* script = [detailedPatchesWebView windowScriptObject];
+	WebScriptObject* script = detailedPatchesWebView.windowScriptObject;
 	[script removeWebScriptKey:@"machgWebviewController"];
 	[detailedPatchesWebView close];
 	detailedPatchesWebView = nil;
@@ -172,8 +172,8 @@
 // MARK: Chained methods
 // ------------------------------------------------------------------------------------
 
-- (MacHgDocument*)	myDocument		{ return [parentController myDocument]; }
-- (NSWindow*)		parentWindow	{ return [[parentController myDocument] mainWindow]; }
+- (MacHgDocument*)	myDocument		{ return parentController.myDocument; }
+- (NSWindow*)		parentWindow	{ return parentController.myDocument.mainWindow; }
 
 - (IBAction) fsviewerDoubleAction:(id)sender { [parentController fsviewerDoubleAction:sender]; }
 - (IBAction) fsviewerAction:(id)sender		 { [parentController fsviewerAction:sender]; }
@@ -190,9 +190,9 @@
 {
 	switch (styleNum)
 	{
-		case eFilesBrowser:		return [self.theFilesBrowser enclosingBoxView];
-		case eFilesOutline:		return [self.theFilesOutline enclosingScrollView];
-		case eFilesTable:		return [self.theFilesTable enclosingBoxView];
+		case eFilesBrowser:		return self.theFilesBrowser.enclosingBoxView;
+		case eFilesOutline:		return self.theFilesOutline.enclosingScrollView;
+		case eFilesTable:		return self.theFilesTable.enclosingBoxView;
 		default:				return nil;
 	}
 }
@@ -218,9 +218,9 @@
 - (void)	 setShowingFilesTable:(BOOL)val					{ }
 
 
-- (IBAction) actionSwitchToFilesBrowser:(id)sender			{ [self setCurrentFSViewerPane:eFilesBrowser]; }
-- (IBAction) actionSwitchToFilesOutline:(id)sender			{ [self setCurrentFSViewerPane:eFilesOutline]; }
-- (IBAction) actionSwitchToFilesTable:(id)sender			{ [self setCurrentFSViewerPane:eFilesTable]; }
+- (IBAction) actionSwitchToFilesBrowser:(id)sender			{ self.currentFSViewerPane = eFilesBrowser; }
+- (IBAction) actionSwitchToFilesOutline:(id)sender			{ self.currentFSViewerPane = eFilesOutline; }
+- (IBAction) actionSwitchToFilesTable:(id)sender			{ self.currentFSViewerPane = eFilesTable; }
 + (NSSet*)	 keyPathsForValuesAffectingShowingFilesBrowser	{ return [NSSet setWithObject:@"currentFSViewerPane"]; }
 + (NSSet*)	 keyPathsForValuesAffectingShowingFilesOutline	{ return [NSSet setWithObject:@"currentFSViewerPane"]; }
 + (NSSet*)	 keyPathsForValuesAffectingShowingFilesTable	{ return [NSSet setWithObject:@"currentFSViewerPane"]; }
@@ -231,7 +231,7 @@
 {
 	NSView* view = [self primaryViewOfFSViewerPane:styleNum];
 	[[self viewerPane:styleNum] prepareToOpenFSViewerPane];
-	[self setContentView:view];
+	self.contentView = view;
 	currentFSViewerPane_ = styleNum;
 	[parentController didSwitchViewTo:styleNum];
 	[self regenerateDifferencesInWebview];
@@ -256,17 +256,17 @@
 - (void) reloadDataSin					{ [self.currentViewerPane reloadDataSin]; }
 
 
-- (BOOL)		nodesAreSelected		{ return [self.currentViewerPane nodesAreSelected]; }
-- (BOOL)		nodeIsClicked			{ return [self.currentViewerPane nodeIsClicked]; }
-- (BOOL)		nodesAreChosen			{ return [self.currentViewerPane nodesAreChosen]; }
-- (FSNodeInfo*) chosenNode				{ return [self.currentViewerPane chosenNode]; }
-- (FSNodeInfo*) clickedNode				{ return [self.currentViewerPane clickedNode]; }
-- (NSArray*) selectedNodes				{ return [self.currentViewerPane selectedNodes]; }
-- (BOOL) singleFileIsChosenInFiles		{ return [self.currentViewerPane singleFileIsChosenInFiles]; }
-- (BOOL) singleItemIsChosenInFiles		{ return [self.currentViewerPane singleItemIsChosenInFiles]; }
-- (BOOL) clickedNodeInSelectedNodes		{ return [self.currentViewerPane clickedNodeInSelectedNodes]; }
+- (BOOL)		nodesAreSelected		{ return self.currentViewerPane.nodesAreSelected; }
+- (BOOL)		nodeIsClicked			{ return self.currentViewerPane.nodeIsClicked; }
+- (BOOL)		nodesAreChosen			{ return self.currentViewerPane.nodesAreChosen; }
+- (FSNodeInfo*) chosenNode				{ return self.currentViewerPane.chosenNode; }
+- (FSNodeInfo*) clickedNode				{ return self.currentViewerPane.clickedNode; }
+- (NSArray*) selectedNodes				{ return self.currentViewerPane.selectedNodes; }
+- (BOOL) singleFileIsChosenInFiles		{ return self.currentViewerPane.singleFileIsChosenInFiles; }
+- (BOOL) singleItemIsChosenInFiles		{ return self.currentViewerPane.singleItemIsChosenInFiles; }
+- (BOOL) clickedNodeInSelectedNodes		{ return self.currentViewerPane.clickedNodeInSelectedNodes; }
 
-- (BOOL) clickedNodeCoincidesWithTerminalSelections		{ return [self.currentViewerPane clickedNodeCoincidesWithTerminalSelections]; }
+- (BOOL) clickedNodeCoincidesWithTerminalSelections		{ return self.currentViewerPane.clickedNodeCoincidesWithTerminalSelections; }
 
 
 
@@ -285,7 +285,7 @@
 		return @[];
 	NSMutableArray* paths = [[NSMutableArray alloc] init];
 	for (FSNodeInfo* node in theSelectedNodes)
-		[paths addObjectIfNonNil:[node absolutePath]];
+		[paths addObjectIfNonNil:node.absolutePath];
 	return paths;
 }
 
@@ -293,7 +293,7 @@
 - (NSArray*) absolutePathsOfChosenFiles
 {
 	if (self.nodeIsClicked && !self.clickedNodeInSelectedNodes)
-		return @[ [self.clickedNode absolutePath] ];
+		return @[ self.clickedNode.absolutePath ];
 	return self.absolutePathsOfSelectedFilesInBrowser;
 }
 
@@ -305,15 +305,15 @@
 	
 	FSNodeInfo* clickedNode = self.clickedNode;
 	if (self.nodeIsClicked)
-		return [clickedNode isDirectory] ? [clickedNode absolutePath] : [[clickedNode absolutePath] stringByDeletingLastPathComponent];
+		return clickedNode.isDirectory ? clickedNode.absolutePath : clickedNode.absolutePath.stringByDeletingLastPathComponent;
 	
 	// If we have more than one selected cell then we return the enclosing directory.
 	NSArray* theSelectedNodes = self.selectedNodes;
-	if ([theSelectedNodes count] >1)
-		return [[[theSelectedNodes lastObject] absolutePath] stringByDeletingLastPathComponent];
+	if (theSelectedNodes.count >1)
+		return [[theSelectedNodes.lastObject absolutePath] stringByDeletingLastPathComponent];
 	
-	FSNodeInfo* selectedNode = [theSelectedNodes lastObject];
-	return [selectedNode isDirectory] ? [selectedNode absolutePath] : [[selectedNode absolutePath] stringByDeletingLastPathComponent];
+	FSNodeInfo* selectedNode = theSelectedNodes.lastObject;
+	return selectedNode.isDirectory ? selectedNode.absolutePath : selectedNode.absolutePath.stringByDeletingLastPathComponent;
 }
 
 // ------------------------------------------------------------------------------------
@@ -322,13 +322,13 @@
 // ------------------------------------------------------------------------------------
 
 - (BOOL) statusOfChosenPathsInFilesContain:(HGStatus)status		{ return bitsInCommon(status, self.statusOfChosenPathsInFiles); }
-- (BOOL) repositoryHasFilesWhichContainStatus:(HGStatus)status	{ return bitsInCommon(status, [self.rootNodeInfo hgStatus]); }
+- (BOOL) repositoryHasFilesWhichContainStatus:(HGStatus)status	{ return bitsInCommon(status, self.rootNodeInfo.hgStatus); }
 
 
 - (HGStatus) statusOfChosenPathsInFiles
 {
 	if (self.nodeIsClicked && !self.clickedNodeInSelectedNodes)
-		return [self.clickedNode hgStatus];
+		return self.clickedNode.hgStatus;
 	
 	if (!self.nodesAreSelected)
 		return eHGStatusNoStatus;
@@ -336,7 +336,7 @@
 	HGStatus combinedStatus = eHGStatusNoStatus;
 	NSArray* theSelectedNodes = self.selectedNodes;
 	for (FSNodeInfo* node in theSelectedNodes)
-		combinedStatus = unionBits(combinedStatus, [node hgStatus]);
+		combinedStatus = unionBits(combinedStatus, node.hgStatus);
 	return combinedStatus;
 }
 
@@ -348,7 +348,7 @@
 	for (NSString* path in absolutePaths)
 	{
 		FSNodeInfo* node = [theRoot nodeForPathFromRoot:path];
-		BOOL includePath = bitsInCommon([node hgStatus], status);
+		BOOL includePath = bitsInCommon(node.hgStatus, status);
 		if (includePath)
 			[remainingPaths addObject:path];
 	}
@@ -368,7 +368,7 @@
 
 - (NSRect)	screenRectForNode:(FSNodeInfo*)node		{ return [self.window convertRectToScreen:[self rectInWindowForNode:node]]; }
 
-- (NSInteger) numberOfQuickLookPreviewItems			{ return [self.absolutePathsOfSelectedFilesInBrowser count]; }
+- (NSInteger) numberOfQuickLookPreviewItems			{ return self.absolutePathsOfSelectedFilesInBrowser.count; }
 
 - (NSArray*) quickLookPreviewItems
 {
@@ -379,7 +379,7 @@
 	NSArray* nodes = self.selectedNodes;
 	for (FSNodeInfo* node in nodes)
 	{
-		NSString* path = [node absolutePath];
+		NSString* path = node.absolutePath;
 		if (!path)
 			continue;
 		NSRect screenRect = [self screenRectForNode:node];
@@ -408,7 +408,7 @@
 {
 	NSArray* paths = self.absolutePathsOfChosenFiles;
 	for (NSString* path in paths)
-		[[NSWorkspace sharedWorkspace] openFile:path];
+		[NSWorkspace.sharedWorkspace openFile:path];
 }
 
 
@@ -416,13 +416,13 @@
 {
 	if (!self.nodesAreChosen)
 	{
-		[[NSWorkspace sharedWorkspace] selectFile:self.absolutePathOfRepositoryRoot inFileViewerRootedAtPath:nil];
+		[NSWorkspace.sharedWorkspace selectFile:self.absolutePathOfRepositoryRoot inFileViewerRootedAtPath:nil];
 		return;
 	}
 
 	if (self.clickedNode && !self.clickedNodeCoincidesWithTerminalSelections)
 	{
-		[[NSWorkspace sharedWorkspace] selectFile:[self.clickedNode absolutePath] inFileViewerRootedAtPath:nil];
+		[NSWorkspace.sharedWorkspace selectFile:self.clickedNode.absolutePath inFileViewerRootedAtPath:nil];
 		return;
 	}
 
@@ -432,7 +432,7 @@
 		NSURL* newURL = [NSURL fileURLWithPath:[path stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
 		[urls addObject:newURL];
 	}
-	[[NSWorkspace sharedWorkspace] activateFileViewerSelectingURLs:urls];
+	[NSWorkspace.sharedWorkspace activateFileViewerSelectingURLs:urls];
 }
 
 
@@ -461,37 +461,37 @@
 	if (!item)
 		return;
 
-	NSString* applicationPath = [[item representedObject] path];
+	NSString* applicationPath = [item.representedObject path];
 	NSArray* paths = self.absolutePathsOfChosenFiles;
 	for (NSString* path in paths)
-		[[NSWorkspace sharedWorkspace] openFile:path withApplication:applicationPath];
+		[NSWorkspace.sharedWorkspace openFile:path withApplication:applicationPath];
 }
 
 - (IBAction) browserOpenChosenNodesWithABrowserToChoose:(id)sender
 {
-	NSString* applicationPath = getSingleApplicationPathFromOpenPanel([[self.clickedNode absolutePath] lastPathComponent]);
+	NSString* applicationPath = getSingleApplicationPathFromOpenPanel([self.clickedNode.absolutePath lastPathComponent]);
 	NSArray* paths = self.absolutePathsOfChosenFiles;
 	for (NSString* path in paths)
-		[[NSWorkspace sharedWorkspace] openFile:path withApplication:applicationPath];
+		[NSWorkspace.sharedWorkspace openFile:path withApplication:applicationPath];
 }
 
 
 - (NSMenuItem*) menuItemForOpenWith:(NSURL*)appURL usedDictionary:(NSMutableDictionary*)dict
 {
 	NSMenuItem* item = [[NSMenuItem alloc]init];
-	NSString* appName = [[appURL path] lastPathComponent];
+	NSString* appName = appURL.path.lastPathComponent;
 	if (dict[appName])
 		return nil;
 	dict[appName] = appURL;
-	NSString* version = [[NSBundle bundleWithPath:[appURL path]] infoDictionary][@"CFBundleShortVersionString"];
-	NSString* title = [appName stringByDeletingPathExtension];
+	NSString* version = [[NSBundle bundleWithPath:appURL.path] infoDictionary][@"CFBundleShortVersionString"];
+	NSString* title = appName.stringByDeletingPathExtension;
 	[item setTitle:version ? fstr(@"%@ (%@)",title, version) : title];
-	[item setRepresentedObject:appURL];
+	item.representedObject = appURL;
 	[item setAction:@selector(browserOpenChosenNodesWithApplication:)];
-	[item setKeyEquivalent:@""];
+	item.keyEquivalent = @"";
 	NSSize imageSize = NSMakeSize(ICON_SIZE, ICON_SIZE);
-	NSImage* theFileIcon = [NSWorkspace iconImageOfSize:imageSize forPath:[appURL path]];
-	[item setImage:theFileIcon];
+	NSImage* theFileIcon = [NSWorkspace iconImageOfSize:imageSize forPath:appURL.path];
+	item.image = theFileIcon;
 
 	return item;
 }
@@ -507,16 +507,16 @@
 	if (openWithItem)
 		[theMenu removeItem:openWithItem];
 
-	if ([parentController controlsMainFSViewer] && self.chosenNode)
+	if (parentController.controlsMainFSViewer && self.chosenNode)
 	{
 		FSNodeInfo* chosenNode = self.chosenNode;
-		NSString* path = [chosenNode absolutePath];
+		NSString* path = chosenNode.absolutePath;
 		NSURL* pathURL = [NSURL fileURLWithPath:path];
 		NSArray* apps = [NSApplication applicationsForURL:pathURL];
 		if (IsEmpty(apps))
 			for (FSNodeInfo* node in self.chosenNodes)
 			{
-				path = [node absolutePath];
+				path = node.absolutePath;
 				pathURL = [NSURL fileURLWithPath:path];
 				apps = [NSApplication applicationsForURL:pathURL];
 				if (IsNotEmpty(apps))
@@ -538,7 +538,7 @@
 			if (newItem)
 			{
 				[subMenu insertItem:newItem atIndex:index++];
-				[subMenu insertItem:[NSMenuItem separatorItem] atIndex:index++];
+				[subMenu insertItem:NSMenuItem.separatorItem atIndex:index++];
 			}
 		}
 
@@ -551,13 +551,13 @@
 		}
 		
 		// Add the Other... item
-		[subMenu insertItem:[NSMenuItem separatorItem] atIndex:index++];		
+		[subMenu insertItem:NSMenuItem.separatorItem atIndex:index++];		
 		[subMenu insertItemWithTitle:@"Other…" action:@selector(browserOpenChosenNodesWithABrowserToChoose:) keyEquivalent:@"" atIndex:index++];
 
 		// Create an item for the submenu and add the submenu to the menu.
 		NSMenuItem* newOpenWithItem = [[NSMenuItem alloc] init];		
-		[newOpenWithItem setTitle:@"Open With…"];
-		[newOpenWithItem setSubmenu:subMenu];
+		newOpenWithItem.title = @"Open With…";
+		newOpenWithItem.submenu = subMenu;
 		[theMenu insertItem:newOpenWithItem atIndex:1];
 	}
 }
@@ -602,12 +602,12 @@
 
 - (NSURL*) patchDetailURL
 {
-	return [NSURL fileURLWithPath:fstr(@"%@/Webviews/htmlForDifferences/%@",[[NSBundle mainBundle] resourcePath], @"index.html")];
+	return [NSURL fileURLWithPath:fstr(@"%@/Webviews/htmlForDifferences/%@",NSBundle.mainBundle.resourcePath, @"index.html")];
 }
 
 - (HunkExclusions*) hunkExclusions
 {
-	return [parentController hunkExclusions];
+	return parentController.hunkExclusions;
 }
 
 
@@ -620,18 +620,18 @@
 
 	FSViewer* __weak weakSelf = self;
 	dispatch_async(mainQueue(), ^{
-		WebScriptObject* script = [detailedPatchesWebView windowScriptObject];
+		WebScriptObject* script = detailedPatchesWebView.windowScriptObject;
 		[script setValue:detailedPatchesWebView forKey:@"machgWebviewController"];
 		[script callWebScriptMethod:@"changeFontSizeOfDiff" withArguments:@[ fstr(@"%f",FontSizeOfDifferencesWebviewFromDefaults()) ]];
 			
-		NSArray* selectedPaths = [weakSelf absolutePathsOfSelectedFilesInBrowser];
+		NSArray* selectedPaths = weakSelf.absolutePathsOfSelectedFilesInBrowser;
 		if (IsEmpty(selectedPaths))
 		{
 			[detailedPatchesWebView setBackingPatch:nil andFallbackMessage:@""];
 			return;
 		}
 		
-		NSString* rootPath = [weakSelf absolutePathOfRepositoryRoot];
+		NSString* rootPath = weakSelf.absolutePathOfRepositoryRoot;
 		[detailedPatchesWebView regenerateDifferencesForSelectedPaths:selectedPaths andRoot:rootPath];
 	});
 }
@@ -682,15 +682,15 @@
 	{
 		storedFontSizeofBrowserItems = fontSizeOfBrowserItemsFromDefaults();
 		NSFont* textFont = [NSFont fontWithName:@"Verdana" size:storedFontSizeofBrowserItems];
-		rowHeight = MAX([textFont boundingRectForFont].size.height + 4.0, 16.0);
+		rowHeight = MAX(textFont.boundingRectForFont.size.height + 4.0, 16.0);
 	}
 	return rowHeight;
 }
 
 - (void) markPathsDirty:(RepositoryPaths*)dirtyPaths
 {
-	dispatch_async([self.myDocument refreshBrowserSerialQueue], ^{
-		NSArray* absoluteDirtyPaths = [dirtyPaths absolutePaths];
+	dispatch_async(self.myDocument.refreshBrowserSerialQueue, ^{
+		NSArray* absoluteDirtyPaths = dirtyPaths.absolutePaths;
 		
 		DispatchGroup group = dispatch_group_create();
 		__block FSViewerSelectionState* theSavedState = nil;
@@ -717,8 +717,8 @@
 
 - (void) refreshBrowserPaths:(RepositoryPaths*)changes finishingBlock:(BlockProcess)theBlock
 {
-	NSString* rootPath = [changes rootPath];
-	NSArray* absoluteChangedPaths = pruneDisallowedPaths(pruneContainedPaths([changes absolutePaths]));
+	NSString* rootPath = changes.rootPath;
+	NSArray* absoluteChangedPaths = pruneDisallowedPaths(pruneContainedPaths(changes.absolutePaths));
 	if (IsEmpty(absoluteChangedPaths) || !pathIsExistentDirectory(rootPath))
 	{
 		if (theBlock)
@@ -729,10 +729,10 @@
 	NSArray* restrictedSelectedPaths = restrictPathsToPaths(canonicalizedSelectedPaths, absoluteChangedPaths);
 	BOOL changesInSelectedPaths = IsNotEmpty(restrictedSelectedPaths);
 
-	ProcessListController* theProcessListController = [self.myDocument theProcessListController];
+	ProcessListController* theProcessListController = self.myDocument.theProcessListController;
 	NSNumber* processNum = [theProcessListController addProcessIndicator:@"Refresh Browser Data"];
 
-	dispatch_async([self.myDocument refreshBrowserSerialQueue], ^{
+	dispatch_async(self.myDocument.refreshBrowserSerialQueue, ^{
 
 		absolutePathOfRepositoryRoot_ = rootPath;
 
@@ -751,13 +751,13 @@
 			// If the result is still relevant and If we are in a merge state then we might have resolved and conflicted files and
 			// we need to show such status. XXX does the following ever conflict if we are in a merge state and we look at the
 			// diff pane?
-			if ([rootPath isEqualTo:[self.myDocument absolutePathOfRepositoryRoot]])
-				if ([self.myDocument inMergeState])
+			if ([rootPath isEqualTo:self.myDocument.absolutePathOfRepositoryRoot])
+				if (self.myDocument.inMergeState)
 					newResolveStatusLines = [parentController resolveStatusLines:absoluteChangedPaths withRootPath:rootPath];
 		});
 		
 		dispatch_group_async(group, globalQueue(), ^{
-			if ([rootPath isEqualToString:[rootNodeInfo_ absolutePath]])
+			if ([rootPath isEqualToString:rootNodeInfo_.absolutePath])
 				newRootNode = [rootNodeInfo_ shallowTreeCopyRemoving:absoluteChangedPaths];	// copy the tree and prune the changed paths out of the node tree.
 			if (!newRootNode)
 				newRootNode = [FSNodeInfo newEmptyTreeRootedAt:rootPath];					// fully regenerate the node tree if pruning wasn't successful
@@ -781,20 +781,20 @@
 			return;
 		}
 
-		if ([newStatusLines count] > 0)
+		if (newStatusLines.count > 0)
 			newRootNode = [newRootNode fleshOutTreeWithStatusLines:newStatusLines withParentViewer:self];
-		if ([newResolveStatusLines count] > 0)
+		if (newResolveStatusLines.count > 0)
 			newRootNode = [newRootNode fleshOutTreeWithStatusLines:newResolveStatusLines withParentViewer:self];
 
 		dispatch_group_async(group, mainQueue(), ^{
 			// In the mean time, only if our results are still relevant (ie the root has not changed) then switch to the new root
-			if ([rootPath isEqualTo:[self.myDocument absolutePathOfRepositoryRoot]])
+			if ([rootPath isEqualTo:self.myDocument.absolutePathOfRepositoryRoot])
 			{			
 				FSViewerSelectionState* theSavedState = self.saveViewerSelectionState;
 				rootNodeInfo_ = newRootNode;
 				[self reloadData];
 				[self restoreViewerSelectionState:theSavedState ];		// restore the selection and the scroll positions of the columns and the horizontal scroll
-				if ([parentController controlsMainFSViewer] && ![self.myDocument underlyingRepositoryChangedEventIsQueued])
+				if (parentController.controlsMainFSViewer && !self.myDocument.underlyingRepositoryChangedEventIsQueued)
 					[[self.myDocument repositoryData] adjustCollectionForIncompleteRevision];
 			}
 
@@ -816,7 +816,7 @@
 - (void) repositoryDataIsNew
 {
 	[self.currentViewerPane repositoryDataIsNew];
-	absolutePathOfRepositoryRoot_ = [self.myDocument absolutePathOfRepositoryRoot];
+	absolutePathOfRepositoryRoot_ = self.myDocument.absolutePathOfRepositoryRoot;
 	[self regenerateBrowserDataAndReload];
 	if (theFilesOutline_)
 		[theFilesOutline_ restoreExpandedStateFromUserDefaults];
@@ -851,7 +851,7 @@
 // MARK: Save and Restore Viewer Selection state
 // ------------------------------------------------------------------------------------
 
-- (FSViewerSelectionState*)	saveViewerSelectionState						{ return [self.currentViewerPane saveViewerSelectionState]; }
+- (FSViewerSelectionState*)	saveViewerSelectionState						{ return self.currentViewerPane.saveViewerSelectionState; }
 - (void) restoreViewerSelectionState:(FSViewerSelectionState*)savedState	{ [self.currentViewerPane restoreViewerSelectionState:savedState] ; }
 
 @end

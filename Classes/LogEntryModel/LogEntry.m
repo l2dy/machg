@@ -110,7 +110,7 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 // MARK:  Derived information
 // ------------------------------------------------------------------------------------
 
-- (NSArray*) labels { return [collection_ revisionNumberToLabels][self.revision]; }
+- (NSArray*) labels { return collection_.revisionNumberToLabels[self.revision]; }
 
 - (NSArray*) tags
 {
@@ -135,7 +135,7 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 		return @"";
 	NSArray* branchLabels = [LabelData filterLabels:labels byType:eBranchLabel];
 	LabelData* branchHeahLabel = IsNotEmpty(branchLabels) ? branchLabels[0] : nil;
-	return IsNotEmpty(branchHeahLabel) ? [branchHeahLabel name] : @"";
+	return IsNotEmpty(branchHeahLabel) ? branchHeahLabel.name : @"";
 }
 
 - (BOOL) isClosedBranchHead
@@ -169,30 +169,30 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 {
 	LogEntry* entry = [[LogEntry alloc] initForCollection:collection];
 	[entry loadLogEntryResultLine:line];
-	return ([entry loadStatus] != eLogEntryLoadedNone) ? entry : nil;
+	return (entry.loadStatus != eLogEntryLoadedNone) ? entry : nil;
 }
 
 + (LogEntry*) pendingLogEntryForRevision:(NSNumber*)revision  forRepositoryData:collection
 {
 	LogEntry* entry = [[LogEntry alloc] initForCollection:collection];
-	[entry setRevision:revision];
-	[entry setLoadStatus:eLogEntryLoading];
+	entry.revision = revision;
+	entry.loadStatus = eLogEntryLoading;
 	return entry;
 }
 
 + (LogEntry*) unfinishedEntryForRevision:(NSNumber*)revision  forRepositoryData:collection
 {
 	LogEntry* entry = [[LogEntry alloc] initForCollection:collection];
-	[entry setRevision:revision];
+	entry.revision = revision;
 	NSNumber* parent1 = [collection getHGParent1Revision];
 	NSNumber* parent2 = [collection getHGParent2Revision];
 	if (!parent1)
 		parent1 = intAsNumber(numberAsInt(revision) -1);
 	NSArray* hgParentsArray = parent2 ? @[parent1,parent2] : @[parent1];
-	[entry setParentsArray:hgParentsArray];
-	[entry setLoadStatus:eLogEntryLoaded];
-	[entry setChangeset:incompleteChangeset];
-	[entry setFullRecord:[LogRecord unfinishedRecord]];
+	entry.parentsArray = hgParentsArray;
+	entry.loadStatus = eLogEntryLoaded;
+	entry.changeset = incompleteChangeset;
+	entry.fullRecord = LogRecord.unfinishedRecord;
 	return entry;
 }
 
@@ -209,9 +209,9 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 {
 	static NSString* revHex = @"(\\d+):([0-9a-fA-F]{12})";
 
-	int itemCount  = [namesOfLogEntryParts count];
+	int itemCount  = namesOfLogEntryParts.count;
 	NSArray* parts = [line componentsSeparatedByString:logEntryPartSeparator];
-	if ([parts count] < itemCount)
+	if (parts.count < itemCount)
 		return;
 	
 	[self setChangeset:parts[logEntryPartChangeset]];
@@ -236,7 +236,7 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 		parentsArray_ = [NSArray arrayWithArray:parentRevs];
 	}
 	
-	[self setLoadStatus:eLogEntryLoaded];
+	self.loadStatus = eLogEntryLoaded;
 }
 
 - (void) fullyLoadEntry
@@ -288,9 +288,9 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 // ------------------------------------------------------------------------------------
 
 - (RepositoryData*) repositoryData		{ return collection_; }
-- (NSInteger)	childCount				{ return [childrenArray_ count]; }
-- (NSInteger)	parentCount				{ return [parentsArray_ count]; }
-- (BOOL)		hasMultipleParents		{ return [parentsArray_ count] > 1; }
+- (NSInteger)	childCount				{ return childrenArray_.count; }
+- (NSInteger)	parentCount				{ return parentsArray_.count; }
+- (BOOL)		hasMultipleParents		{ return parentsArray_.count > 1; }
 - (NSArray*)	parentsOfEntry			{ return parentsArray_; }
 - (NSArray*)	childrenOfEntry			{ return childrenArray_; }
 - (NSString*)	revisionStr				{ return numberAsString(revision_); }
@@ -299,12 +299,12 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 - (NSInteger)	ithParentRev:(NSInteger)i			{ return (0 <= i && self.parentCount > i) ? numberAsInt(parentsArray_[i]) : NSNotFound; }
 - (BOOL)	    revIsDirectParent:(NSInteger)rev	{ return rev == numberAsInt(revision_) - 1; }
 - (BOOL)	    revIsDirectChild:(NSInteger)rev		{ return rev == numberAsInt(revision_) + 1; }
-- (BOOL)		isEqualToEntry:(LogEntry*)entry		{ return [changeset_ isEqualToString:[entry changeset]] && [parentsArray_ isEqualToArray:[entry parentsOfEntry]]; }
-- (NSNumber*)	firstParent				{ return [parentsArray_ count] > 0 ? parentsArray_[0] : nil; }
-- (NSNumber*)	secondParent			{ return [parentsArray_ count] > 1 ? parentsArray_[1] : nil; }
+- (BOOL)		isEqualToEntry:(LogEntry*)entry		{ return [changeset_ isEqualToString:entry.changeset] && [parentsArray_ isEqualToArray:entry.parentsOfEntry]; }
+- (NSNumber*)	firstParent				{ return parentsArray_.count > 0 ? parentsArray_[0] : nil; }
+- (NSNumber*)	secondParent			{ return parentsArray_.count > 1 ? parentsArray_[1] : nil; }
 - (NSNumber*)   minimumParent
 {
-	switch ([parentsArray_ count])
+	switch (parentsArray_.count)
 	{
 		case 1: return parentsArray_[0];
 		case 2: return minimumNumber(parentsArray_[0], parentsArray_[1]);
@@ -322,10 +322,10 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 // MARK:  Status and Updating
 // ------------------------------------------------------------------------------------
 
-- (NSString*)	shortChangeset			{ return [changeset_ substringToIndex:MIN(12,[changeset_ length])]; }
+- (NSString*)	shortChangeset			{ return [changeset_ substringToIndex:MIN(12,changeset_.length)]; }
 - (BOOL)	    isLoading				{ return loadStatus_ == eLogEntryLoading; }
 - (BOOL)	    isLoaded				{ return loadStatus_ == eLogEntryLoaded; }
-- (BOOL)	    isFullyLoaded			{ return loadStatus_ == eLogEntryLoaded && fullRecord_ && [fullRecord_ isFullyLoaded]; }
+- (BOOL)	    isFullyLoaded			{ return loadStatus_ == eLogEntryLoaded && fullRecord_ && fullRecord_.isFullyLoaded; }
 
 
 
@@ -336,19 +336,19 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 // MARK:  Query the LogRecord
 // ------------------------------------------------------------------------------------
 
-- (NSString*) author			{ return [fullRecord_ author]; }
-- (NSString*) fullAuthor		{ return [fullRecord_ fullAuthor]; }
-- (NSString*) branch            { return stringIsNonWhiteSpace([fullRecord_ branch]) ? [fullRecord_ branch] : @"default"; }
-- (NSString*) shortComment		{ return [fullRecord_ shortComment]; }
-- (NSString*) fullComment		{ return [fullRecord_ fullComment]; }
-- (NSArray*)  filesAdded		{ return [fullRecord_ filesAdded]; }
-- (NSArray*)  filesModified		{ return [fullRecord_ filesModified]; }
-- (NSArray*)  filesRemoved		{ return [fullRecord_ filesRemoved]; }
+- (NSString*) author			{ return fullRecord_.author; }
+- (NSString*) fullAuthor		{ return fullRecord_.fullAuthor; }
+- (NSString*) branch            { return stringIsNonWhiteSpace(fullRecord_.branch) ? fullRecord_.branch : @"default"; }
+- (NSString*) shortComment		{ return fullRecord_.shortComment; }
+- (NSString*) fullComment		{ return fullRecord_.fullComment; }
+- (NSArray*)  filesAdded		{ return fullRecord_.filesAdded; }
+- (NSArray*)  filesModified		{ return fullRecord_.filesModified; }
+- (NSArray*)  filesRemoved		{ return fullRecord_.filesRemoved; }
 
-- (NSString*) shortDate			{ return [fullRecord_ shortDate]; }
-- (NSString*) fullDate			{ return [fullRecord_ fullDate]; }
-- (NSString*) isoDate			{ return [fullRecord_ isoDate]; }
-- (NSDate*)   rawDate			{ return [fullRecord_ rawDate]; }
+- (NSString*) shortDate			{ return fullRecord_.shortDate; }
+- (NSString*) fullDate			{ return fullRecord_.fullDate; }
+- (NSString*) isoDate			{ return fullRecord_.isoDate; }
+- (NSDate*)   rawDate			{ return fullRecord_.rawDate; }
 
 
 
@@ -385,7 +385,7 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 	}
 	if (IsNotEmpty(self.parentsOfEntry))
 	{
-		[verboseEntry appendAttributedString: categoryAttributedString( ([self.parentsOfEntry count] > 1) ? @"Parents:\t" : @"Parent:\t")];
+		[verboseEntry appendAttributedString: categoryAttributedString( (self.parentsOfEntry.count > 1) ? @"Parents:\t" : @"Parent:\t")];
 		for (NSNumber* parent in self.parentsOfEntry)
 		{
 			if (IsNotEmpty(parent))
@@ -567,14 +567,14 @@ NSDictionary* categoryFontAttributes()
 	{
 		NSTextTab* tabstop = [[NSTextTab alloc] initWithType:NSLeftTabStopType location:theIndent];
 		NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-		[paragraphStyle setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
-		[paragraphStyle setHeadIndent:theIndent];
-		[paragraphStyle setFirstLineHeadIndent:theFirstLineIndent];
+		paragraphStyle.paragraphStyle = NSParagraphStyle.defaultParagraphStyle;
+		paragraphStyle.headIndent = theIndent;
+		paragraphStyle.firstLineHeadIndent = theFirstLineIndent;
 		[paragraphStyle setTabStops: @[tabstop]];
 		
 		NSColor* textColor = rgbColor255(180.0, 180.0, 180.0);
 		
-		NSFont* font = [NSFont fontWithName:@"Helvetica-Bold"  size:[NSFont systemFontSize]];
+		NSFont* font = [NSFont fontWithName:@"Helvetica-Bold"  size:NSFont.systemFontSize];
 		
 		theDictionary = @{NSFontAttributeName: font, NSForegroundColorAttributeName: textColor, NSParagraphStyleAttributeName: paragraphStyle};
 	}
@@ -587,13 +587,13 @@ NSDictionary* normalFontAttributes()
 	if (theDictionary == nil)
 	{
 		NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-		[paragraphStyle setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
-		[paragraphStyle setHeadIndent:theIndent];
-		[paragraphStyle setFirstLineHeadIndent:theIndent];
+		paragraphStyle.paragraphStyle = NSParagraphStyle.defaultParagraphStyle;
+		paragraphStyle.headIndent = theIndent;
+		paragraphStyle.firstLineHeadIndent = theIndent;
 		NSTextTab* tabstop = [[NSTextTab alloc] initWithType:NSLeftTabStopType location:theIndent];
 		[paragraphStyle setTabStops: @[tabstop]];	// Add a tab stop.
 		
-		NSFont* font = [NSFont fontWithName:@"Helvetica"  size:[NSFont systemFontSize]];
+		NSFont* font = [NSFont fontWithName:@"Helvetica"  size:NSFont.systemFontSize];
 		theDictionary = @{NSFontAttributeName: font, NSParagraphStyleAttributeName: paragraphStyle};
 	}
 	return theDictionary;
@@ -606,14 +606,14 @@ NSDictionary* grayedFontAttributes()
 	{
 		NSTextTab* tabstop = [[NSTextTab alloc] initWithType:NSLeftTabStopType location:theIndent];
 		NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-		[paragraphStyle setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
-		[paragraphStyle setHeadIndent:theIndent];
-		[paragraphStyle setFirstLineHeadIndent:theIndent];
+		paragraphStyle.paragraphStyle = NSParagraphStyle.defaultParagraphStyle;
+		paragraphStyle.headIndent = theIndent;
+		paragraphStyle.firstLineHeadIndent = theIndent;
 		[paragraphStyle setTabStops: @[tabstop]];
 		
 		NSColor* textColor = rgbColor255(180.0, 180.0, 180.0);
 		
-		NSFont* font = [NSFont fontWithName:@"Helvetica"  size:[NSFont systemFontSize]];
+		NSFont* font = [NSFont fontWithName:@"Helvetica"  size:NSFont.systemFontSize];
 		
 		theDictionary = @{NSFontAttributeName: font, NSForegroundColorAttributeName: textColor, NSParagraphStyleAttributeName: paragraphStyle};
 	}

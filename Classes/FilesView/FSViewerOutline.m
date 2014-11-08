@@ -24,17 +24,17 @@
 
 - (void) awakeFromNib
 {
-	[self setDelegate:self];
-	[self setDataSource:self];
-	[self setTarget:self];
+	self.delegate = self;
+	self.dataSource = self;
+	self.target = self;
 	[self setAction:@selector(fsviewerAction:)];
 	[self setDoubleAction:@selector(fsviewerDoubleAction:)];
-	[self setIndentationPerLevel:20.0];
+	self.indentationPerLevel = 20.0;
 }
 
 - (void) reloadData
 {
-	[self setRowHeight:[parentViewer_ rowHeightForFont]];
+	self.rowHeight = parentViewer_.rowHeightForFont;
 	[super reloadData];
 	if (IsEmpty(expandedNodes_))
 		[self restoreExpandedStateFromUserDefaults];
@@ -51,7 +51,7 @@
 - (void) prepareToOpenFSViewerPane
 {
 	[self reloadDataSin];	// Have the desirable side effect of copying the selection from the current pane to this one.
-	[[[parentViewer_ myDocument] mainWindow] makeFirstResponder:self];
+	[[parentViewer_.myDocument mainWindow] makeFirstResponder:self];
 }
 
 - (NSRect)frameOfOutlineCellAtRow:(NSInteger)row
@@ -95,7 +95,7 @@
 
 - (BOOL) singleFileIsChosenInFiles
 {
-	if (![self.chosenNode isFile])
+	if (!self.chosenNode.isFile)
 		return NO;
 	return (self.numberOfSelectedRows == 1) || ![self isRowSelected:self.chosenRow];
 }
@@ -105,10 +105,10 @@
 - (void)		repositoryDataIsNew
 {
 	// If we are autoExpanding the clear all the old expansions
-	if ([[parentViewer_ parentController] autoExpandViewerOutlines])
+	if (parentViewer_.parentController.autoExpandViewerOutlines)
 	{
-		NSString* cacheKeyName = fstr(@"ChacheExpandedFSViewerOutlineNodes§%@", [[parentViewer_ myDocument] absolutePathOfRepositoryRoot]);
-		[[NSUserDefaults standardUserDefaults] removeObjectForKey:cacheKeyName];
+		NSString* cacheKeyName = fstr(@"ChacheExpandedFSViewerOutlineNodes§%@", parentViewer_.myDocument.absolutePathOfRepositoryRoot);
+		[NSUserDefaults.standardUserDefaults removeObjectForKey:cacheKeyName];
 	}
 	expandedNodes_ = nil;
 	[self myDeselectAll];
@@ -134,10 +134,10 @@
 // MARK: Data Source Delegates
 // ------------------------------------------------------------------------------------
 
-- (id)        outlineView:(NSOutlineView*)outlineView  child:(NSInteger)index  ofItem:(FSNodeInfo*)item									{ return [(item ? item : [parentViewer_ rootNodeInfo]) childNodeAtIndex:index]; }
-- (BOOL)      outlineView:(NSOutlineView*)outlineView  isItemExpandable:(FSNodeInfo*)item												{ return [(item ? item : [parentViewer_ rootNodeInfo]) childNodeCount] > 0; }
-- (NSInteger) outlineView:(NSOutlineView*)outlineView  numberOfChildrenOfItem:(FSNodeInfo*)item											{ return [(item ? item : [parentViewer_ rootNodeInfo]) childNodeCount]; }
-- (id)        outlineView:(NSOutlineView*)outlineView  objectValueForTableColumn:(NSTableColumn*)tableColumn  byItem:(FSNodeInfo*)item  { return [(item ? item : [parentViewer_ rootNodeInfo]) relativePathComponent]; }
+- (id)        outlineView:(NSOutlineView*)outlineView  child:(NSInteger)index  ofItem:(FSNodeInfo*)item									{ return [(item ? item : parentViewer_.rootNodeInfo) childNodeAtIndex:index]; }
+- (BOOL)      outlineView:(NSOutlineView*)outlineView  isItemExpandable:(FSNodeInfo*)item												{ return [(item ? item : parentViewer_.rootNodeInfo) childNodeCount] > 0; }
+- (NSInteger) outlineView:(NSOutlineView*)outlineView  numberOfChildrenOfItem:(FSNodeInfo*)item											{ return [(item ? item : parentViewer_.rootNodeInfo) childNodeCount]; }
+- (id)        outlineView:(NSOutlineView*)outlineView  objectValueForTableColumn:(NSTableColumn*)tableColumn  byItem:(FSNodeInfo*)item  { return [(item ? item : parentViewer_.rootNodeInfo) relativePathComponent]; }
 
 
 
@@ -150,7 +150,7 @@
 
 - (void)	outlineView:(NSOutlineView*)outlineView  willDisplayCell:(id)aCell  forTableColumn:(NSTableColumn*)tableColumn  item:(id)item
 {
-	if ([[tableColumn identifier] isEqualToString:@"path"])
+	if ([tableColumn.identifier isEqualToString:@"path"])
 	{
 		FSNodeInfo* node = DynamicCast(FSNodeInfo, item);
 		[aCell setParentNodeInfo:[self parentForItem:node]];
@@ -163,10 +163,10 @@
 {
 	if (!expandedNodes_)
 		[self restoreExpandedStateFromUserDefaults];
-	FSNodeInfo* node = [notification userInfo][@"NSObject"];
-	if ([expandedNodes_ containsObject:[node absolutePath]])
+	FSNodeInfo* node = notification.userInfo[@"NSObject"];
+	if ([expandedNodes_ containsObject:node.absolutePath])
 	{
-		[expandedNodes_ removeObject:[node absolutePath]];
+		[expandedNodes_ removeObject:node.absolutePath];
 		[self saveExpandedStateToUserDefaults];
 	}
 }
@@ -175,10 +175,10 @@
 {
 	if (!expandedNodes_)
 		[self restoreExpandedStateFromUserDefaults];
-	FSNodeInfo* node = [notification userInfo][@"NSObject"];
-	if (![expandedNodes_ containsObject:[node absolutePath]])
+	FSNodeInfo* node = notification.userInfo[@"NSObject"];
+	if (![expandedNodes_ containsObject:node.absolutePath])
 	{
-		[expandedNodes_ addObject:[node absolutePath]];
+		[expandedNodes_ addObject:node.absolutePath];
 		[self saveExpandedStateToUserDefaults];
 	}	
 }
@@ -204,7 +204,7 @@
 {
 	NSMutableArray* paths = [[NSMutableArray alloc] init];
 	for (FSNodeInfo* node in items)
-		[paths addObject:[node absolutePath]];
+		[paths addObject:node.absolutePath];
 	return [parentViewer_ writePaths:paths toPasteboard:pasteboard];	// The parent handles writing out the pasteboard items
 }
 
@@ -218,38 +218,38 @@
 
 - (void) autoExpandNodes:(FSNodeInfo*)node
 {
-	if (!bitsInCommon([node hgStatus],eHGStatusChangedInSomeWay))
+	if (!bitsInCommon(node.hgStatus,eHGStatusChangedInSomeWay))
 		return;
 	[self expandItem:node];
-	NSArray* childNodes = [[node childNodes] allValues];
+	NSArray* childNodes = node.childNodes.allValues;
 	for (FSNodeInfo* child in childNodes)
 		[self autoExpandNodes:child];
 }
 
 - (void) saveExpandedStateToUserDefaults
 {
-	NSString* cacheKeyName = fstr(@"ChacheExpandedFSViewerOutlineNodes§%@", [[parentViewer_ myDocument] absolutePathOfRepositoryRoot]);
-	[[NSUserDefaults standardUserDefaults] setObject:[expandedNodes_ allObjects] forKey:cacheKeyName];
+	NSString* cacheKeyName = fstr(@"ChacheExpandedFSViewerOutlineNodes§%@", parentViewer_.myDocument.absolutePathOfRepositoryRoot);
+	[NSUserDefaults.standardUserDefaults setObject:expandedNodes_.allObjects forKey:cacheKeyName];
 }
 
 - (void) restoreExpandedStateFromUserDefaults
 {
-	NSString* cacheKeyName = fstr(@"ChacheExpandedFSViewerOutlineNodes§%@", [[parentViewer_ myDocument] absolutePathOfRepositoryRoot]);
-	NSArray* expandedNodes = [[NSUserDefaults standardUserDefaults] objectForKey:cacheKeyName];
+	NSString* cacheKeyName = fstr(@"ChacheExpandedFSViewerOutlineNodes§%@", parentViewer_.myDocument.absolutePathOfRepositoryRoot);
+	NSArray* expandedNodes = [NSUserDefaults.standardUserDefaults objectForKey:cacheKeyName];
 	expandedNodes_ = expandedNodes ? [NSMutableSet setWithArray:expandedNodes] : [[NSMutableSet alloc] init];
 }
 
 - (void) restoreExpandedVisualsFromExpandedState
 {
-	FSNodeInfo* rootNode = [parentViewer_ rootNodeInfo];
-	NSArray* sortedExpandedPaths = [[expandedNodes_ allObjects] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+	FSNodeInfo* rootNode = parentViewer_.rootNodeInfo;
+	NSArray* sortedExpandedPaths = [expandedNodes_.allObjects sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
 	for (NSString* path in sortedExpandedPaths)
 	{
 		FSNodeInfo* node = [rootNode nodeForPathFromRoot:path];
 		if (node)
 			[self expandItem:node];
 	}
-	if ([[parentViewer_ parentController] autoExpandViewerOutlines])
+	if (parentViewer_.parentController.autoExpandViewerOutlines)
 		[self autoExpandNodes:rootNode];
 }
 
@@ -257,11 +257,11 @@
 {
 	FSViewerSelectionState* newSavedState = [[FSViewerSelectionState alloc] init];
 
-	NSArray* selectedPaths = [parentViewer_ absolutePathsOfSelectedFilesInBrowser];
-	BOOL restoreFirstResponderToViewer = [[[parentViewer_ parentWindow] firstResponder] hasAncestor:self];
+	NSArray* selectedPaths = parentViewer_.absolutePathsOfSelectedFilesInBrowser;
+	BOOL restoreFirstResponderToViewer = [parentViewer_.parentWindow.firstResponder hasAncestor:self];
 	
 	NSScrollView* enclosingSV = self.enclosingScrollView;
-	NSPoint currentScrollPosition = [[enclosingSV contentView] bounds].origin;
+	NSPoint currentScrollPosition = enclosingSV.contentView.bounds.origin;
 	NSValue* scrollPositionAsValue = [NSValue valueWithPoint:currentScrollPosition];
 
 	// Save the selectedPaths
@@ -274,10 +274,10 @@
 
 - (void) restoreViewerSelectionState:(FSViewerSelectionState*)savedState
 {
-	NSArray* savedSelectedPaths            = [savedState savedSelectedPaths];
-	BOOL     restoreFirstResponderToViewer = [savedState restoreFirstResponderToViewer];
-	NSValue* savedScrollPositionValue	   = [[savedState savedColumnScrollPositions] firstObject];
-	FSNodeInfo* rootNode				   = [parentViewer_ rootNodeInfo];
+	NSArray* savedSelectedPaths            = savedState.savedSelectedPaths;
+	BOOL     restoreFirstResponderToViewer = savedState.restoreFirstResponderToViewer;
+	NSValue* savedScrollPositionValue	   = savedState.savedColumnScrollPositions.firstObject;
+	FSNodeInfo* rootNode				   = parentViewer_.rootNodeInfo;
 
 	// restore the selection
 	NSMutableIndexSet* rowsToBeSelected = [[NSMutableIndexSet alloc]init];	
@@ -292,11 +292,11 @@
 	if (savedScrollPositionValue)
 	{
 		NSScrollView* enclosingSV = self.enclosingScrollView;
-		[[enclosingSV documentView] scrollPoint:[savedScrollPositionValue pointValue]];
+		[enclosingSV.documentView scrollPoint:savedScrollPositionValue.pointValue];
 	}
-	if ([rowsToBeSelected count]>0)
+	if (rowsToBeSelected.count>0)
 	{
-		NSUInteger row = [rowsToBeSelected firstIndex];
+		NSUInteger row = rowsToBeSelected.firstIndex;
 		[self scrollRowToVisible:row];
 	}
 

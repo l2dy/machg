@@ -70,12 +70,12 @@
 
 - (void) clearSheetValues
 {
-	[self setShortNameFieldValue:@""];
-	[self setBaseServerURLFieldValue:@""];
-	[self setUsername:@""];
-	[self setPassword:@""];
-	[self setShowRealPassword:YES];
-	[self setRepositoryIdentity:@""];
+	self.shortNameFieldValue = @"";
+	self.baseServerURLFieldValue = @"";
+	self.username = @"";
+	self.password = @"";
+	self.showRealPassword = YES;
+	self.repositoryIdentity = @"";
 }
 
 
@@ -92,7 +92,7 @@
 	AuthorizationRef myAuthorizationRef;
 	AuthorizationCreate(NULL, kAuthorizationEmptyEnvironment, kAuthorizationFlagDefaults, &myAuthorizationRef);
 	AuthorizationFree(myAuthorizationRef, kAuthorizationFlagDestroyRights);
-	[self setShowRealPassword:NO];
+	self.showRealPassword = NO;
 	[self passwordChanged];
 }
 
@@ -144,7 +144,7 @@
 		showRealPassword_ = val;
 		[self didChangeValueForKey:@"showRealPassword"];
 	}
-	[showPasswordButton setState:val];
+	showPasswordButton.state = val;
 	[self passwordChanged];
 }
 
@@ -164,12 +164,12 @@
 	[passwordBoxDisclosureController setToOpenState:!sshConnection withAnimation:YES];
 	if (sshConnection && IsNotEmpty(password_))
 	{
-		[self setPassword:@""];
+		self.password = @"";
 		[self passwordChanged];
 	}
 
-	BOOL valid = ([self.baseServerURLFieldValue length] > 0) && ([self.shortNameFieldValue length] > 0);
-	[okButton setEnabled:valid];
+	BOOL valid = (self.baseServerURLFieldValue.length > 0) && (self.shortNameFieldValue.length > 0);
+	okButton.enabled = valid;
 	ServerRepositoryRefSheetController* __weak weakSelf = self;
 	if (sender == theBaseServerTextField || sender == self || sender == theUsernameTextField || sender == theSecurePasswordTextField || sender == theUnsecurePasswordTextField)
 	{
@@ -196,8 +196,8 @@
 	nodeToConfigure = nil;
 	passwordKeyChainItem_ = nil;
 	cloneAfterAddition_ = NO;
-	[theTitleText setStringValue:@"Add Server Repository"];
-	[okButton setTitle:@"Add Server"];
+	theTitleText.stringValue = @"Add Server Repository";
+	okButton.title = @"Add Server";
 	[theConnectionValidationController resetForSheetOpen];
 	[myDocument_ beginSheet:theWindow];
 }
@@ -212,8 +212,8 @@
 	nodeToConfigure = nil;
 	passwordKeyChainItem_ = nil;
 	cloneAfterAddition_ = YES;
-	[theTitleText setStringValue:@"Add and Clone Server Repository"];
-	[okButton setTitle:@"Add and Clone"];
+	theTitleText.stringValue = @"Add and Clone Server Repository";
+	okButton.title = @"Add and Clone";
 	[theConnectionValidationController resetForSheetOpen];
 	[myDocument_ beginSheet:theWindow];
 }
@@ -222,9 +222,9 @@
 - (void) openSheetForConfigureRepositoryRef:(SidebarNode*)node
 {
 	// If the user has chosen the wrong type of configuration do the correct thing.
-	if ([node isLocalRepositoryRef])
+	if (node.isLocalRepositoryRef)
 	{
-		[[myDocument_ theLocalRepositoryRefSheetController] openSheetForConfigureRepositoryRef:node];
+		[myDocument_.theLocalRepositoryRefSheetController openSheetForConfigureRepositoryRef:node];
 		return;
 	}
 
@@ -232,30 +232,30 @@
 	[self clearSheetValues];
 	[advancedOptionsDisclosureController setToOpenState:NO withAnimation:NO];
 	
-	if ([node isServerRepositoryRef])
+	if (node.isServerRepositoryRef)
 	{
-		[self setShortNameFieldValue:[node shortName]];
-		[self setBaseServerURLFieldValue:[node path]];
+		self.shortNameFieldValue = node.shortName;
+		self.baseServerURLFieldValue = node.path;
 		[self baseServerURLEndedEdits];
-		[self setRepositoryIdentity:[node repositoryIdentity]];
+		self.repositoryIdentity = node.repositoryIdentity;
 	}
 	
-	passwordKeyChainItem_ = [EMGenericKeychainItem genericKeychainItemForService:kMacHgApp withUsername:[node path]];
+	passwordKeyChainItem_ = [EMGenericKeychainItem genericKeychainItemForService:kMacHgApp withUsername:node.path];
 	if (passwordKeyChainItem_)
 	{
-		[self setPassword:passwordKeyChainItem_.password];
-		[self setShowRealPassword:NO];
+		self.password = passwordKeyChainItem_.password;
+		self.showRealPassword = NO;
 	}
 	else
 	{
 		passwordKeyChainItem_ = nil;
 		if (IsEmpty(password_))
-			[self setShowRealPassword:YES];
+			self.showRealPassword = YES;
 	}
 	[self passwordChanged];
 
-	[theTitleText setStringValue:@"Configure Server Repository"];
-	[okButton setTitle:@"Configure Server"];
+	theTitleText.stringValue = @"Configure Server Repository";
+	okButton.title = @"Configure Server";
 	cloneAfterAddition_ = NO;
 	[theConnectionValidationController resetForSheetOpen];
 	[self validateButtons:self];
@@ -293,18 +293,18 @@
 {
 	if (self.showRealPassword == YES)
 	{
-		[self setShowRealPassword:NO];
+		self.showRealPassword = NO;
 		return;
 	}
 
 	if (!self.authorizeForShowingPassword)
 	{
-		[showPasswordButton setState:NSOffState];
+		showPasswordButton.state = NSOffState;
 		[self passwordChanged];
 		return;
 	}
 
-	[self setShowRealPassword:YES];
+	self.showRealPassword = YES;
 }
 
 
@@ -312,30 +312,30 @@
 {
 	[theWindow makeFirstResponder:theWindow];	// Make the text fields of the sheet commit any changes they currently have
 
-	Sidebar* theSidebar = [myDocument_ sidebar];
-	[[theSidebar prepareUndoWithTarget:theSidebar] setRootAndUpdate:[[theSidebar root] copyNodeTree]];
-	[[theSidebar undoManager] setActionName: (nodeToConfigure ? @"Configure Repository" : @"Add Server Repository")];
+	Sidebar* theSidebar = myDocument_.sidebar;
+	[[theSidebar prepareUndoWithTarget:theSidebar] setRootAndUpdate:theSidebar.root.copyNodeTree];
+	[theSidebar.undoManager setActionName: (nodeToConfigure ? @"Configure Repository" : @"Add Server Repository")];
 
-	NSString* newName    = [shortNameFieldValue_ copy];
+	NSString* newName    = shortNameFieldValue_.copy;
 	NSString* newPath    = [self generateFullServerURLIncludingPassword:NO andMaskingPassword:NO];
 	NSString* newId      = IsNotEmpty(repositoryIdentity_) ? repositoryIdentity_ : nil;
 	if (nodeToConfigure)
 	{
-		[theSidebar removeConnectionsFor:[nodeToConfigure path]];
-		[nodeToConfigure setPath:newPath];
-		[nodeToConfigure setShortName:newName];
+		[theSidebar removeConnectionsFor:nodeToConfigure.path];
+		nodeToConfigure.path = newPath;
+		nodeToConfigure.shortName = newName;
 		[nodeToConfigure refreshNodeIcon];
 	}
 	else
 	{
 		SidebarNode* newNode = [SidebarNode nodeWithCaption:newName  forServerPath:newPath];
 		[newNode refreshNodeIcon];
-		[[myDocument_ sidebar] addSidebarNode:newNode];
+		[myDocument_.sidebar addSidebarNode:newNode];
 		[theSidebar selectNode:newNode];
 	}
 
 	if (IsNotEmpty(newId) && IsNotEmpty(newPath))
-		[[[AppController sharedAppController] repositoryIdentityForPath] synchronizedSetObject:newId forKey:newPath];
+		[[AppController.sharedAppController repositoryIdentityForPath] synchronizedSetObject:newId forKey:newPath];
 
 	if (passwordKeyChainItem_)
 	{
@@ -343,7 +343,7 @@
 			passwordKeyChainItem_ = nil;
 		else if (IsEmpty(password_))
 		{
-			// JFH_FIXME: This should relly be [passwordKeyChainItem_ removeFromKeychain] but this is causing the keychain to temporarily get corrupted. So instead just leave the empty password for the given user.
+			// JFH_FIXME: This should relly be passwordKeyChainItem_.removeFromKeychain but this is causing the keychain to temporarily get corrupted. So instead just leave the empty password for the given user.
 			passwordKeyChainItem_.password = @"";
 			passwordKeyChainItem_ = nil;
 		}
@@ -359,10 +359,10 @@
 			passwordKeyChainItem_ = [EMGenericKeychainItem addGenericKeychainItemForService:kMacHgApp withUsername:newPath password:self.password];
 	}
 
-	[[AppController sharedAppController] computeRepositoryIdentityForPath:newPath];
+	[AppController.sharedAppController computeRepositoryIdentityForPath:newPath];
 	
 	[myDocument_ endSheet:theWindow];
-	[[myDocument_ sidebar] reloadData];
+	[myDocument_.sidebar reloadData];
 	[myDocument_ saveDocumentIfNamed];
 	[myDocument_ postNotificationWithName:kSidebarSelectionDidChange];
 	if (cloneAfterAddition_)
@@ -388,7 +388,7 @@
 {
 	[theFullServerTextField sizeToFit];
 	[NSAnimationContext beginGrouping];
-	[[NSAnimationContext currentContext] setDuration:0.1];
+	[NSAnimationContext.currentContext setDuration:0.1];
 	[connectionStatusBox setToRightOf:theFullServerTextField bySpacing:10];
 	[NSAnimationContext endGrouping];
 }
@@ -407,16 +407,16 @@
 	if (IsEmpty(baseServerURLFieldValue_))
 		return nil;
 	NSURL* theBaseURL = [NSURL URLWithString:baseServerURLFieldValue_];
-	BOOL valid = [theBaseURL scheme] && [theBaseURL host];
+	BOOL valid = theBaseURL.scheme && theBaseURL.host;
 	if (!valid || IsEmpty(username_))
 		return baseServerURLFieldValue_;
 	
 	NSURL* withUser     = [theBaseURL URLByReplacingUser:username_];
 	if (!includePass || IsEmpty(password_))
-		return [withUser absoluteString];
+		return withUser.absoluteString;
 	
 	NSURL* withPassword = [withUser URLByReplacingPassword:mask ? @"***" : password_];
-	return [withPassword absoluteString];
+	return withPassword.absoluteString;
 }
 
 - (void) baseServerURLChanged
@@ -435,12 +435,12 @@
 	
 	NSURL* theBaseURL = [NSURL URLWithString:baseServerURLFieldValue_];
 
-	if (IsNotEmpty([theBaseURL password]))
-		[self setPassword:[theBaseURL password]];
-	if (IsNotEmpty([theBaseURL user]))
-		[self setUsername:[theBaseURL user]];
+	if (IsNotEmpty(theBaseURL.password))
+		self.password = theBaseURL.password;
+	if (IsNotEmpty(theBaseURL.user))
+		self.username = theBaseURL.user;
 	if (commitNew)
-		[self setBaseServerURLFieldValue:[[theBaseURL URLByDeletingUserAndPassword] absoluteString]];
+		self.baseServerURLFieldValue = theBaseURL.URLByDeletingUserAndPassword.absoluteString;
 
 	[self setFullServerURLFieldValue:[self generateFullServerURLIncludingPassword:YES andMaskingPassword:!showRealPassword_]];
 	[self performSelector:@selector(repositionConnectionStatusBox) withObject:nil afterDelay:0.05];
@@ -450,9 +450,9 @@
 {
 	[self baseServerURLChanged];
 	NSURL* theBaseURL = [NSURL URLWithString:baseServerURLFieldValue_];
-	if (IsEmpty([theBaseURL password]) && IsEmpty([theBaseURL user]))
+	if (IsEmpty(theBaseURL.password) && IsEmpty(theBaseURL.user))
 		return;
-	[self setBaseServerURLFieldValue:[[theBaseURL URLByDeletingUserAndPassword] absoluteString]];
+	self.baseServerURLFieldValue = theBaseURL.URLByDeletingUserAndPassword.absoluteString;
 }
 
 
@@ -479,18 +479,18 @@
 
 - (void) controlTextDidChange:(NSNotification*)aNotification
 {
-	id sender = [aNotification object];
+	id sender = aNotification.object;
 	if		(sender == theBaseServerTextField)			[self baseServerURLChanged];
 	else if (sender == theUsernameTextField)			[self usernameChanged];
 	else if (sender == theSecurePasswordTextField)		[self passwordChanged];
 	else if (sender == theUnsecurePasswordTextField)	[self passwordChanged];
 	
-	[self validateButtons:[aNotification object]];
+	[self validateButtons:aNotification.object];
 }
 
 - (void) controlTextDidEndEditing:(NSNotification*)aNotification
 {
-	id sender = [aNotification object];
+	id sender = aNotification.object;
 	if		(sender == theBaseServerTextField)			[self baseServerURLEndedEdits];
 }
 

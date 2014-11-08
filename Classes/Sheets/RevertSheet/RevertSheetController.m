@@ -65,8 +65,8 @@
 - (void) openRevertSheetWithPaths:(NSArray*)paths andRevision:(NSNumber*)revision
 {
 	// Report the branch we are about to revert on in the dialog
-	NSString* newSheetMessage = fstr(@"The following files will be reverted to the versions as of the revision selected below (%@)", [logTableView selectedRevision]);
-	[sheetInformativeMessageTextField setStringValue: newSheetMessage];
+	NSString* newSheetMessage = fstr(@"The following files will be reverted to the versions as of the revision selected below (%@)", logTableView.selectedRevision);
+	sheetInformativeMessageTextField.stringValue =  newSheetMessage;
 	absolutePathsOfFilesToRevert = paths;
 	
 	[logTableView resetTable:self];
@@ -78,27 +78,27 @@
 
 - (IBAction) openRevertSheetWithAllFiles:(id)sender
 {
-	NSString* newTitle = fstr(@"Reverting All Files in %@", [myDocument_ selectedRepositoryShortName]);
-	[revertSheetTitle setStringValue:newTitle];
-	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
-	[self openRevertSheetWithPaths:@[rootPath] andRevision:[myDocument_ getHGParent1Revision]];
+	NSString* newTitle = fstr(@"Reverting All Files in %@", myDocument_.selectedRepositoryShortName);
+	revertSheetTitle.stringValue = newTitle;
+	NSString* rootPath = myDocument_.absolutePathOfRepositoryRoot;
+	[self openRevertSheetWithPaths:@[rootPath] andRevision:myDocument_.getHGParent1Revision];
 }
 
 - (IBAction) openRevertSheetWithSelectedFiles:(id)sender
 {
-	NSString* newTitle = fstr(@"Reverting Selected Files in %@", [myDocument_ selectedRepositoryShortName]);
-	[revertSheetTitle setStringValue:newTitle];
-	NSArray* paths = [myDocument_ absolutePathsOfChosenFiles];
-	if ([paths count] <= 0)
+	NSString* newTitle = fstr(@"Reverting Selected Files in %@", myDocument_.selectedRepositoryShortName);
+	revertSheetTitle.stringValue = newTitle;
+	NSArray* paths = myDocument_.absolutePathsOfChosenFiles;
+	if (paths.count <= 0)
 		{ PlayBeep(); DebugLog(@"No files are selected to revert"); return; }
 	
-	[self openRevertSheetWithPaths:paths  andRevision:[myDocument_ getHGParent1Revision]];
+	[self openRevertSheetWithPaths:paths  andRevision:myDocument_.getHGParent1Revision];
 }
 
 
 - (IBAction) sheetButtonOk:(id)sender
 {
-	NSNumber* versionToRevertTo = [logTableView selectedRevision];
+	NSNumber* versionToRevertTo = logTableView.selectedRevision;
 	BOOL didReversion = [myDocument_ primaryActionRevertFiles:absolutePathsOfFilesToRevert toVersion:versionToRevertTo];
 	if (!didReversion)
 		return;
@@ -114,7 +114,7 @@
 
 - (IBAction) sheetButtonViewDifferencesForRevertSheet:(id)sender
 {
-	NSNumber* versionToRevertTo = [logTableView selectedRevision];
+	NSNumber* versionToRevertTo = logTableView.selectedRevision;
 	[myDocument_ viewDifferencesInCurrentRevisionFor:absolutePathsOfFilesToRevert toRevision:numberAsString(versionToRevertTo)];
 }
 
@@ -129,7 +129,7 @@
 
 - (void) logTableViewSelectionDidChange:(LogTableView*)theLogTable
 {
-	[sheetInformativeMessageTextField setAttributedStringValue: self.formattedSheetMessage];
+	sheetInformativeMessageTextField.attributedStringValue =  self.formattedSheetMessage;
 }
 
 
@@ -145,7 +145,7 @@
 {
 	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"The contents of the files within the selected file paths will be replaced with their contents as of version ")];
-	NSNumber* revision = [logTableView selectedRevision];
+	NSNumber* revision = logTableView.selectedRevision;
 	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(revision ? numberAsString(revision) : @"-")];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@". Any tracked files which have been modified will be moved aside. Any newly added or removed files will return to their former status.")];
 	return newSheetMessage;

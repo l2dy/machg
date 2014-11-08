@@ -47,7 +47,7 @@
 
 - (NSString*) commandLineString
 {
-    NSMutableString* desc = [[self.launchPath lastPathComponent] mutableCopy];
+    NSMutableString* desc = [self.launchPath.lastPathComponent mutableCopy];
     for (NSString* arg in self.arguments)
 	{
         [desc appendString:@" "];
@@ -83,9 +83,9 @@
 	{
 		delegate_ = delegate;
 		if (env)
-			[self setEnvironment:env];
-		[self setLaunchPath:cmd];
-		[self setArguments:args];
+			self.environment = env;
+		self.launchPath = cmd;
+		self.arguments = args;
 	}
 	return self;
 }
@@ -111,7 +111,7 @@ NSString* filterProgressOutOfErrorString(NSString* rawErrorStr)
 			[delegate shellTaskCreated:shellTask];
 		
 		[shellTask launch];			// Start the process
-		// DebugLog(@"launched %@", [shellTask commandLineString]);
+		// DebugLog(@"launched %@", shellTask.commandLineString);
 
 		// Move the process into our group if we can so when we quit all child processes are killed. See http:
 		// www.cocoadev.com/index.pl?NSTaskTermination. Maybe there is a better way to do this in which case I would like to know.
@@ -121,8 +121,8 @@ NSString* filterProgressOutOfErrorString(NSString* rawErrorStr)
 		setpgid([shellTask  processIdentifier], group);
 
 		[shellTask waitUntilExit];
-		outStr = nonNil([shellTask outputString]);
-		errStr = nonNil([shellTask errorString]);
+		outStr = nonNil(shellTask.outputString);
+		errStr = nonNil(shellTask.errorString);
 		BOOL isHgCommand = [cmd hasSuffix:@"MacHg.app/Contents/Resources/localhg"];
 		
 		if (!isHgCommand)
@@ -132,17 +132,17 @@ NSString* filterProgressOutOfErrorString(NSString* rawErrorStr)
 			outStr =[outStr substringFromIndex:17];
 			break;
 		}
-		DebugLog(@"Recieved Null Mercurial Output for: %@", [shellTask commandLineString]);
+		DebugLog(@"Recieved Null Mercurial Output for: %@", shellTask.commandLineString);
 		repeats++;
 		sleep(repeats * 0.1);
 	} while (repeats < 4);
 
-	// DebugLog(@"Finished execute cmd for %@", [shellTask commandLineString]);
+	// DebugLog(@"Finished execute cmd for %@", shellTask.commandLineString);
 
 	if (IsNotEmpty(errStr))
-		DebugLog(@"err string for cmd %@ is %@", [shellTask commandLineString], errStr);
+		DebugLog(@"err string for cmd %@ is %@", shellTask.commandLineString, errStr);
 
-	ExecutionResult* result = [ExecutionResult resultWithCmd:cmd args:args result:[shellTask terminationStatus] outStr:outStr errStr:filterProgressOutOfErrorString(errStr)];
+	ExecutionResult* result = [ExecutionResult resultWithCmd:cmd args:args result:shellTask.terminationStatus outStr:outStr errStr:filterProgressOutOfErrorString(errStr)];
 	result->theShellTask_ = shellTask;
 	return result;
 }
@@ -203,12 +203,12 @@ NSString* filterProgressOutOfErrorString(NSString* rawErrorStr)
 	if (IsNotEmpty(errStr_))	[clauses addObject: fstr(@"err:%@", errStr_)];
 	if (IsNotEmpty(outStr_))	[clauses addObject: fstr(@"stdout:%@", outStr_)];
 	[clauses addObject:cmdClause];
-	return fstr(@"<%@ { code:%d, %@} >", self.className, result_, [clauses componentsJoinedByString:@", "]);
+	return fstr(@"<%@ { code:%d, %@} >", [self className], result_, [clauses componentsJoinedByString:@", "]);
 }
 
 - (void) displayAnyHostIdentificationViolations
 {
-	NSString* cmd = [generatingArgs_ firstObject];
+	NSString* cmd = generatingArgs_.firstObject;
 	if (![cmd isMatchedByRegex:@"incoming|outgoing|pull|push|identify"])
 		return;
 	if (IsEmpty(errStr_))
@@ -219,15 +219,15 @@ NSString* filterProgressOutOfErrorString(NSString* rawErrorStr)
 		return;
 
 	NSString* fingerPrint = nil;
-	NSURL* url = [NSURL URLWithString:[generatingArgs_ lastObject]];
-	NSString* host = [url host];
-	NSNumber* port = [url port];
+	NSURL* url = [NSURL URLWithString:generatingArgs_.lastObject];
+	NSString* host = url.host;
+	NSNumber* port = url.port;
 	if (!host)
 		return;
 
-	NSString* scriptPath = fstr(@"%@/%@",[[NSBundle mainBundle] resourcePath], @"getHTTPSfingerprint.py");
-	ExecutionResult* results = [ShellTask execute:scriptPath withArgs:@[host, port ? numberAsString(port) : @"443"] withEnvironment:[TaskExecutions environmentForHg]];
-	if ([results hasNoErrors])
+	NSString* scriptPath = fstr(@"%@/%@",NSBundle.mainBundle.resourcePath, @"getHTTPSfingerprint.py");
+	ExecutionResult* results = [ShellTask execute:scriptPath withArgs:@[host, port ? numberAsString(port) : @"443"] withEnvironment:TaskExecutions.environmentForHg];
+	if (results.hasNoErrors)
 		fingerPrint = trimString(results.outStr);
 
 	if (!fingerPrint)
@@ -238,7 +238,7 @@ NSString* filterProgressOutOfErrorString(NSString* rawErrorStr)
 	// Check to see if we already have a finger print in which case the fingerprint couldn't be used to verify the host which is bad.
 	NSMutableArray* argsShowConfig = [NSMutableArray arrayWithObjects:@"showconfig", fstr(@"hostfingerprints.%@", host), nil];
 	ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsShowConfig  fromRoot:@"/tmp"];
-	if ([result hasNoErrors] && IsNotEmpty(result.outStr))
+	if (result.hasNoErrors && IsNotEmpty(result.outStr))
 	{
 		
 		RunCriticalAlertPanel(@"Mismatched Fingerprint Key", fstr(@"The key stored for the host '%@' is different than the key returned by connecting to %@. This could indicate the connection has been compromised. Check your configuration settings!", host, host), @"OK", @"", @"");
@@ -252,9 +252,9 @@ NSString* filterProgressOutOfErrorString(NSString* rawErrorStr)
 	if (RequireVerifiedServerCertificatesFromDefaults())
 		dispatch_async(mainQueue(), ^{
 			NSAlert* alert = NewAlertPanel(errorMessage, fullErrorMessage, @"Decline", @"Add", nil);
-			[alert setShowsHelp:YES];
-			[alert setHelpAnchor:@"AboutServerIdentitySecurity"];
-			int response = [alert runModal];
+			alert.showsHelp = YES;
+			alert.helpAnchor = @"AboutServerIdentitySecurity";
+			int response = alert.runModal;
 			if (response != NSAlertSecondButtonReturn)
 				return;
 			
@@ -280,11 +280,11 @@ NSString* filterProgressOutOfErrorString(NSString* rawErrorStr)
 		if ([s isNotEqualTo:@"--header"])
 			[theCommandAsString appendFormat:@"%@ ", s];
 	NSString* filteredCommandString = [theCommandAsString stringByReplacingOccurrencesOfRegex:@"((?:ssh|http|https)://.*?):.*?@" withString:@"$1:***@"];
-	NSString* currentTime = [[NSDate date] description];
+	NSString* currentTime = NSDate.date.description;
 	NSString* hgBinary = executableLocationHG();
 	NSString* message = fstr(@"MacHg issued(%@):\n%@ %@\nResult code was:%d\nStandard out was:\n%@\nStandard error was:\n%@\n\n\n",
 							 currentTime, hgBinary, filteredCommandString, result_, outStr_, errStr_);
-	[[NSFileManager defaultManager] appendString:message toFilePath:MacHgLogFileLocation()];
+	[NSFileManager.defaultManager appendString:message toFilePath:MacHgLogFileLocation()];
 }
 
 
@@ -293,7 +293,7 @@ NSString* filterProgressOutOfErrorString(NSString* rawErrorStr)
 	dispatch_async(mainQueue(), ^{
 		// If we have a short enough error message then we can report the error simply using RunAlertPanel
 		NSInteger lineCount = [[errorDetails componentsSeparatedByString:@"\n"] count];
-		if ([errorDetails length] < 400 && lineCount <= 8)
+		if (errorDetails.length < 400 && lineCount <= 8)
 		{
 			NSString* fullErrorMessage = fstr(@"Mercurial reported error number %ld:\n%@", errorNumber, errorDetails);
 			RunAlertPanel(errorMessage, fullErrorMessage, @"OK", nil, nil);
@@ -308,24 +308,24 @@ NSString* filterProgressOutOfErrorString(NSString* rawErrorStr)
 		NSTextView* textView = [[NSTextView alloc] initWithFrame:initialSize];
 		NSDictionary* dict = @{ NSFontAttributeName : [NSFont systemFontOfSize:25.0] };
 		NSAttributedString* str = [NSAttributedString string:errorDetails withAttributes:dict];
-		[textView setFont:[NSFont systemFontOfSize:[NSFont smallSystemFontSize]]];
+		[textView setFont:[NSFont systemFontOfSize:NSFont.smallSystemFontSize]];
 		[textView insertText:str];
-		[textView setEditable:NO];
-		[textView setRichText:YES];
-		[textView setDrawsBackground:NO];
+		textView.editable = NO;
+		textView.richText = YES;
+		textView.drawsBackground = NO;
 
 		NSScrollView* scrollview = [[NSScrollView alloc] initWithFrame: initialSize];
-		[scrollview setBorderType:NSNoBorder];
-		[scrollview setHasVerticalScroller:YES];
-		[scrollview setDrawsBackground:NO];
-		[scrollview setHasHorizontalScroller:NO];
-		[scrollview setAutoresizingMask:NSViewWidthSizable | NSViewHeightSizable];
-		[scrollview setDocumentView:textView];
+		scrollview.borderType = NSNoBorder;
+		scrollview.hasVerticalScroller = YES;
+		scrollview.drawsBackground = NO;
+		scrollview.hasHorizontalScroller = NO;
+		scrollview.autoresizingMask = NSViewWidthSizable | NSViewHeightSizable;
+		scrollview.documentView = textView;
 
-		NSAlert* alert = [NSAlert new];
-		[alert setInformativeText: informativeText];
-		[alert setMessageText: errorMessage];
-		[alert setAccessoryView:scrollview];
+		NSAlert* alert = NSAlert.new;
+		alert.informativeText =  informativeText;
+		alert.messageText =  errorMessage;
+		alert.accessoryView = scrollview;
 		[alert addButtonWithTitle:@"OK"];
 		[alert runModal];
 	});
@@ -346,7 +346,7 @@ NSString* filterProgressOutOfErrorString(NSString* rawErrorStr)
 	// report errors if we asked for error reporting and it hasn't already been handled.
 	if (!loggedToAlertOrWindow_ && self.hasErrors && bitsInCommon(log, eIssueErrorsInAlerts))
 	{
-		NSString* errorMessage = fstr(@"Error During %@", [[generatingArgs_ firstObject] capitalizedString]);
+		NSString* errorMessage = fstr(@"Error During %@", [generatingArgs_.firstObject capitalizedString]);
 		
 		// This is a heuristic see the thread I started Versioning of Extensions and Matt's rather empty response here http:
 		// www.selenic.com/pipermail/mercurial/2010-May/032095.html
@@ -398,11 +398,11 @@ static NSString* processedPathEnv(NSDictionary* processEnv)
 	{
 		includeHomeHgrc  = IncludeHomeHgrcInHGRCPATHFromDefaults();
 		
-		NSDictionary* processEnv    = [[NSProcessInfo processInfo] environment];
+		NSDictionary* processEnv    = NSProcessInfo.processInfo.environment;
 		NSMutableDictionary* newEnv = [[NSMutableDictionary alloc] init];
 
 		NSString* hgrc_Path = hgrcPath();
-		NSString* localMercurialPath = fstr(@"%@/LocalMercurial", [[NSBundle mainBundle] builtInPlugInsPath]);
+		NSString* localMercurialPath = fstr(@"%@/LocalMercurial", NSBundle.mainBundle.builtInPlugInsPath);
 		NSString* PATHenv = processedPathEnv(processEnv);		// This is $PATH with /usr/local/bin included if necessary
 		
 		[newEnv copyValueOfKey:@"SSH_ASKPASS"	from:processEnv];
@@ -526,7 +526,7 @@ static NSString* processedPathEnv(NSDictionary* processEnv)
 
 	NSMutableArray* newArgs = [self preProcessMercurialCommandArgs:args fromRoot:rootPath];
 	NSString* hgBinary = executableLocationHG();
-	ExecutionResult* results = [ShellTask  execute:hgBinary  withArgs:newArgs  withEnvironment:[TaskExecutions environmentForHg]  withDelegate:delegate];
+	ExecutionResult* results = [ShellTask  execute:hgBinary  withArgs:newArgs  withEnvironment:TaskExecutions.environmentForHg  withDelegate:delegate];
 	[results pruneMissingExtensionsErrors];
 	[results logAndReportAnyErrors:log];
 	return results;
@@ -548,8 +548,8 @@ static NSString* processedPathEnv(NSDictionary* processEnv)
 OSStatus DoTerminalScript(NSString* script)
 {
 	// Launch the terminal if it's not already active...
-	[[NSWorkspace sharedWorkspace] launchAppWithBundleIdentifier:@"com.apple.Terminal" options:0 additionalEventParamDescriptor:nil launchIdentifier:nil];
-	const char* utf8Script = [script UTF8String];
+	[NSWorkspace.sharedWorkspace launchAppWithBundleIdentifier:@"com.apple.Terminal" options:0 additionalEventParamDescriptor:nil launchIdentifier:nil];
+	const char* utf8Script = script.UTF8String;
     /*
      * Run a shell script in Terminal.app.
      * (Terminal.app must be running first.)

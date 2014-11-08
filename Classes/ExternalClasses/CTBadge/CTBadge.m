@@ -43,17 +43,17 @@ const float CTSmallLabelSize = 11.;
 
 + (CTBadge *)systemBadge
 {
-	id newInstance = [[self.class alloc] init];
+	id newInstance = [[[self class] alloc] init];
 	
 	return newInstance;
 }
 
 + (CTBadge *)badgeWithColor:(NSColor *)badgeColor labelColor:(NSColor *)labelColor;
 {
-	id newInstance = [[self.class alloc] init];
+	CTBadge* newInstance = [[[self class] alloc] init];
 	
-	[newInstance setBadgeColor:badgeColor];
-	[newInstance setLabelColor:labelColor];
+	newInstance.badgeColor = badgeColor;
+	newInstance.labelColor = labelColor;
 	
 	return newInstance;
 }
@@ -114,7 +114,7 @@ const float CTSmallLabelSize = 11.;
 	float scaleFactor = 1;
 	
 	if(size <= 0)
-		[NSException raise:NSInvalidArgumentException format:@"%@ %@: size (%f) must be positive", self.class, NSStringFromSelector(_cmd), size];
+		[NSException raise:NSInvalidArgumentException format:@"%@ %@: size (%f) must be positive", [self class], NSStringFromSelector(_cmd), size];
 	else if(size <= CTSmallBadgeSize)
 		scaleFactor = size/CTSmallBadgeSize;
 	else
@@ -182,8 +182,8 @@ const float CTSmallLabelSize = 11.;
 	[image lockFocus];
 	[NSGraphicsContext saveGraphicsState];
 	NSShadow *theShadow = [[NSShadow alloc] init];
-	[theShadow setShadowOffset: NSMakeSize(0,-shadowOffset)];
-	[theShadow setShadowBlurRadius:shadowBlurRadius];
+	theShadow.shadowOffset =  NSMakeSize(0,-shadowOffset);
+	theShadow.shadowBlurRadius = shadowBlurRadius;
 	[theShadow setShadowColor:[[NSColor blackColor] colorWithAlphaComponent:shadowOpacity]];
 	[theShadow set];
 	[badgeImage drawAtPoint:NSZeroPoint fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
@@ -254,7 +254,7 @@ const float CTSmallLabelSize = 11.;
 	else
 		labelFont = [NSFont fontWithName:@"Helvetica-Bold" size:size];
 	
-	NSMutableParagraphStyle *pStyle = [[NSMutableParagraphStyle alloc] init];[pStyle setAlignment:NSCenterTextAlignment];
+	NSMutableParagraphStyle *pStyle = [[NSMutableParagraphStyle alloc] init];pStyle.alignment = NSCenterTextAlignment;
 	NSDictionary *attributes = @{NSForegroundColorAttributeName: self.labelColor,
 								NSFontAttributeName: labelFont};
 	
@@ -290,7 +290,7 @@ const float CTSmallLabelSize = 11.;
 	
 	if(size > 0 && size != [badgeMask size].height)
 	{
-		[badgeMask setName:nil];
+		badgeMask.name = nil;
 		[badgeMask setSize:NSMakeSize([badgeMask size].width*(size/[badgeMask size].height), size)];
 	}
 	

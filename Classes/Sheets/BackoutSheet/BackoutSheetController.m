@@ -66,19 +66,19 @@
 
 - (IBAction) validate:(id)sender
 {
-	BOOL valid = [logTableView singleRevisionSelected];
-	[okButton setEnabled:valid];
+	BOOL valid = logTableView.singleRevisionSelected;
+	okButton.enabled = valid;
 	[sheetInformativeMessageTextField setAttributedStringValue: (valid ? self.formattedSheetMessage : normalSheetMessageAttributedString(@"You need to select a single revision in order to backout."))];
 }
 
 
 - (void) openBackoutSheetWithRevision:(NSNumber*)revision
 {
-	NSString* newTitle = fstr(@"Backout Selected Changeset in %@", [myDocument_ selectedRepositoryShortName]);
-	[backoutSheetTitle setStringValue:newTitle];
+	NSString* newTitle = fstr(@"Backout Selected Changeset in %@", myDocument_.selectedRepositoryShortName);
+	backoutSheetTitle.stringValue = newTitle;
 
 	// Report the branch we are about to backout to in the dialog
-	[sheetInformativeMessageTextField setStringValue:@""];
+	sheetInformativeMessageTextField.stringValue = @"";
 
 	
 	[logTableView resetTable:self];
@@ -90,8 +90,8 @@
 
 - (IBAction) openBackoutSheetWithSelectedRevision:(id)sender
 {
-	NSArray* revs = [[[myDocument_ theHistoryView] logTableView] chosenRevisions];
-	if ([revs count] > 0)
+	NSArray* revs = [myDocument_.theHistoryView.logTableView chosenRevisions];
+	if (revs.count > 0)
 	{
 		NSInteger minRev = numberAsInt(revs[0]);
 		NSInteger maxRev = numberAsInt(revs[0]);
@@ -104,13 +104,13 @@
 		[self openBackoutSheetWithRevision:intAsNumber(minRev)];
 	}
 	else
-		[self openBackoutSheetWithRevision:[myDocument_ getHGParent1Revision]];
+		[self openBackoutSheetWithRevision:myDocument_.getHGParent1Revision];
 }
 
 
 - (IBAction) sheetButtonOk:(id)sender
 {
-	NSNumber* versionToBackoutTo = [logTableView selectedRevision];
+	NSNumber* versionToBackoutTo = logTableView.selectedRevision;
 	BOOL didReversion = [myDocument_ primaryActionBackoutFilesToVersion:versionToBackoutTo];
 	if (!didReversion)
 		return;
@@ -126,8 +126,8 @@
 
 - (IBAction) sheetButtonViewDifferencesForBackoutSheet:(id)sender
 {
-	NSArray* rootPathAsArray = [myDocument_ absolutePathOfRepositoryRootAsArray];
-	NSNumber* versionToBackoutTo = [logTableView selectedRevision];
+	NSArray* rootPathAsArray = myDocument_.absolutePathOfRepositoryRootAsArray;
+	NSNumber* versionToBackoutTo = logTableView.selectedRevision;
 	[myDocument_ viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:numberAsString(versionToBackoutTo)];
 }
 
@@ -169,11 +169,11 @@
 	}
 		
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"The changeset ")];
-	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(numberAsString([logTableView selectedRevision]))];
+	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(numberAsString(logTableView.selectedRevision))];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" will be backed out (reversed).")];
 		
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" The backout will be transplanted directly on top of the current parent ")];
-	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(numberAsString([myDocument_ getHGParent1Revision]))];
+	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(numberAsString(myDocument_.getHGParent1Revision))];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@".")];
 
 	return newSheetMessage;

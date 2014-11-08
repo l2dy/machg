@@ -24,16 +24,16 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 	theRetainedSelf = self;
 	dispatch_async(mainQueue(), ^{
 		[NSBundle loadNibNamed:@"ResultsWindow" owner:self];
-		[titleMessageTextField setStringValue:message];
-		[[resultsMessageTextView textStorage] setAttributedString:results];
+		titleMessageTextField.stringValue = message;
+		[resultsMessageTextView.textStorage setAttributedString:results];
 
-		NSSize titleSize = [[titleMessageTextField attributedStringValue] size];
-		NSSize resultsSize = [results size];
+		NSSize titleSize = titleMessageTextField.attributedStringValue.size;
+		NSSize resultsSize = results.size;
 		NSSize newSize;
 		
-		NSRect visibleFrame = [screen visibleFrame];
-		NSSize currentSize = [resultsMessageTextView frame].size;
-		NSRect f = [resultsWindow frame];
+		NSRect visibleFrame = screen.visibleFrame;
+		NSSize currentSize = resultsMessageTextView.frame.size;
+		NSRect f = resultsWindow.frame;
 		
 		CGFloat padH   = f.size.width  - currentSize.width;
 		CGFloat padV   = f.size.height - currentSize.height;
@@ -46,7 +46,7 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 		f.origin.y     = constrain(f.origin.y, 10, MAX(visibleFrame.size.height - newSize.height - 20, 10));
 	
 		[resultsWindow setFrame:f display:YES];
-		[resultsWindow setTitle:windowTitle];
+		resultsWindow.title = windowTitle;
 		[resultsWindow makeKeyAndOrderFront:self];
 		[resultsWindow makeFirstResponder:okButtonForResultsWindow];
 	});

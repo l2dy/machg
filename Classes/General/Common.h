@@ -720,7 +720,7 @@ static inline void dispatchSpliced(dispatch_queue_t q, BlockProcess theBlock)
 static inline void NoAnimationBlock(BlockProcess theBlock)
 {
 	[NSAnimationContext beginGrouping];
-	[[NSAnimationContext currentContext] setDuration:0.0];
+	[NSAnimationContext.currentContext setDuration:0.0];
 	theBlock();
 	[NSAnimationContext endGrouping];
 }
@@ -837,12 +837,12 @@ static inline NSNumber*	intAsNumber(int i)				{ return @(i); }
 static inline int		numberAsInt(NSNumber* num)		{ return [num intValue]; }
 
 static inline NSNumber*	floatAsNumber(float f)			{ return @(f); }
-static inline float		numberAsFloat(NSNumber* num)	{ return [num floatValue]; }
+static inline float		numberAsFloat(NSNumber* num)	{ return num.floatValue; }
 
 static inline NSNumber*	boolAsNumber(bool b)			{ return @(b); }
-static inline BOOL		numberAsBool(NSNumber* num)		{ return [num boolValue]; }
+static inline BOOL		numberAsBool(NSNumber* num)		{ return num.boolValue; }
 
-static inline NSString*	numberAsString(NSNumber* num)	{ return [num stringValue]; }
+static inline NSString*	numberAsString(NSNumber* num)	{ return num.stringValue; }
 static inline NSNumber*	stringAsNumber(NSString* str)	{ return @([str intValue]); }
 
 static inline NSString* dupString(NSString* str)		{ return str ? [NSString stringWithString:str] : nil; }

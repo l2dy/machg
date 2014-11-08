@@ -36,7 +36,7 @@
 	block_ = nil;
 	@synchronized(theTimer)
 	{
-		if (![theTimer isValid] || numberAsInt([theTimer userInfo]) != operationNumber_)
+		if (!theTimer.isValid || numberAsInt(theTimer.userInfo) != operationNumber_)
 			return;
 	}
 	if (theBlock)

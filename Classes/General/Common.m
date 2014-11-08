@@ -154,12 +154,12 @@ NSString* const MHGWarnAboutBadMercurialConfiguration   	= @"WarnAboutBadMercuri
 
 
 
-static inline BOOL		boolFromDefaultsForKey(NSString* key)		{ return [[NSUserDefaults standardUserDefaults] boolForKey:key]; }
-static inline int		enumFromDefaultsForKey(NSString* key)		{ return [[NSUserDefaults standardUserDefaults] integerForKey:key]; }
-static inline int		integerFromDefaultsForKey(NSString* key)	{ return [[NSUserDefaults standardUserDefaults] integerForKey:key]; }
-static inline float		floatFromDefaultsForKey(NSString* key)		{ return [[NSUserDefaults standardUserDefaults] floatForKey:key]; }
-static inline NSString* stringFromDefaultsForKey(NSString* key)		{ return [[NSUserDefaults standardUserDefaults] stringForKey:key]; }
-static inline NSColor*	colorFromDefaultsForKey(NSString* key)		{ return [NSUnarchiver unarchiveObjectWithData:[[NSUserDefaults standardUserDefaults] dataForKey:key]]; }
+static inline BOOL		boolFromDefaultsForKey(NSString* key)		{ return [NSUserDefaults.standardUserDefaults boolForKey:key]; }
+static inline int		enumFromDefaultsForKey(NSString* key)		{ return [NSUserDefaults.standardUserDefaults integerForKey:key]; }
+static inline int		integerFromDefaultsForKey(NSString* key)	{ return [NSUserDefaults.standardUserDefaults integerForKey:key]; }
+static inline float		floatFromDefaultsForKey(NSString* key)		{ return [NSUserDefaults.standardUserDefaults floatForKey:key]; }
+static inline NSString* stringFromDefaultsForKey(NSString* key)		{ return [NSUserDefaults.standardUserDefaults stringForKey:key]; }
+static inline NSColor*	colorFromDefaultsForKey(NSString* key)		{ return [NSUnarchiver unarchiveObjectWithData:[NSUserDefaults.standardUserDefaults dataForKey:key]]; }
 
 BOOL		AddRemoveUsesSimilarityFromDefaults()					{ return boolFromDefaultsForKey(MHGAddRemoveUsesSimilarity); }
 BOOL		AllowHistoryEditingOfRepositoryFromDefaults()			{ return boolFromDefaultsForKey(MHGAllowHistoryEditingOfRepository); }
@@ -289,7 +289,7 @@ void dispatchWithTimeOutBlock(dispatch_queue_t q, NSTimeInterval t, BlockProcess
 
 NSAlert* NewAlertPanel(NSString* title, NSString* message, NSString* defaultButton, NSString* alternateButton, NSString* otherButton)
 {
-	NSAlert* alert = [NSAlert new];
+	NSAlert* alert = NSAlert.new;
 	alert.informativeText = message;
 	alert.messageText = title;
 	alert.alertStyle = NSCriticalAlertStyle;
@@ -318,7 +318,7 @@ NSInteger RunAlertExtractingSuppressionResult(NSAlert* alert, NSString* keyForBo
 {
 	int result = [alert runModal];
 	if (alert.suppressionButton.state == NSOnState)
-		[[NSUserDefaults standardUserDefaults] setBool:NO forKey:keyForBooleanDefault];
+		[NSUserDefaults.standardUserDefaults setBool:NO forKey:keyForBooleanDefault];
 	return result;
 }
 
@@ -349,8 +349,8 @@ BOOL pathContainedIn(NSString* base, NSString* path)
 
 NSString* pathDifference(NSString* base, NSString* path)
 {
-	int baseLength = [base length];
-	int pathLength = [path length];
+	int baseLength = base.length;
+	int pathLength = path.length;
 	if (pathLength <= baseLength)
 		return @"";
 	if ([[path substringToIndex:baseLength] isNotEqualToString:base])
@@ -366,7 +366,7 @@ NSArray* parentPaths(NSArray* filteredPaths, NSString* rootPath)
 	NSMutableArray* theParentPaths = [[NSMutableArray alloc] init];
 	for (NSString* path in filteredPaths)
 	{
-		NSString* parent = [path stringByDeletingLastPathComponent];
+		NSString* parent = path.stringByDeletingLastPathComponent;
 		if ([pathDifference(rootPath, parent) isEqualToString:@""])
 			parent = rootPath;
 		if (![theParentPaths containsObject:parent])
@@ -380,13 +380,13 @@ void moveFilesToTheTrash(NSArray* absolutePaths)
 	NSMutableArray* urls = [[NSMutableArray alloc]init];
 	for (NSString* path in absolutePaths)
 		[urls addObject:[NSURL fileURLWithPath:path]];
-	[[NSWorkspace sharedWorkspace] recycleURLs:urls completionHandler:nil];
+	[NSWorkspace.sharedWorkspace recycleURLs:urls completionHandler:nil];
 }
 
 
 NSString* caseSensitiveFilePath(NSString* filePath)
 {
-	NSFileManager* fileManager = [NSFileManager defaultManager];
+	NSFileManager* fileManager = NSFileManager.defaultManager;
     const char* cFilePath = [fileManager fileSystemRepresentationWithPath:filePath];
     if (cFilePath == 0 || *cFilePath == L'\0')
 		return nil;
@@ -401,36 +401,36 @@ NSString* caseSensitiveFilePath(NSString* filePath)
 
 BOOL pathIsLink(NSString* path)
 {
-	NSFileManager* fileManager = [NSFileManager defaultManager];
+	NSFileManager* fileManager = NSFileManager.defaultManager;
 	NSDictionary* fileAttributes = [fileManager attributesOfItemAtPath:path error:nil];
-	return fileAttributes ? [[fileAttributes fileType] isEqualToString:NSFileTypeSymbolicLink] : NO;
+	return fileAttributes ? [fileAttributes.fileType isEqualToString:NSFileTypeSymbolicLink] : NO;
 }
 
 BOOL pathIsExistent(NSString* path)
 {
 	BOOL isDir = NO;
-	BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir];
+	BOOL exists = [NSFileManager.defaultManager fileExistsAtPath:path isDirectory:&isDir];
 	return exists;
 }
 
 BOOL pathIsExistentDirectory(NSString* path)
 {
 	BOOL isDir = NO;
-	BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir];
+	BOOL exists = [NSFileManager.defaultManager fileExistsAtPath:path isDirectory:&isDir];
 	return (exists && isDir);
 }
 
 BOOL pathIsExistentFile(NSString* path)
 {
 	BOOL isDir = NO;
-	BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:path isDirectory:&isDir];
+	BOOL exists = [NSFileManager.defaultManager fileExistsAtPath:path isDirectory:&isDir];
 	return (exists && !isDir);
 }
 
 
 BOOL pathIsReadable(NSString* path)
 {
-	return [[NSFileManager defaultManager] isReadableFileAtPath:path];
+	return [NSFileManager.defaultManager isReadableFileAtPath:path];
 }
 
 
@@ -445,7 +445,7 @@ NSArray* pruneDisallowedPaths(NSArray* paths)
 {
 	NSMutableArray* pruned = [[NSMutableArray alloc]init];
 	for (NSString* path in paths)
-		if (![[path lastPathComponent] isEqualToString:@".hg"])
+		if (![path.lastPathComponent isEqualToString:@".hg"])
 			[pruned addObject:path];
 	return pruned;
 }
@@ -462,8 +462,8 @@ NSArray* pruneContainedPaths(NSArray* paths)
 	{
 		if (currentBase && [path hasPrefix:currentBase])
 		{
-			NSInteger currentBaseLength = [currentBase length];
-			if ([path length] <= [currentBase length])
+			NSInteger currentBaseLength = currentBase.length;
+			if (path.length <= currentBase.length)
 				continue;
 			if ([currentBase characterAtIndex:currentBaseLength-1]=='/' || [path characterAtIndex:currentBaseLength]=='/')
 				continue;
@@ -487,7 +487,7 @@ NSArray* restrictPathsToPaths(NSArray* inPaths, NSArray* inContainingPaths)
 	NSInteger i = 0;
 	NSInteger j = 0;
 	NSMutableArray* restrictedPaths = [[NSMutableArray alloc]init];
-	while (i < [paths count] && j < [containingPaths count])
+	while (i < paths.count && j < containingPaths.count)
 	{
 		NSString* si = paths[i];
 		NSString* sj = containingPaths[j];
@@ -536,13 +536,13 @@ static OpenApplicationPanelDelegate* sharedOpenApplicationPanelDelegate_ = nil;
 + (OpenApplicationPanelDelegate*) sharedOpenApplicationPanelDelegate
 {
 	if (!sharedOpenApplicationPanelDelegate_)
-		sharedOpenApplicationPanelDelegate_ = [self.alloc init];
+		sharedOpenApplicationPanelDelegate_ = [[self alloc] init];
 	return sharedOpenApplicationPanelDelegate_;
 }
 
 - (BOOL)panel:(id)sender shouldEnableURL:(NSURL*)url
 {
-	return [[[url path] pathExtension] isEqualToString:@"app"] || pathIsExistentDirectory([url path]);
+	return [url.path.pathExtension isEqualToString:@"app"] || pathIsExistentDirectory(url.path);
 }
 @end
 
@@ -552,64 +552,64 @@ static OpenApplicationPanelDelegate* sharedOpenApplicationPanelDelegate_ = nil;
 
 NSString* getSingleDirectoryPathFromOpenPanel()
 {
-	NSOpenPanel* panel = [NSOpenPanel openPanel];
-	[panel setCanChooseFiles:NO];
-	[panel setCanChooseDirectories:YES];
-	[panel setAllowsMultipleSelection:NO];
-	NSInteger result = [panel runModal];
+	NSOpenPanel* panel = NSOpenPanel.openPanel;
+	panel.canChooseFiles = NO;
+	panel.canChooseDirectories = YES;
+	panel.allowsMultipleSelection = NO;
+	NSInteger result = panel.runModal;
 	if (result == NSAlertAlternateReturn)
 		return nil;
-	NSArray* filenameURLs = [panel URLs];
-	NSURL* filenameURL = [filenameURLs lastObject];
-	return [filenameURL path];
+	NSArray* filenameURLs = panel.URLs;
+	NSURL* filenameURL = filenameURLs.lastObject;
+	return filenameURL.path;
 }
 
 
 NSString* getSingleFilePathFromOpenPanel()
 {
-	NSOpenPanel* panel = [NSOpenPanel openPanel];
-	[panel setCanChooseFiles:YES];
-	[panel setCanChooseDirectories:NO];
-	[panel setAllowsMultipleSelection:NO];
-	NSInteger result = [panel runModal];
+	NSOpenPanel* panel = NSOpenPanel.openPanel;
+	panel.canChooseFiles = YES;
+	panel.canChooseDirectories = NO;
+	panel.allowsMultipleSelection = NO;
+	NSInteger result = panel.runModal;
 	if (result == NSAlertAlternateReturn)
 		return nil;
-	NSArray* filenameURLs = [panel URLs];
-	NSURL* filenameURL = [filenameURLs lastObject];
-	return [filenameURL path];
+	NSArray* filenameURLs = panel.URLs;
+	NSURL* filenameURL = filenameURLs.lastObject;
+	return filenameURL.path;
 }
 
 
 NSString* getSingleApplicationPathFromOpenPanel(NSString* forDocument)
 {
-	NSOpenPanel* panel = [NSOpenPanel openPanel];
-	[panel setCanChooseFiles:YES];
-	[panel setCanChooseDirectories:NO];
-	[panel setAllowsMultipleSelection:NO];
+	NSOpenPanel* panel = NSOpenPanel.openPanel;
+	panel.canChooseFiles = YES;
+	panel.canChooseDirectories = NO;
+	panel.allowsMultipleSelection = NO;
 	NSString* message =  forDocument ? fstr(@"Choose an application to open the document “%@”", forDocument) : @"Choose an application";
-	[panel setMessage:message];
-	[panel setTitle:@"Choose Application."];
-	[panel setDelegate:[OpenApplicationPanelDelegate sharedOpenApplicationPanelDelegate]];
-	NSInteger result = [panel runModal];
+	panel.message = message;
+	panel.title = @"Choose Application.";
+	panel.delegate = OpenApplicationPanelDelegate.sharedOpenApplicationPanelDelegate;
+	NSInteger result = panel.runModal;
 	if (result == NSAlertAlternateReturn)
 		return nil;
-	NSArray* filenameURLs = [panel URLs];
-	NSURL* filenameURL = [filenameURLs lastObject];
-	return [filenameURL path];
+	NSArray* filenameURLs = panel.URLs;
+	NSURL* filenameURL = filenameURLs.lastObject;
+	return filenameURL.path;
 }
 
 
 NSArray* getListOfFilePathURLsFromOpenPanel(NSString* startingPath)
 {
-	NSOpenPanel* panel = [NSOpenPanel openPanel];
+	NSOpenPanel* panel = NSOpenPanel.openPanel;
 	[panel setDirectoryURL:[NSURL fileURLWithPath:startingPath]];
-	[panel setCanChooseFiles:YES];
-	[panel setCanChooseDirectories:NO];
-	[panel setAllowsMultipleSelection:YES];
-	NSInteger result = [panel runModal];
+	panel.canChooseFiles = YES;
+	panel.canChooseDirectories = NO;
+	panel.allowsMultipleSelection = YES;
+	NSInteger result = panel.runModal;
 	if (result == NSAlertAlternateReturn)
 		return nil;
-	return [panel URLs];
+	return panel.URLs;
 }
 
 
@@ -661,7 +661,7 @@ void PlayBeep()
 
 NSString* executableLocationHG()
 {
-	return fstr(@"%@/%@",[[NSBundle mainBundle] resourcePath], @"localhg");
+	return fstr(@"%@/%@",NSBundle.mainBundle.resourcePath, @"localhg");
 }
 
 
@@ -672,8 +672,8 @@ NSString* applicationSupportVersionedFolder()
 	{
 		NSArray* searchPaths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
 		NSString* applicationSupportFolder = searchPaths[0];
-		NSString* shortVersion = [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
-		answer = fstr(@"%@/%@/%@", applicationSupportFolder, [[NSProcessInfo processInfo] processName], shortVersion);
+		NSString* shortVersion = [NSBundle.mainBundle objectForInfoDictionaryKey:@"CFBundleShortVersionString"];
+		answer = fstr(@"%@/%@/%@", applicationSupportFolder, NSProcessInfo.processInfo.processName, shortVersion);
 	}
 	return answer;
 }
@@ -685,7 +685,7 @@ NSString* applicationSupportFolder()
 	{
 		NSArray* searchPaths = NSSearchPathForDirectoriesInDomains(NSApplicationSupportDirectory, NSUserDomainMask, YES);
 		NSString* applicationSupportFolder = searchPaths[0];
-		answer = fstr(@"%@/%@", applicationSupportFolder, [[NSProcessInfo processInfo] processName]);
+		answer = fstr(@"%@/%@", applicationSupportFolder, NSProcessInfo.processInfo.processName);
 	}
 	return answer;
 }
@@ -702,7 +702,7 @@ NSString* hgrcPath()
 
 NSArray* aliasesForShell(NSString* path)
 {
-	NSString* mhgResources  = fstr(@"mhgResources='%@'", [[NSBundle mainBundle] resourcePath]);
+	NSString* mhgResources  = fstr(@"mhgResources='%@'", NSBundle.mainBundle.resourcePath);
 	NSString* mhgAlias  = fstr(@"alias %@='\"${mhgResources}/localhg\"'", LocalHGShellAliasNameFromDefaults());
 	NSString* ehgAlias  = fstr(@"alias %@='HGPLAIN=1 HGENCODING=UTF-8 HGRCPATH=\"%@\" \"${mhgResources}/localhg\"'", LocalWhitelistedHGShellAliasNameFromDefaults(), hgrcPath());
 	NSString* terminalInfoScriptPath = fstr(@"\"${mhgResources}/terminalinformation.sh\"");
@@ -714,7 +714,7 @@ NSArray* aliasesForShell(NSString* path)
 NSString* tempFilePathWithTemplate(NSString* nameTemplate)
 {
 	NSString* tempFileTemplate = [NSTemporaryDirectory() stringByAppendingPathComponent:nameTemplate];
-	const char* tempFileTemplateCString = [tempFileTemplate fileSystemRepresentation];
+	const char* tempFileTemplateCString = tempFileTemplate.fileSystemRepresentation;
 	char* tempFileNameCString = (char*)malloc(strlen(tempFileTemplateCString) + 1);
 	strcpy(tempFileNameCString, tempFileTemplateCString);
 	int fileDescriptor = mkstemp(tempFileNameCString);
@@ -725,7 +725,7 @@ NSString* tempFilePathWithTemplate(NSString* nameTemplate)
 		return nil;
 	}
 	
-	NSString* tempFileName = [[NSFileManager defaultManager] stringWithFileSystemRepresentation:tempFileNameCString length:strlen(tempFileNameCString)];
+	NSString* tempFileName = [NSFileManager.defaultManager stringWithFileSystemRepresentation:tempFileNameCString length:strlen(tempFileNameCString)];
 	close(fileDescriptor);
 	free(tempFileNameCString);
 	return tempFileName;
@@ -734,11 +734,11 @@ NSString* tempFilePathWithTemplate(NSString* nameTemplate)
 NSString* tempDirectoryPathWithTemplate(NSString* nameTemplate, NSString* directoryPath)
 {
 	if (directoryPath && !pathIsExistentDirectory(directoryPath))
-		[[NSFileManager defaultManager] createDirectoryAtPath:directoryPath withIntermediateDirectories:YES attributes:nil error:nil];
+		[NSFileManager.defaultManager createDirectoryAtPath:directoryPath withIntermediateDirectories:YES attributes:nil error:nil];
 	NSString* resolvedDirectoryPath = directoryPath ? directoryPath : NSTemporaryDirectory();
 
 	NSString* tempDirectoryTemplate = [resolvedDirectoryPath stringByAppendingPathComponent:nameTemplate];
-	const char* tempDirectoryTemplateCString = [tempDirectoryTemplate fileSystemRepresentation];
+	const char* tempDirectoryTemplateCString = tempDirectoryTemplate.fileSystemRepresentation;
 	char* tempDirectoryNameCString = (char*)malloc(strlen(tempDirectoryTemplateCString) + 1);
 	strcpy(tempDirectoryNameCString, tempDirectoryTemplateCString);
 	const char* result = mkdtemp(tempDirectoryNameCString);
@@ -749,7 +749,7 @@ NSString* tempDirectoryPathWithTemplate(NSString* nameTemplate, NSString* direct
 		return nil;
 	}
 	
-	NSString* tempDirectoryName = [[NSFileManager defaultManager] stringWithFileSystemRepresentation:tempDirectoryNameCString length:strlen(tempDirectoryNameCString)];
+	NSString* tempDirectoryName = [NSFileManager.defaultManager stringWithFileSystemRepresentation:tempDirectoryNameCString length:strlen(tempDirectoryNameCString)];
 	free(tempDirectoryNameCString);
 	return tempDirectoryName;
 }
@@ -784,7 +784,7 @@ int	bitCount(int num)
 
 NSString* trimString(NSString* string)
 {
-	return [string stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]];
+	return [string stringByTrimmingCharactersInSet: NSCharacterSet.whitespaceAndNewlineCharacterSet];
 }
 
 NSString* trimTrailingString(NSString* string)
@@ -808,7 +808,7 @@ NSString* collapseWhiteSpace(NSString* string)
 
 BOOL stringIsNonWhiteSpace(NSString* string)
 {
-	return [[string stringByTrimmingCharactersInSet: [NSCharacterSet whitespaceAndNewlineCharacterSet]] length] > 0;
+	return [[string stringByTrimmingCharactersInSet: NSCharacterSet.whitespaceAndNewlineCharacterSet] length] > 0;
 }
 
 NSString* riffleComponents(NSArray* components, NSString* separator)
@@ -881,9 +881,9 @@ NSDictionary* emphasizedSheetMessageFontAttributes()
 	if (theDictionary == nil)
 	{
 		NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-		[paragraphStyle setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
+		paragraphStyle.paragraphStyle = NSParagraphStyle.defaultParagraphStyle;
 		NSColor* textColor = [NSColor colorWithDeviceRed:(190.0/255.0) green:(13.0/255.0) blue:(13.0/255.0) alpha:1.0];
-		NSFont* font = [NSFont boldSystemFontOfSize:[NSFont smallSystemFontSize]];
+		NSFont* font = [NSFont boldSystemFontOfSize:NSFont.smallSystemFontSize];
 		theDictionary = @{NSFontAttributeName: font, NSForegroundColorAttributeName: textColor, NSParagraphStyleAttributeName: paragraphStyle};
 	}
 	return theDictionary;
@@ -895,8 +895,8 @@ NSDictionary* normalSheetMessageFontAttributes()
 	if (theDictionary == nil)
 	{
 		NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-		[paragraphStyle setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
-		NSFont* font = [NSFont messageFontOfSize:[NSFont smallSystemFontSize]];
+		paragraphStyle.paragraphStyle = NSParagraphStyle.defaultParagraphStyle;
+		NSFont* font = [NSFont messageFontOfSize:NSFont.smallSystemFontSize];
 		theDictionary = @{NSFontAttributeName: font, NSParagraphStyleAttributeName: paragraphStyle};
 	}
 	return theDictionary;
@@ -908,9 +908,9 @@ NSDictionary* grayedSheetMessageFontAttributes()
 	if (theDictionary == nil)
 	{
 		NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-		[paragraphStyle setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
-		NSColor* textColor = [NSColor grayColor];
-		NSFont* font = [NSFont messageFontOfSize:[NSFont smallSystemFontSize]];
+		paragraphStyle.paragraphStyle = NSParagraphStyle.defaultParagraphStyle;
+		NSColor* textColor = NSColor.grayColor;
+		NSFont* font = [NSFont messageFontOfSize:NSFont.smallSystemFontSize];
 		theDictionary = @{NSFontAttributeName: font, NSForegroundColorAttributeName: textColor, NSParagraphStyleAttributeName: paragraphStyle};
 	}
 	return theDictionary;
@@ -923,9 +923,9 @@ NSDictionary* fixedWidthResultsMessageFontAttributes()
 	{
 		NSFont* font = [NSFont fontWithName:@"Monaco"  size:9];
 		NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-		[paragraphStyle setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
+		paragraphStyle.paragraphStyle = NSParagraphStyle.defaultParagraphStyle;
 		float charWidth = [[font screenFontWithRenderingMode:NSFontDefaultRenderingMode] advancementForGlyph:(NSGlyph) ' '].width;
-		[paragraphStyle setDefaultTabInterval:(charWidth * 4)];
+		paragraphStyle.defaultTabInterval = (charWidth * 4);
 		[paragraphStyle setTabStops:@[]];
 		theDictionary = @{NSFontAttributeName: font, NSParagraphStyleAttributeName: paragraphStyle};
 	}
@@ -963,43 +963,43 @@ void printParentViewHierarchy(NSView* aView)
 	{
 		DebugLog(@"");
 		DebugLog(@"class is %@", [theView class]);
-		printRect(@"visible rect", [theView visibleRect]);
-		printRect(@"bounds " , [theView bounds]);
+		printRect(@"visible rect", theView.visibleRect);
+		printRect(@"bounds " , theView.bounds);
 		if ([theView isKindOfClass:[NSClipView class]])
 			printRect(@"documentVisibleRect " , [(NSClipView*)theView documentVisibleRect]);
 		if ([theView isKindOfClass:[NSScrollView class]])
 			printRect(@"documentVisibleRect " , [(NSScrollView*)theView documentVisibleRect]);
 		
-		theView = [theView superview];
+		theView = theView.superview;
 	}
 }
 
 void printResponderViewHierarchy(NSWindow* aWindow)
 {
-	NSResponder* theResponder = [aWindow firstResponder];
+	NSResponder* theResponder = aWindow.firstResponder;
 	while(theResponder)
 	{
 		DebugLog(@"");
 		DebugLog(@"class is %@", [theResponder class]);
-		DebugLog(@"description is %@", [theResponder description]);
+		DebugLog(@"description is %@", theResponder.description);
 //		if ([theResponder isKindOfClass:[NSView class]])
-//			printRect(@"visible rect", [theResponder visibleRect]);
+//			printRect(@"visible rect", theResponder.visibleRect);
 //		if ([theResponder isKindOfClass:[NSView class]])
-//			printRect(@"bounds " , [theResponder bounds]);
+//			printRect(@"bounds " , theResponder.bounds);
 //		if ([theView isKindOfClass:[NSClipView class]])
 //			printRect(@"documentVisibleRect " , [(NSClipView*)theView documentVisibleRect]);
 //		if ([theView isKindOfClass:[NSScrollView class]])
 //			printRect(@"documentVisibleRect " , [(NSScrollView*)theView documentVisibleRect]);
 		
-		theResponder = [theResponder nextResponder];
+		theResponder = theResponder.nextResponder;
 	}
 }
 
 void printChildViewHierarchyWithIndent(NSView* view, NSString* indent)
 {
 	DebugLog(@"%@%@", indent, [view className]);
-	NSArray* subviews = [view subviews];
-	for (int i = 0; i < [subviews count]; i++)
+	NSArray* subviews = view.subviews;
+	for (int i = 0; i < subviews.count; i++)
 		printChildViewHierarchyWithIndent(subviews[i], [indent stringByAppendingString:@"  "]);
 }
 
@@ -1013,10 +1013,10 @@ void printAttributesForString(NSAttributedString* string)
     NSRange effectiveRange = { 0, 0 };
     do
 	{
-		NSRange range = NSMakeRange (NSMaxRange(effectiveRange), [string length] - NSMaxRange(effectiveRange));
+		NSRange range = NSMakeRange (NSMaxRange(effectiveRange), string.length - NSMaxRange(effectiveRange));
 		NSDictionary* attributeDict = [string attributesAtIndex: range.location longestEffectiveRange: &effectiveRange inRange: range];
         DebugLog(@"Range: %@  Attributes: %@", NSStringFromRange(effectiveRange), attributeDict);
-    } while (NSMaxRange(effectiveRange) < [string length]);
+    } while (NSMaxRange(effectiveRange) < string.length);
 	
 }
 
@@ -1030,12 +1030,12 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	
 	NSString* body =  [[NSString alloc] initWithFormat: format arguments: ap];
 	va_end (ap);
-	const char* threadName = [[[NSThread currentThread] name] UTF8String];
+	const char* threadName = [NSThread.currentThread.name UTF8String];
 	// NSString* fileName = [[NSString stringWithUTF8String:file] lastPathComponent];
 	if (threadName)
-		fprintf(stderr,"%s/%-40s %s",threadName,funcName,[body UTF8String]);
+		fprintf(stderr,"%s/%-40s %s",threadName,funcName,body.UTF8String);
 	else
-		fprintf(stderr,"%p/%-40s %s",[NSThread currentThread],funcName,[body UTF8String]);
+		fprintf(stderr,"%p/%-40s %s",NSThread.currentThread,funcName,body.UTF8String);
 }
 
 
@@ -1052,34 +1052,34 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 - (void) postNotificationWithName:(NSString*)notificationName
 {
-	[[NSNotificationCenter defaultCenter] postNotificationName:notificationName object:self];
+	[NSNotificationCenter.defaultCenter postNotificationName:notificationName object:self];
 }
 
 - (void) postNotificationWithName:(NSString*)notificationName userInfo:(NSDictionary*)info
 {
-	[[NSNotificationCenter defaultCenter] postNotificationName:notificationName object:self userInfo:info];
+	[NSNotificationCenter.defaultCenter postNotificationName:notificationName object:self userInfo:info];
 }
 
 - (void) observe:(NSString*)notificationName byCalling:(SEL)notificationSelector
 {
 	[self stopObserving:notificationName from:nil];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:notificationSelector name:notificationName object:nil];
+	[NSNotificationCenter.defaultCenter addObserver:self selector:notificationSelector name:notificationName object:nil];
 }
 
 - (void) observe:(NSString*)notificationName from:(id)notificationSender byCalling:(SEL)notificationSelector
 {
 	[self stopObserving:notificationName from:notificationSender];
-	[[NSNotificationCenter defaultCenter] addObserver:self selector:notificationSelector name:notificationName object:notificationSender];
+	[NSNotificationCenter.defaultCenter addObserver:self selector:notificationSelector name:notificationName object:notificationSender];
 }
 
 - (void) stopObserving:(NSString*)notificationName from:(id)notificationSender
 {
-	[[NSNotificationCenter defaultCenter] removeObserver:self name:notificationName object:notificationSender];
+	[NSNotificationCenter.defaultCenter removeObserver:self name:notificationName object:notificationSender];
 }
 
 - (void) stopObserving
 {
-	[[NSNotificationCenter defaultCenter] removeObserver:self];
+	[NSNotificationCenter.defaultCenter removeObserver:self];
 }
 
 @end
@@ -1121,7 +1121,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 - (BOOL) differsOnlyInCaseFrom:(NSString*)aString
 {
 	return
-		self.length == [aString length] &&
+		self.length == aString.length &&
 		[self compare:aString options:NSCaseInsensitiveSearch] == NSOrderedSame &&
 		[self compare:aString options:NSLiteralSearch] != NSOrderedSame;
 }
@@ -1135,7 +1135,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 		return NO;
 	static NSCharacterSet* newLines = nil;
 	if (!newLines)
-		newLines = [NSCharacterSet newlineCharacterSet];
+		newLines = NSCharacterSet.newlineCharacterSet;
 	return [newLines characterIsMember:self.lastCharacter];
 }
 
@@ -1183,7 +1183,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 - (BOOL) getCapturesWithRegexAndComponents:(NSString*)regEx  firstComponent:(NSString**)first
 {
 	NSArray* parts = [self captureComponentsMatchedByRegex:regEx];
-	if ([parts count] <= 1)
+	if (parts.count <= 1)
 		return NO;
 	if (first) *first = parts[1];
 	return YES;
@@ -1191,7 +1191,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 - (BOOL) getCapturesWithRegexAndComponents:(NSString*)regEx  firstComponent:(NSString**)first  secondComponent:(NSString**)second
 {
 	NSArray* parts = [self captureComponentsMatchedByRegex:regEx];
-	if ([parts count] <= 2)
+	if (parts.count <= 2)
 		return NO;
 	if (first)  *first  = parts[1];
 	if (second) *second = parts[2];
@@ -1200,7 +1200,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 - (BOOL) getCapturesWithRegexAndComponents:(NSString*)regEx  firstComponent:(NSString**)first  secondComponent:(NSString**)second  thirdComponent:(NSString**)third
 {
 	NSArray* parts = [self captureComponentsMatchedByRegex:regEx];
-	if ([parts count] <= 3)
+	if (parts.count <= 3)
 		return NO;
 	if (first)  *first  = parts[1];
 	if (second) *second = parts[2];
@@ -1210,7 +1210,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 - (BOOL) getCapturesWithRegexAndComponents:(NSString*)regEx  firstComponent:(NSString**)first  secondComponent:(NSString**)second  thirdComponent:(NSString**)third  fourthComponent:(NSString**)fourth
 {
 	NSArray* parts = [self captureComponentsMatchedByRegex:regEx];
-	if ([parts count] <= 4)
+	if (parts.count <= 4)
 		return NO;
 	if (first)  *first  = parts[1];
 	if (second) *second = parts[2];
@@ -1222,7 +1222,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 - (BOOL) getCapturesWithRegexAndTrimedComponents:(NSString*)regEx  firstComponent:(NSString**)first
 {
 	NSArray* parts = [self captureComponentsMatchedByRegex:regEx];
-	if ([parts count] <= 1)
+	if (parts.count <= 1)
 		return NO;
 	if (first)  *first = trimString(parts[1]);
 	return YES;
@@ -1230,7 +1230,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 - (BOOL) getCapturesWithRegexAndTrimedComponents:(NSString*)regEx  firstComponent:(NSString**)first  secondComponent:(NSString**)second
 {
 	NSArray* parts = [self captureComponentsMatchedByRegex:regEx];
-	if ([parts count] <= 2)
+	if (parts.count <= 2)
 		return NO;
 	if (first)  *first  = trimString(parts[1]);
 	if (second) *second = trimString(parts[2]);
@@ -1239,7 +1239,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 - (BOOL) getCapturesWithRegexAndTrimedComponents:(NSString*)regEx  firstComponent:(NSString**)first  secondComponent:(NSString**)second  thirdComponent:(NSString**)third
 {
 	NSArray* parts = [self captureComponentsMatchedByRegex:regEx];
-	if ([parts count] <= 3)
+	if (parts.count <= 3)
 		return NO;
 	if (first)  *first  = trimString(parts[1]);
 	if (second) *second = trimString(parts[2]);
@@ -1249,7 +1249,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 - (BOOL) getCapturesWithRegexAndTrimedComponents:(NSString*)regEx  firstComponent:(NSString**)first  secondComponent:(NSString**)second  thirdComponent:(NSString**)third  fourthComponent:(NSString**)fourth
 {
 	NSArray* parts = [self captureComponentsMatchedByRegex:regEx];
-	if ([parts count] <= 4)
+	if (parts.count <= 4)
 		return NO;
 	if (first)  *first  = trimString(parts[1]);
 	if (second) *second = trimString(parts[2]);
@@ -1295,8 +1295,8 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 {
     NSMutableAttributedString* attrString = [[NSMutableAttributedString alloc] initWithString:inString];
     [attrString beginEditing];
-    [attrString addAttribute:NSLinkAttributeName value:[aURL absoluteString]];
-    [attrString addAttribute:NSForegroundColorAttributeName value:[NSColor blueColor]];	    // make the text appear in blue
+    [attrString addAttribute:NSLinkAttributeName value:aURL.absoluteString];
+    [attrString addAttribute:NSForegroundColorAttributeName value:NSColor.blueColor];	    // make the text appear in blue
     [attrString addAttribute:NSUnderlineStyleAttributeName value:@(NSSingleUnderlineStyle)];		// next make the text appear with an underline
     [attrString endEditing];
     return attrString;
@@ -1350,7 +1350,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	if (matched)
 	{
 		// We ignore the offset since the UTC date contains all of the information
-		double date   = [base floatValue];
+		double date   = base.floatValue;
 		if (date != NAN)
 			return [NSDate dateWithTimeIntervalSince1970: date];
 	}
@@ -1359,7 +1359,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	matched = [utcDatePlusOffset getCapturesWithRegexAndTrimedComponents:@"^(\\d+\\.?\\d*)\\s*$" firstComponent:&base];
 	if (matched)
 	{
-		double date   = [base floatValue];
+		double date   = base.floatValue;
 		if (date != NAN)
 			return [NSDate dateWithTimeIntervalSince1970: date];
 	}
@@ -1389,7 +1389,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	NSMutableIndexSet* set = [[NSMutableIndexSet alloc]init];
 	[set addIndexes:self];
 	[set addIndexes:indexSet];
-	return [set count] < (self.count + [indexSet count]);
+	return set.count < (self.count + indexSet.count);
 }
 
 - (BOOL) freeOfIndex:(NSInteger)index	{ return ![self containsIndex:index]; }
@@ -1476,12 +1476,12 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 - (NSArray*) reversedArray
 {
-    return [self.reverseObjectEnumerator allObjects];
+    return self.reverseObjectEnumerator.allObjects;
 }
 
 - (NSArray*) arrayByRemovingObject:(id)object
 {
-	NSMutableArray* a = self.mutableCopy;
+	NSMutableArray* a = [self mutableCopy];
 	[a removeObject:object];
 	return [NSArray arrayWithArray:a];
 }
@@ -1582,15 +1582,15 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 {
 	NSImage* nodeImage = nil;
 	if (pathIsExistent(path))
-		nodeImage = [[NSWorkspace sharedWorkspace] iconForFile:path];
-	if (!nodeImage && IsNotEmpty([path pathExtension]))
-		nodeImage = [[NSWorkspace sharedWorkspace] iconForFileType:[path pathExtension]];        // No icon for actual file, try the extension.    
+		nodeImage = [NSWorkspace.sharedWorkspace iconForFile:path];
+	if (!nodeImage && IsNotEmpty(path.pathExtension))
+		nodeImage = [NSWorkspace.sharedWorkspace iconForFileType:path.pathExtension];        // No icon for actual file, try the extension.    
 	if (!nodeImage && defaultImageName)
 		nodeImage = [NSImage imageNamed:defaultImageName];
 	if (!nodeImage)
-		nodeImage = [[NSWorkspace sharedWorkspace] iconForFile:path];
+		nodeImage = [NSWorkspace.sharedWorkspace iconForFile:path];
 
-	[nodeImage setSize:size];
+	nodeImage.size = size;
 
 	return nodeImage;
 }
@@ -1638,7 +1638,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 }
 - (BOOL) copyItemAtPath:(NSString*)src toPath:(NSString*)dest withIntermediateDirectories:(BOOL)intermediates error:(NSError**)error
 {
-	NSString* destDir = [dest stringByDeletingLastPathComponent];
+	NSString* destDir = dest.stringByDeletingLastPathComponent;
 	if (intermediates && !pathIsExistentDirectory(destDir))
 	{
 		NSError* err = nil;
@@ -1669,9 +1669,9 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 		}
 		@catch (NSException *e)
 		{
-			if ([[e name] isEqualToString:NSFileHandleOperationException])
+			if ([e.name isEqualToString:NSFileHandleOperationException])
 			{
-				if ([[e reason] isEqualToString:@"*** -[NSConcreteFileHandle readDataOfLength:]: Bad file descriptor"])
+				if ([e.reason isEqualToString:@"*** -[NSConcreteFileHandle readDataOfLength:]: Bad file descriptor"])
 				{
 					usleep(0.3 * USEC_PER_SEC);
 					continue;
@@ -1692,7 +1692,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	}
 	@catch (NSException *e)
 	{
-		if ([[e name] isEqualToString:NSFileHandleOperationException] && [[e reason] isMatchedByRegex:@"\\[NSConcreteFileHandle availableData\\]"])
+		if ([e.name isEqualToString:NSFileHandleOperationException] && [e.reason isMatchedByRegex:@"\\[NSConcreteFileHandle availableData\\]"])
 			return nil;
 		@throw;
 	}
@@ -1709,7 +1709,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 - (void) addSuppressionCheckBox
 {
 	NSAttributedString* smallSuppressionMessage = [NSAttributedString string:@"Do not show this kind of message again" withAttributes: smallSystemFontAttributes];
-	[self setShowsSuppressionButton:YES];
+	self.showsSuppressionButton = YES;
 	[self.suppressionButton setAttributedTitle:smallSuppressionMessage];
 }
 @end
@@ -1741,7 +1741,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	// Add or subtract 0.5 so the lines are drawn within pixel bounds 
 	if (isHorizontal)
 	{
-		if ([view isFlipped])
+		if (view.isFlipped)
 			aRect.origin.y -= 0.5;
 		else
 			aRect.origin.y += 0.5;
@@ -1765,8 +1765,8 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 			posInPixels = sizeInPixels.width - posInPixels - 1;
 	}
 	
-	float posInPoints   =   posInPixels / [[NSScreen mainScreen] backingScaleFactor];
-	float insetInPoints = insetInPixels / [[NSScreen mainScreen] backingScaleFactor];
+	float posInPoints   =   posInPixels / NSScreen.mainScreen.backingScaleFactor;
+	float insetInPoints = insetInPixels / NSScreen.mainScreen.backingScaleFactor;
 	
 	// Calculate line start and end points
 	float startX, startY, endX, endY;
@@ -1787,8 +1787,8 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	}
 	
 	// Draw line
-	NSBezierPath *path = [NSBezierPath bezierPath];
-	[path setLineWidth:0.0f];
+	NSBezierPath *path = NSBezierPath.bezierPath;
+	path.lineWidth = 0.0f;
 	[path moveToPoint:NSMakePoint(startX,startY)];
 	[path lineToPoint:NSMakePoint(endX,endY)];
 	[self set];
@@ -1816,7 +1816,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 		if (animate)
 			[self.animator setFrame:theFrame];
 		else
-			[self setFrame:theFrame];
+			self.frame = theFrame;
 	}
 }
 
@@ -1844,7 +1844,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 - (void) setToRightOf:(NSView*)theView bySpacing:(CGFloat)coord
 {
-	NSRect theViewFrame = [theView frame];
+	NSRect theViewFrame = theView.frame;
 	NSRect selfFrame = self.frame;
 	selfFrame.origin.x = NSMaxX(theViewFrame) + 10;
 	[self.animator setFrame:selfFrame];
@@ -1857,7 +1857,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	{
 		if ([theView isKindOfClass:[NSBox class]])
 			return (NSBox*)theView;
-		theView = [theView superview];
+		theView = theView.superview;
 	}
 	return nil;
 }
@@ -1869,7 +1869,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	{
 		if ([theView isKindOfClass:class])
 			return theView;
-		theView = [theView superview];
+		theView = theView.superview;
 	}
 	return nil;
 }
@@ -1895,11 +1895,11 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	CGFloat maxWidth = 0;
 	CGFloat delta = 100000;
 	for (NSControl* control in arrayOfControls)
-		if ([control autoresizingMask] | NSViewWidthSizable)
-			maxWidth = MAX(maxWidth, [[control attributedStringValue] size].width);
+		if (control.autoresizingMask | NSViewWidthSizable)
+			maxWidth = MAX(maxWidth, control.attributedStringValue.size.width);
 	for (NSControl* control in arrayOfControls)
-		if ([control autoresizingMask] | NSViewWidthSizable)
-			delta = MIN(delta, [control bounds].size.width - maxWidth);
+		if (control.autoresizingMask | NSViewWidthSizable)
+			delta = MIN(delta, control.bounds.size.width - maxWidth);
 	if (delta < 50 || delta > 300)
 	{
 		NSRect frame = self.frame;
@@ -1917,7 +1917,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 @implementation NSResponder ( NSResponderPlusExtensions )
 - (BOOL) hasAncestor:(NSResponder*)responder
 {
-	for (NSResponder* resp = self; resp; resp = [resp nextResponder])
+	for (NSResponder* resp = self; resp; resp = resp.nextResponder)
 		if (resp == responder)
 			return YES;
 	return NO;
@@ -1935,7 +1935,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	NSRect newFrame = self.frame;
 	NSSize maxSize = UnionSizeWIthSize(newFrame.size, oldFrame.size);
 	newFrame = UnionRectWithSize(newFrame, maxSize);
-	[self setFrame:newFrame];
+	self.frame = newFrame;
 }
 
 @end
@@ -1946,7 +1946,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 // MARK: -
 @implementation NSTableView ( NSTableViewPlusExtensions )
 - (void) selectRow:(NSInteger)row		{ [self selectRowIndexes:[NSIndexSet indexSetWithIndex:row] byExtendingSelection:NO]; }
-- (void) myDeselectAll					{ [self selectRowIndexes:[NSIndexSet indexSet] byExtendingSelection:NO]; }		// There is a bug with deselectAll in the 10.6 api / use. I can't track it down exactly but here is a reference:
+- (void) myDeselectAll					{ [self selectRowIndexes:NSIndexSet.indexSet byExtendingSelection:NO]; }		// There is a bug with deselectAll in the 10.6 api / use. I can't track it down exactly but here is a reference:
 																														// http://stackoverflow.com/questions/8377205/enabling-empty-selection-on-view-based-nstableviews
 																														// http://stackoverflow.com/questions/1296798/cant-make-empty-selection-in-nstableview
 																														// http://www.cocoabuilder.com/archive/cocoa/242930-nstableview-empty-selection-not-working.html
@@ -1970,7 +1970,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 		[self scrollRowToVisible:highTableRow];
 
 	// Finally if we can fit in the last row then we do so since it generally looks better
-	NSRect clippedView = [self.enclosingScrollView documentVisibleRect];
+	NSRect clippedView = self.enclosingScrollView.documentVisibleRect;
 	NSRange theRange = [self rowsInRect: clippedView];
 	if (!NSLocationInRange(tableRowCount, theRange))
 		if (lowTableRow == NSNotFound || tableRowCount - lowTableRow < theRange.length)

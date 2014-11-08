@@ -21,10 +21,10 @@
 #import <Foundation/Foundation.h>
 
 /*
- -[NSURL user] returns nil if not defined or the un-escaped string otherwise
- -[NSURL password] returns nil if not defined or the original string otherwise (possibly escaped)
- -[NSURL path] returns empty string if not defined or the un-escaped string otherwise (also strips the suffix slash if any)
- -[NSURL query] returns nil if not defined or the original string otherwise (possibly escaped)
+ -NSURL.user returns nil if not defined or the un-escaped string otherwise
+ -NSURL.password returns nil if not defined or the original string otherwise (possibly escaped)
+ -NSURL.path returns empty string if not defined or the un-escaped string otherwise (also strips the suffix slash if any)
+ -NSURL.query returns nil if not defined or the original string otherwise (possibly escaped)
  */
 @interface NSURL (Parameters)
 + (NSURL*) URLWithScheme:(NSString*)scheme host:(NSString*)host path:(NSString*)path;

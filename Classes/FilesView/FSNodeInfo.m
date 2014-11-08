@@ -32,26 +32,26 @@
 // Given a node we have its absolute path and we can query if it is a link, readable, a directory, etc....
 - (BOOL) isLink
 {
-	NSFileManager* fileManager = [NSFileManager defaultManager];
+	NSFileManager* fileManager = NSFileManager.defaultManager;
 	NSDictionary* fileAttributes = [fileManager attributesOfItemAtPath:absolutePath error:nil];
-	return [[fileAttributes fileType] isEqualToString:NSFileTypeSymbolicLink];
+	return [fileAttributes.fileType isEqualToString:NSFileTypeSymbolicLink];
 }
 
 - (BOOL) isDirectory
 {
-	if ([childNodes count]	> 0)
+	if (childNodes.count	> 0)
 		return YES;
 	BOOL isDir = NO;
-	BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:absolutePath isDirectory:&isDir];
+	BOOL exists = [NSFileManager.defaultManager fileExistsAtPath:absolutePath isDirectory:&isDir];
 	return exists && isDir;
 }
 
 - (BOOL) isFile
 {
-	if ([childNodes count]	> 0)
+	if (childNodes.count	> 0)
 		return NO;
 	BOOL isDir = NO;
-	BOOL exists = [[NSFileManager defaultManager] fileExistsAtPath:absolutePath isDirectory:&isDir];
+	BOOL exists = [NSFileManager.defaultManager fileExistsAtPath:absolutePath isDirectory:&isDir];
 	return exists && !isDir;
 }
 
@@ -60,13 +60,13 @@
 {
 	// Make this as sophisticated for example to hide more files you don't think the user should see!
 	NSString* lastPathComponent = self.lastPathComponent;
-	return ([lastPathComponent length] ? ([lastPathComponent characterAtIndex:0]!='.') : NO);
+	return (lastPathComponent.length ? ([lastPathComponent characterAtIndex:0]!='.') : NO);
 }
 
 - (BOOL)		isDirty				{ return bitsInCommon(hgStatus, eHGStatusDirty); }
-- (BOOL)		isReadable			{ return [[NSFileManager defaultManager] isReadableFileAtPath:absolutePath]; }
+- (BOOL)		isReadable			{ return [NSFileManager.defaultManager isReadableFileAtPath:absolutePath]; }
 - (NSString*)	fsType				{ return self.isDirectory ? @"Directory" : @"Non-Directory"; }
-- (NSString*)	lastPathComponent	{ return [relativePathComponent lastPathComponent]; }
+- (NSString*)	lastPathComponent	{ return relativePathComponent.lastPathComponent; }
 
 
 
@@ -77,7 +77,7 @@
 // MARK: Accessors
 // ------------------------------------------------------------------------------------
 
-- (NSInteger)   childNodeCount						{ return [self.sortedChildNodeKeys count]; }
+- (NSInteger)   childNodeCount						{ return self.sortedChildNodeKeys.count; }
 - (FSNodeInfo*) childNodeAtIndex:(NSInteger)index	{ return [self.childNodes objectForKey:[self.sortedChildNodeKeys objectAtIndex:index]]; }
 
 // This method must be called on theRoot node.
@@ -86,10 +86,10 @@
 	NSString* theRelativePath = pathDifference(self.absolutePath, thePath);
 	if (IsEmpty(theRelativePath))
 		return [self.absolutePath isEqualToString:thePath] ? self : nil;
-	NSArray* thePathComponents = [theRelativePath pathComponents];
+	NSArray* thePathComponents = theRelativePath.pathComponents;
 	FSNodeInfo* node = self;
 	for (NSString* pathPath in thePathComponents)
-		node = [node childNodes][pathPath];
+		node = node.childNodes[pathPath];
 	return node;
 }
 
@@ -101,23 +101,23 @@
 
 	*column = -1;
 	*row = 0;
-	NSString* thePath = [goalNode absolutePath];
+	NSString* thePath = goalNode.absolutePath;
 	NSString* theRelativePath = pathDifference(self.absolutePath, thePath);
 	if (IsEmpty(theRelativePath))
 		return NO;
 	
-	NSArray* thePathComponents = [theRelativePath pathComponents];
+	NSArray* thePathComponents = theRelativePath.pathComponents;
 	FSNodeInfo* node = self;
 	FSNodeInfo* childNode = self;
 	for (NSString* pathPath in thePathComponents)
 	{
 		node = childNode;
-		childNode = [node childNodes][pathPath];
+		childNode = node.childNodes[pathPath];
 		(*column)++;
 	}
 	if (!childNode)
 		return NO;
-	*row = [[node sortedChildNodeKeys] indexOfObject:[thePathComponents lastObject]];
+	*row = [node.sortedChildNodeKeys indexOfObject:thePathComponents.lastObject];
 	return (*row != NSNotFound);
 }
 
@@ -171,7 +171,7 @@
 		return nil;
 	parentFSViewer = viewer;
 	relativePathComponent = path;
-	absolutePath = [[parent absolutePath] stringByAppendingPathComponent:relativePathComponent];
+	absolutePath = [parent.absolutePath stringByAppendingPathComponent:relativePathComponent];
 	childNodes = nil;
 	sortedChildNodeKeys = nil;
 	haveComputedTheProperties = NO;
@@ -185,9 +185,9 @@
 	self = [super init];
 	if (!self)
 		return nil;
-	parentFSViewer = [node parentFSViewer];
-	relativePathComponent = [node relativePathComponent];
-	absolutePath = [node absolutePath];
+	parentFSViewer = node.parentFSViewer;
+	relativePathComponent = node.relativePathComponent;
+	absolutePath = node.absolutePath;
 	childNodes = nil;
 	sortedChildNodeKeys = nil;
 	haveComputedTheProperties = NO;
@@ -201,7 +201,7 @@
 	self = [self initWithNodeEnvironment:node];
 	if (!self)
 		return nil;
-	childNodes = [[node childNodes] mutableCopy];
+	childNodes = [node.childNodes mutableCopy];
 	return self;
 }
 
@@ -307,7 +307,7 @@
 
 + (NSImage*) compositeRowOfIcons:(NSArray*)icons withOverlap:(CGFloat)overlap
 {
-	NSInteger adjustedIconCount = MAX([icons count] - 1, 0);
+	NSInteger adjustedIconCount = MAX(icons.count - 1, 0);
 	CGFloat hsize = ceil(ICON_SIZE * (1 + adjustedIconCount / overlap));
 	NSImage* combinedImage = [[NSImage alloc] initWithSize:NSMakeSize(hsize,  ICON_SIZE)];
 	NSRect imageFrame = NSMakeRect(0, 0, ICON_SIZE, ICON_SIZE);
@@ -376,11 +376,11 @@
 		for (id childNodeKey in childNodes)
 		{
 			FSNodeInfo* childNode = childNodes[childNodeKey];
-			if (![childNode haveComputedTheProperties])
+			if (!childNode.haveComputedTheProperties)
 				[childNode computeProperties];
-			hgStatus = hgStatus | [childNode hgStatus];
+			hgStatus = hgStatus | childNode.hgStatus;
 		}
-		sortedChildNodeKeys = [[childNodes allKeys] sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
+		sortedChildNodeKeys = [childNodes.allKeys sortedArrayUsingSelector:@selector(localizedCaseInsensitiveCompare:)];
 	}
 	maxIconCountOfSubitems_ = notYetComputedIconCount;
 	haveComputedTheProperties = YES;
@@ -407,7 +407,7 @@
 		for (id childNodeKey in childNodes)
 		{
 			FSNodeInfo* childNode = childNodes[childNodeKey];
-			maxIconCountOfSubitems_ = MAX(maxIconCountOfSubitems_, [childNode directoryDecorationIconCountForNodeInfo]);
+			maxIconCountOfSubitems_ = MAX(maxIconCountOfSubitems_, childNode.directoryDecorationIconCountForNodeInfo);
 		}
 	return maxIconCountOfSubitems_;
 }
@@ -433,7 +433,7 @@
 	for (NSString* statusLine in hgStatusLines)
 	{
 		// If this particular status line is malformed skip this line.
-		if ([statusLine length] < 3)
+		if (statusLine.length < 3)
 			continue;
 
 		NSString* statusLetter   = [statusLine substringToIndex:1];
@@ -447,11 +447,11 @@
 		// This way it's a bit slower but for larger numbers of files in a directory it works much better using a dictionary.
 		for (NSString* partName in pathComponents)
 		{
-			NSMutableDictionary* theChildNodes = [parent childNodes];
+			NSMutableDictionary* theChildNodes = parent.childNodes;
 			if (!theChildNodes)
 			{
 				NSMutableDictionary* newChildNodes = [[NSMutableDictionary alloc] init];
-				[parent setChildNodes:newChildNodes];
+				parent.childNodes = newChildNodes;
 				theChildNodes = newChildNodes;
 			}
 				
@@ -468,7 +468,7 @@
 				parent = newChild;
 			}
 		}
-		[parent setHgStatusAdditively:theStatus];
+		parent.hgStatusAdditively = theStatus;
 	}
 	
 	[newRoot computeProperties];
@@ -479,10 +479,10 @@
 - (FSNodeInfo*) deepCopyAndDirtify
 {
 	FSNodeInfo* copiedNode = [[FSNodeInfo alloc]initWithNode:self];
-	[copiedNode setHgStatus:unionBits([copiedNode hgStatus], eHGStatusDirty)];
-	[[copiedNode childNodes] removeAllObjects];
-	for (FSNodeInfo* childNode in [self.childNodes objectEnumerator])
-		[copiedNode childNodes][[childNode relativePathComponent]] = [childNode deepCopyAndDirtify];
+	copiedNode.hgStatus = unionBits(copiedNode.hgStatus, eHGStatusDirty);
+	[copiedNode.childNodes removeAllObjects];
+	for (FSNodeInfo* childNode in self.childNodes.objectEnumerator)
+		[copiedNode childNodes][childNode.relativePathComponent] = childNode.deepCopyAndDirtify;
 	return copiedNode;
 }
 
@@ -506,10 +506,10 @@
 		{
 			if (IsEmpty(component))
 				break;
-			FSNodeInfo* copiedNode = [node haveComputedTheProperties] ? [[FSNodeInfo alloc] initWithNode:node] : node;	// If we have already copied the node we don't need to copy it again
-			[parent childNodes][[copiedNode relativePathComponent]] = copiedNode;
+			FSNodeInfo* copiedNode = node.haveComputedTheProperties ? [[FSNodeInfo alloc] initWithNode:node] : node;	// If we have already copied the node we don't need to copy it again
+			[parent childNodes][copiedNode.relativePathComponent] = copiedNode;
 			
-			FSNodeInfo* childNode = [copiedNode childNodes][component];
+			FSNodeInfo* childNode = copiedNode.childNodes[component];
 			if (!childNode)
 				{ done = YES; break;}
 			parent = copiedNode;
@@ -519,7 +519,7 @@
 			continue;
 
 		// We have arrived at the place we should do a deep copy and dirtify of the tree
-		[parent childNodes][[node relativePathComponent]] = [node deepCopyAndDirtify];
+		[parent childNodes][node.relativePathComponent] = node.deepCopyAndDirtify;
 	}
 	[newRoot computeProperties];
 	return newRoot;
@@ -542,7 +542,7 @@
 	{
 		NSString* existingKey = self.sortedChildNodeKeys[i];
 		NSArray* componentPath = theRelativeComponentPaths[j];
-		NSString* pruneKey = [componentPath firstObject];
+		NSString* pruneKey = componentPath.firstObject;
 		NSComparisonResult comp = [existingKey localizedCaseInsensitiveCompare:pruneKey];
 		
 		// If the existing key is different then the key to remove then keep this child node
@@ -561,7 +561,7 @@
 		}
 
 		// If the path to remove doesn't have any further path components than we are prunning this child node and all it's children
-		if ([componentPath count] == 1)
+		if (componentPath.count == 1)
 		{
 			i++;
 			j++;
@@ -577,9 +577,9 @@
 		while (j < theRelativeComponentPaths.count)
 		{
 			componentPath = theRelativeComponentPaths[j];
-			if (![existingKey isEqualToString:[componentPath firstObject]])
+			if (![existingKey isEqualToString:componentPath.firstObject])
 				break;
-			NSArray* childComponentPath = [componentPath arrayByRemovingFirst];
+			NSArray* childComponentPath = componentPath.arrayByRemovingFirst;
 			[subsetOfPathsToRemove addObject:childComponentPath];
 			j++;
 		}
@@ -646,7 +646,7 @@
 
 - (void) addAllLeafNodes:(NSMutableArray*)flatNodes withStatus:(HGStatus)status
 {
-	if ([self.sortedChildNodeKeys count] == 0 && bitsInCommon(status, hgStatus))
+	if (self.sortedChildNodeKeys.count == 0 && bitsInCommon(status, hgStatus))
 	{
 		[flatNodes addObject:self];
 		return;
@@ -702,25 +702,25 @@ static NSString* stringFromItemCount(NSInteger theCount)
 	if (!dateFormatter)
 	{
 		dateFormatter = [[NSDateFormatter alloc] init];
-		[dateFormatter setDateStyle:NSDateFormatterShortStyle];
-		[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
+		dateFormatter.dateStyle = NSDateFormatterShortStyle;
+		dateFormatter.timeStyle = NSDateFormatterShortStyle;
 	}
 	
 	NSMutableAttributedString* attrString = [NSMutableAttributedString string:fstr( @"%@\n", self.lastPathComponent) withAttributes:smallCenteredSystemFontAttributes];
 
-	NSFileManager* fileManager = [NSFileManager defaultManager];
+	NSFileManager* fileManager = NSFileManager.defaultManager;
 	NSDictionary* fileAttributes = [fileManager attributesOfItemAtPath:absolutePath error:nil];
 	
 	if (!self.isDirectory)
-		[attrString appendAttributedString: [NSAttributedString string:stringFromFileSize([fileAttributes fileSize]) withAttributes:smallCenteredSystemFontAttributes]];
+		[attrString appendAttributedString: [NSAttributedString string:stringFromFileSize(fileAttributes.fileSize) withAttributes:smallCenteredSystemFontAttributes]];
 	else
-		[attrString appendAttributedString: [NSAttributedString string:stringFromItemCount([sortedChildNodeKeys count]) withAttributes:smallCenteredSystemFontAttributes]];
+		[attrString appendAttributedString: [NSAttributedString string:stringFromItemCount(sortedChildNodeKeys.count) withAttributes:smallCenteredSystemFontAttributes]];
 	
-	NSString* dateModifiedString = [dateFormatter stringFromDate:[fileAttributes fileModificationDate]];
+	NSString* dateModifiedString = [dateFormatter stringFromDate:fileAttributes.fileModificationDate];
 	[attrString appendAttributedString: [NSAttributedString string:@"Mod. " withAttributes:smallBoldCenteredSystemFontAttributes]];
 	[attrString appendAttributedString: [NSAttributedString string:fstr( @"%@\n", dateModifiedString) withAttributes:smallCenteredSystemFontAttributes]];
 
-	NSString* dateCreatedString = [dateFormatter stringFromDate:[fileAttributes fileCreationDate]];
+	NSString* dateCreatedString = [dateFormatter stringFromDate:fileAttributes.fileCreationDate];
 	[attrString appendAttributedString: [NSAttributedString string:@"Crd. " withAttributes:smallBoldCenteredSystemFontAttributes]];
 	[attrString appendAttributedString: [NSAttributedString string:fstr( @"%@\n", dateCreatedString) withAttributes:smallCenteredSystemFontAttributes]];
 	
@@ -742,6 +742,6 @@ NSArray* pathsOfFSNodes(NSArray* nodes)
 {
 	NSMutableArray* paths = [[NSMutableArray alloc]init];
 	for (FSNodeInfo* node in nodes)
-		[paths addObject:[node absolutePath]];
+		[paths addObject:node.absolutePath];
 	return paths;
 }

@@ -32,9 +32,9 @@
 
 - (void) awakeFromNib
 {
-	[self setDelegate:self];
-	[self setDataSource:self];
-	[self setTarget:self];
+	self.delegate = self;
+	self.dataSource = self;
+	self.target = self;
 	[self setAction:@selector(fsviewerAction:)];
 	[self setDoubleAction:@selector(fsviewerDoubleAction:)];
 }
@@ -51,15 +51,15 @@
 
 - (void) regenerateTableData
 {
-	if (IsEmpty([[parentViewer_ rootNodeInfo] childNodes]))
+	if (IsEmpty(parentViewer_.rootNodeInfo.childNodes))
 		leafNodeForTableRow_ = @[];
 	else
-		leafNodeForTableRow_ = [[parentViewer_ rootNodeInfo] generateFlatLeafNodeListWithStatus:eHGStatusAll];
+		leafNodeForTableRow_ = [parentViewer_.rootNodeInfo generateFlatLeafNodeListWithStatus:eHGStatusAll];
 }
 
 - (void) reloadData
 {
-	[self setRowHeight:[parentViewer_ rowHeightForFont]];
+	self.rowHeight = parentViewer_.rowHeightForFont;
 	[self regenerateTableData];
 	[super reloadData];
 }
@@ -72,7 +72,7 @@
 - (void) prepareToOpenFSViewerPane
 {
 	[self reloadDataSin];
-	[[[parentViewer_ myDocument] mainWindow] makeFirstResponder:self];
+	[[parentViewer_.myDocument mainWindow] makeFirstResponder:self];
 }
 
 
@@ -134,7 +134,7 @@
 
 - (BOOL) singleFileIsChosenInFiles
 {
-	if (![self.chosenNode isFile])
+	if (!self.chosenNode.isFile)
 		return NO;
 	return (self.numberOfSelectedRows == 1) || ![self isRowSelected:self.chosenRow];
 }
@@ -168,11 +168,11 @@
 {
 	FSViewerSelectionState* newSavedState = [[FSViewerSelectionState alloc] init];
 	
-	NSArray* selectedPaths = [parentViewer_ absolutePathsOfSelectedFilesInBrowser];
-	BOOL restoreFirstResponderToViewer = [[[parentViewer_ parentWindow] firstResponder] hasAncestor:self];
+	NSArray* selectedPaths = parentViewer_.absolutePathsOfSelectedFilesInBrowser;
+	BOOL restoreFirstResponderToViewer = [parentViewer_.parentWindow.firstResponder hasAncestor:self];
 	
 	NSScrollView* enclosingSV = self.enclosingScrollView;
-	NSPoint currentScrollPosition = [[enclosingSV contentView] bounds].origin;
+	NSPoint currentScrollPosition = enclosingSV.contentView.bounds.origin;
 	NSValue* scrollPositionAsValue = [NSValue valueWithPoint:currentScrollPosition];
 	
 	// Save the selectedPaths
@@ -185,9 +185,9 @@
 
 - (void) restoreViewerSelectionState:(FSViewerSelectionState*)savedState
 {
-	NSArray* savedSelectedPaths            = [savedState savedSelectedPaths];
-	NSValue* savedScrollPositionValue	   = [[savedState savedColumnScrollPositions] firstObject];
-	FSNodeInfo* rootNode				   = [parentViewer_ rootNodeInfo];
+	NSArray* savedSelectedPaths            = savedState.savedSelectedPaths;
+	NSValue* savedScrollPositionValue	   = savedState.savedColumnScrollPositions.firstObject;
+	FSNodeInfo* rootNode				   = parentViewer_.rootNodeInfo;
 	
 	// restore the selection
 	NSMutableIndexSet* rowsToBeSelected = [[NSMutableIndexSet alloc]init];	
@@ -203,11 +203,11 @@
 	if (savedScrollPositionValue)
 	{
 		NSScrollView* enclosingSV = self.enclosingScrollView;
-		[[enclosingSV documentView] scrollPoint:[savedScrollPositionValue pointValue]];
+		[enclosingSV.documentView scrollPoint:savedScrollPositionValue.pointValue];
 	}
-	if ([rowsToBeSelected count]>0)
+	if (rowsToBeSelected.count>0)
 	{
-		NSUInteger row = [rowsToBeSelected firstIndex];
+		NSUInteger row = rowsToBeSelected.firstIndex;
 		[self scrollRowToVisible:row];
 	}
 }
@@ -222,18 +222,18 @@
 
 - (NSInteger) numberOfRowsInTableView:(NSTableView*)aTableView
 {
-	return [self.leafNodeForTableRow count];
+	return self.leafNodeForTableRow.count;
 }
 
 - (id) tableView:(NSTableView*)aTableView objectValueForTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)requestedRow
 {
 	FSNodeInfo* node = self.leafNodeForTableRow[requestedRow];
-	if ([[aTableColumn identifier] isEqualToString:@"name"])
-		return [node relativePathComponent];
-	if ([[aTableColumn identifier] isEqualToString:@"path"])
+	if ([aTableColumn.identifier isEqualToString:@"name"])
+		return node.relativePathComponent;
+	if ([aTableColumn.identifier isEqualToString:@"path"])
 	{
-		NSString* root = [[parentViewer_ rootNodeInfo] absolutePath];
-		NSString* pathInRepository = pathDifference(root, [[node absolutePath] stringByDeletingLastPathComponent]);
+		NSString* root = parentViewer_.rootNodeInfo.absolutePath;
+		NSString* pathInRepository = pathDifference(root, node.absolutePath.stringByDeletingLastPathComponent);
 		return IsNotEmpty(pathInRepository) ? pathInRepository : @" ";
 	}
 	return nil;
@@ -242,13 +242,13 @@
 - (void) tableView:(NSTableView*)aTableView  willDisplayCell:(id)aCell forTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
 {
 	FSNodeInfo* node = self.leafNodeForTableRow[rowIndex];
-	NSString* columnIdentifier = [aTableColumn identifier];
+	NSString* columnIdentifier = aTableColumn.identifier;
 	[aCell setNodeInfo:node];
 	if ([columnIdentifier isEqualToString:@"exclude"])
 	{
-		NSString* root = [[parentViewer_ rootNodeInfo] absolutePath];
-		HunkExclusions* hunkExclusions = [parentViewer_ hunkExclusions];
-		NSString* fileName = pathDifference(root, [node absolutePath]);
+		NSString* root = parentViewer_.rootNodeInfo.absolutePath;
+		HunkExclusions* hunkExclusions = parentViewer_.hunkExclusions;
+		NSString* fileName = pathDifference(root, node.absolutePath);
 		NSSet* exlcusions = [hunkExclusions hunkExclusionSetForRoot:root andFile:fileName];
 		NSInteger state;
 		if (IsEmpty(exlcusions))
@@ -268,13 +268,13 @@
 - (void) tableView:(NSTableView*)aTableView setObjectValue:(id)anObject forTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
 {
 	FSNodeInfo* node = self.leafNodeForTableRow[rowIndex];
-	NSString* columnIdentifier = [aTableColumn identifier];
+	NSString* columnIdentifier = aTableColumn.identifier;
 
 	if ([columnIdentifier isEqualToString:@"exclude"])
 	{
-		NSString* root = [[parentViewer_ rootNodeInfo] absolutePath];
-		HunkExclusions* hunkExclusions = [parentViewer_ hunkExclusions];
-		NSString* fileName = pathDifference(root, [node absolutePath]);
+		NSString* root = parentViewer_.rootNodeInfo.absolutePath;
+		HunkExclusions* hunkExclusions = parentViewer_.hunkExclusions;
+		NSString* fileName = pathDifference(root, node.absolutePath);
 		NSSet* exlcusions = [hunkExclusions hunkExclusionSetForRoot:root andFile:fileName];
 		if (IsEmpty(exlcusions))
 			[hunkExclusions excludeFile:fileName forRoot:root];
@@ -285,7 +285,7 @@
 
 //- (BOOL)tableView:(NSTableView*)aTableView shouldEditTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
 //{
-//	NSString* requestedColumn = [aTableColumn identifier];
+//	NSString* requestedColumn = aTableColumn.identifier;
 //	if ([requestedColumn isEqualToString:@"patchName"])
 //		return NO;
 //	return YES;
@@ -318,7 +318,7 @@
 	NSMutableArray* paths = [[NSMutableArray alloc] init];
 	[rowIndexes enumerateIndexesUsingBlock:^(NSUInteger row, BOOL* stop) {
 		FSNodeInfo* node = self.leafNodeForTableRow[row];
-		[paths addObject:[node absolutePath]];
+		[paths addObject:node.absolutePath];
 	}];
 	return [parentViewer_ writePaths:paths toPasteboard:pasteboard];	// The parent handles writing out the pasteboard items
 }
@@ -342,17 +342,17 @@
 
 //- (void) mouseEntered:(NSEvent*)event
 //{
-//	[NSAnimationContext beginGrouping];
-//	[[NSAnimationContext currentContext] setDuration:1.0];
-//	[[buttonMessage animator] setHidden:NO];
-//	[NSAnimationContext endGrouping];
+//	NSAnimationContext.beginGrouping;
+//	[NSAnimationContext.currentContext setDuration:1.0];
+//	[buttonMessage.animator setHidden:NO];
+//	NSAnimationContext.endGrouping;
 //}
 //- (void) mouseExited:(NSEvent*)event
 //{
-//	[NSAnimationContext beginGrouping];
-//	[[NSAnimationContext currentContext] setDuration:1.0];
-//	[[buttonMessage animator] setHidden:YES];
-//	[NSAnimationContext endGrouping];
+//	NSAnimationContext.beginGrouping;
+//	[NSAnimationContext.currentContext setDuration:1.0];
+//	[buttonMessage.animator setHidden:YES];
+//	NSAnimationContext.endGrouping;
 //}
 
 - (BOOL) showsBorderOnlyWhileMouseInside

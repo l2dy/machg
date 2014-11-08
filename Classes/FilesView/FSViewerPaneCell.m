@@ -16,19 +16,19 @@
 NSDictionary* fsStringAttributes(FSNodeInfo* nodeInfo);
 void commonLoadCellContents(NSCell* cell)
 {
-	NSString* stringValue = [cell stringValue];
+	NSString* stringValue = cell.stringValue;
 	FSNodeInfo* nodeInfo = [cell performSelectorIfPossible:@selector(nodeInfo)];
 	if (!stringValue || !nodeInfo)
 		return;
 
 	// Set the text part.  FSNode will format the string (underline, bold, etc...) based on various properties of the file.
 	NSAttributedString* attrStringValue = [NSAttributedString string:stringValue withAttributes:fsStringAttributes(nodeInfo)];
-	[cell setAttributedStringValue:attrStringValue];
+	cell.attributedStringValue = attrStringValue;
 	
 	// If we don't have access to the file, make sure the user can't select it!
-	[cell setEnabled:[nodeInfo isReadable]];
-	[cell setBackgroundStyle:NSBackgroundStyleLight];
-	[cell setHighlighted:NO];
+	cell.enabled = nodeInfo.isReadable;
+	cell.backgroundStyle = NSBackgroundStyleLight;
+	cell.highlighted = NO;
 	if ([cell respondsToSelector:@selector(setFileIcon:)])
 	{
 		NSImage* theFileIcon = nil;
@@ -59,7 +59,7 @@ void commonLoadCellContents(NSCell* cell)
 
 + (NSSize) iconRowSize:(FSNodeInfo*)parentNodeInfo
 {
-	int iconCount = parentNodeInfo ? [parentNodeInfo maxIconCountOfSubitems] : 1;
+	int iconCount = parentNodeInfo ? parentNodeInfo.maxIconCountOfSubitems : 1;
 	return NSMakeSize(ICON_SIZE + floor(ICON_SIZE * (iconCount - 1)/IconOverlapCompression), ICON_SIZE);
 }
 
@@ -90,7 +90,7 @@ void commonLoadCellContents(NSCell* cell)
 	if (fileIcon)
 		theSize.width += ICON_INTERSPACING + ICON_SIZE;
 	theSize.width += ICON_TEXT_SPACING;
-	theSize.height = MAX(iconRowSize.height + ICON_INSET_VERT * 2.0, [self.attributedStringValue size].height + 5);
+	theSize.height = MAX(iconRowSize.height + ICON_INSET_VERT * 2.0, self.attributedStringValue.size.height + 5);
 	return theSize;
 }
 
@@ -101,7 +101,7 @@ static void drawImageAtPoint(NSImage* img, NSPoint pt, BOOL flipped)
 		[img drawAtPoint:pt fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
 	else
 	{
-		NSAffineTransform* transform = [NSAffineTransform transform];
+		NSAffineTransform* transform = NSAffineTransform.transform;
 		[transform translateXBy:pt.x yBy:pt.y];
 		[transform scaleXBy:1.0 yBy:-1.0];
 		[transform concat];
@@ -113,16 +113,16 @@ static void drawImageAtPoint(NSImage* img, NSPoint pt, BOOL flipped)
 
 - (void) drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView*)controlView
 {
-	NSImage* combinedIcon = [self.nodeInfo combinedIconImage];
+	NSImage* combinedIcon = self.nodeInfo.combinedIconImage;
 	BOOL isOutlineCell = [self isKindOfClass:[FSViewerOutlinePaneIconedCell class]];
-	BOOL hasChildren = IsNotEmpty([self.nodeInfo childNodes]);
+	BOOL hasChildren = IsNotEmpty(self.nodeInfo.childNodes);
 	
-	[self setDrawsBackground:NO];
+	self.drawsBackground = NO;
 
 	CGFloat iconRowWidth = [FSViewerPaneCell iconRowSize:self.parentNodeInfo].width;
 	NSPoint drawPoint = cellFrame.origin;
 	
-	BOOL isFlipped = [controlView isFlipped];
+	BOOL isFlipped = controlView.isFlipped;
 	
 	// Draw IconRow
 	drawPoint.x += ICON_INSET_HORIZ;
@@ -220,11 +220,11 @@ NSDictionary* fsStringAttributes(FSNodeInfo* nodeInfo)
 	if (standardAttributes == nil || storedFontSizeofBrowserItems != fontSizeOfBrowserItemsFromDefaults())
 	{
 		storedFontSizeofBrowserItems = fontSizeOfBrowserItemsFromDefaults();
-		NSFontManager* fontManager   = [NSFontManager sharedFontManager];
-		NSMutableParagraphStyle* ps  = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
-		[ps setLineBreakMode:NSLineBreakByTruncatingMiddle];
+		NSFontManager* fontManager   = NSFontManager.sharedFontManager;
+		NSMutableParagraphStyle* ps  = [NSParagraphStyle.defaultParagraphStyle mutableCopy];
+		ps.lineBreakMode = NSLineBreakByTruncatingMiddle;
 		NSFont* textFont = [NSFont fontWithName:@"Verdana" size:storedFontSizeofBrowserItems];
-		NSColor* greyColor = [NSColor grayColor];
+		NSColor* greyColor = NSColor.grayColor;
 		NSFont* italicTextFont = [fontManager convertFont:textFont toHaveTrait:NSItalicFontMask];
 		NSFont* boldTextFont   = [fontManager convertFont:textFont toHaveTrait:NSBoldFontMask];
 		
@@ -235,16 +235,16 @@ NSDictionary* fsStringAttributes(FSNodeInfo* nodeInfo)
 		virtualAttributes  = @{NSFontAttributeName: italicTextFont, NSParagraphStyleAttributeName: ps};
 	}
 	
-	if ([nodeInfo isDirty])
+	if (nodeInfo.isDirty)
 		return dirtyAttributes;
 	
-	if ([[nodeInfo parentFSViewer] areNodesVirtual])
+	if (nodeInfo.parentFSViewer.areNodesVirtual)
 		return virtualAttributes;
 	
-	if ([nodeInfo isLink])
+	if (nodeInfo.isLink)
 		return italicAttributes;
 	
-	if ([nodeInfo hgStatus] == eHGStatusIgnored)
+	if (nodeInfo.hgStatus == eHGStatusIgnored)
 		return grayedAttributes;
 	
 	return standardAttributes;

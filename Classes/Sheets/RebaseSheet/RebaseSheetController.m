@@ -72,7 +72,7 @@
 
 - (NSIndexSet*) indexSetForStartingRevision:(NSNumber*)rev
 {
-	NSSet* descendants = [[myDocument_ repositoryData] descendantsOfRevisionNumber:rev];
+	NSSet* descendants = [myDocument_.repositoryData descendantsOfRevisionNumber:rev];
 	NSMutableIndexSet* newIndexes = [[NSMutableIndexSet alloc]init];
 	for (NSNumber* revNum in descendants)
 		[newIndexes addIndex:[sourceLogTableView tableRowForRevision:revNum]];
@@ -81,14 +81,14 @@
 
 - (NSString*) reasonForInvalidityOfSelectedEntries
 {
-	NSArray* sourceEntries = [sourceLogTableView selectedEntries];
+	NSArray* sourceEntries = sourceLogTableView.selectedEntries;
 	
-	if ([sourceEntries count] < 1)
+	if (sourceEntries.count < 1)
 		return @"Unable to perform rebase because no revisions are selected to rebase. Select a tree of revisions to rebase.";
 
-	NSArray* destinationEntries = [destinationLogTableView selectedEntries];
+	NSArray* destinationEntries = destinationLogTableView.selectedEntries;
 	
-	if ([destinationEntries count] < 1)
+	if (destinationEntries.count < 1)
 		return @"Unable to perform rebase because no revisions are selected to rebase onto. Select a single revision as the target of the rebase.";
 
 	return nil;
@@ -98,11 +98,11 @@
 {
 	NSString* reasonForNonValid = self.reasonForInvalidityOfSelectedEntries;
 	if (!reasonForNonValid)
-		[okButton setEnabled:YES];
+		okButton.enabled = YES;
 	else
 	{
-		[okButton setEnabled:NO];
-		[sheetInformativeMessageTextField setStringValue: reasonForNonValid];
+		okButton.enabled = NO;
+		sheetInformativeMessageTextField.stringValue =  reasonForNonValid;
 	}
 }
 
@@ -127,7 +127,7 @@
 	
 	BOOL abort = (result == NSAlertAlternateReturn);
 	[argsRebase addObject: abort ? @"--abort" : @"--continue"];
-	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
+	NSString* rootPath = myDocument_.absolutePathOfRepositoryRoot;
 	ExecutionResult* results = [myDocument_  executeMercurialWithArgs:argsRebase  fromRoot:rootPath  whileDelayingEvents:YES];
 	if (results.outStr)
 	{
@@ -137,7 +137,7 @@
 		RunAlertPanel(titleMessage, message, @"OK", nil, nil);
 	}
 	if (abort)
-		[[myDocument_ repositoryData] deleteRebaseState];
+		[myDocument_.repositoryData deleteRebaseState];
 }
 
 
@@ -151,7 +151,7 @@
 
 - (IBAction) openRebaseSheetWithSelectedRevisions:(id)sender
 {
-	if ([[myDocument_ repositoryData] rebaseInProgress])
+	if (myDocument_.repositoryData.rebaseInProgress)
 	{
 		[self doContinueOrAbort];
 		return;
@@ -165,15 +165,15 @@
 	
 	// Retarget a single click to select that entry and all descendants.
 	[sourceLogTableView setAction:@selector(handleLogTableViewClick:)];
-	[sourceLogTableView setTarget:self];
+	sourceLogTableView.target = self;
 	
 	//
 	// Initialize Source LogTableView
 	//
 	[sourceLogTableView resetTable:self];
-	NSArray* revs = [[[myDocument_ theHistoryView] logTableView] chosenRevisions];
-	if ([revs count] <= 0)
-		[sourceLogTableView scrollToRevision:[myDocument_ getHGTipRevision]];
+	NSArray* revs = [myDocument_.theHistoryView.logTableView chosenRevisions];
+	if (revs.count <= 0)
+		[sourceLogTableView scrollToRevision:myDocument_.getHGTipRevision];
 	else
 	{
 		NSInteger minRev = numberAsInt(revs[0]);
@@ -190,19 +190,19 @@
 	// Initialize Destination LogTableView
 	//
 	[destinationLogTableView resetTable:self];
-	[destinationLogTableView scrollToRevision:[myDocument_ getHGTipRevision]];
+	[destinationLogTableView scrollToRevision:myDocument_.getHGTipRevision];
 	[destinationLogTableView deselectAll:self];
 
 	// Set Sheet Title
-	NSString* newTitle = fstr(@"Rebasing Selected Revisions in “%@”", [myDocument_ selectedRepositoryShortName]);
-	[rebaseSheetTitle setStringValue:newTitle];
+	NSString* newTitle = fstr(@"Rebasing Selected Revisions in “%@”", myDocument_.selectedRepositoryShortName);
+	rebaseSheetTitle.stringValue = newTitle;
 
-	[self setKeepOriginalRevisions:NO];
-	[self setKeepOriginalBranchNames:NO];
+	self.keepOriginalRevisions = NO;
+	self.keepOriginalBranchNames = NO;
 	
 	[self validateButtons:self];
-	if ([okButton isEnabled])
-		[sheetInformativeMessageTextField setAttributedStringValue: self.formattedSheetMessage];
+	if (okButton.isEnabled)
+		sheetInformativeMessageTextField.attributedStringValue =  self.formattedSheetMessage;
 	
 	[myDocument_ beginSheet:theRebaseSheet];
 }
@@ -212,15 +212,15 @@
 {
 	[myDocument_ endSheet:theRebaseSheet];
 
-	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
-	NSString* repositoryName = [[[myDocument_ sidebar] selectedNode] shortName];
-	LowHighPair pair = [sourceLogTableView lowestToHighestSelectedRevisions];
-	NSNumber* destinationRev = [destinationLogTableView selectedRevision];
+	NSString* rootPath = myDocument_.absolutePathOfRepositoryRoot;
+	NSString* repositoryName = [myDocument_.sidebar.selectedNode shortName];
+	LowHighPair pair = sourceLogTableView.lowestToHighestSelectedRevisions;
+	NSNumber* destinationRev = destinationLogTableView.selectedRevision;
 	NSString* rebaseDescription = fstr(@"rebasing %ld-%ld in “%@”", pair.lowRevision, pair.highRevision, repositoryName);
 	NSMutableArray* argsRebase = [NSMutableArray arrayWithObjects:@"rebase", @"--config", @"extensions.hgext.rebase=", nil];	// We are using MacHgs rebase command so we need to specify that it is
 																														// in the extensions folder of the included Mercurial
 	[argsRebase addObjectsFromArray:configurationForProgress];
-	NSString* mergeToolName = [[AppController sharedAppController] scriptNameForMergeTool:UseWhichToolForMergingFromDefaults()];
+	NSString* mergeToolName = [AppController.sharedAppController scriptNameForMergeTool:UseWhichToolForMergingFromDefaults()];
 	[argsRebase addObject:@"--config" followedBy:fstr(@"merge-tools.%@.priority=100", mergeToolName)];	// Unfortunately rebase doesn't take a --tool option yet
 	[argsRebase addObject:@"--detach"];
 	[argsRebase addObject:@"--source" followedBy:intAsString(pair.lowRevision)];
@@ -230,8 +230,8 @@
 	if (self.keepOriginalBranchNames)
 		[argsRebase addObject:@"--keepbranches"];
 
-	ProcessController* processController = [ProcessController processControllerWithMessage:rebaseDescription forList:[myDocument_ theProcessListController]];
-	dispatch_async([myDocument_ mercurialTaskSerialQueue], ^{
+	ProcessController* processController = [ProcessController processControllerWithMessage:rebaseDescription forList:myDocument_.theProcessListController];
+	dispatch_async(myDocument_.mercurialTaskSerialQueue, ^{
 		[myDocument_ executeMercurialWithArgs:argsRebase  fromRoot:rootPath  withDelegate:processController  whileDelayingEvents:YES];
 		[processController terminateController];
 	});		
@@ -254,28 +254,28 @@
 - (void) logTableViewSelectionDidChange:(LogTableView*)theLogTable
 {
 	[self validateButtons:self];
-	if ([okButton isEnabled])
-		[sheetInformativeMessageTextField setAttributedStringValue: self.formattedSheetMessage];
+	if (okButton.isEnabled)
+		sheetInformativeMessageTextField.attributedStringValue =  self.formattedSheetMessage;
 }
 
 
 - (NSIndexSet*) tableView:(NSTableView*)tableView selectionIndexesForProposedSelection:(NSIndexSet*)proposedSelectionIndexes
 {
-	NSRange range = MakeRangeFirstLast([proposedSelectionIndexes firstIndex], [proposedSelectionIndexes lastIndex]);
+	NSRange range = MakeRangeFirstLast(proposedSelectionIndexes.firstIndex, proposedSelectionIndexes.lastIndex);
 	return [NSIndexSet indexSetWithIndexesInRange:range];
 }
 
 
 - (IBAction) handleLogTableViewClick:(id)sender
 {
-	NSIndexSet* newIndexes = [self indexSetForStartingRevision:[sourceLogTableView chosenRevision]];
+	NSIndexSet* newIndexes = [self indexSetForStartingRevision:sourceLogTableView.chosenRevision];
 	[sourceLogTableView selectRowIndexes:newIndexes byExtendingSelection:NO];
 }
 
 
 - (CGFloat) firstPaneHeight:(NSSplitView*)theSplitView
 {
-	return [[theSplitView subviews][0] frame].size.height;
+	return [theSplitView.subviews[0] frame].size.height;
 }
 
 
@@ -284,11 +284,11 @@
 	CGFloat svOnePosition = [self firstPaneHeight:sourceSV];
 	CGFloat svTwoPosition = [self firstPaneHeight:destinationSV ];
 	
-	if ([aNotification object] == sourceSV)
+	if (aNotification.object == sourceSV)
 		if (svOnePosition != svTwoPosition)
 			[destinationSV setPosition:svOnePosition ofDividerAtIndex:0];
 	
-	if ([aNotification object] == destinationSV)
+	if (aNotification.object == destinationSV)
 		if (svOnePosition != svTwoPosition)
 			[sourceSV setPosition:svTwoPosition ofDividerAtIndex:0];
 }
@@ -305,8 +305,8 @@
 - (NSAttributedString*) formattedSheetMessage
 {
 	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
-	LowHighPair sourcePair = [sourceLogTableView lowestToHighestSelectedRevisions];
-	NSNumber* destinationRev = [destinationLogTableView selectedRevision];
+	LowHighPair sourcePair = sourceLogTableView.lowestToHighestSelectedRevisions;
+	NSNumber* destinationRev = destinationLogTableView.selectedRevision;
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"The selected revisions within ")];
 	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(intAsString(sourcePair.lowRevision))];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" through to ")];
@@ -327,7 +327,7 @@
 
 - (void) awakeFromNib
 {
-	[self setDelegate:self];
+	self.delegate = self;
 }
 
 - (CGFloat)splitView:(NSSplitView*)splitView constrainMaxCoordinate:(CGFloat)proposedMaximumPosition ofSubviewAt:(NSInteger)dividerIndex	{ return self.frame.size.width-200.0; }

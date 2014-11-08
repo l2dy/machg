@@ -73,33 +73,33 @@
 
 - (BOOL) incompleteRevisionWillBeStripped
 {
-	NSUInteger incompleteRow = [logTableView tableRowForRevision:[[myDocument_ repositoryData] incompleteRevision]];
+	NSUInteger incompleteRow = [logTableView tableRowForRevision:myDocument_.repositoryData.incompleteRevision];
 	return (incompleteRow != NSNotFound && [logTableView isRowSelected:incompleteRow]);
 }
 
 - (NSIndexSet*) indexSetForStartingRevision:(NSNumber*)rev
 {
-	LogEntry* incompleteRevisionEntry = [[myDocument_ repositoryData] incompleteRevisionEntry];
-	if (theSameNumbers(rev,[incompleteRevisionEntry revision]))
-		return [NSIndexSet indexSet];
+	LogEntry* incompleteRevisionEntry = myDocument_.repositoryData.incompleteRevisionEntry;
+	if (theSameNumbers(rev,incompleteRevisionEntry.revision))
+		return NSIndexSet.indexSet;
 	
-	NSSet* descendants = [[myDocument_ repositoryData] descendantsOfRevisionNumber:rev];
+	NSSet* descendants = [myDocument_.repositoryData descendantsOfRevisionNumber:rev];
 	NSMutableIndexSet* newIndexes = [[NSMutableIndexSet alloc]init];
 	for (NSNumber* revNum in descendants)
 		[newIndexes addIndex:[logTableView tableRowForRevision:revNum]];
 	
 	// Add the incompleteRevision if applicable
-	if (incompleteRevisionEntry && [descendants containsObject:[incompleteRevisionEntry firstParent]])
-		[newIndexes addIndex:[logTableView tableRowForRevision:[incompleteRevisionEntry revision]]];
+	if (incompleteRevisionEntry && [descendants containsObject:incompleteRevisionEntry.firstParent])
+		[newIndexes addIndex:[logTableView tableRowForRevision:incompleteRevisionEntry.revision]];
 
 	return newIndexes;
 }
 
 - (NSString*) reasonForInvalidityOfSelectedEntries
 {
-	NSArray* entries = [logTableView selectedEntries];
+	NSArray* entries = logTableView.selectedEntries;
 
-	if ([entries count] < 1)
+	if (entries.count < 1)
 		return @"Unable to perform the strip because no revisions are selected to strip. Select one or more consecutive revisions to strip.";
 
 	if (!self.forceOption && self.incompleteRevisionWillBeStripped)
@@ -113,13 +113,13 @@
 	NSString* reasonForNonValid = self.reasonForInvalidityOfSelectedEntries;
 	if (!reasonForNonValid)
 	{
-		[okButton setEnabled:YES];
-		[sheetInformativeMessageTextField setAttributedStringValue: self.formattedSheetMessage];
+		okButton.enabled = YES;
+		sheetInformativeMessageTextField.attributedStringValue =  self.formattedSheetMessage;
 	}
 	else
 	{
-		[okButton setEnabled:NO];
-		[sheetInformativeMessageTextField setStringValue: reasonForNonValid];
+		okButton.enabled = NO;
+		sheetInformativeMessageTextField.stringValue =  reasonForNonValid;
 	}
 }
 
@@ -136,15 +136,15 @@
 {
 	// Retarget a single click to select that entry and all descendants.
 	[logTableView setAction:@selector(handleLogTableViewClick:)];
-	[logTableView setTarget:self];
+	logTableView.target = self;
 	
-	NSString* newTitle = fstr(@"Stripping Selected Revisions in “%@”", [myDocument_ selectedRepositoryShortName]);
-	[stripSheetTitle setStringValue:newTitle];
-	[self setForceOption:NO];
-	[self setBackupOption:YES];
+	NSString* newTitle = fstr(@"Stripping Selected Revisions in “%@”", myDocument_.selectedRepositoryShortName);
+	stripSheetTitle.stringValue = newTitle;
+	self.forceOption = NO;
+	self.backupOption = YES;
 
 	[logTableView resetTable:self];
-	[logTableView setCanSelectIncompleteRevision:YES];
+	logTableView.canSelectIncompleteRevision = YES;
 	
 	if ([myDocument_ repositoryHasFilesWhichContainStatus:eHGStatusCommittable])
 	{
@@ -153,9 +153,9 @@
 			return;
 	}
 	
-	NSArray* revs = [[[myDocument_ theHistoryView] logTableView] chosenRevisions];
-	if ([revs count] <= 0)
-		[logTableView scrollToRevision:[myDocument_ getHGTipRevision]];
+	NSArray* revs = [myDocument_.theHistoryView.logTableView chosenRevisions];
+	if (revs.count <= 0)
+		[logTableView scrollToRevision:myDocument_.getHGTipRevision];
 	else
 	{
 		NSInteger minRev = numberAsInt(revs[0]);
@@ -169,8 +169,8 @@
 	}
 	
 	[self validateButtons:self];
-	if ([okButton isEnabled])
-		[sheetInformativeMessageTextField setAttributedStringValue: self.formattedSheetMessage];
+	if (okButton.isEnabled)
+		sheetInformativeMessageTextField.attributedStringValue =  self.formattedSheetMessage;
 
 	[myDocument_ beginSheet:theStripSheet];
 }
@@ -180,9 +180,9 @@
 {
 	[myDocument_ endSheet:theStripSheet];
 
-	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
-	NSString* repositoryName = [[[myDocument_ sidebar] selectedNode] shortName];
-	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
+	NSString* rootPath = myDocument_.absolutePathOfRepositoryRoot;
+	NSString* repositoryName = [myDocument_.sidebar.selectedNode shortName];
+	LowHighPair pair = logTableView.lowestToHighestSelectedRevisions;
 	NSString* stripDescription = fstr(@"Stripping %ld in “%@”", pair.lowRevision, repositoryName);
 	NSMutableArray* argsStrip = [NSMutableArray arrayWithObjects:@"strip",  @"--config", @"extensions.hgext.mq=", nil];	// We are using MacHgs strip so command we need to specify that it is
 																													// in the extensions folder of the included Mercurial
@@ -194,8 +194,8 @@
 	NSString* revisionNumber = fstr(@"%ld", pair.lowRevision);
 	[argsStrip addObject:revisionNumber];
 
-	ProcessController* processController = [ProcessController processControllerWithMessage:stripDescription forList:[myDocument_ theProcessListController]];
-	dispatch_async([myDocument_ mercurialTaskSerialQueue], ^{
+	ProcessController* processController = [ProcessController processControllerWithMessage:stripDescription forList:myDocument_.theProcessListController];
+	dispatch_async(myDocument_.mercurialTaskSerialQueue, ^{
 		[myDocument_ executeMercurialWithArgs:argsStrip  fromRoot:rootPath  withDelegate:processController  whileDelayingEvents:YES];
 		[processController terminateController];
 	});		
@@ -218,8 +218,8 @@
 - (void) logTableViewSelectionDidChange:(LogTableView*)theLogTable
 {
 	[self validateButtons:self];
-	if ([okButton isEnabled])
-		[sheetInformativeMessageTextField setAttributedStringValue: self.formattedSheetMessage];
+	if (okButton.isEnabled)
+		sheetInformativeMessageTextField.attributedStringValue =  self.formattedSheetMessage;
 }
 
 - (NSIndexSet*) tableView:(NSTableView*)tableView selectionIndexesForProposedSelection:(NSIndexSet*)proposedSelectionIndexes
@@ -229,7 +229,7 @@
 
 - (IBAction) handleLogTableViewClick:(id)sender
 {
-	NSIndexSet* newIndexes = [self indexSetForStartingRevision:[logTableView chosenRevision]];
+	NSIndexSet* newIndexes = [self indexSetForStartingRevision:logTableView.chosenRevision];
 	[logTableView selectRowIndexes:newIndexes byExtendingSelection:NO];
 }
 
@@ -245,7 +245,7 @@
 - (NSAttributedString*) formattedSheetMessage
 {
 	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
-	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
+	LowHighPair pair = logTableView.lowestToHighestSelectedRevisions;
 
 	BOOL willEraseUncommitted = self.incompleteRevisionWillBeStripped;
 	BOOL singleRevision = pair.lowRevision == pair.highRevision;

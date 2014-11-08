@@ -18,14 +18,14 @@
 	static CGFloat relativeYPosition = 0.7;
 
 	NSRect f = self.frame;
-	NSRect bounds = [[super superview] bounds];
+	NSRect bounds = super.superview.bounds;
 	f.origin.x = round((bounds.size.width  - f.size.width ) * relativeXPosition);
 	f.origin.y = round((bounds.size.height - f.size.height) * relativeYPosition);
 	if (f.origin.x < 0)
 		f.origin.x = 0;
 	if (f.origin.y > f.size.height)
 		f.origin.y = f.size.height;
-	[self setFrame:f];
+	self.frame = f;
 	[super viewWillDraw];
 }
 

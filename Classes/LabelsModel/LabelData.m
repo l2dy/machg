@@ -61,13 +61,13 @@
 
 - (BOOL) isEqualToLabel:(LabelData*)label
 {
-	if (![self.name isEqualToString:[label name]])
+	if (![self.name isEqualToString:label.name])
 		return NO;
-	if (![self.revision isEqualToNumber:[label revision]])
+	if (![self.revision isEqualToNumber:label.revision])
 		return NO;
-	if (![self.changeset isEqualToString:[label changeset]])
+	if (![self.changeset isEqualToString:label.changeset])
 		return NO;
-	if (self.labelType != [label labelType])
+	if (self.labelType != label.labelType)
 		return NO;
 	return YES;
 }
@@ -120,7 +120,7 @@
 {
 	NSMutableArray* newArrayOfLabels = [[NSMutableArray alloc] init];
 	for (LabelData* label in labels)
-		if (bitsInCommon([label labelType], type))
+		if (bitsInCommon(label.labelType, type))
 			[newArrayOfLabels addObject:label];
 	return newArrayOfLabels;
 }
@@ -129,14 +129,14 @@
 {
 	NSMutableArray* newArrayOfNames = [[NSMutableArray alloc] init];
 	for (LabelData* label in labels)
-		[newArrayOfNames addObject:[label name]];
+		[newArrayOfNames addObject:label.name];
 	return newArrayOfNames;
 }
 
 + (NSArray*) filterLabelsAndExtractNames:(NSArray*)labels byType:(LabelType)type
 {
 	NSArray* filteredLabels = [LabelData filterLabels:labels byType:type];
-	NSArray* sortedLabels = [filteredLabels sortedArrayUsingDescriptors:[LabelData descriptorsForSortByNameAscending]];
+	NSArray* sortedLabels = [filteredLabels sortedArrayUsingDescriptors:LabelData.descriptorsForSortByNameAscending];
 	return [LabelData extractNameFromLabels:sortedLabels];
 }
 
@@ -146,7 +146,7 @@
 	NSArray* sortedLabels = [labels sortedArrayUsingDescriptors:self.descriptorsForSortByNameAscending];
 	NSMutableArray* newLabels = [[NSMutableArray alloc] init];
 	for (LabelData* label in sortedLabels)
-		if (![label isEqualToLabel:[newLabels lastObject]])
+		if (![label isEqualToLabel:newLabels.lastObject])
 			  [newLabels addObject:label];
 	return newLabels;
 }
@@ -154,9 +154,9 @@
 + (NSArray*) filterLabelsDictionary:(NSDictionary*)labelsDict byType:(LabelType)type
 {
 	NSMutableArray* newArrayOfLabels = [[NSMutableArray alloc] init];
-	for (NSArray* labelArray in [labelsDict allValues])
+	for (NSArray* labelArray in labelsDict.allValues)
 		for (LabelData* label in labelArray)
-			if (bitsInCommon([label labelType], type))
+			if (bitsInCommon(label.labelType, type))
 				[newArrayOfLabels addObject:label];
 	return newArrayOfLabels;
 }

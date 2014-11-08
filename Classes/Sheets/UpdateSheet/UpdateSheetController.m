@@ -66,43 +66,43 @@
 
 - (IBAction) validate:(id)sender
 {
-	BOOL valid = [logTableView singleRevisionSelected];
-	[okButton setEnabled:valid];
+	BOOL valid = logTableView.singleRevisionSelected;
+	okButton.enabled = valid;
 	[sheetInformativeMessageTextField setAttributedStringValue: (valid ? self.formattedSheetMessage : normalSheetMessageAttributedString(@"You need to select a single revision in order to update."))];
 }
 
 
 - (void) openUpdateSheetWithRevision:(NSNumber*)revision
 {
-	NSString* newTitle = fstr(@"Updating All Files in %@", [myDocument_ selectedRepositoryShortName]);
-	[updateSheetTitle setStringValue:newTitle];
-	[self setCleanUpdate:NO];
+	NSString* newTitle = fstr(@"Updating All Files in %@", myDocument_.selectedRepositoryShortName);
+	updateSheetTitle.stringValue = newTitle;
+	self.cleanUpdate = NO;
 
 	// Report the branch we are about to update to in the dialog
-	[sheetInformativeMessageTextField setStringValue:@""];
+	sheetInformativeMessageTextField.stringValue = @"";
 	
 	[logTableView resetTable:self];
 	[myDocument_ beginSheet:theUpdateSheet];
-	[logTableView scrollToRevision:revision ? revision : [myDocument_ getHGParent1Revision]];
+	[logTableView scrollToRevision:revision ? revision : myDocument_.getHGParent1Revision];
 	[self validate:self];
 }
 
 
 - (IBAction) openUpdateSheetWithCurrentRevision:(id)sender
 {
-	[self openUpdateSheetWithRevision:[myDocument_ getHGParent1Revision]];
+	[self openUpdateSheetWithRevision:myDocument_.getHGParent1Revision];
 }
 
 
 - (IBAction) openUpdateSheetWithSelectedRevision:(id)sender
 {
-	[self openUpdateSheetWithRevision:[myDocument_ getSelectedRevision]];
+	[self openUpdateSheetWithRevision:myDocument_.getSelectedRevision];
 }
 
 
 - (IBAction) sheetButtonOk:(id)sender
 {
-	NSNumber* versionToUpdateTo = [logTableView selectedRevision];
+	NSNumber* versionToUpdateTo = logTableView.selectedRevision;
 	BOOL didReversion = [myDocument_ primaryActionUpdateFilesToVersion:versionToUpdateTo withCleanOption:self.cleanUpdate withConfirmation:NO];
 	if (!didReversion)
 		return;
@@ -118,8 +118,8 @@
 
 - (IBAction) sheetButtonViewDifferencesForUpdateSheet:(id)sender
 {
-	NSArray* rootPathAsArray = [myDocument_ absolutePathOfRepositoryRootAsArray];
-	NSNumber* versionToUpdateTo = [logTableView selectedRevision];
+	NSArray* rootPathAsArray = myDocument_.absolutePathOfRepositoryRootAsArray;
+	NSNumber* versionToUpdateTo = logTableView.selectedRevision;
 	[myDocument_ viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:numberAsString(versionToUpdateTo)];
 }
 
@@ -160,7 +160,7 @@
 	}
 		
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"The repository will be restored to the state of version ")];
-	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(numberAsString([logTableView selectedRevision]))];
+	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(numberAsString(logTableView.selectedRevision))];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@".")];
 	
 	if (!outstandingChanges)
@@ -175,7 +175,7 @@
 	else
 	{
 		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" The modifications to the files will be transplanted to the new version ")];
-		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(numberAsString([logTableView selectedRevision]))];
+		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(numberAsString(logTableView.selectedRevision))];
 		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@".")];
 	}
 	return newSheetMessage;

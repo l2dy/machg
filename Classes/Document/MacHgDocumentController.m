@@ -13,7 +13,7 @@
 
 - (NSUInteger)maximumRecentDocumentCount
 {
-	NSUInteger recentCount = [super maximumRecentDocumentCount];
+	NSUInteger recentCount = super.maximumRecentDocumentCount;
 	return (recentCount > 0) ? recentCount : 1;
 }
 

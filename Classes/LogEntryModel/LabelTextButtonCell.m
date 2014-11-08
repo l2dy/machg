@@ -50,11 +50,11 @@
 {
 	NSTextAttachment* attachment   = [[NSTextAttachment alloc] init];
 	LabelTextButtonCell* labelCell = [[LabelTextButtonCell alloc] initWithLabel:label andLogEntry:entry];
-	[labelCell setButtonTitle:[label name]];
-	[labelCell setBezelStyle:NSRoundRectBezelStyle];
-	[labelCell setTarget:labelCell];
+	labelCell.buttonTitle = label.name;
+	labelCell.bezelStyle = NSRoundRectBezelStyle;
+	labelCell.target = labelCell;
 	[labelCell setAction:@selector(gotoLabel:)];
-	[attachment setAttachmentCell:labelCell];
+	attachment.attachmentCell = labelCell;
 	return attachment;
 }
 
@@ -71,9 +71,9 @@
 	if (theDictionary == nil)
 	{
 		NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-		[paragraphStyle setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
-		[paragraphStyle setAlignment:NSCenterTextAlignment];
-		NSFont* font = [NSFont fontWithName:@"Helvetica"  size:[NSFont smallSystemFontSize]];
+		paragraphStyle.paragraphStyle = NSParagraphStyle.defaultParagraphStyle;
+		paragraphStyle.alignment = NSCenterTextAlignment;
+		NSFont* font = [NSFont fontWithName:@"Helvetica"  size:NSFont.smallSystemFontSize];
 		theDictionary = @{NSFontAttributeName: font, NSParagraphStyleAttributeName: paragraphStyle};
 	}
 	[self setAttributedTitle:[NSAttributedString string:title withAttributes:theDictionary]];
@@ -91,15 +91,15 @@
 - (IBAction) gotoLabel:(id)sender
 {
 	// I am not sure what action clicking on the label should have for now.
-	//	MacHgDocument* document = [[entry_ repositoryData] myDocument];
-	//	if (![document showingASheet] && [document showingHistoryView])
+	//	MacHgDocument* document = entry_.repositoryData.myDocument;
+	//	if (!document.showingASheet && document.showingHistoryView)
 }
 
 
 - (NSRect) buttonFrameSize
 {
 	NSAttributedString* title = self.attributedTitle;
-	NSSize s = [title size];
+	NSSize s = title.size;
 	return NSMakeRect(0, -5, s.width + 15, 15);
 }
 
@@ -110,15 +110,15 @@
 	newRect.origin.x += 0.5;
 	newRect.size.width -= 1.0;
 	NSBezierPath* path   = [NSBezierPath bezierPathWithRoundedRect:newRect xRadius:4.0 yRadius:4.0];
-	NSColor* fillColor   = [NSColor lightGrayColor];
-	NSColor* strokeColor = [NSColor blackColor];
+	NSColor* fillColor   = NSColor.lightGrayColor;
+	NSColor* strokeColor = NSColor.blackColor;
 
-	[path setLineWidth:0];
-	if ([label_ isBranch])
+	path.lineWidth = 0;
+	if (label_.isBranch)
 		fillColor   = LogEntryTableBranchHighlightColor();
-	else if ([label_ isBookmark])
+	else if (label_.isBookmark)
 		fillColor = LogEntryTableBookmarkHighlightColor();
-	else if ([label_ isTag])
+	else if (label_.isTag)
 		fillColor = LogEntryTableTagHighlightColor();
 	
 	if (fillColor)

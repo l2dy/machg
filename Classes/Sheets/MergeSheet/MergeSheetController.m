@@ -75,7 +75,7 @@
 
 - (IBAction) validateButtons:(id)sender
 {
-	NSString* theSelectedRevision = numberAsString([logTableView selectedRevision]);
+	NSString* theSelectedRevision = numberAsString(logTableView.selectedRevision);
 	NSString* theParentRevision   = numberAsString([[myDocument_ repositoryData]getHGParent1Revision]);
 	BOOL canMerge = YES;
 	
@@ -89,7 +89,7 @@
 	
 	if (!message)
 	{
-		NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
+		NSString* rootPath = myDocument_.absolutePathOfRepositoryRoot;
 		NSMutableArray* argsDebugAncestor = [NSMutableArray arrayWithObjects:@"debugancestor", theSelectedRevision, theParentRevision, nil];
 		ExecutionResult* results = [myDocument_ executeMercurialWithArgs:argsDebugAncestor fromRoot:rootPath whileDelayingEvents:YES];
 		if (results.outStr)
@@ -110,8 +110,8 @@
 	}
 	
 	dispatch_async(mainQueue(), ^{
-		[sheetButtonOkForMergeSheet setEnabled:canMerge];
-		[sheetInformativeMessageTextField setAttributedStringValue: message];
+		sheetButtonOkForMergeSheet.enabled = canMerge;
+		sheetInformativeMessageTextField.attributedStringValue =  message;
 	});
 }
 
@@ -144,7 +144,7 @@
 {
 	[mergeSheetWindow makeFirstResponder:mergeSheetWindow]; // Make the text fields of the sheet commit any changes they currently have
 	[myDocument_ endSheet:mergeSheetWindow];
-	NSNumber* theSelectedRevision = [logTableView selectedRevision];
+	NSNumber* theSelectedRevision = logTableView.selectedRevision;
 	NSArray* theOptions = self.forceTheMerge ? @[@"--force"] : nil;
 	[myDocument_ primaryActionMergeWithVersion:theSelectedRevision andOptions:theOptions withConfirmation:NO];
 }
@@ -159,8 +159,8 @@
 
 - (IBAction) sheetButtonViewDifferencesForMergeSheet:(id)sender
 {
-	NSArray* rootPathAsArray = [myDocument_ absolutePathOfRepositoryRootAsArray];
-	NSNumber* versionToMergeWith = [logTableView selectedRevision];
+	NSArray* rootPathAsArray = myDocument_.absolutePathOfRepositoryRootAsArray;
+	NSNumber* versionToMergeWith = logTableView.selectedRevision;
 	[myDocument_ viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:numberAsString(versionToMergeWith)];
 }
 
@@ -190,17 +190,17 @@
 - (NSAttributedString*) normalFormattedSheetMessage
 {
 	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
-	NSNumber* parent1Revision = [myDocument_ getHGParent1Revision];
+	NSNumber* parent1Revision = myDocument_.getHGParent1Revision;
 	if (!parent1Revision)
 	{
 		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(@"No parent revision.")];
 		return newSheetMessage;
 	}
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@"The revision selected above (")];
-	NSNumber* rev = [logTableView selectedRevision];
+	NSNumber* rev = logTableView.selectedRevision;
 	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(rev ? numberAsString(rev) : @"-")];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@") will be merged into the current revision (")];
-	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString([myDocument_ isCurrentRevisionTip] ? @"tip" : numberAsString(parent1Revision))];
+	[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(myDocument_.isCurrentRevisionTip ? @"tip" : numberAsString(parent1Revision))];
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@").")];
 	return newSheetMessage;
 }
@@ -210,10 +210,10 @@
 {
 	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
 	[newSheetMessage appendAttributedString: grayedSheetMessageAttributedString(@"Cannot merge (")];
-	NSNumber* rev = [logTableView selectedRevision];
+	NSNumber* rev = logTableView.selectedRevision;
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(rev ? numberAsString(rev) : @"-")];
 	[newSheetMessage appendAttributedString: grayedSheetMessageAttributedString(@") into the current revision (")];
-	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString([myDocument_ isCurrentRevisionTip] ? @"tip" : numberAsString([myDocument_ getHGParent1Revision]))];
+	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(myDocument_.isCurrentRevisionTip ? @"tip" : numberAsString(myDocument_.getHGParent1Revision))];
 	[newSheetMessage appendAttributedString: grayedSheetMessageAttributedString(@") since one of the revisions is a direct ancestor of the other.")];
 	return newSheetMessage;
 }

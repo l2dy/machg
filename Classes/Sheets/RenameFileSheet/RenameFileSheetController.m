@@ -57,23 +57,23 @@
 	BOOL pathsDiffer = [theCurrentNameFieldValue_ isNotEqualToString:theNewNameFieldValue_];
 	if (!pathsDiffer)
 	{
-		[errorMessageTextField setStringValue:@"You must choose a new file name which is different than the current file name."];
+		errorMessageTextField.stringValue = @"You must choose a new file name which is different than the current file name.";
 		[errorDisclosureController ensureDisclosureBoxIsOpen:YES];
-		[theRenameButton setEnabled:NO];
+		theRenameButton.enabled = NO;
 		return;
 	}
 		
 	BOOL pathsDifferOnlyByCase = [theCurrentNameFieldValue_ differsOnlyInCaseFrom:theNewNameFieldValue_];
 	if (pathsDifferOnlyByCase)
 	{
-		[errorMessageTextField setStringValue:@"You cannot rename the current file to a new name which differs only in the case of the name. (The file system used by Macintosh OSX is case insensitive.)"];
+		errorMessageTextField.stringValue = @"You cannot rename the current file to a new name which differs only in the case of the name. (The file system used by Macintosh OSX is case insensitive.)";
 		[errorDisclosureController ensureDisclosureBoxIsOpen:YES];
-		[theRenameButton setEnabled:NO];
+		theRenameButton.enabled = NO;
 		return;
 	}
 
 	[errorDisclosureController ensureDisclosureBoxIsClosed:YES];
-	[theRenameButton setEnabled:YES];
+	theRenameButton.enabled = YES;
 }
 
 
@@ -88,39 +88,39 @@
 - (IBAction) openRenameFileSheet:(id)sender
 {
 
-	NSArray* theSelectedFiles = [myDocument_ absolutePathsOfChosenFiles];
+	NSArray* theSelectedFiles = myDocument_.absolutePathsOfChosenFiles;
 
-	if ([theSelectedFiles count] < 1)
+	if (theSelectedFiles.count < 1)
 	{
 		PlayBeep();
 		RunAlertPanel(@"No File Selected", @"You need to select a file to rename", @"OK", nil, nil);
 		return;
 	}
 	
-	if (![theSelectedFiles count] > 1)
+	if (!theSelectedFiles.count > 1)
 	{
 		PlayBeep();
 		RunAlertPanel(@"Too Many Files Selected", @"You need to select just a single file to rename", @"OK", nil, nil);
 		return;
 	}
 	
-	NSString* filePath = [theSelectedFiles lastObject];
+	NSString* filePath = theSelectedFiles.lastObject;
 	
 	FSNodeInfo* theNode = [myDocument_ nodeForPath:filePath];
-	BOOL itemIsDirectory = [theNode isDirectory];
+	BOOL itemIsDirectory = theNode.isDirectory;
 	if (itemIsDirectory)
 	{
 		PlayBeep();
-		NSString* subMessage = fstr(@"“%@” is a directory. Renaming the directory will effectively rename evey file in the directory. Do you want to continue?", [filePath lastPathComponent]);
+		NSString* subMessage = fstr(@"“%@” is a directory. Renaming the directory will effectively rename evey file in the directory. Do you want to continue?", filePath.lastPathComponent);
 		int result = RunCriticalAlertPanel(@"Directory Rename", subMessage, @"Cancel", @"Rename", nil);
 		if (result != NSAlertAlternateReturn)
 			return;
 	}
 
-	if (!bitsInCommon([theNode hgStatus],eHGStatusInRepository))
+	if (!bitsInCommon(theNode.hgStatus,eHGStatusInRepository))
 	{
 		PlayBeep();
-		NSString* subMessage = fstr(@"“%@” is not managed by Mercurial. You can rename or relocate the file in the finder without incident.", [filePath lastPathComponent]);
+		NSString* subMessage = fstr(@"“%@” is not managed by Mercurial. You can rename or relocate the file in the finder without incident.", filePath.lastPathComponent);
 		RunAlertPanel(@"File Not Under Management", subMessage, @"OK", nil, nil);
 		return;
 	}
@@ -132,15 +132,15 @@
 
 	[errorDisclosureController setToOpenState:NO withAnimation:NO];
 	
-	NSString* newPath = [filePath stringByDeletingLastPathComponent];
-	NSString* newName = fstr(@"Renamed%@", [filePath lastPathComponent]);
+	NSString* newPath = filePath.stringByDeletingLastPathComponent;
+	NSString* newName = fstr(@"Renamed%@", filePath.lastPathComponent);
 	NSString* newPathName = [newPath stringByAppendingPathComponent:newName];
-	NSNumber* newButtonState =[NSNumber numberWithBool:bitsInCommon([theNode hgStatus],eHGStatusMissing)];
+	NSNumber* newButtonState =[NSNumber numberWithBool:bitsInCommon(theNode.hgStatus,eHGStatusMissing)];
 
-	[self setTheCurrentNameFieldValue:filePath];
-	[self setTheNewNameFieldValue:newPathName];	
+	self.theCurrentNameFieldValue = filePath;
+	self.theNewNameFieldValue = newPathName;	
 	[theRenameFileSheet resizeSoContentsFitInFields:theCurrentNameField, theNewNameField, nil];
-	[self setTheAlreadyMovedButtonValue:newButtonState];
+	self.theAlreadyMovedButtonValue = newButtonState;
 	[self validateButtons:self];
 	[myDocument_ beginSheet:theRenameFileSheet];
 }
@@ -150,7 +150,7 @@
 {
 	if (DisplayWarningForRenamingFilesFromDefaults())
 	{
-		NSString* subMessage = fstr(@"Are you sure you want to rename “%@” to “%@”?", [theCurrentNameFieldValue_ lastPathComponent], [theNewNameFieldValue_ lastPathComponent]);
+		NSString* subMessage = fstr(@"Are you sure you want to rename “%@” to “%@”?", theCurrentNameFieldValue_.lastPathComponent, theNewNameFieldValue_.lastPathComponent);
 		int result = RunCriticalAlertPanelWithSuppression(@"Renaming Selected File", subMessage, @"Rename", @"Cancel", MHGDisplayWarningForRenamingFiles);
 		if (result != NSAlertFirstButtonReturn)
 			return;
@@ -158,13 +158,13 @@
 	[theRenameFileSheet makeFirstResponder:theRenameFileSheet];	// Make the text fields of the sheet commit any changes they currently have
 
 	[myDocument_ removeAllUndoActionsForDocument];
-	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
+	NSString* rootPath = myDocument_.absolutePathOfRepositoryRoot;
 
 	[myDocument_ dispatchToMercurialQueuedWithDescription:@"Renaming Files" process:^{
 		NSArray* paths = @[theCurrentNameFieldValue_, theNewNameFieldValue_];
 		[myDocument_ registerPendingRefresh:paths];
 		NSMutableArray* argsRename = [NSMutableArray arrayWithObjects:@"rename", nil];
-		if ([theAlreadyMovedButtonValue_ boolValue])
+		if (theAlreadyMovedButtonValue_.boolValue)
 			[argsRename addObject:@"--after"];
 		[argsRename addObject:theCurrentNameFieldValue_ followedBy:theNewNameFieldValue_];
 
@@ -186,7 +186,7 @@
 {
 	NSString* filename = getSingleFilePathFromOpenPanel();
 	if (filename)
-		[self setTheNewNameFieldValue:filename];
+		self.theNewNameFieldValue = filename;
 }
 
 
@@ -199,7 +199,7 @@
 
 - (void) controlTextDidChange:(NSNotification*)aNotification
 {
-	[self validateButtons:[aNotification object]];
+	[self validateButtons:aNotification.object];
 }
 
 

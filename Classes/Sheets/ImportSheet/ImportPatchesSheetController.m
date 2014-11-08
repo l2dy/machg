@@ -67,8 +67,8 @@
 {
 	[self openSplitViewPaneToDefaultHeight: self];
 	[theImportPatchesSheet makeFirstResponder:patchesTable];
-	[self setGuessRenames:YES];
-	[self setGuessSimilarityFactor:1.0];
+	self.guessRenames = YES;
+	self.guessSimilarityFactor = 1.0;
 	
 	// Old Loading of example data when debugging...
 	//	NSMutableArray* newPatches = [[NSMutableArray alloc]init];
@@ -92,20 +92,20 @@
 
 - (IBAction) addPatches:(id)sender
 {
-	NSOpenPanel* panel = [NSOpenPanel openPanel];
-	[panel setDirectoryURL:[NSURL fileURLWithPath:[myDocument_ absolutePathOfRepositoryRoot]]];
-	[panel setCanChooseFiles:YES];
-	[panel setCanChooseDirectories:NO];
-	[panel setAllowsMultipleSelection:YES];
+	NSOpenPanel* panel = NSOpenPanel.openPanel;
+	[panel setDirectoryURL:[NSURL fileURLWithPath:myDocument_.absolutePathOfRepositoryRoot]];
+	panel.canChooseFiles = YES;
+	panel.canChooseDirectories = NO;
+	panel.allowsMultipleSelection = YES;
 	[panel beginSheetModalForWindow:theImportPatchesSheet completionHandler:^(NSInteger result){
 		if (result == NSAlertAlternateReturn)
 			return;
 		
-		NSArray* fileURLs = [panel URLs];
+		NSArray* fileURLs = panel.URLs;
 		NSMutableArray* newPatches = [[NSMutableArray alloc]init];
 		for (NSURL* pathURL in fileURLs)
 		{
-			PatchRecord* patch = [PatchRecord patchRecordFromFilePath:[pathURL path]];
+			PatchRecord* patch = [PatchRecord patchRecordFromFilePath:pathURL.path];
 			[newPatches addObject:patch];
 		}
 		[patchesTable addPatches:newPatches];
@@ -125,7 +125,7 @@
 - (IBAction) validate:(id)sender
 {
 	BOOL valid = [patchesTable numberOfRowsInTableView:patchesTable] > 0;
-	[okButton setEnabled:valid];
+	okButton.enabled = valid;
 	[sheetInformativeMessageTextField setAttributedStringValue: (valid ? self.formattedSheetMessage : normalSheetMessageAttributedString(@"You need to add one or more patches in order to import patches."))];
 }
 
@@ -145,8 +145,8 @@
 
 - (IBAction) openImportPatchesSheet:(id)sender
 {
-	NSString* newTitle = fstr(@"Importing Patches into %@", [myDocument_ selectedRepositoryShortName]);
-	[importSheetTitle setStringValue:newTitle];
+	NSString* newTitle = fstr(@"Importing Patches into %@", myDocument_.selectedRepositoryShortName);
+	importSheetTitle.stringValue = newTitle;
 	 
 	// Report the branch we are about to import to in the dialog
 	[patchesTable resetTable:self];
@@ -159,44 +159,44 @@
 - (IBAction) sheetButtonOk:(id)sender
 {
 	[theImportPatchesSheet makeFirstResponder:theImportPatchesSheet];	// Make the fields of the sheet commit any changes they currently have
-	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
+	NSString* rootPath = myDocument_.absolutePathOfRepositoryRoot;
 	NSMutableString* cumulativeMessages = [[NSMutableString alloc] init];
 	BOOL canClose = NO;
 
 	while (true)
 	{
 		NSMutableArray* argsImport = [NSMutableArray arrayWithObjects:@"import", nil];
-		if ([[patchesTable patches] count] <= 0)
+		if (patchesTable.patches.count <= 0)
 		{
 			canClose = YES;
 			break;
 		}
-		PatchRecord* patch = [[patchesTable patches] firstObject];
+		PatchRecord* patch = patchesTable.patches.firstObject;
 		if (!patch)
 			break;
 
 		BOOL willFilterPatch = IsNotEmpty([hunkExclusions_ repositoryHunkExclusionsForRoot:rootPath]);
-		if ([patch authorIsModified]        || willFilterPatch)		[argsImport addObject:@"--user"    followedBy:[patch author]];
-		if ([patch dateIsModified]          || willFilterPatch)		[argsImport addObject:@"--date"    followedBy:[patch date]];
-		if ([patch commitMessageIsModified] || willFilterPatch)		[argsImport addObject:@"--message" followedBy:[patch commitMessage]];
-		if ([patch forceOption])									[argsImport addObject:@"--force"];
-		if ([patch exactOption])									[argsImport addObject:@"--exact"];
-		if ([patch importBranchOption])								[argsImport addObject:@"--import-branch"];
-		if ([patch dontCommitOption])								[argsImport addObject:@"--no-commit"];
+		if (patch.authorIsModified        || willFilterPatch)		[argsImport addObject:@"--user"    followedBy:patch.author];
+		if (patch.dateIsModified          || willFilterPatch)		[argsImport addObject:@"--date"    followedBy:patch.date];
+		if (patch.commitMessageIsModified || willFilterPatch)		[argsImport addObject:@"--message" followedBy:patch.commitMessage];
+		if (patch.forceOption)									[argsImport addObject:@"--force"];
+		if (patch.exactOption)									[argsImport addObject:@"--exact"];
+		if (patch.importBranchOption)								[argsImport addObject:@"--import-branch"];
+		if (patch.dontCommitOption)								[argsImport addObject:@"--no-commit"];
 		if (guessRenames_)											[argsImport addObject:@"--similarity" followedBy:intAsString(constrainInteger((int)round(100 * guessSimilarityFactor_), 0, 100))];
 
-		PatchData* patchData = [patch patchData];
-		NSString* patchPath = [patch path];
+		PatchData* patchData = patch.patchData;
+		NSString* patchPath = patch.path;
 		if (willFilterPatch)
 			patchPath = [patchData tempFileWithPatchBodyExcluding:hunkExclusions_ withRoot:rootPath];
 		[argsImport addObject:patchPath];
 		ExecutionResult* result = [TaskExecutions executeMercurialWithArgs:argsImport  fromRoot:rootPath];
-		if ([result hasWarnings])
-			RunAlertPanel(@"Results of Import", [result errStr], @"OK", nil, nil);
+		if (result.hasWarnings)
+			RunAlertPanel(@"Results of Import", result.errStr, @"OK", nil, nil);
 
-//		if ([result hasWarnings])
-//			[cumulativeMessages appendString:[result errStr]];
-		if ([result hasErrors])
+//		if (result.hasWarnings)
+//			[cumulativeMessages appendString:result.errStr];
+		if (result.hasErrors)
 			break;
 		[patchesTable removePatchAtIndex:0];
 	}
@@ -227,7 +227,7 @@
 - (NSAttributedString*) formattedSheetMessage
 {
 	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
-	NSString* message = fstr(@"The patches listed above will be imported into the repository %@", [myDocument_ selectedRepositoryShortName]);
+	NSString* message = fstr(@"The patches listed above will be imported into the repository %@", myDocument_.selectedRepositoryShortName);
 	[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(message)];
 	return newSheetMessage;
 }

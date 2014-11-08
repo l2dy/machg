@@ -22,7 +22,7 @@
 {
 	if ((self = [super init]))
 	{
-		[super setTarget:self];
+		super.target = self;
 		[super setAction:@selector(forwardActionAfterTrackedClick:)];
 		trueTarget = nil;
 		trueAction = nil;
@@ -42,7 +42,7 @@
 - (void) setTarget:(id)object
 {
 	trueTarget = object;
-	[super setTarget:self];
+	super.target = self;
 }
 - (void) setAction:(SEL)action
 {
@@ -62,7 +62,7 @@
 - (NSRect) buttonFrameSize
 {
 	NSAttributedString* title = self.attributedTitle;
-	NSSize s = [title size];
+	NSSize s = title.size;
 	return NSMakeRect(0, -7, s.width + 30, 22);
 }
 
@@ -72,9 +72,9 @@
 	if (theDictionary == nil)
 	{
 		NSMutableParagraphStyle* paragraphStyle = [[NSMutableParagraphStyle alloc] init];
-		[paragraphStyle setParagraphStyle:[NSParagraphStyle defaultParagraphStyle]];
-		[paragraphStyle setAlignment:NSCenterTextAlignment];
-		NSFont* font = [NSFont controlContentFontOfSize:[NSFont systemFontSize]];
+		paragraphStyle.paragraphStyle = NSParagraphStyle.defaultParagraphStyle;
+		paragraphStyle.alignment = NSCenterTextAlignment;
+		NSFont* font = [NSFont controlContentFontOfSize:NSFont.systemFontSize];
 		theDictionary = @{NSFontAttributeName: font, NSParagraphStyleAttributeName: paragraphStyle};
 	}
 	[self setAttributedTitle:[NSAttributedString string:title withAttributes:theDictionary]];
@@ -164,7 +164,7 @@
 - (NSPoint)cellBaselineOffset
 {
 	NSRect titleRect = [self titleRectForBounds:self.buttonFrameSize];
-	CGFloat baseline = ceil(NSMinY(titleRect) + [self.font ascender]);
+	CGFloat baseline = ceil(NSMinY(titleRect) + self.font.ascender);
 	return NSMakePoint(0, baseline);
 }
 

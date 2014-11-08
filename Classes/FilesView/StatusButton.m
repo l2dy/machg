@@ -27,7 +27,7 @@ NSString* kKeyPathShowFileIcons	 = @"values.DisplayFileIconsInBrowser";
 - (void) awakeFromNib
 {
 	// Bind the show / hide of the column to the preferences LogEntryTableDisplayChangesetColumn which is bound to a checkbox in the prefs.
-	id defaults = [NSUserDefaultsController sharedUserDefaultsController];
+	id defaults = NSUserDefaultsController.sharedUserDefaultsController;
 	
 	// Receive a notification when the tag highlight color changes.
 	[defaults  addObserver:self  forKeyPath:kKeyPathShowAdded		options:NSKeyValueObservingOptionNew  context:NULL];
@@ -45,7 +45,7 @@ NSString* kKeyPathShowFileIcons	 = @"values.DisplayFileIconsInBrowser";
 
 - (void) dealloc
 {
-	id defaults = [NSUserDefaultsController sharedUserDefaultsController];	
+	id defaults = NSUserDefaultsController.sharedUserDefaultsController;	
 	[defaults  removeObserver:self forKeyPath:kKeyPathShowAdded];
 	[defaults  removeObserver:self forKeyPath:kKeyPathShowModified];
 	[defaults  removeObserver:self forKeyPath:kKeyPathShowClean];
@@ -137,10 +137,10 @@ NSString* kKeyPathShowFileIcons	 = @"values.DisplayFileIconsInBrowser";
 	[icons addObject:downArrowImage];
 	
 	NSImage* combinedImage = [FSNodeInfo compositeRowOfIcons:icons withOverlap:1.5];
-	[self setImage:combinedImage];
+	self.image = combinedImage;
 	NSRect newFrame = self.frame;
 	newFrame.size.width = combinedImage.size.width + 8;
-	[self setFrame:newFrame];
+	self.frame = newFrame;
 }
 
 @end

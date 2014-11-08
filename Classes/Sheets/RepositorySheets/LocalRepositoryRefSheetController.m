@@ -46,8 +46,8 @@
 
 - (void) clearSheetFieldValues
 {
-	[self setShortNameFieldValue:@""];
-	[self setPathFieldValue:@""];
+	self.shortNameFieldValue = @"";
+	self.pathFieldValue = @"";
 	[self validateButtons:self];
 }
 
@@ -64,13 +64,13 @@
 {
 	BOOL repositoryExists = repositoryExistsAtPath(pathFieldValue_);
 	BOOL directoryExists = repositoryExists || pathIsExistentDirectory(pathFieldValue_);
-	if (directoryExists && [[theLocalRepositoryRefSheet firstResponder] hasAncestor:pathField])
-		if (IsEmpty(shortNameFieldValue_) || [[pathFieldValue_ pathComponents] containsObject:shortNameFieldValue_])
-			[self setShortNameFieldValue:[pathFieldValue_ lastPathComponent]];
+	if (directoryExists && [theLocalRepositoryRefSheet.firstResponder hasAncestor:pathField])
+		if (IsEmpty(shortNameFieldValue_) || [pathFieldValue_.pathComponents containsObject:shortNameFieldValue_])
+			self.shortNameFieldValue = pathFieldValue_.lastPathComponent;
 	
-	BOOL valid = ([self.pathFieldValue length] > 0) && ([self.shortNameFieldValue length] > 0);
-	[okButton setEnabled:valid];
-	[repositoryPathBox setHidden:!repositoryExists];
+	BOOL valid = (self.pathFieldValue.length > 0) && (self.shortNameFieldValue.length > 0);
+	okButton.enabled = valid;
+	repositoryPathBox.hidden = !repositoryExists;
 	[okButton setTitle:(repositoryExists ? @"Manage Repository" : @"Create Repository")];
 	[theTitleText setStringValue:(repositoryExists ? @"Manage Repository" : @"Create Repository")];
 }
@@ -87,9 +87,9 @@
 	NSString* filename = getSingleDirectoryPathFromOpenPanel();
 	if (filename)
 	{
-		[self setPathFieldValue:filename];
+		self.pathFieldValue = filename;
 		if ([self.shortNameFieldValue isEqualToString: @""])
-			[self setShortNameFieldValue:[filename lastPathComponent]];
+			self.shortNameFieldValue = filename.lastPathComponent;
 	}
 	[self validateButtons:sender];
 }
@@ -102,9 +102,9 @@
 
 - (void) openSheetForNewRepositoryRef
 {
-	SidebarNode* node = [[myDocument_ sidebar] chosenNode];
+	SidebarNode* node = myDocument_.sidebar.chosenNode;
 	if (node)
-		[self openSheetForNewRepositoryRefNamed:@"" atPath:@"" addNewRepositoryRefTo:[node parent] atIndex:[[node parent] indexOfChildNode:node]+1];
+		[self openSheetForNewRepositoryRefNamed:@"" atPath:@"" addNewRepositoryRefTo:node.parent atIndex:[node.parent indexOfChildNode:node]+1];
 	else
 		[self openSheetForNewRepositoryRefNamed:@"" atPath:@"" addNewRepositoryRefTo:nil atIndex:0];
 }
@@ -112,12 +112,12 @@
 - (void) openSheetForNewRepositoryRefNamed:(NSString*)name atPath:(NSString*)path addNewRepositoryRefTo:(SidebarNode*)parent atIndex:(NSInteger)index
 {
 	[self clearSheetFieldValues];
-	[self setShortNameFieldValue:name];
-	[self setPathFieldValue:path];
+	self.shortNameFieldValue = name;
+	self.pathFieldValue = path;
 	nodeToConfigure = nil;
 	addNewRepositoryRefTo = parent;
 	addNewRepositoryRefAtIndex = index;
-	[theTitleText setStringValue:@"Create Repository"];
+	theTitleText.stringValue = @"Create Repository";
 	[theLocalRepositoryRefSheet resizeSoContentsFitInFields: shortNameField, pathField, nil];
 	[self validateButtons:self];
 	[myDocument_ beginSheet:theLocalRepositoryRefSheet];
@@ -127,18 +127,18 @@
 - (void) openSheetForConfigureRepositoryRef:(SidebarNode*)node
 {
 	// If the user has chosen the wrong type of configuration do the correct thing.
-	if ([node isServerRepositoryRef])
+	if (node.isServerRepositoryRef)
 	{
-		[[myDocument_ theServerRepositoryRefSheetController] openSheetForConfigureRepositoryRef:node];
+		[myDocument_.theServerRepositoryRefSheetController openSheetForConfigureRepositoryRef:node];
 		return;
 	}
 	
 	nodeToConfigure = node;
 	addNewRepositoryRefTo = nil;
-	if ([node isLocalRepositoryRef])
+	if (node.isLocalRepositoryRef)
 	{
-		[self setShortNameFieldValue:[node shortName]];
-		[self setPathFieldValue:[node path]];
+		self.shortNameFieldValue = node.shortName;
+		self.pathFieldValue = node.path;
 	}
 	else
 		[self clearSheetFieldValues];
@@ -153,12 +153,12 @@
 {
 	[theLocalRepositoryRefSheet makeFirstResponder:theLocalRepositoryRefSheet];	// Make the text fields of the sheet commit any changes they currently have
 
-	Sidebar* theSidebar = [myDocument_ sidebar];
-	[[theSidebar prepareUndoWithTarget:theSidebar] setRootAndUpdate:[[theSidebar root] copyNodeTree]];
-	[[theSidebar undoManager] setActionName: (nodeToConfigure ? @"Configure Repository" : @"Add Local Repository")];
+	Sidebar* theSidebar = myDocument_.sidebar;
+	[[theSidebar prepareUndoWithTarget:theSidebar] setRootAndUpdate:theSidebar.root.copyNodeTree];
+	[theSidebar.undoManager setActionName: (nodeToConfigure ? @"Configure Repository" : @"Add Local Repository")];
 	
-	NSString* newName    = [shortNameFieldValue_ copy];
-	NSString* newPath    = [pathFieldValue_ copy];
+	NSString* newName    = shortNameFieldValue_.copy;
+	NSString* newPath    = pathFieldValue_.copy;
 
 	@try
 	{
@@ -167,10 +167,10 @@
 		{
 			NSMutableArray* argsInit = [NSMutableArray arrayWithObjects:@"init", newPath, nil];
 			ExecutionResult* initResults = [myDocument_  executeMercurialWithArgs:argsInit  fromRoot:@"/" whileDelayingEvents:YES];
-			if ([initResults hasErrors] || [initResults hasWarnings])
+			if (initResults.hasErrors || initResults.hasWarnings)
 				[NSException raise:@"Initialize Repository" format:@"Mercurial could not initialize a repository at %@", newPath, nil];
 
-			NSFileManager* fileManager = [NSFileManager defaultManager];
+			NSFileManager* fileManager = NSFileManager.defaultManager;
 			NSString* hgignorePath = [newPath stringByAppendingPathComponent:@".hgignore"];
 			NSData* dataToWrite = [[DefaultHGIgnoreContentsFromDefaults() stringByAppendingString:@"\n"] dataUsingEncoding:NSMacOSRomanStringEncoding];
 			BOOL created = [fileManager createFileAtPath:hgignorePath contents:dataToWrite attributes:nil];
@@ -179,24 +179,24 @@
 				
 			NSMutableArray* argsCommit = [NSMutableArray arrayWithObjects:@"commit", @"--addremove", @".hgignore", @"--message", @"initialize repository", nil];
 			ExecutionResult* commitResults = [myDocument_  executeMercurialWithArgs:argsCommit  fromRoot:newPath  whileDelayingEvents:YES];
-			if ([commitResults hasErrors])
+			if (commitResults.hasErrors)
 				[NSException raise:@"Initialize Repository" format:@"Mercurial could not commit %@ while initializing the repository.", hgignorePath, nil];
 		}
 		
 		if (nodeToConfigure)
 		{
-			[theSidebar removeConnectionsFor:[nodeToConfigure path]];
-			[nodeToConfigure setPath:newPath];
-			[nodeToConfigure setShortName:newName];
-			[[myDocument_ sidebar] selectNode:nodeToConfigure];
+			[theSidebar removeConnectionsFor:nodeToConfigure.path];
+			nodeToConfigure.path = newPath;
+			nodeToConfigure.shortName = newName;
+			[myDocument_.sidebar selectNode:nodeToConfigure];
 			[nodeToConfigure refreshNodeIcon];
 		}
 		else
 		{
 			SidebarNode* newNode = [SidebarNode nodeWithCaption:newName  forLocalPath:newPath];
-			[[myDocument_ sidebar] emmbedAnyNestedRepositoriesForPath:newPath atNode:newNode];
-			NSArray* newServers  = [[myDocument_ sidebar] serversIfAvailable:newPath includingAlreadyPresent:NO];
-			[[AppController sharedAppController] computeRepositoryIdentityForPath:newPath];
+			[myDocument_.sidebar emmbedAnyNestedRepositoriesForPath:newPath atNode:newNode];
+			NSArray* newServers  = [myDocument_.sidebar serversIfAvailable:newPath includingAlreadyPresent:NO];
+			[AppController.sharedAppController computeRepositoryIdentityForPath:newPath];
 			[newNode refreshNodeIcon];
 			if (addNewRepositoryRefTo)
 			{
@@ -209,19 +209,19 @@
 			{
 				if (newServers)
 					for (SidebarNode* newServer in newServers)
-						[[myDocument_ sidebar] addSidebarNode:newServer];
-				[[myDocument_ sidebar] addSidebarNode:newNode];
+						[myDocument_.sidebar addSidebarNode:newServer];
+				[myDocument_.sidebar addSidebarNode:newNode];
 			}
-			[[myDocument_ sidebar] reloadData];
-			[[myDocument_ sidebar] selectNode:newNode];
+			[myDocument_.sidebar reloadData];
+			[myDocument_.sidebar selectNode:newNode];
 		}
 
 		[myDocument_ postNotificationWithName:kRepositoryRootChanged];
 	}
 	@catch (NSException* e)
 	{
-		if ([[e name] isEqualTo:@"Initialize Repository"])
-			RunAlertPanel(@"Initialize Repository", [e reason], @"OK", nil, nil);
+		if ([e.name isEqualTo:@"Initialize Repository"])
+			RunAlertPanel(@"Initialize Repository", e.reason, @"OK", nil, nil);
 		else
 			[e raise];
 	}
@@ -229,7 +229,7 @@
 	{
 		[NSApp endSheet:theLocalRepositoryRefSheet];
 		[theLocalRepositoryRefSheet orderOut:sender];
-		[[myDocument_ sidebar] reloadData];
+		[myDocument_.sidebar reloadData];
 		[myDocument_ saveDocumentIfNamed];
 		[myDocument_ postNotificationWithName:kSidebarSelectionDidChange];
 		[myDocument_ postNotificationWithName:kUnderlyingRepositoryChanged]; 	// Check that we still need to post this notification. The command
@@ -256,7 +256,7 @@
 
 - (void) controlTextDidChange:(NSNotification*)aNotification
 {
-	[self validateButtons:[aNotification object]];
+	[self validateButtons:aNotification.object];
 }
 
 @end
@@ -280,7 +280,7 @@
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)info
 {
 	[self.window makeFirstResponder:self];
-	NSPasteboard*  pasteboard  = [info draggingPasteboard];
+	NSPasteboard*  pasteboard  = info.draggingPasteboard;
 	NSString* availableType = [pasteboard availableTypeFromArray:@[NSFilenamesPboardType, NSURLPboardType, NSStringPboardType, NSMultipleTextSelectionPboardType, NSRTFPboardType]];
 	if (availableType)
 	{

@@ -38,23 +38,23 @@
 // MARK:  Handle Clicks
 // ------------------------------------------------------------------------------------
 
-- (RepositoryData*) repositoryData { return [[logTable myDocument] repositoryData]; }
+- (RepositoryData*) repositoryData { return logTable.myDocument.repositoryData; }
 
 - (NSMenuItem*) menuItemForLabel:(LabelData*)label
 {
 	NSMenuItem* item = [[NSMenuItem alloc]init];
 	NSMutableAttributedString* menuTitle = [[NSMutableAttributedString alloc] init];
-	if (IsEmpty([label name]))
-		[menuTitle appendAttributedString:[NSAttributedString string:[label revisionStr] withAttributes:systemFontAttributes]];
+	if (IsEmpty(label.name))
+		[menuTitle appendAttributedString:[NSAttributedString string:label.revisionStr withAttributes:systemFontAttributes]];
 	else
 	{
-		[menuTitle appendAttributedString:[NSAttributedString string:[label name] withAttributes:systemFontAttributes]];
-		[menuTitle appendAttributedString:[NSAttributedString string:fstr(@" (%@)",[label revision]) withAttributes:graySystemFontAttributes]];
+		[menuTitle appendAttributedString:[NSAttributedString string:label.name withAttributes:systemFontAttributes]];
+		[menuTitle appendAttributedString:[NSAttributedString string:fstr(@" (%@)",label.revision) withAttributes:graySystemFontAttributes]];
 	}
-	[item setRepresentedObject:label];
-	[item setTarget:self];
+	item.representedObject = label;
+	item.target = self;
 	[item setAction:@selector(scrollToLabel:)];
-	[item setAttributedTitle:menuTitle];
+	item.attributedTitle = menuTitle;
 	return item;
 }
 
@@ -62,41 +62,41 @@
 {
 	NSMenuItem* menuItemScrollToTag = [[NSMenuItem alloc] initWithTitle:@"Scroll to Tag" action:NULL keyEquivalent:@""];
 	NSMenu* menuOfTags  = [[NSMenu alloc]init];
-	NSArray* tagLabels = [LabelData filterLabelsDictionary: [self.repositoryData revisionNumberToLabels]  byType:eTagLabel];
-	NSArray* sortedTagLabels = [tagLabels sortedArrayUsingDescriptors:[LabelData descriptorsForSortByRevisionAscending]];
+	NSArray* tagLabels = [LabelData filterLabelsDictionary: self.repositoryData.revisionNumberToLabels  byType:eTagLabel];
+	NSArray* sortedTagLabels = [tagLabels sortedArrayUsingDescriptors:LabelData.descriptorsForSortByRevisionAscending];
 	for (LabelData* label in sortedTagLabels)
 		[menuOfTags addItem:[self menuItemForLabel:label]];
-	[menuItemScrollToTag setSubmenu:menuOfTags];
+	menuItemScrollToTag.submenu = menuOfTags;
 
 	
 	NSMenuItem* menuItemScrollToBookmark = [[NSMenuItem alloc] initWithTitle:@"Scroll to Bookmark" action:NULL keyEquivalent:@""];
 	NSMenu* menuOfBookmarks  = [[NSMenu alloc]init];
-	NSArray* bookmarkLabels = [LabelData filterLabelsDictionary: [self.repositoryData revisionNumberToLabels]  byType:eBookmarkLabel];
-	NSArray* sortedBookmarkLabels = [bookmarkLabels sortedArrayUsingDescriptors:[LabelData descriptorsForSortByRevisionAscending]];
+	NSArray* bookmarkLabels = [LabelData filterLabelsDictionary: self.repositoryData.revisionNumberToLabels  byType:eBookmarkLabel];
+	NSArray* sortedBookmarkLabels = [bookmarkLabels sortedArrayUsingDescriptors:LabelData.descriptorsForSortByRevisionAscending];
 	for (LabelData* label in sortedBookmarkLabels)
 		[menuOfBookmarks addItem:[self menuItemForLabel:label]];
-	[menuItemScrollToBookmark setSubmenu:menuOfBookmarks];
+	menuItemScrollToBookmark.submenu = menuOfBookmarks;
 
 	
 	NSMenuItem* menuItemScrollToBranch = [[NSMenuItem alloc] initWithTitle:@"Scroll to Branch" action:NULL keyEquivalent:@""];
 	NSMenu* menuOfBranches  = [[NSMenu alloc]init];
-	NSArray* branchLabels = [LabelData filterLabelsDictionary: [self.repositoryData revisionNumberToLabels]  byType:eBranchLabel];
-	NSArray* sortedBranchLabels = [branchLabels sortedArrayUsingDescriptors:[LabelData descriptorsForSortByRevisionAscending]];
+	NSArray* branchLabels = [LabelData filterLabelsDictionary: self.repositoryData.revisionNumberToLabels  byType:eBranchLabel];
+	NSArray* sortedBranchLabels = [branchLabels sortedArrayUsingDescriptors:LabelData.descriptorsForSortByRevisionAscending];
 	for (LabelData* label in sortedBranchLabels)
 		[menuOfBranches addItem:[self menuItemForLabel:label]];
-	[menuItemScrollToBranch setSubmenu:menuOfBranches];
+	menuItemScrollToBranch.submenu = menuOfBranches;
 
 	
 	NSMenuItem* menuItemScrollToOpenHead = [[NSMenuItem alloc] initWithTitle:@"Scroll to OpenHead" action:NULL keyEquivalent:@""];
 	NSMenu* menuOfOpenHeads  = [[NSMenu alloc]init];
-	NSArray* openHeadLabels = [LabelData filterLabelsDictionary: [self.repositoryData revisionNumberToLabels]  byType:eOpenHead];
-	NSArray* sortedOpenHeadLabels = [openHeadLabels sortedArrayUsingDescriptors:[LabelData descriptorsForSortByRevisionAscending]];
+	NSArray* openHeadLabels = [LabelData filterLabelsDictionary: self.repositoryData.revisionNumberToLabels  byType:eOpenHead];
+	NSArray* sortedOpenHeadLabels = [openHeadLabels sortedArrayUsingDescriptors:LabelData.descriptorsForSortByRevisionAscending];
 	for (LabelData* label in sortedOpenHeadLabels)
 		[menuOfOpenHeads addItem:[self menuItemForLabel:label]];
-	[menuItemScrollToOpenHead setSubmenu:menuOfOpenHeads];
+	menuItemScrollToOpenHead.submenu = menuOfOpenHeads;
 
 	NSMenuItem* scrollToChangesetItem = [[NSMenuItem alloc] initWithTitle:@"Scroll to Changeset…" action:@selector(getAndScrollToChangeset:) keyEquivalent:@"l"];
-	[scrollToChangesetItem setTarget:logTable];
+	scrollToChangesetItem.target = logTable;
 		
 	
 	NSMenu* newMenu = [[NSMenu alloc]init];
@@ -104,10 +104,10 @@
 	[newMenu addItem:menuItemScrollToBookmark];
 	[newMenu addItem:menuItemScrollToBranch];
 	[newMenu addItem:menuItemScrollToOpenHead];
-	[newMenu addItem:[NSMenuItem separatorItem]];
+	[newMenu addItem:NSMenuItem.separatorItem];
 	[newMenu addItem:scrollToChangesetItem];
 	thePopUpMenu = newMenu;
-	[thePopUpMenu setDelegate:self];
+	thePopUpMenu.delegate = self;
 }
 
 
@@ -120,8 +120,8 @@
 	CGFloat offset = (controlSize == NSRegularControlSize) ? 3 : 4;
 	
     NSPoint menuOrigin = [self convertPoint:NSMakePoint(0, frame.size.height + offset) toView:nil];
-	NSEvent* event = [NSEvent mouseEventWithType:NSLeftMouseDown location:menuOrigin modifierFlags:NSLeftMouseDownMask timestamp:[theEvent timestamp]
-									windowNumber:[theEvent windowNumber] context:[theEvent context] eventNumber:[theEvent eventNumber] clickCount:1 pressure:1.0];
+	NSEvent* event = [NSEvent mouseEventWithType:NSLeftMouseDown location:menuOrigin modifierFlags:NSLeftMouseDownMask timestamp:theEvent.timestamp
+									windowNumber:theEvent.windowNumber context:theEvent.context eventNumber:theEvent.eventNumber clickCount:1 pressure:1.0];
     [NSMenu popUpContextMenu:thePopUpMenu withEvent:event forView:self];
 }
 
@@ -137,9 +137,9 @@
 - (IBAction) scrollToLabel:(id)sender
 {
 	NSMenuItem* item = DynamicCast(NSMenuItem, sender);
-	LabelData* label = DynamicCast(LabelData, [item representedObject]);
-	if ([label revision])
-		[logTable selectAndScrollToRevision:[label revision]];
+	LabelData* label = DynamicCast(LabelData, item.representedObject);
+	if (label.revision)
+		[logTable selectAndScrollToRevision:label.revision];
 }
 
 

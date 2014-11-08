@@ -41,10 +41,10 @@
 	// Break into components. First component ("/") needs no resolution, so
 	// we only need to handle subsequent components.
 	//
-	NSArray* pathComponents = [path pathComponents];
+	NSArray* pathComponents = path.pathComponents;
 	NSString* resolvedPath = pathComponents[0];
 	pathComponents = [pathComponents
-		subarrayWithRange:NSMakeRange(1, [pathComponents count] - 1)];
+		subarrayWithRange:NSMakeRange(1, pathComponents.count - 1)];
 
 	//
 	// Process all remaining components.
@@ -52,7 +52,7 @@
 	for (NSString *component in pathComponents)
 	{
 		resolvedPath = [resolvedPath stringByAppendingPathComponent:component];
-		resolvedPath = [resolvedPath stringByIterativelyResolvingSymlinkOrAlias];
+		resolvedPath = resolvedPath.stringByIterativelyResolvingSymlinkOrAlias;
 		if (!resolvedPath)
 		{
 			return nil;
@@ -79,7 +79,7 @@
 	//
 	// Use lstat to determine if the file is a symlink
 	//
-	if (lstat([[NSFileManager defaultManager]
+	if (lstat([NSFileManager.defaultManager
 		fileSystemRepresentationWithPath:path], &fileInfo) < 0)
 	{
 		return nil;
@@ -91,14 +91,14 @@
 	//
 	while (S_ISLNK(fileInfo.st_mode) ||
 		(!S_ISDIR(fileInfo.st_mode) &&
-			(aliasTarget = [path stringByConditionallyResolvingAlias]) != nil))
+			(aliasTarget = path.stringByConditionallyResolvingAlias) != nil))
 	{
 		if (S_ISLNK(fileInfo.st_mode))
 		{
 			//
 			// Resolve the symlink final component in the path
 			//
-			NSString* symlinkPath = [path stringByConditionallyResolvingSymlink];
+			NSString* symlinkPath = path.stringByConditionallyResolvingSymlink;
 			if (!symlinkPath)
 				return nil;
 			if ([path isEqualToString:symlinkPath])
@@ -113,7 +113,7 @@
 		//
 		// Use lstat to determine if the file is a symlink
 		//
-		if (lstat([[NSFileManager defaultManager] fileSystemRepresentationWithPath:path], &fileInfo) < 0)
+		if (lstat([NSFileManager.defaultManager fileSystemRepresentationWithPath:path], &fileInfo) < 0)
 		{
 			path = nil;
 			continue;
@@ -173,7 +173,7 @@
 	// Resolve the symlink final component in the path
 	//
 	NSString* symlinkPath =
-		[[NSFileManager defaultManager]
+		[NSFileManager.defaultManager
 			destinationOfSymbolicLinkAtPath:self
 			error:NULL];
 	if (!symlinkPath)
@@ -189,7 +189,7 @@
 		symlinkPath =
 			[self.stringByDeletingLastPathComponent
 				stringByAppendingPathComponent:symlinkPath];
-		symlinkPath = [symlinkPath stringByStandardizingPath];
+		symlinkPath = symlinkPath.stringByStandardizingPath;
 	}
 	return symlinkPath;
 }
@@ -242,7 +242,7 @@
 {
 	NSMutableArray* resolvedPaths = [[NSMutableArray alloc]init];
 	for (NSString* path in self)
-		[resolvedPaths addObject:[path stringByResolvingSymlinksAndAliases]];
+		[resolvedPaths addObject:path.stringByResolvingSymlinksAndAliases];
 	return resolvedPaths;
 }
 
