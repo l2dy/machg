@@ -1688,9 +1688,7 @@
 		NSString* copyDir = fstr(@"%@/copy", undoDir);
 		NSError* err = nil;
 
-		NSFileManager* localFileManager =[[NSFileManager alloc] init];
-		[localFileManager setDelegate:self];
-		
+		NSFileManager* localFileManager =[[NSFileManager alloc] init];		
 		[localFileManager createDirectoryAtPath:copyDir withIntermediateDirectories:YES attributes:nil error:&err];
 		if (err)
 		{
