@@ -529,7 +529,7 @@
 
 	LogEntry* highestEntry = [logTableView_ highestSelectedEntry];
 	NSString* highestSelectedChangeset = [highestEntry changeset];
-	NSRect itemRect = [logTableView_ rectOfRowInWindow:[logTableView_ tableRowForRevision:[highestEntry revision]]];
+	NSRect itemRect = [logTableView_ rectOfRowInScreen:[logTableView_ tableRowForRevision:[highestEntry revision]]];
 
 	for (LogEntry* entry in entries)
 	{

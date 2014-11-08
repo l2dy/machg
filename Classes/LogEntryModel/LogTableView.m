@@ -902,21 +902,16 @@ static inline void addRevisionsToTableRowList(NSString* str, NSMutableArray* tab
 // MARK:  Graphic Operations
 // ------------------------------------------------------------------------------------
 
-- (NSRect) rectOfRowInWindow:(NSInteger)row
+- (NSRect) rectOfRowInScreen:(NSInteger)row
 {
 	NSRect itemRect = [self rectOfRow:row];
-	NSRect itemRectInWindow = NSZeroRect;
-	
-	if (NSIntersectsRect(self.visibleRect, itemRect))
-	{
-		// convert item rect to screen coordinates
-		itemRectInWindow = [self convertRectToBase:itemRect];
-		itemRectInWindow.origin = [self.window convertBaseToScreen:itemRectInWindow.origin];
-	}
-	return itemRectInWindow;
+	if (!NSIntersectsRect(self.visibleRect, itemRect))
+		return NSZeroRect;
+
+	NSRect itemRectInWindow = [self convertRect:itemRect toView:self.window.contentView];
+	NSRect itemRectInScreen = [self.window convertRectToScreen:itemRectInWindow];
+	return itemRectInScreen;
 }
-
-
 
 @end
 

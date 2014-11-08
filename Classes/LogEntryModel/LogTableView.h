@@ -121,7 +121,7 @@
 
 
 // Graphic Operations
-- (NSRect)		rectOfRowInWindow:(NSInteger)row;
+- (NSRect)		rectOfRowInScreen:(NSInteger)row;
 
 @end
 
