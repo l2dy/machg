@@ -40,6 +40,8 @@
 	foregroundFilters_ = nil;
 	backgroundFilters_ = nil;
 	lastCenterForGradiant_ = nil;
+	if ([self respondsToSelector:@selector(setLayerUsesCoreImageFilters:)])
+		self.layerUsesCoreImageFilters = YES;
 }
 
 

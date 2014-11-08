@@ -218,6 +218,8 @@
 	toolbarSearchFieldCategory_ = eSearchByKeyword;
 	toolbarSearchFieldValue_ = @"";
 	toolbarSearchFieldQueryIsValid_ = YES;
+	if ([toolbarSearchField_ respondsToSelector:@selector(setLayerUsesCoreImageFilters:)])
+		toolbarSearchField_.layerUsesCoreImageFilters = YES;
 	
 	NSMenu* theSearchFieldMenu = [[[self toolbarSearchField] cell] searchMenuTemplate];
 	[self setSearchCategory:[theSearchFieldMenu itemWithTag:eSearchByKeyword]];
