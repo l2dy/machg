@@ -30,6 +30,6 @@
 
 @interface NSArray (SymlinksAndAliases)
 
-- (NSArray*) resolveSymlinksAndAliasesInPaths;
+- (NSArray*) copyFullyResolvedPaths;
 
 @end

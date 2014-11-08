@@ -293,7 +293,7 @@
 - (NSArray*) absolutePathsOfChosenFiles
 {
 	if (self.nodeIsClicked && !self.clickedNodeInSelectedNodes)
-		return @[ self.clickedNode.absolutePath ];
+		return arrayWithObject(self.clickedNode.absolutePath);
 	return self.absolutePathsOfSelectedFilesInBrowser;
 }
 

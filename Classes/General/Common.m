@@ -2025,7 +2025,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 {
 	if (!self.rowWasClicked && self.numberOfSelectedRows == 0)
 		return @[];
-	return [self isRowSelected:self.chosenRow] ? self.selectedItems : @[ self.chosenItem ];
+	return [self isRowSelected:self.chosenRow] ? self.selectedItems : arrayWithObject(self.chosenItem);
 }
 
 - (void) selectItem:(id)item

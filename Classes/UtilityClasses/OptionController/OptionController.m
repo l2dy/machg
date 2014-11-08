@@ -94,8 +94,10 @@
 	if (specialHandling_ || !self.optionIsSet)
 		return;
 	[args addObject:fstr(@"--%@", optionName)];
+	NSString* optionValue;
 	if (optionValueField)
-		[args addObject:self.optionValue];
+		if ( ((optionValue = self.optionValue)) )
+			[args addObject:optionValue];
 }
 
 + (BOOL) containsOptionWhichIsSet:(NSArray*)options
@@ -118,6 +120,7 @@
 
 - (void) setConnections:(NSMutableDictionary*)connections fromOptionWithKey:(NSString*)key
 {
+	assert(YESasNumber);
 	NSString* fullKey = [key stringByAppendingString:optionName];
 	if (self.optionIsSet)
 	{
@@ -126,7 +129,7 @@
 			value = self.optionValue;
 		else
 			value = YESasNumber;
-		connections[fullKey] = value;
+		connections[fullKey] = value ? value : YESasNumber;
 	}
 	else
 		[connections removeObjectForKey:fullKey];

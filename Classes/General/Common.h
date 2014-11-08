@@ -913,6 +913,7 @@ static inline BOOL IsEmpty(id thing)
 		([thing respondsToSelector:@selector(count)]  && [(NSArray*)thing count] == 0);
 }
 
+static NSArray*			arrayWithObject(id obj) { return obj ? @[obj] : @[]; }
 
 static inline BOOL		IsNotEmpty(id thing) { return !IsEmpty(thing); }
 

@@ -316,7 +316,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 {
 	if (!self.rowWasClicked || [self.selectedRowIndexes containsIndex:self.clickedRow])
 		return self.selectedEntries;
-	return @[ self.chosenEntry ];
+	return arrayWithObject(self.chosenEntry);
 }
 - (NSArray*) selectedEntries
 {
@@ -330,7 +330,7 @@ static inline BOOL between (int a, int b, int i) { return (a <= i && i <= b) || 
 {
 	if (!self.rowWasClicked || [self.selectedRowIndexes containsIndex:self.clickedRow])
 		return self.selectedRevisions;
-	return @[ self.chosenRevision ];
+	return arrayWithObject(self.chosenRevision);
 }
 - (NSArray*) selectedRevisions
 {

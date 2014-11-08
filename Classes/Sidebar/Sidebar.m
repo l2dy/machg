@@ -658,7 +658,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	if ([pasteboard availableTypeFromArray:@[NSFilenamesPboardType]])
 	{
 		NSArray* filenames = [pasteboard propertyListForType:NSFilenamesPboardType];
-		NSArray* resolvedFilenames = filenames.resolveSymlinksAndAliasesInPaths;
+		NSArray* resolvedFilenames = filenames.copyFullyResolvedPaths;
 		for (NSString* file in resolvedFilenames)
 			if (pathIsExistentDirectory(file))
 				return NSDragOperationCopy;
@@ -754,7 +754,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 		[self.undoManager setActionName:@"Drag"];
 		
 		NSArray* filenames = [pasteboard propertyListForType:NSFilenamesPboardType];
-		NSArray* resolvedFilenames = filenames.resolveSymlinksAndAliasesInPaths;
+		NSArray* resolvedFilenames = filenames.copyFullyResolvedPaths;
 		SidebarNode* newSelectedNode = nil;
 		for (id path in resolvedFilenames.reverseObjectEnumerator)
 			if (pathIsExistentDirectory(path) && repositoryExistsAtPath(path))

@@ -334,7 +334,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 	else if ([pboard availableTypeFromArray:@[NSFilenamesPboardType]])
 	{
 		NSArray* filenames = [pboard propertyListForType:NSFilenamesPboardType];
-		NSArray* resolvedFilenames = filenames.resolveSymlinksAndAliasesInPaths;
+		NSArray* resolvedFilenames = filenames.copyFullyResolvedPaths;
 		for (NSString* file in resolvedFilenames)
 			if (pathIsExistentFile(file))
 				return NSDragOperationCopy;
@@ -369,7 +369,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 	if ([pboard availableTypeFromArray:@[NSFilenamesPboardType]])
 	{
 		NSArray* filenames = [pboard propertyListForType:NSFilenamesPboardType];
-		NSArray* resolvedFilenames = filenames.resolveSymlinksAndAliasesInPaths;
+		NSArray* resolvedFilenames = filenames.copyFullyResolvedPaths;
 		NSMutableArray* newPatches = [[NSMutableArray alloc]init];
 		for (NSString* path in resolvedFilenames)
 			if (pathIsExistentFile(path))

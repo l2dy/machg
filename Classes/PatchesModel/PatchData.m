@@ -864,6 +864,7 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 
 - (PatchRecord*) initWithFilePath:(NSString*)path contents:(NSString*)contents
 {
+	self = [super init];
 	path_ = path;
 	author_ = @"";
 	date_ = @"";

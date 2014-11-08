@@ -238,11 +238,13 @@
 
 @implementation NSArray (SymlinksAndAliases)
 
-- (NSArray*) resolveSymlinksAndAliasesInPaths
+- (NSArray*) copyFullyResolvedPaths
 {
 	NSMutableArray* resolvedPaths = [[NSMutableArray alloc]init];
+	NSString* resolvedPath;
 	for (NSString* path in self)
-		[resolvedPaths addObject:path.stringByResolvingSymlinksAndAliases];
+		if ( ((resolvedPath = path.stringByResolvingSymlinksAndAliases)) )
+			[resolvedPaths addObject:resolvedPath];
 	return resolvedPaths;
 }
 

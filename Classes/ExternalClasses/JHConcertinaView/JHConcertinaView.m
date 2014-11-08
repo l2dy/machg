@@ -134,6 +134,13 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 
 - (void) collapsePaneGivingSpaceToPanes:(NSArray*)panes
 {
+	NSInteger count = panes.count;
+	
+	// Put in a fixed maximum count of panes less than 30 since it makes it easier to code.
+	// If you need more than this, simply bump this up to whatever
+	assert(count < 30 && count >= 1);
+	CGFloat extraHeights[30];
+
 	oldPaneHeight = self.height;
 	CGFloat extra = self.contentHeight;
 
@@ -141,8 +148,6 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 	for (JHConcertinaSubView* pane in panes)
 		totalContentHeights += pane.contentHeight;
 
-	NSInteger count = panes.count;
-	CGFloat extraHeights[count];
 
 	if (totalContentHeights < 1)
 		for (NSInteger i = 0 ; i < count; i++)
