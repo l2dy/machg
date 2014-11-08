@@ -203,13 +203,13 @@
 // MARK:  Graphic Operations
 // ------------------------------------------------------------------------------------
 
-- (NSRect) frameinWindowOfRow:(NSInteger)row inColumn:(NSInteger)column
+- (NSRect) frameInWindowOfRow:(NSInteger)row inColumn:(NSInteger)column
 {
 	NSRect itemRect = [self frameOfRow:row inColumn:column];
-	
-	// check that the path Rect is visible on screen
+
+	// check that the item Rect is visible
 	if (NSIntersectsRect(self.visibleRect, itemRect))
-		return [self convertRectToBase:itemRect];	// convert item rect to screen coordinates
+		return [self convertRect:itemRect toView:self.window.contentView];
 	return NSZeroRect;
 }
 
@@ -218,7 +218,7 @@
 	NSInteger col;
 	NSInteger row;
 	BOOL found = [self.rootNodeInfo getRow:&row andColumn:&col forNode:node];
-	return found ? [self frameinWindowOfRow:row inColumn:col] : NSZeroRect;
+	return found ? [self frameInWindowOfRow:row inColumn:col] : NSZeroRect;
 }
 
 

@@ -147,10 +147,10 @@
 {
 	NSInteger row = [self indexOfNode:node];
 	NSRect itemRect = (row != NSNotFound) ? [self rectOfRow:row] : NSZeroRect;	
-	
-	// check that the path Rect is visible on screen
+
+	// check that the item Rect is visible
 	if (NSIntersectsRect(self.visibleRect, itemRect))
-		return [self convertRectToBase:itemRect];			// convert item rect to screen coordinates
+		return [self convertRect:itemRect toView:self.window.contentView];
 	return NSZeroRect;
 }
 

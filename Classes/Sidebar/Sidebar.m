@@ -840,9 +840,9 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	NSInteger row = [self rowForItem:node];
 	NSRect itemRect = (row>=0) ? [self rectOfRow:row] : NSZeroRect;	
 	
-	// check that the path Rect is visible on screen
+	// check that the item Rect is visible
 	if (NSIntersectsRect(self.visibleRect, itemRect))
-		return [self convertRectToBase:itemRect];			// convert item rect to screen coordinates
+		return [self convertRect:itemRect toView:self.window.contentView];
 	return NSZeroRect;
 }
 

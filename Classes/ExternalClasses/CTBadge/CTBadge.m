@@ -291,7 +291,6 @@ const float CTSmallLabelSize = 11.;
 	if(size > 0 && size != [badgeMask size].height)
 	{
 		[badgeMask setName:nil];
-		[badgeMask setScalesWhenResized:YES];
 		[badgeMask setSize:NSMakeSize([badgeMask size].width*(size/[badgeMask size].height), size)];
 	}
 	

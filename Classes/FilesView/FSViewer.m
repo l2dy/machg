@@ -366,7 +366,7 @@
 // MARK:  Quicklook Handling
 // ------------------------------------------------------------------------------------
 
-- (NSRect)	screenRectForNode:(FSNodeInfo*)node		{ NSRect rect = [self rectInWindowForNode:node]; rect.origin = [self.window convertBaseToScreen:rect.origin]; return rect; }
+- (NSRect)	screenRectForNode:(FSNodeInfo*)node		{ return [self.window convertRectToScreen:[self rectInWindowForNode:node]]; }
 
 - (NSInteger) numberOfQuickLookPreviewItems			{ return [self.absolutePathsOfSelectedFilesInBrowser count]; }
 
