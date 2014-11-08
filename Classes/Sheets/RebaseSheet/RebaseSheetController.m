@@ -96,7 +96,7 @@
 
 - (IBAction) validateButtons:(id)sender
 {
-	NSString* reasonForNonValid = [self reasonForInvalidityOfSelectedEntries];
+	NSString* reasonForNonValid = self.reasonForInvalidityOfSelectedEntries;
 	if (!reasonForNonValid)
 		[okButton setEnabled:YES];
 	else
@@ -202,7 +202,7 @@
 	
 	[self validateButtons:self];
 	if ([okButton isEnabled])
-		[sheetInformativeMessageTextField setAttributedStringValue: [self formattedSheetMessage]];
+		[sheetInformativeMessageTextField setAttributedStringValue: self.formattedSheetMessage];
 	
 	[myDocument_ beginSheet:theRebaseSheet];
 }
@@ -225,9 +225,9 @@
 	[argsRebase addObject:@"--detach"];
 	[argsRebase addObject:@"--source" followedBy:intAsString(pair.lowRevision)];
 	[argsRebase addObject:@"--dest" followedBy:numberAsString(destinationRev)];
-	if ([self keepOriginalRevisions])
+	if (self.keepOriginalRevisions)
 		[argsRebase addObject:@"--keep"];
-	if ([self keepOriginalBranchNames])
+	if (self.keepOriginalBranchNames)
 		[argsRebase addObject:@"--keepbranches"];
 
 	ProcessController* processController = [ProcessController processControllerWithMessage:rebaseDescription forList:[myDocument_ theProcessListController]];
@@ -255,7 +255,7 @@
 {
 	[self validateButtons:self];
 	if ([okButton isEnabled])
-		[sheetInformativeMessageTextField setAttributedStringValue: [self formattedSheetMessage]];
+		[sheetInformativeMessageTextField setAttributedStringValue: self.formattedSheetMessage];
 }
 
 

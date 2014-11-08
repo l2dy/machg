@@ -59,15 +59,15 @@
 - (void) menuWillOpen:(NSMenu*)menu
 {
 	[sheetWindow makeFirstResponder:sheetWindow];	// Make the fields of the sheet commit any changes they currently have
-	[self setConnectionFromFieldsForSource:[self sourceRepository] andDestination:[self destinationRepository]];
+	[self setConnectionFromFieldsForSource:self.sourceRepository andDestination:self.destinationRepository];
 }
 
 - (void) menu:(NSMenu*)menu willHighlightItem:(NSMenuItem*)item
 {
 	NSMenuItem* useItem = item ? item : [compatibleRepositoriesPopup selectedItem];	// If the item is nil we are selecting outside the popup so fall back to the selected items values.
 	SidebarNode* newRepository = DynamicCast(SidebarNode, [useItem  representedObject]);
-	SidebarNode* destination = (destinationLabel == compatibleRepositoriesPopup) ? newRepository : [self destinationRepository];
-	SidebarNode* source		 = (sourceLabel      == compatibleRepositoriesPopup) ? newRepository : [self sourceRepository];
+	SidebarNode* destination = (destinationLabel == compatibleRepositoriesPopup) ? newRepository : self.destinationRepository;
+	SidebarNode* source		 = (sourceLabel      == compatibleRepositoriesPopup) ? newRepository : self.sourceRepository;
 	[self setFieldsFromConnectionForSource:source  andDestination:destination];
 	[self layoutGroupsForSource:           source  andDestination:destination];
 	[self updateIncomingOutgoingCountForSource:source andDestination:destination];
@@ -150,7 +150,7 @@
 - (void) chooseInitialPopupItem:(NSPopUpButton*)popup
 {
 	NSMutableArray* orderedPaths = [[NSMutableArray alloc] init];
-	NSString* matchingPath = (sourceLabel == compatibleRepositoriesPopup) ? [[self destinationRepository] recentPullConnection] : [[self sourceRepository] recentPushConnection];
+	NSString* matchingPath = (sourceLabel == compatibleRepositoriesPopup) ? [self.destinationRepository recentPullConnection] : [self.sourceRepository recentPushConnection];
 	[orderedPaths addObjectIfNonNil:matchingPath];
 	
 	Sidebar* theSidebar = myDocument_.sidebar;
@@ -232,14 +232,14 @@
 
 - (IBAction) populatePopupMenuItemsAndRelayout:(id)sender
 {
-	SidebarNode* oppositeToPopup = (sourceLabel == compatibleRepositoriesPopup) ? [self destinationRepository] : [self sourceRepository];
+	SidebarNode* oppositeToPopup = (sourceLabel == compatibleRepositoriesPopup) ? self.destinationRepository : self.sourceRepository;
 	SidebarNode* compatibleRoot = [myDocument_.sidebar.root copySubtreeCompatibleTo:oppositeToPopup];
 	SidebarNode* root = [sheetButtonAllowOperationWithAnyRepository state] ? myDocument_.sidebar.root : compatibleRoot;
 	[self populateNewAndSetupPopupMenu:compatibleRepositoriesPopup withItems:root];
 	[[compatibleRepositoriesPopup menu] setDelegate:self];
 	
-	[self setFieldsFromConnectionForSource:[self sourceRepository]  andDestination:[self destinationRepository]];
-	[self layoutGroupsForSource:           [self sourceRepository]  andDestination:[self destinationRepository]];
+	[self setFieldsFromConnectionForSource:self.sourceRepository  andDestination:self.destinationRepository];
+	[self layoutGroupsForSource:           self.sourceRepository  andDestination:self.destinationRepository];
 }
 
 
@@ -254,7 +254,7 @@
 - (IBAction) syncForceOptionToAllowOperationAndRepopulate:(id)sender
 {
 	[forceOption setOverallState:[sheetButtonAllowOperationWithAnyRepository state]];
-	[self setConnectionFromFieldsForSource:[self sourceRepository] andDestination:[self destinationRepository]];
+	[self setConnectionFromFieldsForSource:self.sourceRepository andDestination:self.destinationRepository];
 	BOOL showAdvancedOptions = [OptionController containsOptionWhichIsSet:cmdOptions];
 	[disclosureController setToOpenState:showAdvancedOptions withAnimation:NO];
 	[self populatePopupMenuItemsAndRelayout:sender];
@@ -262,21 +262,21 @@
 
 - (void) setConnectionFromFieldsForSource:(SidebarNode*)source andDestination:(SidebarNode*)destination
 {
-	NSString* partialKey = fstr(@"%@§%@§%@§", [self operationName], nonNil([source path]), nonNil([destination path]));
+	NSString* partialKey = fstr(@"%@§%@§%@§", self.operationName, nonNil([source path]), nonNil([destination path]));
 	[OptionController setConnections:myDocument_.connections fromOptions:cmdOptions  forKey:partialKey];
 }
 
 - (void) setFieldsFromConnectionForSource:(SidebarNode*)source andDestination:(SidebarNode*)destination
 {
-	NSString* partialKey = fstr(@"%@§%@§%@§", [self operationName], nonNil([source path]), nonNil([destination path]));
+	NSString* partialKey = fstr(@"%@§%@§%@§", self.operationName, nonNil([source path]), nonNil([destination path]));
 	[OptionController setOptions:cmdOptions fromConnections:myDocument_.connections forKey:partialKey];
 }
 
-- (void) updateIncomingOutgoingCount	{ [self updateIncomingOutgoingCountForSource:[self sourceRepository] andDestination:[self destinationRepository]]; }
+- (void) updateIncomingOutgoingCount	{ [self updateIncomingOutgoingCountForSource:self.sourceRepository andDestination:self.destinationRepository]; }
 - (void) updateIncomingOutgoingCountForSource:(SidebarNode*)source andDestination:(SidebarNode*)destination
 {
 	NSString* theCount;
-	if ([[self operationName] isMatchedByRegex:@"Push|Outgoing"])
+	if ([self.operationName isMatchedByRegex:@"Push|Outgoing"])
 		theCount = [myDocument_.sidebar outgoingCountTo:destination];
 	else
 		theCount = [myDocument_.sidebar incomingCountFrom:source];
@@ -293,8 +293,8 @@
 // MARK: Utilities
 // ------------------------------------------------------------------------------------
 
-- (NSString*) sourceRepositoryName		{ return [[self sourceRepository] shortName]; }
-- (NSString*) destinationRepositoryName	{ return [[self destinationRepository] shortName]; }
+- (NSString*) sourceRepositoryName		{ return [self.sourceRepository shortName]; }
+- (NSString*) destinationRepositoryName	{ return [self.destinationRepository shortName]; }
 
 
 

@@ -113,7 +113,7 @@
 // Duplicate a tree but don't copy the immutable bits, so the size of the copy is smallish.
 - (SidebarNode*) copyNodeTree
 {
-	SidebarNode* newNode = [self copyNode];
+	SidebarNode* newNode = self.copyNode;
 	if (children)
 	{
 		newNode->children = [[NSMutableArray alloc]init];
@@ -146,14 +146,14 @@ static inline NSInteger rangeCheckIndex(NSInteger index, NSInteger count)	{ retu
 - (NSUInteger) numberOfChildren						{ return [children count]; }
 - (NSInteger) level									{ return parent ? (1 + [parent level]) : -1; }	// Should be the same as NSOutlineView::levelForItem:
 
-- (BOOL) isExistentLocalRepositoryRef				{ return [self isLocalRepositoryRef] && pathIsExistentDirectory(path); }
-- (BOOL) isMissingLocalRepositoryRef				{ return [self isLocalRepositoryRef] && !repositoryExistsAtPath(path); }
+- (BOOL) isExistentLocalRepositoryRef				{ return self.isLocalRepositoryRef && pathIsExistentDirectory(path); }
+- (BOOL) isMissingLocalRepositoryRef				{ return self.isLocalRepositoryRef && !repositoryExistsAtPath(path); }
 - (BOOL) isLocalRepositoryRef						{ return (nodeKind == kSidebarNodeKindLocalRepositoryRef); }
 - (BOOL) isServerRepositoryRef						{ return (nodeKind == kSidebarNodeKindServerRepositoryRef); }
 - (BOOL) isSectionNode								{ return (nodeKind == kSidebarNodeKindSection); }
-- (BOOL) isTopLevelSectionNode						{ return [self isSectionNode] && ([self level] <= 0); }
-- (BOOL) isDraggable								{ return ![self isSectionNode]; }
-- (BOOL) isRepositoryRef							{ return [self isLocalRepositoryRef] || [self isServerRepositoryRef]; }
+- (BOOL) isTopLevelSectionNode						{ return self.isSectionNode && (self.level <= 0); }
+- (BOOL) isDraggable								{ return !self.isSectionNode; }
+- (BOOL) isRepositoryRef							{ return self.isLocalRepositoryRef || self.isServerRepositoryRef; }
 
 
 
@@ -187,13 +187,13 @@ static inline NSInteger rangeCheckIndex(NSInteger index, NSInteger count)	{ retu
 	NSMutableDictionary* attributesToApply = [standardSidebarFontAttributes mutableCopy];
 	if (selected)
 		attributesToApply[NSForegroundColorAttributeName] = [NSColor whiteColor];
-	if ([self isVirginRepository])
+	if (self.isVirginRepository)
 		attributesToApply[NSForegroundColorAttributeName] = selected ? virginSidebarSelectedColor : virginSidebarColor;
-	if ([self isServerRepositoryRef])
+	if (self.isServerRepositoryRef)
 		attributesToApply[NSObliquenessAttributeName] = @0.15f;
-	if ([self isMissingLocalRepositoryRef])
+	if (self.isMissingLocalRepositoryRef)
 		attributesToApply[NSForegroundColorAttributeName] = selected ? missingSidebarSelectedColor : missingSidebarColor;
-	if ([self isSectionNode])
+	if (self.isSectionNode)
 	{
 		attributesToApply[NSForegroundColorAttributeName] = selected ? [NSColor whiteColor] : [NSColor colorWithDeviceWhite:0.5 alpha:1.0];
 		attributesToApply[NSFontAttributeName] = [NSFont boldSystemFontOfSize:[NSFont smallSystemFontSize]];
@@ -217,16 +217,16 @@ static inline NSInteger rangeCheckIndex(NSInteger index, NSInteger count)	{ retu
 - (NSString*) description
 {
 	NSMutableString* part = [[NSMutableString alloc]init];
-	NSInteger depth = [self nodeDepth];
+	NSInteger depth = self.nodeDepth;
 	for (NSInteger i = 0; i < depth; i++)
 		[part appendString:@"   "];
-	[part appendFormat:@"<%@{ caption = %@, path = %@, id = %@ }\n", [self className], shortName, path, nonNil([self repositoryIdentity])];
+	[part appendFormat:@"<%@{ caption = %@, path = %@, id = %@ }\n", self.className, shortName, path, nonNil(self.repositoryIdentity)];
 	for (SidebarNode* node in children)
 		[part appendString:[node description]];
 	if (recentPushConnection)
-		[part appendFormat:@"recentPushConnection: %@\n", [self recentPushConnection]];
+		[part appendFormat:@"recentPushConnection: %@\n", self.recentPushConnection];
 	if (recentPullConnection)
-		[part appendFormat:@"recentPullConnection: %@\n", [self recentPullConnection]];
+		[part appendFormat:@"recentPullConnection: %@\n", self.recentPullConnection];
 	
 	return part;
 }
@@ -242,14 +242,14 @@ static inline NSInteger rangeCheckIndex(NSInteger index, NSInteger count)	{ retu
 
 - (NSString*) fullURLPath
 {
-	if (![self isServerRepositoryRef])
+	if (!self.isServerRepositoryRef)
 		return path;
 	return FullServerURL(path, eAllPasswordsAreVisible);
 }
 
 - (NSString*) pathHidingAnyPassword
 {
-	if (![self isServerRepositoryRef])
+	if (!self.isServerRepositoryRef)
 		return path;
 	return FullServerURL(path, eAllPasswordsAreMangled);
 }
@@ -308,7 +308,7 @@ SidebarNodeKind nodeKindFromStoredNodeType(NSInteger storedType)
 
 	NSString* repositoryIdentity = [[[AppController sharedAppController] repositoryIdentityForPath] synchronizedObjectForKey:path];
 	if (IsEmpty(repositoryIdentity))
-		repositoryIdentity = [self repositoryIdentity];
+		repositoryIdentity = self.repositoryIdentity;
 	if (repositoryIdentity)
 		[coder encodeObject:repositoryIdentity forKey:@"repositoryIdentity"];
 }
@@ -328,7 +328,7 @@ SidebarNodeKind nodeKindFromStoredNodeType(NSInteger storedType)
 	recentPushConnection = [coder decodeObjectForKey:@"recentPushConnection"];
 	recentPullConnection = [coder decodeObjectForKey:@"recentPullConnection"];
 
-	if ([self isLocalRepositoryRef] && path)
+	if (self.isLocalRepositoryRef && path)
 	{
 		if ([path length] < PATH_MAX)
 		{
@@ -343,7 +343,7 @@ SidebarNodeKind nodeKindFromStoredNodeType(NSInteger storedType)
 			RunCriticalAlertPanel(@"Max Path Length exceeded", fstr(@"The maximum path length for the path to the repository root was exceeded. Functionality for this repository could be erratic. The path is %@", path), @"OK", nil, nil);
 	}
 	
-	if ([self isRepositoryRef] && path)
+	if (self.isRepositoryRef && path)
 	{
 		NSString* repositoryIdentity = [coder decodeObjectForKey:@"repositoryIdentity"];
 		if (repositoryIdentity)
@@ -358,11 +358,11 @@ SidebarNodeKind nodeKindFromStoredNodeType(NSInteger storedType)
 
 - (void) refreshNodeIcon
 {
-	if ([self isLocalRepositoryRef] && repositoryExistsAtPath(path))
+	if (self.isLocalRepositoryRef && repositoryExistsAtPath(path))
 		icon = [[NSWorkspace sharedWorkspace] iconForFile:path];
-	else if ([self isLocalRepositoryRef])
+	else if (self.isLocalRepositoryRef)
 		icon = [NSImage imageNamed:@"MissingRepository.png"];
-	else if ([self isServerRepositoryRef])
+	else if (self.isServerRepositoryRef)
 		icon = [NSImage imageNamed:NSImageNameNetwork];
 }
 
@@ -383,7 +383,7 @@ SidebarNodeKind nodeKindFromStoredNodeType(NSInteger storedType)
 - (BOOL) isVirginRepository
 {
 	static NSString* virginRepository = @"000000000000";
-	return [[self repositoryIdentity] isEqualToString:virginRepository];
+	return [self.repositoryIdentity isEqualToString:virginRepository];
 }
 
 - (BOOL) isCompatibleToNodeInArray:(NSArray*)nodes
@@ -398,15 +398,15 @@ SidebarNodeKind nodeKindFromStoredNodeType(NSInteger storedType)
 {
 	// If the paths are the same then the servers have to be compatible since they reference the same thing. (This is useful when
 	// you can't actually get a repository identity
-	if ([trimString([self path]) isEqualToString:trimString([other path])])
+	if ([trimString(self.path) isEqualToString:trimString([other path])])
 		return YES;
 	
-	NSString* repositoryIdentitySelf  = [self repositoryIdentity];
+	NSString* repositoryIdentitySelf  = self.repositoryIdentity;
 	NSString* repositoryIdentityOther = [other repositoryIdentity];
 
 	if (repositoryIdentitySelf == nil || repositoryIdentityOther == nil)
 		return NO;
-	if ([self isVirginRepository] || [other isVirginRepository])
+	if (self.isVirginRepository || [other isVirginRepository])
 		return YES;
 	return [repositoryIdentitySelf isEqualToString:repositoryIdentityOther];
 }
@@ -414,9 +414,9 @@ SidebarNodeKind nodeKindFromStoredNodeType(NSInteger storedType)
 
 - (SidebarNode*) copySubtreeCompatibleTo:(SidebarNode*)comp
 {
-	BOOL isCompatobleRepo = [self isRepositoryRef] && [self isCompatibleTo:comp];
+	BOOL isCompatobleRepo = self.isRepositoryRef && [self isCompatibleTo:comp];
 	if (IsEmpty(children))
-		return isCompatobleRepo ? [self copyNode] : nil;
+		return isCompatobleRepo ? self.copyNode : nil;
 
 	NSMutableArray* compatibleChildren = [[NSMutableArray alloc]init];
 	for (SidebarNode* node in children)
@@ -427,11 +427,11 @@ SidebarNodeKind nodeKindFromStoredNodeType(NSInteger storedType)
 	
 	if (!isCompatobleRepo && IsEmpty(compatibleChildren))
 		return nil;
-	SidebarNode* prunedNode = [self copyNode];
+	SidebarNode* prunedNode = self.copyNode;
 	prunedNode->children = compatibleChildren;
 	
 	// For the incompatible repository references list them in the selection menu's as section nodes
-	if ([self isRepositoryRef] && !isCompatobleRepo)
+	if (self.isRepositoryRef && !isCompatobleRepo)
 		[prunedNode setNodeKind:kSidebarNodeKindSection];
 
 	return prunedNode;

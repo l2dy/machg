@@ -56,7 +56,7 @@
 - (void) stopAndLogTimeAndReset
 {
 	[self stop];
-	NSLog(@"Timing %d took %f seconds", timeCount, [self elapsedSeconds]);
+	NSLog(@"Timing %d took %f seconds", timeCount, self.elapsedSeconds);
 	[self reset];
 }
 

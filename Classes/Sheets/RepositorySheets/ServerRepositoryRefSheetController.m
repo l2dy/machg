@@ -160,7 +160,7 @@
 - (IBAction) validateButtons:(id)sender
 {
 	// If we are using ssh then hide all password details since Mercurial can't handle passed in passwords for ssh.
-	BOOL sshConnection = [[self baseServerURLFieldValue] isMatchedByRegex:@"^ssh://"];
+	BOOL sshConnection = [self.baseServerURLFieldValue isMatchedByRegex:@"^ssh://"];
 	[passwordBoxDisclosureController setToOpenState:!sshConnection withAnimation:YES];
 	if (sshConnection && IsNotEmpty(password_))
 	{
@@ -168,7 +168,7 @@
 		[self passwordChanged];
 	}
 
-	BOOL valid = ([[self baseServerURLFieldValue] length] > 0) && ([[self shortNameFieldValue] length] > 0);
+	BOOL valid = ([self.baseServerURLFieldValue length] > 0) && ([self.shortNameFieldValue length] > 0);
 	[okButton setEnabled:valid];
 	ServerRepositoryRefSheetController* __weak weakSelf = self;
 	if (sender == theBaseServerTextField || sender == self || sender == theUsernameTextField || sender == theSecurePasswordTextField || sender == theUnsecurePasswordTextField)
@@ -273,7 +273,7 @@
 
 - (IBAction) testConnectionInTerminal:(id)sender
 {
-	if (IsNotEmpty(password_) && ![self authorizeForShowingPassword])
+	if (IsNotEmpty(password_) && !self.authorizeForShowingPassword)
 		return;
 
 	NSString* fullServerURL = [self generateFullServerURLIncludingPassword:YES andMaskingPassword:NO];
@@ -291,13 +291,13 @@
 
 - (IBAction) toggleShowPassword:(id)sender
 {
-	if ([self showRealPassword] == YES)
+	if (self.showRealPassword == YES)
 	{
 		[self setShowRealPassword:NO];
 		return;
 	}
 
-	if (![self authorizeForShowingPassword])
+	if (!self.authorizeForShowingPassword)
 	{
 		[showPasswordButton setState:NSOffState];
 		[self passwordChanged];
@@ -356,7 +356,7 @@
 		if (passwordKeyChainItem_)
 			passwordKeyChainItem_.password = password_;
 		else
-			passwordKeyChainItem_ = [EMGenericKeychainItem addGenericKeychainItemForService:kMacHgApp withUsername:newPath password:[self password]];
+			passwordKeyChainItem_ = [EMGenericKeychainItem addGenericKeychainItemForService:kMacHgApp withUsername:newPath password:self.password];
 	}
 
 	[[AppController sharedAppController] computeRepositoryIdentityForPath:newPath];

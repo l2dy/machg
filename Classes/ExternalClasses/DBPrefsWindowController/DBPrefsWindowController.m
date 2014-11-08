@@ -20,7 +20,7 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 + (DBPrefsWindowController *)sharedPrefsWindowController
 {
 	if (!_sharedPrefsWindowController) {
-		_sharedPrefsWindowController = [[self alloc] initWithWindowNibName:[self nibName]];
+		_sharedPrefsWindowController = [self.alloc initWithWindowNibName:self.nibName];
 	}
 	return _sharedPrefsWindowController;
 }
@@ -81,10 +81,10 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 													  backing:NSBackingStoreBuffered
 													    defer:YES];
 	[self setWindow:window];
-	contentSubview = [[NSView alloc] initWithFrame:[[[self window] contentView] frame]];
+	contentSubview = [[NSView alloc] initWithFrame:[[self.window contentView] frame]];
 	[contentSubview setAutoresizingMask:(NSViewMinYMargin | NSViewWidthSizable)];
-	[[[self window] contentView] addSubview:contentSubview];
-	[[self window] setShowsToolbarButton:NO];
+	[[self.window contentView] addSubview:contentSubview];
+	[self.window setShowsToolbarButton:NO];
 }
 
 
@@ -191,7 +191,7 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 - (IBAction)showWindow:(id)sender
 {
 		// This forces the resources in the nib to load.
-	(void)[self window];
+	(void)self.window;
 
 		// Clear the last setup and get a fresh one.
 	[toolbarIdentifiers removeAllObjects];
@@ -202,21 +202,21 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 	NSAssert (([toolbarIdentifiers count] > 0),
 			  @"No items were added to the toolbar in -setupToolbar.");
 	
-	if ([[self window] toolbar] == nil) {
+	if ([self.window toolbar] == nil) {
 		NSToolbar *toolbar = [[NSToolbar alloc] initWithIdentifier:@"DBPreferencesToolbar"];
 		[toolbar setAllowsUserCustomization:NO];
 		[toolbar setAutosavesConfiguration:NO];
 		[toolbar setSizeMode:NSToolbarSizeModeDefault];
 		[toolbar setDisplayMode:NSToolbarDisplayModeIconAndLabel];
 		[toolbar setDelegate:self];
-		[[self window] setToolbar:toolbar];
+		[self.window setToolbar:toolbar];
 	}
 	
 	NSString *firstIdentifier = toolbarIdentifiers[0];
-	[[[self window] toolbar] setSelectedItemIdentifier:firstIdentifier];
+	[[self.window toolbar] setSelectedItemIdentifier:firstIdentifier];
 	[self displayViewForIdentifier:firstIdentifier animate:NO];
 	
-	[[self window] center];
+	[self.window center];
 
 	[super showWindow:sender];
 }
@@ -303,17 +303,17 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 		frame.origin.y = NSHeight([contentSubview frame]) - NSHeight([newView bounds]);
 		[newView setFrame:frame];
 		[contentSubview addSubview:newView];
-		[[self window] setInitialFirstResponder:newView];
+		[self.window setInitialFirstResponder:newView];
 
-		if (animate && [self crossFade])
+		if (animate && self.crossFade)
 			[self crossFadeView:oldView withView:newView];
 		else {
 			[oldView removeFromSuperviewWithoutNeedingDisplay];
 			[newView setHidden:NO];
-			[[self window] setFrame:[self frameForView:newView] display:YES animate:animate];
+			[self.window setFrame:[self frameForView:newView] display:YES animate:animate];
 		}
 		
-		[[self window] setTitle:[toolbarItems[identifier] label]];
+		[self.window setTitle:[toolbarItems[identifier] label]];
 	}
 }
 
@@ -321,7 +321,7 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 
 - (void) switchToViewForIdentifier:(NSString*)identifier animate:(BOOL)animate
 {
-	[[[self window] toolbar] setSelectedItemIdentifier:identifier];
+	[[self.window toolbar] setSelectedItemIdentifier:identifier];
 	[self displayViewForIdentifier:identifier animate:animate];
 }
 
@@ -337,7 +337,7 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 {
 	[viewAnimation stopAnimation];
 	
-    if ([self shiftSlowsAnimation] && [[[self window] currentEvent] modifierFlags] & NSShiftKeyMask)
+    if (self.shiftSlowsAnimation && [[self.window currentEvent] modifierFlags] & NSShiftKeyMask)
 		[viewAnimation setDuration:1.25];
     else
 		[viewAnimation setDuration:0.25];
@@ -348,8 +348,8 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 	NSDictionary *fadeInDictionary = @{NSViewAnimationTargetKey: newView,
 		NSViewAnimationEffectKey: NSViewAnimationFadeInEffect};
 
-	NSDictionary *resizeDictionary = @{NSViewAnimationTargetKey: [self window],
-		NSViewAnimationStartFrameKey: [NSValue valueWithRect:[[self window] frame]],
+	NSDictionary *resizeDictionary = @{NSViewAnimationTargetKey: self.window,
+		NSViewAnimationStartFrameKey: [NSValue valueWithRect:[self.window frame]],
 		NSViewAnimationEndFrameKey: [NSValue valueWithRect:[self frameForView:newView]]};
 	
 	NSArray *animationArray = @[fadeOutDictionary, fadeInDictionary, resizeDictionary];
@@ -381,7 +381,7 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 
 		// This is a work-around that prevents the first
 		// toolbar icon from becoming highlighted.
-	[[self window] makeFirstResponder:nil];
+	[self.window makeFirstResponder:nil];
 
 	(void)animation;
 }
@@ -392,13 +392,13 @@ static DBPrefsWindowController *_sharedPrefsWindowController = nil;
 - (NSRect)frameForView:(NSView *)view
 	// Calculate the window size for the new view.
 {
-	NSRect windowFrame = [[self window] frame];
-	NSRect contentRect = [[self window] contentRectForFrameRect:windowFrame];
+	NSRect windowFrame = [self.window frame];
+	NSRect contentRect = [self.window contentRectForFrameRect:windowFrame];
 	float windowTitleAndToolbarHeight = NSHeight(windowFrame) - NSHeight(contentRect);
 
 	windowFrame.size.height = NSHeight([view frame]) + windowTitleAndToolbarHeight;
 	windowFrame.size.width = NSWidth([view frame]);
-	windowFrame.origin.y = NSMaxY([[self window] frame]) - NSHeight(windowFrame);
+	windowFrame.origin.y = NSMaxY([self.window frame]) - NSHeight(windowFrame);
 	
 	return windowFrame;
 }

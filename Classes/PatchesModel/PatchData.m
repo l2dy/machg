@@ -247,7 +247,7 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 
 - (NSString*) description
 {
-	return fstr(@"######## %@ ########\n%@", hunkHash,[self hunkString]);
+	return fstr(@"######## %@ ########\n%@", hunkHash,self.hunkString);
 }
 
 @end
@@ -310,8 +310,8 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 - (NSString*) filePatchExcluding:(NSSet*)excludedHunks
 {
 	// The normal case when this file patch is not filtered at all
-	if (IsEmpty(excludedHunks) || ![excludedHunks intersectsSet:[self hunkHashesSet]])
-		return [self filePatchString];
+	if (IsEmpty(excludedHunks) || ![excludedHunks intersectsSet:self.hunkHashesSet])
+		return self.filePatchString;
 
 	BOOL empty = YES;
 	NSMutableString* filteredFilePatch = [NSMutableString stringWithString:filePatchHeader];
@@ -327,7 +327,7 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 - (NSString*) filePatchSelecting:(NSSet*)includedHunks
 {
 	// The normal case when this file patch is not filtered at all
-	if (IsEmpty(includedHunks) || ![includedHunks intersectsSet:[self hunkHashesSet]])
+	if (IsEmpty(includedHunks) || ![includedHunks intersectsSet:self.hunkHashesSet])
 		return nil;
 
 	BOOL empty = YES;
@@ -433,7 +433,7 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 
 - (void) finishHunkObjectWithLines:(NSMutableArray*)hunkLines
 {
-	[[self currentFilePatch] addHunkObjectWithLines:hunkLines];
+	[self.currentFilePatch addHunkObjectWithLines:hunkLines];
 }
 
 - (void) startNewFilePatchForPath:(NSString*)filePath andHeader:(NSString*)filePatchHeader binary:(BOOL)binary
@@ -505,7 +505,7 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 		}
 
 		// We found a hunk header so finish the current hunk object and start collecting lines for a new hunk
-		if ([line isMatchedByRegex:@"^@@.*"] && ![[self currentFilePatch] binaryPatch])
+		if ([line isMatchedByRegex:@"^@@.*"] && ![self.currentFilePatch binaryPatch])
 		{
 			[self finishHunkObjectWithLines:hunkLines];
 			hunkLines = [[NSMutableArray alloc]init];
@@ -683,7 +683,7 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 	if (cachedPatchBodyHTMLized_)
 		return cachedPatchBodyHTMLized_;
 	NSMutableString* finalString = [[NSMutableString alloc] init];
-	BOOL sublineDiffing = [self lineChangeCount] < 2000;
+	BOOL sublineDiffing = self.lineChangeCount < 2000;
 	for (FilePatch* filePatch in filePatches_)
 		if (filePatch)
 		{
@@ -735,7 +735,7 @@ static NSString* htmlizedDifference(NSMutableArray* leftLines, NSMutableArray* r
 	NSMutableString* finalString = [[NSMutableString alloc] init];
 	NSDictionary* repositoryHunkExclusions = [hunkExclusions repositoryHunkExclusionsForRoot:root];
 	if (IsEmpty(repositoryHunkExclusions))
-		return [self patchBodyString];
+		return self.patchBodyString;
 
 	BOOL empty = YES;
 	for (FilePatch* filePatch in filePatches_)

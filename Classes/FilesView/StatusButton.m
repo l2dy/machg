@@ -138,7 +138,7 @@ NSString* kKeyPathShowFileIcons	 = @"values.DisplayFileIconsInBrowser";
 	
 	NSImage* combinedImage = [FSNodeInfo compositeRowOfIcons:icons withOverlap:1.5];
 	[self setImage:combinedImage];
-	NSRect newFrame = [self frame];
+	NSRect newFrame = self.frame;
 	newFrame.size.width = combinedImage.size.width + 8;
 	[self setFrame:newFrame];
 }

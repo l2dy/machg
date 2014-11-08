@@ -95,7 +95,7 @@ NSString* const kConcertinaViewContentDidUncollapse = @"ConcertinaViewContentDid
 - (void) setDivider:(NSView*)view
 {
 	divider = view;
-	if (![[self subviews] containsObject:divider])
+	if (![self.subviews containsObject:divider])
 		[self addSubview:divider];
 	[self adjustPaneAndDivider];	
 }
@@ -103,7 +103,7 @@ NSString* const kConcertinaViewContentDidUncollapse = @"ConcertinaViewContentDid
 - (void) setContent:(NSView*)view
 {
 	content = view;
-	if (![[self subviews] containsObject:content])
+	if (![self.subviews containsObject:content])
 		[self addSubview:content];
 	[self adjustPaneAndDivider];
 }
@@ -120,13 +120,13 @@ NSString* const kConcertinaViewContentDidUncollapse = @"ConcertinaViewContentDid
 - (NSView*) divider			  { return divider; }
 - (NSView*) content			  { return content; }
 - (CGFloat) dividerHeight	  { return divider.frame.size.height; }
-- (CGFloat) contentHeight	  { return [self height] - [self dividerHeight]; }
+- (CGFloat) contentHeight	  { return self.height - self.dividerHeight; }
 - (CGFloat) height			  { return self.frame.size.height; }
 - (CGFloat) oldPaneHeight	  { return oldPaneHeight; }
-- (void)	initOldPaneHeight { oldPaneHeight = MAX([self height], 100); }
+- (void)	initOldPaneHeight { oldPaneHeight = MAX(self.height, 100); }
 
-- (void)	changeFrameHeightBy:(CGFloat)delta		 { if (delta == 0) return; NSRect frame = [self frame]; frame.size.height += delta; [[self animator] setFrame:frame]; }
-- (void)	changeFrameHeightDirectBy:(CGFloat)delta { if (delta == 0) return; NSRect frame = [self frame]; frame.size.height += delta; [self setFrame:frame]; }
+- (void)	changeFrameHeightBy:(CGFloat)delta		 { if (delta == 0) return; NSRect frame = self.frame; frame.size.height += delta; [self.animator setFrame:frame]; }
+- (void)	changeFrameHeightDirectBy:(CGFloat)delta { if (delta == 0) return; NSRect frame = self.frame; frame.size.height += delta; [self setFrame:frame]; }
 - (BOOL)	clickIsInsideDivider:(NSEvent*)theEvent	 { return NSPointInRect([theEvent locationInWindow], [divider convertRect:[divider bounds] toView:nil]); }
 
 
@@ -134,8 +134,8 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 
 - (void) collapsePaneGivingSpaceToPanes:(NSArray*)panes
 {
-	oldPaneHeight = [self height];
-	CGFloat extra = [self contentHeight];
+	oldPaneHeight = self.height;
+	CGFloat extra = self.contentHeight;
 
 	CGFloat totalContentHeights = 0;
 	for (JHConcertinaSubView* pane in panes)
@@ -169,7 +169,7 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 	for (JHConcertinaSubView* pane in panes)
 		totalContentHeights += [pane contentHeight];
 
-	CGFloat extra = height - [self height];
+	CGFloat extra = height - self.height;
 	
 	CGFloat totalExtra = 0;
 	if (totalContentHeights > 0.5)
@@ -305,7 +305,7 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 	NSMutableArray* otherPanes = [arrayOfConcertinaPanes mutableCopy];
 	[otherPanes removeObject:pane];
 	[pane expandPaneTo:height byTakingSpaceFromPanes:otherPanes];
-	[self splitView:self resizeSubviewsWithOldSize:[self frame].size];	
+	[self splitView:self resizeSubviewsWithOldSize:self.frame.size];	
 }
 
 - (void) collapsePane:(NSView*)paneChild
@@ -314,12 +314,12 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 	NSMutableArray* otherPanes = [arrayOfConcertinaPanes mutableCopy];
 	[otherPanes removeObject:pane];
 	[pane collapsePaneGivingSpaceToPanes:otherPanes];
-	[self splitView:self resizeSubviewsWithOldSize:[self frame].size];	
+	[self splitView:self resizeSubviewsWithOldSize:self.frame.size];	
 }
 
 - (void) expandPane:(NSView*)paneChild toPecentageHeight:(float)percentage
 {
-	float desieredFrameHeight = [self frame].size.height*constrain(percentage,0,1);
+	float desieredFrameHeight = self.frame.size.height*constrain(percentage,0,1);
 	[self expandPane:paneChild toHeight:desieredFrameHeight];
 }
 
@@ -374,10 +374,10 @@ static inline CGFloat extraForPane(CGFloat extra, JHConcertinaSubView* pane, CGF
 
 	while (true)
 	{
-		NSEvent* event = [[self window] nextEventMatchingMask:NSLeftMouseUpMask | NSLeftMouseDraggedMask];
+		NSEvent* event = [self.window nextEventMatchingMask:NSLeftMouseUpMask | NSLeftMouseDraggedMask];
 		if ([event type] == NSLeftMouseUp)
 		{
-			[[self window] invalidateCursorRectsForView:draggedDivider];
+			[self.window invalidateCursorRectsForView:draggedDivider];
 			return;
 		}
 		if ([event type] != NSLeftMouseDragged)
@@ -474,7 +474,7 @@ static inline CGFloat total(CGFloat* array, NSInteger count)
 	CGFloat totalDividerHeights = total(dividerHeights, count); 
 	if (self.frame.size.height < totalDividerHeights)
 	{
-		NSRect newFrame = [self frame];
+		NSRect newFrame = self.frame;
 		newFrame.origin.y = 0;
 		newFrame.size.height = totalDividerHeights;
 		[self setFrame:newFrame];
@@ -529,7 +529,7 @@ static inline CGFloat total(CGFloat* array, NSInteger count)
 			break;
 	}
 	
-	CGFloat width = [self frame].size.width;
+	CGFloat width = self.frame.size.width;
 
 	// resize all of the panes to our newly calculated paneHeights
 	CGFloat yOffset = 0;
@@ -661,10 +661,10 @@ static inline CGFloat total(CGFloat* array, NSInteger count)
 	JHConcertinaSubView* subView = (JHConcertinaSubView*)enclosingViewOfClass(self, [JHConcertinaSubView class]);
 	JHConcertinaView* parentConcertinaView = (JHConcertinaView*)enclosingViewOfClass(self, [JHConcertinaView class]);
 	if (!parentConcertinaView)
-		[self addCursorRect:[self bounds] cursor:[NSCursor resizeUpDownCursor]];
+		[self addCursorRect:self.bounds cursor:[NSCursor resizeUpDownCursor]];
 	BOOL spaceAbove      = [parentConcertinaView spaceAbove:subView];
 	BOOL spaceInAndBelow = [parentConcertinaView spaceInAndBelow:subView];
 	NSCursor* cursor = cursorForSpaceAboveAndBelow(spaceAbove, spaceInAndBelow);
-	[self addCursorRect:[self bounds] cursor:cursor];
+	[self addCursorRect:self.bounds cursor:cursor];
 }
 @end

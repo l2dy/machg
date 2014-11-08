@@ -66,7 +66,7 @@
 	CIColor* black   = [CIColor colorWithRed:  0.0/255.0 green:  0.0/255.0 blue:  0.0/255.0 alpha:1.0];
 	CIColor* color0  = [CIColor colorWithRed: 77.0/255.0 green: 78.0/255.0 blue: 87.0/255.0 alpha:0.8];
 	CIColor* color1  = [CIColor colorWithRed: 39.0/255.0 green: 40.0/255.0 blue: 52.0/255.0 alpha:0.5];
-	CIVector* center = [self recomputePosition];
+	CIVector* center = self.recomputePosition;
 	NSNumber* radius = radius_ ? radius_ : @450.0f;
 	
 	CIFilter* gradiantFilter = [CIFilter filterWithName:@"CIGaussianGradient"];
@@ -97,11 +97,11 @@
 
 - (void) viewWillDraw
 {
-	CIVector* newPosition = [self recomputePosition];
+	CIVector* newPosition = self.recomputePosition;
 	if (!foregroundFilters_ || !backgroundFilters_ || !lastCenterForGradiant_ || [lastCenterForGradiant_ isNotEqualTo:newPosition])
 		[self recomputeFilters];
-	[[self layer] setFilters: foregroundFilters_];
-	[[self layer] setBackgroundFilters:backgroundFilters_];
+	self.layer.filters = foregroundFilters_;
+	self.layer.backgroundFilters = backgroundFilters_;
 	
     [super viewWillDraw];
 } 

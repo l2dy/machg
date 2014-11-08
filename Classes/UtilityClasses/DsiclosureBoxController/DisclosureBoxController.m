@@ -207,7 +207,7 @@ static NSInteger disclosureAnimationCount = 0;
 		[[NSUserDefaults standardUserDefaults] setBool:disclosureIsVisible_ forKey:autoSaveName_];
 	
 	NSRect windowFrame = [parentWindow frame];
-	CGFloat sizeChange = [self sizeChange];
+	CGFloat sizeChange = self.sizeChange;
 	
 	NSTimeInterval resizeTime = [parentWindow animationResizeTime:windowFrame];
 	animate = (disclosureAnimationCount > 0) ? NO : animate;
@@ -249,7 +249,7 @@ static NSInteger disclosureAnimationCount = 0;
 		[[NSUserDefaults standardUserDefaults] setBool:disclosureIsVisible_ forKey:autoSaveName_];
 	
 	NSRect windowFrame = [parentWindow frame];
-	CGFloat sizeChange = [self sizeChange];
+	CGFloat sizeChange = self.sizeChange;
 
 	NSTimeInterval resizeTime = [parentWindow animationResizeTime:windowFrame];
 	animate = (disclosureAnimationCount > 0) ? NO : animate;

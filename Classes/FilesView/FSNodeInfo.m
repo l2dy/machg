@@ -59,13 +59,13 @@
 - (BOOL) isVisible
 {
 	// Make this as sophisticated for example to hide more files you don't think the user should see!
-	NSString* lastPathComponent = [self lastPathComponent];
+	NSString* lastPathComponent = self.lastPathComponent;
 	return ([lastPathComponent length] ? ([lastPathComponent characterAtIndex:0]!='.') : NO);
 }
 
 - (BOOL)		isDirty				{ return bitsInCommon(hgStatus, eHGStatusDirty); }
 - (BOOL)		isReadable			{ return [[NSFileManager defaultManager] isReadableFileAtPath:absolutePath]; }
-- (NSString*)	fsType				{ return [self isDirectory] ? @"Directory" : @"Non-Directory"; }
+- (NSString*)	fsType				{ return self.isDirectory ? @"Directory" : @"Non-Directory"; }
 - (NSString*)	lastPathComponent	{ return [relativePathComponent lastPathComponent]; }
 
 
@@ -77,15 +77,15 @@
 // MARK: Accessors
 // ------------------------------------------------------------------------------------
 
-- (NSInteger)   childNodeCount						{ return [[self sortedChildNodeKeys] count]; }
-- (FSNodeInfo*) childNodeAtIndex:(NSInteger)index	{ return [[self childNodes] objectForKey:[[self sortedChildNodeKeys] objectAtIndex:index]]; }
+- (NSInteger)   childNodeCount						{ return [self.sortedChildNodeKeys count]; }
+- (FSNodeInfo*) childNodeAtIndex:(NSInteger)index	{ return [self.childNodes objectForKey:[self.sortedChildNodeKeys objectAtIndex:index]]; }
 
 // This method must be called on theRoot node.
 - (FSNodeInfo*) nodeForPathFromRoot:(NSString*)thePath
 {
-	NSString* theRelativePath = pathDifference([self absolutePath], thePath);
+	NSString* theRelativePath = pathDifference(self.absolutePath, thePath);
 	if (IsEmpty(theRelativePath))
-		return [[self absolutePath] isEqualToString:thePath] ? self : nil;
+		return [self.absolutePath isEqualToString:thePath] ? self : nil;
 	NSArray* thePathComponents = [theRelativePath pathComponents];
 	FSNodeInfo* node = self;
 	for (NSString* pathPath in thePathComponents)
@@ -102,7 +102,7 @@
 	*column = -1;
 	*row = 0;
 	NSString* thePath = [goalNode absolutePath];
-	NSString* theRelativePath = pathDifference([self absolutePath], thePath);
+	NSString* theRelativePath = pathDifference(self.absolutePath, thePath);
 	if (IsEmpty(theRelativePath))
 		return NO;
 	
@@ -238,8 +238,8 @@
 
 - (NSImage*) iconImageOfSize:(NSSize)size
 {    
-	NSString* path = [self absolutePath];
-	NSString* defaultImageName = [self isDirectory] ? NSImageNameFolder : @"FSIconImage-Default";
+	NSString* path = self.absolutePath;
+	NSString* defaultImageName = self.isDirectory ? NSImageNameFolder : @"FSIconImage-Default";
 	return [NSWorkspace iconImageOfSize:size forPath:path withDefault:defaultImageName];
 }
 
@@ -326,13 +326,13 @@
 	static NSMutableDictionary* cachedIcons = nil;
 	if (!cachedIcons)
 		cachedIcons = [[NSMutableDictionary alloc] init];
-	NSNumber* theKey = [NSNumber numberWithInt:[self hgStatus]];
+	NSNumber* theKey = [NSNumber numberWithInt:self.hgStatus];
 
 	NSImage* cached = cachedIcons[theKey];
 	if (cached)
 		return cached;
 	
-	NSArray* icons = [FSNodeInfo notableIconImagesForStatus:[self hgStatus] isDirectory:[self isDirectory]];
+	NSArray* icons = [FSNodeInfo notableIconImagesForStatus:self.hgStatus isDirectory:self.isDirectory];
 	NSImage* combinedImage = [FSNodeInfo compositeRowOfIcons:icons withOverlap:IconOverlapCompression];
 	cachedIcons[theKey] = combinedImage;
 	return combinedImage;
@@ -342,7 +342,7 @@
 - (int) directoryDecorationIconCountForNodeInfo
 {
 	int iconCount = 0;
-	HGStatus status = [self hgStatus];
+	HGStatus status = self.hgStatus;
 	if (bitsInCommon(status, eHGStatusMissing))		iconCount++;
 	if (bitsInCommon(status, eHGStatusUntracked))	iconCount++;
 	if (bitsInCommon(status, eHGStatusAdded))		iconCount++;
@@ -481,7 +481,7 @@
 	FSNodeInfo* copiedNode = [[FSNodeInfo alloc]initWithNode:self];
 	[copiedNode setHgStatus:unionBits([copiedNode hgStatus], eHGStatusDirty)];
 	[[copiedNode childNodes] removeAllObjects];
-	for (FSNodeInfo* childNode in [[self childNodes] objectEnumerator])
+	for (FSNodeInfo* childNode in [self.childNodes objectEnumerator])
 		[copiedNode childNodes][[childNode relativePathComponent]] = [childNode deepCopyAndDirtify];
 	return copiedNode;
 }
@@ -646,12 +646,12 @@
 
 - (void) addAllLeafNodes:(NSMutableArray*)flatNodes withStatus:(HGStatus)status
 {
-	if ([[self sortedChildNodeKeys] count] == 0 && bitsInCommon(status, hgStatus))
+	if ([self.sortedChildNodeKeys count] == 0 && bitsInCommon(status, hgStatus))
 	{
 		[flatNodes addObject:self];
 		return;
 	}
-	for (NSString* key in [self sortedChildNodeKeys])
+	for (NSString* key in self.sortedChildNodeKeys)
 		[childNodes[key] addAllLeafNodes:flatNodes withStatus:status];
 }
 
@@ -671,7 +671,7 @@
 // MARK: Preview support
 // ------------------------------------------------------------------------------------
 
-- (NSImage*) iconImageForPreview { return [NSWorkspace iconImageOfSize:NSMakeSize(128,128) forPath:[self absolutePath]]; }
+- (NSImage*) iconImageForPreview { return [NSWorkspace iconImageOfSize:NSMakeSize(128,128) forPath:self.absolutePath]; }
 
 static NSString* stringFromFileSize(NSInteger theSize)
 {
@@ -706,12 +706,12 @@ static NSString* stringFromItemCount(NSInteger theCount)
 		[dateFormatter setTimeStyle:NSDateFormatterShortStyle];
 	}
 	
-	NSMutableAttributedString* attrString = [NSMutableAttributedString string:fstr( @"%@\n", [self lastPathComponent]) withAttributes:smallCenteredSystemFontAttributes];
+	NSMutableAttributedString* attrString = [NSMutableAttributedString string:fstr( @"%@\n", self.lastPathComponent) withAttributes:smallCenteredSystemFontAttributes];
 
 	NSFileManager* fileManager = [NSFileManager defaultManager];
 	NSDictionary* fileAttributes = [fileManager attributesOfItemAtPath:absolutePath error:nil];
 	
-	if (![self isDirectory])
+	if (!self.isDirectory)
 		[attrString appendAttributedString: [NSAttributedString string:stringFromFileSize([fileAttributes fileSize]) withAttributes:smallCenteredSystemFontAttributes]];
 	else
 		[attrString appendAttributedString: [NSAttributedString string:stringFromItemCount([sortedChildNodeKeys count]) withAttributes:smallCenteredSystemFontAttributes]];

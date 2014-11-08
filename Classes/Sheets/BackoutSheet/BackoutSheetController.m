@@ -68,7 +68,7 @@
 {
 	BOOL valid = [logTableView singleRevisionSelected];
 	[okButton setEnabled:valid];
-	[sheetInformativeMessageTextField setAttributedStringValue: (valid ? [self formattedSheetMessage] : normalSheetMessageAttributedString(@"You need to select a single revision in order to backout."))];
+	[sheetInformativeMessageTextField setAttributedStringValue: (valid ? self.formattedSheetMessage : normalSheetMessageAttributedString(@"You need to select a single revision in order to backout."))];
 }
 
 

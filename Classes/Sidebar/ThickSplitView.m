@@ -28,7 +28,7 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 
 - (CGFloat) splitView:(NSSplitView*)splitView constrainSplitPosition:(CGFloat)proposedPosition ofSubviewAt:(NSInteger)dividerIndex
 {
-	CGFloat height = [self bounds].size.height;
+	CGFloat height = self.bounds.size.height;
 	if (proposedPosition > height - 50)
 		return height - 18;
 	return constrain(proposedPosition, height - 250, height - 100);
@@ -36,11 +36,11 @@ static inline CGFloat constrain(CGFloat val, CGFloat min, CGFloat max)	{ if (val
 
 - (void) splitView:(NSSplitView*)splitView resizeSubviewsWithOldSize:(NSSize)oldSize
 {
-	NSArray* views		= [self subviews];
+	NSArray* views		= self.subviews;
 	NSView* outline		= views[0];
 	NSView* info		= views[1];
 	NSRect outlineFrame = [outline frame];
-	outlineFrame.size.height = [self frame].size.height - [info frame].size.height;
+	outlineFrame.size.height = self.frame.size.height - [info frame].size.height;
 	[outline setFrame:outlineFrame];
 	[self adjustSubviews];
 }

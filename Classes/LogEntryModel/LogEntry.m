@@ -110,11 +110,11 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 // MARK:  Derived information
 // ------------------------------------------------------------------------------------
 
-- (NSArray*) labels { return [collection_ revisionNumberToLabels][[self revision]]; }
+- (NSArray*) labels { return [collection_ revisionNumberToLabels][self.revision]; }
 
 - (NSArray*) tags
 {
-	NSArray* labels = [self labels];
+	NSArray* labels = self.labels;
 	if (IsEmpty(labels))
 		return [[NSArray alloc]init];
 	return [LabelData filterLabelsAndExtractNames:labels byType:eTagLabel];
@@ -122,7 +122,7 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 
 - (NSArray*) bookmarks
 {
-	NSArray* labels = [self labels];
+	NSArray* labels = self.labels;
 	if (IsEmpty(labels))
 		return [[NSArray alloc]init];
 	return [LabelData filterLabelsAndExtractNames:labels byType:eBookmarkLabel];
@@ -130,7 +130,7 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 
 - (NSString*) branchHead
 {
-	NSArray* labels = [self labels];
+	NSArray* labels = self.labels;
 	if (IsEmpty(labels))
 		return @"";
 	NSArray* branchLabels = [LabelData filterLabels:labels byType:eBranchLabel];
@@ -140,7 +140,7 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 
 - (BOOL) isClosedBranchHead
 {
-	NSArray* labels = [self labels];
+	NSArray* labels = self.labels;
 	if (IsEmpty(labels))
 		return NO;
 	NSArray* branchLabels = [LabelData filterLabels:labels byType:eClosedBranch];
@@ -149,7 +149,7 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 
 - (NSString*) labelsString
 {
-	NSArray* labels = [self labels];
+	NSArray* labels = self.labels;
 	if (IsEmpty(labels))
 		return @"";
 	NSArray* names = [LabelData filterLabelsAndExtractNames:labels byType:eNotOpenHead];
@@ -295,8 +295,8 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 - (NSArray*)	childrenOfEntry			{ return childrenArray_; }
 - (NSString*)	revisionStr				{ return numberAsString(revision_); }
 - (NSInteger)	revisionInt				{ return numberAsInt(revision_); }
-- (NSInteger)	ithChildRev:(NSInteger)i			{ return (0 <= i && [self childCount]  > i) ? numberAsInt(childrenArray_[i]) : NSNotFound; }
-- (NSInteger)	ithParentRev:(NSInteger)i			{ return (0 <= i && [self parentCount] > i) ? numberAsInt(parentsArray_[i]) : NSNotFound; }
+- (NSInteger)	ithChildRev:(NSInteger)i			{ return (0 <= i && self.childCount  > i) ? numberAsInt(childrenArray_[i]) : NSNotFound; }
+- (NSInteger)	ithParentRev:(NSInteger)i			{ return (0 <= i && self.parentCount > i) ? numberAsInt(parentsArray_[i]) : NSNotFound; }
 - (BOOL)	    revIsDirectParent:(NSInteger)rev	{ return rev == numberAsInt(revision_) - 1; }
 - (BOOL)	    revIsDirectChild:(NSInteger)rev		{ return rev == numberAsInt(revision_) + 1; }
 - (BOOL)		isEqualToEntry:(LogEntry*)entry		{ return [changeset_ isEqualToString:[entry changeset]] && [parentsArray_ isEqualToArray:[entry parentsOfEntry]]; }
@@ -366,27 +366,27 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 	if (YES)
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"\nChangeset:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@ : %@\n", revision_, [self shortChangeset]))];
+		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@ : %@\n", revision_, self.shortChangeset))];
 	}
-	if (IsNotEmpty([self tags]))
+	if (IsNotEmpty(self.tags))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Tags:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", [[self tags] componentsJoinedByString:@", "]))];
+		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", [self.tags componentsJoinedByString:@", "]))];
 	}
-	if (IsNotEmpty([self bookmarks]))
+	if (IsNotEmpty(self.bookmarks))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Bookmarks:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", [[self bookmarks] componentsJoinedByString:@", "]))];
+		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", [self.bookmarks componentsJoinedByString:@", "]))];
 	}	
-	if (stringIsNonWhiteSpace([self branchHead]))
+	if (stringIsNonWhiteSpace(self.branchHead))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Branch Head:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", [self branchHead]))];
+		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", self.branchHead))];
 	}
-	if (IsNotEmpty([self parentsOfEntry]))
+	if (IsNotEmpty(self.parentsOfEntry))
 	{
-		[verboseEntry appendAttributedString: categoryAttributedString( ([[self parentsOfEntry] count] > 1) ? @"Parents:\t" : @"Parent:\t")];
-		for (NSNumber* parent in [self parentsOfEntry])
+		[verboseEntry appendAttributedString: categoryAttributedString( ([self.parentsOfEntry count] > 1) ? @"Parents:\t" : @"Parent:\t")];
+		for (NSNumber* parent in self.parentsOfEntry)
 		{
 			if (IsNotEmpty(parent))
 			{
@@ -397,52 +397,52 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 		}
 		[verboseEntry appendAttributedString: normalAttributedString(@"\n")];
 	}
-//	if (stringIsNonWhiteSpace(children_) && ([self childCount] > 1 || ![self revIsDirectChild:[self ithChildRev:0]]))
+//	if (stringIsNonWhiteSpace(children_) && (self.childCount > 1 || ![self revIsDirectChild:[self ithChildRev:0]]))
 //	{
 //		[verboseEntry appendAttributedString: categoryAttributedString(@"Children:\t")];
 //		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", children_))];
 //	}
 	
-	if (![self isFullyLoaded])
+	if (!self.isFullyLoaded)
 		return verboseEntry;
 
-	if (stringIsNonWhiteSpace([self fullAuthor]))
+	if (stringIsNonWhiteSpace(self.fullAuthor))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Author:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", [self fullAuthor]))];
+		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", self.fullAuthor))];
 	}
 	else
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Author:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", nonNil([self author])))];
+		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", nonNil(self.author)))];
 	}
 	
 	// branches is always non-null/non-empty
 	[verboseEntry appendAttributedString: categoryAttributedString(@"Branch:\t")];
-	[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", [self branch]))];
+	[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", self.branch))];
 
-	if (IsNotEmpty([self rawDate]))
+	if (IsNotEmpty(self.rawDate))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Date:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@   ", [self shortDate]))];
-		[verboseEntry appendAttributedString: grayedAttributedString(fstr(@"(%@)\n", [self fullDate]))];
+		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@   ", self.shortDate))];
+		[verboseEntry appendAttributedString: grayedAttributedString(fstr(@"(%@)\n", self.fullDate))];
 	}
 
-	if (stringIsNonWhiteSpace([self fullComment]))
+	if (stringIsNonWhiteSpace(self.fullComment))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Description:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", [self fullComment]))];
+		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", self.fullComment))];
 	}
-	else if (stringIsNonWhiteSpace([self shortComment]))
+	else if (stringIsNonWhiteSpace(self.shortComment))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Description:\t")];
-		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", [self shortComment]))];
+		[verboseEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", self.shortComment))];
 	}
 	
-	if (IsNotEmpty([self filesAdded]))
+	if (IsNotEmpty(self.filesAdded))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Added:\t")];
-		for (NSString* file in [self filesAdded])
+		for (NSString* file in self.filesAdded)
 		{
 			NSTextAttachment* attachment = [DiffTextButtonCell diffButtonAttachmentWithLogEntry:self andFile:file andType:eDiffFileAdded];
 			[verboseEntry appendAttributedString: normalAttributedString(@" ")];
@@ -450,10 +450,10 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 			[verboseEntry appendAttributedString: normalAttributedString(@"\n")];
 		}
 	}
-	if (IsNotEmpty([self filesModified]))
+	if (IsNotEmpty(self.filesModified))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Modified:\t")];
-		for (NSString* file in [self filesModified])
+		for (NSString* file in self.filesModified)
 		{
 			NSTextAttachment* attachment = [DiffTextButtonCell diffButtonAttachmentWithLogEntry:self andFile:file andType:eDiffFileChanged];
 			[verboseEntry appendAttributedString: normalAttributedString(@" ")];
@@ -461,10 +461,10 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 			[verboseEntry appendAttributedString: normalAttributedString(@"\n")];
 		}
 	}
-	if (IsNotEmpty([self filesRemoved]))
+	if (IsNotEmpty(self.filesRemoved))
 	{
 		[verboseEntry appendAttributedString: categoryAttributedString(@"Removed:\t")];
-		for (NSString* file in [self filesRemoved])
+		for (NSString* file in self.filesRemoved)
 		{
 			NSTextAttachment* attachment = [DiffTextButtonCell diffButtonAttachmentWithLogEntry:self andFile:file andType:eDiffFileRemoved];
 			[verboseEntry appendAttributedString: normalAttributedString(@" ")];
@@ -482,19 +482,19 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 	NSMutableAttributedString* briefEntry = [[NSMutableAttributedString alloc] init];
 	[briefEntry appendAttributedString: categoryAttributedString(@"Commit:\t")];
 	[briefEntry appendAttributedString: normalAttributedString(fstr(@"%@ ", revision_))];
-	[briefEntry appendAttributedString: grayedAttributedString(fstr(@"(%@)", [self author]))];
-	[briefEntry appendAttributedString: normalAttributedString(fstr(@", %@\n", [self shortDate]))];
+	[briefEntry appendAttributedString: grayedAttributedString(fstr(@"(%@)", self.author))];
+	[briefEntry appendAttributedString: normalAttributedString(fstr(@", %@\n", self.shortDate))];
 	[briefEntry appendAttributedString: categoryAttributedString(@"Description:\t")];
-	[briefEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", [self fullComment]))];
+	[briefEntry appendAttributedString: normalAttributedString(fstr(@"%@\n", self.fullComment))];
 	return briefEntry;
 }
 
 
 - (id) labelsAndShortComment
 {
-	NSArray* labels = [self labels];
+	NSArray* labels = self.labels;
 	if (IsEmpty(labels))
-		return [self shortComment];
+		return self.shortComment;
 
 
 	NSMutableAttributedString* str = [[NSMutableAttributedString alloc]init];
@@ -516,8 +516,8 @@ void setupGlobalsForLogEntryPartsAndTemplate()
 		[str appendAttributedString: [NSAttributedString attributedStringWithAttachment:attachment]];
 		[str appendAttributedString: [NSAttributedString string:@" " withAttributes:smallSystemFontAttributes]];
 	}
-	if ([self shortComment])
-		[str appendAttributedString:[NSAttributedString string:[self shortComment] withAttributes:smallSystemFontAttributes]];
+	if (self.shortComment)
+		[str appendAttributedString:[NSAttributedString string:self.shortComment withAttributes:smallSystemFontAttributes]];
 	return str;
 }
 

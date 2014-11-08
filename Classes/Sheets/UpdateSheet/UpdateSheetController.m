@@ -68,7 +68,7 @@
 {
 	BOOL valid = [logTableView singleRevisionSelected];
 	[okButton setEnabled:valid];
-	[sheetInformativeMessageTextField setAttributedStringValue: (valid ? [self formattedSheetMessage] : normalSheetMessageAttributedString(@"You need to select a single revision in order to update."))];
+	[sheetInformativeMessageTextField setAttributedStringValue: (valid ? self.formattedSheetMessage : normalSheetMessageAttributedString(@"You need to select a single revision in order to update."))];
 }
 
 
@@ -103,7 +103,7 @@
 - (IBAction) sheetButtonOk:(id)sender
 {
 	NSNumber* versionToUpdateTo = [logTableView selectedRevision];
-	BOOL didReversion = [myDocument_ primaryActionUpdateFilesToVersion:versionToUpdateTo withCleanOption:[self cleanUpdate] withConfirmation:NO];
+	BOOL didReversion = [myDocument_ primaryActionUpdateFilesToVersion:versionToUpdateTo withCleanOption:self.cleanUpdate withConfirmation:NO];
 	if (!didReversion)
 		return;
 
@@ -166,7 +166,7 @@
 	if (!outstandingChanges)
 		return newSheetMessage;
 	
-	if ([self cleanUpdate])
+	if (self.cleanUpdate)
 	{
 		[newSheetMessage appendAttributedString: normalSheetMessageAttributedString(@" The modified files will be ")];
 		[newSheetMessage appendAttributedString: emphasizedSheetMessageAttributedString(@"overwritten")];

@@ -17,7 +17,7 @@
 	static CGFloat relativeXPosition = 0.35;
 	static CGFloat relativeYPosition = 0.7;
 
-	NSRect f = [self frame];
+	NSRect f = self.frame;
 	NSRect bounds = [[super superview] bounds];
 	f.origin.x = round((bounds.size.width  - f.size.width ) * relativeXPosition);
 	f.origin.y = round((bounds.size.height - f.size.height) * relativeYPosition);

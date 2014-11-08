@@ -61,7 +61,7 @@
 
 - (NSRect) buttonFrameSize
 {
-	NSAttributedString* title = [self attributedTitle];
+	NSAttributedString* title = self.attributedTitle;
 	NSSize s = [title size];
 	return NSMakeRect(0, -7, s.width + 30, 22);
 }
@@ -163,14 +163,14 @@
 
 - (NSPoint)cellBaselineOffset
 {
-	NSRect titleRect = [self titleRectForBounds:[self buttonFrameSize]];
-	CGFloat baseline = ceil(NSMinY(titleRect) + [[self font] ascender]);
+	NSRect titleRect = [self titleRectForBounds:self.buttonFrameSize];
+	CGFloat baseline = ceil(NSMinY(titleRect) + [self.font ascender]);
 	return NSMakePoint(0, baseline);
 }
 
 - (NSRect)cellFrameForTextContainer:(NSTextContainer*)textContainer proposedLineFragment:(NSRect)lineFrag glyphPosition:(NSPoint)position characterIndex:(NSUInteger)charIndex
 {
-	return [self buttonFrameSize];
+	return self.buttonFrameSize;
 }
 
 

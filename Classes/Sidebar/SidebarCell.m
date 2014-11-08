@@ -141,7 +141,7 @@
 {
 	// Setup Badge String and Size
 	NSSize badgeNumSize = [badgeString_ sizeWithAttributes:nil];
-	NSFont* badgeFont = [self font];
+	NSFont* badgeFont = self.font;
 	
 	// Calculate the Badge's coordinate
 	CGFloat badgeWidth = badgeNumSize.width + TSBADGECELL_BUFFER_SIDE * 2;
@@ -160,8 +160,8 @@
 	NSBezierPath* badgePath = [NSBezierPath bezierPathWithRoundedRect:badgeRect  xRadius:TSBADGECELL_RADIUS_X  yRadius:TSBADGECELL_RADIUS_Y];
 	
 	BOOL isWindowFront = [[NSApp mainWindow] isVisible];
-	BOOL isViewInFocus = [[[[self controlView] window] firstResponder] isEqual:[self controlView]];
-	BOOL isCellHighlighted = [self isHighlighted];
+	BOOL isViewInFocus = [[[self.controlView window] firstResponder] isEqual:self.controlView];
+	BOOL isCellHighlighted = self.isHighlighted;
 	
 	NSDictionary* dict = [[NSMutableDictionary alloc] init];
 	[dict setValue:badgeFont forKey:NSFontAttributeName];

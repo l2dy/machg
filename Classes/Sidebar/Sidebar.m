@@ -66,8 +66,8 @@
 	[self observe:kRepositoryDataDidChange					from:myDocument_  byCalling:@selector(repositoryDataDidChange:)];
 
 	// Scroll to the top in case the outline contents is very long
-	[[[self enclosingScrollView] verticalScroller] setFloatValue:0.0];
-	[[[self enclosingScrollView] contentView] scrollToPoint:NSMakePoint(0, 0)];
+	[[self.enclosingScrollView verticalScroller] setFloatValue:0.0];
+	[[self.enclosingScrollView contentView] scrollToPoint:NSMakePoint(0, 0)];
 	
 
 	// drag and drop support
@@ -81,7 +81,7 @@
 	// Set up some appearance paramaeters
 	[self setSelectionHighlightStyle:NSTableViewSelectionHighlightStyleNone];	// We do our own formatting so it looks like a source list
 	[self setDraggingDestinationFeedbackStyle:NSTableViewDraggingDestinationFeedbackStyleSourceList];
-	[self setRowHeight:[self rowHeight]+1.0];									// Tweak the row height a bit so it looks more like source lists.
+	[self setRowHeight:self.rowHeight+1.0];									// Tweak the row height a bit so it looks more like source lists.
 	[self setIndentationPerLevel:13.0];
 	
 	// Set up Delegates & Data Source
@@ -132,14 +132,14 @@
 
 - (void) addSidebarNode:(SidebarNode*)newNode
 {
-	SidebarNode* node = [self chosenNode];
+	SidebarNode* node = self.chosenNode;
 	[self addSidebarNode:newNode afterNode:node];
 }
 
 - (void) addSidebarNode:(SidebarNode*)newNode afterNode:(SidebarNode*)existingNode
 {
 	if (!existingNode)
-		existingNode = [self chosenNode];
+		existingNode = self.chosenNode;
 	if (existingNode)
 	{
 		NSInteger existingIndex = [[existingNode parent] indexOfChildNode:existingNode];
@@ -151,7 +151,7 @@
 			return;
 		}
 	}
-	SidebarNode* node = [self lastSectionNode];
+	SidebarNode* node = self.lastSectionNode;
 	if (!node)
 		node = root_;
 	[node addChild:newNode];
@@ -180,31 +180,31 @@
 // MARK:  Selection Queries
 // ------------------------------------------------------------------------------------
 
-- (BOOL) localRepoIsSelected			{ return [[self selectedNode] isLocalRepositoryRef]  && ![self multipleNodesAreSelected]; }
-- (BOOL) localRepoIsChosen				{ return [[self chosenNode]   isLocalRepositoryRef]  && ![self multipleNodesAreChosen]; }
-- (BOOL) serverRepoIsSelected			{ return [[self selectedNode] isServerRepositoryRef] && ![self multipleNodesAreSelected]; }
-- (BOOL) serverRepoIsChosen				{ return [[self selectedNode] isServerRepositoryRef] && ![self multipleNodesAreChosen]; }
-- (BOOL) localOrServerRepoIsSelected	{ return [[self selectedNode] isRepositoryRef]       && ![self multipleNodesAreSelected]; }
-- (BOOL) localOrServerRepoIsChosen		{ return [[self chosenNode]   isRepositoryRef]       && ![self multipleNodesAreChosen]; }
-- (SidebarNode*) selectedNode			{ return [self selectedItem]; }
-- (SidebarNode*) chosenNode				{ return [self chosenItem]; }
-- (SidebarNode*) clickedNode			{ return [self clickedItem]; }
-- (NSArray*)     selectedNodes			{ return [self selectedItems]; }
-- (NSArray*)     chosenNodes			{ return [self chosenItems]; }
-- (BOOL) multipleNodesAreSelected		{ return [self numberOfSelectedRows] > 1; }
-- (BOOL) multipleNodesAreChosen			{ return [self multipleNodesAreSelected] && [self isRowSelected:[self chosenRow]]; }
+- (BOOL) localRepoIsSelected			{ return [self.selectedNode isLocalRepositoryRef]  && !self.multipleNodesAreSelected; }
+- (BOOL) localRepoIsChosen				{ return [self.chosenNode   isLocalRepositoryRef]  && !self.multipleNodesAreChosen; }
+- (BOOL) serverRepoIsSelected			{ return [self.selectedNode isServerRepositoryRef] && !self.multipleNodesAreSelected; }
+- (BOOL) serverRepoIsChosen				{ return [self.selectedNode isServerRepositoryRef] && !self.multipleNodesAreChosen; }
+- (BOOL) localOrServerRepoIsSelected	{ return [self.selectedNode isRepositoryRef]       && !self.multipleNodesAreSelected; }
+- (BOOL) localOrServerRepoIsChosen		{ return [self.chosenNode   isRepositoryRef]       && !self.multipleNodesAreChosen; }
+- (SidebarNode*) selectedNode			{ return self.selectedItem; }
+- (SidebarNode*) chosenNode				{ return self.chosenItem; }
+- (SidebarNode*) clickedNode			{ return self.clickedItem; }
+- (NSArray*)     selectedNodes			{ return self.selectedItems; }
+- (NSArray*)     chosenNodes			{ return self.chosenItems; }
+- (BOOL) multipleNodesAreSelected		{ return self.numberOfSelectedRows > 1; }
+- (BOOL) multipleNodesAreChosen			{ return self.multipleNodesAreSelected && [self isRowSelected:self.chosenRow]; }
 
 - (SidebarNodeKind) combinedKindOfSelectedNodes
 {
 	SidebarNodeKind kinds = 0;
-	for (SidebarNode* node in [self selectedNodes])
+	for (SidebarNode* node in self.selectedNodes)
 		kinds = unionBits(kinds, [node nodeKind]);
 	return kinds;
 }
 - (SidebarNodeKind) combinedKindOfChosenNodes
 {
 	SidebarNodeKind kinds = 0;
-	for (SidebarNode* node in [self chosenNodes])
+	for (SidebarNode* node in self.chosenNodes)
 		kinds = unionBits(kinds, [node nodeKind]);
 	return kinds;
 }
@@ -226,7 +226,7 @@
 // then the NSMutableArray in there and so on. Maybe 1K or 2K bytes for a whole tree so I am not going to sweat this.
 - (void) setRootAndUpdate:(SidebarNode*)root
 {
-	NSUndoManager* undoer = [self undoManager];
+	NSUndoManager* undoer = self.undoManager;
 	if ([undoer isUndoing] || [undoer isRedoing])
 		[[self prepareUndoWithTarget:self] setRootAndUpdate:root_];
 	root_ = root;
@@ -347,7 +347,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	{
 		SidebarCell* sidebarCell = (SidebarCell*) cell;
 		SidebarNode* node = ExactDynamicCast(SidebarNode,item);
-		SidebarNode* selectedNode = [self selectedNode];
+		SidebarNode* selectedNode = self.selectedNode;
 		[sidebarCell setNode:node];
 
 		NSString* outgoingCount = outgoingCounts[[node path]];
@@ -422,13 +422,13 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 
 	if ([node isSectionNode])
 	{
-		NSColor* backColor = [self backgroundColor];
+		NSColor* backColor = self.backgroundColor;
 		NSRect bounds = [self rectOfRow:rowIndex];
 		[backColor set];
 		[NSBezierPath fillRect:bounds];
 	}
 	
-	if ([[self selectedRowIndexes] containsIndex:rowIndex])
+	if ([self.selectedRowIndexes containsIndex:rowIndex])
 	{
 		BOOL active = [[[myDocument_ mainWindow] firstResponder] hasAncestor:self];	// We display active if we are in the rsponde chain
 		NSRect cellBounds = [self rectOfRow:rowIndex];
@@ -445,7 +445,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 
 - (void) outlineViewSelectionDidChange:(NSNotification*)notification
 {
-	SidebarNode* selectedNode = [self selectedNode];
+	SidebarNode* selectedNode = self.selectedNode;
 	
 	outgoingCounts = [[NSMutableDictionary alloc]init];				// reset the outgoing counts which will get recomputed below.
 	incomingCounts = [[NSMutableDictionary alloc]init];				// reset the outgoing counts which will get recomputed below.
@@ -453,10 +453,10 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	[myDocument_ postNotificationWithName:kSidebarSelectionDidChange];
 	[myDocument_ postNotificationWithName:kRepositoryRootChanged];	// We have switched to a new root (possibly a nil root)
 
-	SidebarNode* node = [self selectedNode];
-	currentSelectionAllowsBadges_ = ![self multipleNodesAreSelected] && node && ![node isMissingLocalRepositoryRef];
+	SidebarNode* node = self.selectedNode;
+	currentSelectionAllowsBadges_ = !self.multipleNodesAreSelected && node && ![node isMissingLocalRepositoryRef];
 	
-	if (selectedNode == nil || [selectedNode nodeKind] == kSidebarNodeKindSection || [self multipleNodesAreSelected])
+	if (selectedNode == nil || [selectedNode nodeKind] == kSidebarNodeKindSection || self.multipleNodesAreSelected)
 	{
 		[myDocument_ discardCurrentRepository];
 		[repositoryPathControl_ setURL:[NSURL URLWithString:@""]];
@@ -511,7 +511,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	if ([aNotification object] != self)
 		return;
 
-	SidebarNode* selectedNode = [self selectedNode];
+	SidebarNode* selectedNode = self.selectedNode;
 	NSText* fieldEditor = [aNotification userInfo][@"NSFieldEditor"];
 	NSString* newString = [[fieldEditor string] copy];		// Important to make a copy here. Apple says:
 
@@ -520,7 +520,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	
 	// Allow undo here.
 	[[self prepareUndoWithTarget:self] setRootAndUpdate:[root_ copyNodeTree]];
-	[[self undoManager] setActionName:@"Name Change"];
+	[self.undoManager setActionName:@"Name Change"];
 
 	// Do name change
 	[selectedNode setShortName:newString];
@@ -557,7 +557,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 		return nil;
 	
 	NSMutableArray* serversToAdd = [[NSMutableArray alloc]init];
-	NSMutableArray* allRepositories = [NSMutableArray arrayWithArray:[self allRepositories]];
+	NSMutableArray* allRepositories = [NSMutableArray arrayWithArray:self.allRepositories];
 	NSString* captionBase = [file lastPathComponent];
 	for (NSArray* path in paths)
 	{
@@ -695,11 +695,11 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 
 		SidebarNode* copiedTree = [root_ copyNodeTree];
 		[[self prepareUndoWithTarget:self] setRootAndUpdate:copiedTree];
-		[[self undoManager] setActionName:@"Drag"];
+		[self.undoManager setActionName:@"Drag"];
 		
 		NSArray* dragNodesArray = [[AppController sharedAppController] dragNodesArray];
 		Sidebar* sourceSidebar  = DynamicCast(Sidebar, [info draggingSource]);
-		NSArray* currentSelectedNodes = [self selectedNodes];
+		NSArray* currentSelectedNodes = self.selectedNodes;
 		NSArray* currentSelectedSourceNodes = [sourceSidebar selectedNodes];
 		BOOL copyNodes = (sourceSidebar != self) || ([info draggingSourceOperationMask] == NSDragOperationCopy);
 		
@@ -751,7 +751,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	{
 		SidebarNode* copiedTree = [root_ copyNodeTree];
 		[[self prepareUndoWithTarget:self] setRootAndUpdate:copiedTree];
-		[[self undoManager] setActionName:@"Drag"];
+		[self.undoManager setActionName:@"Drag"];
 		
 		NSArray* filenames = [pasteboard propertyListForType:NSFilenamesPboardType];
 		NSArray* resolvedFilenames = [filenames resolveSymlinksAndAliasesInPaths];
@@ -841,14 +841,14 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	NSRect itemRect = (row>=0) ? [self rectOfRow:row] : NSZeroRect;	
 	
 	// check that the path Rect is visible on screen
-	if (NSIntersectsRect([self visibleRect], itemRect))
+	if (NSIntersectsRect(self.visibleRect, itemRect))
 		return [self convertRectToBase:itemRect];			// convert item rect to screen coordinates
 	return NSZeroRect;
 }
 
 - (void) setNeedsDisplayForNode:(SidebarNode*)node
 {
-	[[[self window] contentView] setNeedsDisplayInRect:[self rectInWindowForNode:node]];
+	[[self.window contentView] setNeedsDisplayInRect:[self rectInWindowForNode:node]];
 }
 
 - (void) setNeedsDisplayForNodePath:(NSString*)nodePath andNode:(SidebarNode*)node
@@ -970,14 +970,14 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 		for (int i = 3; i < numberOfItems; i++)
 			[theMenu removeItemAtIndex:3];
 
-		if ([self multipleNodesAreChosen])
+		if (self.multipleNodesAreChosen)
 		{
 			[theMenu addItem:[NSMenuItem separatorItem]];
-			[theMenu addItemWithTitle:[self menuTitleForRemoveSidebarItems]				action:@selector(mainMenuRemoveSidebarItems:)			keyEquivalent:@""];
+			[theMenu addItemWithTitle:self.menuTitleForRemoveSidebarItems				action:@selector(mainMenuRemoveSidebarItems:)			keyEquivalent:@""];
 			return;
 		}
 
-		SidebarNode* node = [self clickedNode];
+		SidebarNode* node = self.clickedNode;
         if (node != nil && [node isLocalRepositoryRef])
 		{
 			[theMenu addItem:[NSMenuItem separatorItem]];
@@ -1058,7 +1058,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 
 - (IBAction) mainMenuConfigureRepositoryRef:(id)sender
 {
-	SidebarNode* node = [self chosenNode];
+	SidebarNode* node = self.chosenNode;
 
 	if ([node isLocalRepositoryRef])
 		[myDocument_ mainMenuConfigureLocalRepositoryRef:sender];
@@ -1072,16 +1072,16 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 - (IBAction) mainMenuAddNewSidebarGroupItem:(id)sender
 {
 	[[self prepareUndoWithTarget:self] setRootAndUpdate:[root_ copyNodeTree]];
-	[[self undoManager] setActionName:@"Add New Group"];
+	[self.undoManager setActionName:@"Add New Group"];
 
 	SidebarNode* newGroupNode = [SidebarNode sectionNodeWithCaption:@"NEW GROUP"];
 	
-	SidebarNode* targetNode = [self chosenNode];
-	if ([self numberOfSelectedRows] <= 0 && !targetNode)
+	SidebarNode* targetNode = self.chosenNode;
+	if (self.numberOfSelectedRows <= 0 && !targetNode)
 		[root_ insertChild:newGroupNode atIndex:[[root_ children] count]];
 	else
 	{
-		SidebarNode* node = [self chosenNode];
+		SidebarNode* node = self.chosenNode;
 		NSInteger index = [[node parent] indexOfChildNode:node] + 1;
 		[[node parent] insertChild:newGroupNode atIndex:index];
 	}
@@ -1090,7 +1090,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 
 - (NSString*) menuTitleForRemoveSidebarItems
 {	
-	NSArray* nodes = [self chosenNodes];
+	NSArray* nodes = self.chosenNodes;
 	if (IsEmpty(nodes))
 		return @"Delete Repository Item";
 
@@ -1119,12 +1119,12 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 
 - (IBAction) mainMenuRemoveSidebarItems:(id)sender
 {
-	NSArray* theChosenNodes = [self chosenNodes];
+	NSArray* theChosenNodes = self.chosenNodes;
 	if (IsEmpty(theChosenNodes))
 		{ NSBeep(); return; }
 	
-	BOOL restoreSelectionAfterRemove = [self clickedRowOutsideSelectedRows];
-	NSArray* theSelectedNodes = [self selectedNodes];
+	BOOL restoreSelectionAfterRemove = self.clickedRowOutsideSelectedRows;
+	NSArray* theSelectedNodes = self.selectedNodes;
 	
 	NSMutableArray* chosenNodesAndAllChildren = [NSMutableArray arrayWithArray:theChosenNodes];
 	for (SidebarNode* node in theChosenNodes)
@@ -1189,7 +1189,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	else
 	{
 		[[self prepareUndoWithTarget:self] setRootAndUpdate:[root_ copyNodeTree]];					// With the undo restore the root node tree
-		[[self undoManager] setActionName:[self menuTitleForRemoveSidebarItems]];		
+		[self.undoManager setActionName:self.menuTitleForRemoveSidebarItems];		
 		NSMutableDictionary* connectionsCopy = [[myDocument_ connections] mutableCopy];
 		[[self prepareUndoWithTarget:myDocument_] setConnections:connectionsCopy];
 	}
@@ -1209,7 +1209,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 
 - (IBAction) mainMenuRevealRepositoryInFinder:(id)sender
 {
-	SidebarNode* node = [self chosenNode];
+	SidebarNode* node = self.chosenNode;
 	if (!node)
 		return;
 	
@@ -1220,7 +1220,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 
 - (IBAction) mainMenuOpenTerminalHere:(id)sender
 {
-	SidebarNode* node = [self chosenNode];
+	SidebarNode* node = self.chosenNode;
 	if (!node)
 	{
 		PlayBeep();
@@ -1255,7 +1255,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 //	{
 //		unichar keyCode = [key characterAtIndex:0];
 //		if (keyCode == NSDeleteCharacter || keyCode == NSBackspaceCharacter)
-//			if ([self numberOfSelectedRows] > 0)
+//			if (self.numberOfSelectedRows > 0)
 //			{
 //				[self sidebarMenuRemoveSidebarItems:self];
 //				return;
@@ -1315,7 +1315,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	return arr;
 }
 
-- (SidebarNode*) lastSectionNode	{ return [[self allSectionNodes] lastObject]; }
+- (SidebarNode*) lastSectionNode	{ return [self.allSectionNodes lastObject]; }
 
 
 
@@ -1345,7 +1345,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 - (NSArray*) allCompatibleRepositories:(SidebarNode*)selectedNode
 {
 	NSMutableArray* compatibleRepositories = [[NSMutableArray alloc] init];
-	NSArray* allRepositories = [self allRepositories];
+	NSArray* allRepositories = self.allRepositories;
 	for (SidebarNode* repo in allRepositories)
 		if ([repo isCompatibleTo:selectedNode])
 			[compatibleRepositories addObject:repo];
@@ -1371,7 +1371,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 
 - (void) computeIncomingOutgoingToCompatibleRepositories
 {
-	SidebarNode* theSelectedNode  = [self selectedNode];
+	SidebarNode* theSelectedNode  = self.selectedNode;
 	NSString* rootPath = [theSelectedNode path];
 	
 	if (![theSelectedNode isExistentLocalRepositoryRef])

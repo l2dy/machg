@@ -63,9 +63,9 @@
 
 - (void) awakeFromNib
 {
-//	[self observe:kRepositoryDataIsNew		from:[self myDocument]  byCalling:@selector(repositoryDataIsNew)];
-//	[self observe:kRepositoryDataDidChange	from:[self myDocument]  byCalling:@selector(logEntriesDidChange:)];
-//	[self observe:kLogEntriesDidChange		from:[self myDocument]  byCalling:@selector(logEntriesDidChange:)];
+//	[self observe:kRepositoryDataIsNew		from:self.myDocument  byCalling:@selector(repositoryDataIsNew)];
+//	[self observe:kRepositoryDataDidChange	from:self.myDocument  byCalling:@selector(logEntriesDidChange:)];
+//	[self observe:kLogEntriesDidChange		from:self.myDocument  byCalling:@selector(logEntriesDidChange:)];
 	
 	// Tell the browser to send us messages when it is clicked.
 	[self setTarget:self];
@@ -95,11 +95,11 @@
 // MARK:  Quieres
 // ------------------------------------------------------------------------------------
 
-- (BOOL)		 patchIsSelected { return 0 <= [self selectedRow] && [self selectedRow] < [patchesTableData_ count]; }
-- (BOOL)		 patchIsClicked	 { return [self clickedRow] != -1; }
-- (PatchRecord*) selectedPatch	 { return [self patchIsSelected] ? patchesTableData_[[self selectedRow]] : nil; }
-- (PatchRecord*) clickedPatch	 { return [self patchIsClicked]  ? patchesTableData_[[self clickedRow]]  : nil; }
-- (PatchRecord*) chosenPatch	 { PatchRecord* ans = [self clickedPatch]; return ans ? ans : [self selectedPatch]; }
+- (BOOL)		 patchIsSelected { return 0 <= self.selectedRow && self.selectedRow < [patchesTableData_ count]; }
+- (BOOL)		 patchIsClicked	 { return self.clickedRow != -1; }
+- (PatchRecord*) selectedPatch	 { return self.patchIsSelected ? patchesTableData_[self.selectedRow] : nil; }
+- (PatchRecord*) clickedPatch	 { return self.patchIsClicked  ? patchesTableData_[self.clickedRow]  : nil; }
+- (PatchRecord*) chosenPatch	 { PatchRecord* ans = self.clickedPatch; return ans ? ans : self.selectedPatch; }
 - (NSArray*)     patches		 { return patchesTableData_; }
 
 
@@ -124,7 +124,7 @@
 - (IBAction) removeSelectedPatches:(id)sender
 {
 	NSMutableArray* newTableData = [NSMutableArray arrayWithArray:patchesTableData_];
-	[newTableData removeObjectsAtIndexes:[self selectedRowIndexes]];
+	[newTableData removeObjectsAtIndexes:self.selectedRowIndexes];
 	patchesTableData_ = newTableData;
 	[self deselectAll:self];
 	[self reloadData];
@@ -201,12 +201,12 @@
 
 - (NSInteger) numberOfRowsInTableView:(NSTableView*)aTableView
 {
-	return [[self patchesTableData] count];
+	return [self.patchesTableData count];
 }
 
 - (id) tableView:(NSTableView*)aTableView objectValueForTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)requestedRow
 {
-	PatchRecord* patch = [self patchesTableData][requestedRow];
+	PatchRecord* patch = self.patchesTableData[requestedRow];
 	NSString* requestedColumn = [aTableColumn identifier];
 
 	id value = [patch valueForKey:requestedColumn];
@@ -215,7 +215,7 @@
 
 - (void) tableView:(NSTableView*)aTableView setObjectValue:(id)anObject forTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)rowIndex
 {
-	PatchRecord* clickedPatch = [self patchesTableData][rowIndex];
+	PatchRecord* clickedPatch = self.patchesTableData[rowIndex];
 	NSString* columnIdentifier = [aTableColumn identifier];
 	[clickedPatch setValue:anObject forKey:columnIdentifier];
 
@@ -256,22 +256,22 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 - (void) tableViewSelectionDidChange:(NSNotification*)aNotification
 {
 	NSInteger currentTaskNumber = [detailedPatchesWebView nextTaskNumber];
-	NSInteger selectedRowCount = [[self selectedRowIndexes] count];
+	NSInteger selectedRowCount = [self.selectedRowIndexes count];
 	if (selectedRowCount == 0)
 		[detailedPatchesWebView setBackingPatch:nil andFallbackMessage:@"No Patch Selected" withTaskNumber:currentTaskNumber];
 	else if (selectedRowCount > 1)
 		[detailedPatchesWebView setBackingPatch:nil andFallbackMessage:@"Multiple Patches Selected" withTaskNumber:currentTaskNumber];
 	else
-		[detailedPatchesWebView setBackingPatch:[[self selectedPatch] patchData] andFallbackMessage:@"" withTaskNumber:currentTaskNumber];
+		[detailedPatchesWebView setBackingPatch:[self.selectedPatch patchData] andFallbackMessage:@"" withTaskNumber:currentTaskNumber];
 }
 
 // Clicking on the checkboxes in the table view shouldn't change the selection.
 - (BOOL) selectionShouldChangeInTableView:(NSTableView*)aTableView
 {
-	NSInteger column = [self clickedColumn];
+	NSInteger column = self.clickedColumn;
 	if (column < 0)
 		return YES;
-	NSTableColumn* clickedTableColumn = [self tableColumns][column];
+	NSTableColumn* clickedTableColumn = self.tableColumns[column];
 	NSString* columnIdentifier = [clickedTableColumn identifier];
 	if ([columnIdentifier isEqualToString:@"forceOption"] || [columnIdentifier isEqualToString:@"exactOption"] || [columnIdentifier isEqualToString:@"commitOption"] || [columnIdentifier isEqualToString:@"importBranchOption"])
 		return NO;
@@ -289,10 +289,10 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 	if (commandSelector != @selector(insertNewline:))
 		return NO;
 	
-	NSInteger theEditedColumn = [self editedColumn];
-	if (theEditedColumn < 0 || theEditedColumn >= [[self tableColumns]count])
+	NSInteger theEditedColumn = self.editedColumn;
+	if (theEditedColumn < 0 || theEditedColumn >= self.tableColumns.count)
 		return NO;
-	NSTableColumn* editedTableColumn = [self tableColumns][theEditedColumn];
+	NSTableColumn* editedTableColumn = self.tableColumns[theEditedColumn];
 	NSString* columnIdentifier = [editedTableColumn identifier];
 	if ([columnIdentifier isNotEqualToString:@"commitMessage"])
 		return NO;
@@ -427,11 +427,11 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 
 - (NSColor*) cellBackingColor
 {
-	PatchRecord* patch = [self patch];
+	PatchRecord* patch = self.patch;
 	if (![patch isModified])
 		return nil;
 	
-	NSString* columnIdentifier = [[self patchesTableColumn] identifier];
+	NSString* columnIdentifier = [self.patchesTableColumn identifier];
 	if (
 		([patch authorIsModified]			&& [columnIdentifier isEqualToString:@"author"]) ||
 		([patch dateIsModified]				&& [columnIdentifier isEqualToString:@"date"]) ||
@@ -445,7 +445,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 
 - (NSColor*) highlightColorWithFrame:(NSRect)cellFrame inView:(NSView*)controlView
 {
-	NSColor* backingColor = [self cellBackingColor];
+	NSColor* backingColor = self.cellBackingColor;
 	NSColor* highlightColor = [super highlightColorWithFrame:cellFrame inView:controlView];
 	if (!backingColor)
 		return highlightColor;
@@ -454,7 +454,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 
 - (void) drawWithFrame:(NSRect)cellFrame inView:(NSView*)controlView
 {
-	NSColor* backingColor = [self cellBackingColor];
+	NSColor* backingColor = self.cellBackingColor;
 	if (backingColor)
 	{
 		[backingColor set];
@@ -487,7 +487,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 
 - (void) selectWithFrame:(NSRect)aRect inView:(NSView*)controlView editor:(NSText*)textObj delegate:(id)anObject start:(NSInteger)selStart length:(NSInteger)selLength
 {
-	aRect = UnionRectWithSize(aRect, [[self attributedStringValue] size]);
+	aRect = UnionRectWithSize(aRect, [self.attributedStringValue size]);
 	aRect.size.width *= 1.2;
 	isEditingOrSelecting_ = YES;
 	[super selectWithFrame:aRect inView:controlView editor:textObj delegate:anObject start:selStart length:selLength];
@@ -496,7 +496,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 
 - (void)editWithFrame:(NSRect)aRect inView:(NSView*)controlView editor:(NSText*)textObj delegate:(id)anObject event:(NSEvent*)theEvent
 {
-	aRect = UnionRectWithSize(aRect, [[self attributedStringValue] size]);
+	aRect = UnionRectWithSize(aRect, [self.attributedStringValue size]);
 	aRect.size.width *= 1.2;
 	isEditingOrSelecting_ = YES;
 	[super editWithFrame:aRect inView:controlView editor:textObj delegate:anObject event:theEvent];
@@ -521,7 +521,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 - (void) editWithFrame:(NSRect)aRect inView:(NSView*)controlView editor:(NSText*)textObj delegate:(id)anObject event:(NSEvent*)theEvent
 {
 	aRect = UnionWidthHeight(aRect, 340, 45);
-	aRect = UnionRectWithSize(aRect, [[self attributedStringValue] size]);
+	aRect = UnionRectWithSize(aRect, [self.attributedStringValue size]);
 	isEditingOrSelecting_ = YES;
     [super editWithFrame:aRect inView:controlView editor:textObj delegate:anObject event:theEvent];
 	isEditingOrSelecting_ = NO;
@@ -532,7 +532,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 - (void) selectWithFrame:(NSRect)aRect inView:(NSView*)controlView editor:(NSText*)textObj delegate:(id)anObject start:(NSInteger)selStart length:(NSInteger)selLength
 {
 	aRect = UnionWidthHeight(aRect, 340, 45);
-	aRect = UnionRectWithSize(aRect, [[self attributedStringValue] size]);
+	aRect = UnionRectWithSize(aRect, [self.attributedStringValue size]);
 	isEditingOrSelecting_ = YES;
     [super selectWithFrame:aRect inView:controlView editor:textObj delegate:anObject start:selStart length:selLength];
 	isEditingOrSelecting_ = NO;
@@ -541,7 +541,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 // Expansion tool tip support
 - (NSRect) expansionFrameWithFrame:(NSRect)cellFrame inView:(NSView*)view
 {
-	cellFrame = UnionRectWithSize(cellFrame, [[self attributedStringValue] size]);
+	cellFrame = UnionRectWithSize(cellFrame, [self.attributedStringValue size]);
 	
 	// We want to make the cell *slightly* larger; it looks better when showing the expansion tool tip.
 	cellFrame.size.width += 4.0;
@@ -551,7 +551,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 
 - (void) drawWithExpansionFrame:(NSRect)cellFrame inView:(NSView*)view
 {
-    NSAttributedString* message = [self attributedStringValue];
+    NSAttributedString* message = self.attributedStringValue;
 	cellFrame = UnionRectWithSize(cellFrame, [message size]);
     if ([message length] > 0)
 	{
@@ -578,7 +578,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 // Expansion tool tip support
 - (NSRect) expansionFrameWithFrame:(NSRect)cellFrame inView:(NSView*)view
 {
-    NSAttributedString* message = [self attributedStringValue];
+    NSAttributedString* message = self.attributedStringValue;
 	
 	NSString* fullPath = [self.patch path];
 	NSDictionary* attributes = [message attributesOfWholeString];
@@ -593,7 +593,7 @@ static NSAttributedString*   grayedAttributedString(NSString* string) { return [
 
 - (void) drawWithExpansionFrame:(NSRect)cellFrame inView:(NSView*)view
 {
-    NSAttributedString* message = [self attributedStringValue];
+    NSAttributedString* message = self.attributedStringValue;
 	
 	NSString* fullPath = [self.patch path];
 	NSDictionary* attributes = [message attributesOfWholeString];

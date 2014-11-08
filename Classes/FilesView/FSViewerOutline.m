@@ -43,7 +43,7 @@
 
 - (void) reloadDataSin
 {
-	FSViewerSelectionState* theSavedState = [self saveViewerSelectionState];
+	FSViewerSelectionState* theSavedState = self.saveViewerSelectionState;
 	[self reloadData];
 	[self restoreViewerSelectionState:theSavedState];
 }
@@ -71,15 +71,15 @@
 // MARK: Testing of selection and clicks
 // ------------------------------------------------------------------------------------
 
-- (BOOL)		nodesAreSelected	{ return [self numberOfSelectedRows] > 0; }
-- (BOOL)		nodeIsClicked		{ return [self clickedRow] != -1; }
-- (BOOL)		nodesAreChosen		{ return [self nodeIsClicked] || [self nodesAreSelected]; }
-- (FSNodeInfo*) selectedNode		{ return [self selectedItem]; }
-- (FSNodeInfo*) clickedNode			{ return [self clickedItem]; }
-- (FSNodeInfo*) chosenNode			{ return [self chosenItem]; }
-- (NSArray*)	selectedNodes		{ return [self selectedItems]; }
-- (NSArray*)	chosenNodes			{ return [self chosenItems]; }
-- (BOOL) clickedNodeInSelectedNodes	{ return [self clickedRowInSelectedRows]; }
+- (BOOL)		nodesAreSelected	{ return self.numberOfSelectedRows > 0; }
+- (BOOL)		nodeIsClicked		{ return self.clickedRow != -1; }
+- (BOOL)		nodesAreChosen		{ return self.nodeIsClicked || self.nodesAreSelected; }
+- (FSNodeInfo*) selectedNode		{ return self.selectedItem; }
+- (FSNodeInfo*) clickedNode			{ return self.clickedItem; }
+- (FSNodeInfo*) chosenNode			{ return self.chosenItem; }
+- (NSArray*)	selectedNodes		{ return self.selectedItems; }
+- (NSArray*)	chosenNodes			{ return self.chosenItems; }
+- (BOOL) clickedNodeInSelectedNodes	{ return self.clickedRowInSelectedRows; }
 
 - (IBAction) fsviewerDoubleAction:(id)sender { [parentViewer_ fsviewerDoubleAction:sender]; }
 - (IBAction) fsviewerAction:(id)sender		 { [parentViewer_ fsviewerAction:sender]; }
@@ -95,12 +95,12 @@
 
 - (BOOL) singleFileIsChosenInFiles
 {
-	if (![[self chosenNode] isFile])
+	if (![self.chosenNode isFile])
 		return NO;
-	return ([self numberOfSelectedRows] == 1) || ![self isRowSelected:[self chosenRow]];
+	return (self.numberOfSelectedRows == 1) || ![self isRowSelected:self.chosenRow];
 }
 
-- (BOOL)		singleItemIsChosenInFiles											{ return ([self numberOfSelectedRows] == 1) || ![self isRowSelected:[self chosenRow]]; }
+- (BOOL)		singleItemIsChosenInFiles											{ return (self.numberOfSelectedRows == 1) || ![self isRowSelected:self.chosenRow]; }
 - (BOOL)		clickedNodeCoincidesWithTerminalSelections							{ return NO; }
 - (void)		repositoryDataIsNew
 {
@@ -120,7 +120,7 @@
 	NSRect itemRect = (row>=0) ? [self rectOfRow:row] : NSZeroRect;	
 	
 	// check that the path Rect is visible on screen
-	if (NSIntersectsRect([self visibleRect], itemRect))
+	if (NSIntersectsRect(self.visibleRect, itemRect))
 		return [self convertRectToBase:itemRect];			// convert item rect to screen coordinates
 	return NSZeroRect;
 }
@@ -260,7 +260,7 @@
 	NSArray* selectedPaths = [parentViewer_ absolutePathsOfSelectedFilesInBrowser];
 	BOOL restoreFirstResponderToViewer = [[[parentViewer_ parentWindow] firstResponder] hasAncestor:self];
 	
-	NSScrollView* enclosingSV = [self enclosingScrollView];
+	NSScrollView* enclosingSV = self.enclosingScrollView;
 	NSPoint currentScrollPosition = [[enclosingSV contentView] bounds].origin;
 	NSValue* scrollPositionAsValue = [NSValue valueWithPoint:currentScrollPosition];
 
@@ -291,7 +291,7 @@
 
 	if (savedScrollPositionValue)
 	{
-		NSScrollView* enclosingSV = [self enclosingScrollView];
+		NSScrollView* enclosingSV = self.enclosingScrollView;
 		[[enclosingSV documentView] scrollPoint:[savedScrollPositionValue pointValue]];
 	}
 	if ([rowsToBeSelected count]>0)
@@ -301,7 +301,7 @@
 	}
 
 	if (restoreFirstResponderToViewer)
-		[[self window] makeFirstResponder:self];	
+		[self.window makeFirstResponder:self];	
 }
 
 @end

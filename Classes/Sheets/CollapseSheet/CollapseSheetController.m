@@ -105,7 +105,7 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 
 - (IBAction) validateButtons:(id)sender
 {
-	NSString* reasonForNonValid = [self reasonForInvalidityOfSelectedEntries];
+	NSString* reasonForNonValid = self.reasonForInvalidityOfSelectedEntries;
 	if (!reasonForNonValid)
 		[okButton setEnabled:YES];
 	else
@@ -243,7 +243,7 @@ static BOOL RevOutside(NSInteger num, NSInteger low, NSInteger high) { return nu
 {
 	[self validateButtons:self];
 	if ([okButton isEnabled])
-		[sheetInformativeMessageTextField setAttributedStringValue: [self formattedSheetMessage]];
+		[sheetInformativeMessageTextField setAttributedStringValue: self.formattedSheetMessage];
 }
 
 - (NSIndexSet*) tableView:(NSTableView*)tableView selectionIndexesForProposedSelection:(NSIndexSet*)proposedSelectionIndexes

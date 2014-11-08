@@ -105,7 +105,7 @@
 
 - (IBAction) openSheet:(id)sender
 {
-	[titleText setStringValue:fstr(@"Outgoing from “%@”", [self sourceRepositoryName])];
+	[titleText setStringValue:fstr(@"Outgoing from “%@”", self.sourceRepositoryName)];
 	[super openSheet:sender];
 }
 
@@ -115,8 +115,8 @@
 	[sheetWindow makeFirstResponder:sheetWindow]; // Make the text fields of the sheet commit any changes they currently have
 	[myDocument_ endSheet:sheetWindow];
 
-	SidebarNode* outgoingDestination  = [self destinationRepository];
-	SidebarNode* outgoingSource       = [self sourceRepository];
+	SidebarNode* outgoingDestination  = self.destinationRepository;
+	SidebarNode* outgoingSource       = self.sourceRepository;
 	NSString* outgoingSourceName      = [outgoingSource shortName];
 	NSString* outgoingDestinationName = [outgoingDestination shortName];
 	
@@ -151,7 +151,7 @@
 {
 	[sheetWindow makeFirstResponder:sheetWindow]; // Make the text fields of the sheet commit any changes they currently have
 	[myDocument_ endSheet:sheetWindow];
-	[self setConnectionFromFieldsForSource:[self sourceRepository] andDestination:[self destinationRepository]];
+	[self setConnectionFromFieldsForSource:self.sourceRepository andDestination:self.destinationRepository];
 }
 
 

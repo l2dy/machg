@@ -1885,7 +1885,7 @@ exitNow:
   return(self);
 
 errorExit:
-  if(RKL_EXPECTED(self      != NULL,         1L))                                        {  [self autorelease]; }
+  if(RKL_EXPECTED(self      != NULL,         1L))                                        {  self.autorelease; }
   if(RKL_EXPECTED(status     > U_ZERO_ERROR, 0L) && RKL_EXPECTED(exception == NULL, 0L)) {  exception = rkl_NSExceptionForRegex(initRegexString, initOptions, NULL, status); } // If we had a problem, prepare an exception to be thrown.
   if(RKL_EXPECTED(status     < U_ZERO_ERROR, 0L) && (initError != NULL))                 { *initError = rkl_makeNSError((RKLUserInfoOptions)RKLUserInfoNone, initRegexString, initOptions, NULL, status, initString, initRange, NULL, NULL, 0L, (RKLRegexEnumerationOptions)RKLRegexEnumerationNoOptions, @"The ICU library returned an unexpected error."); }
   if(RKL_EXPECTED(exception != NULL,         0L))                                        {  rkl_handleDelayedAssert(self, _cmd, exception); }
@@ -2618,7 +2618,7 @@ exitNow2:
   NSUInteger errorFree     = 0UL;
   NSInteger replacedCount  = -1L;
   NSString *replacedString = rkl_performEnumerationUsingBlock(self, _cmd, (RKLRegexOp)RKLCapturesArrayOp, regex, RKLNoOptions, self, NSMaxiumRange, (RKLBlockEnumerationOp)RKLBlockEnumerationReplaceOp, 0UL,                &replacedCount, &errorFree, NULL,  NULL, block);
-  if((errorFree == YES) && (replacedCount > 0L)) { [self replaceCharactersInRange:NSMakeRange(0UL, [self length]) withString:replacedString]; }
+  if((errorFree == YES) && (replacedCount > 0L)) { [self replaceCharactersInRange:NSMakeRange(0UL, self.length) withString:replacedString]; }
   return(replacedCount);
 }
 

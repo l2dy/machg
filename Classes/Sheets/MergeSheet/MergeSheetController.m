@@ -97,7 +97,7 @@
 			NSString* ancestor = trimString([results.outStr stringByMatching:@"(\\d+):[\\d\\w]+\\s*" capture:1L]);
 			if ([ancestor isEqualToString:theParentRevision] || [ancestor isEqualToString:theSelectedRevision])
 			{
-				message = [self ancestorFormattedSheetMessage];
+				message = self.ancestorFormattedSheetMessage;
 				canMerge = NO;
 			}
 		}
@@ -105,7 +105,7 @@
 
 	if (!message)
 	{
-		message = [self normalFormattedSheetMessage];
+		message = self.normalFormattedSheetMessage;
 		canMerge = YES;
 	}
 	
@@ -145,7 +145,7 @@
 	[mergeSheetWindow makeFirstResponder:mergeSheetWindow]; // Make the text fields of the sheet commit any changes they currently have
 	[myDocument_ endSheet:mergeSheetWindow];
 	NSNumber* theSelectedRevision = [logTableView selectedRevision];
-	NSArray* theOptions = [self forceTheMerge] ? @[@"--force"] : nil;
+	NSArray* theOptions = self.forceTheMerge ? @[@"--force"] : nil;
 	[myDocument_ primaryActionMergeWithVersion:theSelectedRevision andOptions:theOptions withConfirmation:NO];
 }
 

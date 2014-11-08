@@ -98,41 +98,41 @@ NSString* unescapeString(NSString* str)
 
 - (NSString*) passwordByReplacingPercentEscapes
 {
-	NSString* string = [self password];
+	NSString* string = self.password;
 	return IsNotEmpty(string) ? unescapeString(string) : nil;
 }
 
 - (NSString*) queryByReplacingPercentEscapes
 {
-	NSString* string = [self query];
+	NSString* string = self.query;
 	return IsNotEmpty(string) ? unescapeString(string) : nil;
 }
 
 - (NSURL*) URLByDeletingPassword
 {
-	return [NSURL URLWithScheme:[self scheme] user:[self user] password:nil host:[self host] port:[[self port] unsignedShortValue] path:[self path]];
+	return [NSURL URLWithScheme:self.scheme user:self.user password:nil host:self.host port:[self.port unsignedShortValue] path:self.path];
 }
 
 - (NSURL*) URLByDeletingUserAndPassword
 {
-	return [NSURL URLWithScheme:[self scheme] user:nil password:nil host:[self host] port:[[self port] unsignedShortValue] path:[self path]];
+	return [NSURL URLWithScheme:self.scheme user:nil password:nil host:self.host port:[self.port unsignedShortValue] path:self.path];
 }
 
 - (NSURL*) URLByReplacingUser:(NSString*)newUser
 {
-	return [NSURL URLWithScheme:[self scheme] user:newUser password:[self password] host:[self host] port:[[self port] unsignedShortValue] path:[self path]];
+	return [NSURL URLWithScheme:self.scheme user:newUser password:self.password host:self.host port:[self.port unsignedShortValue] path:self.path];
 }
 
 - (NSURL*) URLByReplacingPassword:(NSString*)newPassword
 {
-	return [NSURL URLWithScheme:[self scheme] user:[self user] password:newPassword host:[self host] port:[[self port] unsignedShortValue] path:[self path]];
+	return [NSURL URLWithScheme:self.scheme user:self.user password:newPassword host:self.host port:[self.port unsignedShortValue] path:self.path];
 }
 
 - (NSURL*) URLByReplacingBaseURL:(NSString*)newBase
 {
 	NSURL* newBaseURL = [NSURL URLWithString:newBase];
-	NSString* newUserIfAny     = IsNotEmpty([newBaseURL user])     ? [newBaseURL user]     : [self user];
-	NSString* newPasswordIfAny = IsNotEmpty([newBaseURL password]) ? [newBaseURL password] : [self password];
+	NSString* newUserIfAny     = IsNotEmpty([newBaseURL user])     ? [newBaseURL user]     : self.user;
+	NSString* newPasswordIfAny = IsNotEmpty([newBaseURL password]) ? [newBaseURL password] : self.password;
 	return [NSURL URLWithScheme:[newBaseURL scheme] user:newUserIfAny password:newPasswordIfAny host:[newBaseURL host] port:[[newBaseURL port] unsignedShortValue] path:[newBaseURL path]];
 }
 

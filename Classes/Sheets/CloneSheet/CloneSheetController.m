@@ -90,7 +90,7 @@
 		if (pathIsExistentDirectory(pathName))
 			pathName = [pathName stringByAppendingPathComponent:filename];
 		[self setPathFieldValue:pathName];
-		if ([[self shortNameFieldValue] isEqualToString:@""])
+		if ([self.shortNameFieldValue isEqualToString:@""])
 			[self setShortNameFieldValue:[pathName lastPathComponent]];
 	}
 	[self validateButtons:sender];
@@ -98,7 +98,7 @@
 
 - (IBAction) validateButtons:(id)sender
 {
-	if ([[self shortNameFieldValue] length] <= 0)
+	if ([self.shortNameFieldValue length] <= 0)
 	{
 		[errorMessageTextField setStringValue:@"You need to enter a short name of your choosing to refer to the repository."];
 		[errorDisclosureController ensureDisclosureBoxIsOpen:YES];
@@ -106,7 +106,7 @@
 		return;
 	}
 
-	if ([[self pathFieldValue] length] <= 0)
+	if ([self.pathFieldValue length] <= 0)
 	{
 		[errorMessageTextField setStringValue:@"You need to choose a local destination to clone the repository to."];
 		[errorDisclosureController ensureDisclosureBoxIsOpen:YES];
@@ -114,7 +114,7 @@
 		return;
 	}
 	
-	BOOL repoExists = repositoryExistsAtPath([self pathFieldValue]);
+	BOOL repoExists = repositoryExistsAtPath(self.pathFieldValue);
 	if (repoExists)
 	{
 		[errorMessageTextField setStringValue:@"A Mercurial repository already exists at the chosen local destination."];
@@ -124,18 +124,18 @@
 	}
 	
 	BOOL dir;
-	BOOL pathExists = [[NSFileManager defaultManager] fileExistsAtPath:[self pathFieldValue] isDirectory:&dir];
+	BOOL pathExists = [[NSFileManager defaultManager] fileExistsAtPath:self.pathFieldValue isDirectory:&dir];
 	BOOL fileExists = pathExists && !dir;
 	BOOL dirExists  = pathExists && dir;
     if (dirExists) 
     {
-        NSArray* fileInfo = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:[self pathFieldValue] error:NULL];
+        NSArray* fileInfo = [[NSFileManager defaultManager] contentsOfDirectoryAtPath:self.pathFieldValue error:NULL];
         if (IsEmpty(fileInfo))
 			dirExists = NO;
         
         //SG: This can be removed if core mecurial allows cloning into essentially empty directories (ie containing only .DS_Store).
         if (dirExists && [fileInfo count] == 1 && [[fileInfo firstObject] isEqualToString:@".DS_Store"]) 
-            dirExists = ![[NSFileManager defaultManager] removeItemAtPath:[[self pathFieldValue] stringByAppendingPathComponent:@".DS_Store"] error:NULL];
+            dirExists = ![[NSFileManager defaultManager] removeItemAtPath:[self.pathFieldValue stringByAppendingPathComponent:@".DS_Store"] error:NULL];
     }
 	if (fileExists || dirExists)
 	{

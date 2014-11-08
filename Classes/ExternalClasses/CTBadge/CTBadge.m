@@ -43,14 +43,14 @@ const float CTSmallLabelSize = 11.;
 
 + (CTBadge *)systemBadge
 {
-	id newInstance = [[[self class] alloc] init];
+	id newInstance = [[self.class alloc] init];
 	
 	return newInstance;
 }
 
 + (CTBadge *)badgeWithColor:(NSColor *)badgeColor labelColor:(NSColor *)labelColor;
 {
-	id newInstance = [[[self class] alloc] init];
+	id newInstance = [[self.class alloc] init];
 	
 	[newInstance setBadgeColor:badgeColor];
 	[newInstance setLabelColor:labelColor];
@@ -114,7 +114,7 @@ const float CTSmallLabelSize = 11.;
 	float scaleFactor = 1;
 	
 	if(size <= 0)
-		[NSException raise:NSInvalidArgumentException format:@"%@ %@: size (%f) must be positive", [self class], NSStringFromSelector(_cmd), size];
+		[NSException raise:NSInvalidArgumentException format:@"%@ %@: size (%f) must be positive", self.class, NSStringFromSelector(_cmd), size];
 	else if(size <= CTSmallBadgeSize)
 		scaleFactor = size/CTSmallBadgeSize;
 	else
@@ -135,7 +135,7 @@ const float CTSmallLabelSize = 11.;
 	NSImage *badgeImage;	//this the image with the gradient fill
 	NSImage *badgeMask ;	//we nock out this mask from the gradient
 	
-	NSGradient *badgeGradient = [self badgeGradient];
+	NSGradient *badgeGradient = self.badgeGradient;
 	
 	float shadowOpacity,
 	shadowOffset,
@@ -237,9 +237,9 @@ const float CTSmallLabelSize = 11.;
 #pragma mark Misc.
 - (NSGradient *)badgeGradient
 {
-	NSGradient *aGradient = [[NSGradient alloc] initWithColorsAndLocations:[self badgeColor], 0.0, 
-							 [self badgeColor], 1/3., 
-							 [[self badgeColor] shadowWithLevel:1/3.], 1.0, nil];
+	NSGradient *aGradient = [[NSGradient alloc] initWithColorsAndLocations:self.badgeColor, 0.0, 
+							 self.badgeColor, 1/3., 
+							 [self.badgeColor shadowWithLevel:1/3.], 1.0, nil];
 	
 	return aGradient;
 }
@@ -255,7 +255,7 @@ const float CTSmallLabelSize = 11.;
 		labelFont = [NSFont fontWithName:@"Helvetica-Bold" size:size];
 	
 	NSMutableParagraphStyle *pStyle = [[NSMutableParagraphStyle alloc] init];[pStyle setAlignment:NSCenterTextAlignment];
-	NSDictionary *attributes = @{NSForegroundColorAttributeName: [self labelColor],
+	NSDictionary *attributes = @{NSForegroundColorAttributeName: self.labelColor,
 								NSFontAttributeName: labelFont};
 	
 	//Label stuff

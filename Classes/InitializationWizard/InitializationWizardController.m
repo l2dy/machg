@@ -36,13 +36,13 @@
 - (void) showWizard
 {
 	[self validateButtons:self];
-	[NSApp runModalForWindow:[self window]];
+	[NSApp runModalForWindow:self.window];
 }
 
 - (void) closeWizard
 {
 	[NSApp stopModal];
-	[[self window] performClose:self];
+	[self.window performClose:self];
 }
 
 
@@ -50,7 +50,7 @@
 - (IBAction) initializationWizardSheetButtonOk:(id)sender
 {
 	NSString* macHgHGRCFilePath = fstr(@"%@/hgrc",applicationSupportFolder());
-	NSString* addition = fstr(@"\n[ui]\nusername = %@\n",[self userNameFieldValue]);
+	NSString* addition = fstr(@"\n[ui]\nusername = %@\n",self.userNameFieldValue);
 	[[NSFileManager defaultManager] appendString:addition toFilePath:macHgHGRCFilePath];
 	
 	[self closeWizard];
@@ -63,7 +63,7 @@
 
 - (IBAction) validateButtons:(id)sender
 {
-	BOOL valid = ([[self userNameFieldValue] length] > 0);
+	BOOL valid = ([self.userNameFieldValue length] > 0);
 	[okButton setEnabled:valid];
 }
 

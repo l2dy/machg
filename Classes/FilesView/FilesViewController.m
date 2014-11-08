@@ -276,7 +276,7 @@
 	// In order to improve performance, we only want to update the preview image if the user pauses for at
 	// least a moment on a select node. This allows one to scroll through the nodes at a more acceptable pace.
 	// First, we cancel the previous request so we don't get a whole bunch of them queued up.
-	[[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateCurrentPreviewImageDoIt) object:nil];
+	[self.class cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateCurrentPreviewImageDoIt) object:nil];
 	[self performSelector:@selector(updateCurrentPreviewImageDoIt) withObject:nil afterDelay:0.05];
 }
 
@@ -437,7 +437,7 @@ const CGFloat  expandedWidth = 148;	// This is the width of the view in its expa
 	[viewAnimation setAnimationCurve:NSAnimationEaseInOut];
 	[viewAnimation setDelegate:self];
 	
-	BOOL shouldBeMinimized = [[NSUserDefaults standardUserDefaults] boolForKey:[self isMinimizedAutoSaveName]];
+	BOOL shouldBeMinimized = [[NSUserDefaults standardUserDefaults] boolForKey:self.isMinimizedAutoSaveName];
 	if (shouldBeMinimized)
 		[self minimize:self];
 	else
@@ -446,14 +446,14 @@ const CGFloat  expandedWidth = 148;	// This is the width of the view in its expa
 
 - (CGFloat) targetDividerPosition					{ return self.frame.size.width - (minimized ? collapsedWidth : expandedWidth); }
 
-- (void) animationDidEnd:(NSAnimation*)animation	{ [self setPosition:[self targetDividerPosition] ofDividerAtIndex:0]; }
+- (void) animationDidEnd:(NSAnimation*)animation	{ [self setPosition:self.targetDividerPosition ofDividerAtIndex:0]; }
 
 
 - (void) animateContentToNewFrame:(NSRect)endFrame
 {
 	[viewAnimation stopAnimation];
 	
-	float duration = ([[[self window] currentEvent] modifierFlags] & NSShiftKeyMask) ? 1.25 : 0.25;
+	float duration = ([[self.window currentEvent] modifierFlags] & NSShiftKeyMask) ? 1.25 : 0.25;
 	[viewAnimation setDuration:duration];
 	
 	NSDictionary* resizeDictionary = @{NSViewAnimationTargetKey: theContent,
@@ -476,7 +476,7 @@ const CGFloat  expandedWidth = 148;	// This is the width of the view in its expa
 
 - (IBAction) maximize:(id)sender
 {
-	[[NSUserDefaults standardUserDefaults] setBool:NO  forKey:[self isMinimizedAutoSaveName]];
+	[[NSUserDefaults standardUserDefaults] setBool:NO  forKey:self.isMinimizedAutoSaveName];
 	if (!minimized)
 		return;
 
@@ -485,14 +485,14 @@ const CGFloat  expandedWidth = 148;	// This is the width of the view in its expa
 	[toggleStatusSidebarButton setAction:@selector(minimize:)];
 
 	minimized = NO;
-	NSRect endFrame = [self frame];
+	NSRect endFrame = self.frame;
 	endFrame.size.width -= expandedWidth;
 	[self animateContentToNewFrame:endFrame];
 }
 
 - (IBAction) minimize:(id)sender
 {
-	[[NSUserDefaults standardUserDefaults] setBool:YES  forKey:[self isMinimizedAutoSaveName]];
+	[[NSUserDefaults standardUserDefaults] setBool:YES  forKey:self.isMinimizedAutoSaveName];
 	if (minimized)
 		return;
 
@@ -501,7 +501,7 @@ const CGFloat  expandedWidth = 148;	// This is the width of the view in its expa
 	[toggleStatusSidebarButton setAction:@selector(maximize:)];
 
 	minimized = YES;
-	NSRect endFrame = [self frame];
+	NSRect endFrame = self.frame;
 	endFrame.size.width -= collapsedWidth;
 	[self animateContentToNewFrame:endFrame];
 }
@@ -525,7 +525,7 @@ const CGFloat  expandedWidth = 148;	// This is the width of the view in its expa
 		[self maximize:self];
 	else if (!minimized && proposedPosition>(crossOverPoint + 3))
 		[self minimize:self];
-	return [self targetDividerPosition];
+	return self.targetDividerPosition;
 }
 
 - (CGFloat)splitView:(NSSplitView*)splitView constrainMaxCoordinate:(CGFloat)proposedMaximumPosition ofSubviewAt:(NSInteger)dividerIndex

@@ -102,7 +102,7 @@
 	if ([entries count] < 1)
 		return @"Unable to perform the strip because no revisions are selected to strip. Select one or more consecutive revisions to strip.";
 
-	if (![self forceOption] && [self incompleteRevisionWillBeStripped])
+	if (!self.forceOption && self.incompleteRevisionWillBeStripped)
 		return @"Unable to perform the strip because there are uncommitted changes. Enable the checkbox 'Force' option to ignore the uncommitted changes.";
 
 	return nil;
@@ -110,11 +110,11 @@
 
 - (IBAction) validateButtons:(id)sender
 {
-	NSString* reasonForNonValid = [self reasonForInvalidityOfSelectedEntries];
+	NSString* reasonForNonValid = self.reasonForInvalidityOfSelectedEntries;
 	if (!reasonForNonValid)
 	{
 		[okButton setEnabled:YES];
-		[sheetInformativeMessageTextField setAttributedStringValue: [self formattedSheetMessage]];
+		[sheetInformativeMessageTextField setAttributedStringValue: self.formattedSheetMessage];
 	}
 	else
 	{
@@ -170,7 +170,7 @@
 	
 	[self validateButtons:self];
 	if ([okButton isEnabled])
-		[sheetInformativeMessageTextField setAttributedStringValue: [self formattedSheetMessage]];
+		[sheetInformativeMessageTextField setAttributedStringValue: self.formattedSheetMessage];
 
 	[myDocument_ beginSheet:theStripSheet];
 }
@@ -187,9 +187,9 @@
 	NSMutableArray* argsStrip = [NSMutableArray arrayWithObjects:@"strip",  @"--config", @"extensions.hgext.mq=", nil];	// We are using MacHgs strip so command we need to specify that it is
 																													// in the extensions folder of the included Mercurial
     [argsStrip addObjectsFromArray:configurationForProgress];
-	if ([self forceOption])
+	if (self.forceOption)
 		[argsStrip addObject:@"--force"];		
-	if (![self backupOption])
+	if (!self.backupOption)
 		[argsStrip addObject:@"--no-backup"];		
 	NSString* revisionNumber = fstr(@"%ld", pair.lowRevision);
 	[argsStrip addObject:revisionNumber];
@@ -219,7 +219,7 @@
 {
 	[self validateButtons:self];
 	if ([okButton isEnabled])
-		[sheetInformativeMessageTextField setAttributedStringValue: [self formattedSheetMessage]];
+		[sheetInformativeMessageTextField setAttributedStringValue: self.formattedSheetMessage];
 }
 
 - (NSIndexSet*) tableView:(NSTableView*)tableView selectionIndexesForProposedSelection:(NSIndexSet*)proposedSelectionIndexes
@@ -247,7 +247,7 @@
 	NSMutableAttributedString* newSheetMessage = [[NSMutableAttributedString alloc] init];
 	LowHighPair pair = [logTableView lowestToHighestSelectedRevisions];
 
-	BOOL willEraseUncommitted = [self incompleteRevisionWillBeStripped];
+	BOOL willEraseUncommitted = self.incompleteRevisionWillBeStripped;
 	BOOL singleRevision = pair.lowRevision == pair.highRevision;
 	if (singleRevision)
 	{

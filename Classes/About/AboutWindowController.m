@@ -22,7 +22,7 @@
 
 - (void) showAboutWindow
 {
-	if (![self window])
+	if (!self.window)
 	{
 		[NSBundle loadNibNamed:@"About" owner:self];
 		[backingBox setRadius:@190.0f];
@@ -31,7 +31,7 @@
 		NSURL* creditsURL = [NSURL fileURLWithPath:fstr(@"%@/MacHGHelp/%@",[[NSBundle mainBundle] resourcePath], @"Credits.html")];
 		[[creditsWebview mainFrame] loadRequest:[NSURLRequest requestWithURL:creditsURL]];			
 	}
-	[[self window] makeKeyAndOrderFront:nil];
+	[self.window makeKeyAndOrderFront:nil];
 }
 
 - (void) webView:(WebView*)webView decidePolicyForNavigationAction:(NSDictionary*)actionInformation request:(NSURLRequest*)request frame:(WebFrame*)frame decisionListener:(id < WebPolicyDecisionListener >)listener

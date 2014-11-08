@@ -51,7 +51,7 @@
 // ------------------------------------------------------------------------------------
 
 - (BOOL)      optionIsSet								{ return ([optionSwitchButton state] == NSOnState); }
-- (NSString*) optionValue								{ return [self optionIsSet] ? [optionValueField stringValue] : nil; }
+- (NSString*) optionValue								{ return self.optionIsSet ? [optionValueField stringValue] : nil; }
 - (void)	  setOptionValue:(NSString*)value			{ [optionValueField setStringValue:nonNil(value)]; [self setOverallState:value?YES:NO]; }
 
 - (IBAction)  setOptionValueStateFromButton:(id)sender
@@ -91,11 +91,11 @@
 
 - (void) addOptionToArgs:(NSMutableArray*)args
 {
-	if (specialHandling_ || ![self optionIsSet])
+	if (specialHandling_ || !self.optionIsSet)
 		return;
 	[args addObject:fstr(@"--%@", optionName)];
 	if (optionValueField)
-		[args addObject:[self optionValue]];
+		[args addObject:self.optionValue];
 }
 
 + (BOOL) containsOptionWhichIsSet:(NSArray*)options
@@ -119,11 +119,11 @@
 - (void) setConnections:(NSMutableDictionary*)connections fromOptionWithKey:(NSString*)key
 {
 	NSString* fullKey = [key stringByAppendingString:optionName];
-	if ([self optionIsSet])
+	if (self.optionIsSet)
 	{
 		id value;
 		if (optionValueField)
-			value = [self optionValue];
+			value = self.optionValue;
 		else
 			value = YESasNumber;
 		connections[fullKey] = value;

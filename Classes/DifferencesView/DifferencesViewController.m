@@ -141,7 +141,7 @@
 
 - (IBAction) validateButtons:(id)sender
 {
-//	BOOL valid = ([[self pathFieldValue] length] > 0) && ([[self nickNameFieldValue] length] > 0);
+//	BOOL valid = ([self.pathFieldValue length] > 0) && ([self.nickNameFieldValue length] > 0);
 //	[addExistingDifferenceOkButton setEnabled:valid];
 //	[configureExistingDifferenceOkButton setEnabled:valid];
 //	[initNewDifferenceOkButton setEnabled:valid];
@@ -255,7 +255,7 @@
 	// In order to improve performance, we only want to update the preview image if the user pauses for at
 	// least a moment on a select node. This allows one to scroll through the nodes at a more acceptable pace.
 	// First, we cancel the previous request so we don't get a whole bunch of them queued up.
-	[[self class] cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateCurrentPreviewImageDoIt) object:nil];
+	[self.class cancelPreviousPerformRequestsWithTarget:self selector:@selector(updateCurrentPreviewImageDoIt) object:nil];
 	[self performSelector:@selector(updateCurrentPreviewImageDoIt) withObject:nil afterDelay:0.05];
 }
 
@@ -308,12 +308,12 @@
 - (IBAction) mainMenuDiffSelectedFiles:(id)sender
 {
 	NSArray* selectedPaths = [theFSViewer absolutePathsOfChosenFiles];
-	[myDocument_ viewDifferencesInCurrentRevisionFor:selectedPaths toRevision:[self revisionNumbers]];
+	[myDocument_ viewDifferencesInCurrentRevisionFor:selectedPaths toRevision:self.revisionNumbers];
 }
 - (IBAction) mainMenuDiffAllFiles:(id)sender
 {
 	NSArray* rootPathAsArray = [myDocument_ absolutePathOfRepositoryRootAsArray];
-	[myDocument_ viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:[self revisionNumbers]];
+	[myDocument_ viewDifferencesInCurrentRevisionFor:rootPathAsArray toRevision:self.revisionNumbers];
 }
 - (IBAction) toolbarDiffFiles:(id)sender
 {
@@ -384,7 +384,7 @@
 - (BOOL) statusOfChosenPathsInFilesContain:(HGStatus)status		{ return bitsInCommon(status, [theFSViewer statusOfChosenPathsInFiles]); }
 - (BOOL) repositoryHasFilesWhichContainStatus:(HGStatus)status	{ return bitsInCommon(status, [[theFSViewer rootNodeInfo] hgStatus]); }
 - (BOOL) nodesAreChosenInFiles									{ return [theFSViewer nodesAreChosen]; }
-- (BOOL) toolbarActionAppliesToFilesWith:(HGStatus)status		{ return ([self statusOfChosenPathsInFilesContain:status] || (![self nodesAreChosenInFiles] && [self repositoryHasFilesWhichContainStatus:status])); }
+- (BOOL) toolbarActionAppliesToFilesWith:(HGStatus)status		{ return ([self statusOfChosenPathsInFilesContain:status] || (!self.nodesAreChosenInFiles && [self repositoryHasFilesWhichContainStatus:status])); }
 
 - (BOOL) validateUserInterfaceItem:(id < NSValidatedUserInterfaceItem >)anItem
 {
@@ -394,15 +394,15 @@
 	if (theAction == @selector(mainMenuDiffAllFiles:))					return [myDocument_ localRepoIsSelectedAndReady] && [self repositoryHasFilesWhichContainStatus:eHGStatusModified];
 	if (theAction == @selector(toolbarDiffFiles:))						return [myDocument_ localRepoIsSelectedAndReady] && [self toolbarActionAppliesToFilesWith:eHGStatusModified];
 	
-	if (theAction == @selector(mainMenuOpenSelectedFilesInFinder:))		return [myDocument_ localRepoIsSelectedAndReady] && [self nodesAreChosenInFilesWhichAreSnapshotable];
+	if (theAction == @selector(mainMenuOpenSelectedFilesInFinder:))		return [myDocument_ localRepoIsSelectedAndReady] && self.nodesAreChosenInFilesWhichAreSnapshotable;
 	if (theAction == @selector(mainMenuRevealSelectedFilesInFinder:))	return [myDocument_ localRepoIsSelectedAndReady];
 	if (theAction == @selector(mainMenuOpenTerminalHere:))				return [myDocument_ localRepoIsSelectedAndReady];
 	if (theAction == @selector(mainMenuDiffSelectedFiles:))				return [myDocument_ localRepoIsSelectedAndReady] && [self statusOfChosenPathsInFilesContain:eHGStatusModified];
 	if (theAction == @selector(mainMenuDiffAllFiles:))					return [myDocument_ localRepoIsSelectedAndReady] && [self repositoryHasFilesWhichContainStatus:eHGStatusModified];
 
-	if (theAction == @selector(differencesMenuAnnotateBaseRevisionOfSelectedFiles:))	return [myDocument_ localRepoIsSelectedAndReady] && [self nodesAreChosenInFilesWhichAreSnapshotable];
-	if (theAction == @selector(differencesMenuAnnotateCompareRevisionOfSelectedFiles:))	return [myDocument_ localRepoIsSelectedAndReady] && [self nodesAreChosenInFilesWhichAreSnapshotable];
-	if (theAction == @selector(differencesMenuOpenSelectedFilesInFinder:))				return [myDocument_ localRepoIsSelectedAndReady] && [self nodesAreChosenInFilesWhichAreSnapshotable];
+	if (theAction == @selector(differencesMenuAnnotateBaseRevisionOfSelectedFiles:))	return [myDocument_ localRepoIsSelectedAndReady] && self.nodesAreChosenInFilesWhichAreSnapshotable;
+	if (theAction == @selector(differencesMenuAnnotateCompareRevisionOfSelectedFiles:))	return [myDocument_ localRepoIsSelectedAndReady] && self.nodesAreChosenInFilesWhichAreSnapshotable;
+	if (theAction == @selector(differencesMenuOpenSelectedFilesInFinder:))				return [myDocument_ localRepoIsSelectedAndReady] && self.nodesAreChosenInFilesWhichAreSnapshotable;
 
 	return NO;
 }
@@ -445,13 +445,13 @@
 
 - (NSArray*) statusLinesForPaths:(NSArray*)absolutePaths withRootPath:(NSString*)rootPath
 {
-	NSString* revNumbers = [self revisionNumbers];
+	NSString* revNumbers = self.revisionNumbers;
 	if (IsEmpty(revNumbers))
 		return nil;
 
 	// We need to handle the case when both revisions are the same. In this case its just doing a manifest and marking up the
 	// output with a prefixed 'C ' to indicate clean.
-	if ([self equalRevisionsAreSelected])
+	if (self.equalRevisionsAreSelected)
 	{
 		NSMutableArray* argsManifest = [NSMutableArray arrayWithObjects:@"manifest", @"--rev", numberAsString([baseLogTableView selectedRevision]), nil];
 		ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsManifest  fromRoot:rootPath  logging:eLoggingNone];
@@ -470,13 +470,13 @@
 	// Get status of everything relevant and return this array for use by the node tree to re-flush stale parts of it (or all of it.)
 	NSMutableArray* argsStatus = [NSMutableArray arrayWithObjects:@"status", nil];
 
-	if ([self showIgnoredFilesInBrowser])	[argsStatus addObject:@"--ignored"];
-	if ([self showCleanFilesInBrowser])		[argsStatus addObject:@"--clean"];
-	if ([self showUntrackedFilesInBrowser])	[argsStatus addObject:@"--unknown"];
-	if ([self showAddedFilesInBrowser])		[argsStatus addObject:@"--added"];
-	if ([self showRemovedFilesInBrowser])	[argsStatus addObject:@"--removed"];
-	if ([self showMissingFilesInBrowser])	[argsStatus addObject:@"--deleted"];
-	if ([self showModifiedFilesInBrowser])	[argsStatus addObject:@"--modified"];
+	if (self.showIgnoredFilesInBrowser)		[argsStatus addObject:@"--ignored"];
+	if (self.showCleanFilesInBrowser)		[argsStatus addObject:@"--clean"];
+	if (self.showUntrackedFilesInBrowser)	[argsStatus addObject:@"--unknown"];
+	if (self.showAddedFilesInBrowser)		[argsStatus addObject:@"--added"];
+	if (self.showRemovedFilesInBrowser)		[argsStatus addObject:@"--removed"];
+	if (self.showMissingFilesInBrowser)		[argsStatus addObject:@"--deleted"];
+	if (self.showModifiedFilesInBrowser)	[argsStatus addObject:@"--modified"];
 	[argsStatus addObject:@"--rev" followedBy:revNumbers];
 	[argsStatus addObjectsFromArray:absolutePaths];
 

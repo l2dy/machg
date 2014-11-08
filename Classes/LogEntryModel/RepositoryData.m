@@ -138,8 +138,8 @@
 	
 	NSNumber* ip1 = [oldIncompleteRevisionEntry  firstParent];
 	NSNumber* ip2 = [oldIncompleteRevisionEntry secondParent];
-	NSNumber*  p1 = [self getHGParent1Revision];
-	NSNumber*  p2 = [self getHGParent2Revision];
+	NSNumber*  p1 = self.getHGParent1Revision;
+	NSNumber*  p2 = self.getHGParent2Revision;
 	BOOL parents1Differ = (p1 && !ip1) || (!p1 && ip1) || (p1 && ip1 && ![p1 isEqualToNumber:ip1]);
 	BOOL parents2Differ = (p2 && !ip2) || (!p2 && ip2) || (p2 && ip2 && ![p2 isEqualToNumber:ip2]);
 	BOOL changedParents = (parents1Differ || parents2Differ);
@@ -154,7 +154,7 @@
 		return;
 	@synchronized(self)
 	{
-		if (![self shouldChangeIncompleteRevisionInformation])
+		if (!self.shouldChangeIncompleteRevisionInformation)
 			return;
 		[self resetEntriesAndLogGraph];
 	}
@@ -200,7 +200,7 @@
 
 - (NSString*) combinedHGIgnoreRegEx
 {
-	if (![self combinedHGIgnoreRegExNeedsRefresh])
+	if (!self.combinedHGIgnoreRegExNeedsRefresh)
 		return hgIgnoreFilesRegEx_;
 	NSMutableArray* argsDebugIgnore = [NSMutableArray arrayWithObjects:@"debugignore", nil];
 	ExecutionResult* results = [TaskExecutions executeMercurialWithArgs:argsDebugIgnore  fromRoot:rootPath_  logging:eLoggingNone];
@@ -368,7 +368,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 				revisionNumberToLabels_ = newRevisionToLabels;
 				hasMultipleOpenHeads_ = headCount > 1;
 				
-				incompleteRevisionChanged = [self shouldChangeIncompleteRevisionInformation];
+				incompleteRevisionChanged = self.shouldChangeIncompleteRevisionInformation;
 				[self resetEntriesAndLogGraph];
 			}
 			[theProcessListController removeProcessIndicator:processNum];
@@ -407,7 +407,7 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 	oldLogGraph_ = logGraph_;
 	logGraph_ = [[LogGraph alloc] init];
 	includeIncompleteRevision_ = [myDocument_ repositoryHasFilesWhichContainStatus:eHGStatusCommittable];
-	incompleteRevisionEntry_   = includeIncompleteRevision_ ? [LogEntry unfinishedEntryForRevision:intAsNumber([self computeNumberOfRealRevisions] + 1) forRepositoryData:self] : nil;
+	incompleteRevisionEntry_   = includeIncompleteRevision_ ? [LogEntry unfinishedEntryForRevision:intAsNumber(self.computeNumberOfRealRevisions + 1) forRepositoryData:self] : nil;
 	if (incompleteRevisionEntry_)
 		[self setEntry:incompleteRevisionEntry_];
 }
@@ -422,11 +422,11 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 // MARK:  Derived Information
 // ------------------------------------------------------------------------------------
 
-- (BOOL)	  inMergeState						{ return [self getHGParent2Revision] != nil; }	// If we have a second parent we are merging
-- (BOOL)      isCurrentRevisionTip				{ return [[self getHGParent1Revision] isEqualToNumber:[self getHGTipRevision]]; }
-- (BOOL)	  revisionIsParent:(NSNumber*)rev	{ return rev && ([[self getHGParent2Revision] isEqualToNumber:rev] || [[self getHGParent1Revision] isEqualToNumber:rev]);}
-- (NSInteger) computeNumberOfRealRevisions		{ return [[self getHGTipRevision] intValue]; }
-- (NSInteger) computeNumberOfRevisions			{ return [[self getHGTipRevision] intValue] + (includeIncompleteRevision_ ? 1 : 0); }
+- (BOOL)	  inMergeState						{ return self.getHGParent2Revision != nil; }	// If we have a second parent we are merging
+- (BOOL)      isCurrentRevisionTip				{ return [self.getHGParent1Revision isEqualToNumber:self.getHGTipRevision]; }
+- (BOOL)	  revisionIsParent:(NSNumber*)rev	{ return rev && ([self.getHGParent2Revision isEqualToNumber:rev] || [self.getHGParent1Revision isEqualToNumber:rev]);}
+- (NSInteger) computeNumberOfRealRevisions		{ return [self.getHGTipRevision intValue]; }
+- (NSInteger) computeNumberOfRevisions			{ return [self.getHGTipRevision intValue] + (includeIncompleteRevision_ ? 1 : 0); }
 - (BOOL)	  hasMultipleOpenHeads				{ return hasMultipleOpenHeads_; }
 
 
@@ -439,10 +439,10 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 
 - (BOOL)	  isTipOfLocalBranch
 {
-	NSString* parentRevision = numberAsString([self getHGParent1Revision]);
+	NSString* parentRevision = numberAsString(self.getHGParent1Revision);
 	NSString* revPattern = fstr(@"descendants(rev(%@))", parentRevision);
 	NSMutableArray* argsLog = [NSMutableArray arrayWithObjects:@"log", @"--limit", @"10", @"--template", @"{rev},", @"--rev", revPattern, nil];
-	ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:[self rootPath]  logging:eLoggingNone];
+	ExecutionResult* hgLogResults = [TaskExecutions executeMercurialWithArgs:argsLog  fromRoot:self.rootPath  logging:eLoggingNone];
 	if ([hgLogResults hasErrors])
 		return NO;
 	
@@ -730,11 +730,11 @@ static BOOL labelArrayDictionariesAreEqual(NSDictionary* dict1, NSDictionary* di
 	int requestedRow = [revision intValue];
 	
 	int lowLimit  = MAX(0, requestedRow - cacheLineCount);
-	int highLimitOfNormal = [self computeNumberOfRealRevisions];
+	int highLimitOfNormal = self.computeNumberOfRealRevisions;
 	int highLimit = MIN(highLimitOfNormal, requestedRow + cacheLineCount);
 	
 	if (requestedRow < lowLimit || requestedRow > highLimit)
-		return (requestedLogEntry == incompleteRevisionEntry_) ? [self incompleteRevisionEntry] : nil;
+		return (requestedLogEntry == incompleteRevisionEntry_) ? self.incompleteRevisionEntry : nil;
 	
 	// We add pending LogEntries for all of the revisions we are about to read in. This means we don't redundantly try to
 	// repeatedly do a fillTableFrom:to: If an entry is loading or is already fully loaded then we don't need to set it loading

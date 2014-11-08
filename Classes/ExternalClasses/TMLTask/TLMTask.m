@@ -50,7 +50,7 @@
 
 + (TLMTask *)launchedTaskWithLaunchPath:(NSString *)path arguments:(NSArray *)arguments;
 {
-    TLMTask *task = [[self new] autorelease];
+    TLMTask *task = [self.new autorelease];
     [task setLaunchPath:path];
     [task setArguments:arguments];
     [task launch];
@@ -70,16 +70,16 @@
 - (void)setStandardOutput:(id)output;
 {
     NSParameterAssert([output isKindOfClass:[NSPipe class]]);
-    if ([self standardOutput])
-        [NSException raise:NSInternalInconsistencyException format:@"%@ manages its own stdio channels", [self class]];
+    if (self.standardOutput)
+        [NSException raise:NSInternalInconsistencyException format:@"%@ manages its own stdio channels", self.class];
     [super setStandardOutput:output];
 }
 
 - (void)setStandardError:(id)error;
 {
     NSParameterAssert([error isKindOfClass:[NSPipe class]]);
-    if ([self standardError])
-        [NSException raise:NSInternalInconsistencyException format:@"%@ manages its own stdio channels", [self class]];
+    if (self.standardError)
+        [NSException raise:NSInternalInconsistencyException format:@"%@ manages its own stdio channels", self.class];
     [super setStandardError:error];
 }
 
@@ -93,8 +93,8 @@
     [_lock lockWhenCondition:TLM_KQ_INIT];
     
     // We just set these to NSPipes and acquired the lock, so calling these accessors is safe
-    int fdo = [[[self standardOutput] fileHandleForReading] fileDescriptor];
-    int fde = [[[self standardError] fileHandleForReading] fileDescriptor];
+    int fdo = [[self.standardOutput fileHandleForReading] fileDescriptor];
+    int fde = [[self.standardError fileHandleForReading] fileDescriptor];
     
     // hopefully this never happens...
     if (fdo < 0 || fde < 0) {
@@ -138,7 +138,7 @@
          If still running, wait for the next timeout; this is basically insurance,
          since it's not clear if EV_EOF is always set.
          */
-        if (0 == eventCount && [self isRunning])
+        if (0 == eventCount && self.isRunning)
             continue;
         
         size_t len = event.data;
@@ -182,7 +182,7 @@
         }
                 
         // if not running or both pipes are widowed, bail out
-        if ((outEOF && errEOF) || [self isRunning] == NO)
+        if ((outEOF && errEOF) || self.isRunning == NO)
             break;
                 
     }
@@ -246,15 +246,15 @@
 
 - (NSString *)errorString
 {
-    if (nil == _errorString && [[self errorData] length])
-        _errorString = [[NSString alloc] initWithData:[self errorData] encoding:NSUTF8StringEncoding];
+    if (nil == _errorString && [self.errorData length])
+        _errorString = [[NSString alloc] initWithData:self.errorData encoding:NSUTF8StringEncoding];
     return _errorString;    
 }
 
 - (NSString *)outputString
 {
-    if (nil == _outputString && [[self outputData] length])
-        _outputString = [[NSString alloc] initWithData:[self outputData] encoding:NSUTF8StringEncoding];
+    if (nil == _outputString && [self.outputData length])
+        _outputString = [[NSString alloc] initWithData:self.outputData encoding:NSUTF8StringEncoding];
     return _outputString;        
 }
 

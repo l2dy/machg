@@ -58,7 +58,7 @@
 	CGFloat rowHeight = bounds.size.height;
 	int thisRow   = [logTableView tableRowForRevision:[entry_ revision]];
 	int targetRow = [logTableView tableRowForRevision:intAsNumber(rev)];
-	return floor(NSMidY(bounds) + ([[self controlView] isFlipped] ? 1 : -1) * (targetRow - thisRow) * rowHeight);
+	return floor(NSMidY(bounds) + ([self.controlView isFlipped] ? 1 : -1) * (targetRow - thisRow) * rowHeight);
 }
 
 

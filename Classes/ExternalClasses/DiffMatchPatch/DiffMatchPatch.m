@@ -62,7 +62,7 @@ void splice(NSMutableArray *input, NSUInteger start, NSUInteger count, NSArray *
 + (id)diffWithOperation:(Operation)anOperation
                 andText:(NSString *)aText;
 {
-  return [[[self alloc] initWithOperation:anOperation andText:aText] autorelease];
+  return [[self.alloc initWithOperation:anOperation andText:aText] autorelease];
 }
 
 - (id)initWithOperation:(Operation)anOperation
@@ -86,7 +86,7 @@ void splice(NSMutableArray *input, NSUInteger start, NSUInteger count, NSArray *
 
 - (id)copyWithZone:(NSZone *)zone
 {
-  id newDiff = [[[self class] allocWithZone:zone]
+  id newDiff = [[self.class allocWithZone:zone]
                 initWithOperation:self.operation
                 andText:self.text];
 
@@ -188,7 +188,7 @@ void splice(NSMutableArray *input, NSUInteger start, NSUInteger count, NSArray *
 
 - (id)copyWithZone:(NSZone *)zone
 {
-  Patch *newPatch = [[[self class] allocWithZone:zone] init];
+  Patch *newPatch = [[self.class allocWithZone:zone] init];
 
   newPatch.diffs = [[[NSMutableArray alloc] initWithArray:self.diffs copyItems:YES] autorelease];
   newPatch.start1 = self.start1;

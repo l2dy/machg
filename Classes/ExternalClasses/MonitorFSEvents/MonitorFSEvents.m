@@ -123,7 +123,7 @@ static void FSEventsCallBack_(ConstFSEventStreamRef streamRef, void* clientCallB
  * Provides the string used when printing this object in NSLog, etc. Useful for
  * debugging purposes.
  */
-- (NSString*) description { return fstr(@"<%@ { watchedPaths = %@ } >", [self className], watchedPaths_); }
+- (NSString*) description { return fstr(@"<%@ { watchedPaths = %@ } >", self.className, watchedPaths_); }
 
 - (void) dealloc
 {

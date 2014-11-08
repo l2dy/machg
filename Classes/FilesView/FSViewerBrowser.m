@@ -44,7 +44,7 @@
 
 - (void) reloadDataSin
 {
-	FSViewerSelectionState* theSavedState = [self saveViewerSelectionState];
+	FSViewerSelectionState* theSavedState = self.saveViewerSelectionState;
 	[self setDefaultColumnWidth:sizeOfBrowserColumnsFromDefaults()];
 	[self reloadData];
 	[self restoreViewerSelectionState:theSavedState];				// restore the selection and the scroll positions of the columns and the horizontal scroll
@@ -87,9 +87,9 @@
 
 - (void) testForSeletionChanged
 {
-	if ([[self selectionIndexPath] compare:lastSelectedIndexPath_] != NSOrderedSame)
+	if ([self.selectionIndexPath compare:lastSelectedIndexPath_] != NSOrderedSame)
 		[self postBrowserViewSelectionDidChangeNotification];
-	lastSelectedIndexPath_ = [self selectionIndexPath];	
+	lastSelectedIndexPath_ = self.selectionIndexPath;	
 }
 
 
@@ -99,15 +99,15 @@
 // MARK: Path and Selection Operations
 // ------------------------------------------------------------------------------------
 
-- (BOOL)		nodesAreSelected	{ return [self selectedColumn] >= 0; }
-- (BOOL)		nodeIsClicked		{ return [self clickedRow] != -1; }
-- (BOOL)		nodesAreChosen		{ return [self nodeIsClicked] || [self nodesAreSelected]; }
-- (FSNodeInfo*) chosenNode			{ FSNodeInfo* ans = [self clickedNode]; return ans ? ans : [[self selectedCell] nodeInfo]; }
+- (BOOL)		nodesAreSelected	{ return self.selectedColumn >= 0; }
+- (BOOL)		nodeIsClicked		{ return self.clickedRow != -1; }
+- (BOOL)		nodesAreChosen		{ return self.nodeIsClicked || self.nodesAreSelected; }
+- (FSNodeInfo*) chosenNode			{ FSNodeInfo* ans = self.clickedNode; return ans ? ans : [self.selectedCell nodeInfo]; }
 - (FSNodeInfo*) clickedNode
 {
 	@try
 	{
-		return [self nodeIsClicked] ? [self itemAtRow:[self clickedRow] inColumn:[self clickedColumn]] : nil;
+		return self.nodeIsClicked ? [self itemAtRow:self.clickedRow inColumn:self.clickedColumn] : nil;
 	}
 	@catch (NSException* ne)
 	{
@@ -118,9 +118,9 @@
 
 - (NSArray*) selectedNodes
 {
-	if (![self nodesAreSelected])
+	if (!self.nodesAreSelected)
 		return @[];
-	NSArray* theSelectedCells = [self selectedCells];
+	NSArray* theSelectedCells = self.selectedCells;
 	NSMutableArray* nodes = [[NSMutableArray alloc] init];
 	for (FSViewerPaneCell* cell in theSelectedCells)
 		[nodes addObjectIfNonNil:[cell nodeInfo]];
@@ -130,13 +130,13 @@
 
 - (BOOL) singleFileIsChosenInFiles
 {
-	if ([self nodeIsClicked] && [[self clickedNode] isFile])
+	if (self.nodeIsClicked && [self.clickedNode isFile])
 		return YES;
 	
-	int selectedColumn = [self selectedColumn];
+	int selectedColumn = self.selectedColumn;
 	if (selectedColumn >= 0)
 		if ([[self selectedRowIndexesInColumn:selectedColumn] count] == 1)
-			if ([[[self selectedCell] nodeInfo] isFile])
+			if ([[self.selectedCell nodeInfo] isFile])
 				return YES;
 	return NO;
 }
@@ -144,10 +144,10 @@
 
 - (BOOL) singleItemIsChosenInFiles
 {
-	if ([self nodeIsClicked] && [[self clickedNode] isDirectory])
+	if (self.nodeIsClicked && [self.clickedNode isDirectory])
 		return YES;
 	
-	int selectedColumn = [self selectedColumn];
+	int selectedColumn = self.selectedColumn;
 	if (selectedColumn >= 0)
 		if ([[self selectedRowIndexesInColumn:selectedColumn] count] == 1)
 			return YES;
@@ -156,26 +156,26 @@
 
 - (BOOL) clickedNodeInSelectedNodes
 {
-	if (![self nodeIsClicked])
+	if (!self.nodeIsClicked)
 		return NO;
-	if ([self clickedColumn] != [self selectedColumn])
+	if (self.clickedColumn != self.selectedColumn)
 		return NO;
 	
-	NSArray* indexPaths = [self selectionIndexPaths];
+	NSArray* indexPaths = self.selectionIndexPaths;
 	for (NSIndexPath* indexPath in indexPaths)
-		if ([indexPath indexAtPosition:[self clickedColumn]] == [self clickedRow])
+		if ([indexPath indexAtPosition:self.clickedColumn] == self.clickedRow)
 			return YES;
 	return NO;
 }
 
 
-- (BOOL) clickedNodeCoincidesWithTerminalSelections	{ return ([self nodeIsClicked] && ([self clickedColumn] == [self selectedColumn]) && [self clickedNodeInSelectedNodes]); }
+- (BOOL) clickedNodeCoincidesWithTerminalSelections	{ return (self.nodeIsClicked && (self.clickedColumn == self.selectedColumn) && self.clickedNodeInSelectedNodes); }
 
 
 - (FSNodeInfo*) parentNodeInfoForColumn:(NSInteger)column
 {
 	if (column == 0)
-        return [self rootNodeInfo];
+        return self.rootNodeInfo;
 	
 	// Find the selected item leading up to this column and grab its FSNodeInfo stored in that cell
 	FSViewerPaneCell* selectedCell = [self selectedCellInColumn:column-1];
@@ -208,7 +208,7 @@
 	NSRect itemRect = [self frameOfRow:row inColumn:column];
 	
 	// check that the path Rect is visible on screen
-	if (NSIntersectsRect([self visibleRect], itemRect))
+	if (NSIntersectsRect(self.visibleRect, itemRect))
 		return [self convertRectToBase:itemRect];	// convert item rect to screen coordinates
 	return NSZeroRect;
 }
@@ -217,7 +217,7 @@
 {
 	NSInteger col;
 	NSInteger row;
-	BOOL found = [[self rootNodeInfo] getRow:&row andColumn:&col forNode:node];
+	BOOL found = [self.rootNodeInfo getRow:&row andColumn:&col forNode:node];
 	return found ? [self frameinWindowOfRow:row inColumn:col] : NSZeroRect;
 }
 
@@ -230,7 +230,7 @@
 // MARK: Browser Delegate Methods
 // ------------------------------------------------------------------------------------
 
-- (id) rootItemForBrowser:(NSBrowser*)browser										{ return [self rootNodeInfo]; }
+- (id) rootItemForBrowser:(NSBrowser*)browser										{ return self.rootNodeInfo; }
 - (NSInteger) browser:(NSBrowser*)browser numberOfChildrenOfItem:(FSNodeInfo*)item	{ return [item childNodeCount]; }
 - (BOOL) browser:(NSBrowser*)browser isLeafItem:(FSNodeInfo*)item					{ return ![item isDirectory]; }
 - (id) browser:(NSBrowser*)browser objectValueForItem:(FSNodeInfo*)item				{ return [item lastPathComponent]; }
@@ -256,7 +256,7 @@
 	if (!ShowFilePreviewInBrowserFromDefaults())
 		return nil;
 	if (!browserLeafPreviewController_)
-		browserLeafPreviewController_ = [[NSViewController alloc] initWithNibName:@"BrowserPreviewView" bundle:[NSBundle bundleForClass:[self class]]];
+		browserLeafPreviewController_ = [[NSViewController alloc] initWithNibName:@"BrowserPreviewView" bundle:[NSBundle bundleForClass:self.class]];
 	return browserLeafPreviewController_; // NSBrowser will set the representedObject for us
 }
 
@@ -305,7 +305,7 @@
 	// Save scroll positions of the columns
 	NSArray* selectedPaths = [parentViewer_ absolutePathsOfSelectedFilesInBrowser];
 	FSViewerSelectionState* newSavedState = [[FSViewerSelectionState alloc] init];
-	int numberOfColumns = [self lastColumn];
+	int numberOfColumns = self.lastColumn;
 	[newSavedState setSavedColumnScrollPositions:[[NSMutableArray alloc] init]];
 	for (int i = 0; i <= numberOfColumns; i++)
 	{
@@ -347,7 +347,7 @@
 	if (restoreFirstResponderToViewer)
 		[[parentViewer_ parentWindow] makeFirstResponder:self];
 	NSArray* components = [relativeSelectedPath pathComponents];
-	FSNodeInfo* childNode = [self rootNodeInfo];
+	FSNodeInfo* childNode = self.rootNodeInfo;
 	FSNodeInfo* node = childNode;
 	int col = 0;
 	for (NSString* name in components)
@@ -381,7 +381,7 @@
 			[self selectRowIndexes:rowIndexes inColumn:(col-1)];
 	}
 	if (restoreFirstResponderToViewer)
-		[[self window] makeFirstResponder:self];
+		[self.window makeFirstResponder:self];
 	
 	
 	// restore column scroll positions

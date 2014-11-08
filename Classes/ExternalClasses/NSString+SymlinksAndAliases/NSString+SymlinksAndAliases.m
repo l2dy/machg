@@ -31,7 +31,7 @@
 	//
 	// Convert to a standardized absolute path.
 	//
-	NSString* path = [self stringByStandardizingPath];
+	NSString* path = self.stringByStandardizingPath;
 	if (![path hasPrefix:@"/"])
 	{
 		return nil;
@@ -133,7 +133,7 @@
 //
 - (NSString*)stringByResolvingAlias
 {
-	NSString* aliasTarget = [self stringByConditionallyResolvingAlias];
+	NSString* aliasTarget = self.stringByConditionallyResolvingAlias;
 	if (aliasTarget)
 	{
 		return aliasTarget;
@@ -151,7 +151,7 @@
 //
 - (NSString*)stringByResolvingSymlink
 {
-	NSString* symlinkTarget = [self stringByConditionallyResolvingSymlink];
+	NSString* symlinkTarget = self.stringByConditionallyResolvingSymlink;
 	if (symlinkTarget)
 	{
 		return symlinkTarget;
@@ -187,7 +187,7 @@
 		// relative links
 		//
 		symlinkPath =
-			[[self stringByDeletingLastPathComponent]
+			[self.stringByDeletingLastPathComponent
 				stringByAppendingPathComponent:symlinkPath];
 		symlinkPath = [symlinkPath stringByStandardizingPath];
 	}

@@ -77,7 +77,7 @@ static int _kqueue = -1;
 
 + (BDSKTask *)launchedTaskWithLaunchPath:(NSString *)path arguments:(NSArray *)arguments;
 {
-    BDSKTask *task = [[self new] autorelease];
+    BDSKTask *task = [self.new autorelease];
     [task setLaunchPath:path];
     [task setArguments:arguments];
     [task launch];
@@ -91,7 +91,7 @@ static int _kqueue = -1;
 {
     self = [super init];
     if (self) {
-        _internal = NSZoneCalloc([self zone], 1, sizeof(struct BDSKTaskInternal));
+        _internal = NSZoneCalloc(self.zone, 1, sizeof(struct BDSKTaskInternal));
         memset(&_internal->_event, 0, sizeof(struct kevent));
         pthread_mutex_init(&_internal->_lock, NULL);
         _internal->_canNotify = 1;
@@ -246,7 +246,7 @@ static char *__BDSKCopyFileSystemRepresentation(NSString *str)
     char *workingDir = __BDSKCopyFileSystemRepresentation(_currentDirectoryPath);
     
     // fill with pointers to copied C strings
-    char **args = NSZoneCalloc([self zone], (argCount + 2), sizeof(char *));
+    char **args = NSZoneCalloc(self.zone, (argCount + 2), sizeof(char *));
     NSUInteger i;
     args[0] = __BDSKCopyFileSystemRepresentation(_launchPath);
     for (i = 0; i < argCount; i++) {
@@ -257,10 +257,10 @@ static char *__BDSKCopyFileSystemRepresentation(NSString *str)
     char ***nsEnvironment = _NSGetEnviron();
     char **env = *nsEnvironment;
     
-    NSDictionary *environment = [self environment];
+    NSDictionary *environment = self.environment;
     if (environment) {
         // fill with pointers to copied C strings
-        env = NSZoneCalloc([self zone], [environment count] + 1, sizeof(char *));
+        env = NSZoneCalloc(self.zone, [environment count] + 1, sizeof(char *));
         NSString *key;
         NSUInteger envIndex = 0;
         for (key in environment) {
@@ -278,7 +278,7 @@ static char *__BDSKCopyFileSystemRepresentation(NSString *str)
     NSFileHandle *nullHandle = [NSFileHandle fileHandleWithNullDevice];
     [handlesToClose addObject:nullHandle];
     
-    fh = [self standardInput];
+    fh = self.standardInput;
     if ([fh isKindOfClass:[NSPipe class]]) {
         [handlesToClose addObject:[fh fileHandleForReading]];
         fd_inp = [[fh fileHandleForReading] fileDescriptor];
@@ -287,7 +287,7 @@ static char *__BDSKCopyFileSystemRepresentation(NSString *str)
         fd_inp = [fh isEqual:nullHandle] ? fd_null : [fh fileDescriptor];
     }
     
-    fh = [self standardOutput];
+    fh = self.standardOutput;
     if ([fh isKindOfClass:[NSPipe class]]) {
         [handlesToClose addObject:[fh fileHandleForWriting]];
         fd_out = [[fh fileHandleForWriting] fileDescriptor];
@@ -296,7 +296,7 @@ static char *__BDSKCopyFileSystemRepresentation(NSString *str)
         fd_out = [fh isEqual:nullHandle] ? fd_null : [fh fileDescriptor];
     }
     
-    fh = [self standardError];
+    fh = self.standardError;
     if ([fh isKindOfClass:[NSPipe class]]) {
         [handlesToClose addObject:[fh fileHandleForWriting]];
         fd_err = [[fh fileHandleForWriting] fileDescriptor];
@@ -471,22 +471,22 @@ static char *__BDSKCopyFileSystemRepresentation(NSString *str)
 - (int)terminationStatus; 
 { 
     ASSERT_LAUNCH;
-    if ([self isRunning]) [NSException raise:NSInternalInconsistencyException format:@"Task is still running"];
+    if (self.isRunning) [NSException raise:NSInternalInconsistencyException format:@"Task is still running"];
     return _terminationStatus; 
 }
 
 - (NSTaskTerminationReason)terminationReason; 
 { 
     ASSERT_LAUNCH;
-    if ([self isRunning]) [NSException raise:NSInternalInconsistencyException format:@"Task is still running"];
+    if (self.isRunning) [NSException raise:NSInternalInconsistencyException format:@"Task is still running"];
     return _terminationReason; 
 }
 
 - (void)waitUntilExit;
 {
     ASSERT_LAUNCH;
-    while ([self isRunning]) {
-        NSDate *next = [[NSDate allocWithZone:[self zone]] initWithTimeIntervalSinceNow:0.1];
+    while (self.isRunning) {
+        NSDate *next = [[NSDate allocWithZone:self.zone] initWithTimeIntervalSinceNow:0.1];
         [[NSRunLoop currentRunLoop] runMode:NSDefaultRunLoopMode beforeDate:next];
         [next release];
     }

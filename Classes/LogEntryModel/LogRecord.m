@@ -139,7 +139,7 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 - (BOOL)	    filesLoaded					{ return bitsInCommon(loadStatus_, eLogRecordFilesLoaded); }
 - (BOOL)		detailsAreLoadingOrLoaded	{ return bitsInCommon(loadStatus_, eLogRecordDetailsLoading | eLogRecordDetailsLoaded); }
 - (BOOL)		filesAreLoadingOrLoaded		{ return bitsInCommon(loadStatus_, eLogRecordFilesLoading   | eLogRecordFilesLoaded); }
-- (BOOL)	    isFullyLoaded				{ return [self detailsLoaded] && [self filesLoaded] ; }
+- (BOOL)	    isFullyLoaded				{ return self.detailsLoaded && self.filesLoaded ; }
 
 
 
@@ -202,7 +202,7 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 
 - (void) fillDetailsOfLogRecordForRepository:(RepositoryData*)repository
 {
-	if ([self detailsAreLoadingOrLoaded])
+	if (self.detailsAreLoadingOrLoaded)
 		return;
 	
 	dispatch_async(globalQueue(), ^{
@@ -221,15 +221,15 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 
 - (void) fillFilesOfLogRecordForRepository:(RepositoryData*)repository
 {
-	if ([self filesAreLoadingOrLoaded])
+	if (self.filesAreLoadingOrLoaded)
 		return;
 
 	@synchronized(self)
 	{		
-		if ([self filesAreLoadingOrLoaded])
+		if (self.filesAreLoadingOrLoaded)
 			return;
 		
-		LogRecordLoadStatus status = [self loadStatus];
+		LogRecordLoadStatus status = self.loadStatus;
 		status = unionBits(status, eLogRecordFilesLoading);
 		[self setLoadStatus:status];
 
@@ -268,7 +268,7 @@ void setupGlobalsForLogRecordPartsAndTemplate()
 				}
 			}
 			
-			LogRecordLoadStatus status = [self loadStatus];
+			LogRecordLoadStatus status = self.loadStatus;
 			status = unsetBits(status, eLogRecordFilesLoading);
 			status = unionBits(status, eLogRecordFilesLoaded);
 			@synchronized(self)

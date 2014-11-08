@@ -61,13 +61,13 @@
 
 - (BOOL) isEqualToLabel:(LabelData*)label
 {
-	if (![[self name] isEqualToString:[label name]])
+	if (![self.name isEqualToString:[label name]])
 		return NO;
-	if (![[self revision] isEqualToNumber:[label revision]])
+	if (![self.revision isEqualToNumber:[label revision]])
 		return NO;
-	if (![[self changeset] isEqualToString:[label changeset]])
+	if (![self.changeset isEqualToString:[label changeset]])
 		return NO;
-	if ([self labelType] != [label labelType])
+	if (self.labelType != [label labelType])
 		return NO;
 	return YES;
 }
@@ -77,7 +77,7 @@
 
 - (NSString*) labelTypeDescription
 {
-	switch ([self labelType])
+	switch (self.labelType)
 	{
 		case eLocalTag:			return @"Tag (Local)";
 		case eGlobalTag:		return @"Tag (Global)";
@@ -93,7 +93,7 @@
 
 - (NSAttributedString*) labelTypeAttributedDescription
 {
-	switch ([self labelType])
+	switch (self.labelType)
 	{
 		case eLocalTag:			return [NSAttributedString string:@"Tag"		withAttributes:smallSystemFontAttributes andString:@" (Local)"    withAttributes:smallGraySystemFontAttributes];
 		case eGlobalTag:		return [NSAttributedString string:@"Tag"		withAttributes:smallSystemFontAttributes andString:@" (Global)"   withAttributes:smallGraySystemFontAttributes];
@@ -143,7 +143,7 @@
 // This sorts the array as a side effect
 + (NSArray*) removeDuplicateLabels:(NSArray*)labels
 {
-	NSArray* sortedLabels = [labels sortedArrayUsingDescriptors:[self descriptorsForSortByNameAscending]];
+	NSArray* sortedLabels = [labels sortedArrayUsingDescriptors:self.descriptorsForSortByNameAscending];
 	NSMutableArray* newLabels = [[NSMutableArray alloc] init];
 	for (LabelData* label in sortedLabels)
 		if (![label isEqualToLabel:[newLabels lastObject]])

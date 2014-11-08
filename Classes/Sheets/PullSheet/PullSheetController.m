@@ -95,7 +95,7 @@
 
 - (IBAction) openSheet:(id)sender
 {
-	[titleText setStringValue:fstr(@"Pull to “%@”", [self destinationRepositoryName])];
+	[titleText setStringValue:fstr(@"Pull to “%@”", self.destinationRepositoryName)];
 	[super openSheet:sender];
 }
 
@@ -105,8 +105,8 @@
 	[sheetWindow makeFirstResponder:sheetWindow]; // Make the text fields of the sheet commit any changes they currently have
 	[myDocument_ endSheet:sheetWindow];
 	
-	SidebarNode* pullDestination  = [self destinationRepository];
-	SidebarNode* pullSource       = [self sourceRepository];
+	SidebarNode* pullDestination  = self.destinationRepository;
+	SidebarNode* pullSource       = self.sourceRepository;
 	NSString* pullSourceName      = [pullSource shortName];
 	NSString* pullDestinationName = [pullDestination shortName];
 
@@ -155,7 +155,7 @@
 {
 	[sheetWindow makeFirstResponder:sheetWindow]; // Make the text fields of the sheet commit any changes they currently have
 	[myDocument_ endSheet:sheetWindow];
-	[self setConnectionFromFieldsForSource:[self sourceRepository] andDestination:[self destinationRepository]];
+	[self setConnectionFromFieldsForSource:self.sourceRepository andDestination:self.destinationRepository];
 }
 
 @end

@@ -91,7 +91,7 @@
 
 - (IBAction) validateButtons:(id)sender
 {
-	NSString* reasonForNonValid = [self reasonForInvalidityOfSelectedEntries];
+	NSString* reasonForNonValid = self.reasonForInvalidityOfSelectedEntries;
 	if (!reasonForNonValid)
 		[okButton setEnabled:YES];
 	else
@@ -185,7 +185,7 @@
 	
 	[self validateButtons:self];
 	if ([okButton isEnabled])
-		[sheetInformativeMessageTextField setAttributedStringValue: [self formattedSheetMessage]];
+		[sheetInformativeMessageTextField setAttributedStringValue: self.formattedSheetMessage];
 	[self setWindow:theHistoryEditSheet];
 	[myDocument_ beginSheet:theHistoryEditSheet];
 	
@@ -268,7 +268,7 @@
 {
 	[self validateButtons:self];
 	if ([okButton isEnabled])
-		[sheetInformativeMessageTextField setAttributedStringValue: [self formattedSheetMessage]];
+		[sheetInformativeMessageTextField setAttributedStringValue: self.formattedSheetMessage];
 }
 
 - (NSIndexSet*) tableView:(NSTableView*)tableView selectionIndexesForProposedSelection:(NSIndexSet*)proposedSelectionIndexes

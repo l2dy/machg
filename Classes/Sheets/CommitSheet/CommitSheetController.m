@@ -33,7 +33,7 @@ NSString* kAmendOption	 = @"amendOption";
 {
 	[super awakeFromNib];
 
-	HunkExclusions* exclusions = [self hunkExclusions];
+	HunkExclusions* exclusions = self.hunkExclusions;
 	[self observe:kHunkWasExcluded from:exclusions byCalling:@selector(nodeWasChanged:)];
 	[self observe:kHunkWasIncluded from:exclusions byCalling:@selector(nodeWasChanged:)];
 	[self observe:kFileWasExcluded from:exclusions byCalling:@selector(nodeWasChanged:)];
@@ -47,13 +47,13 @@ NSString* kAmendOption	 = @"amendOption";
 
 - (void) nodeWasChanged:(NSNotification*)notification
 {
-	if ([self showingFilesTable])
+	if (self.showingFilesTable)
 	{
 		NSDictionary* userInfo = [notification userInfo];
 		NSString* absolutePath = fstr(@"%@/%@", nonNil(userInfo[kRootPath]), nonNil(userInfo[kFileName]));
-		FSNodeInfo* changedNode = [[self rootNodeInfo] nodeForPathFromRoot:absolutePath];
+		FSNodeInfo* changedNode = [self.rootNodeInfo nodeForPathFromRoot:absolutePath];
 		if (changedNode)
-			[[[self window] contentView] setNeedsDisplayInRect:[self rectInWindowForNode:changedNode]];
+			[[self.window contentView] setNeedsDisplayInRect:[self rectInWindowForNode:changedNode]];
 	}
 	[(id)self.parentController performSelectorIfPossible:@selector(validateButtons:) withObject:self];
 }
@@ -300,8 +300,8 @@ NSString* kAmendOption	 = @"amendOption";
 - (BOOL) anyHunksToCommit
 {
 	NSString* rootPath = [myDocument_ absolutePathOfRepositoryRoot];
-	HunkExclusions* hunkExclusions = [self hunkExclusions];
-	for(FSNodeInfo* node in [self tableLeafNodes])
+	HunkExclusions* hunkExclusions = self.hunkExclusions;
+	for(FSNodeInfo* node in self.tableLeafNodes)
 	{
 		NSString* fileName = pathDifference(rootPath, [node absolutePath]);
 		NSSet* hunkExclusionSet = [hunkExclusions hunkExclusionSetForRoot:rootPath andFile:fileName];
@@ -318,7 +318,7 @@ NSString* kAmendOption	 = @"amendOption";
 {
 	BOOL pathsAreSelected = [commitFilesViewer nodesAreSelected];
 	BOOL canAllowAmend = AllowHistoryEditingOfRepositoryFromDefaults() && amendIsPossible_ && ![myDocument_ inMergeState];
-	BOOL okToCommit = IsNotEmpty([commitMessageTextView string]) && [self anyHunksToCommit];
+	BOOL okToCommit = IsNotEmpty([commitMessageTextView string]) && self.anyHunksToCommit;
 	NSString* diffButtonMessage = pathsAreSelected ? @"Diff Selected" : @"Diff All";
 	
 	dispatch_async(mainQueue(), ^{
@@ -387,10 +387,10 @@ NSString* kAmendOption	 = @"amendOption";
 {
 	NSString* theMessage = [commitMessageTextView string];
 	NSMutableArray* args = [NSMutableArray arrayWithObjects:@"--message", theMessage, nil];
-	if ([self committerOption] && IsNotEmpty([self committer]))
-		[args addObject:@"--user" followedBy:[self committer]];
-	if ([self dateOption] && IsNotEmpty([self date]))
-		[args addObject:@"--date" followedBy:[[self date] isodateDescription]];
+	if (self.committerOption && IsNotEmpty(self.committer))
+		[args addObject:@"--user" followedBy:self.committer];
+	if (self.dateOption && IsNotEmpty(self.date))
+		[args addObject:@"--date" followedBy:[self.date isodateDescription]];
 	return args;
 }
 
@@ -411,7 +411,7 @@ NSString* kAmendOption	 = @"amendOption";
 		NSMutableArray* args = [NSMutableArray arrayWithObjects:@"commit", nil];
 		[self handleCommitSubrepoSubstateOption:args];
 		[myDocument_ registerPendingRefresh:pathsToCommit];
-		[args addObjectsFromArray:[self argumentsForUserDataMessage]];
+		[args addObjectsFromArray:self.argumentsForUserDataMessage];
 		if (![myDocument_ inMergeState])
 			[args addObjectsFromArray:pathsToCommit];
 		
@@ -500,7 +500,7 @@ NSString* kAmendOption	 = @"amendOption";
 		[argsDiff addObjectsFromArray:contestedPaths];
 		ExecutionResult* diffResult = [TaskExecutions executeMercurialWithArgs:argsDiff  fromRoot:rootPath logging:eLoggingNone];
 		PatchData* patchData = IsNotEmpty(diffResult.outStr) ? [PatchData patchDataFromDiffContents:diffResult.outStr] : nil;
-		contestedPatchFile = [patchData tempFileWithPatchBodyExcluding:[self hunkExclusions] withRoot:rootPath];
+		contestedPatchFile = [patchData tempFileWithPatchBodyExcluding:self.hunkExclusions withRoot:rootPath];
 	}
 	
 	// Create temporary Directory and copy contested files to this directory
@@ -520,7 +520,7 @@ NSString* kAmendOption	 = @"amendOption";
 		return;
 	}
 	
-	NSArray* commitCommandArguments = [self argumentsForUserDataMessage];
+	NSArray* commitCommandArguments = self.argumentsForUserDataMessage;
 	
 	[myDocument_ dispatchToMercurialQueuedWithDescription:operationTitle process:^{
 
@@ -612,9 +612,9 @@ NSString* kAmendOption	 = @"amendOption";
 	
 	[theCommitSheet makeFirstResponder:theCommitSheet];	// Make the fields of the sheet commit any changes they currently have
 
-	NSArray* commitData = [self tableLeafPaths];
-	NSArray*   contestedPaths = [[self hunkExclusions]   contestedPathsIn:commitData  forRoot:root];
-	NSArray* uncontestedPaths = [[self hunkExclusions] uncontestedPathsIn:commitData  forRoot:root];
+	NSArray* commitData = self.tableLeafPaths;
+	NSArray*   contestedPaths = [self.hunkExclusions   contestedPathsIn:commitData  forRoot:root];
+	NSArray* uncontestedPaths = [self.hunkExclusions uncontestedPathsIn:commitData  forRoot:root];
 	BOOL inMerge = [[myDocument_ repositoryData] inMergeState];
 	BOOL simpleOperation = 	IsEmpty(contestedPaths);
 	BOOL amend = ([amendButton state] == NSOnState);
@@ -642,7 +642,7 @@ NSString* kAmendOption	 = @"amendOption";
 
 - (IBAction) commitSheetDiffAction:(id)sender
 {
-	NSArray* nodesToDiff = [commitFilesViewer nodesAreSelected] ? [commitFilesViewer chosenNodes] : [self tableLeafNodes];
+	NSArray* nodesToDiff = [commitFilesViewer nodesAreSelected] ? [commitFilesViewer chosenNodes] : self.tableLeafNodes;
 	NSArray* pathsToDiff = pathsOfFSNodes(nodesToDiff);
 	[myDocument_ viewDifferencesInCurrentRevisionFor:pathsToDiff toRevision:nil]; // nil indicates the current revision
 	[self makeMessageFieldFirstResponder];

@@ -24,7 +24,7 @@
 - (void) openHelpAnchor:(id)sender
 {
 	NSString* locBookName = [[NSBundle mainBundle] objectForInfoDictionaryKey: @"CFBundleHelpBookName"];
-	[[NSHelpManager sharedHelpManager] openHelpAnchor:[self helpAnchorName] inBook:locBookName];
+	[[NSHelpManager sharedHelpManager] openHelpAnchor:self.helpAnchorName inBook:locBookName];
 }
 	 
 @end

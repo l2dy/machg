@@ -89,7 +89,7 @@
 	MacHgDocument* document = [[entry_ repositoryData] myDocument];
 	if (![document showingASheet] && [document showingHistoryView])
 	{
-		NSString* title = [self title];
+		NSString* title = self.title;
 		NSString* revision = nil;
 		//		if ([title getCapturesWithRegexAndComponents:@"(\\d+):[\\d\\w]+" firstComponent:&revision])
 		if ([title getCapturesWithRegexAndComponents:@"(\\d+)" firstComponent:&revision])

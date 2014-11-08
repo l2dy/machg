@@ -152,7 +152,7 @@
 
 - (IBAction) refreshHistoryView:(id)sender
 {
-	NSString* newSearchMessage = IsEmpty([[myDocument_ toolbarSearchField] stringValue]) ? @"Search" : [self searchCaption];
+	NSString* newSearchMessage = IsEmpty([[myDocument_ toolbarSearchField] stringValue]) ? @"Search" : self.searchCaption;
 	[[myDocument_ toolbarSearchItem] setLabel:newSearchMessage];
 	[logTableView_ refreshTable:self];
 	[theLabelsTableView_ refreshTable:self];
@@ -160,7 +160,7 @@
 
 - (IBAction) resetHistoryView:(id)sender
 {
-	NSString* newSearchMessage = IsEmpty([[myDocument_ toolbarSearchField] stringValue]) ? @"Search" : [self searchCaption];
+	NSString* newSearchMessage = IsEmpty([[myDocument_ toolbarSearchField] stringValue]) ? @"Search" : self.searchCaption;
 	[[myDocument_ toolbarSearchItem] setLabel:newSearchMessage];
 	[logTableView_ resetTable:self];
 	[theLabelsTableView_ resetTable:self];
@@ -470,15 +470,15 @@
 	if (theAction == @selector(mainMenuBackoutChangeset:))						return [myDocument_ localRepoIsSelectedAndReady] && ![myDocument_ repositoryHasFilesWhichContainStatus:eHGStatusChangedInSomeWay];
 	
 	// HistoryView contextual items
-	if (theAction == @selector(historyMenuAddLabelToChosenRevision:))			return [myDocument_ localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
-	if (theAction == @selector(historyMenuDiffSelectedRevisions:))				return [myDocument_ localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
-	if (theAction == @selector(historyMenuDiffAllToChosenRevision:))			return [myDocument_ localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
-	if (theAction == @selector(historyMenuUpdateRepositoryToChosenRevision:))	return [myDocument_ localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuAddLabelToChosenRevision:))			return [myDocument_ localRepoIsSelectedAndReady] && !self.chosenRevisionsContainsIncompleteRevision;
+	if (theAction == @selector(historyMenuDiffSelectedRevisions:))				return [myDocument_ localRepoIsSelectedAndReady] && !self.chosenRevisionsContainsIncompleteRevision;
+	if (theAction == @selector(historyMenuDiffAllToChosenRevision:))			return [myDocument_ localRepoIsSelectedAndReady] && !self.chosenRevisionsContainsIncompleteRevision;
+	if (theAction == @selector(historyMenuUpdateRepositoryToChosenRevision:))	return [myDocument_ localRepoIsSelectedAndReady] && !self.chosenRevisionsContainsIncompleteRevision;
 	if (theAction == @selector(historyMenuGotoChangeset:))						return [myDocument_ localRepoIsSelectedAndReady] && [myDocument_ showingHistoryView];
-	if (theAction == @selector(historyMenuMergeRevision:))						return [myDocument_ localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
-	if (theAction == @selector(historyMenuManifestOfChosenRevision:))			return [myDocument_ localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuMergeRevision:))						return [myDocument_ localRepoIsSelectedAndReady] && !self.chosenRevisionsContainsIncompleteRevision;
+	if (theAction == @selector(historyMenuManifestOfChosenRevision:))			return [myDocument_ localRepoIsSelectedAndReady] && !self.chosenRevisionsContainsIncompleteRevision;
 	// -------
-	if (theAction == @selector(historyMenuViewRevisionDifferences:))			return [myDocument_ localRepoIsSelectedAndReady] && ![self chosenRevisionsContainsIncompleteRevision];
+	if (theAction == @selector(historyMenuViewRevisionDifferences:))			return [myDocument_ localRepoIsSelectedAndReady] && !self.chosenRevisionsContainsIncompleteRevision;
 
 	// Labels contextual items
 	if (theAction == @selector(labelsMenuMoveChosenLabel:))						return [myDocument_ localRepoIsSelectedAndReady] && [theLabelsTableView_ chosenLabel] && ![[theLabelsTableView_ chosenLabel] isOpenHead];
@@ -549,7 +549,7 @@
 	return quickLookPreviewItems;
 }
 
-- (NSInteger) numberOfQuickLookPreviewItems		{ return [[self quickLookPreviewItems] count]; }
+- (NSInteger) numberOfQuickLookPreviewItems		{ return [self.quickLookPreviewItems count]; }
 
 - (void) keyDown:(NSEvent *)theEvent
 {

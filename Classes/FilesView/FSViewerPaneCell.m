@@ -90,7 +90,7 @@ void commonLoadCellContents(NSCell* cell)
 	if (fileIcon)
 		theSize.width += ICON_INTERSPACING + ICON_SIZE;
 	theSize.width += ICON_TEXT_SPACING;
-	theSize.height = MAX(iconRowSize.height + ICON_INSET_VERT * 2.0, [[self attributedStringValue] size].height + 5);
+	theSize.height = MAX(iconRowSize.height + ICON_INSET_VERT * 2.0, [self.attributedStringValue size].height + 5);
 	return theSize;
 }
 
@@ -154,7 +154,7 @@ void commonLoadCellContents(NSCell* cell)
 // Expansion tool tip support
 - (NSRect) expansionFrameWithFrame:(NSRect)cellFrame inView:(NSView*)view
 {
-	// We could access our recommended cell size with [self cellSize] and see if it fits in cellFrame, but NSBrowserCell already does this for us!
+	// We could access our recommended cell size with self.cellSize and see if it fits in cellFrame, but NSBrowserCell already does this for us!
 	NSRect expansionFrame = [super expansionFrameWithFrame:cellFrame inView:view];
 	// If we do need an expansion frame, the rect will be non-empty. We need to move it over, and shrink it, since we won't be drawing the icon in it
 	if (!NSIsEmptyRect(expansionFrame))

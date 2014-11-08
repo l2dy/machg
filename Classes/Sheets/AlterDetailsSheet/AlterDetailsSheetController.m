@@ -100,7 +100,7 @@
 		return;
 	}
 
-	[chooseChangesetInformativeMessageTextField setAttributedStringValue: [self formattedChooseChangesetSheetMessage]];
+	[chooseChangesetInformativeMessageTextField setAttributedStringValue: self.formattedChooseChangesetSheetMessage];
 	[chooseChangesetButton setEnabled:YES];
 	return;	
 }
@@ -142,7 +142,7 @@
 		return;
 	}
 		
-	[alterDetailsInformativeMessageTextField setAttributedStringValue:[self formattedAlterDetailsSheetMessage]];
+	[alterDetailsInformativeMessageTextField setAttributedStringValue:self.formattedAlterDetailsSheetMessage];
 	[alterDetailsButton setEnabled:YES];
 }
 

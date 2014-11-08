@@ -68,7 +68,7 @@
 		if (IsEmpty(shortNameFieldValue_) || [[pathFieldValue_ pathComponents] containsObject:shortNameFieldValue_])
 			[self setShortNameFieldValue:[pathFieldValue_ lastPathComponent]];
 	
-	BOOL valid = ([[self pathFieldValue] length] > 0) && ([[self shortNameFieldValue] length] > 0);
+	BOOL valid = ([self.pathFieldValue length] > 0) && ([self.shortNameFieldValue length] > 0);
 	[okButton setEnabled:valid];
 	[repositoryPathBox setHidden:!repositoryExists];
 	[okButton setTitle:(repositoryExists ? @"Manage Repository" : @"Create Repository")];
@@ -88,7 +88,7 @@
 	if (filename)
 	{
 		[self setPathFieldValue:filename];
-		if ([[self shortNameFieldValue] isEqualToString: @""])
+		if ([self.shortNameFieldValue isEqualToString: @""])
 			[self setShortNameFieldValue:[filename lastPathComponent]];
 	}
 	[self validateButtons:sender];
@@ -269,7 +269,7 @@
 - (void) awakeFromNib
 {
 	[super awakeFromNib];
-	NSMutableArray* dragTypes = [NSMutableArray arrayWithArray:[self registeredDraggedTypes]];
+	NSMutableArray* dragTypes = [NSMutableArray arrayWithArray:self.registeredDraggedTypes];
 	[dragTypes addObject:NSFilenamesPboardType];
 	[self registerForDraggedTypes:dragTypes];
 }
@@ -279,12 +279,12 @@
 
 - (NSDragOperation)draggingEntered:(id <NSDraggingInfo>)info
 {
-	[[self window] makeFirstResponder:self];
+	[self.window makeFirstResponder:self];
 	NSPasteboard*  pasteboard  = [info draggingPasteboard];
 	NSString* availableType = [pasteboard availableTypeFromArray:@[NSFilenamesPboardType, NSURLPboardType, NSStringPboardType, NSMultipleTextSelectionPboardType, NSRTFPboardType]];
 	if (availableType)
 	{
-		[[self window] makeFirstResponder:self];
+		[self.window makeFirstResponder:self];
 		return NSDragOperationCopy;
 	}
 	return NSDragOperationNone;

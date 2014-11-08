@@ -160,8 +160,8 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 // ------------------------------------------------------------------------------------
 
 - (NSString*) shortVersionNumberString	{ return [[NSBundle mainBundle] objectForInfoDictionaryKey:@"CFBundleShortVersionString"]; }
-- (NSString*) shortVersionString		{ return fstr(@"Version:%@", [self shortVersionNumberString]); }
-- (NSString*) shortMacHgVersionString	{ return fstr(@"MacHg %@", [self shortVersionNumberString]); }
+- (NSString*) shortVersionString		{ return fstr(@"Version:%@", self.shortVersionNumberString); }
+- (NSString*) shortMacHgVersionString	{ return fstr(@"MacHg %@", self.shortVersionNumberString); }
 
 - (NSString*) macHgBuildHashKeyString
 {
@@ -185,25 +185,25 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 - (NSString*) shortMercurialVersionNumberString
 {
 	NSString* shortNumber;
-	BOOL matched = [[self mercurialVersionString] getCapturesWithRegexAndComponents:@"Mercurial Distributed SCM \\(version ([0-9\\.]+)\\+[0-9\\.]+\\)" firstComponent:&shortNumber];
+	BOOL matched = [self.mercurialVersionString getCapturesWithRegexAndComponents:@"Mercurial Distributed SCM \\(version ([0-9\\.]+)\\+[0-9\\.]+\\)" firstComponent:&shortNumber];
 	return matched ? shortNumber : @"";
 }
 
 - (NSString*) mercurialBuildHashKeyString
 {
 	NSString* hashKeyString;
-	BOOL matched = [[self mercurialVersionString] getCapturesWithRegexAndComponents:@"Mercurial Distributed SCM \\(version [0-9\\.]+\\+([0-9\\.]+)\\)" firstComponent:&hashKeyString];
+	BOOL matched = [self.mercurialVersionString getCapturesWithRegexAndComponents:@"Mercurial Distributed SCM \\(version [0-9\\.]+\\+([0-9\\.]+)\\)" firstComponent:&hashKeyString];
 	return matched ? hashKeyString : @"";
 }
 
-- (NSString*) shortMercurialVersionString	{ return fstr(@"Mercurial SCM %@", [self shortMercurialVersionNumberString]); }
+- (NSString*) shortMercurialVersionString	{ return fstr(@"Mercurial SCM %@", self.shortMercurialVersionNumberString); }
 
 
 - (NSAttributedString*) fullVersionString
 {
 	NSMutableAttributedString* version = [[NSMutableAttributedString alloc] init];
-	[version appendString:[self shortVersionString] withAttributes:systemFontAttributes];
-	[version appendString:fstr(@" (%@)",[self macHgBuildHashKeyString]) withAttributes:smallGraySystemFontAttributes];
+	[version appendString:self.shortVersionString withAttributes:systemFontAttributes];
+	[version appendString:fstr(@" (%@)",self.macHgBuildHashKeyString) withAttributes:smallGraySystemFontAttributes];
 	
 	// Switch the version string to center aligned
 	NSMutableParagraphStyle* ps = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
@@ -295,7 +295,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 
 - (void) checkForOutdatedSupportFiles
 {
-	NSString* currentBundleString = [self shortVersionNumberString];
+	NSString* currentBundleString = self.shortVersionNumberString;
 	NSString* mostModernMacHgVersionExecuted = [[NSUserDefaults standardUserDefaults] stringForKey:@"MostModernMacHgVersionExecuted"];
 	BOOL replacedHgrc = NO;
 	BOOL replacedHgignore = NO;
@@ -445,7 +445,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 
 
 	// Since we could not find a user name we have to ask the user for it
-		[[self theInitilizationWizardController] showWizard];
+		[self.theInitilizationWizardController showWizard];
 }
 
 - (void) checkForFileMerge
@@ -962,7 +962,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 - (NSApplicationTerminateReply)applicationShouldTerminate:(NSApplication *)sender
 {
 	// Remove the cache directory
-	NSString* cacheDir = [self cacheDirectory];
+	NSString* cacheDir = self.cacheDirectory;
 	if (cacheDir)
 	{
 		NSFileManager* fileManager = [NSFileManager defaultManager];
@@ -1033,7 +1033,7 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 // MARK: About Box
 // ------------------------------------------------------------------------------------
 
-- (IBAction) showAboutBox:(id)sender	{ [[self theAboutWindowController] showAboutWindow]; }
+- (IBAction) showAboutBox:(id)sender	{ [self.theAboutWindowController showAboutWindow]; }
 
 
 

@@ -16,9 +16,9 @@
 //
 - (void)keyDown:(NSEvent*)theEvent
 {
-    if ([fileManager fileExistsAtPath:[[self string] stringByExpandingTildeInPath]] && [theEvent keyCode] == 51 && NSMaxRange([self selectedRange]) == [[self string] length] && manualSelection == NO)       // if string is valid path, delete key was pressed, and current selection goes to end of string, and current selection was not set manually by the user
+    if ([fileManager fileExistsAtPath:[self.string stringByExpandingTildeInPath]] && [theEvent keyCode] == 51 && NSMaxRange(self.selectedRange) == [self.string length] && manualSelection == NO)       // if string is valid path, delete key was pressed, and current selection goes to end of string, and current selection was not set manually by the user
     {
-        NSRange selectionRange = NSMakeRange(([self selectedRange].location - 1), ([self selectedRange].length + 1));
+        NSRange selectionRange = NSMakeRange((self.selectedRange.location - 1), (self.selectedRange.length + 1));
         [self setSelectedRange:selectionRange];
     }
     
@@ -47,19 +47,19 @@
         return;
     }
     
-    if ([[self string] isEqualTo:@""])       // if there is no string, we won't bother trying to match it
+    if ([self.string isEqualTo:@""])       // if there is no string, we won't bother trying to match it
     {
         [super didChangeText];
         return;
     }
     
-    if ([fileManager fileExistsAtPath:[[self string] stringByExpandingTildeInPath]])     // if the current string is a valid path, we don't want to alter it
+    if ([fileManager fileExistsAtPath:[self.string stringByExpandingTildeInPath]])     // if the current string is a valid path, we don't want to alter it
     {
         [super didChangeText];
         return;
     }
     
-    NSArray* components = [[self string] pathComponents];
+    NSArray* components = [self.string pathComponents];
     NSArray* componentsBase;
     
     // get our search directory, described by componentsBase
@@ -87,8 +87,8 @@
 				break;
 
             // calculate what part of the resulting path should be selected
-            float incompleteLength = (float)[[self string] length];
-            float selectionLength = (float)([completedPath length] - [[self string] length]);
+            float incompleteLength = (float)[self.string length];
+            float selectionLength = (float)([completedPath length] - [self.string length]);
             NSRange selectionRange = NSMakeRange(incompleteLength, selectionLength);
             
             // set our results

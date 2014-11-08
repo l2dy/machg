@@ -16,13 +16,13 @@
 {
 	NSMutableParagraphStyle* ps = [[NSParagraphStyle defaultParagraphStyle] mutableCopy];
 	[ps setAlignment:NSCenterTextAlignment];
-	NSUInteger mask = [self keyEquivalentModifierMask];
+	NSUInteger mask = self.keyEquivalentModifierMask;
 	NSMutableString* modifiers = [[NSMutableString alloc] init];
 	if (mask & NSControlKeyMask)	[modifiers appendString:@"⌃"];
 	if (mask & NSAlternateKeyMask)	[modifiers appendString:@"⌥"];
 	if (mask & NSCommandKeyMask)	[modifiers appendString:@"⌘"];
 	
-	NSString* key   = [[self keyEquivalent] uppercaseString];
+	NSString* key   = [self.keyEquivalent uppercaseString];
 	NSFont* keyFont = [NSFont systemFontOfSize:[NSFont systemFontSize]];
 	
 	NSDictionary* standardAttributes = @{NSFontAttributeName: keyFont, NSParagraphStyleAttributeName: ps};
@@ -37,8 +37,8 @@
 
 - (void) awakeFromNib
 {
-	originalTitle  = [self title];
-	decoratedTitle = [self determineDecoratedTitle];
+	originalTitle  = self.title;
+	decoratedTitle = self.determineDecoratedTitle;
 	[self observe:kCommandKeyIsDown		from:nil  byCalling:@selector(switchToDecoratedTitle)];
 	[self observe:kCommandKeyIsUp		from:nil  byCalling:@selector(switchToStandardTitle)];
 

@@ -75,7 +75,7 @@
 {
 	BOOL valid = ![logTableView noRevisionSelected];
 	[okButton setEnabled:valid];
-	[sheetInformativeMessageTextField setAttributedStringValue: (valid ? [self formattedSheetMessage] : normalSheetMessageAttributedString(@"You need to select one or more revisions in order to export a patch."))];
+	[sheetInformativeMessageTextField setAttributedStringValue: (valid ? self.formattedSheetMessage : normalSheetMessageAttributedString(@"You need to select one or more revisions in order to export a patch."))];
 }
 
 - (IBAction) openExportPatchesSheetWithSelectedRevisions:(id)sender
@@ -167,7 +167,7 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 	else if (!singleEntrySelected &&  reversePatchOption_                          )	exportDescription =      @"exporting selected revisions (reversed)";
 	
 	NSInteger numberOfPatches  = [entries count];
-	NSString* fileNameTemplate = [self patchNameOption];
+	NSString* fileNameTemplate = self.patchNameOption;
 	fileNameTemplate      = [fileNameTemplate stringByReplacingOccurrencesOfRegex:@"\\%N" withString:intAsString(numberOfPatches)];
 	BOOL changingFileName = [fileNameTemplate isMatchedByRegex:@"\\%[nrRhH]" options:RKLNoOptions];
 	
@@ -181,10 +181,10 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 			{
 				NSInteger rev = [entry revisionInt];
 				NSMutableArray* argsDiff = [NSMutableArray arrayWithObjects:@"diff", nil];
-				if ([self textOption])			[argsDiff addObject:@"--text"];
-				if ([self gitOption])			[argsDiff addObject:@"--git"];
-				if ([self noDatesOption])		[argsDiff addObject:@"--nodates"];
-				if ([self reversePatchOption])	[argsDiff addObject:@"--reverse"];
+				if (self.textOption)			[argsDiff addObject:@"--text"];
+				if (self.gitOption)			[argsDiff addObject:@"--git"];
+				if (self.noDatesOption)		[argsDiff addObject:@"--nodates"];
+				if (self.reversePatchOption)	[argsDiff addObject:@"--reverse"];
 				if (rev != incompleteRev)
 					[argsDiff addObject:@"--change" followedBy:intAsString(rev)];
 				
@@ -323,7 +323,7 @@ static NSInteger entryReverseSort(id entry1, id entry2, void* context)
 	NSInteger start = [[entries firstObject] revisionInt];
 	NSInteger end   = [[entries lastObject] revisionInt];
 
-	NSString* fileNameTemplate = [self patchNameOption];
+	NSString* fileNameTemplate = self.patchNameOption;
 	BOOL changingFileName = [fileNameTemplate isMatchedByRegex:@"\\%[nrRhH]" options:RKLNoOptions];
 	BOOL incompleteRevSelected = (incompleteRev == start || incompleteRev == end);
 	

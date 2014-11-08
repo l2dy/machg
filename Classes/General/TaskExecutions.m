@@ -47,8 +47,8 @@
 
 - (NSString*) commandLineString
 {
-    NSMutableString* desc = [[[self launchPath] lastPathComponent] mutableCopy];
-    for (NSString* arg in [self arguments])
+    NSMutableString* desc = [[self.launchPath lastPathComponent] mutableCopy];
+    for (NSString* arg in self.arguments)
 	{
         [desc appendString:@" "];
         [desc appendString:arg];
@@ -191,8 +191,8 @@ NSString* filterProgressOutOfErrorString(NSString* rawErrorStr)
 }
 
 - (BOOL) hasErrors		{ return ( result_ == 1 && IsNotEmpty(errStr_)) || result_ > 1 || result_ < 0 || [errStr_ isMatchedByRegex:@"^(?i)abort" options:RKLMultiline]; }
-- (BOOL) hasWarnings	{ return IsNotEmpty(errStr_) && ![self hasErrors]; }
-- (BOOL) hasNoErrors	{ return ![self hasErrors]; }
+- (BOOL) hasWarnings	{ return IsNotEmpty(errStr_) && !self.hasErrors; }
+- (BOOL) hasNoErrors	{ return !self.hasErrors; }
 - (BOOL) isClean		{ return result_ == 0 && IsEmpty(errStr_); }
 
 - (NSString*) description
@@ -203,7 +203,7 @@ NSString* filterProgressOutOfErrorString(NSString* rawErrorStr)
 	if (IsNotEmpty(errStr_))	[clauses addObject: fstr(@"err:%@", errStr_)];
 	if (IsNotEmpty(outStr_))	[clauses addObject: fstr(@"stdout:%@", outStr_)];
 	[clauses addObject:cmdClause];
-	return fstr(@"<%@ { code:%d, %@} >", [self className], result_, [clauses componentsJoinedByString:@", "]);
+	return fstr(@"<%@ { code:%d, %@} >", self.className, result_, [clauses componentsJoinedByString:@", "]);
 }
 
 - (void) displayAnyHostIdentificationViolations
@@ -340,11 +340,11 @@ NSString* filterProgressOutOfErrorString(NSString* rawErrorStr)
 	if ( (level == 1 && bitsInCommon(log, eLogAllToFile)) || level == 2)
 		[self logMercurialResult];
 	
-	if ([self hasErrors])
+	if (self.hasErrors)
 		[self displayAnyHostIdentificationViolations];
 	
 	// report errors if we asked for error reporting and it hasn't already been handled.
-	if (!loggedToAlertOrWindow_ && [self hasErrors] && bitsInCommon(log, eIssueErrorsInAlerts))
+	if (!loggedToAlertOrWindow_ && self.hasErrors && bitsInCommon(log, eIssueErrorsInAlerts))
 	{
 		NSString* errorMessage = fstr(@"Error During %@", [[generatingArgs_ firstObject] capitalizedString]);
 		

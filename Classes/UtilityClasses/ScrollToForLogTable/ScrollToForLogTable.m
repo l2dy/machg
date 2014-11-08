@@ -62,7 +62,7 @@
 {
 	NSMenuItem* menuItemScrollToTag = [[NSMenuItem alloc] initWithTitle:@"Scroll to Tag" action:NULL keyEquivalent:@""];
 	NSMenu* menuOfTags  = [[NSMenu alloc]init];
-	NSArray* tagLabels = [LabelData filterLabelsDictionary: [[self repositoryData] revisionNumberToLabels]  byType:eTagLabel];
+	NSArray* tagLabels = [LabelData filterLabelsDictionary: [self.repositoryData revisionNumberToLabels]  byType:eTagLabel];
 	NSArray* sortedTagLabels = [tagLabels sortedArrayUsingDescriptors:[LabelData descriptorsForSortByRevisionAscending]];
 	for (LabelData* label in sortedTagLabels)
 		[menuOfTags addItem:[self menuItemForLabel:label]];
@@ -71,7 +71,7 @@
 	
 	NSMenuItem* menuItemScrollToBookmark = [[NSMenuItem alloc] initWithTitle:@"Scroll to Bookmark" action:NULL keyEquivalent:@""];
 	NSMenu* menuOfBookmarks  = [[NSMenu alloc]init];
-	NSArray* bookmarkLabels = [LabelData filterLabelsDictionary: [[self repositoryData] revisionNumberToLabels]  byType:eBookmarkLabel];
+	NSArray* bookmarkLabels = [LabelData filterLabelsDictionary: [self.repositoryData revisionNumberToLabels]  byType:eBookmarkLabel];
 	NSArray* sortedBookmarkLabels = [bookmarkLabels sortedArrayUsingDescriptors:[LabelData descriptorsForSortByRevisionAscending]];
 	for (LabelData* label in sortedBookmarkLabels)
 		[menuOfBookmarks addItem:[self menuItemForLabel:label]];
@@ -80,7 +80,7 @@
 	
 	NSMenuItem* menuItemScrollToBranch = [[NSMenuItem alloc] initWithTitle:@"Scroll to Branch" action:NULL keyEquivalent:@""];
 	NSMenu* menuOfBranches  = [[NSMenu alloc]init];
-	NSArray* branchLabels = [LabelData filterLabelsDictionary: [[self repositoryData] revisionNumberToLabels]  byType:eBranchLabel];
+	NSArray* branchLabels = [LabelData filterLabelsDictionary: [self.repositoryData revisionNumberToLabels]  byType:eBranchLabel];
 	NSArray* sortedBranchLabels = [branchLabels sortedArrayUsingDescriptors:[LabelData descriptorsForSortByRevisionAscending]];
 	for (LabelData* label in sortedBranchLabels)
 		[menuOfBranches addItem:[self menuItemForLabel:label]];
@@ -89,7 +89,7 @@
 	
 	NSMenuItem* menuItemScrollToOpenHead = [[NSMenuItem alloc] initWithTitle:@"Scroll to OpenHead" action:NULL keyEquivalent:@""];
 	NSMenu* menuOfOpenHeads  = [[NSMenu alloc]init];
-	NSArray* openHeadLabels = [LabelData filterLabelsDictionary: [[self repositoryData] revisionNumberToLabels]  byType:eOpenHead];
+	NSArray* openHeadLabels = [LabelData filterLabelsDictionary: [self.repositoryData revisionNumberToLabels]  byType:eOpenHead];
 	NSArray* sortedOpenHeadLabels = [openHeadLabels sortedArrayUsingDescriptors:[LabelData descriptorsForSortByRevisionAscending]];
 	for (LabelData* label in sortedOpenHeadLabels)
 		[menuOfOpenHeads addItem:[self menuItemForLabel:label]];
@@ -115,8 +115,8 @@
 {
 	[self updatePopupMenu];
 	
-	NSRect frame = [self frame];
-	NSControlSize controlSize = [[self cell] controlSize];
+	NSRect frame = self.frame;
+	NSControlSize controlSize = [self.cell controlSize];
 	CGFloat offset = (controlSize == NSRegularControlSize) ? 3 : 4;
 	
     NSPoint menuOrigin = [self convertPoint:NSMakePoint(0, frame.size.height + offset) toView:nil];

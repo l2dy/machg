@@ -129,7 +129,7 @@
 
 - (void) logTableViewSelectionDidChange:(LogTableView*)theLogTable
 {
-	[sheetInformativeMessageTextField setAttributedStringValue: [self formattedSheetMessage]];
+	[sheetInformativeMessageTextField setAttributedStringValue: self.formattedSheetMessage];
 }
 
 

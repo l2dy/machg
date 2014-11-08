@@ -68,9 +68,9 @@
 
 - (void) awakeFromNib
 {
-	[self observe:kRepositoryDataIsNew		from:[self myDocument]  byCalling:@selector(repositoryDataIsNew)];
-	[self observe:kRepositoryDataDidChange	from:[self myDocument]  byCalling:@selector(repositoryDataDidChange:)];
-	[self observe:kLogEntriesDidChange		from:[self myDocument]  byCalling:@selector(logEntriesDidChange:)];
+	[self observe:kRepositoryDataIsNew		from:self.myDocument  byCalling:@selector(repositoryDataIsNew)];
+	[self observe:kRepositoryDataDidChange	from:self.myDocument  byCalling:@selector(repositoryDataDidChange:)];
+	[self observe:kLogEntriesDidChange		from:self.myDocument  byCalling:@selector(logEntriesDidChange:)];
 	
 	// Tell the browser to send us messages when it is clicked.
 	[self setTarget:self];
@@ -80,7 +80,7 @@
 	[self setDataSource:self];
 	
 	// Stop garbage littering on Lion see issue #273
-	[DynamicCast(NSClipView, [self superview]) setCopiesOnScroll:NO];
+	[DynamicCast(NSClipView, self.superview) setCopiesOnScroll:NO];
 	awake_ = YES;
 	[self resetTable:self];
 }
@@ -98,11 +98,11 @@
 // MARK:  Quieres
 // ------------------------------------------------------------------------------------
 
-- (BOOL)	  labelIsSelected	{ return 0 <= [self selectedRow] && [self selectedRow] < [labelsTableData_ count]; }
-- (BOOL)	  labelIsClicked	{ return [self clickedRow] != -1; }
-- (LabelData*) selectedLabel	{ return [self labelIsSelected] ? labelsTableData_[[self selectedRow]] : nil; }
-- (LabelData*) clickedLabel		{ return [self labelIsClicked]  ? labelsTableData_[[self clickedRow]]  : nil; }
-- (LabelData*) chosenLabel		{ LabelData* ans = [self clickedLabel]; return ans ? ans : [self selectedLabel]; }
+- (BOOL)	  labelIsSelected	{ return 0 <= self.selectedRow && self.selectedRow < [labelsTableData_ count]; }
+- (BOOL)	  labelIsClicked	{ return self.clickedRow != -1; }
+- (LabelData*) selectedLabel	{ return self.labelIsSelected ? labelsTableData_[self.selectedRow] : nil; }
+- (LabelData*) clickedLabel		{ return self.labelIsClicked  ? labelsTableData_[self.clickedRow]  : nil; }
+- (LabelData*) chosenLabel		{ LabelData* ans = self.clickedLabel; return ans ? ans : self.selectedLabel; }
 
 
 
@@ -143,8 +143,8 @@
 
 - (IBAction) labelTableSingleClick:(id) sender
 {
-	LabelData* label = [self chosenLabel];
-	LogTableView* logTable = [[[self myDocument] theHistoryView] logTableView];
+	LabelData* label = self.chosenLabel;
+	LogTableView* logTable = [[self.myDocument theHistoryView] logTableView];
 	[logTable scrollToRevision:[label revision]];
 }
 
@@ -185,10 +185,10 @@
 {
 	@synchronized(self)
 	{
-		labelsTableFilterType_ = [self labelTypeFilterOfButtons];
+		labelsTableFilterType_ = self.labelTypeFilterOfButtons;
 		RepositoryData* collection = [[parentController myDocument] repositoryData];
 		NSArray* newTableData = [LabelData filterLabelsDictionary:[collection revisionNumberToLabels] byType:labelsTableFilterType_];
-		NSArray* descriptors = [self sortDescriptors];
+		NSArray* descriptors = self.sortDescriptors;
 		labelsTableData_ = [LabelData removeDuplicateLabels:newTableData];
 		labelsTableData_ = [labelsTableData_ sortedArrayUsingDescriptors:descriptors];
 		[parentController labelsChanged];
@@ -199,7 +199,7 @@
 
 - (NSArray*) labelsTableData
 {	
-	if ([self labelTypeFilterOfButtons] != labelsTableFilterType_)
+	if (self.labelTypeFilterOfButtons != labelsTableFilterType_)
 		[self recomputeLabelsTableData];
 	return labelsTableData_;
 }
@@ -240,22 +240,22 @@
 
 - (NSInteger) numberOfRowsInTableView:(NSTableView*)aTableView
 {
-	return [[self labelsTableData] count];
+	return [self.labelsTableData count];
 }
 
 - (id) tableView:(NSTableView*)aTableView objectValueForTableColumn:(NSTableColumn*)aTableColumn row:(NSInteger)requestedRow
 {
 	if ([self numberOfRowsInTableView:aTableView] <= requestedRow)	return fstr(@"%ld",requestedRow);
 
-	LabelData* label = [self labelsTableData][requestedRow];
+	LabelData* label = self.labelsTableData[requestedRow];
 	NSString* requestedColumn = [aTableColumn identifier];
 	return [label valueForKey:requestedColumn];
 }
 
 - (void) tableView:(NSTableView*)aTableView sortDescriptorsDidChange:(NSArray*)oldDescriptors
 {
-	LabelData* selectedLabel = [self selectedLabel];
-	NSArray* descriptors = [self sortDescriptors];
+	LabelData* selectedLabel = self.selectedLabel;
+	NSArray* descriptors = self.sortDescriptors;
 	labelsTableData_ = [labelsTableData_ sortedArrayUsingDescriptors:descriptors];
 	dispatch_async(mainQueue(), ^{
 		[aTableView reloadData];
@@ -279,10 +279,10 @@
 
 - (void) tableViewSelectionDidChange:(NSNotification*)aNotification
 {
-	LabelData* label = [self chosenLabel];
+	LabelData* label = self.chosenLabel;
 	if (label)
 	{
-		LogTableView* logTable = [[[self myDocument] theHistoryView] logTableView];
+		LogTableView* logTable = [[self.myDocument theHistoryView] logTableView];
 		[logTable scrollToRevision:[label revision]];
 	}
 	[parentController labelsChanged];

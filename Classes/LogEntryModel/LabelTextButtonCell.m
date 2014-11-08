@@ -98,7 +98,7 @@
 
 - (NSRect) buttonFrameSize
 {
-	NSAttributedString* title = [self attributedTitle];
+	NSAttributedString* title = self.attributedTitle;
 	NSSize s = [title size];
 	return NSMakeRect(0, -5, s.width + 15, 15);
 }

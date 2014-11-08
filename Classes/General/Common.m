@@ -536,7 +536,7 @@ static OpenApplicationPanelDelegate* sharedOpenApplicationPanelDelegate_ = nil;
 + (OpenApplicationPanelDelegate*) sharedOpenApplicationPanelDelegate
 {
 	if (!sharedOpenApplicationPanelDelegate_)
-		sharedOpenApplicationPanelDelegate_ = [[self alloc] init];
+		sharedOpenApplicationPanelDelegate_ = [self.alloc init];
 	return sharedOpenApplicationPanelDelegate_;
 }
 
@@ -1116,12 +1116,12 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 @implementation NSString ( NSStringPlusComparisons )
 
 - (unichar) firstCharacter						{ return [self characterAtIndex:0]; }
-- (unichar) lastCharacter						{ return [self characterAtIndex:[self length]-1]; }
+- (unichar) lastCharacter						{ return [self characterAtIndex:self.length-1]; }
 - (BOOL) isNotEqualToString:(NSString*)aString	{ return ![self isEqualToString:aString]; }
 - (BOOL) differsOnlyInCaseFrom:(NSString*)aString
 {
 	return
-		[self length] == [aString length] &&
+		self.length == [aString length] &&
 		[self compare:aString options:NSCaseInsensitiveSearch] == NSOrderedSame &&
 		[self compare:aString options:NSLiteralSearch] != NSOrderedSame;
 }
@@ -1131,19 +1131,19 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 }
 - (BOOL) endsWithNewLine
 {
-	if ([self length] <= 0)
+	if (self.length <= 0)
 		return NO;
 	static NSCharacterSet* newLines = nil;
 	if (!newLines)
 		newLines = [NSCharacterSet newlineCharacterSet];
-	return [newLines characterIsMember:[self lastCharacter]];
+	return [newLines characterIsMember:self.lastCharacter];
 }
 
 - (NSArray*) stringDividedIntoLines
 {
 	NSMutableArray* lines = [[NSMutableArray alloc]init];
 	NSInteger start = 0;
-	while (start < [self length])
+	while (start < self.length)
 	{
 		NSRange nextLine = [self lineRangeForRange:NSMakeRange(start, 1)];
 		[lines addObject:[self substringWithRange:nextLine]];
@@ -1154,12 +1154,12 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 - (NSRange) fullRange
 {
-	return NSMakeRange(0, [self length]);
+	return NSMakeRange(0, self.length);
 }
 
 - (NSString*) SHA1HashString
 {
-	const char *cstr = [self UTF8String];
+	const char *cstr = self.UTF8String;
 	unsigned char result[20];
 	CC_SHA1(cstr, strlen(cstr), result);
 	
@@ -1308,7 +1308,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 }
 - (NSRange) fullRange
 {
-	return NSMakeRange(0, [self length]);
+	return NSMakeRange(0, self.length);
 }
 @end
 
@@ -1327,7 +1327,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 }
 - (void) addAttribute:(NSString*)name value:(id)value
 {
-	[self addAttribute:name value:value range:[self fullRange]];
+	[self addAttribute:name value:value range:self.fullRange];
 }
 @end
 
@@ -1389,7 +1389,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	NSMutableIndexSet* set = [[NSMutableIndexSet alloc]init];
 	[set addIndexes:self];
 	[set addIndexes:indexSet];
-	return [set count] < ([self count] + [indexSet count]);
+	return [set count] < (self.count + [indexSet count]);
 }
 
 - (BOOL) freeOfIndex:(NSInteger)index	{ return ![self containsIndex:index]; }
@@ -1420,7 +1420,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 {
 	@try
 	{
-		id ans = [self lastObject];
+		id ans = self.lastObject;
 		if (ans)
 			[self removeLastObject];
 		return ans;
@@ -1433,7 +1433,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 {
 	@try
 	{
-		id ans = [self firstObject];
+		id ans = self.firstObject;
 		if (ans)
 			[self removeFirstObject];
 		return ans;
@@ -1447,7 +1447,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 - (void) reverse
 {
     NSUInteger i = 0;
-    NSUInteger j = [self count] - 1;
+    NSUInteger j = self.count - 1;
     while (i < j)
 	{
         [self exchangeObjectAtIndex:i withObjectAtIndex:j];
@@ -1476,12 +1476,12 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 - (NSArray*) reversedArray
 {
-    return [[self reverseObjectEnumerator] allObjects];
+    return [self.reverseObjectEnumerator allObjects];
 }
 
 - (NSArray*) arrayByRemovingObject:(id)object
 {
-	NSMutableArray* a = [self mutableCopy];
+	NSMutableArray* a = self.mutableCopy;
 	[a removeObject:object];
 	return [NSArray arrayWithArray:a];
 }
@@ -1541,8 +1541,8 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 // MARK: -
 @implementation NSDictionary ( NSDictionaryPlusAccessors )
 - (id) synchronizedObjectForKey:(id)aKey			{ @synchronized(self) { return self[aKey]; }; /*keep gcc happy*/ return nil; }
-- (NSArray*) synchronizedAllKeys					{ @synchronized(self) { return [self allKeys]; }; /*keep gcc happy*/ return nil; }
-- (NSInteger) synchronizedCount						{ @synchronized(self) { return [self count]; }; /*keep gcc happy*/ return 0; }
+- (NSArray*) synchronizedAllKeys					{ @synchronized(self) { return self.allKeys; }; /*keep gcc happy*/ return nil; }
+- (NSInteger) synchronizedCount						{ @synchronized(self) { return self.count; }; /*keep gcc happy*/ return 0; }
 - (id) synchronizedObjectForIntKey:(NSInteger)key	{ @synchronized(self) { return self[intAsNumber(key)]; }; /*keep gcc happy*/ return nil; }
 - (id) objectForIntKey:(NSInteger)key				{ return self[intAsNumber(key)]; }
 @end
@@ -1567,7 +1567,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 @implementation NSTask (NSTaskPlusExtensions)
 - (void) cancelTask
 {
-	if ([self isRunning])
+	if (self.isRunning)
 		[self terminate];
 }
 @end
@@ -1665,7 +1665,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 			return nil;
 		@try
 		{
-			return [self readDataToEndOfFile];
+			return self.readDataToEndOfFile;
 		}
 		@catch (NSException *e)
 		{
@@ -1688,7 +1688,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 {
 	@try
 	{
-		return [self availableData];
+		return self.availableData;
 	}
 	@catch (NSException *e)
 	{
@@ -1710,7 +1710,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 {
 	NSAttributedString* smallSuppressionMessage = [NSAttributedString string:@"Do not show this kind of message again" withAttributes: smallSystemFontAttributes];
 	[self setShowsSuppressionButton:YES];
-	[[self suppressionButton] setAttributedTitle:smallSuppressionMessage];
+	[self.suppressionButton setAttributedTitle:smallSuppressionMessage];
 }
 @end
 
@@ -1806,7 +1806,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 - (void) setCenterX:(CGFloat)coord { [self setCenterX:coord animate:YES]; }
 - (void) setCenterX:(CGFloat)coord animate:(BOOL)animate
 {
-	NSRect theFrame = [self frame];
+	NSRect theFrame = self.frame;
 	CGFloat newOriginX = round(coord - theFrame.size.width / 2);
 	if (newOriginX < 0)
 		newOriginX = 0;
@@ -1814,7 +1814,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	{
 		theFrame.origin.x = newOriginX;
 		if (animate)
-			[[self animator] setFrame:theFrame];
+			[self.animator setFrame:theFrame];
 		else
 			[self setFrame:theFrame];
 	}
@@ -1822,32 +1822,32 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 - (void) setMinX:(CGFloat)coord
 {
-	NSRect theFrame = [self frame];
+	NSRect theFrame = self.frame;
 	CGFloat newOriginX = coord;
 	if (newOriginX != theFrame.origin.x)
 	{
 		theFrame.origin.x = newOriginX;
-		[[self animator] setFrame:theFrame];
+		[self.animator setFrame:theFrame];
 	}
 }
 
 - (void) setMaxX:(CGFloat)coord
 {
-	NSRect theFrame = [self frame];
+	NSRect theFrame = self.frame;
 	CGFloat newOriginX = coord - theFrame.size.width;
 	if (newOriginX != theFrame.origin.x)
 	{
 		theFrame.origin.x = newOriginX;
-		[[self animator] setFrame:theFrame];
+		[self.animator setFrame:theFrame];
 	}
 }
 
 - (void) setToRightOf:(NSView*)theView bySpacing:(CGFloat)coord
 {
 	NSRect theViewFrame = [theView frame];
-	NSRect selfFrame = [self frame];
+	NSRect selfFrame = self.frame;
 	selfFrame.origin.x = NSMaxX(theViewFrame) + 10;
-	[[self animator] setFrame:selfFrame];
+	[self.animator setFrame:selfFrame];
 }
 
 - (NSBox*) enclosingBoxView
@@ -1902,10 +1902,10 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 			delta = MIN(delta, [control bounds].size.width - maxWidth);
 	if (delta < 50 || delta > 300)
 	{
-		NSRect frame = [self frame];
+		NSRect frame = self.frame;
 		frame.size.width -= delta - 100;
-		frame.size.width = MAX(frame.size.width, [self minSize].width);
-		frame.size.width = MIN(frame.size.width, [self maxSize].width);
+		frame.size.width = MAX(frame.size.width, self.minSize.width);
+		frame.size.width = MIN(frame.size.width, self.maxSize.width);
 		[self setFrame:frame display:YES animate:NO];
 	}
 }
@@ -1930,9 +1930,9 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 - (void) growToFit
 {
-	NSRect oldFrame = [self frame];
+	NSRect oldFrame = self.frame;
 	[self sizeToFit];
-	NSRect newFrame = [self frame];
+	NSRect newFrame = self.frame;
 	NSSize maxSize = UnionSizeWIthSize(newFrame.size, oldFrame.size);
 	newFrame = UnionRectWithSize(newFrame, maxSize);
 	[self setFrame:newFrame];
@@ -1950,17 +1950,17 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 																														// http://stackoverflow.com/questions/8377205/enabling-empty-selection-on-view-based-nstableviews
 																														// http://stackoverflow.com/questions/1296798/cant-make-empty-selection-in-nstableview
 																														// http://www.cocoabuilder.com/archive/cocoa/242930-nstableview-empty-selection-not-working.html
-- (BOOL) rowWasClicked					{ return [self clickedRow] != -1; }
-- (NSInteger) chosenRow					{ NSInteger clickedRow = [self clickedRow];	return (clickedRow >= 0) ? clickedRow : [self selectedRow]; }
-- (BOOL) clickedRowInSelectedRows		{ NSInteger clickedRow = [self clickedRow]; return (clickedRow >= 0) &&  [self isRowSelected:clickedRow]; }
-- (BOOL) clickedRowOutsideSelectedRows	{ NSInteger clickedRow = [self clickedRow]; return (clickedRow >= 0) && ![self isRowSelected:clickedRow]; }
-- (BOOL) selectedRowsWereChosen			{ NSInteger clickedRow = [self clickedRow]; return ((clickedRow == -1) && ([self numberOfSelectedRows] > 0)) || ((clickedRow >= 0) && [self isRowSelected:clickedRow]); }
+- (BOOL) rowWasClicked					{ return self.clickedRow != -1; }
+- (NSInteger) chosenRow					{ NSInteger clickedRow = self.clickedRow;	return (clickedRow >= 0) ? clickedRow : self.selectedRow; }
+- (BOOL) clickedRowInSelectedRows		{ NSInteger clickedRow = self.clickedRow; return (clickedRow >= 0) &&  [self isRowSelected:clickedRow]; }
+- (BOOL) clickedRowOutsideSelectedRows	{ NSInteger clickedRow = self.clickedRow; return (clickedRow >= 0) && ![self isRowSelected:clickedRow]; }
+- (BOOL) selectedRowsWereChosen			{ NSInteger clickedRow = self.clickedRow; return ((clickedRow == -1) && (self.numberOfSelectedRows > 0)) || ((clickedRow >= 0) && [self isRowSelected:clickedRow]); }
 
 - (void) scrollToRangeOfRowsLow:(NSInteger)lowTableRow high:(NSInteger)highTableRow
 {
 	// By doing these 3 scrolls we try to get the table to display the selected low and high rows somewhat in the middle or at least with 5
 	// values either side of it in the table.
-	NSInteger tableRowCount = [self numberOfRows];
+	NSInteger tableRowCount = self.numberOfRows;
 
 	if (highTableRow != NSNotFound)
 		[self scrollRowToVisible:MIN(highTableRow+5, tableRowCount)];
@@ -1970,7 +1970,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 		[self scrollRowToVisible:highTableRow];
 
 	// Finally if we can fit in the last row then we do so since it generally looks better
-	NSRect clippedView = [[self enclosingScrollView] documentVisibleRect];
+	NSRect clippedView = [self.enclosingScrollView documentVisibleRect];
 	NSRange theRange = [self rowsInRect: clippedView];
 	if (!NSLocationInRange(tableRowCount, theRange))
 		if (lowTableRow == NSNotFound || tableRowCount - lowTableRow < theRange.length)
@@ -1995,9 +1995,9 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	}
 	return nil;
 }
-- (id) selectedItem		{ return ([self numberOfSelectedRows] > 0) ? [self safeItemAtRow:[self selectedRow]] : nil; }
-- (id) clickedItem		{ NSInteger clickedRow = [self clickedRow];  return (clickedRow >= 0) ? [self safeItemAtRow:clickedRow] : nil; }
-- (id) chosenItem		{ NSInteger clickedRow = [self clickedRow];  return (clickedRow >= 0) ? [self safeItemAtRow:clickedRow] : [self selectedItem]; }
+- (id) selectedItem		{ return (self.numberOfSelectedRows > 0) ? [self safeItemAtRow:self.selectedRow] : nil; }
+- (id) clickedItem		{ NSInteger clickedRow = self.clickedRow;  return (clickedRow >= 0) ? [self safeItemAtRow:clickedRow] : nil; }
+- (id) chosenItem		{ NSInteger clickedRow = self.clickedRow;  return (clickedRow >= 0) ? [self safeItemAtRow:clickedRow] : self.selectedItem; }
 
 - (NSArray*) selectedItems
 {
@@ -2006,7 +2006,7 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 	// We need to only call itemAtRow on the main thread. Bad things seem to happen if we don't...
 	__block NSIndexSet* rows;
 	dispatchSpliced(mainQueue(), ^{
-		rows = [self selectedRowIndexes];
+		rows = self.selectedRowIndexes;
 		[rows enumerateIndexesUsingBlock:^(NSUInteger row, BOOL* stop) {
 			[nodes addObjectIfNonNil:[self itemAtRow:row]];
 		}];
@@ -2016,9 +2016,9 @@ void DebugLog_(const char* file, int lineNumber, const char* funcName, NSString*
 
 - (NSArray*) chosenItems
 {
-	if (![self rowWasClicked] && [self numberOfSelectedRows] == 0)
+	if (!self.rowWasClicked && self.numberOfSelectedRows == 0)
 		return @[];
-	return [self isRowSelected:[self chosenRow]] ? [self selectedItems] : @[ [self chosenItem] ];
+	return [self isRowSelected:self.chosenRow] ? self.selectedItems : @[ self.chosenItem ];
 }
 
 - (void) selectItem:(id)item

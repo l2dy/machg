@@ -32,7 +32,7 @@
 		NSArray* colors = @[fillStartingColor, fillEndingColor, fillStartingColor];
 		verticalGradient   = [[NSGradient alloc] initWithColors:colors atLocations:locations colorSpace:[NSColorSpace deviceRGBColorSpace]];
 	}
-	if ([self isVertical])
+	if (self.isVertical)
 		[verticalGradient drawInRect:aRect angle:0];
 	else
 		[horizontalGradient drawInRect:aRect angle:90];	

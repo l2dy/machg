@@ -126,7 +126,7 @@
 {
 	BOOL valid = [patchesTable numberOfRowsInTableView:patchesTable] > 0;
 	[okButton setEnabled:valid];
-	[sheetInformativeMessageTextField setAttributedStringValue: (valid ? [self formattedSheetMessage] : normalSheetMessageAttributedString(@"You need to add one or more patches in order to import patches."))];
+	[sheetInformativeMessageTextField setAttributedStringValue: (valid ? self.formattedSheetMessage : normalSheetMessageAttributedString(@"You need to add one or more patches in order to import patches."))];
 }
 
 - (void)	 patchesDidChange

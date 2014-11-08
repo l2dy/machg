@@ -24,7 +24,7 @@
 
 - (void) awakeFromNib
 {
-	[[self menu] setDelegate:self];
+	[self.menu setDelegate:self];
 }
 
 
@@ -38,14 +38,14 @@
 
 - (void) mouseDown:(NSEvent*)theEvent
 {	
-	NSRect frame = [self frame];
-	NSControlSize controlSize = [[self cell] controlSize];
+	NSRect frame = self.frame;
+	NSControlSize controlSize = [self.cell controlSize];
 	CGFloat offset = (controlSize == NSRegularControlSize) ? 3 : 4;
 	
     NSPoint menuOrigin = [self convertPoint:NSMakePoint(0, frame.size.height + offset) toView:nil];
 	NSEvent* event = [NSEvent mouseEventWithType:NSLeftMouseDown location:menuOrigin modifierFlags:NSLeftMouseDownMask timestamp:[theEvent timestamp]
 									windowNumber:[theEvent windowNumber] context:[theEvent context] eventNumber:[theEvent eventNumber] clickCount:1 pressure:1.0];
-    [NSMenu popUpContextMenu:[self menu] withEvent:event forView:self];
+    [NSMenu popUpContextMenu:self.menu withEvent:event forView:self];
 }
 
 
