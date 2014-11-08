@@ -95,6 +95,22 @@ void commonLoadCellContents(NSCell* cell)
 }
 
 
+static void drawImageAtPoint(NSImage* img, NSPoint pt, BOOL flipped)
+{
+	if (!flipped)
+		[img drawAtPoint:pt fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
+	else
+	{
+		NSAffineTransform* transform = [NSAffineTransform transform];
+		[transform translateXBy:pt.x yBy:pt.y];
+		[transform scaleXBy:1.0 yBy:-1.0];
+		[transform concat];
+		[img drawAtPoint:NSZeroPoint fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
+		[transform invert];
+		[transform concat];
+	}
+}
+
 - (void) drawInteriorWithFrame:(NSRect)cellFrame inView:(NSView*)controlView
 {
 	NSImage* combinedIcon = [self.nodeInfo combinedIconImage];
@@ -106,13 +122,15 @@ void commonLoadCellContents(NSCell* cell)
 	CGFloat iconRowWidth = [FSViewerPaneCell iconRowSize:self.parentNodeInfo].width;
 	NSPoint drawPoint = cellFrame.origin;
 	
+	BOOL isFlipped = [controlView isFlipped];
+	
 	// Draw IconRow
 	drawPoint.x += ICON_INSET_HORIZ;
 	// Adjust the image frame top account for the fact that we may or may not be in a flipped control view,
 	// since when compositing the online documentation states: "The image will have the orientation of the
 	// base coordinate system, regardless of the destination coordinates".
-	drawPoint.y += ceil((cellFrame.size.height + ([controlView isFlipped] ? 1 : -1) * cellFrame.size.height) / 2);
-	//drawPoint.y += [controlView isFlipped] ? ceil(cellFrame.size.height) : 0;
+	drawPoint.y += ceil((cellFrame.size.height + (isFlipped ? 1 : -1) * cellFrame.size.height) / 2);
+	//drawPoint.y += isFlipped ? ceil(cellFrame.size.height) : 0;
 
 	float heightDelta = cellFrame.size.height - combinedIcon.size.height;
 	drawPoint.y -= floor(heightDelta/3);
@@ -122,7 +140,7 @@ void commonLoadCellContents(NSCell* cell)
 		drawPoint.x += DISCLOSURE_SPACING + DISCLOSURE_SIZE + DISCLOSURE_SPACING;
 	
 	drawPoint.x += iconRowWidth - combinedIcon.size.width;
-	[combinedIcon compositeToPoint:drawPoint operation:NSCompositeSourceOver fraction:1.0];
+	drawImageAtPoint(combinedIcon, drawPoint, isFlipped);
 	drawPoint.x += combinedIcon.size.width;
 	
 	// Leave space for the disclosure triangle if present
@@ -133,7 +151,7 @@ void commonLoadCellContents(NSCell* cell)
 	if (fileIcon)
 	{
 		drawPoint.x += ICON_INTERSPACING;
-		[fileIcon compositeToPoint:drawPoint operation:NSCompositeSourceOver fraction:1.0];
+		drawImageAtPoint(fileIcon, drawPoint, isFlipped);
 		drawPoint.x += fileIcon.size.width;
 	}
 	

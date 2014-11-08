@@ -799,7 +799,7 @@ static void drawHorizontalLine(CGFloat x, CGFloat y, CGFloat w, NSColor* color)
 	{
 		NSImage* addImage = [NSImage imageNamed:NSImageNameAddTemplate];
 		[badge lockFocus];
-		[addImage compositeToPoint:NSZeroPoint operation:NSCompositeSourceOver];
+		[addImage drawAtPoint:NSZeroPoint fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
 		[badge unlockFocus];
 	}
 	return badge;

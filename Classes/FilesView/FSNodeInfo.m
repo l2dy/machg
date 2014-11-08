@@ -314,7 +314,7 @@
 	[combinedImage lockFocus];
 	for (NSImage* icon in icons)
 	{
-		[icon compositeToPoint:imageFrame.origin operation:NSCompositeSourceOver fraction:1.0];
+		[icon drawAtPoint:imageFrame.origin fromRect:NSZeroRect operation:NSCompositeSourceOver fraction:1.0];
 		imageFrame.origin.x += ICON_SIZE / overlap;
 	}
 	[combinedImage unlockFocus];
