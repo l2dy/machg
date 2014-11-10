@@ -61,6 +61,14 @@
 // since we need to distinguish between the two versions of the same thing.
 
 
+// Dot Syntax
+// ------------------------------------------------------------------------------------------------------------------------------
+// "Dot" Notation or syntax seems to have won in real world usage. Despite it's ambiguity at times I think now
+// I actually prefer it's readability. Thus in most places use entry.parents instead of [entry parents] when
+// you want to "access" something. Also to set things, eg instead of [entry setParent:aParent] use
+// entry.parent = aParent
+
+
 // Brace conventions
 // ------------------------------------------------------------------------------------------------------------------------------
 // Use Allman style for braces. (http://en.wikipedia.org/wiki/Indent_style) eg
