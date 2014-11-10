@@ -926,8 +926,10 @@ NSString* kKeyPathUseWhichToolForMerging = @"values.UseWhichToolForMerging";
 		[NSApp presentAnyErrorsAndClear:&err];
 		if (newDoc)
 		{
-			[newDoc saveToURL:defaultURL ofType:@"MacHgDocument" forSaveOperation:NSSaveAsOperation completionHandler:nil];
-			[NSApp presentAnyErrorsAndClear:&err];
+			[newDoc writeSafelyToURL:defaultURL ofType:@"MacHgDocument" forSaveOperation:NSSaveAsOperation error:&err];
+			// 4 is the error code for this file doesn't exist (in fact I don't think writeSafelyToURL should throw an error in this case
+			if (err.code != 4)
+				[NSApp presentAnyErrorsAndClear:&err];
 			[newDoc showWindows];
 			return NO;
 		}
