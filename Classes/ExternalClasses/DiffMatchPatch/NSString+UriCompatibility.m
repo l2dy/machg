@@ -1,8 +1,7 @@
 /*
  * Diff Match and Patch
- *
- * Copyright 2010 geheimwerk.de.
- * http://code.google.com/p/google-diff-match-patch/
+ * Copyright 2018 The diff-match-patch Authors.
+ * https://github.com/google/diff-match-patch
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -39,7 +38,8 @@
                                   CFSTR(" !~*'();/?:@&=+$,#"),
                                   NULL,
                                   kCFStringEncodingUTF8);
-  return [NSMakeCollectable(urlString) autorelease];
+  CFMakeCollectable(urlString);
+  return [(NSString *)urlString autorelease];
 }
 
 /**
@@ -55,7 +55,8 @@
                                             (CFStringRef)self, 
                                             CFSTR(""), 
                                             kCFStringEncodingUTF8);
-  return [NSMakeCollectable(decodedString) autorelease];
+  CFMakeCollectable(decodedString);
+  return [(NSString *)decodedString autorelease];
 }
 
 @end

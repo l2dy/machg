@@ -1,8 +1,7 @@
 /*
  * Diff Match and Patch
- *
- * Copyright 2010 geheimwerk.de.
- * http://code.google.com/p/google-diff-match-patch/
+ * Copyright 2018 The diff-match-patch Authors.
+ * https://github.com/google/diff-match-patch
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -33,11 +32,6 @@ CFArrayRef diff_halfMatchCreate(CFStringRef text1, CFStringRef text2, const floa
 CFArrayRef diff_halfMatchICreate(CFStringRef longtext, CFStringRef shorttext, CFIndex i);
 
 CFStringRef diff_linesToCharsMungeCFStringCreate(CFStringRef text, CFMutableArrayRef lineArray, CFMutableDictionaryRef lineHash);
-CFStringRef diff_tokensToCharsMungeCFStringCreate(CFStringRef text, CFMutableArrayRef tokenArray, CFMutableDictionaryRef tokenHash, CFOptionFlags tokenizerOptions);
-CFStringRef diff_wordsToCharsMungeCFStringCreate(CFStringRef text, CFMutableArrayRef tokenArray, CFMutableDictionaryRef tokenHash);
-CFStringRef diff_sentencesToCharsMungeCFStringCreate(CFStringRef text, CFMutableArrayRef tokenArray, CFMutableDictionaryRef tokenHash);
-CFStringRef diff_paragraphsToCharsMungeCFStringCreate(CFStringRef text, CFMutableArrayRef tokenArray, CFMutableDictionaryRef tokenHash);
-CFStringRef diff_lineBreakDelimiteredToCharsMungeCFStringCreate(CFStringRef text, CFMutableArrayRef tokenArray, CFMutableDictionaryRef tokenHash);
 
 CFIndex diff_cleanupSemanticScore(CFStringRef one, CFStringRef two);
 
@@ -50,17 +44,5 @@ CF_INLINE void diff_CFStringPrepareUniCharBuffer(CFStringRef string, const UniCh
     *string_chars = *string_buffer;
   }
 }
-
-#define CFIndexArrayLastValueIndex (CFArrayGetCount(theArray)-1)
-
-CF_INLINE CFIndex diff_CFArrayLastValueAsCFIndex(CFMutableArrayRef theArray) {
-  return (CFIndex)CFArrayGetValueAtIndex(theArray, CFIndexArrayLastValueIndex);
-}
-
-CF_INLINE void diff_CFArrayRemoveLastValue(CFMutableArrayRef theArray) {
-  CFArrayRemoveValueAtIndex(theArray, CFIndexArrayLastValueIndex);
-}
-
-#undef CFIndexArrayLastValueIndex
 
 #endif //ifndef _DIFFMATCHPATCHCFUTILITIES_H
